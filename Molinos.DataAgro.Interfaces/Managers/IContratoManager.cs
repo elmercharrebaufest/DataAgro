@@ -19,8 +19,6 @@ namespace Molinos.DataAgro.Interfaces
         void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork);
 
         KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<ComercialQry> listComercial);
-        StoredPorContratoResult TraerTodosContratos();
-        
 
         Task<DatosIniContrato> TraerDatosCombo();
 

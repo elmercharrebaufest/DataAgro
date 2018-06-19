@@ -323,16 +323,8 @@ namespace WebDataAgro.Controllers {
         public async Task<ActionResult> BuscaDatosTabla(KendoGridMvcRequest request)
         {
             List<ComercialQry> listComercial = await RecuperaEquipo(idActiveDirectory);
-
-            //if (oParam.ProveedorId == null) {
-            //    oParam.ProveedorId = 0;
-            //}
-            
+           
             var model = mobjContratoManager.TraerTodosContratos(request, listComercial);
-
-            //if (listComercial.Count > 0) {
-            //    model.ReporteContratoContratoTraerPorFltro.RemoveAll(x => listComercial.Any(z => z.ComercialId != x.ComercialId));
-            //}
 
             return Json(model);
         }

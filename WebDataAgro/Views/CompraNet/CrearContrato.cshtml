@@ -9,15 +9,20 @@
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
-
+    <br />
+    <br />
+    <br />
+    <br />
     <div id="CrearContrato">
-
+        <br />
+        <br />
+        <br />
         <div class="row">
             <div class="col-md-2">
                 <label>Proveedor</label>
             </div>
             <div class="col-md-10">
-                <input id="buscadorProveedor" class="k-textbox" type="text" placeholder="Buscar por CUIT, razón social" style="max-width: 550px"/>
+                <input id="buscadorProveedor" class="k-textbox" type="text" placeholder="Buscar por CUIT, razón social" style="max-width: 550px" />
                 <div id="buscadorResult"></div>
             </div>
         </div>
@@ -109,17 +114,6 @@
                 </div>
             </div>
         </div>
-
-        <!--<div id="fechaHastaContratoDiv" class="row">
-            <div class="col-md-2">
-                <label>Fecha hasta (de Contrato)</label>
-            </div>
-            <div class="col-md-10">
-                <input id="fechaEntregaId" type="date" data-bind="value: Parametros.fechaEntregaId" style="width: 550px" />
-                <img id="errfechaentregaId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
-        </div>-->
-
         <div id="ContratoDiv" hidden class="row">
             <div class="col-md-2">
                 <label>Contrato</label>
@@ -131,7 +125,6 @@
             <div class="col-md-6">
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-2">
                 <label>Comercial</label>
@@ -141,7 +134,6 @@
                 <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-2">
                 <label>Observaci&oacute;n</label>
@@ -151,11 +143,9 @@
                 <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-
         <div id="DatosAdicionales" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Datos adicionales
         </div>
-
         <div class="datos-adicionales" display="block">
             <br />
             <div class="row">
@@ -166,14 +156,13 @@
                     <input id="sustentableId" class="campo-input-input" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
                     <span id="sustentableDiv" hidden>
-                        <input id="sustentablePrecioId" placeholder="Importe" style="width:380px"/>
+                        <input id="sustentablePrecioId" placeholder="Importe" style="width:380px" />
                         <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
                         <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
                         <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-2">
                     <label>Doralizado</label>
@@ -182,12 +171,11 @@
                     <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
                     <span id="dolarizadoDiv" hidden>
-                        <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="max-width: 480px"/>
+                        <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="max-width: 480px" />
                         <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-2">
                     <label>Pesificado</label>
@@ -196,12 +184,11 @@
                     <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
                     <span id="pesificadoDiv" hidden>
-                        <input id="pesificadoDiasId" placeholder="Días" style="width:480px"/>
+                        <input id="pesificadoDiasId" placeholder="Días" style="width:480px" />
                         <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-2">
                     <label>No Informa SIO</label>
@@ -211,7 +198,6 @@
                     <img id="errnoInformaSioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-2">
                     <label>Trigo Especial</label>
@@ -223,7 +209,6 @@
             </div>
         </div>
     </div>
-
     <br />
     <div class="row">
         <div class="col-md-offset-2 col-md-4">

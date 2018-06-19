@@ -28,7 +28,7 @@
     
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]) DEFAULT 1, 
     [ContratoSAP] INT NULL, 
-    [Ampliaciones] FLOAT NULL, 
+    [Ampliaciones] INT NOT NULL DEFAULT 0, 
     [Observacion] NVARCHAR(MAX) NULL, 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [Campaña]([CampañaId]), 
     CONSTRAINT [FK_Contrato_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 

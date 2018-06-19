@@ -202,61 +202,6 @@ namespace Molinos.DataAgro.Business.Managers
             return oContrato;
         }
 
-        public StoredPorContratoResult TraerTodosContratos()
-        {
-            var oResult = new StoredPorContratoResult();
-
-            var oContrato = mobjUnitOfWork.Repository<Contrato>().Queryable();
-
-            var query = oContrato
-                        .Select(x => new BasicoContrato()
-                        {
-                            ContratoId = x.ContratoId.ToString(),
-                            ProveedorId = x.ProveedorId,
-                            ComercialId = x.ComercialId,
-                            MaterialId = x.MaterialId,
-                            TipoNegocioId = x.TipoNegocioId,
-                            Cantidad = x.Cantidad,
-                            Precio = x.Precio,
-                            FechaEntrega = SqlFunctions.DateName("day", x.FechaEntrega).Trim() + "/" +
-                                           SqlFunctions.StringConvert((double)x.FechaEntrega.Month).TrimStart() + "/" +
-                                           SqlFunctions.DateName("year", x.FechaEntrega),
-                            CampanaId = x.CampanaId,
-                            FechaDesde = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "/" +
-                                         SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "/" +
-                                         SqlFunctions.DateName("year", x.FechaDesde),
-                            FechaHasta = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "/" +
-                                         SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "/" +
-                                         SqlFunctions.DateName("year", x.FechaHasta),
-                            MonedaId = x.MonedaId,
-                            Fecha = Convert.ToString(x.Fecha),
-                            GrupoCompra = x.GrupoCompra,
-                            ProvinciaId = x.ProvinciaId,
-                            LocalidadId = x.LocalidadId,
-                            Base = x.Base,
-                            Importe_Sustentable = ((decimal)x.ImporteSustentable),
-                            MonedaId_Sustentable = x.MonedaIdSustentable,
-                            Fecha_Dolarizado = SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "/" +
-                                               SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "/" +
-                                               SqlFunctions.DateName("year", x.FechaDolarizado),
-                            Dias_Pesificado = x.DiasPesificado,
-                            NoInformaSIO = x.NoInformaSio,
-                            TrigoEspecial = x.TrigoEspecial,
-                            Estado = x.Estado,
-                            UsuarioId = x.UsuarioId,
-                            ContratoSAP = x.ContratoSAP,
-                            Ampliaciones = x.Ampliaciones,
-                            Observacion = x.Observacion
-
-                        });
-
-            oResult.BasicoContratoTraerPorFltro = query.ToList();
-
-            //oResult.BasicoContratoTraerPorFltro.FindAll
-
-            return oResult;
-        }
-
         public async Task<GrabarContratoResult> GrabarAmpliacionContrato(Contrato oContrato) {
 
             Contrato oContratoSave;
@@ -424,21 +369,13 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocioId = cont.TipoNegocioId,
                     Cantidad = cont.Cantidad,
                     Precio = cont.Precio,
-                    FechaEntrega = SqlFunctions.DateName("day", cont.FechaEntrega).Trim() + "/" +
-                                   SqlFunctions.StringConvert((double)cont.FechaEntrega.Month).TrimStart() + "/" +
-                                   SqlFunctions.DateName("year", cont.FechaEntrega),
+                    FechaEntrega = cont.FechaEntrega,
                     CampanaId = cont.CampanaId,
-                    FechaDesde = SqlFunctions.DateName("day", cont.FechaDesde).Trim() + "/" +
-                                 SqlFunctions.StringConvert((double)cont.FechaDesde.Month).TrimStart() + "/" +
-                                 SqlFunctions.DateName("year", cont.FechaDesde),
-                    FechaHasta = SqlFunctions.DateName("day", cont.FechaHasta).Trim() + "/" +
-                                 SqlFunctions.StringConvert((double)cont.FechaHasta.Month).TrimStart() + "/" +
-                                 SqlFunctions.DateName("year", cont.FechaHasta),
+                    FechaDesde = cont.FechaDesde,
+                    FechaHasta = cont.FechaHasta,
                     MonedaId = cont.MonedaId,
                     Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = SqlFunctions.DateName("day", cont.Fecha).Trim() + "/" +
-                            SqlFunctions.StringConvert((double)cont.Fecha.Month).TrimStart() + "/" +
-                            SqlFunctions.DateName("year", cont.Fecha),
+                    Fecha = cont.Fecha,
                     Fecha_Order = cont.Fecha,
                     GrupoCompra = cont.GrupoCompra,
                     ProvinciaId = cont.ProvinciaId,
@@ -447,9 +384,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe_Sustentable = ((decimal)cont.ImporteSustentable),
                     MonedaId_Sustentable = cont.MonedaIdSustentable,
                     Moneda_Sustentable = moneSust == null ? "" : moneSust.Descripcion,
-                    Fecha_Dolarizado = cont.FechaDolarizado != null ? SqlFunctions.DateName("day", cont.FechaDolarizado).Trim() + "/" +
-                                                                      SqlFunctions.StringConvert((double)cont.FechaDolarizado.Value.Month).TrimStart() + "/" +
-                                                                      SqlFunctions.DateName("year", cont.FechaDolarizado) :"",
+                    Fecha_Dolarizado = cont.FechaDolarizado,
                     Dias_Pesificado = cont.DiasPesificado,
                     NoInformaSIO = cont.NoInformaSio,
                     TrigoEspecial = cont.TrigoEspecial,
@@ -492,15 +427,13 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocioId = 3,
                     Cantidad = fijac.Cantidad,
                     Precio = fijac.Precio,
-                    FechaEntrega = "",
+                    FechaEntrega = null,
                     CampanaId = 0,
-                    FechaDesde = "",
-                    FechaHasta = "",
+                    FechaDesde = null,
+                    FechaHasta = null,
                     MonedaId = fijac.MonedaId,
                     Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = SqlFunctions.DateName("day", fijac.Fecha).Trim() + "/" +
-                    SqlFunctions.StringConvert((double)fijac.Fecha.Month).TrimStart() + "/" +
-                    SqlFunctions.DateName("year", fijac.Fecha),
+                    Fecha = fijac.Fecha,
                     Fecha_Order = fijac.Fecha,
                     GrupoCompra = 0,
                     ProvinciaId = null,
@@ -509,7 +442,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe_Sustentable = null,
                     MonedaId_Sustentable = "",
                     Moneda_Sustentable = "",
-                    Fecha_Dolarizado = "",
+                    Fecha_Dolarizado = null,
                     Dias_Pesificado = null,
                     NoInformaSIO = null,
                     TrigoEspecial = null,

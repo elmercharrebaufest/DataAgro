@@ -16,15 +16,15 @@ namespace Molinos.DataAgro.Entities
         public int TipoNegocioId { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
-        public string FechaEntrega { get; set; }
+        public DateTime? FechaEntrega { get; set; }
 
         public int CampanaId { get; set; }
-        public string FechaDesde { get; set; }
-        public string FechaHasta { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
         public int ProveedorId { get; set; }
         public string MonedaId { get; set; }
         public string Moneda { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public int GrupoCompra { get; set; }
         public int? ComercialId { get; set; }
         public int? ProvinciaId { get; set; }
@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Entities
         public decimal? Importe_Sustentable { get; set; }
         public string MonedaId_Sustentable { get; set; }
         public string Moneda_Sustentable { get; set; }
-        public string Fecha_Dolarizado { get; set; }
+        public DateTime? Fecha_Dolarizado { get; set; }
         public int? Dias_Pesificado { get; set; }
         public bool? NoInformaSIO { get; set; }
 

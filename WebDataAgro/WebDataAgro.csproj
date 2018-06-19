@@ -185,6 +185,7 @@
     <Compile Include="Controllers\ProvinciaController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Core\Atributes.cs" />
+    <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
     <Compile Include="Filters\CustomExceptionHandlerAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -1012,6 +1013,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\KendoExtensions.js" />
     <Content Include="Scripts\kendo\angular.min.js" />
     <Content Include="Scripts\kendo\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\kendo\cultures\kendo.culture.af.min.js" />

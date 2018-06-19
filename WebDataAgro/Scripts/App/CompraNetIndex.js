@@ -42,6 +42,7 @@ $(document).ready(function () {
             MensInfo("No posee permisos para la carga de contratos");
         }        
     });
+
 });
 
 function htmlEncode(value) {
@@ -62,7 +63,7 @@ function botonPendiente(dataItem, icono) {
         "'" + formatearFecha(dataItem.FechaDesde) + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaHasta) + "'" + ',' +
         "'" + formatearFecha(dataItem.Fecha) + "'" + ',' +
-        "'" + dataItem.FechaEntrega + "'" + ',' +
+        "'" + formatearFecha(dataItem.FechaEntrega) + "'" + ',' +
         "'" + dataItem.TipoNegocioId + "'" + ',' +
         "'" + dataItem.MaterialId + "'" + ',' +
         "'" + dataItem.Cantidad + "'" + ',' +
@@ -122,7 +123,7 @@ function botonVisualizar(dataItem, icono) {
     "'" + dataItem.ContratoSAP + "'" + ',' +
     "'" + dataItem.Importe_Sustentable + "'" + ',' +
     "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
-    "'" + dataItem.Fecha_Dolarizado + "'" + ',' +
+    "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
     "'" + dataItem.Dias_Pesificado + "'" + ',' +
     "'" + dataItem.NoInformaSIO + "'" + ',' +
     "'" + dataItem.TrigoEspecial + "'" + ',' +
@@ -152,42 +153,51 @@ $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
 }
 
 function CreateGridInformeCompraNet() {
-    
-    $("#gridInformeCompraNet").kendoGrid({
-        dataSource: {
-            //type: "odata",
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: '/CompraNet/BuscaDatosTabla',
+    var ds = {
+        transport: {
+            read: {
+                type: 'post',
+                dataType: 'json',
+                url: '/CompraNet/BuscaDatosTabla',
+            },
+            parameterMap: function (options) {
+                if (options.filter) {
+                    KendoGrid_FixFilter(ds, options.filter);
                 }
-            },
-            schema: {
-                data: 'Data',
-                total: 'Total',
-                model: {
-                    //id: 'Id',
-                    fields: {
-                        Fecha: { type: "date" },  
-                        FechaDesde: { type: "date" },
-                        FechaHasta: { type: "date" },
-                    }
-                }
-            },            
-            requestStart: function () {
-                kendo.ui.progress($("#loading"), false);
-            },
-            requestEnd: function () {
-                kendo.ui.progress($("#loading"), false);
-            },
-            serverPaging: true,
-            serverSorting: true,
-            sort: [{ field: "Estado_Order", dir: "asc" },
-            { field: "Fecha", dir: "desc" }],
-            serverFiltering: true,
-            pageSize: 20
+                return options;
+            }
         },
+        schema: {
+            data: 'Data',
+            total: 'Total',
+            model: {
+                id: 'Id',
+                fields: {
+                    Fecha: { type: "date" },
+                    FechaDesde: { type: "date" },
+                    FechaHasta: { type: "date" },
+                    FechaEntrega: { type: "date" },
+                    Fecha_Dolarizado: { type: "date" }
+                }
+            },
+
+        },
+        requestStart: function () {
+            kendo.ui.progress($("#loading"), false);
+        },
+        requestEnd: function () {
+            kendo.ui.progress($("#loading"), false);
+        },
+        serverPaging: true,
+        serverSorting: true,
+        sort: [{ field: "Estado_Order", dir: "asc" }],
+        serverFiltering: true,
+        pageSize: 20,
+        filter: { field:"Fecha", operator:"eq", value: new Date },
+    };
+
+    $("#gridInformeCompraNet").kendoGrid({
+        dataSource: ds,
         dataBound: function () {
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
             $("td:has(div.statusconfirmado)").css('border-bottom', '5px solid #179e2b');
@@ -209,8 +219,8 @@ function CreateGridInformeCompraNet() {
                         return '<div class="statusfinalizado "></div>' + dataItem.Proveedor;
                     }
                 } },
-            { field: "FechaDesde", type: "date", title: "Desde", format: "{0:dd/MM/yyyy}", width: 45 },
-            { field: "FechaHasta", type: "date", title: "Hasta", format: "{0:dd/MM/yyyy}", width: 45 },
+            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
+            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
             { field: "TipoNegocio", type: "string", title: "Tipo", width: 70 },
             { field: "Material", type: "string", filterable: { multi: true }, width: 95, template: "#=Material#" },
             { field: "Cantidad", type: "number", width: 70, format: "{0:n0}" },
@@ -227,7 +237,7 @@ function CreateGridInformeCompraNet() {
             { field: "Precio", type: "number", width: 70, format: "{0:n2}" },
             { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70 },
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70 },
-            { field: "Fecha", type: "date", title: "Carga", width: 20, format: "{0:dd/MM/yyyy}" },
+            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate },
             { field: "Comercial", type: "string", title: "Comercial", width: 70, template: function (dataItem) {
                     if (($("#perfil").val() != "Analista")) {
                         return dataItem.Comercial;
@@ -312,6 +322,7 @@ function CreateGridInformeCompraNet() {
         scrollable: false,
         sortable: true,
         selectable: "row",
+        
         filterable: {
             height: 350,
             extra: false,
@@ -574,7 +585,7 @@ function InicializarElementosModalPendiente() {
 }
 
 
-function modalPendiente(observacion, estado, contratoId, proveedor, desdeHasta, fecha, fechaEntrega, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
+function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, fechaEntrega, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
       
     if (tipoId === "3") {
         $("#modalPendiente .noFijacion").hide();
@@ -597,17 +608,7 @@ function modalPendiente(observacion, estado, contratoId, proveedor, desdeHasta, 
         spinners: false,
         min: 0
     });
-
-    var fechaDesde;
-    var fechaHasta;
-    var fechaDesdeHasta = desdeHasta.split("-");
-        fechaDesde = fechaDesdeHasta[0];
-        fechaHasta = fechaDesdeHasta[1];
-
-        if (nroSAP == null) {
-            nroSAP = "";
-        }
-
+       
     $(".modal-title-pendiente").empty();
     $(".modal-title-pendiente").append("Contrato Nro Sap: " + nroSAP);
 
@@ -721,8 +722,8 @@ function ObtenerDatosModalPendiente() {
 
     if ($("#buscadorProveedorModalPendiente").val() != "") {
 
-        cuitAux = $("#buscadorProveedorModalPendiente").val().split('(');
-        cuit = cuitAux[1].split(')');
+        var cuitAux = $("#buscadorProveedorModalPendiente").val().split('(');
+        var cuit = cuitAux[1].split(')');
 
         objPendiente.ProveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0] });
 
@@ -764,8 +765,8 @@ function ModificarContrato(modificarContrato) {
 
         if (result != null) {
 
-            if (ExistsErrorMessages(result.errores)) {
-                MensErr(result.errores[0].Message);
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
             }
             else {
                 MensInfo("Se ha modificado la fijacion con exito");
@@ -779,8 +780,8 @@ function ModificarContrato(modificarContrato) {
 
         if (result != null) {
 
-            if (ExistsErrorMessages(result.errores)) {
-                MensErr(result.errores[0].Message);
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
             }
             else {
                 MensInfo("Se ha modificado el Contrato con exito");
@@ -854,9 +855,9 @@ function Finalizar(finalizarContratoFijacion) {
     }
 
     if (result != null) {
-        if (result.errores != null) {
-            if (ExistsErrorMessages(result.errores)) {
-                MensErr(result.errores[0].Message);
+        if (result.Errores != null) {
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
             }
         }
         
@@ -874,8 +875,8 @@ function ReenviarMails(reenviarMail) {
 
     if (result != null) {
 
-        if (ExistsErrorMessages(result.errores)) {
-            MensErr(result.errores[0].Message);
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
         }
         else {
             MensInfo("Se ha reenviado el Mail con exito");
@@ -907,28 +908,21 @@ function ObtenerDatosModalConfirmado() {
 
 
 function Confirmar(confirmarContratoFijacion) {
-
-
+    
     if ($("#tipoNegocioModalConTilde").val() === '3') {
         var result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
     } else {
         var result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
     }
 
-    if (result != null) {
-        if (result.errores != null) {
-
-            if (ExistsErrorMessages(result.errores)) {
-                MensErr(result.errores[0].Message);
-            }
-        }
-
+    if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
+        MensErr(result.Errores[0].Message);
+    }
         else {
             recargarGrilla();
             MensInfo("Se ha confirmado el Contrato con exito");
         }
-    }
-}
+   }
 
 function ModalConError(contratoId, proveedor, fechaDesdeHasta, tipo, material, cantidad, precio, campana, provincia, localidad, nroSAP, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial) {
 
@@ -1022,8 +1016,8 @@ function GuardarAmpliacion(ampliacion) {
 
     if (result != null) {
 
-        if (ExistsErrorMessages(result.errores)) {
-            MensErr(result.errores[0].Message);
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
         }
         else {
             recargarGrilla();
