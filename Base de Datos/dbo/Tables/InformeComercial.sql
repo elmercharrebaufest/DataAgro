@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[InformeComercial] (
+    [InformeComercialId] INT           NOT NULL,
+    [ProveedorId]        INT           NULL,
+    [FechaAlta]          DATETIME      NULL,
+    [ComercialId]        INT           NULL,
+    [EmplRelDep]         BIT           NULL,
+    [EmplRelDepCant]     VARCHAR (50)  NULL,
+    [Rodados]            INT           NULL,
+    [RodadosOtros]       VARCHAR (50)  NULL,
+    [Chacra]             INT           NULL,
+    [ChacraOtros]        VARCHAR (50)  NULL,
+    [AntigActividad]     VARCHAR (100) NULL,
+    [ActuacionProd]      VARCHAR (100) NULL,
+    [ClienteAnt]         VARCHAR (100) NULL,
+    [Comentarios]        VARCHAR (500) NULL,
+    [RespuestaSap]       VARCHAR (100) NULL,
+    [CampañaId]          INT           NULL,
+    [EstadoId]           INT           NULL,
+    CONSTRAINT [PK_InformeComercial] PRIMARY KEY CLUSTERED ([InformeComercialId] ASC),
+    CONSTRAINT [FK_InformeComercial_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
+    CONSTRAINT [FK_InformeComercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
+    CONSTRAINT [FK_InformeComercial_InformeComercial] FOREIGN KEY ([InformeComercialId]) REFERENCES [dbo].[InformeComercial] ([InformeComercialId]),
+    CONSTRAINT [FK_InformeComercial_InformeComercialEstado] FOREIGN KEY ([EstadoId]) REFERENCES [dbo].[InformeComercialEstado] ([EstadoInformeId]),
+    CONSTRAINT [FK_InformeComercial_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId])
+);
+

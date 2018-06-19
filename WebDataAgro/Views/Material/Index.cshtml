@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Materiales";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/AbmMaterial")
+}
+
+
+<h3>Materiales</h3>
+
+<div id="rootwizard">
+
+<div id="Abm">
+
+    <ul>
+        <li style="display:none"><a href="#tab1" data-toggle="tab"></a></li>
+        <li style="display:none"><a href="#tab2" data-toggle="tab"></a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane" id="tab1">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Código</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="ParamCodigo" type="text" class="k-textbox" data-bind="value: Parametros.Codigo, disabled: isFilterDisabled" maxlength="20" style="max-width:311px" />
+                    <img id="errParamCodigo" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Descripción</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="ParamDescripcion" type="text" class="k-textbox" data-bind="value: Parametros.Descripcion, disabled: isFilterDisabled" maxlength="50" style="max-width:311px" />
+                    <img id="errParamDescripcion" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                    <button id="butFiltrar" class="k-button" type="button"  data-role="button" data-bind="disabled: isFilterDisabled">Buscar</button>
+                </div>
+            </div>
+
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="gridIniMaterial" data-bind="source: Resultados" style="height:245px;"></div>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+
+            <div class="row top5">
+                <div class="col-md-12">
+                    <span class="ms-redlabel" data-bind="text: recordMessage"></span>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAgregar" class="k-button" type="button" data-role="button" data-bind="disabled: isAddNewDisabled">Agregar</button>
+                    <button id="butModificar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Modificar</button>
+                    <button id="butEliminar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane" id="tab2">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Código</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Codigo" type="text" class="k-textbox" data-bind="value: Material.Codigo, disabled: isControlDisabled" maxlength="20" style="max-width:311px" />
+                    <img id="errCodigo" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Descripción</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Descripcion" type="text" class="k-textbox" data-bind="value: Material.Descripcion, disabled: isControlDisabled" maxlength="50" style="max-width:311px" />
+                    <img id="errDescripcion" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
+                    <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>

@@ -1,0 +1,373 @@
+﻿var notif = 0;
+var htmlnotifaux = "";
+var options = {};
+var strFiltro = "";
+var notificaciones = [];
+
+
+
+    
+
+
+
+function ArmarNotificaciones() {
+
+    var result = MSExecuteOnServer('/Home/TraerActividadesPorComercialId');
+
+    if (result != null) {
+
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowTooltipMessages("err", result.Errores);
+        }
+        else {
+
+            $(".notificaciones-contenedor").empty();
+
+            notificaciones = result.Actividades;
+
+            notif = notificaciones.length;
+
+            for (var ii in notificaciones) {
+                (function (i) {
+                    var url = MSGetUrl("/Content/Images/notificaciones-reloj.png");
+                    htmlnotifaux += '<div class="notificacion-detalle">'
+                    + '<div class="notificacion-detalle-horario">'
+                    + '<img class="notificacion-reloj" src="..' + url + '" />'
+                    + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + " " + notificaciones[i].Hora + '</span>'
+                    + '</div>'
+                    + '<div class="notificacion-detalle-contacto">'
+                    + notificaciones[i].Contacto
+                    + '</div>'
+                    + '<div class="notificacion-detalle-titulo">'
+                    + notificaciones[i].Tema
+                    + '</div>'
+                    + '<div class="notificacion-detalle-descripcion">'
+                    + notificaciones[i].Comentarios
+                    + '</div>'
+                    + '</div>';
+                })(ii);
+            }
+
+            if (notif > 0){
+            setTimeout(function () {
+                $(".notificaciones-contenedor").append(htmlnotifaux);
+            }, 300);
+            } else {
+                $(".notificaciones-contenedor").remove();
+            }
+
+      }
+    }
+}
+
+$(document).ready(function () {
+    
+    
+
+    $(".miscontactos-nav").parent().attr("href",window.location.origin);
+
+    ArmarNotificaciones();
+    $("#notificaciones-a").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".notificaciones-contenedor").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".notificaciones-contenedor").hide();
+    });
+    
+    $(".notificaciones-contenedor").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".notificaciones-contenedor").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".notificaciones-contenedor").hide();
+    });
+
+    //if (notif > 0) {
+        $(".cant-notif-span").html(notif);
+    /*} else {
+        $(".cant-notif-span").parent().remove();
+    }*/
+
+
+
+    /*Reportes */
+
+
+    $("#reportes-a").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".reporte-detalle").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".reporte-detalle").hide();
+    });
+    
+    $(".reporte-detalle").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".reporte-detalle").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".reporte-detalle").hide();
+    });
+
+    if ($("#tablas-a").length > 0) {
+        $("#tablas-a").hover(function () {
+            var alt = 60 + $(document).scrollTop();
+            $(".tablas-detalle").show().css({
+                left: $(this).offset().left,
+                top: alt,
+                overflow: 'auto',
+                'max-height': '280px'
+            });
+
+            if (($(this).offset().left + $(".tablas-detalle").width()) > $(window).width()) {
+                $(".tablas-detalle").show().css({
+                    left: 'auto',
+                    right: $(window).width() - ($(".mis-tablas-li").offset().left + $(".mis-tablas-li").width()),
+                    top: alt,
+                    overflow: 'auto',
+                    'max-height': '280px'
+                });
+            }
+
+        }, function () {
+            $(".tablas-detalle").hide();
+        });
+
+        $(".tablas-detalle").hover(function () {
+            var alt = 60 + $(document).scrollTop();
+            $(".tablas-detalle").show().css({
+                left: $(this).offset().left,
+                top: alt,
+                overflow: 'auto',
+                'max-height': '280px'
+            });
+
+            if (($(this).offset().left + $(".tablas-detalle").width()) > $(window).width()) {
+                $(".tablas-detalle").show().css({
+                    left: 'auto',
+                    right: $(window).width() - ($(".mis-tablas-li").offset().left + $(".mis-tablas-li").width()),
+                    top: alt,
+                    overflow: 'auto',
+                    'max-height': '280px'
+                });
+            }
+
+        }, function () {
+            $(".tablas-detalle").hide();
+        });
+    }
+
+	$("#informes-a").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".informe-detalle").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".informe-detalle").hide();
+    });
+    
+    $(".informe-detalle").hover(function () {
+        var alt = 60 + $(document).scrollTop();
+        $(".informe-detalle").show().css({
+            left: $(this).offset().left,
+            top: alt,
+            overflow: 'auto',
+            'max-height': '280px'
+        });
+    }, function () {
+        $(".informe-detalle").hide();
+    });
+	
+	
+	
+	
+	
+
+    $(".buscador-nav-input").keyup(function (e) {
+        armarBusquedaResult(e);
+    });
+
+    $(".buscador-nav-input").blur(function () {
+        //$(".buscar-result").empty();
+        //$(".buscar-result").hide();
+    });
+    $(".buscador-nav-input").focus(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        armarBusquedaResult();
+    })
+
+
+    $(".agregar-contacto-mobile").click(function()
+    {
+        window.location.href = window.location.origin + "/Proveedor/Agregar";
+    });
+
+    $(".buscar-mobile").click(function () {
+        $(".nav-bar-segundo").attr("style", "display:block!important;");
+    });
+
+
+
+    inicializarLayout();
+    
+
+    $(".mis-postit").click(function (e) { 
+        e.stopPropagation();
+        e.preventDefault();
+        
+        InicializarPost();
+    });
+    
+
+
+    $("#guardar-postit").click(function (){
+        guardarPost();
+    });
+
+    $(".salir-postit").click(function () {
+        $("#modalPostit").modal('hide');
+    });
+
+
+    
+
+
+});
+
+function InicializarPost() {
+    result = MSExecuteOnServer('/Home/TraerPostIt');
+    if (result) {
+        $("#texto-postit").val(result.Texto);
+        $("#modalPostit").modal();
+    }
+
+}
+
+function guardarPost() {
+    var obj = {};
+
+    obj.Texto = $("#texto-postit").val();
+
+    var result = MSExecuteOnServer('/Home/GuardarPostItAsync', obj);
+
+    if (result) {
+        $("#modalPostit").modal('hide');
+    }
+
+
+}
+
+function armarBusquedaResult(value) {
+    if ($(".buscador-nav-input").val().length >= 3) {
+        $(".buscar-result").empty();
+
+        //aca tiene que ir a buscar
+        var txt = $(".buscador-nav-input").val().toUpperCase();
+
+
+        var result = MSExecuteOnServer('/Home/BusquedaHome', { filtro: txt });
+
+
+        var html = "";
+        for (var i = 0; i < result.length; i++) {
+
+            var valor = "";
+
+
+            valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
+            
+            valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
+
+            var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
+            
+            html += '<a href=' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id) + '>'
+                  +'<div class="buscar-result-linea">'
+                  + '<img class="buscar-cont" src="..' + url + '" /> '
+                  + '<p class="buscar-nomb">' + valor + '</p>'
+                  + '</div>'
+                  + '</a>';
+        }
+
+        if (result.length == 1) {
+            if (value && (value.keyCode || value.which) == 13) {
+                var htmlurl = MSGetUrl ("/proveedor/Detalle?ProveedorId=" + result[0].Id);
+                window.location.href = window.location.origin + htmlurl;
+            }
+        }
+
+        if (!result.length) {
+            html += '<div class="buscar-result-linea">'
+                  + '<p class="buscar-nomb">No se encontraron resultados</p>'
+                  + '</div>';
+        }
+
+        $(".buscar-result").append(html);
+        console.log($(".buscador-nav-input").is(":focus"));
+        $(".buscar-result").show();
+    } else {
+        $(".buscar-result").empty();
+        $(".buscar-result").hide();
+    }
+}
+
+$(window).click(function (e) {
+    if ($(".buscar-result").is(":visible")) {
+        if (!$(".buscador-nav-input").is(":focus")) {
+            $(".buscar-result").empty();
+            $(".buscar-result").hide();
+        }
+    }
+})
+
+$(window).scroll(function (event) {
+    var alt = 60 + $(document).scrollTop();
+    $(".notificaciones-contenedor").css({
+        left: $("#notificaciones-a").offset().left,
+        top: alt
+    });
+    $(".reporte-detalle").css({
+        left: $("#reportes-a").offset().left,
+        top: alt
+    });
+
+    if ($("#tablas-a").length) {
+
+        $(".tablas-detalle").css({
+            left: $("#tablas-a").offset().left,
+            top: alt
+        });
+    }
+
+});
+
+
+function inicializarLayout() {
+    var result = MSExecuteOnServer('/Home/ValidarComercial');
+    if (result == 0) {
+		$("#tablas-a").remove();
+        $(".tablas-detalle").remove();
+    }   
+}
+
+

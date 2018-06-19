@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<parameters>
+    <setParameter name="IIS Web Application Name" value="dataagro" />
+    <setParameter name="DataAgro-Web.config Connection String" value="Data Source=bfdev226;Initial Catalog=dataagro2;Integrated Security=True" />
+
+</parameters>

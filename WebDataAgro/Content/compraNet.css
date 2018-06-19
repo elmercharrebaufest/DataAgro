@@ -1,0 +1,407 @@
+﻿.formulario-footer-cancelar {
+    font-family: "G-Open Sans-n4", Arial;
+    color: #787878;
+    font-size: 100%;
+}
+
+.formulario-footer-cancelar:hover {
+    text-decoration: none;
+}
+
+.btnDestacado {
+    background-color: #26337B;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px!important;
+    margin: 10px 0;
+}
+
+.mySearchHide, .hideFiltros {
+	display: none
+}
+
+.btnAzul {
+    background-color: #26337B;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px!important;
+}
+
+.btnAzul:hover {
+    background-color: #151f52;
+    cursor: pointer
+}
+
+.btnVerde {
+    background-color: #017940;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px!important;
+}
+/*#finalizarBorrar {
+    background-color: blue;
+}*/
+.btnVerde:hover {
+    background-color: #046135;
+    cursor: pointer
+}
+
+.espaciolineas {
+    line-height: 1.6;
+}
+
+
+#pivotgrid {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+}
+
+#configurator {
+    display: inline-block;
+    vertical-align: top;
+    width: 2500px;
+}
+
+.k-pivot-table .k-grid-content td {
+    text-align: right;
+}
+
+#busquedaFiltro {
+    background-color: #017940;
+    color: #fff;
+}
+
+#buscadorResult, #buscadorResultModalPendiente {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    position: absolute;
+    display: none;
+    top: 35px;
+    width: 550px;
+    left: 15px;
+    background-color: #fff;
+    max-height: 215px;
+    overflow: auto;
+    z-index: 1000;
+}
+
+#buscadorResult p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#gridInformeCompraNet td .status,
+#gridInformeCompraNet td .status:hover {
+    /*background:#787878;*/
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 1px 5px 1px 8px;
+    /*border-right: 6px solid;*/
+    font-weight: 700;
+    text-align: right;
+    /*color: #4c4b4b;*/
+    margin-bottom: 3px;
+    line-height: 1.2em;
+}
+
+.status.pendiente {
+    background-color: #ffc100;
+    color: #000000;
+}
+
+.pend { /*icons*/
+    color: #ffc100;
+}
+
+.status.confirmado {
+    background-color: #179e2b;
+    color: #ffffff;
+}
+
+.conf { /*icons*/
+    color: #179e2b;
+}
+
+.status.finalizado {
+    background-color: #000000;
+    color: #dbdbdb;
+}
+
+.fin { /*icons*/
+    color: #000000;
+}
+
+.status.error {
+    background-color: #d00707;
+    color: #ffffff;
+}
+
+.err { /*icons*/
+    color: #d00707;
+}
+
+.status.oferta {
+    background-color: #00adf5;
+    color: #ffffff;
+}
+
+.ofe { /*icons*/
+    color: #00adf5;
+}
+
+.divtop {
+    /*position: relative;
+    bottom: 4px;*/
+    height: 4px;
+}
+
+#gridInformeCompraNet td {
+    text-align: right;
+}
+
+#gridInformeCompraNet td button {
+    border: 0;
+    margin: 5px;
+    padding: 0;
+    background-color: transparent;
+    color: #aaa;
+    font-size: 23px;
+}
+
+#gridInformeCompraNet td button:hover {
+    color: #fff;
+}
+
+.modal .modal-header {
+    padding: 15px;
+    border-bottom: none;
+}
+
+.modal .modal-body {
+    padding: 0 15px 15px 15px;
+}
+
+.modal .modal-footer {
+    border: none;
+    padding: 15px;
+    margin: 0;
+}
+
+.containerNew h1, .modal h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+.modal-content {
+    border-radius: 0 !important;
+    padding: 10px 15px 15px 15px;
+}
+
+#modalVisualizar .campo {
+    width: 100%;
+    color: #787878;
+    border-color: #dbdbdb;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none !important;
+    text-align: right;
+    padding: 3px 5px;
+    border-bottom: 0;
+    color: #333!important;
+
+}
+
+#modalVisualizar .campoAdicionales {
+    background: #efefef;
+}
+
+#modalVisualizar .campo h3 {
+    float: left;
+    margin: 0;
+    font-weight: 700;
+    padding-top: 3px;
+    font-size: 14px;
+    margin: 5px 0 0;
+}
+
+#modalVisualizar .campo span {
+    float: right;
+    margin: 0;
+}
+
+#modalVisualizar .campo:last-child {
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.noPadding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.myBtn {
+    width: 100%;
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400!important;
+    background-color: #fff;
+}
+
+.myBtn:hover, .myBtn:active {
+    color: #FFF;
+    background: #017940;
+    border-color: #017940;
+}
+
+#modalVisualizar div.status {
+    display: none;
+}
+
+.modal .status div {
+    font-size: 12px;
+    text-align: left;
+    margin: 10px 0;
+    border: 0;
+    color: #FFF;
+    padding: 3px;
+    font-weight: 700;
+}
+.centrar {
+    position: relative;
+    bottom: -6px;
+}
+
+.mover-izquierda {
+    right:14px;
+    bottom:3px;
+}
+.mover-derecha {
+    left: 17px;
+    bottom: 3px;
+}
+.modal .confirmado div {
+    background: #008e61!important;
+}
+
+.modal .finalizado div {
+    background: #000!important;
+}
+
+.modal .pendiente div {
+    background: #ffc100!important;
+}
+
+.modal .oferta div {
+    background: #00adf5!important;
+}
+
+.modal .conerror div {
+    background: #d00707!important;
+}
+
+
+.modal .confirmado-modal div {
+    background: #008e61!important;
+}
+
+.modal .finalizado-modal div {
+    background: #000!important;
+}
+
+.modal .pendiente-modal div {
+    background: #ffc100!important;
+}
+
+.modal .oferta-modal div {
+    background: #00adf5!important;
+}
+
+.modal .conerror-modal div {
+    background: #d00707!important;
+}
+
+.modal .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    background: none!important;
+    text-indent: 0;
+}
+
+.panelflotante {
+    z-index: 1000;
+    position: fixed;
+    top: 62px;
+    right: 0;
+    left: 0;
+    border-color: #ccc;
+    border-width: 0 0 1px 0;
+    background-color: #fff;
+    padding: 10px 40px 10px 40px;
+}
+
+.page-container {
+    margin-top: 50px;
+}
+
+span.k-widget.k-dropdown.k-header {
+    margin-top: 0;
+}
+
+
+.modal .k-datepicker {
+    width: 100%;
+}
+
+textarea.k-textbox {
+    resize: none;
+    height: auto;
+}
+
+#modalVisualizar .campo.campoAdicionales.observacion {
+    text-align: justify;
+}
+
+#modalVisualizar .campo.campoAdicionales.observacion p {
+    margin: 20px 0 10px 100px;
+}
+
+#gridInformeCompraNet {
+    font-size: 12px;
+}
+
+.modal-dialog-pendiente {
+    z-index: 1050;
+    width: 800px;
+    padding: 10px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.linea-pendiente {
+    margin-top:3px;
+    margin-bottom: 2px
+}
+
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+}

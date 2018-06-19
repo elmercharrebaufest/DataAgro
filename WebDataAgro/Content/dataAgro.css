@@ -1,0 +1,330 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.titulo {
+	font-size: 30px;
+	color: #000;
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+.containerNew h1, .modal h1 {
+	font-size: 18px;
+	font-weight: 700;
+	margin-top: 0;
+}
+.containerNew h3, .modal h3 {
+	font-weight: 700;
+	padding-top: 3px;
+	font-size: 14px;
+	margin: 5px 0 0;
+}
+.noPadding {
+	padding-left: 0;
+	padding-right: 0;
+}
+.noPaddingLeft {
+	padding-left: 0;
+}
+.noPaddingRight {
+	padding-right: 0;
+}
+.mySearch {
+	margin-bottom: 25px;
+	border-bottom: 1px solid #333;
+	margin-top: 20px;
+	font-weight: 700;
+	color: #017940
+}
+.mySearch .col-xs-6 {
+	margin-bottom: 10px;
+}
+.mySearch .col-sm-3  {
+	height:53px!important;
+}
+
+.mySearch input {
+	width: 85%!important;
+}
+.mySearchHide, .hideFiltros {
+	display: none
+}
+.containerNew ul {
+	display: inline-block;
+	padding-left: 0;
+	margin: 0
+}
+.containerNew li {
+	display: inline-block;
+	list-style: none;
+	color: #787878;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	font-size: 16px;
+	padding-top: 7px;
+	border: 1px solid #fff;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+/*btn*/
+.btnNewFile .myBtnDestacado {
+	margin-bottom: 15px;
+	font-weight: 700;
+	line-height: 1.6;
+}
+.btnNewFile .noPaddingRight .myBtnDestacado {
+	background: #017940
+}
+.btnNewFile .noPaddingRight .myBtnDestacado:hover {
+	background: #046135
+}
+.btnNewFile .myBtnDestacado img {
+	float: left;
+	margin-right: 10px;
+}
+.myBtn, .campo {
+	width: 100%;
+	color: #787878;
+	border-color: #dbdbdb;
+	background-color: #fff;
+	text-align: center;
+	text-decoration: none;
+	border-style: solid;
+	border-width: 1px;
+	box-shadow: none !important;
+	padding: 6px;
+}
+.myBtn {
+	color: #000;
+	border: 1px solid #017940;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-weight: 400!important;
+}
+.btnCancelar {
+	background-color: #e2e0e1;
+	border-color: #d2d1d1;
+}
+.myBtn:hover, .myBtn:active {
+	color: #FFF;
+	background: #017940;
+	border-color: #017940
+}
+.myBtnDestacado {
+	background-color: #26337B;
+	color: #fff;
+	padding: 8px;
+	border-radius: 5px!important;
+	-webkit-border-radius: 5px !important;
+	-moz-border-radius: 5px !important;
+	border-radius: 5px!important;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.myBtnDestacado:hover {
+	background: #151f52;
+}
+/*adicionales*/
+.datosEditarAdicionalesPendiente, .datosEditarAdicionales {
+	display: none;
+}
+.datosEditar, .datosEditarPendiente {
+	margin-bottom: 20px;
+}
+.datosEditarAdicionales .col-xs-12, .datosEditarAdicionalesPendiente .col-xs-12 {
+	margin: 10px 0 2px 0;
+}
+.ch_sustentableInput, .ch_dolarizadoInput, .ch_pesificadoInput, .ch_sustentableInputPendiente, .ch_dolarizadoInputPendiente, .ch_pesificadoInputPendiente {
+	display: none
+}
+/*forms*/
+.containerNew input, .modal input, .modal select, .containerNew select {
+	text-align: left!important;
+	width: 90%;
+	float: left;
+	border: 0;
+	margin: 0;
+	font-weight: 400;
+}
+.modal select, .containerNew select {
+	width: 100%
+}
+#modalPendiente .col-xs-12, #modalOferta .col-xs-12 {
+	margin-bottom: 10px;
+}
+#modalPendiente .col-sm-offset-4, #modalOferta .col-sm-offset-4 {
+	margin-top: 10px;
+}
+select option:checked:after {
+	content: attr(title);
+	background: #666;
+	color: #fff;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	border: none;
+}
+.campo i {
+	float: right;
+	padding-top: 2px;
+}
+.campoAdicionales {
+	background: #efefef
+}
+input:focus, select:focus, button:focus {
+	outline: none;
+}
+input[type="checkbox"] {
+	width: auto!important;
+	margin-top: 8px;
+}
+/*modal*/
+.close {
+	font-size: 35px!important;
+}
+.modal {
+	padding-right: 0!important;
+}
+.modal-header {
+	padding: 15px;
+	border-bottom: none;
+}
+.modal-content {
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+	padding: 10px 15px 15px 15px;
+}
+.modal-footer {
+	border: none
+}
+.modal-body {
+	padding-top: 0
+}
+.modal .status div {
+	text-align: left;
+	margin: 10px 0;
+	border: 0;
+	color: #FFF;
+	padding-top: 3px;
+}
+.modal .confirmado div {
+	background: #008e61!important;
+}
+.modal .finalizado div {
+	background: #000!important;
+}
+.modal .pendiente div {
+	background: #ffc100!important;
+}
+.modal .oferta div {
+	background: #00adf5!important;
+}
+.modal .error div {
+	background: #d00707!important;
+	color: #FFF!important;
+}
+.modal .error div {
+	background: #d00707!important;
+	color: #FFF!important;
+}
+#modalError .modal-header i {
+	font-size: 25px;
+	color: #d00707;
+	margin-right: 15px
+}
+#modalError .modal-header {
+	font-weight: 700;
+}
+.modalStatus .campo {
+	text-align: right;
+	padding: 3px 5px;
+	border-bottom: 0;
+	color: #333!important;
+}
+.modal input, .modal select, .modal option {
+	color: #333!important;
+	padding-left: 0!important;
+	box-sizing: content-box;
+}
+.modalStatus .campo:last-child {
+	border-bottom: 1px solid #dbdbdb;
+}
+.modalStatus h3 {
+	float: left;
+	margin: 0;
+}
+.modal .status div {
+	font-size: 12px;
+}
+
+@media (max-width: 990px) {
+.containerNew {
+	padding: 0px;
+}
+}
+
+@media (max-width: 768px) {
+.mySearch .col-sm-3:nth-child(2) {
+	padding-right: 0
+}
+.mySearch .col-sm-3:nth-child(3) {
+	padding-left: 0
+}
+.modal-content {
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+	padding: 10px 0px 15px 0px;
+}
+.containerNew input, .modal input {
+	width: 85%;
+}
+.btnNewFile .noPaddingLeft, .btnNewFile .noPaddingRight {
+	padding-left: 0;
+	padding-right: 0
+}
+}
+
+@media (max-width: 500px) {
+#datosEditarAdicionales h3 {
+	font-size: 12px;
+}
+.page-container {
+	margin: 0;
+	padding: 20px 10px 0;
+}
+#modalPendiente h3, #modalOferta h3, #modalPendiente .campo, #modalOferta .campo {
+	font-size: 12px!important;
+	white-space: normal;
+}
+}
+ @media (max-width: 310px) {
+.mySearch i, #modalPendiente i, #modalOferta i {
+	display: none!important
+}
+.campo {
+	padding: 5px 1px;
+}
+#modalPendiente .col-xs-3, #modalPendiente .col-xs-9, #modalOferta .col-xs-3, #modalOferta .col-xs-9, #modalPendiente .col-xs-1, #modalOferta .col-xs-1, .datosEditarAdicionalesPendiente .col-xs-8, .datosEditarAdicionalesOferta .col-xs-8 {
+	width: 100%;
+}
+#modalPendiente .col-xs-5, #modalPendiente .col-xs-4, #modalOferta .col-xs-5, #modalOferta .col-xs-4, .datosEditarAdicionalesPendiente .col-xs-4, .datosEditarAdicionalesOferta .col-xs-4 {
+	width: 50%!important;
+	padding-right: 0;
+}
+#modalPendiente .col-xs-offset-3, #modalPendiente .col-xs-9, #modalPendiente .col-xs-5, #modalOferta .col-xs-offset-3, #modalOferta .col-xs-9, #modalOferta .col-xs-5 {
+	margin-left: 0;
+	padding-left: 0
+}
+.mySearch .col-sm-3  {
+	width:100%;
+	padding:0;
+}
+}

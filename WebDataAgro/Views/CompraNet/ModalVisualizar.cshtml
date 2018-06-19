@@ -1,0 +1,103 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalVisualizar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
+                <div class="status pendiente-modal"><div>PENDIENTE</div></div>
+                <div class="status confirmado-modal"><div>CONFIRMADO</div></div>
+                <div class="status oferta-modal"><div>OFERTA</div></div>
+                <div class="status conerror-modal"><div>CON ERROR</div></div>
+                <div class="status finalizado-modal"><div>FINALIZADO</div></div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div id="DivVisualizar" class="col-xs-12 noPadding">
+                    <div id="proveedorDivVisualizar" class="campo clearfix">
+                        <h3>Proveedor:</h3>
+                        <span id="visualizar_proveedor"></span>
+                    </div>
+                    <div id="fechaDivVisualizar" class="campo clearfix">
+                        <h3>Fecha de Operación:</h3>
+                        <span id="fechacontrato" class="centrar"></span>
+                    </div>
+                    <div id="fechaDesdeHastaDivVisualizar" class="campo clearfix">
+                        <h3>Fecha Desde-Fecha Hasta Entrega:</h3>
+                        <span id="visualizar_desdeHasta" class="centrar"></span>
+                    </div>
+                    <div class="campo clearfix">
+                        <div id="tipoDivVisualizar" class="col-xs-6 mover-izquierda">
+                            <h3>Tipo:</h3>
+                            <span id="visualizar_tipo" class="centrar"></span>
+                        </div>
+                        <div id="materialDivVisualizar" class="col-xs-6 mover-derecha">
+                            <h3>Material:</h3>
+                            <span id="visualizar_material" class="centrar"></span>
+                        </div>
+                    </div>
+                    <div class="campo clearfix">
+                        <div id="cantidadDivVisualizar" class="col-xs-6 mover-izquierda">
+                            <h3>KG:</h3>
+                            <span id="visualizar_cantidad" class="centrar"></span>
+                     
+                        </div>
+                        <div id="precioDivVisualizar" class="col-xs-6 mover-derecha">
+                            <h3>Precio:</h3>
+                            <span id="visualizar_precio" class="centrar"></span>
+                        </div>
+                    </div>
+                    <div class="campo clearfix">
+                        <div id="campanaDivVisualizar" class="col-xs-6 mover-izquierda">
+                            <h3>Campaña:</h3>
+                            <span id="visualizar_campana" class="centrar"></span>
+                        </div>
+                        <div id="comercialDivVisualizar" class="col-xs-6 mover-derecha">
+                            <h3>Comercial:</h3>
+                            <span id="visualizar_comercial" class="centrar"></span>
+                        </div>
+                    </div>
+                    <div id="procedenciaDivVisualizar" class="campo clearfix">
+                        <h3>Procedencia:</h3>
+                        <span id="visualizar_procedencia"></span>
+                    </div>
+
+                    <div id="sustentableDivVisualizar" class="campo campoAdicionales clearfix">
+                        <h3>Sustentable (Bonificaci&oacute;n):</h3>
+                        <span id="visualizar_sustentablePrecio"></span>
+                    </div>
+                    <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales clearfix">
+                        <h3>Dolarizado (Fecha l&iacute;mite):</h3>
+                        <span id="visualizar_dolarizadoFecha"></span>
+                    </div>
+                    <div id="pesificadoDiasDivVisualizar" class="campo campoAdicionales clearfix">
+                        <h3>Pesificado (D&iacute;as diferimiento):</h3>
+                        <span id="visualizar_pesificadoDias"></span>
+                    </div>
+                    <div id="informaSIODivVisualizar" class="campo campoAdicionales clearfix">
+                        <h3>Informa SIO:</h3>
+                        <span id="visualizar_informaSIO"></span>
+                    </div>
+                    <div id="trigoEspecialDivVisualizar" class="campo campoAdicionales clearfix">
+                        <h3>Trigo Especial:</h3>
+                        <span id="visualizar_trigoEspecial"></span>
+                    </div>
+                    <div class="campo campoAdicionales observacion">
+                        <h3>Observaci&oacute;n: </h3>
+                        <p id="visualizar_observacion"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer clearfix ">
+                <div class="noPadding">
+                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

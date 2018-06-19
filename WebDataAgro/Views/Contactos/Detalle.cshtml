@@ -1,0 +1,1346 @@
+﻿
+@{
+    ViewBag.Title = "Detalle";
+
+}
+<script>
+    var ProveedorId = '@ViewBag.ProveedorId';
+</script>
+
+<link rel="stylesheet" href="~/Content/contactoDetalle.css" />
+<script type="text/javascript" src="~/Scripts/App/contactoDetalle.js"></script>
+
+<div class="container">
+    <div class="detalle-contacto-header">
+        <div class="row">
+            <div class="col-lg-3 detalle-contacto-header-estado">
+                <span>Estado: </span><span class="detalle-contacto-header-estado-span">Nuevo Contacto </span><span class="detalle-contacto-header-estado-cantestrellas"></span>
+            </div>
+            <div class="col-lg-6 detalle-contacto-header-campana-filtro">
+                <select id="campaña" class="detalle-contacto-header-campana-filtro-select">
+                    <option value="1">Campaña 16-17</option>
+                    <option value="2">Campaña 15-16</option>
+                    <option value="3">Campaña 14-15</option>
+                    <option value="4">Campaña 13-14</option>
+                    <option value="5">Campaña 12-13</option>
+                    <option value="6">Todas las campañas</option>
+                </select>
+                <select id="grano" class="detalle-contacto-header-campana-filtro-select">
+                    <option value="1">Soja</option>
+                    <option value="2">Girasol</option>
+                    <option value="3">Maíz</option>
+                    <option value="4">Trigo</option>
+                    <option value="5">Cebada</option>
+                </select>
+            </div>
+            <div class="col-lg-3 detalle-contacto-header-exportar">
+                <a class="exportar-contactos"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
+                <a class="exportar-contactos"><img src="~/Content/Images/imprimir.png" /> <span>Imprimir</span></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="contacto-detalle-basico">
+                <div class="contacto-detalle-basico-titulos">
+                    <div class="contacto-detalle-basico-contenedor-imagen">
+                        <img src="~/Content/Images/contacto-detalle-img.png" />
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-razonsocial">
+                        <span class="contacto-detalle-basico-contenedor-razonsocial-span">Sánchez Mario Javier</span>
+                        <br />
+                        <span class="contacto-detalle-basico-contenedor-cuit-span">(CUIT 20-14926260-2)</span>
+                    </div>
+                </div>
+
+                <div class="contacto-detalle-basico-contenedor-operable">
+                    <div class="lista-contacto-no-operable">
+                        <img class="img-contacto-no-operable" src="../Content/Images/no-operable.png" />
+                        <span class="span-contacto-no-operable">No operable</span>
+                    </div>
+                    <div class="lista-contacto-no-operable-tooltip">
+                        <span class="span-contacto-no-operable-tooltip">Suspendido</span>
+                    </div>
+                    <div class="lista-contacto-no-operable-tooltip-arrow">
+                    </div>
+                </div>
+
+                <div class="contacto-detalle-basico-contenedor-datos">
+                    <div class="contacto-detalle-basico-contenedor-datos-tipo">
+                        Pequeño productor
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-datos-mail">
+                        mail@mail.com
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-datos-telefono">
+                        4554-5216
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-datos-comentarios">
+                        Lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum lorem.
+                    </div>
+                </div>
+
+                <div class="contacto-detalle-basico-editar">
+                    <img src="~/Content/Images/contacto-edit.png" />
+                    <span> Editar contacto</span>
+                </div>
+            </div>
+
+            <div class="contacto-detalle-moa">
+                <div class="contacto-detalle-moa-titulo"><span>Cliente MOA: </span><span><b>No</b></span></div>
+                <div class="contacto-detalle-moa-titulo"><span>Proveedor MOA: </span><span><b>No</b></span></div>
+                <div><span class="contacto-detalle-moa-ultimo-contacto">Último contacto: </span><span class="contacto-detalle-moa-ultimo-contacto-span">hoy</span></div>
+            </div>
+
+            <div class="contacto-detalle-links">
+                <span>CoFace</span>
+                <span>SAP</span>
+                <span>NOSIS</span>
+            </div>
+
+            <div class="contacto-detalle-comercial">
+                <div><span><b>Comercial: </b></span><span class="comecial-a-cargo"><b>Nicolás Gonzalez</b></span></div>
+                <div><span>Grupo compras 901 Buenos Aires</span></div>
+            </div>
+
+        </div>
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="wd70p">
+                    <div class="titulo-campaña">
+                        Operaciones cerradas en campaña
+                    </div>
+                    <div class="img-campaña">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+                <div class="wd30p">
+                    <div class="titulo-campaña">
+                        Total granos comprados  (TNs)
+                    </div>
+                    <div class="contenedor-principal-campanas-grupo">
+                        
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-cantidad">
+                                3.000
+                            </div>
+                            <div class="contenedor-principal-campanas-grano">
+                                Soja
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-cantidad">
+                                1.500
+                            </div>
+                            <div class="contenedor-principal-campanas-grano">
+                                Girasol
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-cantidad">
+                                2.300
+                            </div>
+                            <div class="contenedor-principal-campanas-grano">
+                                Maíz
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-cantidad">
+                                500
+                            </div>
+                            <div class="contenedor-principal-campanas-grano">
+                                Trigo
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-cantidad">
+                                600
+                            </div>
+                            <div class="contenedor-principal-campanas-grano">
+                                Cebada
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="row bordertopbottom">
+                    <div class="wizard-header-contenedor-grupo">
+                        <div class="wizard-header-contenedor whc-selected" id="contacto">
+                            Datos contacto
+                        </div>
+                        <div class="wizard-header-contenedor" id="produccion">
+                            Producción
+                        </div>
+                        <div class="wizard-header-contenedor" id="agenda">
+                            Agenda
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="datos-contacto">
+                <div class="row datos-contacto-titulares">
+                    <div class="wd70p">
+                        <div class="datos-contacto-titular">
+                            <span>Datos Contacto</span> 
+                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc"> Editar</span></a>
+                        </div>
+                    </div>
+                    <div class="wd30p">
+                        <div class="datos-contacto-titular">
+                            <span>Contactos comerciales</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wd65p">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Domicilio Actividad
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Scalabrini Ortiz 1233 (CP1426) Buenos Aires, Chivilcoy
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Canales de operación​​​​​​​
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Bunge
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Entrega a
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Canje
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Condiciones preferentes
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Corredor
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Área de influencia
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Multizona
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Intermediario
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Esteban Rivero
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Comentarios
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="value-contacto">
+                                Lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wd35p">
+                    <div class="contenedor-contacto-comercial">
+                        <div class="contenedor-contacto-comercial-titulo">
+                            <img class="img-contacto-comercial" src="~/Content/Images/contprinc-cont4.png" /> 
+                            <span class="span-contacto-comercial"> 
+                                Mario
+                            </span>
+                            <span class="align-right">
+                                <img class="contacto-edit-img" src="~/Content/Images/contacto-edit.png" /> 
+                                <span class="editar-contacto editar-contacto-comercial"> 
+                                    Editar
+                                </span>
+                            </span>
+                        </div>
+                        <div class="contenedor-contacto-comercial-posicion">
+                            <span class="contenedor-contacto-comercial-posicion-izq">
+                                Comercial Insumos -
+                            </span>
+                            <span class="contenedor-contacto-comercial-posicion-der">
+                                Gerente
+                            </span>
+                        </div>
+                        <div class="contenedor-contacto-comercial-telefonos">
+                            4551-8768 - 5411 54551-8768
+                        </div>
+                        <div class="contenedor-contacto-comercial-mails">
+                            mjsanchez@gmail.com
+                        </div>
+                        <div class="contenedor-contacto-comercial-extras">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-label">
+                                        Miembro de
+                                    </span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-value">
+                                        CREA
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-label">
+                                        Cumpleaños
+                                    </span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-value">
+                                        11 de Febrero
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-label">
+                                        Intereses
+                                    </span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <span class="contenedor-contacto-comercial-extras-value">
+                                        Deportes, Charlas técnicas.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agregar-contacto-comercial">
+                        + Agregar otro contacto
+                    </div>
+                </div>
+            </div>
+            <div id="datos-produccion">
+                <div class="col-lg-12">
+                    <div class="row bordertopbottom">
+                        <div class="wizard-header-contenedor-grupo">
+                            <div class="wizard-header-contenedor whc-selected" id="16-17">
+                                Campaña 16-17
+                            </div>
+                            <div class="wizard-header-contenedor" id="15-16">
+                                Campaña 15-16
+                            </div>
+                            <div class="wizard-header-contenedor" id="14-15">
+                                Campaña 14-15
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="campana16-17">
+                    <div class="datos-contacto-titular">
+                        <span>Producción Campaña 16-17</span>
+                    </div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Capacidad productiva</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle Producción
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>7.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra propio
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>6800</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>200</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Establecimiento propio / arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>400</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="linea-separador-produccion"></div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Almacenamiento</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-alm"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total 
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Capacidad de almacenamiento propia
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNS
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Habilitado para Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>Si</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Tons. Máx. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Has. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>1.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle volumen (movimiento físico)
+                            </div>
+                        </div>
+                        <div class="col-lg-7 con-grupo">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="campana15-16">
+                    <div class="datos-contacto-titular">
+                        <span>Producción Campaña 15-16</span>
+                    </div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Capacidad productiva</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle Producción
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>7.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra propio
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>6800</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>200</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Establecimiento propio / arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>400</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="linea-separador-produccion"></div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Almacenamiento</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-alm"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Capacidad de almacenamiento propia
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNS
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Habilitado para Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>Si</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Tons. Máx. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Has. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>1.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle volumen (movimiento físico)
+                            </div>
+                        </div>
+                        <div class="col-lg-7 con-grupo">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="campana14-15">
+                    <div class="datos-contacto-titular">
+                        <span>Producción Campaña 14-15</span>
+                    </div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Capacidad productiva</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle Producción
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>7.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra propio
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>6800</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Totales para siembra arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>200</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Establecimiento propio / arrendado
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>400</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="linea-separador-produccion"></div>
+                    <div class="datos-contacto-subtitular">
+                        <span>Almacenamiento</span>
+                        <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-alm"> Editar</span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Capacidad de almacenamiento propia
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNS
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Habilitado para Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>Si</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Volumen Anual Total
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Tons. Máx. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>205.002</b> TNs
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Has. Aprobadas Soja Sustentable
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <b>1.000</b> Has
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Detalle volumen (movimiento físico)
+                            </div>
+                        </div>
+                        <div class="col-lg-7 con-grupo">
+                            <div class="value-contacto">
+                                <div class="contenedor-campo-grupo">
+                                    <div class="row">
+                                        <div class="contenedor-campo-grupo-ubicacion">
+                                            Buenos Aires, Chivilcoy
+                                        </div>
+                                        <div class="contenedor-campo-grupo-abm">
+                                            <a><span class="editar-contacto editar-contacto-cp">x Editar</span></a>
+                                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-cp"> Editar</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-hectareas">
+                                        ​​​​​​​(Has Arrendadas)
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Soja
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                    <div class="contenedor-campo-grupo-granos-contenedor">
+                                        <div class="contenedor-campo-grupo-granos-titulo">
+                                            Girasol
+                                        </div>
+                                        <div class="contenedor-campo-grupo-granos-hastns">
+                                            <span>2541 Has</span> <span>-</span> <span>2153 TNs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campo-grupo-ubicacion-agregar">
+                                    + Agregar detalle con otra ubicación
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="datos-agenda">
+                <div class="row datos-contacto-titulares">
+                    <div class="wd30p">
+                        <div class="datos-contacto-titular">
+                            <span>Próximas actividades</span>
+                        </div>
+                    </div>
+                    <div class="wd70p">
+                        <div class="datos-contacto-titular">
+                            <span>Agenda</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="proximas-actividades-contenedor">
+                    <div class="proximas-actividades-detalle">
+                        <div class="proximas-actividades-detalle-horario">
+                            <img src="~/Content/Images/notificaciones-reloj.png" />
+                            <span class="proximas-actividades-horario">mie 15 de junio 15:00</span>
+                        </div>
+                        <div class="proximas-actividades-titulo">
+                            Reunión personal
+                        </div>
+                        <div class="proximas-actividades-observacion">
+                            Lamarlo y enviarle el reporte ​​​​​​​de soja.
+                        </div>
+                    </div>
+                    <div class="proximas-actividades-detalle">
+                        <div class="proximas-actividades-detalle-horario">
+                            <img src="~/Content/Images/notificaciones-reloj.png" />
+                            <span class="proximas-actividades-horario">mie 15 de junio 15:00</span>
+                        </div>
+                        <div class="proximas-actividades-titulo">
+                            Reunión personal
+                        </div>
+                        <div class="proximas-actividades-observacion">
+                            Lamarlo y enviarle el reporte ​​​​​​​de soja.
+                        </div>
+                    </div>
+                    <div class="proximas-actividades-detalle">
+                        <div class="proximas-actividades-detalle-horario">
+                            <img src="~/Content/Images/notificaciones-reloj.png" />
+                            <span class="proximas-actividades-horario">mie 15 de junio 15:00</span>
+                        </div>
+                        <div class="proximas-actividades-titulo">
+                            Reunión personal
+                        </div>
+                        <div class="proximas-actividades-observacion">
+                            Lamarlo y enviarle el reporte ​​​​​​​de soja.
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-contenedor">
+                    <div class="agenda-contenedor-agregar">
+                        Agregar actividad
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Tipo de actividad
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <select id="tipo-actividad">
+                                <option value="1">Seleccione...</option>
+                                <option value="2">Llamada</option>
+                                <option value="3">Reunión / personal</option>
+                                <option value="4">Eventos Molinos</option>
+                                <option value="5">Mail/Chat</option>
+                                <option value="6">Cierre de Operaciones</option>
+                                <option value="7">Cupos</option>
+                                <option value="8">Notas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Detalle Actividad
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <textarea id="detalle-actividad">
+
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="agenda-contenedor-recordatorio">
+                        <img src="~/Content/Images/notificaciones-reloj-azul.png" />
+                        <span class="agenda-contenedor-recordatorio-span">Recordatorio</span>
+                    </div>
+                    <div class="linea-separador-agenda"></div>
+                    
+                        <div class="guardar-agenda">
+                            Guardar
+                        </div>
+                </div>
+                <div class="filtro-agenda">
+                    <div class="filtro-agenda-titulo">
+                        Filtrar por
+                    </div>
+                    <form id="form-filtro-agenda">
+                        <div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Palabra clave
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <input type="text" id="palabra-clave" />
+                            </div>
+                        </div>
+
+                        <div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Período de tiempo
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <select id="periodo-tiempo">
+                                    <option value="null">Todas las campañas</option>
+                                    <option value="1">Ultima semana</option>
+                                    <option value="2">Ultimo mes</option>
+                                    <option value="3">Ultimo trimestre</option>
+                                    <option value="4">Ultimo semestre</option>
+                                    <option value="5">Campaña 16-17</option>
+                                    <option value="6">Campaña 15-16</option>
+                                    <option value="7">Campaña 14-15</option>
+                                    <option value="8">Campaña 13-14</option>
+                                    <option value="9">Campaña 12-13</option>
+                                    <option value="10">Campaña 11-12</option>
+                                    <option value="11">Campañas anteriores</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Tipo de Actividad
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <label for="tipo-act-Todas"><input type="checkbox" value="null" name="Todas" id="tipo-act-Todas" /> <b>Todas</b></label>
+                                <label for="tipo-act-Llamada"><input type="checkbox" value="2" name="Llamada" id="tipo-act-Llamada" /> Llamada</label>
+                                <label for="tipo-act-Reunion-personal"><input type="checkbox" value="3" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Reunión personal</label>
+                                <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="4" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Evento Molinos</label>
+                                <label for="tipo-act-Mail-chat"><input type="checkbox" value="5" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail/chat</label>
+                                <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="6" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" /> Cierre de operaciones</label>
+                                <label for="tipo-act-Cupones"><input type="checkbox" value="7" name="Cupones" id="tipo-act-Cupones" /> Cupones</label>
+                                <label for="tipo-act-Notas"><input type="checkbox" value="8" name="Notas" id="tipo-act-Notas" /> Notas</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="historial-actividad">
+                    <div class="datos-contacto-titular">
+                        <span>Historial actividad</span>
+                    </div>
+                    <div class="historial-actividad-ultimocontacto">
+                        <em>Último contacto <span>hoy</span></em>
+                    </div>
+                    <div class="historial-actividad-grupo-contenedor">
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Reunión personal
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>Llamarlo y enviarle el reporte de soja.</span> 
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                mar 31 de abr hace 1 minuto
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-recordatorio">
+                                <img src="~/Content/Images/notificaciones-reloj.png" /><span>Recordatorio: mie 15 de junio 15:00</span>
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Llamada
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>Se le inundó el campo y quedamos en hablar el 22/05 por Whatsapp.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Reunion personal
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Mail/Chat
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Llamada
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Llamada
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>Se le inundó el campo y quedamos en hablar el 22/05 por Whatsapp.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Reunión personal
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Mail/Chat
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+
+                        <div class="historial-actividad-grupo-detalle">
+                            <div class="historial-actividad-grupo-detalle-titulo">
+                                Mail/Chat
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-abm">
+                                <img src="~/Content/Images/eliminar-agenda.png" />
+                                <img src="~/Content/Images/contacto-edit.png" />
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-comentario">
+                                <img src="~/Content/Images/mensaje-agenda.png" /> <span>El martes confirma las TNs en soja.</span>
+                            </div>
+                            <div class="historial-actividad-grupo-detalle-fecha">
+                                lun 8 de may a las 17:30
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

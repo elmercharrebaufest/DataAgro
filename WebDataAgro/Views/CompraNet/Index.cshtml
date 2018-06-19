@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "CompraNet";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/CompraNetIndex")
+    @Scripts.Render("~/bundles/CompraNetContrato")
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+}
+
+
+@if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+{
+
+    <input type="hidden" id="perfil" value="@ViewBag.perfil" />
+    <!--container-->
+    <div class="panelflotante">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <span id="crearContrato" class="btnAzul btn-block" type="button">
+                    <i class="fa fa-file-o"></i>
+                    Crear Nuevo Contrato/Fijacion
+                </span>
+               
+            </div>
+            <div class="autoRecarga" style="float:right">
+                Autorecargar: <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <div id="CompraNet">
+                <br />
+                <br />
+                <br />
+                <div class="row" id="nuevotab">
+                    <div class="col-xs-12">
+                        <div id="gridInformeCompraNet"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <div class="page-footer">
+        <div class="container"></div>
+    </div>
+
+    <!-- Modal pendiente-->
+    @Html.Partial("ModalPendiente")
+
+    <!-- Modal finalizado-->
+    @Html.Partial("ModalFinalizado")
+
+    <!-- Modal Confirmado-->
+    @Html.Partial("ModalConfirmado")
+
+    <!-- Modal ConError-->
+    @Html.Partial("ModalConError")
+
+    <!-- Modal ConfirmadoTilde-->
+    @Html.Partial("ModalConfirmadoTilde")
+
+    <!-- Modal Ampliaciones-->
+    @Html.Partial("ModalAmpliaciones")
+
+    <!-- Modal Visualizar-->
+    @Html.Partial("ModalVisualizar")
+
+    <!-- Modal Borrar-->
+    @Html.Partial("ModalBorrar")
+}

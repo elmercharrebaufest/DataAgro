@@ -1,0 +1,82 @@
+﻿@{
+    /**/
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    @RenderSection("styles", required: false)
+}
+
+@section Scripts {
+    @RenderSection("scripts", required: false)
+}
+@section LinksContacto {
+    <div class="navbar navbar-inverse navbar-fixed-top nav-bar-segundo">
+        <div class="container">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://www.bolsadecereales.com" target="_blank" title="Bolsa de Cereales" class="marcador">
+                            <img src="~/Content/Images/bolsacereales.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://www.bcr.com.ar" target="_blank" title="Bolsa de Comercio de Rosario" class="marcador">
+                            <img src="~/Content/Images/bolsarosario.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="https://gestiononline.bcr.com.ar/legajo/list" target="_blank" title="Consulta Alta en Bolsa" class="marcador">
+                            <img src="~/Content/Images/Logo.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://www.cmegroup.com" target="_blank" title="Chicago Mercantile Exchange" class="marcador">
+                            <img src="~/Content/Images/cme.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://www.matba.com.ar" target="_blank" title="MATBA" class="marcador">
+                            <img src="~/Content/Images/matba.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://www.e-rofex.com.ar" target="_blank" title="ROFEX" class="marcador">
+                            <img src="~/Content/Images/rofex.png" />
+                        </a>
+                    </li>
+                    <li class="img-links" style="height:60px;">
+                        <a href="http://wxmaps.org/pix/sa.vv.html" target="_blank" title="Mapa climático sudamericano" class="marcador">
+                            <img src="~/Content/Images/gfs.png" />
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="buscador-nav-li">
+                        <div class="buscador-nav">
+                            <input class="buscador-nav-input" type="text" placeholder="Buscar por CUIT, razón social" />
+                            <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
+                            <div class="buscar-result">
+
+                            </div>
+                        </div>
+                    </li>
+                    @if (ViewBag.edita != false)
+                    {
+                        <li class="li-contacto">
+                            <div class="agregarcontacto-nav">
+                                <a href="/Proveedor/Agregar">
+                                    <div id="AgregarContacto" class="btnagregar">
+                                        + Agregar Nuevo Contacto
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+@RenderBody()

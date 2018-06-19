@@ -1,0 +1,278 @@
+﻿/*Celular*/
+
+@media (max-width: 767px){
+
+    .nav-bar-segundo .navbar-collapse ul:first-of-type{
+        display:none!important;
+    }
+
+    .li-contacto{
+        display:none!important;
+    }
+
+    .mis-tablas-li{
+        display:none!important;
+    }
+
+    .mis-contactos-li{
+        display:none!important;
+    }
+
+    .reporte-detalle li:last-of-type{
+        /*display:none;*/
+    }
+
+    #reportes-a{
+        padding-left:0;
+    }
+
+	#informes-a{
+		display:none;
+	}
+	
+    .navbar.navbar-inverse.navbar-fixed-top{
+        text-align:left;
+        width:100%;
+        padding:0;
+        margin:0;
+        display:table;
+    }
+    
+    .navbar-nav{
+        margin:0!important;
+        width:100%!important;
+        padding:5px!important;
+    }
+
+    /*
+    .navbar-nav{
+        float: none;
+        width: auto;
+        display: inline-block;
+    }
+        */
+
+    .miscontactos-nav{
+        display:none;
+    }
+
+    .logoheader-nav{
+        font-size:14px;
+    }
+
+    .mis-reportes-li span,
+    .mis-tablas-li span{
+        font-size:12px!important;
+    }
+
+    .img-links{
+        width:40px!important;
+        height:40px!important;
+    }
+    
+
+    .navbar-nav > li{
+        float:none;
+        display:inline-block;
+    }
+
+
+    .container{
+        width:100%;
+        padding:0;
+        margin:0;
+        max-width:100%;
+    }
+    .navbar-collapse
+    {
+        padding:0;
+        max-width:100%;
+
+    }
+    
+    .navbar-right{
+        display:none;
+    }
+    
+    .navbar.navbar-inverse.navbar-fixed-top.nav-bar-segundo .container ul{
+        display:block;
+        width:100%;
+        text-align:center;
+    }
+
+    .page-container{
+        margin-top:110px!important;
+    }
+
+    .buscador-nav-li{
+        width:90%;
+    }
+
+    .buscador-nav{
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .buscador-nav-input{
+        width:100%;
+    }
+
+    .lista-contacto-no-operable{
+        top:2px!important;
+        right:2px!important;
+        padding:3px!important;
+        width:auto!important;
+    }
+    .lista-contacto-no-operable-tooltip-arrow,
+    .lista-contacto-no-operable-tooltip{
+        top:7px;
+    }
+
+    .lista-contacto-no-operable-tooltip-arrow{
+        right:30px!important;
+    }
+
+    .lista-contacto-no-operable-tooltip{
+        right:40px!important;
+    }
+
+    .span-contacto-no-operable{
+        display:none;
+    }
+
+    .buscar-result{
+        z-index:9999;
+        width:100%;
+    }
+
+    .buscar-nomb{
+        font-size:11px!important;
+    }
+    .buscar-result a{
+        text-align:left;
+    }
+
+    .botones-agenda{
+        text-align:center;
+        padding-right:0;
+    }
+    .marcador img{
+    width:20px;
+    height:20px;
+    cursor:pointer;
+    opacity:0.8;
+    vertical-align: -webkit-baseline-middle;
+}
+
+    .marcador img:hover {
+        opacity:1;
+    }
+
+    .nav-bar-segundo{
+        display:none!important;
+    }
+
+    li.agregar-contacto-mobile,
+    li.buscar-mobile,
+    li.mis-postit.postit-mobile{
+        color:white;
+        float:right;
+        padding-top:15px;
+        display:inline-block!important;
+    }
+
+    li.buscar-mobile,
+    li.mis-postit.postit-mobile {
+        padding-right:15px;
+    }
+
+    #texto-postit{
+        min-height:250px;
+    }
+
+    #modalPostit .modal-guardar-contacto, #modalPostit .modal-cancelar{
+        width:47%;
+    }
+
+}
+
+
+
+
+/*Fin Celular*/
+
+
+/* TABLET */
+@media (min-width: 768px) and (max-width:1024px){
+    .navbar.navbar-inverse.navbar-fixed-top{
+        text-align:left;
+        width:100%;
+        padding:0;
+        margin:0;
+        display:table;
+    }
+	
+	#informes-a{
+		display:none;
+	}
+    
+    .navbar-nav{
+        float: none;
+        width: auto;
+        display: inline-block;
+    }
+
+    .navbar-nav > li{
+        float:none;
+        display:inline-block;
+    }
+
+    .container{
+        width:100%;
+        padding:0;
+        margin:0;
+        max-width:100%;
+    }
+    .navbar-collapse
+    {
+        padding:0;
+    }
+    
+    .navbar-right{
+        margin-right:0!important;
+    }
+
+    .navbar-right li:last-of-type:not(.li-contacto){
+        display:none;   
+        margin-right:0!important;
+    }
+
+    .navbar.navbar-inverse.navbar-fixed-top.nav-bar-segundo .container ul{
+        display:block;
+        width:100%;
+        text-align:center;
+    }
+
+    .page-container{
+        margin-top:190px!important;
+    }
+
+    .marcador img{
+    width:20px;
+    height:20px;
+    cursor:pointer;
+    opacity:0.8;
+    vertical-align: -webkit-baseline-middle;
+}
+
+    .marcador img:hover {
+        opacity:1;
+    }
+
+    li.agregar-contacto-mobile,
+    li.buscar-mobile{
+        display:none!important;
+    }
+
+}
+/* FIN TABLET */

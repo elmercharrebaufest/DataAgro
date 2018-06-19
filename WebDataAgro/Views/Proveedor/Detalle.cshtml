@@ -1,0 +1,1128 @@
+﻿@{
+    ViewBag.Title = "Detalle";
+
+}
+<script>
+    var ProveedorId = '@ViewBag.ProveedorId';
+    var MostrarAgenda = '@ViewBag.MostrarAgenda';
+    //var mostrarEditar = '@ViewBag.MostrarEditar';
+    
+    var extras = {};
+    extras.AgendaCita = '@System.Configuration.ConfigurationManager.AppSettings["AgendaCita"]';
+    extras.AgendaTareas = '@System.Configuration.ConfigurationManager.AppSettings["AgendaTareas"]';
+
+    /*if(mostrarEditar)
+    {        
+        $('#AgregarContacto').hide();
+    }*/
+
+
+</script>
+
+<link rel="stylesheet" href="~/Content/proveedorDetalle.css" />
+<link rel="stylesheet" href="~/Content/proveedorDetalleResponsive.css" />
+<script type="text/javascript" src="~/Scripts/App/proveedorDetalle.js"></script>
+
+<div class="container" id="detalle">
+    <div class="detalle-contacto-header">
+        <div class="row">
+            
+            
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="detalle-contacto-header-estado">
+                <span>Estado: </span><span class="detalle-contacto-header-estado-span"> </span><span class="detalle-contacto-header-estado-cantestrellas"></span>
+            </div>
+            <div class="contacto-detalle-basico">
+                <div class="contacto-detalle-basico-titulos">
+                    <div class="contacto-detalle-basico-contenedor-imagen">
+                        <img src="~/Content/Images/contacto-detalle-img.png" />
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-razonsocial">
+                        <span class="contacto-detalle-basico-contenedor-razonsocial-span"></span>
+                        <br />
+                        <span class="contacto-detalle-basico-contenedor-cuit-span"></span>
+                    </div>
+                </div>
+
+                <div class="contacto-detalle-basico-contenedor-operable">
+                    <div class="lista-contacto-no-operable">
+                        <img class="img-contacto-no-operable" src="../Content/Images/no-operable.png" />
+                        <span class="span-contacto-no-operable">No operable</span>
+                    </div>
+                    <div class="lista-contacto-no-operable-tooltip">
+                        <span class="span-contacto-no-operable-tooltip"></span>
+                    </div>
+                    <div class="lista-contacto-no-operable-tooltip-arrow">
+                    </div>
+                </div>
+
+                <div class="contacto-detalle-basico-contenedor-datos">
+                    <!--<div class="contacto-detalle-basico-contenedor-datos-nomref">
+                        
+                    </div>-->
+                    <div class="contacto-detalle-basico-contenedor-datos-tipo">
+                        
+                    </div>
+                    <!--<div class="contacto-detalle-basico-contenedor-datos-mail">
+
+                    </div>
+                    <div class="contacto-detalle-basico-contenedor-datos-telefono">
+                        
+                    </div>
+                    -->
+                    <div class="contacto-detalle-basico-contenedor-datos-comentarios">
+                        
+                    </div>
+                </div>
+
+                <!--<div class="contacto-detalle-basico-editar">
+                    <img src="~/Content/Images/contacto-edit.png" />
+                    <span> Editar contacto</span>
+                </div>-->
+            </div>
+
+
+            <!-- LLENAR ESTO DESDE JAVASCRIPT -->
+            <div class="contacto-comercial-principal">
+                <div class="contenedor-contacto-comercial">
+                    <div class="contenedor-contacto-comercial-titulo">
+                        <img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" />
+                        <span class="span-contacto-comercial contacto-comercial-principal-nombre">
+                            
+                        </span>
+                    </div>
+                    <div class="contenedor-contacto-comercial-posicion">
+                        <span class="contenedor-contacto-comercial-posicion-izq contacto-principal-cargo">
+                        
+                        </span>
+                        <span class="contenedor-contacto-comercial-posicion-der contacto-principal-puesto">
+                            
+                        </span>
+                    </div>
+                    <div class="contenedor-contacto-comercial-telefonos contacto-principal-telefonos">
+                    
+                    </div>
+                    <div class="contenedor-contacto-comercial-mails contacto-principal-mails">
+                        
+                    </div>
+                    <div class="contenedor-contacto-comercial-extras">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <span class="contenedor-contacto-comercial-extras-label">
+                                    F. Nacimiento
+                                </span>
+                            </div>
+                            <div class="col-lg-6">
+                                <span class="contenedor-contacto-comercial-extras-value contacto-principal-fechanacimiento">
+                                    
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <span class="contenedor-contacto-comercial-extras-label">
+                                    Intereses
+                                </span>
+                            </div>
+                            <div class="col-lg-6">
+                                <span class="contenedor-contacto-comercial-extras-value contacto-principal-intereses">
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- HASTA ACA -->
+
+
+            <div class="contacto-detalle-moa">
+                <div class="contacto-detalle-moa-titulo"><span>Cliente MOA: </span><span class="cliente-moa-val"></span></div>
+                <!--<div class="contacto-detalle-moa-titulo"><span>Proveedor MOA: </span><span><b>No</b></span></div>-->
+                <div><span class="contacto-detalle-moa-ultimo-contacto">Último contacto: </span><span class="contacto-detalle-moa-ultimo-contacto-span"></span></div>
+            </div>
+
+            <div class="contacto-detalle-links">
+                <a href="https://scato.molinosagro.com.ar/" class="contenedor-principal-widget-link sap">
+                    <div class="link-externos">
+                        <img src="~/Content/Images/sap.png" />
+                        <p>SAP</p>
+                    </div>
+                </a>
+                <a href="https://scato.molinosagro.com.ar/" class="contenedor-principal-widget-link scato">
+                    <div class="link-externos">
+                        <img src="~/Content/Images/molinosScato.png" />
+                        <p>SCATO</p>
+                    </div>
+                </a>
+                <a href="https://performancemanager8.successfactors.com/sf/start/#/login" class="contenedor-principal-widget-link field">
+                    <div class="link-externos">
+                        <img src="~/Content/Images/successfactor.png" />
+                        <p>FIELD</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contacto-detalle-comercial">
+                <div><span><b>Comercial: </b></span><span class="comecial-a-cargo"><b></b></span></div>
+                <div><span class="grupo-de-compras"></span></div>
+            </div>
+
+        </div>
+        <div class="col-lg-9 color-claro">
+            <!--<div class="col-lg-6 detalle-contacto-header-campana-filtro">
+
+
+            </div>-->
+            <div class="col-lg-6 detalle-contacto-header-campana-filtro"></div>
+            <div class="col-lg-6 detalle-contacto-header-exportar">
+                <a class="exportar-contactos" id="ExportarPdf"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
+                <a class="exportar-contactos" id="Imprimir"><img src="~/Content/Images/imprimir.png" /> <span>Imprimir</span></a>
+            </div>
+            <div class="row margen-propio">
+                <div class="wd70p campañagrafico">
+                    <div class="titulo-campaña">
+                        Operaciones cerradas en campaña
+                    </div>
+                    <div class="img-campaña">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+                <div class="wd30p campañalistado">
+                    <div class="titulo-campaña">
+                        Total granos comprados  (TNs)
+                    </div>
+                    <div class="contenedor-principal-campanas-grupo">
+                        
+                        <!--<div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-grano">
+                                Soja
+                            </div>
+                            <div class="contenedor-principal-campanas-cantidad">
+                                3.000
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-grano">
+                                Girasol
+                            </div>
+                            <div class="contenedor-principal-campanas-cantidad">
+                                1.500
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-grano">
+                                Maíz
+                            </div>
+                            <div class="contenedor-principal-campanas-cantidad">
+                                2.300
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-grano">
+                                Trigo
+                            </div>
+                            <div class="contenedor-principal-campanas-cantidad">
+                                500
+                            </div>
+                        </div>
+                        <div class="contenedor-principal-campanas-detalle">
+                            <div class="contenedor-principal-campanas-grano">
+                                Cebada
+                            </div>
+                            <div class="contenedor-principal-campanas-cantidad">
+                                600
+                            </div>
+
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="row bordertopbottom">
+                    <div class="wizard-header-contenedor-grupo">
+                        <div class="wizard-header-contenedor whc-selected" id="contacto">
+                            Datos contacto
+                        </div>
+                        <div class="wizard-header-contenedor" id="produccion">
+                            Producción
+                        </div>
+                        <div class="wizard-header-contenedor" id="almacenamiento">
+                            Almacenamiento
+                        </div>
+                        @if (ViewBag.MostrarEditar == true)
+                        {
+                            <div class="wizard-header-contenedor" id="agenda">
+                                Agenda
+                            </div>
+                        }
+                        @if (ViewBag.MostrarEditar == true)
+                        {
+                            <div class="align-right wizardeditar">
+                                <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
+                            </div>
+                        }
+                        
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="datos-contacto">
+                <!--<div class="row datos-contacto-titulares">
+                    <div class="wd70p">
+                        
+                    </div>
+                    <div class="wd30p">
+                        
+                    </div>
+                </div>-->
+                <div class="wd65p">
+                    <div class="datos-contacto-titular">
+                        <span>Datos Contacto</span>
+                        <!--<a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Domicilio Actividad
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-domact" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Canales de operación​​​​​​​
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-caope" class="value-contacto" >
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Entrega a
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-enta" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Condiciones preferentes
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-condpre" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Área de influencia
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-arin" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Intermediario
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-inte" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="label-contacto">
+                                Comentarios
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="daco-come" class="value-contacto">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wd35p">
+
+                    <div class="datos-contacto-titular contacto-titular-comerciales">
+                        <span>Contactos comerciales</span>
+                    </div>
+                    <div class="contenedor-grupo-contactos-comerciales">
+
+                    </div>
+                    
+                </div>
+            </div>
+            <div id="datos-produccion">
+                <div class="col-lg-12">
+                    <div class="row bordertopbottom">
+                        <div class="wizard-header-contenedor-grupo">
+                            <div class="wizard-header-contenedor whc-selected" id="16-17">
+                                Campaña 16-17
+                            </div>
+                            <div class="wizard-header-contenedor" id="15-16">
+                                Campaña 15-16
+                            </div>
+                            <div class="wizard-header-contenedor" id="14-15">
+                                Campaña 14-15
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="campana16-17">
+                    
+                </div>
+                <div id="campana15-16">
+                    
+                </div>
+                <div id="campana14-15">
+                    
+                </div>
+            </div>
+            <div id="datos-almacenamiento">
+                <div class="col-lg-12">
+                    <div class="row bordertopbottom">
+                        <div class="wizard-header-contenedor-grupo">
+                            <div class="wizard-header-contenedor whc-selected" id="a16-17">
+                                Campaña 16-17
+                            </div>
+                            <div class="wizard-header-contenedor" id="a15-16">
+                                Campaña 15-16
+                            </div>
+                            <div class="wizard-header-contenedor" id="a14-15">
+                                Campaña 14-15
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="acampana16-17">
+
+                </div>
+                <div id="acampana15-16">
+
+                </div>
+                <div id="acampana14-15">
+
+                </div>
+            </div>
+
+            <div id="datos-agenda">
+                <div class="row datos-contacto-titulares">
+                    <div class="wd30p">
+                        <div class="datos-contacto-titular">
+                            <span>Próximas actividades</span>
+                        </div>
+                    </div>
+                    <div class="wd70p">
+                        <div class="datos-contacto-titular">
+                            <span>Agenda</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="proximas-actividades-contenedor">
+                    
+                </div>
+                <div class="agenda-contenedor">
+                    <div class="agenda-contenedor-agregar">
+                        Agregar actividad
+                    </div>
+                    <input type="hidden" id="actividadId" />
+                    <input type="hidden" id="fechaHoraActividad" />
+                    <div class="agenda-contenedor-agregar-campo">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Tipo de actividad
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input campo-tipoactividad">
+                            
+                        </div>
+                    </div>
+                    
+                        
+                    <div class="agenda-contenedor-agregar-campo">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Detalle Actividad
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <textarea id="detalle-actividad">
+
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Contacto
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input campo-contactocomercial">
+                            
+                        </div>
+                    </div>
+
+                    <div class="agenda-contenedor-agregar titulo-recordatorio">
+                        Recordatorio
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo campoasunto">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Asunto
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <input id="agendaAsunto" type="text" />
+                        </div>
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo campofechadesde">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Fecha Desde
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <div class="agenda-contenedor-recordatorio-fechayhora">
+                                <div class="agenda-contenedor-recordatorio-fecha">
+                                    <input id="datepicker" />
+                                </div>
+                                <div class="agenda-contenedor-recordatorio-hora">
+                                    <input id="timepicker" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agenda-contenedor-agregar-campo campofechahasta">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Fecha Hasta
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <div class="agenda-contenedor-recordatorio-fechayhora">
+                                <div class="agenda-contenedor-recordatorio-fecha">
+                                    <input id="datepicker-hasta" />
+                                </div>
+                                <div class="agenda-contenedor-recordatorio-hora">
+                                    <input id="timepicker-hasta" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="agenda-contenedor-agregar-campo campoenviar">
+                        <div class="agenda-contenedor-agregar-campo-label">
+                            Enviar
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo-input">
+                            <input id="enviarActividad" type="checkbox" />
+                        </div>
+                    </div>-->
+
+
+
+                    <!--
+                    <div class="agenda-contenedor-recordatorio">
+                        <div class="agenda-contenedor-recordatorio-header">
+                            <img src="~/Content/Images/notificaciones-reloj-azul.png" />
+                            <span class="agenda-contenedor-recordatorio-span">Recordatorio</span>
+                            <span class="agenda-contenedor-recordatorio-span-cancelar">x Cancelar</span>
+                        </div>
+                        <div class="agenda-contenedor-recordatorio-fechayhora">
+                            <div class="agenda-contenedor-recordatorio-fecha">
+                                <input id="datepicker"/>
+                            </div>
+                            <div class="agenda-contenedor-recordatorio-hora">
+                                <input id="timepicker" />
+                            </div>
+                        </div>
+                        <div class="agenda-contenedor-recordatorio-fechayhora">
+                            <label for="enviarActividad"><input id="enviarActividad" type="checkbox" /> Enviar</label>
+                        </div>
+                    </div>
+                    -->
+                    <div class="linea-separador-agenda"></div>
+                    @if (ViewBag.MostrarEditar == true)
+                    {
+                        <div class="guardar-agenda"  id="guardarAgendaId">
+                            Guardar
+                        </div>
+                    }
+                </div>
+                <div class="filtro-agenda">
+                    <div class="filtro-agenda-titulo">
+                        Filtrar por
+                    </div>
+                    <form id="form-filtro-agenda">
+                        <div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Palabra clave
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <input type="text" id="palabra-clave" />
+                            </div>
+                        </div>
+
+                        <!--<div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Período de tiempo
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <select id="periodo-tiempo">
+                                    <option value="null">Todas las campañas</option>
+                                    <option value="1">Ultima semana</option>
+                                    <option value="2">Ultimo mes</option>
+                                    <option value="3">Ultimo trimestre</option>
+                                    <option value="4">Ultimo semestre</option>
+                                    <option value="5">Campaña 16-17</option>
+                                    <option value="6">Campaña 15-16</option>
+                                    <option value="7">Campaña 14-15</option>
+                                    <option value="8">Campaña 13-14</option>
+                                    <option value="9">Campaña 12-13</option>
+                                    <option value="10">Campaña 11-12</option>
+                                    <option value="11">Campañas anteriores</option>
+                                </select>
+                            </div>
+                        </div>-->
+
+                        <div class="filtro-agenda-campo">
+                            <div class="filtro-agenda-campo-label">
+                                Tipo de Actividad
+                            </div>
+                            <div class="filtro-agenda-campo-input">
+                                <label for="tipo-act-Todas"><input type="checkbox" value="0" name="Todas" id="tipo-act-Todas" /> <b>Todas</b></label>
+                                <label for="tipo-act-Llamada"><input type="checkbox" value="1" name="Llamada" id="tipo-act-Llamada" /> Llamada</label>
+                                <label for="tipo-act-Reunion-personal"><input type="checkbox" value="2" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Agenda</label>
+                                <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="3" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
+                                <label for="tipo-act-Mail-chat"><input type="checkbox" value="4" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail</label>
+                                <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="5" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" />Chat</label>
+                                @*<label for="tipo-act-Cupones"><input type="checkbox" value="6" name="Cupones" id="tipo-act-Cupones" /> Cupones</label>
+                                <label for="tipo-act-Notas"><input type="checkbox" value="7" name="Notas" id="tipo-act-Notas" /> Notas</label>*@
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="historial-actividad">
+                    <div class="datos-contacto-titular">
+                        <span>Historial actividad</span>
+                    </div>
+                    <div class="historial-actividad-ultimocontacto">
+                        <em>Último contacto <span class="actividad-ultimo-contacto">hoy</span></em>
+                    </div>
+                    <div class="historial-actividad-grupo-contenedor">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--<div class="container" id="editor">
+    <div class="row">
+        <div class="col-lg-3 sin-padding">
+            <div class="contacto-detalle-basico">
+                <div class="editar-contacto-basico">Editar Datos básicos</div>
+                <div class="row campo-basico-row">
+                    <div class="col-lg-5">
+                        <span class="campo-contacto-basico-span">CUIT</span>
+                    </div>
+                    <div class="col-lg-7">
+                        <input class="campo-contacto-basico-input" type="text" id="CUIT" />
+                    </div>
+                </div>
+                <div class="row campo-basico-row">
+                    <div class="col-lg-5">
+                        <span class="campo-contacto-basico-span">Razón Social</span>
+                    </div>
+                    <div class="col-lg-7">
+                        <input class="campo-contacto-basico-input" type="text" id="RazonSocial" />
+                    </div>
+                </div>
+                <div class="row campo-basico-row">
+                    <div class="col-lg-5">
+                        <span class="campo-contacto-basico-span">Segmentación</span>
+                    </div>
+                    <div class="col-lg-7 segmentacioncombo campo-segmentacion">
+                        
+                    </div>
+                </div>
+                <div class="row campo-basico-row">
+                    <div class="col-lg-5">
+                        <span class="campo-contacto-basico-span">Email</span>
+                    </div>
+                    <div class="col-lg-7 emailinput">
+                        <input type="text" id="Email1" />
+                        <img src="~/Content/Images/agregar-tel-mail.png" id="agregarMail" />
+                    </div>
+                </div>
+                <div class="row campo-basico-row telefonoinput">
+                    
+                    
+                </div>
+                <div class="row campo-basico-row">
+                    <div class="col-lg-5">
+                        <span class="campo-contacto-basico-span">Calificacion</span>
+                    </div>
+                    <div class="col-lg-7 segmentacioncombo">
+                        <select multiple id="calificacion">
+                            <option class="multSelktrImg" image="../Content/Images/1estr.png" value="1"></option>
+                            <option class="multSelktrImg" image="../Content/Images/2estr.png" value="2"></option>
+                            <option class="multSelktrImg" image="../Content/Images/3estr.png" value="3"></option>
+                            <option class="multSelktrImg" image="../Content/Images/4estr.png" value="4"></option>
+                            <option class="multSelktrImg" image="../Content/Images/5estr.png" value="5"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="guardar-contacto-basico">
+                    <div class="formulario-footer-cancelar">
+                        Cancelar
+                    </div>
+                    <div class="formulario-footer-guardar-contacto">
+                        Guardar
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="col-lg-12">
+                <div class="row bordertopbottom">
+                    <div class="wizard-header-contenedor-grupo">
+                        <div class="wizard-header-contenedor whc-selected" id="contacto-edit">
+                            Datos contacto
+                        </div>
+                        <div class="wizard-header-contenedor" id="produccion-edit">
+                            Producción
+                        </div>
+                        <div class="wizard-header-contenedor" id="almacenamiento-edit">
+                            Almacenamiento
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="datos-contacto-edit">
+                <div class="row datos-contacto-titulares">
+                    <div class="wd70p">
+                        <div class="datos-contacto-titular">
+                            <span>Datos Contacto</span>
+                            <a><img src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto formulario-footer-cancelar"> Cancelar</span></a>
+                        </div>
+                    </div>
+                    <div class="wd30p">
+                        <div class="datos-contacto-titular contacto-titular-comerciales">
+                            <span>Contactos comerciales</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wd65p">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Domicilio Actividad
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto campoprovincialocalidad">
+                                
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto ">
+                                Canales de operación
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div  class="value-contacto campo-canaloperacion">
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Entrega a
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto campo-entregaa">
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Condiciones preferentes
+                            </div>
+                        </div>
+                        <div class="col-lg-7 campo-condpref">
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Área de influencia
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
+                            <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Intermediario
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="value-contacto">
+                                <input type="text" id="datcon-intermediario" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="label-contacto">
+                                Comentarios
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div  class="value-contacto">
+                                <textarea id="datcon-comentarios">
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="guardar-contacto-basico">
+                        <div class="formulario-footer-cancelar">
+                            Cancelar
+                        </div>
+                        <div class="formulario-footer-guardar-contacto">
+                            Guardar
+                        </div>
+                    </div>
+                </div>
+                <div class="wd35p">
+                    <div class="contenedor-grupo-contactos-comerciales-edit">
+                        <div class="contenedor-contacto-comercial">
+                             <div class="contenedor-contacto-comercial-titulo">
+                                 <span class="editar-contacto-basico">
+                                     Editar contacto
+                                 </span>
+                                 <span class="align-right">
+                                     <span class="editar-contacto eliminar-contacto-comercial">
+                                         x Eliminar
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Nombre
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <input type="text" id="concom-nombre" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Apellido
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <input type="text" id="concom-apellido" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Email
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto concom-campo-email">
+                                        <input type="text" id="concom-email1" />
+                                        <img src="~/Content/Images/agregar-tel-mail.png" id="concom-agregarMail" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form concom-campo-telefono">
+                                
+                                
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Fecha nacimiento
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <select id="concom-fechanacimientodia">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                        </select>
+                                        <select id="concom-fechanacimientomes">
+                                            <option value="1">Enero</option>
+                                            <option value="2">Febrero</option>
+                                            <option value="3">Marzo</option>
+                                            <option value="4">Abril</option>
+                                            <option value="5">Mayo</option>
+                                            <option value="6">Junio</option>
+                                            <option value="7">Julio</option>
+                                            <option value="8">Agosto</option>
+                                            <option value="9">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Cargo
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <input type="text" id="concom-cargo" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Puesto
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <input type="text" id="concom-puesto" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Intereses
+                                    </div>
+                                </div>
+                                <div class="col-lg-7 campo-intereses">
+                                    <div class="value-contacto concom-intereses">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row concom-form">
+                                <div class="col-lg-5">
+                                    <div class="label-contacto">
+                                        Otros Intereses
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="value-contacto">
+                                        <input type="text" id="concom-otrosintereses" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="guardar-contacto-basico">
+                                <div class="formulario-footer-cancelar">
+                                    Cancelar
+                                </div>
+                                <div class="formulario-footer-guardar-contacto">
+                                    Guardar
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div id="datos-produccion-edit">
+                <div id="edit-campana16-17">
+                    <div class="datos-contacto-titular">
+                        <span>Producción</span>
+                    </div>
+                    <div class="datos-produccion-cap-prod-guardados">
+
+                    </div>
+                    <div class="datos-produccion-cap-prod-editor-contenedor">
+                        <div class="datos-produccion-cap-prod-editor-titulo">
+                            Capacidad productiva
+                        </div>
+                        <div class="formulario-campo">
+                            <span class="campo-span">Ubicación</span>
+                            <input type="text" placeholder="Coordenadas..." class="campo-input-text" id="coordenadas" />
+                            <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+                            <input type="file" name="kmz" id="kmz" class="inputfile" />
+                            <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field">Subir un Archivo</span></label>
+                            
+                        </div>
+                        <div class="formulario-campo">
+                            <select class="campo-input-select campo-sin-span" id="provincia-produccion">
+                                <option value="0">Provincia</option>
+                                <option value="1">Buenos Aires</option>
+                                <option value="2">Catamarca</option>
+                                <option value="3">Chaco</option>
+                                <option value="4">Chubut</option>
+                                <option value="5">Córdoba</option>
+                                <option value="6">Corrientes</option>
+                                <option value="7">Entre Ríos</option>
+                                <option value="8">Formosa</option>
+                                <option value="9">Jujuy</option>
+                                <option value="10">La Pampa</option>
+                                <option value="11">La Rioja</option>
+                                <option value="12">Mendoza</option>
+                                <option value="13">Misiones</option>
+                                <option value="14">Neuquén</option>
+                                <option value="15">Río Negro</option>
+                                <option value="16">Salta</option>
+                                <option value="17">San Juan</option>
+                                <option value="18">San Luis</option>
+                                <option value="19">Santa Cruz</option>
+                                <option value="20">Santa Fe</option>
+                                <option value="21">Santiago del Estero</option>
+                                <option value="22">Tierra del Fuego</option>
+                                <option value="23">Tucumán</option>
+                            </select>
+                        </div>
+                        <div class="formulario-campo">
+                            <select class="campo-input-select campo-sin-span" id="localidad-produccion">
+                                <option value="0">Localidad</option>
+                                <option value="1">Haedo</option>
+                                <option value="2">Morón</option>
+                                <option value="3">San Justo</option>
+                                <option value="4">Chivilcoy</option>
+                            </select>
+                        </div>
+                        <div class="formulario-campo">
+                            <span class="campo-span">Hectareas</span>
+                            <div class="formulario-campo-radio">
+                                <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="1"> Arrendadas</label>
+                                <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="2"> Propias</label>
+                            </div>
+                        </div>
+                        <div class="datos-produccion-cap-prod-editor-granos-contenedor">
+                            <div class="datos-produccion-cap-prod-editor-granos-titulos">
+                                <div class="produccion-titulo-grano">Grano</div>
+                                <div class="produccion-titulo-hastn">Has</div>
+                                <div class="produccion-titulo-hastn">TNs</div>
+                            </div>
+                            <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
+                                <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
+                                    <div class="linea0 campo-granos">
+                                        <select class="campo-input-select campo-sin-span grano" id="grano0">
+                                            <option disabled selected value="">Seleccionar...</option>
+                                            <option value="1">Cebada</option>
+                                            <option value="2">Girasol</option>
+                                            <option value="3">Maiz</option>
+                                            <option value="4">Soja</option>
+                                            <option value="5">Trigo</option>
+                                            <option value="6">Otros</option>
+                                        </select>
+                                        <input type="text" class="campo-input-text hectareas" id="hectareas0" />
+                                        <input type="text" class="campo-input-text toneladas" id="toneladas0" />
+                                    </div>
+                                    <img src="../Content/Images/eliminar-tel-mail.png" id="eliminarGrano" />
+                                </div>
+                                <div class="agregargrano">
+                                    + Agregar grano a este campo
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="datos-produccion-cap-prod-editor-contenedor-guardar" id="guardarCapProd">
+                                Guardar
+                            </div>
+                        </div>
+                    </div>
+                    <div class="guardar-contacto-basico">
+                        <div class="formulario-footer-cancelar">
+                            Cancelar
+                        </div>
+                        <div class="formulario-footer-guardar-contacto">
+                            Guardar
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="datos-almacenamiento-edit">
+                <div id="edit-acampana16-17">
+                    <div class="datos-contacto-titular">
+                        <span>Almacenamiento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>-->
+
+
+@Html.Partial("~/Views/Shared/_PleaseWait.cshtml")

@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E940ADB2-18F1-436C-B24F-B18CEE04F6C0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Molinos.DataAgro.Entities</RootNamespace>
+    <AssemblyName>Molinos.DataAgro.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Jenkins|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Jenkins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mastersoft.Framework.Standard">
+      <HintPath>..\Componentes\Mastersoft.Framework.Standard.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Enums\AreaDeCompras.cs" />
+    <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
+    <Compile Include="Common\Enums\EnumPerfil.cs" />
+    <Compile Include="Common\Enums\InformeComercial.cs" />
+    <Compile Include="Common\Enums\InformeEstado.cs" />
+    <Compile Include="Domain\AbmAreaInfluencia.cs" />
+    <Compile Include="Domain\AbmCanalOperacion.cs" />
+    <Compile Include="Domain\AbmComercial.cs" />
+    <Compile Include="Domain\AbmCondicion.cs" />
+    <Compile Include="Domain\AbmContacto.cs" />
+    <Compile Include="Domain\AbmDestinatario.cs" />
+    <Compile Include="Domain\AbmFijacionDePrecioContrato.cs" />
+    <Compile Include="Domain\AbmFijacionDePrecio.cs" />
+    <Compile Include="Domain\AbmInteres.cs" />
+    <Compile Include="Domain\AbmLocalidad.cs" />
+    <Compile Include="Domain\AbmMaterial.cs" />
+    <Compile Include="Domain\AbmMoneda.cs" />
+    <Compile Include="Domain\AbmPreslip.cs" />
+    <Compile Include="Domain\AbmProvincia.cs" />
+    <Compile Include="Domain\AbmTipoNegocio.cs" />
+    <Compile Include="Domain\Actividades.cs" />
+    <Compile Include="Domain\Agenda.cs" />
+    <Compile Include="Domain\CampañaActual.cs" />
+    <Compile Include="Domain\CampañaMaterialSAPDTO.cs" />
+    <Compile Include="Domain\CombosEntities.cs" />
+    <Compile Include="Domain\CubProveedores.cs" />
+    <Compile Include="Domain\DatosIniContrato.cs" />
+    <Compile Include="Domain\DatosIniProveedor.cs" />
+    <Compile Include="Domain\ExportAll.cs" />
+    <Compile Include="Domain\GrabarContratoResult.cs" />
+    <Compile Include="Domain\GrabarFijacionResult.cs" />
+    <Compile Include="Domain\GrabarPostItResult.cs" />
+    <Compile Include="Domain\GrabarProveedorResult.cs" />
+    <Compile Include="Domain\InformeComercial.cs" />
+    <Compile Include="Domain\NuevoProveedor.cs" />
+    <Compile Include="Domain\ReporteIndicadores.cs" />
+    <Compile Include="Domain\ReporteProveedor.cs" />
+    <Compile Include="Domain\RiesgoComercial.cs" />
+    <Compile Include="Domain\TraerContrato.cs" />
+    <Compile Include="Domain\TraerProveedor.cs" />
+    <Compile Include="Domain\BusquedaHome.cs" />
+    <Compile Include="Domain\Home.cs" />
+    <Compile Include="Entities\Acopio.cs" />
+    <Compile Include="Entities\AcopioCampaña.cs" />
+    <Compile Include="Entities\AcopioMaterial.cs" />
+    <Compile Include="Entities\Actividad.cs" />
+    <Compile Include="Entities\AreaInfluencia.cs" />
+    <Compile Include="Entities\Campaña.cs" />
+    <Compile Include="Entities\CampañaMaterial.cs" />
+    <Compile Include="Entities\CampañaMaterialHistorico.cs" />
+    <Compile Include="Entities\CampañaMaterialPorMes.cs" />
+    <Compile Include="Entities\Campo.cs" />
+    <Compile Include="Entities\CampoMaterial.cs" />
+    <Compile Include="Entities\CanalOperacion.cs" />
+    <Compile Include="Entities\Comercial.cs" />
+    <Compile Include="Entities\ComercialZona.cs" />
+    <Compile Include="Entities\Condicion.cs" />
+    <Compile Include="Entities\ContactoComercial.cs" />
+    <Compile Include="Entities\ContactoComercialInteres.cs" />
+    <Compile Include="Entities\Contrato.cs" />
+    <Compile Include="Entities\Destinatario.cs" />
+    <Compile Include="Entities\Errores.cs" />
+    <Compile Include="Entities\Estado.cs" />
+    <Compile Include="Entities\EstadoContrato.cs" />
+    <Compile Include="Entities\FACACOP.cs" />
+    <Compile Include="Entities\FijacionDePrecioContrato.cs" />
+    <Compile Include="Entities\FijacionDePrecio.cs" />
+    <Compile Include="Entities\GrupoDeCompras.cs" />
+    <Compile Include="Entities\InformeComercial.cs" />
+    <Compile Include="Entities\InformeComercialAlmacenamiento.cs" />
+    <Compile Include="Entities\InformeComercialEstado.cs" />
+    <Compile Include="Entities\InformeComercialProduccion.cs" />
+    <Compile Include="Entities\Interes.cs" />
+    <Compile Include="Entities\Localidad.cs" />
+    <Compile Include="Entities\Material.cs" />
+    <Compile Include="Entities\Moneda.cs" />
+    <Compile Include="Entities\NuevoContratoDatosPrueba.cs" />
+    <Compile Include="Entities\NuevoProveedorDatos.cs" />
+    <Compile Include="Entities\Objetivo.cs" />
+    <Compile Include="Entities\Perfil.cs" />
+    <Compile Include="Entities\PostIt.cs" />
+    <Compile Include="Entities\Preslip.cs" />
+    <Compile Include="Entities\Proveedor.cs" />
+    <Compile Include="Entities\ProveedorCanalOperacion.cs" />
+    <Compile Include="Entities\ProveedorComercial.cs" />
+    <Compile Include="Entities\ProveedorCondicion.cs" />
+    <Compile Include="Entities\ProveedorDestinatario.cs" />
+    <Compile Include="Entities\ProveedorEstado.cs" />
+    <Compile Include="Entities\ProveedorNuevo.cs" />
+    <Compile Include="Entities\Provincia.cs" />
+    <Compile Include="Entities\Reportes.cs" />
+    <Compile Include="Entities\RG2300.cs" />
+    <Compile Include="Entities\Segmentacion.cs" />
+    <Compile Include="Entities\TipoActividad.cs" />
+    <Compile Include="Entities\TipoDeNegocio.cs" />
+    <Compile Include="Entities\TipoNegocio.cs" />
+    <Compile Include="Entities\TipoTelefono.cs" />
+    <Compile Include="Entities\Zona.cs" />
+    <Compile Include="Helpers\ValidacionMail.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

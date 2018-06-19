@@ -1,0 +1,97 @@
+﻿
+create PROCEDURE [dbo].[DataAgro_IndicadoresProductivaBarra]  
+
+@SegmentacionId VARCHAR(max) ,
+ @MaterialId int ,
+ @CampañaId int ,   
+ @ComercialId int 
+
+ as
+
+ declare 
+ @barra1 int = 2500,
+ @barra2 int = 5000 
+ 
+ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
+   
+ declare @SegmentacionSecuencia TABLE (Item INT)    
+
+ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
+
+--RECURSIVIDAD
+--WITH Empleados 
+--( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
+--AS
+--(
+--	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
+--    FROM Comercial  
+--	WHERE ComercialId = @comercialId 
+--	UNION ALL 
+--	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
+--	FROM Comercial A
+--	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+--)
+
+--insert into @EmpleadoTable select * from Empleados
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+
+create table #Valores(MasTn5000 float,MasCl5000 int,MasTn1000 float,MasCl1000 int,MasTn100 float,MasCl100 int)
+
+insert into #Valores (MasCl5000,MasTn5000)
+select count(b.Cuit),sum(b.Toneladas)
+from (select p.cuit,sum(cmm.Toneladas) as Toneladas
+from proveedor p
+inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
+inner join Campo cm on p.ProveedorId= cm.ProveedorId
+inner join CampoMaterial cmm on cm.CampoId=cmm.CampoId
+where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
+and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
+group by p.cuit
+having sum(cmm.toneladas) > @barra2 )b
+
+
+update #Valores
+set MasTn1000= c.toneladas,
+	MasCl1000 = c.cantidad
+from (select count(b.Cuit) as cantidad,sum(b.Toneladas) as toneladas
+from (select p.cuit,sum(cmm.Toneladas) as Toneladas
+from proveedor p
+inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
+inner join Campo cm on p.ProveedorId= cm.ProveedorId
+inner join CampoMaterial cmm on cm.CampoId=cmm.CampoId
+where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
+and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
+ 
+ 
+group by p.cuit
+having sum(cmm.toneladas) between @barra1 and @barra2 - 1 )b) c
+
+
+update #Valores
+set MasTn100= c.toneladas,
+	MasCl100 = c.cantidad
+from (select count(b.Cuit) as cantidad,sum(b.Toneladas) as toneladas
+from (select p.cuit,sum(cmm.Toneladas) as Toneladas
+from proveedor p
+inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
+inner join Campo cm on p.ProveedorId= cm.ProveedorId
+inner join CampoMaterial cmm on cm.CampoId=cmm.CampoId
+where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
+and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
+group by p.cuit
+having sum(cmm.toneladas) < @barra1)b) c
+
+
+
+select * from #Valores
+
+drop table #Valores

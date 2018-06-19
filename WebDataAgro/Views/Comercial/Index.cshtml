@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "ABM de Usuarios";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/AbmComercial")
+}
+
+
+<h3>ABM de Usuarios</h3>
+<br />
+
+<div id="rootwizard">
+
+<div id="Abm">
+
+    <ul>
+        <li style="display:none"><a href="#tab1" data-toggle="tab"></a></li>
+        <li style="display:none"><a href="#tab2" data-toggle="tab"></a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane" id="tab1">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="gridIniComercial" data-bind="source: Resultados" style="height:320px;"></div>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAgregar" class="k-button" type="button" data-role="button" data-bind="disabled: isAddNewDisabled">Agregar</button>
+                    <button id="butModificar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Modificar</button>
+                    <button id="butEliminar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane" id="tab2">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Apellido</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Apellido" type="text" class="k-textbox" data-bind="value: Comercial.Apellido, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                    <img id="errApellido" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Nombres</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Nombres" type="text" class="k-textbox" data-bind="value: Comercial.Nombres, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                    <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Perfil</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="PerfilId" data-bind="source: PerfilCombo, value: Comercial.PerfilId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errPerfilId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Empleador a Cargo</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="EmpleadorACargo" data-bind="source: ComercialCombo, value: Comercial.EmpleadorACargo, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errEmpleadorACargo" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Id Active Directory</label>
+                </div>
+                <div class="col-md-6">
+                    <input id="IdActiveDirectory" type="text" class="k-textbox" data-bind="value: Comercial.IdActiveDirectory, disabled: isControlDisabled" maxlength="100"  />
+                    <img id="errIdActiveDirectory" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+
+
+            <!--
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Grupo de Compras</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="GrupoDeCompras" data-bind="source: GrupoDeComprasCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+            -->
+
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Es Administrador</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Administrador" type="checkbox" data-bind="checked: Comercial.Administrador, disabled: isControlDisabled" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
+                    <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>

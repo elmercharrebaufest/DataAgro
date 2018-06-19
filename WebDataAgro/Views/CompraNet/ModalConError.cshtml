@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalConError" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-conError" id="lineModalLabel"></h1>
+                <div class="status conerror-modal">
+                    <div>CON ERROR</div>
+                </div>
+                <i class="fas fa-exclamation-triangle"></i> Hubo un error. Vuelva a finalizar.
+            </div>
+        </div>
+        <div class="modal-body clearfix ">
+            <div id="DivConError" class="col-xs-12 noPadding">
+                <div id="proveedorDivConError" class="campo clearfix">
+                    <h3>Proveedor:</h3>
+                </div>
+                <div id="fechaDesdeHastaDivConError" class="campo clearfix">
+                    <h3>Fecha:</h3>
+                </div>
+                <div id="tipoDiConError" class="campo clearfix">
+                    <h3>Tipo:</h3>
+                </div>
+                <div id="materialDivConError" class="campo clearfix">
+                    <h3>Material:</h3>
+                </div>
+                <div id="cantidadDivConError" class="campo clearfix">
+                    <h3>KG:</h3>
+                </div>
+                <div id="precioDivConError" class="campo clearfix">
+                    <h3>Precio:</h3>
+                    <strong id="monedaStrongConError"></strong>
+                </div>
+                <div id="campanaDivConError" class="campo clearfix">
+                    <h3>Campaña:</h3>
+                </div>
+                <div id="procedenciaDivConError" class="campo clearfix">
+                    <h3>Procedencia:</h3>
+                </div>
+                <div id="sustentableDivConError" class="campo campoAdicionales clearfix">
+                    <h3>Sustentable:</h3>
+                    <strong id="sustentableMonedaStrongConError"></strong>
+                </div>
+                <div id="dolarizadoFechaDivConError" class="campo campoAdicionales clearfix">
+                    <h3>Dolarizado:</h3>
+                </div>
+                <div id="pesificadoDiasDivConError" class="campo campoAdicionales clearfix">
+                    <h3>Pesificado:</h3>
+                </div>
+                <div id="informaSIODivConError" class="campo campoAdicionales clearfix">
+                    <h3>Informa SIO:</h3>
+                </div>
+                <div id="trigoEspecialDivConError" class="campo campoAdicionales clearfix">
+                    <h3>Trigo Especial:</h3>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer clearfix ">
+            <div class="col-xs-6 noPaddingLeft">
+                <button type="button" id="finalizarConError" class="myBtn" data-dismiss="modal">Finalizar</button>
+            </div>
+            <div class="col-xs-6 noPaddingRight">
+                <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

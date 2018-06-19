@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Reporte Comercial";
+}
+
+<link href="~/Content/ReporteComercial.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/reportes.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/Scripts/App/ReporteComercial.js"></script>
+
+
+<div class="r-contenedor">
+    <h3>Reporte Comercial</h3>
+    <div class="filtro">
+        <div class="wizard-header-contenedor-grupo">
+            <div class="wizard-header-contenedor" id="filtros-titulo">
+                <div>Filtros</div>
+            </div>
+            <div class="wizard-header-contenedor" id="comercial">
+                <div>Comercial</div>
+                <select id="txtcomercial"></select>
+            </div>
+            <!--<div class="wizard-header-contenedor" id="cuit">
+                <div>CUIT</div>
+                <input id="txtcuit" />
+            </div>-->
+            <div class="wizard-header-contenedor" id="estado">
+                <div>Estado</div>
+                <select id="txtestado"></select>
+            </div>
+            <div class="wizard-header-contenedor" id="grano">
+                <div>Grano</div>
+                <select id="txtgrano"></select>
+            </div>
+        </div>
+
+        <div class="botones">
+            <div id="btn-filtrar">
+                Filtrar
+            </div>
+        </div>
+    </div>
+    <div class="derecha">
+        <div id="grilla-informes">
+
+        </div>
+        <div class="ia-contenedor-botones">
+            <button id="butDescargar" class="k-button"><img src="~/Content/Images/Aceptar.png" /> Generar</button>
+        </div>
+    </div>
+    
+    
+    
+</div>

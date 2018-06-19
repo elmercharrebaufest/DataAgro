@@ -1,0 +1,264 @@
+﻿/*Celular*/
+
+@media (max-width: 767px) {
+       
+        .page-container {
+            margin-top: 65px!important;
+        }
+        .nav-bar-segundo{
+            display:none!important;
+        }
+        .bordertopbottom {
+            height: 105px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .wizard-header-contenedor {
+            width: auto;
+            display: inline-block;
+            padding-bottom: 0;
+            padding-top: 10px;
+            margin-left: 5px;
+            margin-right: 5px;
+            text-align: CENTER;
+        }
+
+        #formulario-contacto, #formulario-almacenamiento, #formulario-basico, #formulario-produccion, #formulario-contactocomercial{
+            width:100%;
+        }
+
+        .formulario-campo {
+            display: block;
+        }
+
+        .campo-span {
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        .campo-input-text {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .campo-estadoafip{
+            margin: 10px auto;
+        }
+
+        #Email1, #Email2, #Email3, #Email4, #Telefono1, #Telefono2, #Telefono3, #Telefono4, #concom-Telefono1, #concom-Telefono2, #concom-Telefono3, #TipoTelefono1, #TipoTelefono2, #TipoTelefono3, #TipoTelefono4, #concom-TipoTelefono1, #concom-TipoTelefono2, #concom-TipoTelefono3{
+            margin-left:0px;
+        }
+
+        #agregarMail{
+            right: -5px;
+            top: 47px;
+        }
+
+
+        #eliminarMail2, #eliminarMail3, #eliminarMail4{
+            right:-5px;
+        }
+
+        #agregarTelefono, #eliminarTelefono2, #eliminarTelefono3, #eliminarTelefono4 {
+            right:-5px;
+        }
+
+        .campo-tiptelefono button, #TipoTelefono1, #TipoTelefono2, #TipoTelefono3, #TipoTelefono4, #concom-TipoTelefono1, #concom-TipoTelefono2, #concom-TipoTelefono3{
+            width:60px!important;
+            margin-right:10px;
+        }
+
+        #Telefono1, #Telefono2, #Telefono3, #Telefono4{
+            width:200px;
+        }
+
+        .formulario-footer {
+            width: 100%;
+            margin-top: 20px;
+            text-align:center;
+        }
+
+        .modal-guardar-contacto, .formulario-footer-guardar-contacto, #GuardarContactoComercial, .datos-almacenamiento-cap-prod-editor-contenedor-guardar, .datos-produccion-cap-prod-editor-contenedor-guardar, .formulario-footer-siguiente, .modal-cancelar{
+            width:140px;
+        }
+
+        .formulario-footer-siguiente{
+            width:80px;
+        }
+
+        .campo-provincia button, .campo-provincia-almacenamiento button, .campo-localidad button, .campo-localidad-almacenamiento button, .campo-granos button, .campo-granos-almacenamiento button, .campo-granos-almacenamientograno button, .campo-provincia-produccion button, .campo-localidad-produccion button, .campo-sin-span{
+            width:274px!important;
+        }
+
+        #direccion{
+            margin-right:0;
+            width:65%;
+        }
+
+        .formulario-campo{
+            text-align:center;
+        }
+        
+        
+        .datos-produccion-cap-prod-editor-granos-contenedor.sin-borde .produccion-titulo-grano{
+            width:32%!important;
+        }
+
+
+        #formulario-contacto .datos-produccion-cap-prod-editor-contenedor .datos-produccion-cap-prod-editor-granos-cantidades-grupo select{
+            width:30%!important;
+        }
+
+        #formulario-contacto .datos-produccion-cap-prod-editor-contenedor .datos-produccion-cap-prod-editor-granos-cantidades-grupo select:not(:first-of-type) {
+            margin-left: 5px!important;
+        }
+
+        #formulario-contacto .datos-produccion-cap-prod-editor-contenedor .datos-produccion-cap-prod-editor-granos-cantidades-grupo input{
+            display:inline-block!important;
+            margin-left: 5px!important;
+            width:30%!important;
+        }
+
+        .eliminarObjetivo {
+            right: -6px!important;
+        }
+
+        .concom-form .label-contacto{
+            margin-left:0px;
+        }
+
+        .concom-campo-email img{
+            right:0px;
+        }
+
+        #concom-TipoTelefono1,#concom-TipoTelefono2,#concom-TipoTelefono3{
+            margin-left:15px;
+        }
+        #concom-Telefono1, #concom-Telefono2, #concom-Telefono3 {
+            margin-left: 0px!important;
+            width: 175px!important;
+        }
+
+        #concom-agregarTelefono,
+        #concom-eliminarTelefono2,
+        #concom-eliminarTelefono3{
+            right: 10px;
+        }
+
+        #concom-eliminarMail2,
+        #concom-eliminarMail3,
+        #concom-eliminarTelefono2,
+        #concom-eliminarTelefono3 {
+            top:10px;
+        }
+
+        #concom-TipoTelefono2, #concom-TipoTelefono3 {
+            margin-top: 0px;
+        }
+
+        label[for="kmz"],
+        label[for="kmz-almacenamiento"],
+        .campo-span-kmz,
+        #kmz,
+        #kmz-almacenamiento{
+            display:none;
+        }
+        
+
+        .campo-sin-span-produccion{
+            width:100%!important;
+        }
+
+        #formulario-produccion .almacenamiento-titulo-grano, .produccion-titulo-grano {
+            width: 28%;
+        }
+
+        
+        .campo-granos select{
+            width:25%!important;
+        }
+
+        .campo-granos-almacenamiento select,
+        .campo-granos-almacenamientograno select,
+        .toneladasAlmacenamiento{
+            width:25%!important;
+        }
+
+        .grano:last-of-type{
+            margin-left:5px;
+        }
+
+        .hectareas,
+        .toneladas,
+        .toneladasAlmacenamiento {
+            display: inline-block;
+            margin-top: 5px!important;
+            margin-left: 5px!important;
+        }
+
+        #eliminarGrano-almacenamiento, #eliminarGrano {
+            right:-5px;
+        }
+
+        
+
+        .formulario-campo-radio label{
+            margin-right:5px;
+            padding-top:0!important;
+        }
+
+        .almacenamiento-hectareas-linea .formulario-campo-radio{
+            position: absolute;
+            top: -27px;
+            right: -105px;
+            width: 100px;
+            text-align: left;
+        }
+
+        .almacenamiento-hectareas-linea {
+            position: relative;
+        }
+
+        .eliminarObjetivos{
+            right:-6px;
+        }
+
+}
+/*Fin Celular*/
+
+
+/* TABLET */
+
+@media (min-width: 768px) and (max-width:1025px) {
+        .concom-campo-email img{
+            right:253px!important;
+        }
+        #concom-TipoTelefono1, #concom-TipoTelefono2, #concom-TipoTelefono3{
+            margin-left:15px!important;
+        }
+        #concom-Telefono1, #concom-Telefono2, #concom-Telefono3{
+            margin-left:5px!important;
+        }
+        #concom-agregarTelefono, .concom-campo-telefono img{
+            right:145px!important;
+        }
+
+        #concom-email2,
+        #concom-email3 {
+            margin-right: 290px!important;
+        }
+    
+        #concom-Telefono2,
+        #concom-Telefono3{
+            margin-right: 168px!important;
+        }
+
+        .wizard-header-contenedor{
+            width:100px!important;
+            font-size:10px!important;
+        }
+
+}
+
+/* FIN TABLET */

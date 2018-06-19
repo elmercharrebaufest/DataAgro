@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>DataAgro</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="Preview page of Metronic Admin Theme #4 for windows 8 style tiles examples" name="description" />
+        <meta content="" name="author" />
+        <link rel="shortcut icon" href="/favicon.png" />
+
+        @Styles.Render("~/Content/bootstrap/css")
+        @Styles.Render("~/Content/plugins/css")
+        @Styles.Render("~/Content/layouts/css")
+        @Styles.Render("~/Content/kendo/css")
+        @Styles.Render("~/Content/mastersoft/css")
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap") 
+        @Scripts.Render("~/bundles/plugins")
+        @Scripts.Render("~/bundles/layouts")
+        @Scripts.Render("~/bundles/kendo") 
+        @Scripts.Render("~/bundles/mastersoft")
+    
+        @{
+            Random rand = new Random();
+            string jsLayout =  rand.Next().ToString();
+        }
+
+        <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/SiteResponsive.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/jquery.multiselect.css" rel="stylesheet"  type="text/css" />
+        <link href="~/Scripts/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+        @RenderSection("styles", required: false)
+
+        <script type="text/javascript" src="~/Scripts/App/layout.js"></script>
+        <script type="text/javascript" src="~/Scripts/jquery-ui-1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="~/Scripts/jquery.multiselect.js"></script>
+        <script type="text/javascript" src="~/Scripts/jquery.multiselect.filter.js"></script>
+        <script src="~/Scripts/App/PCFToken.js"></script>
+
+    </head>
+
+    <body id="theBody">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+        {
+            @Html.AntiForgeryToken()
+        }
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="logo-home-li">
+                            <a href="~/Home">
+                                <p class="logoheader-nav"> dataAgro ></p>
+                            </a>
+                        </li>
+                        <li class="mis-contactos-li">
+                            <a>
+                                <img class="miscontactos-nav" src="~/Content/Images/menu-miscontactos.png" />
+                                <span> Mis Contactos</span>
+                            </a>
+                        </li>
+                        <li class="mis-reportes-li">
+                            <a onclick="return false" id="reportes-a">
+                                <img class="miscontactos-nav" src="~/Content/Images/menu-miscontactos.png" />
+                                <span> Mis Reportes</span>
+                            </a>
+                        </li>
+                        <li class="agregar-contacto-mobile">
+                            <img src="~/Content/Images/Users-Add-user.png" style="width:16px;" />
+                        </li>
+                        <li class="buscar-mobile">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </li>
+                        <li class="mis-postit postit-mobile">
+                            <img src="~/Content/Images/postit.png" style="width:16px;" />
+                        </li>
+                        <li class="mis-tablas-li">
+                            <a onclick="return false" id="informes-a">
+                                <img class="miscontactos-nav" src="~/Content/Images/menu-miscontactos.png" />
+                                <span> Informes</span>
+                            </a>
+                        </li>
+                        @if (global_asax.GlobalVariables.EsAdministrador == "True")
+                        {
+                        <li class="mis-tablas-li">
+                            <a onclick="return false" id="tablas-a">
+                                <img class="miscontactos-nav" src="~/Content/Images/menu-miscontactos.png" />
+                                <span> Mis Tablas</span>
+                            </a>
+                        </li>
+                        }
+                        @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False") {
+                        <li class="mis-compraNet-li">
+                            <a href="/CompraNet">
+                                <img class="miscontactos-nav-link" src="~/Content/Images/menu-miscontactos.png" />
+                                <span> CompraNet</span>
+                            </a>
+                        </li>
+                        }
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>   
+                            <a class="mis-postit">
+                                <img class="usuario-nav" src="~/Content/Images/postit.png" />
+                            </a>
+                        </li>
+                        <li>
+                            <a id="notificaciones-a">
+                                <img class="notificaciones-nav" src="~/Content/Images/menu-notificaciones.png" />
+                                <div class="cant-notif"><span class="cant-notif-span"> </span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="user-logueado">
+                                <div style="display:inline-block;">
+                                    <img class="usuario-nav" src="~/Content/Images/user.png" />
+                                </div>
+                                <div class="usuario-nav-logeado">
+                                    <div>
+                                        <span class="usuario-nav-nombre">@WebDataAgro.Core.Util.GetUsuario()</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @RenderSection("LinksContacto", required: false)
+
+        <div class="page-container">
+            <div class="page-sidebar-wrapper"></div>
+
+            <div class="page-content-wrapper">
+                <div class="page-content">
+                    <div class="">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <div class="container"></div>
+        </div>
+
+        <div class="notificaciones-contenedor"></div>
+
+        <div class="reporte-detalle">
+            <ul>
+                <li>
+                    <a href="/Cubproveedores" class="nav-link misreporteslink">
+                        <i class="icon-bar-chart"></i> Reporte Dinámico
+                    </a>
+                </li>
+
+                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+                {
+                    <li>
+                        <a href="/Agenda" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Reporte de Agenda
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="/Proveedor/ReporteProveedor" class="nav-link misreporteslink">
+                        <i class="icon-bar-chart"></i> Reporte de Proveedor
+                    </a>
+                </li>
+                <li>
+                    <a href="/Reportes/Index" class="nav-link misreporteslink">
+                        <i class="icon-bar-chart"></i> Indicadores
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="informe-detalle">
+            <ul>
+                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+                {
+                    <li>
+                        <a href="/InformeComercial/Index" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Informe Comercial
+                        </a>
+                    </li>
+                }
+                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "True")
+                {
+                    <li>
+                        <a href="/InformeComercial/InformeAdministrativo" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Informe Administrativo
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="/InformeComercial/Reporte" class="nav-link misreporteslink">
+                        <i class="icon-bar-chart"></i> Reporte Comercial
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        @if (global_asax.GlobalVariables.EsAdministrador == "True")
+        {
+            <div class="tablas-detalle">
+                <ul>
+                    <li>
+                        <a href="~/CanalOperacion" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Canal de Operación
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Destinatario" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Entrega A
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Condicion" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Condición Preferente
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Comercial" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> ABM Usuarios
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        } 
+
+        <div id="modalPostit" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Notas</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="texto-postit"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-guardar-contacto" id="guardar-postit">Guardar</div>
+                        <div class="modal-cancelar salir-postit">Cancelar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @RenderSection("scripts", required: false)
+
+    </body>
+</html>

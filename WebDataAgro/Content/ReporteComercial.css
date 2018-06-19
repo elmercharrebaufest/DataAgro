@@ -1,0 +1,12 @@
+﻿.filtro{
+	display:inline-block!important;
+}
+.botones{
+	display:block!important;
+}
+
+
+.ia-contenedor-botones {
+    text-align: right;
+    padding: 25px 17px;
+}
