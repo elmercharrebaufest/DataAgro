@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Interfaces
 
         Task<GrabarContratoResult> ConfirmarContrato(Contrato oContrato);
 
-        //Task<GrabarContratoResult> BorrarContrato(Contrato oContrato);
+        Task<GrabarContratoResult> BorrarContrato(Contrato oContrato);
 
         Task<GrabarContratoResult> FinalizarContrato(Contrato oContrato, string idActiveDirectory);
 

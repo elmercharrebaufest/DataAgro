@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Entities
         public int ProveedorId { get; set; }
         public string MonedaId { get; set; }
         public string Moneda { get; set; }
-        public DateTime Fecha { get; set; }
+        public DateTime? Fecha { get; set; }
         public int GrupoCompra { get; set; }
         public int? ComercialId { get; set; }
         public int? ProvinciaId { get; set; }
@@ -82,6 +82,9 @@ namespace Molinos.DataAgro.Entities
         public string Observacion_F { get; set; }
 
         public string FijacionDePrecioContratoId { get; set; }
+        public bool Sustentable { get; set; }
+        public bool Dolarizado { get; set; }
+        public bool Pesificado { get; set; }
     }
 
 

@@ -9,7 +9,7 @@ function InicializarElementos() {
     });
     $("#valor").keyup(function (x) { 
         var code = x.which;
-        if(code==13){
+        if(code===13){
             buscar();
         }
     });
@@ -31,7 +31,7 @@ function buscar() {
 
     console.log("result", result);
 
-    if (result.length == 0) {
+    if (result.length === 0) {
         MensErr("No se encontraron resultados");
         return false;
     } else {

@@ -212,8 +212,8 @@ function GrabarFijacion(nuevaFijacion) {
     var result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevaFijacion);
     if (result != null) {
 
-        if (ExistsErrorMessages(result.errores.ListaErrores)) {
-            MensErr(result.errores.ListaErrores[0].Message);
+        if (ExistsErrorMessages(result.Errores.ListaErrores)) {
+            MensErr(result.Errores.ListaErrores[0].Message);
         }
         else {
             //MensInfo("Se ha realizado la operacion con exito");

@@ -857,7 +857,7 @@ namespace Molinos.DataAgro.Business.Managers
             
 
             var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors.errores = new EntityErrors();
+            oEntityErrors.Errores = new EntityErrors();
 
             /*
              * 
@@ -894,7 +894,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (existe)
             {
-                oEntityErrors.errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "Ya existe un proveedor con ese CUIT" } } };
+                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "Ya existe un proveedor con ese CUIT" } } };
                 return oEntityErrors;
             }
 
@@ -902,7 +902,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (!existeRG)
             {
-                oEntityErrors.errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "No existe el CUIT" } } };
+                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "No existe el CUIT" } } };
                 return oEntityErrors;
             }
 
@@ -910,7 +910,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (existeFA)
             {
-                oEntityErrors.errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "El CUIT es Apocrifo" } } };
+                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "El CUIT es Apocrifo" } } };
                 return oEntityErrors;
             }
 
@@ -1636,7 +1636,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             oEntityErrors.ProveedorId = proveedor.ProveedorId;
-            oEntityErrors.errores = new EntityErrors();
+            oEntityErrors.Errores = new EntityErrors();
             //await mobjUnitOfWork.SaveChangesAsync();
 
             return oEntityErrors;
@@ -1646,7 +1646,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             
             var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors.errores = new EntityErrors();
+            oEntityErrors.Errores = new EntityErrors();
             /*
             EntityValid.ValidateAll(oParam, oEntityErrors.ListaErrores);
 
@@ -1669,7 +1669,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (Error != null)
             {
-                oEntityErrors.errores = Error;
+                oEntityErrors.Errores = Error;
                 return oEntityErrors;
             }   
 
@@ -1677,7 +1677,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (ErrorContacto != null)
             {
-                oEntityErrors.errores = ErrorContacto;
+                oEntityErrors.Errores = ErrorContacto;
                 return oEntityErrors;
             }
 
@@ -1688,7 +1688,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (ErrorComercial != null)
             {
-                oEntityErrors.errores = ErrorComercial;
+                oEntityErrors.Errores = ErrorComercial;
                 return oEntityErrors;
             }
 
@@ -1700,7 +1700,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (ErrorProduccion != null)
             {
-                oEntityErrors.errores = ErrorProduccion;
+                oEntityErrors.Errores = ErrorProduccion;
                 return oEntityErrors;
             }
 
@@ -1709,7 +1709,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (ErrorAlmacenamiento != null)
             {
-                oEntityErrors.errores = ErrorAlmacenamiento;
+                oEntityErrors.Errores = ErrorAlmacenamiento;
                 return oEntityErrors;
             }
 
@@ -1719,7 +1719,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                oEntityErrors.errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
                 return oEntityErrors;
             }
 

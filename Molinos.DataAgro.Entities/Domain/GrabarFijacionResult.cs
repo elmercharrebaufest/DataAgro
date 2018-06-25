@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities
 {
     public class GrabarFijacionResult
     {
-        public List<ErrorMessage> errores { get; set; }
+        public List<ErrorMessage> Errores { get; set; }
         public int? FijacionDePrecioContratoId { get; set; }
 
         public GrabarFijacionResult()

@@ -207,7 +207,7 @@ namespace Molinos.DataAgro.Business.Managers
             Contrato oContratoSave;
 
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.errores = new List<ErrorMessage>();
+            oEntityErrors.Errores = new List<ErrorMessage>();
 
             oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 
@@ -225,11 +225,11 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<GrabarContratoResult> GrabarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.errores = new List<ErrorMessage>();
+            oEntityErrors.Errores = new List<ErrorMessage>();
 
-            oEntityErrors.errores = this.Validar(oContrato, oEntityErrors.errores);
+            oEntityErrors.Errores = this.Validar(oContrato, oEntityErrors.Errores);
 
-            if (oEntityErrors.errores.Count > 0)
+            if (oEntityErrors.Errores.Count > 0)
             {
                 return oEntityErrors;
             }
@@ -371,11 +371,11 @@ namespace Molinos.DataAgro.Business.Managers
                     Precio = cont.Precio,
                     FechaEntrega = cont.FechaEntrega,
                     CampanaId = cont.CampanaId,
-                    FechaDesde = cont.FechaDesde,
-                    FechaHasta = cont.FechaHasta,
+                    FechaDesde = DbFunctions.TruncateTime(cont.FechaDesde),
+                    FechaHasta = DbFunctions.TruncateTime(cont.FechaHasta),
                     MonedaId = cont.MonedaId,
                     Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = cont.Fecha,
+                    Fecha = DbFunctions.TruncateTime(cont.Fecha),
                     Fecha_Order = cont.Fecha,
                     GrupoCompra = cont.GrupoCompra,
                     ProvinciaId = cont.ProvinciaId,
@@ -384,7 +384,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe_Sustentable = ((decimal)cont.ImporteSustentable),
                     MonedaId_Sustentable = cont.MonedaIdSustentable,
                     Moneda_Sustentable = moneSust == null ? "" : moneSust.Descripcion,
-                    Fecha_Dolarizado = cont.FechaDolarizado,
+                    Fecha_Dolarizado = DbFunctions.TruncateTime(cont.FechaDolarizado),
                     Dias_Pesificado = cont.DiasPesificado,
                     NoInformaSIO = cont.NoInformaSio,
                     TrigoEspecial = cont.TrigoEspecial,
@@ -402,7 +402,10 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocio = tine == null ? "" : tine.Descripcion,
                     Localidad = loc == null ? "" : loc.Nombre,
                     Observacion = cont.Observacion != null ? cont.Observacion : "",
-                    FijacionDePrecioContratoId = ""
+                    FijacionDePrecioContratoId = "",
+                    Sustentable = ((decimal)cont.ImporteSustentable) != null && ((decimal)cont.ImporteSustentable) > 0,
+                    Dolarizado = cont.FechaDolarizado!=null,
+                    Pesificado = cont.DiasPesificado!=null
                 };
 
             var queryFijacion =
@@ -433,7 +436,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaHasta = null,
                     MonedaId = fijac.MonedaId,
                     Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = fijac.Fecha,
+                    Fecha = DbFunctions.TruncateTime(fijac.Fecha),
                     Fecha_Order = fijac.Fecha,
                     GrupoCompra = 0,
                     ProvinciaId = null,
@@ -461,6 +464,9 @@ namespace Molinos.DataAgro.Business.Managers
                     Localidad = "",
                     Observacion = fijac.Observacion != null ? fijac.Observacion : "",
                     FijacionDePrecioContratoId = SqlFunctions.StringConvert((double)fijac.FijacionDePrecioContratoId).Trim(),
+                    Sustentable = false,
+                    Dolarizado = false,
+                    Pesificado = false,
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -561,97 +567,32 @@ namespace Molinos.DataAgro.Business.Managers
                 await mobjUnitOfWork.SaveChangesAsync();
             }
             catch (Exception e) {
-                oEntityErrors.errores = new List<ErrorMessage>() {
+                oEntityErrors.Errores = new List<ErrorMessage>() {
                     new ErrorMessage() { Message = e.Message}
                 };
             }
-
             return oEntityErrors;
-
         }
 
-        //public async Task<GrabarContratoResult> BorrarContrato(Contrato oContrato, string idActiveDirectory)
-        //{
-        //    var oEntityErrors = new GrabarContratoResult();
-        //    MaterialManager mobjMaterialManager = new MaterialManager();
-        //    mobjMaterialManager.Inicializar(mobjContexto);
-        //    TipoNegocioManager mobjTipoNegocioManager = new TipoNegocioManager();
-        //    mobjTipoNegocioManager.Inicializar(mobjContexto);
-        //    CampañaManager mobjCampaniaManager = new CampañaManager();
-        //    mobjCampaniaManager.Inicializar(mobjContexto);
-        //    ProvinciaManager mobjProvinciaManager = new ProvinciaManager();
-        //    mobjProvinciaManager.Inicializar(mobjContexto);
-        //    LocalidadManager mobjLocalidadManager = new LocalidadManager();
-        //    mobjLocalidadManager.Inicializar(mobjContexto);
-        //    ProveedorManager mobjProveedorManager = new ProveedorManager();
-        //    mobjProveedorManager.Inicializar(mobjContexto);
-        //    ComercialManager mobjComercialManager = new ComercialManager();
-        //    mobjComercialManager.Inicializar(mobjContexto);
+        public async Task<GrabarContratoResult> BorrarContrato(Contrato oContrato)
+        {    
+           var oEntityErrors = new GrabarContratoResult();
 
-        //    Contrato oContratoSave = new Contrato();
+           var oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+         
+           oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
 
-        //    if (oContrato.Estado != 0)
-        //    {
-        //        oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-        //    }
+           mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
 
+           await mobjUnitOfWork.SaveChangesAsync();
 
-        //    var objCampania = await mobjCampaniaManager.TraerCampaniaAsync(oContratoSave.CampanaId);
-        //    var objMaterial = await mobjMaterialManager.TraerMaterialAsync(oContratoSave.MaterialId);
-        //    var objProvincia = await mobjProvinciaManager.TraerProvinciaAsync(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
-        //    var objTiponegocio = await mobjTipoNegocioManager.TraerTipoNegociodAsync(oContratoSave.TipoNegocioId);
-        //    var objLocalidad = await mobjLocalidadManager.TraerLocalidadAsync(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
-        //    var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
-        //    var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
-
-        //    oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
-        //    mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-        //    await mobjUnitOfWork.SaveChangesAsync();
-
-        //    try
-        //    {
-        //        string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
-
-        //        oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-
-        //        oContratoSave.Estado = (int)EnumEstadoContrato.Finalizado;
-        //        try
-        //        {
-        //            oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
-        //        }
-        //        catch
-        //        {
-        //            oContratoSave.ContratoSAP = 0;
-        //        }
-
-        //        try
-        //        {
-        //            //Envio de mail
-        //            mobjProveedorManager.EnviarEmail(oContratoSave, idActiveDirectory);
-        //        }
-        //        catch { }
-
-
-        //        mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-        //        await mobjUnitOfWork.SaveChangesAsync();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        oEntityErrors.errores = new List<ErrorMessage>() {
-        //            new ErrorMessage() { Message = e.Message}
-        //        };
-        //    }
-
-        //    return oEntityErrors;
-
-        //}
+           return oEntityErrors;
+            
+        }
 
         public async Task<int> ObtenerComercialId(string idActiveDirectory)
         {
-
             return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == idActiveDirectory).SingleOrDefault().ComercialId;
-
         }
 
         public string SAPFinalizarContrato(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string comercial)

@@ -126,8 +126,11 @@ namespace WebDataAgro
                                          
             bundles.Add(new ScriptBundle("~/bundles/CompraNetIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
-                                         "~/Scripts/App/CompraNetIndex.js")); 
+                                         "~/Scripts/App/CompraNetIndex.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/ContratoIndex").Include(
+                                         "~/Scripts/KendoExtensions.js",
+                                         "~/Scripts/App/ReporteContrato.js"));
             //------------------------
 
             bundles.IgnoreList.Clear();

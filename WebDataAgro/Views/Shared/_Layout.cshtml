@@ -43,7 +43,7 @@
         <script src="~/Scripts/App/PCFToken.js"></script>
 
     </head>
-
+ 
     <body id="theBody">
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
         {
@@ -173,6 +173,11 @@
                 <li>
                     <a href="/Proveedor/ReporteProveedor" class="nav-link misreporteslink">
                         <i class="icon-bar-chart"></i> Reporte de Proveedor
+                    </a>
+                </li>
+                <li>
+                    <a href="/Contrato" class="nav-link misreporteslink">
+                        <i class="icon-bar-chart"></i> Reporte de Contratos
                     </a>
                 </li>
                 <li>

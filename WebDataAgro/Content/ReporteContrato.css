@@ -1,0 +1,18 @@
+﻿.k-grid {
+    font-size: 11px;
+}
+
+.k-grid-header th.k-with-icon .k-link {
+    margin-right: 14px;
+}
+.k-grid-header th.k-header > .k-link {
+
+    padding-right: 2px;
+}
+.page-container {
+    margin-top: 120px;
+    width: 1800px;
+}
+.ColumnaObservacion {
+    width: 120px;
+}

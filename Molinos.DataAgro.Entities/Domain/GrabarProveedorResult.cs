@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities
 {
     public class GrabarProveedorResult
     {
-        public EntityErrors errores { get; set; }
+        public EntityErrors Errores { get; set; }
         public int? ProveedorId { get; set; }
 
 

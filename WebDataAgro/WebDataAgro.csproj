@@ -176,6 +176,7 @@
     <Compile Include="Controllers\CubproveedoresController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\PreslipController.cs" />
+    <Compile Include="Controllers\ContratoController.cs" />
     <Compile Include="Controllers\ProveedorController.cs" />
     <Compile Include="Controllers\DestinatarioController.cs" />
     <Compile Include="Controllers\DownLoadController.cs" />
@@ -809,6 +810,7 @@
     <Content Include="Content\Mastersoft.css" />
     <Content Include="Content\proveedorDetalleResponsive.css" />
     <Content Include="Content\ReporteComercial.css" />
+    <Content Include="Content\ReporteContrato.css" />
     <Content Include="Content\reporteProveedor.css" />
     <Content Include="Content\reportes.css" />
     <Content Include="Content\reportesResponsive.css" />
@@ -845,6 +847,7 @@
     <Content Include="Scripts\App\home.js" />
     <Content Include="Scripts\App\layout.js" />
     <Content Include="Scripts\App\ReporteComercial.js" />
+    <Content Include="Scripts\App\ReporteContrato.js" />
     <Content Include="Scripts\App\reporteProveedor.js" />
     <Content Include="Scripts\App\ValidacionProveedor.js" />
     <Content Include="Scripts\bootstrap-dialog.min.js" />
@@ -2297,6 +2300,7 @@
     <Content Include="Views\CompraNet\ModalConfirmado.cshtml" />
     <Content Include="Views\CompraNet\ModalPendiente.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Contrato\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -221,19 +221,19 @@ namespace WebDataAgro.Controllers {
             };
         }
 
-        //public async Task<ActionResult> BorrarContrato(Contrato oParam)
-        //{
+        public async Task<ActionResult> BorrarContrato(Contrato oParam)
+        {
 
-        //    GrabarContratoResult model = new GrabarContratoResult();
+            GrabarContratoResult model = new GrabarContratoResult();
+            model = await mobjContratoManager.BorrarContrato(oParam);
 
-        //    model = await mobjContratoManager.FinalizarContrato(oParam, idActiveDirectory);
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
 
-        //    return new JsonResult()
-        //    {
-        //        Data = model,
-        //        MaxJsonLength = Int32.MaxValue
-        //    };
-        //}
+        }
 
         public async Task<ActionResult> ConfirmarFijacion(FijacionDePrecioContrato oParam) {
             GrabarFijacionResult model = new GrabarFijacionResult();

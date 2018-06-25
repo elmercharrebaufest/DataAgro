@@ -135,8 +135,9 @@ function botonVisualizar(dataItem, icono) {
 }
 
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Borrar" onclick="ModalBorrar(' +
-            "'" + dataItem.Proveedor + "'" + ',' +
+    return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
+        "'" + dataItem.Proveedor + "'" + ',' +
+        "'" + dataItem.ContratoId + "'" +
             ')"><i class="fa  '+ icono + '" aria-hidden="true"></i></button>';
 }
 
@@ -145,7 +146,7 @@ function AutoRecargar() {
         if (document.getElementById('checkRecarga').checked == true) {
             recargarGrilla();
         }
-    }, 30000);
+    }, 15000);
 };
 
 function recargarGrilla() {
@@ -160,7 +161,7 @@ function CreateGridInformeCompraNet() {
                 dataType: 'json',
                 url: '/CompraNet/BuscaDatosTabla',
             },
-            parameterMap: function (options) {
+            parameterMap: function (options, operation) {
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
@@ -177,10 +178,11 @@ function CreateGridInformeCompraNet() {
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
                     FechaEntrega: { type: "date" },
-                    Fecha_Dolarizado: { type: "date" }
+                    Fecha_Dolarizado: { type: "date" },
+                    Cantidad: { type: "number" },
+                    Precio: { type: "number" },
                 }
             },
-
         },
         requestStart: function () {
             kendo.ui.progress($("#loading"), false);
@@ -188,9 +190,17 @@ function CreateGridInformeCompraNet() {
         requestEnd: function () {
             kendo.ui.progress($("#loading"), false);
         },
+        columnMenuInit: function (e) {
+            var filterMultiCheck = e.container.find(".k-filterable").data("kendoFilterMultiCheck");
+            if (filterMultiCheck) {
+                console.log(filterMultiCheck.checkSource.data())
+                filterMultiCheck.checkSource.read();
+            }
+        },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "Estado_Order", dir: "asc" }],
+        sort: [{ field: "Estado_Order", dir: "asc" },
+            { field: "Fecha", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20,
         filter: { field:"Fecha", operator:"eq", value: new Date },
@@ -204,9 +214,11 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusoferta)").css('border-bottom', '5px solid #00adf5');
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
+            $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
         },
         columns: [
-            { field: "Proveedor", type: "string", width: 140, template: function (dataItem) {
+            {
+                field: "Proveedor", type: "string", width: 140, template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 2) {
@@ -217,14 +229,30 @@ function CreateGridInformeCompraNet() {
                         return '<div class="statuserror "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 5) {
                         return '<div class="statusfinalizado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.Estado == 6) {
+                        return '<div class="statusborrado "></div>' + dataItem.Proveedor;
                     }
-                } },
+                }
+            },
             { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
             { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
             { field: "TipoNegocio", type: "string", title: "Tipo", width: 70 },
-            { field: "Material", type: "string", filterable: { multi: true }, width: 95, template: "#=Material#" },
+            {
+                field: "Material", type: "string", filterable: {
+                    multi: true, dataSource: [{
+                        Material: "Maiz Duro Dentado",
+                    }, {
+                        Material: "Trigo Pan",
+                    }, {
+                        Material: "Semilla de Soja",
+                    }]
+                }, width: 95, itemTemplate: function (e) {
+                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>"
+                }, template: "#=Material#"
+            },
             { field: "Cantidad", type: "number", width: 70, format: "{0:n0}" },
-            { field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
+            {
+                field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
                     if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocio + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
@@ -233,31 +261,52 @@ function CreateGridInformeCompraNet() {
                     } else {
                         return '';
                     }
-                } },
+                }
+            },
             { field: "Precio", type: "number", width: 70, format: "{0:n2}" },
             { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70 },
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70 },
             { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate },
-            { field: "Comercial", type: "string", title: "Comercial", width: 70, template: function (dataItem) {
+            {
+                field: "Comercial", type: "string", title: "Comercial", width: 70, template: function (dataItem) {
                     if (($("#perfil").val() != "Analista")) {
                         return dataItem.Comercial;
                     } else {
                         return '';
                     }
-                } },
-            { field: "Estado_Contrato", width: 150, filterable: { multi: true }, template: function (dataItem) {
+                }
+            },
+            {
+                field: "Estado_Contrato", title: "Estado", width: 150, filterable: {
+                    multi: true,
+                    dataSource: [{
+                        Estado_Contrato: "Pendiente",
+                    }, {
+                        Estado_Contrato: "Confirmado",
+                    }, {
+                        Estado_Contrato: "Con Error",
+                    }, {
+                        Estado_Contrato: "Oferta",
+                    }, {
+                        Estado_Contrato: "Finalizado",
+                    }, {
+                        Estado_Contrato: "Rechazado",
+                    },]
+                }, itemTemplate: function (e) {
+                    return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
+                }, template: function (dataItem) {
                     if (dataItem.Estado == 1 && $("#perfil").val() == "Mesa") { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
                             botonConfirmadoTilde(dataItem, 'fa-check pend') +
-                            botonVisualizar(dataItem,'fa-eye pend') +
-                            botonBorrar(dataItem ,'fa-trash pend');
-                            
+                            botonVisualizar(dataItem, 'fa-eye pend') +
+                            botonBorrar(dataItem, 'fa-trash pend');
 
                     } else if (dataItem.Estado == 1) { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
                             botonVisualizar(dataItem, 'fa-eye pend');
+                           
                     }
 
                     if (dataItem.Estado == 2 && $("#perfil").val() == "Mesa") { //confirmado
@@ -271,37 +320,48 @@ function CreateGridInformeCompraNet() {
                         return '<div class="status confirmado">Confirmado</div>' +
                             botonFinalizado(dataItem, 'fa-flag-checkered conf') +
                             botonVisualizar(dataItem, 'fa-eye conf');
+                            
                     }
                     if (dataItem.Estado == 3 && $("#perfil").val() == "Mesa") { //Oferta
-                        return '<div class="status oferta">Oferta</div>' +                            
-                            botonPendiente(dataItem, 'fa-pencil ofe') +   
+                        return '<div class="status oferta">Oferta</div>' +
+                            botonPendiente(dataItem, 'fa-pencil ofe') +
                             botonConfirmadoTilde(dataItem, 'fa-check ofe') +
                             botonVisualizar(dataItem, 'fa-eye ofe') +
                             botonBorrar(dataItem, 'fa-trash ofe');
+
                     } else if (dataItem.Estado == 3) {
-                        return '<div class="status oferta">Oferta</div>' +                            
+                        return '<div class="status oferta">Oferta</div>' +
                             botonPendiente(dataItem, 'fa-pencil ofe') +
                             botonVisualizar(dataItem, 'fa-eye ofe');
+                           
                     }
 
                     if (dataItem.Estado == 4 && $("#perfil").val() == "Mesa") { //error
-                        return '<div class="status error">Con Error</div>' +                            
+                        return '<div class="status error">Con Error</div>' +
                             botonPendiente(dataItem, 'fa-pencil err') +
                             botonFinalizado(dataItem, 'fa-flag-checkered err') +
-                            botonVisualizar(dataItem, 'fa-eye err')+
+                            botonVisualizar(dataItem, 'fa-eye err') +
                             botonBorrar(dataItem, 'fa-trash err');
+
                     } else if (dataItem.Estado == 4) {
                         return '<div class="status error">Con Error</div>' +
                             botonFinalizado(dataItem, 'fa-flag-checkered err') +
                             botonVisualizar(dataItem, 'fa-eye err');
+                           
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
                         return '<div class="status finalizado">Finalizado</div>' +
                             botonVisualizar(dataItem, 'fa-eye fin');
                     }
-                } }
-        ],
+
+                    if (dataItem.Estado == 6) { //Rechazado
+                        return '<div class="status borrado">Rechazado</div>' +
+                            botonVisualizar(dataItem, 'fa-eye bor');
+                    }
+                }
+            } 
+        ],        
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -354,21 +414,14 @@ function CreateGridInformeCompraNet() {
                     lte: "Menor que o igual a",                    
                 }
             }
-        }   
-        
+        }
     });
 }
 
 function InicializarElementosModalPendiente() {
 
     kendo.culture("es-AR");
-
-    //$("#proveedorModalPendienteId").kendoDropDownList({
-    //    optionLabel: "SELECCIONE UN PROVEEDOR...",
-    //    dataTextField: "Descripcion",
-    //    dataValueField: "ProveedorId"
-    //});
-
+    
     $("#proveedorModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#proveedorModalPendienteId").data("kendoDropDownList");
@@ -527,8 +580,20 @@ function InicializarElementosModalPendiente() {
         }, 0);
     });
 
+    $(".btnSubmit").click(function () {
+        var self = this;
+        $(self).prop('disabled', true);
+        setTimeout(function () { $(self).prop('disabled', false); }, 300);
+        $(".modal").modal('hide');
+        return true;
+    });
+    
     $("#finalizarConfirmado").click(function () {
         ObtenerDatosModalConfirmado();
+    });
+
+    $("#finalizarBorrar").click(function () {
+        ObtenerDatosModalBorrado();
     });
 
      $("#finalizarConError").click(function () {
@@ -857,7 +922,7 @@ function Finalizar(finalizarContratoFijacion) {
     if (result != null) {
         if (result.Errores != null) {
             if (ExistsErrorMessages(result.Errores)) {
-                MensErr(result.Errores[0].Message);
+                MensErr("No se ha podido finalizar el contrato correctamente");
             }
         }
         
@@ -924,6 +989,26 @@ function Confirmar(confirmarContratoFijacion) {
         }
    }
 
+function ObtenerDatosModalBorrado() {
+
+
+    var objConfirmado = {};
+
+    objConfirmado.contratoId = $("#contratoModalBorrar").val();
+
+    var result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
+
+    if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
+        MensErr(result.Errores[0].Message);
+    }
+    else {
+        recargarGrilla();
+        MensInfo("Se ha borrado el Contrato con exito");
+    }
+    
+    
+}
+
 function ModalConError(contratoId, proveedor, fechaDesdeHasta, tipo, material, cantidad, precio, campana, provincia, localidad, nroSAP, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial) {
 
     if (nroSAP == "null" || "undefined ") {
@@ -959,10 +1044,7 @@ function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContra
 
     $(".modal-title-confirmadoTilde").empty();
 
-    if (tipoId === '2') {
-        $("#contratoModalConTilde").val(fijacionDePrecioContratoId);
-        $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + contratoId);
-    } else if (tipoId === '3') {
+    if (tipoId === '3') {
         $("#contratoModalConTilde").val(fijacionDePrecioContratoId);
         $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + contratoId);
     } else {
@@ -1089,8 +1171,9 @@ function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, 
 }
 
 
-function ModalBorrar(proveedor) {
+function ModalBorrar(proveedor, id) {
     $("#proveedor_a_borrar").text(proveedor);
+    $("#contratoModalBorrar").val(id);
 
     $("#modalBorrar").modal('show');
 }

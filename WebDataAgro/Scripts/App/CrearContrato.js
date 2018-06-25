@@ -704,8 +704,8 @@ function ObtenerDatos() {
 
         if (result != null) {
 
-            if (ExistsErrorMessages(result.errores)) {
-                MensErr(result.errores[0].Message);
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
             }
             else {
                 window.location.href = window.location.origin + "/CompraNet";

@@ -150,6 +150,15 @@
     color: #00adf5;
 }
 
+.status.borrado {
+    background-color: #848484;
+    color: #ffffff;
+}
+
+.bor { /*icons*/
+    color: #848484;
+}
+
 .divtop {
     /*position: relative;
     bottom: 4px;*/
@@ -404,4 +413,8 @@ textarea.k-textbox {
 body.modal-open {
     overflow: hidden;
     position: fixed;
+}
+
+.k-loading-mask {
+    display: none;
 }

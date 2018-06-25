@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Business.Managers {
             FijacionDePrecioContrato oFijacionDePrecioContratoSave;
 
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.errores = new List<ErrorMessage>();
+            oEntityErrors.Errores = new List<ErrorMessage>();
 
             oFijacionDePrecioContratoSave = await TraerFijacionDePrecioAsync(oFijacion.FijacionDePrecioContratoId);
 
@@ -179,12 +179,12 @@ namespace Molinos.DataAgro.Business.Managers {
 
             //EntityValid.ValidateAll(oFijacionDePrecio, oEntityErrors.ListaErrores);
             var oEntityErrors = new GrabarFijacionResult();
-            oEntityErrors.errores = new List<ErrorMessage>();
+            oEntityErrors.Errores = new List<ErrorMessage>();
 
-            oEntityErrors.errores = this.Validar(oFijacionDePrecio, oEntityErrors.errores);
+            oEntityErrors.Errores = this.Validar(oFijacionDePrecio, oEntityErrors.Errores);
 
 
-            if (oEntityErrors.errores.Count > 0)
+            if (oEntityErrors.Errores.Count > 0)
             {
                 return oEntityErrors;
             }
