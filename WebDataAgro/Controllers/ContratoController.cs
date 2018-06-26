@@ -27,12 +27,15 @@ namespace WebDataAgro.Controllers
         private string idActiveDirectory;
         private IContratoManager mobjContratoManager;
         private IProveedorManager mobjProveedorManager;
-        
+        private IComercialManager mobjComercialManager;
+        private IProvinciaManager mobjProvinciaManager;
+        private ILocalidadManager mobjLocalidadManager;
+
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ContratoController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager,  ICampañaManager oCampañaManager, IProveedorManager oProveedorManager, IContratoManager ocontratoManager)
+        public ContratoController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager,  ICampañaManager oCampañaManager, IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
         {
             mobjMSContext = oMSContextProvider.GetMSContext();
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
@@ -42,14 +45,19 @@ namespace WebDataAgro.Controllers
             mobjCampañaManager.Inicializar(mobjMSContext);
             mobjProveedorManager = oProveedorManager;
             mobjProveedorManager.Inicializar(mobjMSContext);
+            mobjComercialManager = oComercialManager;
+            mobjComercialManager.Inicializar(mobjMSContext);
+            mobjContratoManager = ocontratoManager;
+            mobjContratoManager.Inicializar(mobjMSContext);
+            mobjProvinciaManager = oProvinciaManager;
+            mobjProvinciaManager.Inicializar(mobjMSContext);
+            mobjLocalidadManager = oLocalidadManager;
+            mobjLocalidadManager.Inicializar(mobjMSContext);
         }
 
         public ActionResult Index()
         {
-            IComercialManager mobComercialManager = new Molinos.DataAgro.Business.ComercialManager();
-            mobComercialManager.Inicializar(mobjMSContext);
-
-            if (mobComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobComercialManager.EsPerfilVisualizador(idActiveDirectory))
+            if (mobjComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobjComercialManager.EsPerfilVisualizador(idActiveDirectory))
             {
                 ViewBag.edita = false;
             }
@@ -71,24 +79,20 @@ namespace WebDataAgro.Controllers
         {
 
             int ComercialId = await mobjContratoManager.ObtenerComercialId(idActiveDirectory);
-
-            IComercialManager mObjcomercialmanager = new ComercialManager();
-
-            mObjcomercialmanager.Inicializar(mobjMSContext);
-
+            
             List<ComercialQry> listComercial = new List<ComercialQry>();
 
             ComercialQry comercial = new ComercialQry();
 
             List<ComercialQry> listComercialAux = await mobjContratoManager.TraerComerciales();
 
-            if (mObjcomercialmanager.EsPerfilComercial(idActiveDirectory))
+            if (mobjComercialManager.EsPerfilComercial(idActiveDirectory))
             {
                 comercial.ComercialId = ComercialId;
 
                 listComercial.Add(comercial);
             }
-            else if (mObjcomercialmanager.EsPerfilJefe(idActiveDirectory))
+            else if (mobjComercialManager.EsPerfilJefe(idActiveDirectory))
             {
                 listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
                 foreach (ComercialQry comerciallista in listComercialAux)
@@ -99,7 +103,18 @@ namespace WebDataAgro.Controllers
 
                 listComercial.Add(comercial);
             }
-            else if (mObjcomercialmanager.EsPerfilMesa(idActiveDirectory))
+            else if (mobjComercialManager.EsPerfilAnalista(idActiveDirectory))
+            {
+                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
+                foreach (ComercialQry comerciallista in listComercialAux)
+                {
+                    listComercial.Add(comerciallista);
+                }
+                comercial.ComercialId = ComercialId;
+
+                listComercial.Add(comercial);
+            }
+            else if (mobjComercialManager.EsPerfilMesa(idActiveDirectory))
             {
                 listComercial = listComercialAux;
             }
@@ -107,5 +122,29 @@ namespace WebDataAgro.Controllers
             return listComercial;
         }
 
+        public ActionResult ListarComercial(string text)
+        {
+            var comerciales = mobjComercialManager.ListarComercial(text);
+                                                     //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
+            return Json(comerciales.Select(x => new { ComercialId = x.ComercialId, Comercial = x.Nombres }), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ListarProvincia(string text)
+        {
+            var provincias = mobjProvinciaManager.ListarProvincia(text);            
+            return Json(provincias.Select(x => new { ProvinciaId = x.ProvinciaId, Provincia = x.Nombre }), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ListarLocalidad(string text)
+        {
+            var localidades = mobjLocalidadManager.ListarLocalidad(text);
+            return Json(localidades.Select(x => new { LocalidadId = x.LocalidadId, Localidad = x.Nombre }), JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult ListarProveedor(string text)
+        {
+            var proveedores = mobjProveedorManager.ListarProveedor(text);
+            return Json(proveedores.Select(x => new { ProveedorId = x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
     }
 }

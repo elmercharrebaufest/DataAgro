@@ -30,7 +30,9 @@ namespace Molinos.DataAgro.Interfaces
         Task<EntityErrors> GrabarComercialAsync(Comercial oComercial);
 
         Task<EntityErrors> EliminarComercialAsync(int intComercialId);
-         
+
+        List<Comercial> ListarComercial(string comercial);
+
         bool EsAdmin(string ActiveDirectoryId);
 
         bool EsPerfilAdministrativo(string activeDirectoryId);
@@ -38,6 +40,8 @@ namespace Molinos.DataAgro.Interfaces
         bool EsPerfilVisualizador(string activeDirectoryId);
 
         bool EsPerfilJefe(string activeDirectoryId);
+
+        bool EsPerfilAnalista(string activeDirectoryId);
 
         bool EsPerfilMesa(string activeDirectoryId);
 

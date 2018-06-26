@@ -117,6 +117,10 @@ namespace WebDataAgro.Controllers {
             if (mobcomercialmanager.EsPerfilJefe(idActiveDirectory)) {
                 ViewBag.perfil = "Jefe";
             }
+            if (mobcomercialmanager.EsPerfilAnalista(idActiveDirectory))
+            {
+                ViewBag.perfil = "Analista";
+            }
 
 
             return View();
@@ -350,6 +354,18 @@ namespace WebDataAgro.Controllers {
                 listComercial.Add(comercial);
             }
             else if (mObjcomercialmanager.EsPerfilJefe(idActiveDirectory))
+            {
+                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
+                foreach (ComercialQry comerciallista in listComercialAux)
+                {
+                    listComercial.Add(comerciallista);
+                }
+                comercial.ComercialId = ComercialId;
+
+                listComercial.Add(comercial);
+            }
+
+            else if (mObjcomercialmanager.EsPerfilAnalista(idActiveDirectory))
             {
                 listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
                 foreach (ComercialQry comerciallista in listComercialAux)

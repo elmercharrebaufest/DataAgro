@@ -49,5 +49,6 @@ namespace Molinos.DataAgro.Interfaces {
         Task<Proveedor> TraerProveedor(int? proveedorId);
 
         Task<List<BusquedaHome>> DevolverProveedores(string filtro);
+        List<Proveedor> ListarProveedor(string text);
     }
 }

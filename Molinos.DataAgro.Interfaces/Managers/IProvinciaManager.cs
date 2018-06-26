@@ -26,6 +26,8 @@ namespace Molinos.DataAgro.Interfaces
         Task<EntityErrors> GrabarProvinciaAsync(Provincia oProvincia);
 
         Task<EntityErrors> EliminarProvinciaAsync(int intProvinciaId);
+
+        List<Provincia> ListarProvincia(string provincia);
     }
 }
 

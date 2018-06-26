@@ -62,8 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return listComerciales;
         }
-
-
+        
         public async Task<DatosIniContrato> TraerDatosCombo()
         {
             var DatosCombo = new DatosIniContrato();
@@ -99,7 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                              .AsNoTracking()
                              .OrderBy(x => x.Nombres)
                              .ThenBy(x => x.Apellido)
-                             .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa )
+                             .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa || x.PerfilId == (int)EnumPerfil.Analista)
                              .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
 
             DatosCombo.monedaSustentable = await mobjUnitOfWork.Repository<Moneda>()
@@ -299,8 +298,6 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-
-
         public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<ComercialQry> listComercial)
         {
 
@@ -474,7 +471,7 @@ namespace Molinos.DataAgro.Business.Managers
             return new KendoGrid<BasicoContrato>(request, queryContratos);
 
         }
-
+        
         public async Task<GrabarContratoResult> ConfirmarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();

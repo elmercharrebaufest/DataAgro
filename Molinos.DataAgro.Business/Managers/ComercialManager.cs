@@ -62,18 +62,18 @@ namespace Molinos.DataAgro.Business
 
             var oDatosIniciales = new DatosIniAbmComercial()
             {
-                Comercial = await ObtenerComerciales(0) ,
+                Comercial = await ObtenerComerciales(0),
                 Perfil = await qry.GetPerfilComboAsync(),
                 GrupoDeCompras = await qry.GetGrupoDeComprasComboAsync()
             };
-            
+
             return oDatosIniciales;
         }
 
 
         public async Task<List<ComercialCombo>> ObtenerComerciales(int comercialId)
         {
-            var list = new List<ComercialCombo>();            
+            var list = new List<ComercialCombo>();
             var qry = new CombosQueries(mobjUnitOfWork);
 
             list = await qry.GetAbmComercialComboAsync();
@@ -81,7 +81,7 @@ namespace Molinos.DataAgro.Business
             if (comercialId != 0)
             {
                 var resultStored = mobjUnitOfWork.SelStore<JerarquiaComercial>("DataAgro_ComercialesJerarquicos_Traer", comercialId).ToList();
-                list.RemoveAll(x => resultStored.Any(z => z.ComercialId == x.ComercialId));                
+                list.RemoveAll(x => resultStored.Any(z => z.ComercialId == x.ComercialId));
             }
 
             return list;
@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Business
         public async Task<ResultIniComercial> TraerTodoComercialAsync()
         {
             var oResult = new ResultIniComercial();
-           
+
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
             var oPerfil = mobjUnitOfWork.Repository<Perfil>().Queryable();
 
@@ -100,10 +100,10 @@ namespace Molinos.DataAgro.Business
                         .OrderBy(x => x.COM.Apellido)
                         .Select(x => new ComercialIni()
                         {
-                             ComercialId = x.COM.ComercialId,
-                             Apellido = x.COM.Apellido,
-                             Nombres = x.COM.Nombres,
-                             PerDescripcion = x.PER.Descripcion
+                            ComercialId = x.COM.ComercialId,
+                            Apellido = x.COM.Apellido,
+                            Nombres = x.COM.Nombres,
+                            PerDescripcion = x.PER.Descripcion
                         });
 
             oResult.Comercial = await query.ToListAsync();
@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Business
             {
                 oComercial.ObjectState = Constants.Object_Modified;
             }
-            
+
             return oComercial;
         }
 
@@ -140,9 +140,9 @@ namespace Molinos.DataAgro.Business
         public async Task<EntityErrors> GrabarComercialAsync(Comercial oComercial)
         {
             var oEntityErrors = new EntityErrors();
-                      
+
             EntityValid.ValidateAll(oComercial, oEntityErrors.ListaErrores);
- 
+
             if (oEntityErrors.ListaErrores.Count > 0)
             {
                 return oEntityErrors;
@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Business
             // Agregar el mensaje de entity error si el usuario no existe  en AD 
 
             try
-            { 
+            {
                 using (var ctx = new PrincipalContext(ContextType.Domain))
                 {
                     var user = UserPrincipal.FindByIdentity(ctx, oComercial.IdActiveDirectory);
@@ -167,13 +167,13 @@ namespace Molinos.DataAgro.Business
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
+
             }
 
- 
-            
+
+
             Comercial oComercialSave;
             var XComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
             if (oComercial.ObjectState == 0)
@@ -187,9 +187,9 @@ namespace Molinos.DataAgro.Business
                     return oEntityErrors;
                 }
 
-                
-                
-                
+
+
+
                 //XComercial.
 
 
@@ -200,18 +200,18 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
-                if(oComercial.PerfilId == (int)EnumPerfil.Director)
+                if (oComercial.PerfilId == (int)EnumPerfil.Director)
                 {
                     var comercial = XComercial.FirstOrDefault(x => x.PerfilId == (int)EnumPerfil.Director);
 
-                    if(comercial != null)
+                    if (comercial != null)
                     {
                         oEntityErrors.HayError = true;
                         oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "Ya existe un Director " });
                         return oEntityErrors;
                     }
                 }
-                
+
 
                 //var perfiles = mobjUnitOfWork.Repository<Perfil>().Queryable();            
                 //var perfilId = perfiles.FirstOrDefault(p => p.PerfilId == comercial.ComercialId ).PerfilId;
@@ -221,12 +221,12 @@ namespace Molinos.DataAgro.Business
 
                 oComercialSave = await TraerComercialAsync(oComercial.ComercialId);
             }
-         
-            oComercialSave.Apellido = oComercial.Apellido;  
-            oComercialSave.Nombres = oComercial.Nombres;  
-            oComercialSave.PerfilId = oComercial.PerfilId;  
-            oComercialSave.EmpleadorACargo = oComercial.EmpleadorACargo;  
-            oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;  
+
+            oComercialSave.Apellido = oComercial.Apellido;
+            oComercialSave.Nombres = oComercial.Nombres;
+            oComercialSave.PerfilId = oComercial.PerfilId;
+            oComercialSave.EmpleadorACargo = oComercial.EmpleadorACargo;
+            oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
             //oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;  
             oComercialSave.Administrador = oComercial.Administrador;
 
@@ -247,10 +247,10 @@ namespace Molinos.DataAgro.Business
 
                         throw;
                     }
-                    
+
                 }
             }
-            
+
 
             if (oComercialSave.ObjectState == Constants.Object_Added)
             {
@@ -274,10 +274,10 @@ namespace Molinos.DataAgro.Business
                 return grCom.Id;
             else
             {
-                var IdGrupo= ((mobjUnitOfWork.Repository<GrupoDeCompras>().Queryable().Max(x => (int?)x.Id)) ?? 0) + 1;
+                var IdGrupo = ((mobjUnitOfWork.Repository<GrupoDeCompras>().Queryable().Max(x => (int?)x.Id)) ?? 0) + 1;
                 var oGrupoDeCompraSave = new GrupoDeCompras()
                 {
-                    Id= IdGrupo,
+                    Id = IdGrupo,
                     Descripcion = grupoDeCompra,
                     ObjectState = Constants.Object_Added
                 };
@@ -289,46 +289,6 @@ namespace Molinos.DataAgro.Business
                 return IdGrupo;
             }
         }
-        /*public async void  ActualizarNumeroSAPGrupoDeCompras(int GrupoCompraId, string NumeroSAP)
-        {
-            var oGrupoDeCompraSAP = mobjUnitOfWork.Repository<GrupoDeComprasSAP>().Queryable().AsNoTracking();
-
-            var grCom = oGrupoDeCompraSAP.Where(x => x.Id == GrupoCompraId).FirstOrDefault();
-
-            if (grCom != null)
-            {
-                var oGrupoDeCompraSave = new GrupoDeComprasSAP()
-                {
-                    Id = grCom.Id,
-                    GrupoCompraId = grCom.GrupoCompraId,
-                    NumeroSAP = NumeroSAP,
-                    ObjectState = Constants.Object_Modified
-                };
-
-                mobjUnitOfWork.Repository<GrupoDeComprasSAP>().SaveEntity(oGrupoDeCompraSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
-            }
-
-
-            else
-            {
-                var IdGrupo = ((mobjUnitOfWork.Repository<GrupoDeComprasSAP>().Queryable().Max(x => (int?)x.Id)) ?? 0) + 1;
-                var oGrupoDeCompraSave = new GrupoDeComprasSAP()
-                {
-                    Id = IdGrupo,
-                    GrupoCompraId = IdGrupo,
-                    NumeroSAP = NumeroSAP,
-                    ObjectState = Constants.Object_Added
-                };
-
-                mobjUnitOfWork.Repository<GrupoDeComprasSAP>().SaveEntity(oGrupoDeCompraSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
-
-                
-            }
-        }*/
 
         public async Task<EntityErrors> EliminarComercialAsync(int intComercialId)
         {
@@ -350,18 +310,18 @@ namespace Molinos.DataAgro.Business
 
             return oEntityErrors;
         }
-        
-        public   bool EsAdmin(string ActiveDirectoryId)
+
+        public bool EsAdmin(string ActiveDirectoryId)
         {
             bool resultado = false;
 
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-         
-            if(oComercial.Where(x => x.Administrador.Value == true && x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
+
+            if (oComercial.Where(x => x.Administrador.Value == true && x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
             {
                 resultado = true;
             }
-            
+
             return (resultado);
         }
 
@@ -394,37 +354,57 @@ namespace Molinos.DataAgro.Business
 
             return (resultado);
         }
-        
-        public bool EsPerfilComercial(string activeDirectoryId) {
+
+        public bool EsPerfilComercial(string activeDirectoryId)
+        {
             bool resultado = false;
 
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
 
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Comercial && x.IdActiveDirectory == activeDirectoryId).Count() > 0) {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-        
-        public bool EsPerfilMesa(string activeDirectoryId) {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Mesa && x.IdActiveDirectory == activeDirectoryId).Count() > 0) {
+            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Comercial && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
+            {
                 resultado = true;
             }
 
             return (resultado);
         }
 
-        public bool EsPerfilJefe(string activeDirectoryId) {
+        public bool EsPerfilMesa(string activeDirectoryId)
+        {
             bool resultado = false;
 
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
 
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Jefe && x.IdActiveDirectory == activeDirectoryId).Count() > 0) {
+            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Mesa && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
+            {
+                resultado = true;
+            }
+
+            return (resultado);
+        }
+
+        public bool EsPerfilJefe(string activeDirectoryId)
+        {
+            bool resultado = false;
+
+            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
+
+            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Jefe && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
+            {
+                resultado = true;
+            }
+
+            return (resultado);
+        }
+
+        public bool EsPerfilAnalista(string activeDirectoryId)
+        {
+            bool resultado = false;
+
+            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
+
+            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Analista && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
+            {
                 resultado = true;
             }
 
@@ -445,7 +425,6 @@ namespace Molinos.DataAgro.Business
             return (resultado);
         }
 
-
         public bool ComercialExiste(string ActiveDirectoryId)
 
         {
@@ -453,7 +432,7 @@ namespace Molinos.DataAgro.Business
 
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
 
-            if (  oComercial.Where(x => x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
+            if (oComercial.Where(x => x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
             {
                 resultado = true;
             }
@@ -461,12 +440,12 @@ namespace Molinos.DataAgro.Business
             return (resultado);
         }
 
-        public  bool   ComercialPerteneceProveedor(string ActiveDirectory_Id, int Proveedor_Id)
+        public bool ComercialPerteneceProveedor(string ActiveDirectory_Id, int Proveedor_Id)
         {
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
 
             int CId = oComercial.Where(x => x.IdActiveDirectory == ActiveDirectory_Id).FirstOrDefault().ComercialId;
-          
+
             var query = mobjUnitOfWork.SelStore<Validacion>("DataAgro_ValidarProveedor_PorComercial", CId, Proveedor_Id);
 
             var res = query.ToList();
@@ -475,7 +454,12 @@ namespace Molinos.DataAgro.Business
             else
                 return false;
         }
-                
+
+        public List<Comercial> ListarComercial(string comercial)
+        {
+            return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => comercial != "" && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial))).Take(15).ToList();
+        }
+
     }
 
     internal class Validacion
@@ -494,6 +478,7 @@ namespace Molinos.DataAgro.Business
         public Nullable<int> GrupoDeCompras { get; set; }
     }
 }
+    
 
 
 

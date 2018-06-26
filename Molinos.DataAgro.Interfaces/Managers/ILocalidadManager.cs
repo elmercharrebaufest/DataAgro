@@ -30,6 +30,8 @@ namespace Molinos.DataAgro.Interfaces
         Task<EntityErrors> GrabarLocalidadAsync(Localidad oLocalidad);
 
         Task<EntityErrors> EliminarLocalidadAsync(int intLocalidadId);
+
+        List<Localidad> ListarLocalidad(string localidad);
     }
 }
 
