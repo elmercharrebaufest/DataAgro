@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     kendo.culture("es-AR");
     CreateGridInformeCompraNet();
 });
@@ -71,10 +72,10 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
+  
         },
         columns: [
-            {
-                field: "Proveedor", type: "string", width: 140, filterable: { multi: true, search: true, extra: false}, template: function (dataItem) {
+            {  field: "Proveedor", type: "string", width: 140, filterable: { ui: createMultiSelectProveedor, extra: false}, template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 2) {
@@ -124,8 +125,8 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, title: "Mon"
             },
-            { field: "Provincia", filterable: { multi: true, search: true, extra: false, cell: { showOperators: false, operator: "contains" } } },
-            { field: "Localidad", filterable: { multi: true, search: true, extra: false, cell: { showOperators: false, operator: "contains" } } },
+            { field: "Provincia", filterable: { ui: createMultiSelectProvincia } },
+            { field: "Localidad", filterable: { ui: createMultiSelectLocalidad } },
             { field:"Campania", value: "Campania", title: "Camp", filterable: { multi: true } },
             {
                 title: "Fecha", columns: [
@@ -133,9 +134,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate },
                 ]
             },
-            {
-                field: "Comercial", title: "Comercial", filterable: { multi: true, search: true, extra: false }
-            },
+            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
             { field: "Sustentable", columns: [
                     { field: "Sustentable", title: " ", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false},
@@ -231,11 +230,7 @@ function CreateGridInformeCompraNet() {
             },
             operators: {
                 string: {
-                    eq: "Igual",
-                    neq: "Distinto",
-                    startswith: "Comienza con",
-                    contains: "Contiene",
-                    endswith: "Finaliza con"
+                    eq: "Igual",                    
                 },
                 date: {
                     eq: "Igual",
@@ -280,33 +275,40 @@ function CreateGridInformeCompraNet() {
 
             },
             change: function (e) {
-                var filter = $("#grid").data("kendoGrid").dataSource.filter();
-                var filteredAry = filter.filters.filter(function (e) { return e.field !== valueField })
-                filter.filters = filteredAry; 
-
+                var filter = { logic: "or", filters: [] };
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v != '') {
                         filter.filters.push({ field: valueField, operator: "eq", value: v });
                     }
                 });
-                $("#grid").data("kendoGrid").dataSource.filter(filter);                
+                if (values.length == 0) {
+                    $("#grid").data("kendoGrid").dataSource.filter(defaultFilter);
+                } else {
+                    $("#grid").data("kendoGrid").dataSource.filter(filter);
+                }
             }
-        })
+        });
+        setTimeout(function () {
+            $(".k-multiselect").parent().children(".k-dropdown").remove();
+            $(".k-multiselect").parent().children("div").find('button').remove();          
+        }, 200);
+        
     };
     //Con definir un método de estos para cada columna multiselect estamos, 
-    //function createMultiSelectComercial(element) {
-    //    return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
-    //};
-    //function createMultiSelectProvincia(element) {
-    //    return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
-    //}
+    function createMultiSelectComercial(element) {
+        //createMultiSelect(element, <campo a mostrar>, <campo a filtrar>, <action>)
+        return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
+    };
+    function createMultiSelectProvincia(element) {
+        return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
+    }
 
-    //function createMultiSelectLocalidad(element) {
-    //    return createMultiSelect(element, "Localidad", "LocalidadId", "/Contrato/ListarLocalidad")
-    //}
+    function createMultiSelectLocalidad(element) {
+        return createMultiSelect(element, "Localidad", "LocalidadId", "/Contrato/ListarLocalidad")
+    }
 
-    //function createMultiSelectProveedor(element) {
-    //    return createMultiSelect(element, "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
-    //};
+    function createMultiSelectProveedor(element) {
+        return createMultiSelect(element, "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
+    };
 }

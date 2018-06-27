@@ -815,6 +815,12 @@
     <Content Include="Content\reportes.css" />
     <Content Include="Content\reportesResponsive.css" />
     <Content Include="Content\SiteResponsive.css" />
+    <Content Include="parameters.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="QA.DeployParameters.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="favicon.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

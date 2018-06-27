@@ -1,0 +1,47 @@
+﻿<parameters>
+    <parameter name="SmtpServer Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='SmtpServer']
+                           /@value" />
+    </parameter>
+    <parameter name="SmtpServerPort Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='SmtpServerPort']
+                           /@value" />
+    </parameter>
+    <parameter name="EnableSSL Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='EnableSSL']
+                           /@value" />
+    </parameter>
+    <parameter name="UseDefaultCredentials Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='UseDefaultCredentials']
+                           /@value" />
+    </parameter>
+    <parameter name="CredentialUserName Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='CredentialUserName']
+                           /@value" />
+    </parameter>
+    <parameter name="CredentialPassword Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='CredentialPassword']
+                           /@value" />
+    </parameter>
+    <parameter name="maildeUsuarios Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='maildeUsuarios']
+                           /@value" />
+    </parameter>
+    <parameter name="LogFile Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='LogFile']
+                           /@value" />
+    </parameter>
+    <parameter name="pathError Key">
+        <parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='pathError']
+                           /@value" />
+    </parameter>
+</parameters>

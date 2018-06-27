@@ -2,5 +2,14 @@
 <parameters>
     <setParameter name="IIS Web Application Name" value="dataagro" />
     <setParameter name="DataAgro-Web.config Connection String" value="Data Source=bfdev226;Initial Catalog=dataagro2;Integrated Security=True" />
-
+    <setParameter name="SmtpServer Key" value="smtp.gmail.com" />
+    <setParameter name="SmtpServerPort Key" value="587" />
+    <setParameter name="EnableSSL Key" value="S" />
+    <setParameter name="UseDefaultCredentials Key" value="S" />
+    <setParameter name="CredentialUserName Key" value="dataagro.baufest@gmail.com" />
+    <setParameter name="CredentialPassword Key" value="Hola1234" />
+    <setParameter name="EmailAgenda Key" value="1" />
+    <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
+    <setParameter name="LogFile Key" value="1" />
+    <setParameter name="pathError Key" value="C:\Errores\" />
 </parameters>
