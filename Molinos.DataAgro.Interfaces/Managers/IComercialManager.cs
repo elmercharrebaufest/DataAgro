@@ -10,6 +10,7 @@ using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -35,17 +36,11 @@ namespace Molinos.DataAgro.Interfaces
 
         bool EsAdmin(string ActiveDirectoryId);
 
+        EnumPerfil ObtenerPerfil(string activeDirectoryId);
+
         bool EsPerfilAdministrativo(string activeDirectoryId);
 
         bool EsPerfilVisualizador(string activeDirectoryId);
-
-        bool EsPerfilJefe(string activeDirectoryId);
-
-        bool EsPerfilAnalista(string activeDirectoryId);
-
-        bool EsPerfilMesa(string activeDirectoryId);
-
-        bool EsPerfilComercial(string activeDirectoryId);
 
         bool ComercialExiste(string ActiveDirectoryId);
 

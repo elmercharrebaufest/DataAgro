@@ -508,7 +508,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (localidad != null && provincia != null) oMensaje.Body += "Procedencia: " + provincia.Nombre + ", " + localidad.Nombre + " \r\n";
                     if (oContrato.ImporteSustentable != null && monedaSust != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + monedaSust.Descripcion + " \r\n";
                     if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado: " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n";
-                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pesificado: " + oContrato.DiasPesificado.Value + " \r\n";
+                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pesificado: " + oContrato.DiasPesificado.Value + " días." + " \r\n";
                     if (oContrato.NoInformaSio != null && oContrato.NoInformaSio == true) oMensaje.Body += "No Informa SIO \r\n";
                     if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n";
 

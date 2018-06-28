@@ -103,17 +103,15 @@ namespace Molinos.DataAgro.Business
                                        .ToListAsync();
         }
 
-        public async Task<List<ProveedorCombo>> GetProveedorPorComercialComboAsync(string ActiveDirectory)
+        public async Task<List<ProveedorCombo>> GetProveedorPorComercialComboAsync(string activeDirectory)
         {
             var oResult = new DatosIniAgendaActividad();            
 
-            var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == ActiveDirectory).SingleOrDefault().ComercialId;
+            var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == activeDirectory).SingleOrDefault().ComercialId;
                        
-            var Proveedores = mobjUnitOfWork.SelStoreAsync<ProveedorCombo>("DataAgro_TraerProveedorPorComercial", ComercialId);
+            var proveedores = await mobjUnitOfWork.SelStoreAsync<ProveedorCombo>("DataAgro_TraerProveedorPorComercial", ComercialId).ToListAsync();
 
-            oResult.Proveedores = await Proveedores.ToListAsync();
-
-            return oResult.Proveedores.OrderBy(x => x.RazonSocial).ToList();                                  
+            return proveedores.OrderBy(x => x.RazonSocial).ToList();                                  
                                       
         }
 

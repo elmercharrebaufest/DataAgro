@@ -19,21 +19,5 @@ namespace Molinos.DataAgro.Interfaces {
         void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork); 
         
         Task<DatosIniCompraNet> TraerDatosInicialesAsync(string ActiveDirectory);
-        /*
-        ParamCompraNet TraerParam();
-
-        EntityErrors ValidarContrato(ParamCompraNet oParam);
-
-        Task<ResultCompraNet> TraerDatosAsyncContrato(ParamCompraNet oParam);
-        
-        Task<DatosIniCompraNet> TraerDatosInicialesAsyncFijacion(string ActiveDirectory);
-
-        EntityErrors ValidarFijacion(ParamCompraNet oParam);
-
-        Task<ResultCompraNet> TraerDatosAsyncFijacion(ParamCompraNet oParam);
-        */
-
-        //void ActualizarProveedoresCubo(int? ComercialId);
-
     }
 }

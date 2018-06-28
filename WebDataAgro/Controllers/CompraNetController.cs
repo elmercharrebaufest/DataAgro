@@ -1,23 +1,19 @@
 ﻿using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-using Molinos.DataAgro.Mapping.Context;
-using Mastersoft.Framework.Interfaces;
-using System.Web.Helpers;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Common.Enums;
 
-namespace WebDataAgro.Controllers {
+namespace WebDataAgro.Controllers
+{
     public class CompraNetController : Controller {
         //-----------------------------------------------------
         //  Variables Privadas
@@ -98,30 +94,10 @@ namespace WebDataAgro.Controllers {
         //-----------------------------------------------------
 
         public ActionResult Index() {
-
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-
             ViewBag.perfil = "";
 
-            if (mobcomercialmanager.EsPerfilMesa(idActiveDirectory))
-            {
-                ViewBag.perfil = "Mesa";
-            }
-
-            if (mobcomercialmanager.EsPerfilComercial(idActiveDirectory))
-            {
-                ViewBag.perfil = "Comercial";
-            }
-
-            if (mobcomercialmanager.EsPerfilJefe(idActiveDirectory)) {
-                ViewBag.perfil = "Jefe";
-            }
-            if (mobcomercialmanager.EsPerfilAnalista(idActiveDirectory))
-            {
-                ViewBag.perfil = "Analista";
-            }
-
+            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
+            ViewBag.perfil = perfil.DisplayEnum();
 
             return View();
 
@@ -130,20 +106,18 @@ namespace WebDataAgro.Controllers {
         public ActionResult CrearContrato() {
 
             return View();
-
         }
 
         public ActionResult CrearFijacion() {
 
             return View();
-
         }
 
         public async Task<ActionResult> Inicializar() {
             var model = new DatosIniCompraNetModel();
 
-            var ActiveDirectory = Util.GetIdActiveDirectory();
-            model.Datos = await mobjCompraNetManager.TraerDatosInicialesAsync(ActiveDirectory);
+            var activeDirectory = Util.GetIdActiveDirectory();
+            model.Datos = await mobjCompraNetManager.TraerDatosInicialesAsync(activeDirectory);
             
             return new JsonResult() {
                 Data = model,
@@ -154,10 +128,7 @@ namespace WebDataAgro.Controllers {
         public async Task<ActionResult> InicializarContrato() {
             var model = new ContratoModel_prueba();
 
-            var ActiveDirectory = Util.GetIdActiveDirectory();
-
             model.Datos = await mobjContratoManager.TraerDatosCombo();
-
             
             return new JsonResult() {
                 Data = model,
@@ -167,9 +138,7 @@ namespace WebDataAgro.Controllers {
 
         public async Task<ActionResult> InicializarFijacion() {
             var model = new FijacionDePrecioContratoModel();
-
-            var ActiveDirectory = Util.GetIdActiveDirectory();
-
+            
             model.Datos = await mobjFijacionDePrecioContratoManager.TraerDatosInicialesAsync();
 
             return new JsonResult() {
@@ -178,21 +147,17 @@ namespace WebDataAgro.Controllers {
             };
         }
 
-        public async Task<ActionResult> GrabarContrato(Contrato oParam) {
-
-            GrabarContratoResult model = new GrabarContratoResult();
-            
+        public async Task<ActionResult> GrabarContrato(Contrato oParam)
+        {
             if (oParam.Base == null) oParam.Base = false;
             if (oParam.NoInformaSio == null) oParam.NoInformaSio = false;
             if (oParam.TrigoEspecial == null) oParam.TrigoEspecial = false;
 
-            Comercial comercial = await mobjComercialManager.TraerComercialAsync(Convert.ToInt32(oParam.ComercialId));
-
-            oParam.GrupoCompra = Convert.ToInt32(comercial.GrupoDeCompras);
-
+            var comercial = await mobjComercialManager.TraerComercialAsync(oParam.ComercialId.Value);
+            oParam.GrupoCompra = comercial.GrupoDeCompras.HasValue ? comercial.GrupoDeCompras.Value : 0;
             oParam.UsuarioId = idActiveDirectory;
 
-            model = await mobjContratoManager.GrabarContrato(oParam);
+            var model = await mobjContratoManager.GrabarContrato(oParam);
 
             return new JsonResult() {
                 Data = model,
@@ -202,10 +167,7 @@ namespace WebDataAgro.Controllers {
 
         public async Task<ActionResult> FinalizarContrato(Contrato oParam)
         {
-
-            GrabarContratoResult model = new GrabarContratoResult();
-            
-            model = await mobjContratoManager.FinalizarContrato(oParam, idActiveDirectory);
+            var model = await mobjContratoManager.FinalizarContrato(oParam, idActiveDirectory);
 
             return new JsonResult()
             {
@@ -335,48 +297,25 @@ namespace WebDataAgro.Controllers {
 
         private async Task<List<ComercialQry>> RecuperaEquipo(string idActiveDirectory) {
             
-            int ComercialId = await mobjContratoManager.ObtenerComercialId(idActiveDirectory);
+            int comercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
+            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
+            var listComercialAux = await mobjContratoManager.TraerComerciales();
 
-            IComercialManager mObjcomercialmanager = new ComercialManager();
-
-            mObjcomercialmanager.Inicializar(mobjMSContext);
-
-            List<ComercialQry> listComercial = new List<ComercialQry>();
-
-            ComercialQry comercial = new ComercialQry();
-
-            List<ComercialQry> listComercialAux = await mobjContratoManager.TraerComerciales();
-
-            if (mObjcomercialmanager.EsPerfilComercial(idActiveDirectory))
+            var listComercial = new List<ComercialQry>();
+            
+            if (perfil == EnumPerfil.Comercial || perfil == EnumPerfil.Jefe || perfil == EnumPerfil.Analista)
             {
-                comercial.ComercialId = ComercialId;
-
-                listComercial.Add(comercial);
+                listComercial.Add(new ComercialQry() { ComercialId = comercialId });
             }
-            else if (mObjcomercialmanager.EsPerfilJefe(idActiveDirectory))
+            if(perfil == EnumPerfil.Jefe || perfil == EnumPerfil.Analista)
             {
-                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
+                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
                 foreach (ComercialQry comerciallista in listComercialAux)
                 {
                     listComercial.Add(comerciallista);
                 }
-                comercial.ComercialId = ComercialId;
-
-                listComercial.Add(comercial);
             }
-
-            else if (mObjcomercialmanager.EsPerfilAnalista(idActiveDirectory))
-            {
-                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
-                foreach (ComercialQry comerciallista in listComercialAux)
-                {
-                    listComercial.Add(comerciallista);
-                }
-                comercial.ComercialId = ComercialId;
-
-                listComercial.Add(comercial);
-            }
-            else if(mObjcomercialmanager.EsPerfilMesa(idActiveDirectory))
+            if (perfil == EnumPerfil.Mesa)
             {
                 listComercial = listComercialAux;
             }

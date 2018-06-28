@@ -46,114 +46,21 @@ namespace Molinos.DataAgro.Business {
         //  Metodos Publicos
         //--------------------------------------------------
                 
-        public async Task<DatosIniCompraNet> TraerDatosInicialesAsync(string ActiveDirectory) {
+        public async Task<DatosIniCompraNet> TraerDatosInicialesAsync(string activeDirectory)
+        {
             var qry = new CombosQueries(mobjUnitOfWork);
 
             var oDatosIniciales = new DatosIniCompraNet() {
-                Proveedor = await qry.GetProveedorPorComercialComboAsync(ActiveDirectory),
+                Proveedor = await qry.GetProveedorPorComercialComboAsync(activeDirectory),
                 Comercial = await qry.GetComercialComboAsync(),
                 Material = await qry.GetMaterialComboAsync(),
                 Provincia = await qry.GetProvinciaComboAsync(),
                 Localidad = await qry.GetLocalidadComboAsync()
-                //moneda
-                //campaña
             };
 
             return oDatosIniciales;
         }
 
-        /*
-
-        public ParamCubProveedores TraerParam() {
-            return new ParamCubProveedores();
-        }
-        
-
-        public EntityErrors ValidarContrato(ParamCubProveedores oParam) {
-            var oEntityErrors = new EntityErrors();
-
-            oParam.Validate(oEntityErrors.ListaErrores);
-
-            return oEntityErrors;
-        }
-
-
-        public EntityErrors ValidarFijacion(ParamCubProveedores oParam) {
-            var oEntityErrors = new EntityErrors();
-
-            oParam.Validate(oEntityErrors.ListaErrores);
-
-            return oEntityErrors;
-        }
-        
-        public async Task<ResultCompraNet> TraerDatosAsyncContrato(ParamCompraNet oParam) {
-            var oResult = new ResultCompraNet();
-
-            var oEntityErrors = ValidarContrato(oParam);
-
-            if (oEntityErrors.ListaErrores.Count > 0) {
-                oResult.ListaErrores = oEntityErrors.ListaErrores;
-
-                return oResult;
-            }
-
-            ActualizarProveedoresCubo(oParam.ComercialId);
-
-            var query = mobjUnitOfWork.SelStoreAsync<CompraNet>("DataAgro_Proveedores_Cubo",
-                                                                     oParam.proveedorId,
-                                                                     oParam.provinciaId,
-                                                                     oParam.LocalidadId,
-                                                                     oParam.EstadoId,
-                                                                     oParam.SegmentacionId,
-                                                                     oParam.material,
-                                                                     oParam.ComercialId);
-
-            oResult.Proveedores = await query.ToListAsync();
-
-            return oResult;
-        }
-
-
-        public async Task<ResultCompraNet> TraerDatosAsyncFijacion(ParamCompraNet oParam) {
-            var oResult = new ResultCompraNet();
-
-            var oEntityErrors = ValidarFijacion(oParam);
-
-            if (oEntityErrors.ListaErrores.Count > 0) {
-                oResult.ListaErrores = oEntityErrors.ListaErrores;
-
-                return oResult;
-            }
-
-            ActualizarProveedoresCubo(oParam.ComercialId);
-
-            var query = mobjUnitOfWork.SelStoreAsync<CompraNet>("DataAgro_Proveedores_Cubo",
-                                                                     oParam.proveedorId,
-                                                                     oParam.provinciaId,
-                                                                     oParam.LocalidadId,
-                                                                     oParam.EstadoId,
-                                                                     oParam.SegmentacionId,
-                                                                     oParam.material,
-                                                                     oParam.ComercialId);
-
-            oResult.Proveedores = await query.ToListAsync();
-
-            return oResult;
-        }
-        */
-
-        /*
-        public void ActualizarProveedoresCubo(int? ComercialId) {
-            var query = mobjUnitOfWork.SelStoreAsync<Datos>("DataAgro_Proveedores_TraerPorComercial", ComercialId).ToList();
-
-            if (query.Count > 0) {
-                var compras = new ComprasManager();
-                compras.Inicializar(mobjContexto);
-                compras.ActualizarComprasProveedor(query);
-            }
-
-        }
-        */
     }
 }
 

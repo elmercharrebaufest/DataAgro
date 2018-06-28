@@ -63,7 +63,6 @@ function botonPendiente(dataItem, icono) {
         "'" + formatearFecha(dataItem.FechaDesde) + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaHasta) + "'" + ',' +
         "'" + formatearFecha(dataItem.Fecha) + "'" + ',' +
-        "'" + formatearFecha(dataItem.FechaEntrega) + "'" + ',' +
         "'" + dataItem.TipoNegocioId + "'" + ',' +
         "'" + dataItem.MaterialId + "'" + ',' +
         "'" + dataItem.Cantidad + "'" + ',' +
@@ -78,8 +77,8 @@ function botonPendiente(dataItem, icono) {
         "'" + dataItem.Base + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
         "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
-        "'" + dataItem.Fecha_Dolarizado + "'" + ',' +
-        "'" + dataItem.PesificadoDias + "'" + ',' +
+        "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
+        "'" + dataItem.Dias_Pesificado + "'" + ',' +
         "'" + dataItem.NoInformaSIO + "'" + ',' +
         "'" + dataItem.TrigoEspecial + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" +
@@ -181,6 +180,7 @@ function CreateGridInformeCompraNet() {
                     Fecha_Dolarizado: { type: "date" },
                     Cantidad: { type: "number" },
                     Precio: { type: "number" },
+                    Ampliaciones: {type: "number"}
                 }
             },
         },
@@ -215,10 +215,11 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
+            if (($("#perfil").val() === "Analista")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");}
         },
         columns: [
             {
-                field: "Proveedor", type: "string", width: 140, template: function (dataItem) {
+                field: "Proveedor", type: "string", width: 150, template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 2) {
@@ -236,7 +237,16 @@ function CreateGridInformeCompraNet() {
             },
             { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
             { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
-            { field: "TipoNegocio", type: "string", title: "Tipo", width: 70 },
+            {
+                field: "TipoNegocio", type: "string", filterable: {
+                    multi: true,  dataSource: [{
+                        TipoNegocio: "A FIJAR",
+                    }, {
+                        TipoNegocio: "A PRECIO",
+                    }, {
+                        TipoNegocio: "FIJACION",
+                    }]
+                }, title: "Tipo", width: 70 },
             {
                 field: "Material", type: "string", filterable: {
                     multi: true, dataSource: [{
@@ -267,16 +277,9 @@ function CreateGridInformeCompraNet() {
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70 },
             { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, template: function (dataItem) {
-                    if (($("#perfil").val() != "Analista")) {
-                        return dataItem.Comercial;
-                    } else {
-                        return '';
-                    }
-                }
+                field: "Comercial", type: "string", title: "Comercial", width: 70,                 
             },
-            {
-                field: "Estado_Contrato", title: "Estado", width: 150, filterable: {
+            { field: "Estado_Contrato", title: "Estado", filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente",
@@ -383,6 +386,7 @@ function CreateGridInformeCompraNet() {
         selectable: "row",
         
         filterable: {
+            checkAll: false,
             height: 350,
             extra: false,
             messages: {
@@ -649,7 +653,7 @@ function InicializarElementosModalPendiente() {
 }
 
 
-function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, fechaEntrega, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
+function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
       
     if (tipoId === "3") {
         $("#modalPendiente .noFijacion").hide();
@@ -708,8 +712,7 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
     var oProveedor = MSExecuteOnServer('/CompraNet/BuscarCuitPorId', { ProveedorId: proveedor });
     $("#buscadorProveedorModalPendiente").val(oProveedor.RazonSocial + ' ' + '(' + oProveedor.CUIT + ')');
     $("#fechaDesdeModalPendienteId").val(fechaDesde);
-    $("#fechaHastaModalPendienteId").val(fechaHasta);
-    $("#fechaEntregaModalPendienteId").val(fechaEntrega);
+    $("#fechaHastaModalPendienteId").val(fechaHasta);    
     $("#fechaHoyId").val(fecha);
     $("#tipoModalPendienteId").data("kendoDropDownList").value(tipoId);
     $("#materialModalPendiente").data("kendoDropDownList").value(MaterialId);
@@ -800,7 +803,7 @@ function ObtenerDatosModalPendiente() {
     objPendiente.Cantidad = $("#cantidadModalPendienteId").val();
     objPendiente.Observacion = $("#observacionModalPendienteId").val();
     objPendiente.Precio = $("#precioModalPendienteId").val();
-    objPendiente.FechaEntrega = $("#fechaEntregaModalPendienteId").val();
+    objPendiente.FechaEntrega = $("#fechaHastaModalPendienteId").val();
     objPendiente.CampanaId = $("#campanaModalPendienteId").val();
     objPendiente.FechaDesde = $("#fechaDesdeModalPendienteId").val();
     objPendiente.FechaHasta = $("#fechaHastaModalPendienteId").val();
@@ -1089,7 +1092,7 @@ function ObtenerDatosModalAmpliaciones() {
 
 function GuardarAmpliacion(ampliacion) {
 
-    if ($("#tipoNegocioIdAmpliaciones").val() == '1' || $("#tipoNegocioIdAmpliaciones").val() == '2') {
+    if ($("#tipoNegocioIdAmpliaciones").val() == 'A PRECIO' || $("#tipoNegocioIdAmpliaciones").val() == 'A FIJAR') {
         var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionContrato', ampliacion);
     } else {
         var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionFijacion', ampliacion);

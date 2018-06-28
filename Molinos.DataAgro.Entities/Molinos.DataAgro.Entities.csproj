@@ -155,6 +155,7 @@
     <Compile Include="Entities\TipoNegocio.cs" />
     <Compile Include="Entities\TipoTelefono.cs" />
     <Compile Include="Entities\Zona.cs" />
+    <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Helpers\ValidacionMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

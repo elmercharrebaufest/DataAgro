@@ -3,7 +3,7 @@
 }
 
 <div class="modal fade" id="modalPendiente" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog pendienteM">
         <div id="modalPendienteDiv" class="modal-content">
             <div class="modal-header ">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
@@ -31,11 +31,10 @@
                             <div class="campo clearfix">
                                 <input id="buscadorProveedorModalPendiente" class="k-textbox" type="text" placeholder="Buscar por CUIT, razón social" style="max-width: 550px" />
                                 <div id="buscadorResultModalPendiente"></div>
-                                @*<select id="proveedorModalPendienteId" data-bind="source: ProveedorComboModalPendiente, value: Parametros.proveedorIdModal, disabled: isControlDisabled"></select>*@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 noPadding noFijacion">
+                    <div class="col-xs-12 noPadding noFijacion" style="float: right">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
                             <h5 class="linea-pendiente">Fecha Operación:</h5>
                         </div>
@@ -48,18 +47,28 @@
                     </div>
                     <div class="col-xs-12 noPadding noFijacion">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
-                            <h5 class="linea-pendiente">Fecha Entrega:</h5>
+                            <h5 class="linea-pendiente">Entrega Desde:</h5>
                         </div>
                         <div class="col-xs-9 col-sm-4 noPaddingRight">
                             <div class="campo clearfix">
-                                <input id="fechaEntregaModalPendienteId" placeholder="0" type="date" data-bind="value: Parametros.fechaEntregaModalPendienteIdModal" />
+                                <input type="date" id="fechaDesdeModalPendienteId" data-bind="value: Parametros.fechaDesdeModalPendienteIdModal" />
                                 <img id="errfechaDesdeModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
                             </div>
                         </div>
                     </div>
-                    <input class="hidden" type="date" id="fechaDesdeModalPendienteId" data-bind="value: Parametros.fechaDesdeModalPendienteIdModal" />
-                    <input class="hidden" type="date" id="fechaHastaModalPendienteId" data-bind="value: Parametros.fechaHastaModalPendienteIdModal"/>
-                    <div class="col-xs-12 noPadding noFijacion">
+                    <span/>
+                    <div class="col-xs-12 noPadding noFijacion" >
+                        <div class="col-xs-3 col-sm-2 noPaddingLeft">
+                            <h5 class="linea-pendiente">Entrega Hasta:</h5>
+                        </div>
+                        <div class="col-xs-9 col-sm-4 noPaddingRight">
+                            <div class="campo clearfix">
+                                <input type="date" id="fechaHastaModalPendienteId" data-bind="value: Parametros.fechaHastaModalPendienteIdModal" />
+                                <img id="errfechaHastaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 noPadding">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
                             <h5>Tipo:</h5>
                         </div>
@@ -121,7 +130,7 @@
                                 <img id="errprecioMonedaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
                             </div>
                         </div>
-                    </div>              
+                    </div>
                     <div class="col-xs-12 noPadding">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
                             <h5>Procedencia:</h5>
@@ -162,7 +171,7 @@
                         </div>
                     </div>
                     <div class="col-xs-12 noPadding noFijacion">
-                        <div class="col-xs-3 col-sm-2" >
+                        <div class="col-xs-3 col-sm-2">
                             <h5>Base</h5>
                         </div>
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">

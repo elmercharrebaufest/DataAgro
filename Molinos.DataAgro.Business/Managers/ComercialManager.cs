@@ -340,6 +340,10 @@ namespace Molinos.DataAgro.Business
             return (resultado);
         }
 
+        public EnumPerfil ObtenerPerfil(string activeDirectoryId)
+        {
+            return (EnumPerfil)mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == activeDirectoryId).Select(x => x.PerfilId).FirstOrDefault(); ;
+        }
 
         public bool EsPerfilVisualizador(string activeDirectoryId)
         {
@@ -354,77 +358,7 @@ namespace Molinos.DataAgro.Business
 
             return (resultado);
         }
-
-        public bool EsPerfilComercial(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Comercial && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-        public bool EsPerfilMesa(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Mesa && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-        public bool EsPerfilJefe(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Jefe && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-        public bool EsPerfilAnalista(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Analista && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-        public bool ComercialExiste(int Id,bool BuscarComercialId)
-
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.ComercialId == Id).Count() > 0)
-            {
-                resultado = true;
-            }
-            return (resultado);
-        }
-
+        
         public bool ComercialExiste(string ActiveDirectoryId)
 
         {

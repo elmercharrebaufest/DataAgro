@@ -24,14 +24,6 @@ namespace Molinos.DataAgro.Entities
         Marzo , Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre
     }
 
-    public static class Extensions
-    {
-        public static bool IsNullOrEmpty(this object obj)
-        {
-            return obj == null || String.IsNullOrWhiteSpace(obj.ToString());
-        }
-    }
-
     public class ResultComprasReportesEXCEL
     {
 

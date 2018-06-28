@@ -49,51 +49,47 @@ namespace Molinos.DataAgro.Business.Managers
             mobjUnitOfWork = oUnitOfWork;
         }
 
-        public async Task<List<ComercialQry>> TraerComerciales() {
-
-            List<ComercialQry> listComerciales = new List<ComercialQry>();
-
-            listComerciales = await mobjUnitOfWork.Repository<Comercial>()
+        public async Task<List<ComercialQry>> TraerComerciales()
+        {
+            return await mobjUnitOfWork.Repository<Comercial>()
                              .Queryable()
                              .AsNoTracking()
                              .OrderBy(x => x.Nombres)
                              .ThenBy(x => x.Apellido)
                              .Select(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargo }).ToListAsync();
-
-            return listComerciales;
         }
         
         public async Task<DatosIniContrato> TraerDatosCombo()
         {
-            var DatosCombo = new DatosIniContrato();
+            var datosCombo = new DatosIniContrato();
             
             var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking();
 
-            DatosCombo.prov = await mobjUnitOfWork.Repository<Provincia>()
+            datosCombo.prov = await mobjUnitOfWork.Repository<Provincia>()
                                 .Queryable()
                                 .AsNoTracking()
                                 .Join(oLocalidad, a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new { P = a, L = b })
                                 .GroupBy(x => new { x.P.ProvinciaId, x.P.Nombre })
                                 .Select(x => new ProvinciaQry() { Provinciaid = x.Key.ProvinciaId, Nombre = x.Key.Nombre }).ToListAsync();
 
-            DatosCombo.loc = new List<LocalidadQry>();
+            datosCombo.loc = new List<LocalidadQry>();
 
-            DatosCombo.campaña = await mobjUnitOfWork.Repository<Campaña>()
+            datosCombo.campaña = await mobjUnitOfWork.Repository<Campaña>()
                                 .Queryable()
                                 .AsNoTracking()
                                 .Select(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.material = await mobjUnitOfWork.Repository<Material>()
+            datosCombo.material = await mobjUnitOfWork.Repository<Material>()
                                     .Queryable()
                                     .AsNoTracking()
                                     .Select(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
+            datosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
                                     .Queryable()
                                     .AsNoTracking()
                                     .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
+            datosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
                              .Queryable()
                              .AsNoTracking()
                              .OrderBy(x => x.Nombres)
@@ -101,33 +97,33 @@ namespace Molinos.DataAgro.Business.Managers
                              .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa || x.PerfilId == (int)EnumPerfil.Analista)
                              .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
 
-            DatosCombo.monedaSustentable = await mobjUnitOfWork.Repository<Moneda>()
+            datosCombo.monedaSustentable = await mobjUnitOfWork.Repository<Moneda>()
                                  .Queryable()
                                  .AsNoTracking()
                                  .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
+            datosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
                                .Queryable()
                                .AsNoTracking()
                                .OrderBy(x => x.RazonSocial)
                                .Select(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial }).ToListAsync();
             
-            DatosCombo.tiponegocio = await mobjUnitOfWork.Repository<TipoNegocio>()
+            datosCombo.tiponegocio = await mobjUnitOfWork.Repository<TipoNegocio>()
                                 .Queryable()
                                 .AsNoTracking()
                                 .Select(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).ToListAsync();
 
-            Array estadosValues = System.Enum.GetValues(typeof(EnumEstadoContrato));
+            Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues) {
                 string estadoName = Enum.GetName(typeof(EnumEstadoContrato), estadoValue);
 
                 EstadosContratos item = new EstadosContratos(estadoValue, estadoName);
 
-                DatosCombo.estadoContrato.Add(item);
+                datosCombo.estadoContrato.Add(item);
             }
 
-            return DatosCombo;
+            return datosCombo;
         }
 
         private List<ErrorMessage> Validar(Contrato oParam, List<ErrorMessage> oErrorMessages)
@@ -224,9 +220,7 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<GrabarContratoResult> GrabarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.Errores = new List<ErrorMessage>();
-
-            oEntityErrors.Errores = this.Validar(oContrato, oEntityErrors.Errores);
+            Validar(oContrato, oEntityErrors.Errores);
 
             if (oEntityErrors.Errores.Count > 0)
             {
@@ -392,7 +386,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ContratoSAP = cont.ContratoSAP,
                     Ampliaciones = cont.Ampliaciones,
                     Proveedor = prove == null ? "" : prove.RazonSocial,
-                    Comercial = come == null ? "" : come.Nombres,
+                    Comercial = come == null ? "" : come.Nombres + " " + come.Apellido,
                     Material = mat == null ? "" : mat.Descripcion,
                     Campania = camp == null ? "" : camp.Descripcion,
                     Provincia = provi == null ? "" : provi.Nombre,
@@ -521,8 +515,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
             }
-
-
+            
             var objCampania = await mobjCampaniaManager.TraerCampaniaAsync(oContratoSave.CampanaId);
             var objMaterial = await mobjMaterialManager.TraerMaterialAsync(oContratoSave.MaterialId);
             var objProvincia = await mobjProvinciaManager.TraerProvinciaAsync(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
@@ -587,7 +580,7 @@ namespace Molinos.DataAgro.Business.Managers
             
         }
 
-        public async Task<int> ObtenerComercialId(string idActiveDirectory)
+        public int ObtenerComercialId(string idActiveDirectory)
         {
             return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == idActiveDirectory).SingleOrDefault().ComercialId;
         }

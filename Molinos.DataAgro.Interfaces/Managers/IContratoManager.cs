@@ -34,12 +34,9 @@ namespace Molinos.DataAgro.Interfaces
 
         Task<GrabarContratoResult> GrabarAmpliacionContrato(Contrato oContrato);
 
-        Task<int> ObtenerComercialId(string idActiveDirectory);
+        int ObtenerComercialId(string idActiveDirectory);
 
         Task<List<ComercialQry>> TraerComerciales();
-
-            //Task<GrabarContratoResult> UpdateContrato(NuevoContrato oParam, string idActiveDirectory);
-
 
         }
 }

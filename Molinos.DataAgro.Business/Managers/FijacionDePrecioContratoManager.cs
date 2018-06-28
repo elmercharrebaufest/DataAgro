@@ -51,31 +51,31 @@ namespace Molinos.DataAgro.Business.Managers {
 
         public async Task<DatosIniAbmFijacionDePrecioContrato> TraerDatosInicialesAsync()
         {
-            var DatosCombo = new DatosIniAbmFijacionDePrecioContrato();
+            var datosCombo = new DatosIniAbmFijacionDePrecioContrato();
 
             var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking();
 
-            DatosCombo.material = await mobjUnitOfWork.Repository<Material>()
+            datosCombo.material = await mobjUnitOfWork.Repository<Material>()
                                     .Queryable()
                                     .AsNoTracking()
                                     .Select(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
+            datosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
                                     .Queryable()
                                     .AsNoTracking()
                                     .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
 
-            DatosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
+            datosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
                              .Queryable()
                              .AsNoTracking()
                              .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
 
-            DatosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
+            datosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
                                .Queryable()
                                .AsNoTracking()
                                .Select(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial }).ToListAsync();
 
-            return DatosCombo;
+            return datosCombo;
         }
 
 

@@ -3,6 +3,7 @@ using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
@@ -77,44 +78,43 @@ namespace WebDataAgro.Controllers
 
         private async Task<List<ComercialQry>> RecuperaEquipo(string idActiveDirectory)
         {
-
-            int ComercialId = await mobjContratoManager.ObtenerComercialId(idActiveDirectory);
-            
+            int comercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
+            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
             List<ComercialQry> listComercial = new List<ComercialQry>();
 
             ComercialQry comercial = new ComercialQry();
 
             List<ComercialQry> listComercialAux = await mobjContratoManager.TraerComerciales();
 
-            if (mobjComercialManager.EsPerfilComercial(idActiveDirectory))
+            if (perfil == EnumPerfil.Comercial)
             {
-                comercial.ComercialId = ComercialId;
+                comercial.ComercialId = comercialId;
 
                 listComercial.Add(comercial);
             }
-            else if (mobjComercialManager.EsPerfilJefe(idActiveDirectory))
+            else if (perfil == EnumPerfil.Jefe)
             {
-                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
+                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
                 foreach (ComercialQry comerciallista in listComercialAux)
                 {
                     listComercial.Add(comerciallista);
                 }
-                comercial.ComercialId = ComercialId;
+                comercial.ComercialId = comercialId;
 
                 listComercial.Add(comercial);
             }
-            else if (mobjComercialManager.EsPerfilAnalista(idActiveDirectory))
+            else if (perfil == EnumPerfil.Analista)
             {
-                listComercialAux.RemoveAll(x => ComercialId != x.EmpleadorACargo);
+                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
                 foreach (ComercialQry comerciallista in listComercialAux)
                 {
                     listComercial.Add(comerciallista);
                 }
-                comercial.ComercialId = ComercialId;
+                comercial.ComercialId = comercialId;
 
                 listComercial.Add(comercial);
             }
-            else if (mobjComercialManager.EsPerfilMesa(idActiveDirectory))
+            else if (perfil == EnumPerfil.Mesa)
             {
                 listComercial = listComercialAux;
             }
