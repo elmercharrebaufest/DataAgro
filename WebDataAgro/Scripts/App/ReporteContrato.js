@@ -134,7 +134,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate },
                 ]
             },
-            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
+            { field: "Comercial", title: "Comercial", filterable: { multi: true, search: true } },
             { field: "Sustentable", columns: [
                     { field: "Sustentable", title: " ", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false},
@@ -296,10 +296,9 @@ function CreateGridInformeCompraNet() {
         
     };
     //Con definir un método de estos para cada columna multiselect estamos, 
-    function createMultiSelectComercial(element) {
-        //createMultiSelect(element, <campo a mostrar>, <campo a filtrar>, <action>)
-        return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
-    };
+    //function createMultiSelectComercial(element) {
+    //    return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
+    //};
     function createMultiSelectProvincia(element) {
         return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
     }

@@ -1,17 +1,16 @@
 ﻿using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
 
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -54,10 +53,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ReporteProveedor()
         {
-            IComercialManager mobComercialManager = new Molinos.DataAgro.Business.ComercialManager();
-            mobComercialManager.Inicializar(mobjMSContext);
-
-            if (mobComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobComercialManager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
@@ -68,10 +64,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Agregar(int? ProveedorId)
         {
-
-            IComercialManager mobComercialManager = new Molinos.DataAgro.Business.ComercialManager();
-            mobComercialManager.Inicializar(mobjMSContext);
-            if (mobComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobComercialManager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 return RedirectToAction("Index", "Error");
             }
@@ -170,7 +163,7 @@ namespace WebDataAgro.Controllers
             }
 
             
-            if(mobComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobComercialManager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 mostrarEditar = false;
                 ViewBag.edita = false;

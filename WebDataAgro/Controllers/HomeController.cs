@@ -19,6 +19,7 @@ using System.Configuration;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -44,6 +45,7 @@ namespace WebDataAgro.Controllers
 
 
         private string idActiveDirectory;
+        private object mobcomercialmanager;
 
         //-----------------------------------------------------
         //  Constructor
@@ -67,19 +69,19 @@ namespace WebDataAgro.Controllers
         {
             string ActionView = "";
             
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-            
-            if (GlobalVariables.EsPerfilAdministrativo == "True" || GlobalVariables.EsPerfilVisualizador == "True")
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
+
+            IComercialManager mobcomercialmanager = new ComercialManager();
+            mobcomercialmanager.Inicializar(mobjMSContext);
 
             if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
-            else if (mobcomercialmanager.EsAdmin(idActiveDirectory))
+            else if (GlobalVariables.EsAdministrador)
             {
 
                 ViewBag.esadmin = true;

@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -58,68 +59,20 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Index()
         {
-            if (mobjComercialManager.EsPerfilAdministrativo(idActiveDirectory) || mobjComercialManager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
 
             return View();
         }
-        
-        [HttpPost]
-        public async Task<ActionResult> BuscaDatosTabla(KendoGridMvcRequest request)
-        {
-            List<ComercialQry> listComercial = await RecuperaEquipo(idActiveDirectory);
 
-            var model = mobjContratoManager.TraerTodosContratos(request, listComercial);
+        [HttpPost]
+        public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
+        {
+            var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);
-        }
-
-        private async Task<List<ComercialQry>> RecuperaEquipo(string idActiveDirectory)
-        {
-            int comercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
-            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
-            List<ComercialQry> listComercial = new List<ComercialQry>();
-
-            ComercialQry comercial = new ComercialQry();
-
-            List<ComercialQry> listComercialAux = await mobjContratoManager.TraerComerciales();
-
-            if (perfil == EnumPerfil.Comercial)
-            {
-                comercial.ComercialId = comercialId;
-
-                listComercial.Add(comercial);
-            }
-            else if (perfil == EnumPerfil.Jefe)
-            {
-                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
-                foreach (ComercialQry comerciallista in listComercialAux)
-                {
-                    listComercial.Add(comerciallista);
-                }
-                comercial.ComercialId = comercialId;
-
-                listComercial.Add(comercial);
-            }
-            else if (perfil == EnumPerfil.Analista)
-            {
-                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
-                foreach (ComercialQry comerciallista in listComercialAux)
-                {
-                    listComercial.Add(comerciallista);
-                }
-                comercial.ComercialId = comercialId;
-
-                listComercial.Add(comercial);
-            }
-            else if (perfil == EnumPerfil.Mesa)
-            {
-                listComercial = listComercialAux;
-            }
-
-            return listComercial;
         }
 
         public ActionResult ListarComercial(string text)

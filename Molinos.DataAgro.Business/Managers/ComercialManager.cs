@@ -310,54 +310,6 @@ namespace Molinos.DataAgro.Business
 
             return oEntityErrors;
         }
-
-        public bool EsAdmin(string ActiveDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.Administrador.Value == true && x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-
-        public bool EsPerfilAdministrativo(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Administrativo && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-        public EnumPerfil ObtenerPerfil(string activeDirectoryId)
-        {
-            return (EnumPerfil)mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == activeDirectoryId).Select(x => x.PerfilId).FirstOrDefault(); ;
-        }
-
-        public bool EsPerfilVisualizador(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Visualizador && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
         
         public bool ComercialExiste(string ActiveDirectoryId)
 

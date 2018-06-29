@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Interfaces
 
         void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork);
 
-        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<ComercialQry> listComercial);
+        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId);
 
         Task<DatosIniContrato> TraerDatosCombo();
 
@@ -35,8 +35,5 @@ namespace Molinos.DataAgro.Interfaces
         Task<GrabarContratoResult> GrabarAmpliacionContrato(Contrato oContrato);
 
         int ObtenerComercialId(string idActiveDirectory);
-
-        Task<List<ComercialQry>> TraerComerciales();
-
-        }
+     }
 }

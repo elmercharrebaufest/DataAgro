@@ -11,6 +11,8 @@ using WebDataAgro.Models;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Autofac.Extras.NLog;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -39,13 +41,15 @@ namespace WebDataAgro.Controllers
 
         private IProveedorManager mobjProveedorManager;
 
+        private ILogger mobjLogger;
+
         private string idActiveDirectory;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public CompraNetController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager) {
+        public CompraNetController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger) {
 
 
             mobjMSContext = oMSContextProvider.GetMSContext();
@@ -86,6 +90,8 @@ namespace WebDataAgro.Controllers
 
             mobjLocalidadManager.Inicializar(mobjMSContext);
 
+            mobjLogger = oLogger;
+            
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 
@@ -94,11 +100,9 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
 
         public ActionResult Index() {
-            ViewBag.perfil = "";
-
-            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
-            ViewBag.perfil = perfil.DisplayEnum();
-
+            ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
+            ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
+            mobjLogger.Debug("Hola");
             return View();
 
         }
@@ -176,10 +180,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> ConfirmarContrato(Contrato oParam) {
-            GrabarContratoResult model = new GrabarContratoResult();
-            
-            model = await mobjContratoManager.ConfirmarContrato(oParam);
+        public async Task<ActionResult> ConfirmarContrato(Contrato oParam)
+        {         
+            var model = await mobjContratoManager.ConfirmarContrato(oParam);
 
             return new JsonResult() {
                 Data = model,
@@ -189,9 +192,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> BorrarContrato(Contrato oParam)
         {
-
-            GrabarContratoResult model = new GrabarContratoResult();
-            model = await mobjContratoManager.BorrarContrato(oParam);
+            var model = await mobjContratoManager.BorrarContrato(oParam);
 
             return new JsonResult()
             {
@@ -224,10 +225,10 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> ReenviarMails(Contrato oParam)
+        public ActionResult ReenviarMails(Contrato oParam)
         {
-            GrabarContratoResult model = new GrabarContratoResult();
-            
+            var model = new GrabarContratoResult();
+
             return new JsonResult()
             {
                 Data = model,
@@ -237,9 +238,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> GrabarAmpliacionContrato(Contrato oParam)
         {
-            GrabarContratoResult model = new GrabarContratoResult();
-
-            model = await mobjContratoManager.GrabarAmpliacionContrato(oParam);
+            var model = await mobjContratoManager.GrabarAmpliacionContrato(oParam);
 
             return new JsonResult() {
                 Data = model,
@@ -247,10 +246,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> GrabarAmpliacionFijacion(FijacionDePrecioContrato oParam) {
-            GrabarContratoResult model = new GrabarContratoResult();
-
-            model = await mobjFijacionDePrecioContratoManager.GrabarAmpliacionFijacion(oParam);
+        public async Task<ActionResult> GrabarAmpliacionFijacion(FijacionDePrecioContrato oParam)
+        {
+            var model = await mobjFijacionDePrecioContratoManager.GrabarAmpliacionFijacion(oParam);
 
             return new JsonResult() {
                 Data = model,
@@ -260,11 +258,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> GrabarFijacion(FijacionDePrecioContrato oParam)
         {
-            GrabarFijacionResult model = new GrabarFijacionResult();
-
-            //var entityErrors = await mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecioAsync(oParam, idActiveDirectory);
-
-            model = await mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecioAsync(oParam);
+            var model = await mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecioAsync(oParam);
 
             return new JsonResult()
             {
@@ -273,58 +267,26 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> TraerContrato(string contratoId) {
-
-            var model = new Contrato();
-
-            model = await mobjContratoManager.TraerContratoAsync(Convert.ToInt32(contratoId));
+        public async Task<ActionResult> TraerContrato(string contratoId)
+        {
+            var model = await mobjContratoManager.TraerContratoAsync(Convert.ToInt32(contratoId));
 
             return new JsonResult() {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult> BuscaDatosTabla(KendoGridMvcRequest request)
+        public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {
-            List<ComercialQry> listComercial = await RecuperaEquipo(idActiveDirectory);
-           
-            var model = mobjContratoManager.TraerTodosContratos(request, listComercial);
+            var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);
         }
 
-        private async Task<List<ComercialQry>> RecuperaEquipo(string idActiveDirectory) {
-            
-            int comercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
-            var perfil = mobjComercialManager.ObtenerPerfil(idActiveDirectory);
-            var listComercialAux = await mobjContratoManager.TraerComerciales();
-
-            var listComercial = new List<ComercialQry>();
-            
-            if (perfil == EnumPerfil.Comercial || perfil == EnumPerfil.Jefe || perfil == EnumPerfil.Analista)
-            {
-                listComercial.Add(new ComercialQry() { ComercialId = comercialId });
-            }
-            if(perfil == EnumPerfil.Jefe || perfil == EnumPerfil.Analista)
-            {
-                listComercialAux.RemoveAll(x => comercialId != x.EmpleadorACargo);
-                foreach (ComercialQry comerciallista in listComercialAux)
-                {
-                    listComercial.Add(comerciallista);
-                }
-            }
-            if (perfil == EnumPerfil.Mesa)
-            {
-                listComercial = listComercialAux;
-            }
-
-            return listComercial;
-        }
-
-        public async Task<ActionResult> TraerCampanaPorMaterial(int? MaterialId) {
-
+        public async Task<ActionResult> TraerCampanaPorMaterial(int? MaterialId)
+        {
             if (MaterialId == null) MaterialId = 0;
 
             var model = await mobjCampañaManager.TraerCampañaPorMaterial(Convert.ToInt32(MaterialId));
@@ -335,8 +297,8 @@ namespace WebDataAgro.Controllers
             };
         }
         
-        public async Task<ActionResult> TraerLocalidadPorProvincia(int? ProvinciaId) {
-
+        public async Task<ActionResult> TraerLocalidadPorProvincia(int? ProvinciaId)
+        {
             if (ProvinciaId == null) ProvinciaId = 0;
 
             var model = await mobjLocalidadManager.TraerLocalidadPorProvincia(ProvinciaId.Value);
@@ -347,40 +309,32 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<int?> TraerCampanaActualMaterial(int MaterialId) {
-
-            Material material = await mobjMaterialManager.TraerMaterialAsync(MaterialId);
+        public async Task<int?> TraerCampanaActualMaterial(int MaterialId)
+        {
+            var material = await mobjMaterialManager.TraerMaterialAsync(MaterialId);
             
             return material.CampañaId;
-
         }
 
-        public async Task<ActionResult> ObtenerComercialId() {
-
+        public ActionResult ObtenerComercialId()
+        {
             var ComercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = ComercialId,
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<int> ObtenerProveedorId (string Cuit) {
-
-            int proveedorId = 0;
-
-            ProveedorQry oProveedor = await mobjProveedorManager.TraerProveedorPorCuit(Cuit);
-
-            proveedorId = oProveedor.ProveedorId;
-
-            return proveedorId;
+        public async Task<int> ObtenerProveedorId (string Cuit)
+        {          
+            return (await mobjProveedorManager.TraerProveedorPorCuit(Cuit)).ProveedorId;
         }
 
-        public async Task<ActionResult> ObtenerProvinciaLocalidad (string Cuit) {
-
-            var model = new DatosLocalidadProvincia();
-
-            model = await mobjProveedorManager.TraerLocalidadProveedorPorCuitAsync(Cuit);
+        public async Task<ActionResult> ObtenerProvinciaLocalidad (string Cuit)
+        {
+            var model = await mobjProveedorManager.TraerLocalidadProveedorPorCuitAsync(Cuit);
 
             return new JsonResult() {
                 Data = model,
@@ -390,10 +344,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ObtenerProvinciaLocalidadProv(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)
         {
-
-            var model = new DatosLocalidadProvincia();
-
-            model = await mobjProveedorManager.TraerLocalidadProveedorPorCuitAsync(oDatosLocalidadProvinciaFiltro);
+            var model = await mobjProveedorManager.TraerLocalidadProveedorPorCuitAsync(oDatosLocalidadProvinciaFiltro);
 
             return new JsonResult()
             {
@@ -402,11 +353,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> BuscarCuitPorId(int? ProveedorId) {
-
-            var model = new Proveedor();
-
-            model = await mobjProveedorManager.TraerProveedor(ProveedorId);
+        public async Task<ActionResult> BuscarCuitPorId(int? ProveedorId)
+        {
+            var model = await mobjProveedorManager.TraerProveedor(ProveedorId);
 
             return new JsonResult() {
                 Data = model,

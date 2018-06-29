@@ -14,6 +14,8 @@ using WebDataAgro.Models;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Business;
+using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -45,12 +47,8 @@ namespace WebDataAgro.Controllers
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjComercialManager = oComercialManager;
             mobjComercialManager.Inicializar(mobjMSContext);
-
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-
-
-            if (mobcomercialmanager.EsPerfilAdministrativo(idActiveDirectory) || mobcomercialmanager.EsPerfilVisualizador(idActiveDirectory))
+            
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Molinos.DataAgro.Entities.Common.Enums
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "CompraNet";
 }
@@ -12,10 +14,11 @@
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
 
-@if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+@if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
 {
 
     <input type="hidden" id="perfil" value="@ViewBag.perfil" />
+    <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
     <!--container-->
     <div class="panelflotante">
         <div class="row">
@@ -24,7 +27,7 @@
                     <i class="fa fa-file-o"></i>
                     Crear Nuevo Contrato/Fijacion
                 </span>
-               
+
             </div>
             <div class="autoRecarga" style="float:right">
                 Autorecargar: <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>

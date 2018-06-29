@@ -36,7 +36,7 @@ $(document).ready(function () {
     });
     $("#crearContrato").click(function () {
 
-        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "Analista") {
+        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") {
             window.location.href = window.location.origin + "/CompraNet/CrearContrato";
         } else {
             MensInfo("No posee permisos para la carga de contratos");
@@ -215,7 +215,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
-            if (($("#perfil").val() === "Analista")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");}
+            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");}
         },
         columns: [
             {
@@ -262,7 +262,7 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Cantidad", type: "number", width: 70, format: "{0:n0}" },
             { field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
-                if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "Analista") && dataItem.Estado == 2) {
+                if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocio + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3) {
@@ -297,7 +297,7 @@ function CreateGridInformeCompraNet() {
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
                 }, template: function (dataItem) {
-                    if (dataItem.Estado == 1 && ($("#perfil").val() == "Mesa" || $("#perfil").val() == "Analista")) { //pendiente
+                    if (dataItem.Estado == 1 && ($("#perfil").val() == "Mesa")) { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
                             botonConfirmadoTilde(dataItem, 'fa-check pend') +
@@ -311,7 +311,7 @@ function CreateGridInformeCompraNet() {
                            
                     }
 
-                    if (dataItem.Estado == 2 && ($("#perfil").val() == "Mesa" || $("#perfil").val() == "Analista")) { //confirmado
+                    if (dataItem.Estado == 2 && ($("#perfil").val() == "Mesa")) { //confirmado
                         return '<div class="status confirmado">Confirmado</div>' +
                             botonPendiente(dataItem, 'fa-pencil conf') +
                             botonFinalizado(dataItem, 'fa-flag-checkered conf') +
@@ -324,7 +324,7 @@ function CreateGridInformeCompraNet() {
                             botonVisualizar(dataItem, 'fa-eye conf');
                             
                     }
-                    if (dataItem.Estado == 3 && ($("#perfil").val() == "Mesa" || $("#perfil").val() == "Analista")) { //Oferta
+                    if (dataItem.Estado == 3 && ($("#perfil").val() == "Mesa")) { //Oferta
                         return '<div class="status oferta">Oferta</div>' +
                             botonPendiente(dataItem, 'fa-pencil ofe') +
                             botonConfirmadoTilde(dataItem, 'fa-check ofe') +
@@ -338,7 +338,7 @@ function CreateGridInformeCompraNet() {
                            
                     }
 
-                    if (dataItem.Estado == 4 && ($("#perfil").val() == "Mesa" || $("#perfil").val() == "Analista")) { //error
+                    if (dataItem.Estado == 4 && ($("#perfil").val() == "Mesa")) { //error
                         return '<div class="status error">Con Error</div>' +
                             botonPendiente(dataItem, 'fa-pencil err') +
                             botonFinalizado(dataItem, 'fa-flag-checkered err') +
@@ -924,7 +924,7 @@ function Finalizar(finalizarContratoFijacion) {
     if (result != null) {
         if (result.Errores != null) {
             if (ExistsErrorMessages(result.Errores)) {
-                MensErr("No se ha podido finalizar el contrato correctamente");
+                MensErr("No se ha podido finalizar el contrato correctamente: " + result.Errores[0].Message);
             }
         }
         

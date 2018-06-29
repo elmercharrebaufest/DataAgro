@@ -9,6 +9,8 @@ using WebDataAgro.Core;
 using WebDataAgro.Models;
 using Molinos.DataAgro.Report;
 using Molinos.DataAgro.Business;
+using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -47,17 +49,15 @@ namespace WebDataAgro.Controllers
 
             if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
             {
-
                 ActionView = "ErrorDePermisos";
-
             }
 
-            if (mobcomercialmanager.EsPerfilAdministrativo(idActiveDirectory) || mobcomercialmanager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
 
-            else if (mobcomercialmanager.EsAdmin(idActiveDirectory))
+            else if (GlobalVariables.EsAdministrador)
             {
 
                 ViewBag.esadmin = true;

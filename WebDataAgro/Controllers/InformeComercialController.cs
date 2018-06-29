@@ -17,6 +17,8 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using Molinos.DataAgro.Entities.Domain;
 using Molinos.DataAgro.Business;
+using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
@@ -58,14 +60,11 @@ namespace WebDataAgro.Controllers
 
             mobjComercialManager = oComercialManager;
             mobjComercialManager.Inicializar(mobjMSContext);
-
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-
+            
             mobjHomeManager = oHomeManager;
             mobjHomeManager.Inicializar(mobjMSContext);
 
-            if (mobcomercialmanager.EsPerfilAdministrativo(idActiveDirectory) || mobcomercialmanager.EsPerfilVisualizador(idActiveDirectory))
+            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }

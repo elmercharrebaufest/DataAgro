@@ -76,69 +76,22 @@ namespace WebDataAgro.Core
 
             return oMSContext;
         }
-
-
-
+        
         public static string GetUsuario()
         {
             var strIdentity = HttpContext.Current.User.Identity.Name;
 
             return strIdentity.ToString().Split('\\')[1];
-
-        }
-
-        public static bool IsAdmin()
-        {            
-            Molinos.DataAgro.Business.ComercialManager cm = new Molinos.DataAgro.Business.ComercialManager();
-            cm.Inicializar(GetMSContext());
-            return  cm.EsAdmin(System.Environment.UserName);
-        }
-        
-
-        public static bool EsPerfilAdministrativo(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var unitOfWork = new UnitOfWork(GetMSContext(), new DataAgroContext(GetMSContext()));
-            var oComercial = unitOfWork.Repository<Comercial>().Queryable();
-                 
-            if (oComercial.Where(h => h.PerfilId == (int)EnumPerfil.Administrativo && h.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
-        }
-
-
-        public static bool EsPerfilVisualizador(string activeDirectoryId)
-        {
-            bool resultado = false;
-
-            var unitOfWork = new UnitOfWork(GetMSContext(), new DataAgroContext(GetMSContext()));
-            var oComercial = unitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.PerfilId == (int)EnumPerfil.Visualizador && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
         }
 
         public static int ObtenerPerfilDeUsuario(string activeDirectoryId)
         {
-            int resultado = 0;
-
             var unitOfWork = new UnitOfWork(GetMSContext(), new DataAgroContext(GetMSContext()));
             var oComercial = unitOfWork.Repository<Comercial>().Queryable();
-
-            resultado = oComercial.Where(x => x.IdActiveDirectory == activeDirectoryId).FirstOrDefault().PerfilId;
-
-            return resultado;
+            
+            return oComercial.Where(x => x.IdActiveDirectory == activeDirectoryId).Select(x => x.PerfilId).FirstOrDefault();
         }
-
-
+        
         public static bool EsAdministrador(string activeDirectoryId)
         {
             bool resultado = false;
@@ -146,7 +99,7 @@ namespace WebDataAgro.Core
             var unitOfWork = new UnitOfWork(GetMSContext(), new DataAgroContext(GetMSContext()));
             var oComercial = unitOfWork.Repository<Comercial>().Queryable();
 
-            if (oComercial.Where(x => x.Administrador == true  && x.IdActiveDirectory == activeDirectoryId).Count() > 0)
+            if (oComercial.Any(x => x.Administrador == true  && x.IdActiveDirectory == activeDirectoryId))
             {
                 resultado = true;
             }
@@ -154,13 +107,38 @@ namespace WebDataAgro.Core
             return (resultado);
         }
 
-        /*
-        public static string GetNombre()
+        public static List<int> ListarEquipo(string idActiveDirectory)
         {
-            UserPrincipal userPrincipal = UserPrincipal.Current;
-            return userPrincipal.DisplayName;
+            var unitOfWork = new UnitOfWork(GetMSContext(), new DataAgroContext(GetMSContext()));
+
+            var comercial = unitOfWork.Repository<Comercial>()
+                             .Queryable().SingleOrDefault(x => x.IdActiveDirectory == idActiveDirectory);
+
+            var comerciales = unitOfWork.Repository<Comercial>()
+                             .Queryable()
+                             .Select(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargo }).ToList();
+            List<int> listComercialesId;
+            if (comercial.PerfilId == (int)EnumPerfil.Mesa)
+            {
+                listComercialesId = comerciales.Select(x => x.ComercialId).ToList();
+            }
+            else
+            {
+                listComercialesId = ListarEquipo(comercial.ComercialId, comerciales);
+            }
+            return listComercialesId;
         }
-        */
+
+        private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)
+        {
+            var resultado = new List<int> { comercialId };
+            foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
+            {
+                comerciales.Remove(comercial);
+                resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
+            }
+            return resultado;
+        }
 
         public static List<MSErrorMessage> EntityErrorsToMSErrorMessage(EntityErrors entityErrors)
         {
@@ -199,7 +177,6 @@ namespace WebDataAgro.Core
             return result;
         }
 
-
         public static IEnumerable<MSErrorMessage> EntityErrorsToMSErrorMessage(EntityErrors entityErrors, string entityName)
         {
             var result = new List<MSErrorMessage>();
@@ -218,7 +195,6 @@ namespace WebDataAgro.Core
 
             return result;
         }
-
 
         public static string EntityErrorsToItemError(EntityErrors entityErrors, string entityName, int indice)
         {
@@ -241,7 +217,6 @@ namespace WebDataAgro.Core
 
             return msg;
         }
-
         public static int? ToNullInt(int nValor)
         {
             if (nValor == 0)
@@ -253,7 +228,6 @@ namespace WebDataAgro.Core
                 return nValor;
             }
         }
-
 
         public static int ToInt(object nValor)
         {
@@ -271,7 +245,6 @@ namespace WebDataAgro.Core
             return intValor;
         }
 
-
         public static string ToStr(object cValor)
         {
             string strCadena = "";
@@ -288,7 +261,6 @@ namespace WebDataAgro.Core
             return strCadena;
         }
 
-
         private static byte[] GetPasswordBytes()
         {
             var key = "sadhgj6123hhdajdkqjnzqfjlka7Z23";
@@ -298,18 +270,15 @@ namespace WebDataAgro.Core
             return System.Security.Cryptography.SHA256.Create().ComputeHash(ba);
         }
 
-
         public static string EncryptData(string text)
         {
             return AES.Encrypt(text, GetPasswordBytes());
         }
 
-
         public static string DecryptString(string text)
         {
             return AES.Decrypt(text, GetPasswordBytes());
         }
-
 
         public static string GetDownloadKey(string key)
         {
@@ -320,12 +289,10 @@ namespace WebDataAgro.Core
             return res;
         }
 
-
         public static string GetPathFiles()
         {
             return ConfigurationManager.AppSettings["PathFiles"];
         }
-
 
         public static string GetFullPathPDF(string strFile)
         {
@@ -336,7 +303,6 @@ namespace WebDataAgro.Core
         {
             return value.Substring(value.Length - length);
         }
-
-
+        
     }
 }

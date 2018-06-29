@@ -14,6 +14,8 @@ using Autofac.Integration.Mvc;
 using Molinos.DataAgro.Interfaces;
 using WebDataAgro.Core;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Autofac.Extras.NLog;
 
 namespace WebDataAgro
 {
@@ -39,7 +41,7 @@ namespace WebDataAgro
                    .Where(t => t.Name.EndsWith("Manager"))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
-
+            builder.RegisterModule<NLogModule>();
             var container = builder.Build();
             
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
@@ -50,13 +52,13 @@ namespace WebDataAgro
         public void Session_OnStart()
         {            
             var usuario = Util.GetUsuario();
-            bool esPerfilAdministrativo = Util.EsPerfilAdministrativo(usuario);
-            bool esPerfilVisualizador = Util.EsPerfilVisualizador(usuario);
-            bool esAdministrador = Util.EsAdministrador(usuario);
-
-            GlobalVariables.EsPerfilAdministrativo = esPerfilAdministrativo.ToString();
-            GlobalVariables.EsPerfilVisualizador = esPerfilVisualizador.ToString();
-            GlobalVariables.EsAdministrador = esAdministrador.ToString();
+            var perfil = Util.ObtenerPerfilDeUsuario(usuario);
+            var equipo = Util.ListarEquipo(usuario);
+            
+            GlobalVariables.Perfil = (EnumPerfil)perfil;
+            GlobalVariables.EsAdministrador = Util.EsAdministrador(usuario);
+            GlobalVariables.TieneEmpleadosACargo = equipo.Count > 1;
+            GlobalVariables.Equipo = equipo;
         }
 
 
@@ -77,35 +79,23 @@ namespace WebDataAgro
         public static class GlobalVariables
         {            
             // read-write variable
-            public static string EsPerfilAdministrativo
+            public static EnumPerfil Perfil
             {
                 get
                 {
-                    return HttpContext.Current.Application["esPerfilAdministrativo"] as string;
+                    return (EnumPerfil)HttpContext.Current.Application["perfil"];
                 }
                 set
                 {
-                    HttpContext.Current.Application["esPerfilAdministrativo"] = value;
+                    HttpContext.Current.Application["perfil"] = value;
                 }
             }
 
-            public static string EsPerfilVisualizador
+            public static bool EsAdministrador
             {
                 get
                 {
-                    return HttpContext.Current.Application["esPerfilVisualizador"] as string;
-                }
-                set
-                {
-                    HttpContext.Current.Application["esPerfilVisualizador"] = value;
-                }
-            }
-
-            public static string EsAdministrador
-            {
-                get
-                {
-                    return HttpContext.Current.Application["esAdministrador"] as string;
+                    return HttpContext.Current.Application["esAdministrador"] as bool? ?? false;
                 }
                 set
                 {
@@ -113,6 +103,29 @@ namespace WebDataAgro
                 }
             }
 
+            public static bool TieneEmpleadosACargo
+            {
+                get
+                {
+                    return HttpContext.Current.Application["tieneEmpleadosACargo"] as bool? ?? false;
+                }
+                set
+                {
+                    HttpContext.Current.Application["tieneEmpleadosACargo"] = value;
+                }
+            }
+
+            public static List<int> Equipo
+            {
+                get
+                {
+                    return (List<int>)HttpContext.Current.Application["equipo"];
+                }
+                set
+                {
+                    HttpContext.Current.Application["equipo"] = value;
+                }
+            }
         }
 
     }

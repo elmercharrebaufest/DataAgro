@@ -33,22 +33,13 @@ namespace Molinos.DataAgro.Interfaces
         Task<EntityErrors> EliminarComercialAsync(int intComercialId);
 
         List<Comercial> ListarComercial(string comercial);
-
-        bool EsAdmin(string ActiveDirectoryId);
-
-        EnumPerfil ObtenerPerfil(string activeDirectoryId);
-
-        bool EsPerfilAdministrativo(string activeDirectoryId);
-
-        bool EsPerfilVisualizador(string activeDirectoryId);
-
+        
         bool ComercialExiste(string ActiveDirectoryId);
 
         bool ComercialPerteneceProveedor(string ActiveDirectory_Id, int Proveedor_Id);
 
         Task<int> VerificarGrupoComercial(string grupoDeCompra);
 
-        //void ActualizarNumeroSAPGrupoDeCompras(int GrupoCompraId, string NumeroSAP);
     }
 }
 

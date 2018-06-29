@@ -49,16 +49,6 @@ namespace Molinos.DataAgro.Business.Managers
             mobjUnitOfWork = oUnitOfWork;
         }
 
-        public async Task<List<ComercialQry>> TraerComerciales()
-        {
-            return await mobjUnitOfWork.Repository<Comercial>()
-                             .Queryable()
-                             .AsNoTracking()
-                             .OrderBy(x => x.Nombres)
-                             .ThenBy(x => x.Apellido)
-                             .Select(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargo }).ToListAsync();
-        }
-        
         public async Task<DatosIniContrato> TraerDatosCombo()
         {
             var datosCombo = new DatosIniContrato();
@@ -94,7 +84,7 @@ namespace Molinos.DataAgro.Business.Managers
                              .AsNoTracking()
                              .OrderBy(x => x.Nombres)
                              .ThenBy(x => x.Apellido)
-                             .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa || x.PerfilId == (int)EnumPerfil.Analista)
+                             .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa)
                              .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
 
             datosCombo.monedaSustentable = await mobjUnitOfWork.Repository<Moneda>()
@@ -292,11 +282,8 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<ComercialQry> listComercial)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId)
         {
-
-            List<int> listComercialesId = listComercial.Select(x => x.ComercialId).ToList();
-
             var oResult = new StoredPorContratoResult();
 
             var oContrato = mobjUnitOfWork.Repository<Contrato>().Queryable();
@@ -588,7 +575,6 @@ namespace Molinos.DataAgro.Business.Managers
         public string SAPFinalizarContrato(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string comercial)
         {
             var SapFinalizarContrato = new FinalizarContratoAgent();
-            //var aux = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
             return SapFinalizarContrato.Finalizar(contrato, campaniaDescripcion, materialCodigo, provinciaId, tiponegocioDescripcion, localidadCod, proveedorCUIT, comercial);
         }
 

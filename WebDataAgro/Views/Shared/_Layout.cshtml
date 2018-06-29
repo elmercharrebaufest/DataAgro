@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Molinos.DataAgro.Entities.Common.Enums
+<!DOCTYPE html>
 
 <html lang="en">
     <head>
@@ -86,7 +87,7 @@
                                 <span> Informes</span>
                             </a>
                         </li>
-                        @if (global_asax.GlobalVariables.EsAdministrador == "True")
+                        @if (global_asax.GlobalVariables.EsAdministrador)
                         {
                         <li class="mis-tablas-li">
                             <a onclick="return false" id="tablas-a">
@@ -95,7 +96,7 @@
                             </a>
                         </li>
                         }
-                        @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False") {
+                        @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador) {
                         <li class="mis-compraNet-li">
                             <a href="/CompraNet">
                                 <img class="miscontactos-nav-link" src="~/Content/Images/menu-miscontactos.png" />
@@ -162,7 +163,7 @@
                     </a>
                 </li>
 
-                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+                @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                 {
                     <li>
                         <a href="/Agenda" class="nav-link misreporteslink">
@@ -191,7 +192,7 @@
 
         <div class="informe-detalle">
             <ul>
-                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "False" && global_asax.GlobalVariables.EsPerfilVisualizador == "False")
+                @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                 {
                     <li>
                         <a href="/InformeComercial/Index" class="nav-link misreporteslink">
@@ -199,7 +200,7 @@
                         </a>
                     </li>
                 }
-                @if (global_asax.GlobalVariables.EsPerfilAdministrativo == "True")
+                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Administrativo)
                 {
                     <li>
                         <a href="/InformeComercial/InformeAdministrativo" class="nav-link misreporteslink">
@@ -215,7 +216,7 @@
             </ul>
         </div>
 
-        @if (global_asax.GlobalVariables.EsAdministrador == "True")
+        @if (global_asax.GlobalVariables.EsAdministrador)
         {
             <div class="tablas-detalle">
                 <ul>
