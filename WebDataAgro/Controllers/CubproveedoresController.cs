@@ -1,33 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Net;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
 using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class CubProveedoresController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private ICubProveedoresManager mobjCubProveedoresManager;
 
         private IHomeManager mobjHomeManager;
@@ -42,21 +27,10 @@ namespace WebDataAgro.Controllers
 
         public CubProveedoresController(IMSContextProvider oMSContextProvider, ICubProveedoresManager oCubProveedoresManager, IHomeManager oHomeManager, IComercialManager oComercialManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
-
             mobjCubProveedoresManager = oCubProveedoresManager;
-
-            mobjCubProveedoresManager.Inicializar(mobjMSContext);
-
             mobjHomeManager = oHomeManager;
-
-            mobjHomeManager.Inicializar(mobjMSContext);
-
             mobjComercialManager = oComercialManager;
-
-            mobjComercialManager.Inicializar(mobjMSContext);
         }
 
         //-----------------------------------------------------

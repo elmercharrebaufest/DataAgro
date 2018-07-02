@@ -1,32 +1,28 @@
-﻿using Mastersoft.Framework.DataRepository;
+﻿using Autofac.Extras.NLog;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Mapping.Context;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
-    public class ComprasManager
+    public class ComprasManager : IComprasManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-
-        public void Inicializar(MSContext oContexto)
+        public ComprasManager(ILogger logger, IMSContextProvider oMSContextProvider)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         public void ActualizarCompras()
@@ -36,7 +32,6 @@ namespace Molinos.DataAgro.Business
             var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking().ToList();
             var oProveedorComercial = mobjUnitOfWork.Repository<ProveedorComercial>().Queryable().AsNoTracking();
             var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().Where(x=> x.ComercialId == 4).ToList();
-            //var oEstados = mobjUnitOfWork.Repository<Estado>().Queryable().AsNoTracking().ToList();
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;

@@ -1,4 +1,5 @@
-﻿using Mastersoft.Framework.DataRepository;
+﻿using Autofac.Extras.NLog;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Agent.DatosDelProveedor;
@@ -10,25 +11,18 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class EstadoProveedorManager : IEstadoProveedorManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-
-        public void Inicializar(MSContext oContexto)
+        public EstadoProveedorManager(ILogger logger, IMSContextProvider oMSContextProvider)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
 
@@ -252,7 +246,6 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void ActualizarEstadoProveedor(List<Datos> listProve)
         {
-            var cuit = "0";
             try
             {
                 if (listProve.Count > 0)

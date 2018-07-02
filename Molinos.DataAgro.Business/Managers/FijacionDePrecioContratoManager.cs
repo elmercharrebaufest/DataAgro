@@ -1,48 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Diagnostics;
-
+﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Mapping.Context;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Molinos.DataAgro.Business.Managers {
+namespace Molinos.DataAgro.Business.Managers
+{
     public class FijacionDePrecioContratoManager : IFijacionDePrecioContratoManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private IProveedorManager mobjProveedorManager;
+        private ILogger logger;
 
-        //--------------------------------------------------
-        //  Inicializacion
-        //--------------------------------------------------
-
-        public void Inicializar(MSContext oContexto)
+        public FijacionDePrecioContratoManager(ILogger logger, IMSContextProvider oMSContextProvider, IProveedorManager oMSProveedorManager)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            mobjProveedorManager = oMSProveedorManager;
         }
 
         //--------------------------------------------------
@@ -84,8 +65,6 @@ namespace Molinos.DataAgro.Business.Managers {
             var result = new ResultIniFijacionDePrecioContrato();
             result.FijacionDePrecioContrato = mobjUnitOfWork.SelStore<FijacionDePrecioContratoIni>("DataAgro_BasicoFijacionPrecioContratoTraerPorFiltro", 0).ToList();
             return  result;
-
-
         }
         public async Task<ResultIniFijacionDePrecioContrato> TraerFijacionDePrecioContratoAsync(int ContratoId)
         {
@@ -252,11 +231,9 @@ namespace Molinos.DataAgro.Business.Managers {
             return oEntityErrors;
         }
 
-        public async Task<GrabarFijacionResult> FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory) {
+        public async Task<GrabarFijacionResult> FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
+        {
             var oEntityErrors = new GrabarFijacionResult();
-
-            ProveedorManager mobjProveedorManager = new ProveedorManager();
-            mobjProveedorManager.Inicializar(mobjContexto);
 
             FijacionDePrecioContrato oFijacionDePrecioSave = new FijacionDePrecioContrato();
 

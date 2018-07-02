@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Diagnostics;
-using System.Data.Entity;
-
-using Mastersoft.Framework.DataRepository;
+﻿using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Mapping.Context;
 
 namespace Molinos.DataAgro.Business
 {

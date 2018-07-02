@@ -1,37 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Diagnostics;
-
+﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
-
+using Molinos.DataAgro.Mapping.Context;
+using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class RG2300Manager : IRG2300Manager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-
-        public void Inicializar(MSContext oContexto)
+        public RG2300Manager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         public bool InsetarRG2300 (List<RG2300> oDatos, int cantProcesar)

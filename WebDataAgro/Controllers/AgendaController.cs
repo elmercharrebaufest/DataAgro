@@ -1,70 +1,48 @@
-﻿using Mastersoft.Framework.DataRepository;
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
+﻿using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class AgendaController : Controller
     {
-
-        private MSContext mobjMSContext;
-
-        private IAgendaManager mobjAgendaManager;       
-
+        private IAgendaManager mobjAgendaManager;
         private string idActiveDirectory;
-
         private IComercialManager mobjComercialManager;
+        private readonly IReportesManager reportesManager;
 
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-        public ActionResult Index()
+        public AgendaController(IMSContextProvider oMSContextProvider, IAgendaManager oAgendaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
         {
-            return View();
-        }
-
-
-
-        public AgendaController(IMSContextProvider oMSContextProvider, IAgendaManager oAgendaManager, IComercialManager oComercialManager)
-        {
-            mobjMSContext = oMSContextProvider.GetMSContext();            
             mobjAgendaManager = oAgendaManager;
-            mobjAgendaManager.Inicializar(mobjMSContext);
 
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjComercialManager = oComercialManager;
-            mobjComercialManager.Inicializar(mobjMSContext);
-            
+            this.reportesManager = reportesManager;
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
         }
-               
+        
+        public ActionResult Index()
+        {
+            return View();
+        }
+   
         public async Task<ActionResult> Inicializar()
         {
-            var model = new DatosIniAgendaActividadModel();           
-
-            model.Datos = await mobjAgendaManager.TraerDatosInicialesAsync(Util.GetIdActiveDirectory());
-
+            var model = new DatosIniAgendaActividadModel
+            {
+                Datos = await mobjAgendaManager.TraerDatosInicialesAsync(Util.GetIdActiveDirectory())
+            };
             
-
             return new JsonResult()
             {
                 Data = model,
@@ -80,7 +58,7 @@ namespace WebDataAgro.Controllers
 
             var datos = await mobjAgendaManager.ExportarAgenda(oParam);
 
-            var oLstAgenda = new LstAgendaActividad(mobjMSContext);                           
+            var oLstAgenda = new LstAgendaActividad(reportesManager);                           
             
             var identif = await oLstAgenda.GenerarListadoAsync(datos);
 

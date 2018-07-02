@@ -1,9 +1,8 @@
-﻿using Mastersoft.Framework.DataRepository;
+﻿using Autofac.Extras.NLog;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Agent.Compras;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
@@ -16,8 +15,6 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Molinos.DataAgro.Entities.Common.Enums;
-using static Mastersoft.Framework.Standard.Constantes;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -25,37 +22,19 @@ namespace Molinos.DataAgro.Business.Managers
 
     public class ProveedorManager : IProveedorManager
     {
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
         private IComercialManager mobComercial;
         private ICampañaMaterial mobCampañaMaterial;
 
-        ComercialManager mobjComercialManager = new ComercialManager();
+        private ILogger logger;
 
-
-        public void Inicializar(MSContext oContexto)
+        public ProveedorManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
-        }
-
-        public void Inicializar(MSContext oContexto, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
-        {
-            mobjContexto = oContexto;
-            //mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
             mobComercial = oComercial;
             mobCampañaMaterial = oCampañaMaterial;
-
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
-
 
         public async Task<StoredHistorialResult> TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string TipoActividadId)
         {
@@ -507,9 +486,8 @@ namespace Molinos.DataAgro.Business.Managers
                     if (campania != null) oMensaje.Body += "Campaña: " + campania.Descripcion + " \r\n";
                     if (localidad != null && provincia != null) oMensaje.Body += "Procedencia: " + provincia.Nombre + ", " + localidad.Nombre + " \r\n";
                     if (oContrato.ImporteSustentable != null && monedaSust != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + monedaSust.Descripcion + " \r\n";
-                    if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado: " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n";
-                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pesificado: " + oContrato.DiasPesificado.Value + " días." + " \r\n";
-                    if (oContrato.NoInformaSio != null && oContrato.NoInformaSio == true) oMensaje.Body += "No Informa SIO \r\n";
+                    if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado Hasta " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n";
+                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pago a " + oContrato.DiasPesificado.Value + " Días" + " \r\n";
                     if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n";
 
                     oMensaje.Body += "\r\nPor consultas, contactarse con " + (comercial != null ? comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +

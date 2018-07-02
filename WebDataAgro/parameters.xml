@@ -34,14 +34,4 @@
                         match="/configuration/appSettings/add[@key='maildeUsuarios']
                            /@value" />
     </parameter>
-    <parameter name="LogFile Key">
-        <parameterEntry kind="XmlFile" scope="Web.config"
-                        match="/configuration/appSettings/add[@key='LogFile']
-                           /@value" />
-    </parameter>
-    <parameter name="pathError Key">
-        <parameterEntry kind="XmlFile" scope="Web.config"
-                        match="/configuration/appSettings/add[@key='pathError']
-                           /@value" />
-    </parameter>
 </parameters>

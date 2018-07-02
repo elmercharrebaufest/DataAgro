@@ -1,33 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
 using System.Threading.Tasks;
-
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class ComercialController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private string idActiveDirectory;
 
         private IComercialManager mobjComercialManager;
@@ -38,12 +23,7 @@ namespace WebDataAgro.Controllers
 
         public ComercialController(IMSContextProvider oMSContextProvider, IComercialManager oComercialManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjComercialManager = oComercialManager;
-
-            mobjComercialManager.Inicializar(mobjMSContext);
-
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 
@@ -54,13 +34,10 @@ namespace WebDataAgro.Controllers
         public ActionResult Index()
         {
             string ActionView = "";
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
-            } else if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
+            } else if (!mobjComercialManager.ComercialExiste(idActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
@@ -72,11 +49,12 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Inicializar()
         {
-            var model = new DatosIniAbmComercialModel();
+            var model = new DatosIniAbmComercialModel
+            {
+                Datos = await mobjComercialManager.TraerDatosInicialesAsync(),
 
-            model.Datos = await mobjComercialManager.TraerDatosInicialesAsync();
-
-            model.Comercial = new Comercial();
+                Comercial = new Comercial()
+            };
 
             return new JsonResult()
             {
@@ -107,9 +85,10 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ComercialCombo(AbmComercialParam oParam)
         {
-            var model = new DataAbmComercial();
-
-            model.Comercial = await mobjComercialManager.ObtenerComerciales(oParam.ComercialId);
+            var model = new DataAbmComercial
+            {
+                Comercial = await mobjComercialManager.ObtenerComerciales(oParam.ComercialId)
+            };
 
             return new JsonResult()
             {

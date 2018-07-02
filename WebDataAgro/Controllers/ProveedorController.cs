@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.DataRepository;
-
+﻿
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
@@ -16,32 +15,24 @@ namespace WebDataAgro.Controllers
 {
     public class ProveedorController : Controller
     {
-
-
-        private MSContext mobjMSContext;
-
         private IProveedorManager mobjProveedorManager;
-
         private IHomeManager mobjHomeManager;
-
         private ICampañaManager mobjCampañaManager;
-
         private string idActiveDirectory;
-        
+        private IComercialManager mobComercialManager;
+        private IReportesManager mobjreportesManager;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ProveedorController(IMSContextProvider oMSContextProvider, IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager)
+        public ProveedorController(IMSContextProvider oMSContextProvider, IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjProveedorManager = oProveedorManager;
-            mobjProveedorManager.Inicializar(mobjMSContext);
             mobjHomeManager = oHomeManager;
-            mobjHomeManager.Inicializar(mobjMSContext);
             mobjCampañaManager = oCampañaManager;
-            mobjCampañaManager.Inicializar(mobjMSContext);
+            mobComercialManager = oComercialManager;
+            mobjreportesManager = reportesManager;
         }
 
 
@@ -150,9 +141,6 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Detalle(int ProveedorId, bool? Agenda)
         {
-
-            IComercialManager mobComercialManager = new Molinos.DataAgro.Business.ComercialManager();
-            mobComercialManager.Inicializar(mobjMSContext);
             string ActionView  = "";
             bool mostrarEditar = true;
             
@@ -365,14 +353,11 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ImprimirReporteProveedor(int ProveedorId)
         {
-            
             var model = new ReportesModel();
-
-            //oParam.ActiveDirectoryId = Util.GetIdActiveDirectory();
 
             var datos = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory);
 
-            var oLstProveedor = new LstProveedor(mobjMSContext);
+            var oLstProveedor = new LstProveedor(mobjreportesManager);
 
             var identif = await oLstProveedor.GenerarListadoAsync(datos);
 

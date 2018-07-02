@@ -1,51 +1,36 @@
-﻿using Mastersoft.Framework.DataRepository;
-using Molinos.DataAgro.Entities;
+﻿using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-using Molinos.DataAgro.Report;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class ReportesController : Controller
     {
-
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
-        private IReportesManager mobjReportesManager;
-
-        private string idActiveDirectory;
-
         private IHomeManager mobjHomeManager;
-
-        public ReportesController(IMSContextProvider oMSContextProvider, IReportesManager oReportesManager, IHomeManager oHomeManager)
+        private IReportesManager mobjReportesManager;
+        private IComercialManager mobcomercialmanager;
+        private string idActiveDirectory;
+        
+        public ReportesController(IMSContextProvider oMSContextProvider, IReportesManager oReportesManager, IHomeManager oHomeManager, IComercialManager oMScomercialmanager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
             mobjReportesManager = oReportesManager;
-            mobjReportesManager.Inicializar(mobjMSContext);
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjHomeManager = oHomeManager;
-            mobjHomeManager.Inicializar(mobjMSContext);
+            mobcomercialmanager = oMScomercialmanager;
         }
 
         public ActionResult Index()
         {
             string ActionView = "";
             ViewBag.esadmin = false;
-
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
 
             if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
             {
@@ -204,26 +189,21 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ExportarIndicadores(ParamReportes oParamReportes)
         {
-
-            string Mititulo = "";
-
             oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
             
 
             List<ResultIndicadoresReportesmini> ListaResult =  new List<ResultIndicadoresReportesmini>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
             var filtrosconvertidos =  mobjReportesManager.TransformarFiltros(oParamReportes);
-            int tipo = 0;
             if (oParamReportes.Indicadores == "compras")
             {
                 if (oParamReportes.Grafico == "mapa")
                 {
                    ListaResult = await mobjReportesManager.TraerComprasMapaExportacion(filtrosconvertidos);
-                   tipo = 1;
                 }
 
                 if (oParamReportes.Grafico == "torta")
@@ -291,16 +271,12 @@ namespace WebDataAgro.Controllers
         #region Exportacion
         public async Task<ActionResult> ExportarCompraMapaIndicadores(ParamReportes oParamReportes)
         {
-
-            string Mititulo = "";
-
-            
             oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
             
 
             List<ResultIndicadoresReportesmini> ListaResult = new List<ResultIndicadoresReportesmini>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -327,16 +303,12 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ExportarCompraTortaIndicadores(ParamReportes oParamReportes)
         {
-
-            string Mititulo = "";
-
-            
             oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
             
 
             List<ResultIndicadoresReportesTorta> ListaResult = new List<ResultIndicadoresReportesTorta>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -370,7 +342,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultComprasBarrasReportesmini> ListaResult = new List<ResultComprasBarrasReportesmini>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -411,7 +383,7 @@ namespace WebDataAgro.Controllers
 
             BaseDeDatosReturn ListaResult = new BaseDeDatosReturn();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -447,7 +419,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultObjetivoGaugeReportes> ListaResult = new List<ResultObjetivoGaugeReportes>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -487,7 +459,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultProduccionMapaReportes> ListaResult = new List<ResultProduccionMapaReportes>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -528,7 +500,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultProduccionBarraReportes> ListaResult = new List<ResultProduccionBarraReportes>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -569,7 +541,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultAcopioMapaReportes> ListaResult = new List<ResultAcopioMapaReportes>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
@@ -609,7 +581,7 @@ namespace WebDataAgro.Controllers
 
             List<ResultAcopioBarraReportes> ListaResult = new List<ResultAcopioBarraReportes>();
 
-            var oLstIndicadores = new LstIndicadores(mobjMSContext);
+            var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 

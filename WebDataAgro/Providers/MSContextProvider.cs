@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+﻿
 using Mastersoft.Framework.DataRepository;
 
 using Molinos.DataAgro.Interfaces;
@@ -14,9 +10,15 @@ namespace WebDataAgro
 {
     public class MSContextProvider : IMSContextProvider
     {
+        private MSContext Context {get;set;}
+
+        public MSContextProvider()
+        {
+            Context = Util.GetMSContext();
+        }
         public MSContext GetMSContext()
         {
-            return Util.GetMSContext();
+            return Context;
         }
 
         public string GetIdActiveDirectory()

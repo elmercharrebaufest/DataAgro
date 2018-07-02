@@ -1,49 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
 using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class AreaInfluenciaController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private IAreaInfluenciaManager mobjAreaInfluenciaManager;
 
         private string idActiveDirectory;
 
-        private IComercialManager mobjComercialManager;
-
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-
-        public AreaInfluenciaController(IMSContextProvider oMSContextProvider, IAreaInfluenciaManager oAreaInfluenciaManager, IComercialManager oComercialManager)
+        public AreaInfluenciaController(IMSContextProvider oMSContextProvider, IAreaInfluenciaManager oAreaInfluenciaManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjAreaInfluenciaManager = oAreaInfluenciaManager;
-
-            mobjAreaInfluenciaManager.Inicializar(mobjMSContext);
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
@@ -63,9 +40,10 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Inicializar()
         {
-            var model = new DatosIniAbmAreaInfluenciaModel();
-
-            model.AreaInfluencia = new AreaInfluencia();
+            var model = new DatosIniAbmAreaInfluenciaModel
+            {
+                AreaInfluencia = new AreaInfluencia()
+            };
 
             return new JsonResult()
             {

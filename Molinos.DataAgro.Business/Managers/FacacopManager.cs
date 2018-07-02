@@ -1,26 +1,23 @@
-﻿using Mastersoft.Framework.DataRepository;
+﻿using Autofac.Extras.NLog;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class FacacopManager
     {
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-
-        public void Inicializar(MSContext oContexto)
+        public FacacopManager(ILogger logger, IMSContextProvider oMSContextProvider)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         public bool InsetarFacacop(List<FACACOP> oDatos, int cantProcesar)

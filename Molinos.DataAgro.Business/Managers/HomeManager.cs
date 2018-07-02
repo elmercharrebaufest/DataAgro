@@ -1,60 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Data.Entity.Infrastructure;
-
+﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Mapping.Context;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class HomeManager : IHomeManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
         private ICampañaManager mobCampaña;
         private IEstadoProveedorManager mobEstado;
+        private ILogger logger;
 
-        //--------------------------------------------------
-        //  Inicialización
-        //--------------------------------------------------
-
-        public void Inicializar(MSContext oContexto)
+        public HomeManager(ILogger logger, IMSContextProvider oMSContextProvider, IEstadoProveedorManager mobEstado, ICampañaManager campañaManager)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
-        }
-
-        public void Inicializar(MSContext oContexto, ICampañaManager oCampaña,IEstadoProveedorManager oEstado)
-        {
-            mobjContexto = oContexto;
-            mobCampaña = oCampaña;
-            mobEstado = oEstado;
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
+            this.logger = logger;
+            this.mobEstado = mobEstado;
+            this.mobCampaña = campañaManager;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         //--------------------------------------------------

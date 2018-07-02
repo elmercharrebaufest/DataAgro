@@ -1,68 +1,38 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-
 using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-
-using WebDataAgro.Core;
-using WebDataAgro.Models;
-
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Domain;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
-using Molinos.DataAgro.Entities.Domain;
-using Molinos.DataAgro.Business;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class InformeComercialController : Controller
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private ICondicionManager mobjCondicionManager;
-
         private IInformeComercialManager mobjInformeComercialManager;
-
         private string idActiveDirectory;
-
         private IComercialManager mobjComercialManager;
-
         private IHomeManager mobjHomeManager;
+        private IReportesManager reportesManager;
 
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
-
-        public InformeComercialController(IMSContextProvider oMSContextProvider, ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IComercialManager oComercialManager, IHomeManager oHomeManager)
+        public InformeComercialController(IMSContextProvider oMSContextProvider, ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IComercialManager oComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjCondicionManager = oCondicionManager;
-
-            mobjCondicionManager.Inicializar(mobjMSContext);
-
             mobjInformeComercialManager = oInformeComercialManager;
-
-            mobjInformeComercialManager.Inicializar(mobjMSContext);
-
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
 
             mobjComercialManager = oComercialManager;
-            mobjComercialManager.Inicializar(mobjMSContext);
-            
             mobjHomeManager = oHomeManager;
-            mobjHomeManager.Inicializar(mobjMSContext);
+            this.reportesManager = reportesManager;
 
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
@@ -137,7 +107,7 @@ namespace WebDataAgro.Controllers
 
             if (!entityError.errores.HayError)
             {
-                var oLstInformeComercial = new LstInformeComercial(mobjMSContext);
+                var oLstInformeComercial = new LstInformeComercial(reportesManager);
 
                 var datos = await mobjInformeComercialManager.GenerarInformeComercial(oParam, (int)entityError.InformeId);
 
@@ -161,11 +131,11 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ListarMateriales(oParamInforme oParam)
         {
-
-            var model = new InformesModel();
-
-            model.materiales = await  mobjInformeComercialManager.TraerInformeComercialAsync(oParam.filtro);
-            model.InformeGenerado = await mobjInformeComercialManager.TraerInformeComercialGeneradoAsync(oParam.filtro);
+            var model = new InformesModel
+            {
+                materiales = await mobjInformeComercialManager.TraerInformeComercialAsync(oParam.filtro),
+                InformeGenerado = await mobjInformeComercialManager.TraerInformeComercialGeneradoAsync(oParam.filtro)
+            };
 
             return new JsonResult()
             {
@@ -191,7 +161,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            var oLstIndicadores = new LstInformeComercial(mobjMSContext);
+            var oLstIndicadores = new LstInformeComercial(reportesManager);
 
             var odatos = await mobjInformeComercialManager.TraerCapacidadProductivaAsync(oParamReportes.Informes);
 
@@ -209,14 +179,9 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            /*if (oParamReportes.ComercialID == null)
-            {
-                oParamReportes.ComercialID = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            }*/
-
             oParamReportes.ComercialIDGenerador = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
 
-            var oLstIndicadores = new LstInformeComercial(mobjMSContext);
+            var oLstIndicadores = new LstInformeComercial(reportesManager);
 
             var odatos = await mobjInformeComercialManager.ListarReportes(oParamReportes);
 
@@ -236,7 +201,7 @@ namespace WebDataAgro.Controllers
 
             if (informe != null)
             {
-                var oLstInformeComercial = new LstInformeComercial(mobjMSContext);
+                var oLstInformeComercial = new LstInformeComercial(reportesManager);
 
                 var datos = await mobjInformeComercialManager.GenerarInformeComercial(informe, InformeComercialId);
 
@@ -258,15 +223,13 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> EliminarInformeComercial(int InformeComercialId)
+        public async Task<ActionResult> EliminarInformeComercial(int informeComercialId)
         {
-            var model = InformeComercialId;
-
-            var informe = await mobjInformeComercialManager.EliminarInformes(InformeComercialId);
+            var informe = await mobjInformeComercialManager.EliminarInformes(informeComercialId);
 
             return new JsonResult()
             {
-                Data = model,
+                Data = informeComercialId,
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -274,11 +237,12 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ModificarInformeComercial(int InformeComercialId)
         {
-            var model = new ReportesModificacionModel();
+            var model = new ReportesModificacionModel
+            {
+                parametros = await mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId),
 
-            model.parametros = await mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId);
-
-            model.materiales = await mobjInformeComercialManager.TraerInformeMaterialesAsync(InformeComercialId);
+                materiales = await mobjInformeComercialManager.TraerInformeMaterialesAsync(InformeComercialId)
+            };
 
             return new JsonResult()
             {

@@ -1,54 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Diagnostics;
-
+﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Mapping.Context;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class MaterialManager : IMaterialManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-        //--------------------------------------------------
-        //  Inicialización
-        //--------------------------------------------------
-
-        public void Inicializar(MSContext oContexto)
+        public MaterialManager(ILogger logger, IMSContextProvider oMSContextProvider)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
-        
+
         public async Task<ResultIniMaterial> TraerFiltroMaterialAsync(ParamAbmMaterial oParam)
         {
             var oResult = new ResultIniMaterial();

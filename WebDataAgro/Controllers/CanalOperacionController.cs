@@ -1,49 +1,24 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-
 using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-
-using WebDataAgro.Core;
-using WebDataAgro.Models;
-
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
     public class CanalOperacionController : Controller
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private ICanalOperacionManager mobjCanalOperacionManager;
 
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
-
-        public CanalOperacionController(IMSContextProvider oMSContextProvider, ICanalOperacionManager oCanalOperacionManager)
+        public CanalOperacionController(ICanalOperacionManager oCanalOperacionManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjCanalOperacionManager = oCanalOperacionManager;
-
-            mobjCanalOperacionManager.Inicializar(mobjMSContext);
         }
-
-        //-----------------------------------------------------------------------------------
-        // Metodos Publicos
-        //-----------------------------------------------------------------------------------
-
+        
         public ActionResult Index()
         {
             ViewBag.edita = false;

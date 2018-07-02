@@ -1,44 +1,25 @@
-﻿using Mastersoft.Framework.DataRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac.Extras.NLog;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
-using System.Data.Entity;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Mapping.Context;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class RiesgoComercialManager : IRiesgoComercialManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-        //--------------------------------------------------
-        //  Inicialización
-        //--------------------------------------------------
-
-        public void Inicializar(MSContext oContexto)
+        public RiesgoComercialManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         //--------------------------------------------------

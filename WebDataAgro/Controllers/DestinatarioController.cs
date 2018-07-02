@@ -1,33 +1,19 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-
 using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class DestinatarioController : Controller
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private IDestinatarioManager mobjDestinatarioManager;
         
         private string idActiveDirectory;
@@ -36,14 +22,11 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------------------------------------
 
-        public DestinatarioController(IMSContextProvider oMSContextProvider, IDestinatarioManager oDestinatarioManager, IComercialManager oComercialManager)
+        public DestinatarioController(IMSContextProvider oMSContextProvider, IDestinatarioManager oDestinatarioManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjDestinatarioManager = oDestinatarioManager;
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
-
-            mobjDestinatarioManager.Inicializar(mobjMSContext);
+            
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {

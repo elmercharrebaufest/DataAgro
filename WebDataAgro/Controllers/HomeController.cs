@@ -1,67 +1,35 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using System.Security.Principal;
-using Molinos.DataAgro.Report;
-using System.Configuration;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class HomeController : Controller
     {
-
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private IHomeManager mobjHomeManager;
-
-        private ICampañaManager mobCampañaManager;
-
-        private IEstadoProveedorManager mobEstadoProveedorManager;
-
-        private ICubProveedoresManager mobCuboProveedorManager;
-
-        
-
-
-
         private string idActiveDirectory;
-        private object mobcomercialmanager;
+        private IComercialManager comercialManager;
+        private readonly IReportesManager reportesManager;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public HomeController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager, ICampañaManager mobCampañaManager, IEstadoProveedorManager mobEstadoProveedorManager)
+        public HomeController(IMSContextProvider oMSContextProvider, IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
-            mobjHomeManager = oHomeManager;
-
-            mobCampañaManager.Inicializar(mobjMSContext);
-
-            mobEstadoProveedorManager.Inicializar(mobjMSContext);
-
-            mobjHomeManager.Inicializar(mobjMSContext, mobCampañaManager, mobEstadoProveedorManager);            
+            this.comercialManager = comercialManager;
+            this.reportesManager = reportesManager;
+            this.mobjHomeManager = homeManager;
         }
 
         
@@ -73,11 +41,8 @@ namespace WebDataAgro.Controllers
             {
                 ViewBag.edita = false;
             }
-
-            IComercialManager mobcomercialmanager = new ComercialManager();
-            mobcomercialmanager.Inicializar(mobjMSContext);
-
-            if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
+            
+            if (!comercialManager.ComercialExiste(idActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
@@ -203,7 +168,7 @@ namespace WebDataAgro.Controllers
             
             var datos = await mobjHomeManager.ExportarContactos(ides,idActiveDirectory);
 
-            var oLstContacto = new LstContacto(mobjMSContext);
+            var oLstContacto = new LstContacto(reportesManager);
 
             var identif = await oLstContacto.GenerarListadoAsync(datos);
 
@@ -224,7 +189,7 @@ namespace WebDataAgro.Controllers
 
             var datos = await mobjHomeManager.ExportarContactos(ides,idActiveDirectory);
 
-            var oLstContacto = new LstContacto(mobjMSContext);
+            var oLstContacto = new LstContacto(reportesManager);
 
             var identif = await oLstContacto.GenerarExcelAsync(datos);
 
@@ -244,7 +209,7 @@ namespace WebDataAgro.Controllers
 
             var datos = await mobjHomeManager.ExportarAll(ides, idActiveDirectory);
 
-            var oLstContacto = new LstContacto(mobjMSContext);
+            var oLstContacto = new LstContacto(reportesManager);
 
             var identif = await oLstContacto.GenerarExcelExportAllAsync(datos,Util.ObtenerPerfilDeUsuario(idActiveDirectory));
 
@@ -254,7 +219,7 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> ValidarComercial()
+        public ActionResult ValidarComercial()
         {
             int puedeVer = 1;
 

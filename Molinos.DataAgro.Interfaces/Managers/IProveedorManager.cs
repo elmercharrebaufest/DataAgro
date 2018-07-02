@@ -2,20 +2,13 @@
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces {
-    public interface IProveedorManager {
-        void Inicializar(MSContext oContexto);
-
-        void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork);
-
-        void Inicializar(MSContext oContexto, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial);
-
+    public interface IProveedorManager
+    {
         Task<StoredPorProveedorResult> TraerProveedor(int ProveedorId, string UsuarioDirectory);
 
         Task<DatosIniProveedor> TraerDatosCombo(int ProveedorId);
@@ -50,5 +43,9 @@ namespace Molinos.DataAgro.Interfaces {
 
         Task<List<BusquedaHome>> DevolverProveedores(string filtro);
         List<Proveedor> ListarProveedor(string text);
+
+        void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
+
+        void EnviarEmail(Contrato oContrato, string idActiveDirectory);
     }
 }

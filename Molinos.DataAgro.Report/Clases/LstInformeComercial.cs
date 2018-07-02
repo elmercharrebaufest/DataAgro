@@ -5,6 +5,7 @@ using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Domain;
+using Molinos.DataAgro.Interfaces;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,11 @@ namespace Molinos.DataAgro.Report.Clases
 {
     public class LstInformeComercial
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
+        private IReportesManager reportesManager;
 
-        private MSContext mobjMSContext;
-
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
-
-        public LstInformeComercial(MSContext oMSContext)
+        public LstInformeComercial(IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContext;
+            this.reportesManager = reportesManager;
         }
 
         //-----------------------------------------------------------------------------------
@@ -77,11 +70,8 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = oParam.CUIT.ToString() + " - " + oParam.RazonSocial.ToString() + ".pdf",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;
@@ -128,11 +118,8 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "CapacidadProductiva.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;
@@ -191,11 +178,8 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "ReporteComercial.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;

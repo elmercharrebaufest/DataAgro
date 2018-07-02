@@ -1,20 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 
 namespace WebDataAgro.Controllers
 {
     public class ErrorController : Controller
     {
-    
-
-  
-        
         public ActionResult Index(string jsonx = "",bool esJson = false ,bool esMsj = false )
         {
 

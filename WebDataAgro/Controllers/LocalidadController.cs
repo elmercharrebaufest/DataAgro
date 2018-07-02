@@ -1,54 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
 using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Business;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace WebDataAgro.Controllers
 {
     public class LocalidadController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private ILocalidadManager mobjLocalidadManager;
 
         private string idActiveDirectory;
 
         private IComercialManager mobjComercialManager;
 
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-
         public LocalidadController(IMSContextProvider oMSContextProvider, ILocalidadManager oLocalidadManager, IComercialManager oComercialManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjLocalidadManager = oLocalidadManager;
-
-            mobjLocalidadManager.Inicializar(mobjMSContext);
-
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
 
             mobjComercialManager = oComercialManager;
-            mobjComercialManager.Inicializar(mobjMSContext);
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
@@ -68,11 +44,12 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Inicializar()
         {
-            var model = new DatosIniAbmLocalidadModel();
+            var model = new DatosIniAbmLocalidadModel
+            {
+                Datos = await mobjLocalidadManager.TraerDatosInicialesAsync(),
 
-            model.Datos = await mobjLocalidadManager.TraerDatosInicialesAsync();
-
-            model.Localidad = new Localidad();
+                Localidad = new Localidad()
+            };
 
             return new JsonResult()
             {

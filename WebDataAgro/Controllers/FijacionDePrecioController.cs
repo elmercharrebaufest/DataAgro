@@ -1,45 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
-using WebDataAgro.Core;
-using WebDataAgro.Models;
-
+﻿using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
     public class FijacionDePrecioController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private IFijacionDePrecioManager mobjFijacionDePrecioManager;
-
         private string idActiveDirectory;
-
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-
+        
         public FijacionDePrecioController(IMSContextProvider oMSContextProvider, IFijacionDePrecioManager oFijacionDePrecioManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjFijacionDePrecioManager = oFijacionDePrecioManager;
-
-            mobjFijacionDePrecioManager.Inicializar(mobjMSContext);
-
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 

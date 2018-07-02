@@ -1,41 +1,22 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-using DataDynamics.ActiveReports.Export.Pdf;
-
-using OfficeOpenXml;
-
-using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-
+﻿using DataDynamics.ActiveReports.Export.Pdf;
 using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Business;
-using System.Drawing;
-using System.Diagnostics;
-using Molinos.DataAgro.Business.Managers;
+using Molinos.DataAgro.Interfaces;
+using OfficeOpenXml;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report
 {
     public class LstIndicadores
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
 
-        private MSContext mobjMSContext;
+        private IReportesManager oReportesManager;
 
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
-
-        public LstIndicadores(MSContext oMSContext)
+        public LstIndicadores(IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContext;
+            this.oReportesManager = reportesManager;
         }
 
         //-----------------------------------------------------------------------------------
@@ -64,9 +45,6 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.pdf",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
 
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
@@ -129,10 +107,7 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
+                
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -193,10 +168,7 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
+                
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -257,10 +229,7 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
+                
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -323,9 +292,6 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
 
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
@@ -409,9 +375,6 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -479,9 +442,6 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -542,9 +502,6 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
 
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
@@ -610,9 +567,6 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
 
@@ -674,9 +628,6 @@ namespace Molinos.DataAgro.Report
                     FileName = "Indicadores.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
 
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }
@@ -1058,9 +1009,6 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
 
                 await oReportesManager.GrabarReporteAsync(oReporte);
             }

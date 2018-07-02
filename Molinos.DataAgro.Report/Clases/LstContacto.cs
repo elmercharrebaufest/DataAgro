@@ -19,24 +19,17 @@ using System.Drawing;
 using System.Diagnostics;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
 
 namespace Molinos.DataAgro.Report
 {
     public class LstContacto
     {
-        //-----------------------------------------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------------------------------------
+        private IReportesManager reportesManager;
 
-        private MSContext mobjMSContext;
-
-        //-----------------------------------------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------------------------------------
-
-        public LstContacto(MSContext oMSContext)
+        public LstContacto(IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContext;
+            this.reportesManager = reportesManager;
         }
 
         //-----------------------------------------------------------------------------------
@@ -65,11 +58,8 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.pdf",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;
@@ -144,11 +134,8 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;
@@ -538,11 +525,8 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.xlsx",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;

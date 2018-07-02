@@ -1,48 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Diagnostics;
-
+﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
+using Molinos.DataAgro.Mapping.Context;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class CubProveedoresManager : ICubProveedoresManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
+        private IComprasManager comprasManager;
 
-        //--------------------------------------------------
-        //  Inicialización
-        //--------------------------------------------------
 
-        public void Inicializar(MSContext oContexto)
+        public CubProveedoresManager(ILogger logger, IMSContextProvider oMSContextProvider, IComprasManager comprasManager)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.comprasManager = comprasManager;
         }
 
         //--------------------------------------------------
@@ -119,9 +99,7 @@ namespace Molinos.DataAgro.Business
 
             if (query.Count > 0)
             {
-                var compras = new ComprasManager();
-                compras.Inicializar(mobjContexto);
-                compras.ActualizarComprasProveedor(query);
+                comprasManager.ActualizarComprasProveedor(query);
             }
 
         }

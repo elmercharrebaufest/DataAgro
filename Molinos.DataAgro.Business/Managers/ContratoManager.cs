@@ -1,8 +1,9 @@
-﻿using Mastersoft.Framework.DataRepository;
+﻿using Autofac.Extras.NLog;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
+using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Agent.Compras;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -10,19 +11,10 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
-using System.DirectoryServices;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using static Mastersoft.Framework.Standard.Constantes;
-using System.Web.UI.WebControls;
-using Molinos.DataAgro.Agent.DatosDelComercial;
-using KendoGridBinder.ModelBinder.Mvc;
-using KendoGridBinder;
 using System.Data.Entity.SqlServer;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -30,23 +22,33 @@ namespace Molinos.DataAgro.Business.Managers
 
     public class ContratoManager : IContratoManager
     {
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
         
-        ComercialManager mobjComercialManager = new ComercialManager();
+        private IMaterialManager mobjMaterialManager;
+        private ITipoNegocioManager mobjTipoNegocioManager;
+        private ICampañaManager   mobjCampaniaManager;
+        private IProvinciaManager mobjProvinciaManager;
+        private ILocalidadManager mobjLocalidadManager;
+        private IProveedorManager mobjProveedorManager;
+        private IComercialManager mobjComercialManager;
 
-        public void Inicializar(MSContext oContexto)
+        
+        public ContratoManager(ILogger logger, IMSContextProvider oMSContextProvider, 
+            IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
+            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager, 
+            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager, 
+            IComercialManager oMSComercialManager)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            mobjMaterialManager = oMSMaterialManager;
+            mobjCampaniaManager = oMSCampaniaManager;
+            mobjProvinciaManager = oMSProvinciaManager;
+            mobjLocalidadManager = oMSLocalidadManager;
+            mobjProveedorManager = oMSProveedorManager;
+            mobjComercialManager = oMSComercialManager;
+            mobjTipoNegocioManager = oMSTipoNegocioManager;
         }
 
         public async Task<DatosIniContrato> TraerDatosCombo()
@@ -170,7 +172,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Add(new ErrorMessage("El campo 'Campaña' no debe estar vacio", "CampañaId"));
             }
-
+            if (!oParam.ComercialId.HasValue || oParam.ComercialId == 0)
+            {
+                oErrorMessages.Add(new ErrorMessage("El campo 'Comercial' no debe estar vacio", "ComercialId"));
+            }
             return oErrorMessages;
 
         }
@@ -341,6 +346,7 @@ namespace Molinos.DataAgro.Business.Managers
                 select new BasicoContrato()
                 {
                     ContratoId = SqlFunctions.StringConvert((double)cont.ContratoId).Trim(),
+                    
                     ProveedorId = cont.ProveedorId,
                     ComercialId = cont.ComercialId,
                     MaterialId = cont.MaterialId,
@@ -372,7 +378,8 @@ namespace Molinos.DataAgro.Business.Managers
                     UsuarioId = cont.UsuarioId,
                     ContratoSAP = cont.ContratoSAP,
                     Ampliaciones = cont.Ampliaciones,
-                    Proveedor = prove == null ? "" : prove.RazonSocial,
+                    Cuit = prove == null ? "" : prove.CUIT,
+                    Proveedor = prove == null ? "" : prove.RazonSocial,                    
                     Comercial = come == null ? "" : come.Nombres + " " + come.Apellido,
                     Material = mat == null ? "" : mat.Descripcion,
                     Campania = camp == null ? "" : camp.Descripcion,
@@ -383,8 +390,9 @@ namespace Molinos.DataAgro.Business.Managers
                     FijacionDePrecioContratoId = "",
                     Sustentable = ((decimal)cont.ImporteSustentable) != null && ((decimal)cont.ImporteSustentable) > 0,
                     Dolarizado = cont.FechaDolarizado!=null,
-                    Pesificado = cont.DiasPesificado!=null
-                };
+                    Pesificado = cont.DiasPesificado!=null,
+                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? SqlFunctions.StringConvert((double)cont.ContratoId) : SqlFunctions.StringConvert((double)cont.ContratoSAP)
+        };
 
             var queryFijacion =
                 from fijac in oFijacion
@@ -433,6 +441,7 @@ namespace Molinos.DataAgro.Business.Managers
                     UsuarioId = "",
                     ContratoSAP = null,
                     Ampliaciones = fijac.Ampliaciones,
+                    Cuit = prove == null ? "" : prove.CUIT,
                     Proveedor = prove == null ? "" : prove.RazonSocial,
                     Comercial = come == null ? "" : come.Nombres,
                     Material = mat == null ? "" : mat.Descripcion,
@@ -445,6 +454,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = false,
                     Dolarizado = false,
                     Pesificado = false,
+                    Negocio = fijac.ContratoId
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -481,21 +491,7 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<GrabarContratoResult> FinalizarContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            MaterialManager mobjMaterialManager = new MaterialManager();
-            mobjMaterialManager.Inicializar(mobjContexto);
-            TipoNegocioManager mobjTipoNegocioManager = new TipoNegocioManager();
-            mobjTipoNegocioManager.Inicializar(mobjContexto);
-            CampañaManager mobjCampaniaManager = new CampañaManager();
-            mobjCampaniaManager.Inicializar(mobjContexto);
-            ProvinciaManager mobjProvinciaManager = new ProvinciaManager();
-            mobjProvinciaManager.Inicializar(mobjContexto);
-            LocalidadManager mobjLocalidadManager = new LocalidadManager();
-            mobjLocalidadManager.Inicializar(mobjContexto);
-            ProveedorManager mobjProveedorManager = new ProveedorManager();
-            mobjProveedorManager.Inicializar(mobjContexto);
-            ComercialManager mobjComercialManager = new ComercialManager();
-            mobjComercialManager.Inicializar(mobjContexto);
-
+            
             Contrato oContratoSave = new Contrato();
 
             if (oContrato.Estado != 0)
@@ -574,7 +570,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string SAPFinalizarContrato(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string comercial)
         {
-            var SapFinalizarContrato = new FinalizarContratoAgent();
+            var SapFinalizarContrato = new FinalizarContratoAgent(logger);
             return SapFinalizarContrato.Finalizar(contrato, campaniaDescripcion, materialCodigo, provinciaId, tiponegocioDescripcion, localidadCod, proveedorCUIT, comercial);
         }
 

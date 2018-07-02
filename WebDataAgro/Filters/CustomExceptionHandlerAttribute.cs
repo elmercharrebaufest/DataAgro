@@ -15,6 +15,7 @@ using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Entities;
 using System.IO;
 using System.Configuration;
+using NLog;
 
 namespace WebDataAgro.Filters
 {
@@ -45,7 +46,6 @@ namespace WebDataAgro.Filters
                         ErrorDateTime = DateTime.Now,
                         MachineName = oErrorData.MachineName,
                         AppDomainName = oErrorData.AppDomainName,
-                        //ThreadIdentity = oErrorData.ThreadIdentity,
                         WindowsIdentity = oErrorData.WindowsIdentity,
                         Message = oErrorData.Message,
                         FullException = oErrorData.FullException
@@ -61,45 +61,16 @@ namespace WebDataAgro.Filters
                         EmpresaId = 1
                     };
 
-
-                    if (ConfigurationManager.AppSettings["LogFile"]== "1")
-                    {
-                        // FileStream stream = new FileStream(ConfigurationManager.AppSettings["pathError"] + "error.txt", FileMode.OpenOrCreate, FileAccess.Write);
-                        //StreamWriter writer = new StreamWriter(stream);
-                        StreamWriter writer = File.AppendText(@ConfigurationManager.AppSettings["pathError"] + "error.txt");
-                        // Escribimos fecha y hora del instante
-                        writer.WriteLine("Hora Inicio " + DateTime.Now);
-                        writer.WriteLine("Error");
-                        writer.WriteLine(filterContext.Exception.GetOriginalException().Message);
-                        writer.WriteLine("Detalle");
-                        writer.WriteLine(filterContext.Exception.GetAllFootprints());
-                        writer.WriteLine("Stack");
-                        writer.WriteLine(new StackTrace(filterContext.Exception, true).ToString());
-                        writer.WriteLine("Fin");
-                        writer.Close();
-                    }
+                    var logger = LogManager.GetLogger("Global");
+                    logger.Error(filterContext.Exception.GetOriginalException(), "Excepción no manejada: ");
                     var oErroresManager = new ErroresManager(oMSContext);
 
                     oErroresManager.Grabar(oErrores);
-
-
                 }
                 catch (Exception ex)
                 {
-
-                    // FileStream stream = new FileStream(ConfigurationManager.AppSettings["pathError"] + "error.txt", FileMode.OpenOrCreate, FileAccess.Write);
-                    //StreamWriter writer = new StreamWriter(stream);
-                    StreamWriter writer = File.AppendText(@ConfigurationManager.AppSettings["pathError"] + "error.txt");
-                    // Escribimos fecha y hora del instante
-                    writer.WriteLine("Hora Inicio " + DateTime.Now);
-                    writer.WriteLine("Error");
-                    writer.WriteLine(ex.GetOriginalException().Message);
-                    writer.WriteLine("Detalle");
-                    writer.WriteLine(ex.GetAllFootprints());
-                    writer.WriteLine("Stack");
-                    writer.WriteLine(new StackTrace(ex, true).ToString());
-                    writer.WriteLine("Fin");
-                    writer.Close();
+                    var logger = LogManager.GetLogger("Global");
+                    logger.Error(ex, "Excepción no manejada: ");
                 }
 
                 filterContext.ExceptionHandled = true;

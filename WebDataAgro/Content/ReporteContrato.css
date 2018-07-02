@@ -16,3 +16,12 @@
 .ColumnaObservacion {
     width: 120px;
 }
+.k-button.k-button-icontext .k-icon {
+    vertical-align: middle;
+}
+
+.k-icon.k-i-file-excel {
+    color: green;
+    font-size: 28px;
+    overflow: visible;
+}

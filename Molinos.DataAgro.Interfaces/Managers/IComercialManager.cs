@@ -1,25 +1,14 @@
 ﻿
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-
 using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IComercialManager
     {
-        void Inicializar(MSContext oContexto);
-
-        void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork);
-
         Task<DatosIniAbmComercial> TraerDatosInicialesAsync();
 
         Task<ResultIniComercial> TraerTodoComercialAsync();

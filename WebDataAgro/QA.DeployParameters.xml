@@ -10,6 +10,4 @@
     <setParameter name="CredentialPassword Key" value="D4taAgr017" />
     <setParameter name="EmailAgenda Key" value="0" />
     <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
-    <setParameter name="LogFile Key" value="1" />
-    <setParameter name="pathError Key" value="D:\Sitios\" />
 </parameters>

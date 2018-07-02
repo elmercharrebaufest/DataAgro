@@ -200,6 +200,10 @@
       <Project>{e940adb2-18f1-436c-b24f-b18cee04f6c0}</Project>
       <Name>Molinos.DataAgro.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Interfaces\Molinos.DataAgro.Interfaces.csproj">
+      <Project>{748944E7-1FA4-4C63-9F4A-12A92C0EB481}</Project>
+      <Name>Molinos.DataAgro.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <!--<EmbeddedResource Include="obj\Release\Molinos.DataAgro.Report.RptAgendaActividad.resources" />
@@ -248,7 +252,9 @@
     <!--<None Include="obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="obj\Release\Molinos.DataAgro.Report.csproj.GenerateResource.Cache" />
     <None Include="obj\Release\Molinos.DataAgro.Report.csprojResolveAssemblyReference.cache" />-->
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

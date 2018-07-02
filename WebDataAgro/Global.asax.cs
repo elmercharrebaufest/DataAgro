@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Extras.NLog;
+using Autofac.Integration.Mvc;
+using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using System.Reflection;
-
-
-using Autofac;
-using Autofac.Integration.Mvc;
-
-using Molinos.DataAgro.Interfaces;
 using WebDataAgro.Core;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Autofac.Extras.NLog;
 
 namespace WebDataAgro
 {

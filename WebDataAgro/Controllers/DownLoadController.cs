@@ -1,25 +1,22 @@
 ﻿
+using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
 using System.Threading.Tasks;
-
-using Molinos.DataAgro.Business;
-
+using System.Web.Mvc;
 using WebDataAgro.Core;
-using Molinos.DataAgro.Business.Managers;
 
 namespace WebDataAgro.Controllers
 {
     //[Authorize]
     public class DownLoadController : Controller
     {
-        //-----------------------------------------------------------------------------------
-        // Metodos Publicos
-        //-----------------------------------------------------------------------------------
+        private readonly IReportesManager reportesManager;
+
+        public DownLoadController(IReportesManager reportesManager)
+        {
+            this.reportesManager = reportesManager;
+        }
 
         public async Task<ActionResult> Reporte(string key)
         {
@@ -50,10 +47,7 @@ namespace WebDataAgro.Controllers
                     oMSContext.CNPrefix = cnPrefix;
                 }
 
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(oMSContext);
-
-                var oReporte = await oReportesManager.ObtenerReporteAsync(identif);
+                var oReporte = await reportesManager.ObtenerReporteAsync(identif);
 
                if (oReporte == null)
                 {
@@ -100,10 +94,7 @@ namespace WebDataAgro.Controllers
                     oMSContext.CNPrefix = cnPrefix;
                 }
 
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(oMSContext);
-
-                var oReporte = await oReportesManager.ObtenerReporteAsync(identif);
+                var oReporte = await reportesManager.ObtenerReporteAsync(identif);
 
                 if (oReporte == null)
                 {

@@ -1,42 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Standard;
-
-using WebDataAgro.Core;
-using WebDataAgro.Models;
-
+﻿using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
     public class PreslipController : Controller
     {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-
-        private MSContext mobjMSContext;
-
         private IPreslipManager mobjPreslipManager;
 
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-
-        public PreslipController(IMSContextProvider oMSContextProvider, IPreslipManager oPreslipManager)
+        public PreslipController(IPreslipManager oPreslipManager)
         {
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
             mobjPreslipManager = oPreslipManager;
-
-            mobjPreslipManager.Inicializar(mobjMSContext);
         }
 
         //-----------------------------------------------------

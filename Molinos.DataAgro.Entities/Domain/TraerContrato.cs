@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities
 {
-
-
     public class BasicoContrato
     {
-
+        public string Cuit { get; set; }
         public string ContratoId { get; set; }
         public int MaterialId { get; set; }
         public int TipoNegocioId { get; set; }
@@ -85,6 +80,8 @@ namespace Molinos.DataAgro.Entities
         public bool Sustentable { get; set; }
         public bool Dolarizado { get; set; }
         public bool Pesificado { get; set; }
+
+        public string Negocio { get; set; }
     }
 
 

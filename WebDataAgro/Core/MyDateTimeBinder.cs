@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace WebDataAgro.Core
+﻿namespace WebDataAgro.Core
 {
     using System;
     using System.Globalization;
     using System.Web.Mvc;
 
 
-        [ModelBinder(typeof(MyDateTimeBinder))]
+    [ModelBinder(typeof(MyDateTimeBinder))]
         public class MyDateTimeBinder : IModelBinder
         {
             private const string DatePattern = "MM/dd/yyyy";

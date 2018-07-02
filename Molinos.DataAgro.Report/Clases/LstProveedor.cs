@@ -4,6 +4,7 @@ using Mastersoft.Framework.DataRepository;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,15 +20,15 @@ namespace Molinos.DataAgro.Report.Clases
         //  Variables Privadas
         //-----------------------------------------------------------------------------------
 
-        private MSContext mobjMSContext;
+        private IReportesManager reportesManager;
 
         //-----------------------------------------------------------------------------------
         //  Constructor
         //-----------------------------------------------------------------------------------
 
-        public LstProveedor(MSContext oMSContext)
+        public LstProveedor(IReportesManager reportesManager)
         {
-            mobjMSContext = oMSContext;
+            this.reportesManager = reportesManager;
         }
 
         //-----------------------------------------------------------------------------------
@@ -223,11 +224,8 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "Proveedor.pdf",
                     Contenido = ms.ToArray()
                 };
-
-                var oReportesManager = new ReportesManager();
-                oReportesManager.Inicializar(mobjMSContext);
-
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                
+                await reportesManager.GrabarReporteAsync(oReporte);
             }
 
             return identif;

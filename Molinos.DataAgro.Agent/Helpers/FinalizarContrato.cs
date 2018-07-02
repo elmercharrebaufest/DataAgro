@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.Text;
-using System.Threading.Tasks;
-using Molinos.DataAgro.Agent.Compras;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Agent.FinalizarContrato;
+using Autofac.Extras.NLog;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
     public class FinalizarContratoAgent
     {
-
+        public FinalizarContratoAgent(ILogger logger)
+        {
+            this.logger = logger;
+        }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
-
+        private readonly ILogger logger;
 
         public string Finalizar(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string UsuarioComercial)
         {
@@ -66,15 +63,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_HORA = contrato.Fecha.ToString("HH:mm:ss")
                 };
 
-
+                logger.Debug(rq.ToXml());
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_PRE_SLIP(rq);
+                logger.Debug(devolucion.ToXml());
 
                 if (devolucion.EX_MENSAJE_ERROR != null && devolucion.EX_MENSAJE_ERROR != "")
+                {
                     throw new Exception(devolucion.EX_MENSAJE_ERROR);
-
+                }
+                
                 return devolucion.EX_CONTRATO_SAP;
             }
             catch (Exception e) {
+                logger.Error("Error comunicacion SAP",e);
                 throw e;
             }
 

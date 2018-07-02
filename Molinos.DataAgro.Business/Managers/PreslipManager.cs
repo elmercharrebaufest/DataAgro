@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity.SqlServer;
 using System.Data.Entity;
-using System.Diagnostics;
 
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
@@ -14,35 +9,19 @@ using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Mapping.Context;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Interfaces;
+using Autofac.Extras.NLog;
 
 namespace Molinos.DataAgro.Business
 {
     public class PreslipManager : IPreslipManager
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
-
-        private MSContext mobjContexto;
         private IUnitOfWorkAsync mobjUnitOfWork;
+        private ILogger logger;
 
-        //--------------------------------------------------
-        //  Inicializacion
-        //--------------------------------------------------
-
-        public void Inicializar(MSContext oContexto)
+        public PreslipManager(ILogger logger, IMSContextProvider oMSContextProvider)
         {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = new UnitOfWork(oContexto, new DataAgroContext(oContexto));
-        }
-
-
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
-        {
-            mobjContexto = oContexto;
-
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
         }
 
         //--------------------------------------------------

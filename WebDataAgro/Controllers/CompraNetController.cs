@@ -1,28 +1,19 @@
-﻿using Mastersoft.Framework.DataRepository;
-using Molinos.DataAgro.Business;
+﻿using Autofac.Extras.NLog;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Extensions;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Autofac.Extras.NLog;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
-    public class CompraNetController : Controller {
-        //-----------------------------------------------------
-        //  Variables Privadas
-        //-----------------------------------------------------
-         
-        private MSContext mobjMSContext;
-
+    public class CompraNetController : Controller
+    {        
         private IHomeManager mobjHomeManager;
 
         private ICompraNetManager mobjCompraNetManager;
@@ -49,49 +40,18 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public CompraNetController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger) {
-
-
-            mobjMSContext = oMSContextProvider.GetMSContext();
-
+        public CompraNetController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger)
+        {
             mobjHomeManager = oHomeManager;
-
-            mobjHomeManager.Inicializar(mobjMSContext);
-
             mobjComercialManager = oComercialManager;
-
-            mobjComercialManager.Inicializar(mobjMSContext);
-
             mobjCompraNetManager = oCompraNetManager;
-
-            mobjCompraNetManager.Inicializar(mobjMSContext);
-
             mobjContratoManager = oContratoManager;
-
-            mobjContratoManager.Inicializar(mobjMSContext);
-
             mobjFijacionDePrecioContratoManager = oFijacionDePrecioContratoManager;
-
-            mobjFijacionDePrecioContratoManager.Inicializar(mobjMSContext);
-
             mobjCampañaManager = oCampañaManager;
-
-            mobjCampañaManager.Inicializar(mobjMSContext);
-
             mobjMaterialManager = oMaterialManager;
-
-            mobjMaterialManager.Inicializar(mobjMSContext);
-
             mobjProveedorManager = oProveedorManager;
-
-            mobjProveedorManager.Inicializar(mobjMSContext);
-
             mobjLocalidadManager = ojLocalidadManager;
-
-            mobjLocalidadManager.Inicializar(mobjMSContext);
-
-            mobjLogger = oLogger;
-            
+            mobjLogger = oLogger;            
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 
@@ -102,7 +62,6 @@ namespace WebDataAgro.Controllers
         public ActionResult Index() {
             ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
-            mobjLogger.Debug("Hola");
             return View();
 
         }
@@ -130,10 +89,11 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> InicializarContrato() {
-            var model = new ContratoModel_prueba();
+            var model = new ContratoModel_prueba
+            {
+                Datos = await mobjContratoManager.TraerDatosCombo()
+            };
 
-            model.Datos = await mobjContratoManager.TraerDatosCombo();
-            
             return new JsonResult() {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
@@ -141,9 +101,10 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> InicializarFijacion() {
-            var model = new FijacionDePrecioContratoModel();
-            
-            model.Datos = await mobjFijacionDePrecioContratoManager.TraerDatosInicialesAsync();
+            var model = new FijacionDePrecioContratoModel
+            {
+                Datos = await mobjFijacionDePrecioContratoManager.TraerDatosInicialesAsync()
+            };
 
             return new JsonResult() {
                 Data = model,
@@ -157,8 +118,12 @@ namespace WebDataAgro.Controllers
             if (oParam.NoInformaSio == null) oParam.NoInformaSio = false;
             if (oParam.TrigoEspecial == null) oParam.TrigoEspecial = false;
 
-            var comercial = await mobjComercialManager.TraerComercialAsync(oParam.ComercialId.Value);
-            oParam.GrupoCompra = comercial.GrupoDeCompras.HasValue ? comercial.GrupoDeCompras.Value : 0;
+            if (oParam.ComercialId.HasValue)
+            {
+                var comercial = await mobjComercialManager.TraerComercialAsync(oParam.ComercialId.Value);
+                oParam.GrupoCompra = comercial.GrupoDeCompras ?? 0;
+            }
+            
             oParam.UsuarioId = idActiveDirectory;
 
             var model = await mobjContratoManager.GrabarContrato(oParam);
