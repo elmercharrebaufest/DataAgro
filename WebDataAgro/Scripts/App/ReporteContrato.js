@@ -80,17 +80,17 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Cuit", title: "CUIT", width:90, template: function(dataItem)
                 {
-                if (dataItem.Estado == 1) {
+                if (dataItem.Estado === 1) {
                     return '<div class="statuspendiente "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado == 2) {
+                    } else if (dataItem.Estado === 2) {
                     return '<div class="statusconfirmado "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado == 3) {
+                    } else if (dataItem.Estado === 3) {
                     return '<div class="statusoferta "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado == 4) {
+                    } else if (dataItem.Estado === 4) {
                     return '<div class="statuserror "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado == 5) {
+                    } else if (dataItem.Estado === 5) {
                     return '<div class="statusfinalizado "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado == 6) {
+                    } else if (dataItem.Estado === 6) {
                     return '<div class="statusborrado "></div>' + dataItem.Cuit;
                     }
                 }
@@ -99,7 +99,14 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor, extra: false },
             },
-            { field: "Negocio", width: 90 },
+            {
+                field: "Negocio", width: 90, filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: "{0:0}"
+                        });
+                    }
+                } },
             { field: "Fecha", title: "Operacion", filterable: { extra: true }, width: 80, format: _DefaultDateTemplate },
             { field: "TipoNegocio", title: "Tipo", filterable: {
                     multi: true, dataSource: [{
@@ -225,6 +232,7 @@ function CreateGridInformeCompraNet() {
             height: 350,
             extra: false,
             checkAll: false,
+                
             messages: {
                 info: "Filtros:",
                 filter: "Filtrar",
@@ -284,11 +292,11 @@ function CreateGridInformeCompraNet() {
                 var filter = { logic: "or", filters: [] };
                 var values = this.value();
                 $.each(values, function (i, v) {
-                    if (v != '') {
+                    if (v !== '') {
                         filter.filters.push({ field: valueField, operator: "eq", value: v });
                     }
                 });
-                if (values.length == 0) {
+                if (values.length === 0) {
                     $("#grid").data("kendoGrid").dataSource.filter(defaultFilter);
                 } else {
                     $("#grid").data("kendoGrid").dataSource.filter(filter);

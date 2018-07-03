@@ -76,12 +76,12 @@ namespace Molinos.DataAgro.Entities
 
         public string Observacion_F { get; set; }
 
-        public string FijacionDePrecioContratoId { get; set; }
+        public int? FijacionDePrecioContratoId { get; set; }
         public bool Sustentable { get; set; }
         public bool Dolarizado { get; set; }
         public bool Pesificado { get; set; }
 
-        public string Negocio { get; set; }
+        public int? Negocio { get; set; }
     }
 
 

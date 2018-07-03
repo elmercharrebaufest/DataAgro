@@ -387,12 +387,12 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocio = tine == null ? "" : tine.Descripcion,
                     Localidad = loc == null ? "" : loc.Nombre,
                     Observacion = cont.Observacion != null ? cont.Observacion : "",
-                    FijacionDePrecioContratoId = "",
+                    FijacionDePrecioContratoId = null,
                     Sustentable = ((decimal)cont.ImporteSustentable) != null && ((decimal)cont.ImporteSustentable) > 0,
                     Dolarizado = cont.FechaDolarizado!=null,
                     Pesificado = cont.DiasPesificado!=null,
-                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? SqlFunctions.StringConvert((double)cont.ContratoId) : SqlFunctions.StringConvert((double)cont.ContratoSAP)
-        };
+                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP
+                };
 
             var queryFijacion =
                 from fijac in oFijacion
@@ -409,7 +409,7 @@ namespace Molinos.DataAgro.Business.Managers
                 where listComercialesId.Contains(fijac.ComercialId)
                 select new BasicoContrato()
                 {
-                    ContratoId = fijac.ContratoId,
+                    ContratoId = SqlFunctions.StringConvert((double)fijac.ContratoId).Trim(),
                     ProveedorId = fijac.ProveedorId,
                     ComercialId = fijac.ComercialId,
                     MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
@@ -443,14 +443,14 @@ namespace Molinos.DataAgro.Business.Managers
                     Ampliaciones = fijac.Ampliaciones,
                     Cuit = prove == null ? "" : prove.CUIT,
                     Proveedor = prove == null ? "" : prove.RazonSocial,
-                    Comercial = come == null ? "" : come.Nombres,
+                    Comercial = come == null ? "" : come.Nombres + " " + come.Apellido,
                     Material = mat == null ? "" : mat.Descripcion,
                     Campania = "",
                     Provincia = "",
                     TipoNegocio = "FIJACION",
                     Localidad = "",
                     Observacion = fijac.Observacion != null ? fijac.Observacion : "",
-                    FijacionDePrecioContratoId = SqlFunctions.StringConvert((double)fijac.FijacionDePrecioContratoId).Trim(),
+                    FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
                     Sustentable = false,
                     Dolarizado = false,
                     Pesificado = false,
@@ -463,6 +463,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
         
+
         public async Task<GrabarContratoResult> ConfirmarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -507,13 +508,15 @@ namespace Molinos.DataAgro.Business.Managers
             var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
             var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
 
+            var usuarioComercial = objComercial.Nombres + " " + objComercial.Apellido; 
+
             oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
             mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
             await mobjUnitOfWork.SaveChangesAsync();
-
+            
             try
             {
-                string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
+                string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT,  objComercial != null ? usuarioComercial : "");
 
                 oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 

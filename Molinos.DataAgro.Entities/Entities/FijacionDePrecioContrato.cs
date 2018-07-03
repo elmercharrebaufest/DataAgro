@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int FijacionDePrecioContratoId { get; set; }
-        public string ContratoId { get; set; }
+        public int ContratoId { get; set; }
         public int ProveedorId { get; set; }
         public int? MaterialId { get; set; }
         public string MonedaId { get; set; }

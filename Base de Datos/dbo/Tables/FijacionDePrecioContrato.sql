@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[FijacionDePrecioContrato]
 (
 	[FijacionDePrecioContratoId] INT NOT NULL PRIMARY KEY, 
-	 [ContratoId] NVARCHAR(50) NULL, 
+	 [ContratoId] INT NULL, 
 	  [ProveedorId] INT NOT NULL,
     [MaterialId] INT NULL,
 	 [MonedaId] CHAR(5) NOT NULL, 

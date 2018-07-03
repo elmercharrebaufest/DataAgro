@@ -654,7 +654,9 @@ function InicializarElementosModalPendiente() {
 
 
 function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
-      
+
+    LimpiarPendiente();
+
     if (tipoId === "3") {
         $("#modalPendiente .noFijacion").hide();
     } else {
@@ -777,15 +779,6 @@ $("#modalPendiente #tipoModalPendienteId").on("change", function () {
 
 function ObtenerDatosModalPendiente() {
     var objPendiente = {};
-    var fecha = new Date();
-    var fechaHoy = new Date(
-        fecha.getFullYear(),
-        fecha.getMonth(),
-        fecha.getDate(),
-        fecha.getHours(),
-        fecha.getMinutes(),
-        fecha.getSeconds()
-        );
 
     if ($("#buscadorProveedorModalPendiente").val() != "") {
 
@@ -855,9 +848,7 @@ function ModificarContrato(modificarContrato) {
                 recargarGrilla();
             }
         }
-    }
-
-    LimpiarPendiente();
+    }    
 }
 
 function LimpiarPendiente() {
