@@ -508,15 +508,13 @@ namespace Molinos.DataAgro.Business.Managers
             var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
             var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
 
-            var usuarioComercial = objComercial.Nombres + " " + objComercial.Apellido; 
-
             oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
             mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
             await mobjUnitOfWork.SaveChangesAsync();
             
             try
             {
-                string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT,  objComercial != null ? usuarioComercial : "");
+                string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
 
                 oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 

@@ -224,8 +224,8 @@ namespace Molinos.DataAgro.Business.Managers
             datos.Email = oProveedor.Email1;
 
             var Comercial = oProveedorComercial
-                                     .Join(oComercial, a => a.ComercialId, b => b.ComercialId, (a, b) => new { PC = a, C = b })
-                                     .Select(x => x.C).FirstOrDefault();
+                                     .Where(x => x.ProveedorId == informe.ProveedorId)
+                                     .Join(oComercial, a => a.ComercialId, b => b.ComercialId, (a, b) => b).FirstOrDefault();
 
             switch (Comercial.GrupoDeCompras)
             {
