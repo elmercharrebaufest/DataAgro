@@ -32,6 +32,10 @@ namespace Molinos.DataAgro.Report.Clases
         public async Task<string> GenerarListadoAsync(RptInformeComercialInfo oParam)
         {
             var oRptInformeComercial = new RptInformeComercial();
+            oRptInformeComercial.PageSettings.DefaultPaperSize = false;
+            oRptInformeComercial.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.Custom;
+            oRptInformeComercial.PageSettings.PaperName = "Mi Pagina";
+            oRptInformeComercial.Document.Printer.PrinterName = "";
 
             var oDatos = new List<RptInformeComercialInfo>();           
             var dato = new RptInformeComercialInfo();                              

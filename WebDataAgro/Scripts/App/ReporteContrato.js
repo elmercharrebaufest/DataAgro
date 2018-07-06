@@ -136,11 +136,11 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Moneda: "USD",
                     }]
-                }, title: "Mon"
+                }, title: "Monto"
             },
             { field: "Provincia", filterable: { ui: createMultiSelectProvincia } },
             { field: "Localidad", filterable: { ui: createMultiSelectLocalidad } },
-            { field:"Campania", value: "Campania", title: "Camp", filterable: { multi: true } },
+            { field:"Campania", value: "Campania", title: "Campaña", filterable: { multi: true } },
             {
                 title: "Fecha", columns: [
                     { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 80 },
@@ -161,7 +161,7 @@ function CreateGridInformeCompraNet() {
                     { field: "Pesificado", title: "Pesif. ", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false}
                 ] },
-            { field: "NoInformaSIO", title: "No InformaSIO", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
+            { field: "NoInformaSIO", title: "No informa SIO", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
             { field: "TrigoEspecial", title: "Trigo Especial", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
             { field: "Estado_Contrato", title: "Estado", width: 90, filterable: {
                     multi: true,
