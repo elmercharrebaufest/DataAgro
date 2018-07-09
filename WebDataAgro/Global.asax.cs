@@ -80,11 +80,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (EnumPerfil)HttpContext.Current.Application["perfil"];
+                    return (EnumPerfil)HttpContext.Current.Session["perfil"];
                 }
                 set
                 {
-                    HttpContext.Current.Application["perfil"] = value;
+                    HttpContext.Current.Session["perfil"] = value;
                 }
             }
 
@@ -92,11 +92,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.Application["esAdministrador"] as bool? ?? false;
+                    return HttpContext.Current.Session["esAdministrador"] as bool? ?? false;
                 }
                 set
                 {
-                    HttpContext.Current.Application["esAdministrador"] = value;
+                    HttpContext.Current.Session["esAdministrador"] = value;
                 }
             }
 
@@ -104,11 +104,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.Application["tieneEmpleadosACargo"] as bool? ?? false;
+                    return HttpContext.Current.Session["tieneEmpleadosACargo"] as bool? ?? false;
                 }
                 set
                 {
-                    HttpContext.Current.Application["tieneEmpleadosACargo"] = value;
+                    HttpContext.Current.Session["tieneEmpleadosACargo"] = value;
                 }
             }
 
@@ -116,11 +116,11 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return (List<int>)HttpContext.Current.Application["equipo"];
+                    return (List<int>)HttpContext.Current.Session["equipo"];
                 }
                 set
                 {
-                    HttpContext.Current.Application["equipo"] = value;
+                    HttpContext.Current.Session["equipo"] = value;
                 }
             }
         }

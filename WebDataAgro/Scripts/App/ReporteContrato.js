@@ -35,7 +35,7 @@ function CreateGridInformeCompraNet() {
                     FechaEntrega: { type: "date" },
                     Fecha_Dolarizado: { type: "date" },
                     Cantidad: { type: "number" },
-                    Precio: { type: "number" },
+                    Precio: { type: "number", format: "n2" },
                     Dias_Pesificado: { type: "number" },
                     Pesificado: { type: "boolean" },
                     Sustentable: { type: "boolean" },
@@ -78,7 +78,13 @@ function CreateGridInformeCompraNet() {
         },
         columns: [
             {
-                field: "Cuit", title: "CUIT", width:90, template: function(dataItem)
+                field: "Cuit", title: "CUIT", width: 90, filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: "{0:0}"
+                        });
+                    }
+                }, template: function(dataItem)
                 {
                 if (dataItem.Estado === 1) {
                     return '<div class="statuspendiente "></div>' + dataItem.Cuit;
@@ -128,15 +134,30 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, width: 130, template: "#=Material#"
             },
-            { field: "Cantidad", format: "{0:n0}" },
-            { field: "Precio", format: "{0:n2}" },
+            {
+                field: "Cantidad", format: "{0:n0}", filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: "{0:n0}"
+                        });
+                    }
+                }},
+            {
+                field: "Precio", type: "number", format: "{0:n2}", filterable: {
+                    ui: function (element) {
+                        element.kendoNumericTextBox({
+                            format: "n2",
+                            decimals: 2
+                        });
+                    }
+                } },
             { field: "Moneda", filterable: {
                     multi: true, dataSource: [{
                         Moneda: "ARP",
                     }, {
                         Moneda: "USD",
                     }]
-                }, title: "Monto"
+                }, title: "Moneda"
             },
             { field: "Provincia", filterable: { ui: createMultiSelectProvincia } },
             { field: "Localidad", filterable: { ui: createMultiSelectLocalidad } },
@@ -147,7 +168,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 },
                 ]
             },
-            { field: "Comercial", title: "Comercial", filterable: { multi: true, search: true } },
+            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial, extra: false }},
             { field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false},
@@ -309,10 +330,12 @@ function CreateGridInformeCompraNet() {
         }, 200);
         
     };
+
     //Con definir un método de estos para cada columna multiselect estamos, 
-    //function createMultiSelectComercial(element) {
-    //    return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
-    //};
+    function createMultiSelectComercial(element) {
+        return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
+    };
+
     function createMultiSelectProvincia(element) {
         return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
     }

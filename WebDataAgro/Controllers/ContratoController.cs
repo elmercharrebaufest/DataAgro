@@ -55,7 +55,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ListarComercial(string text)
         {
-            var comerciales = mobjComercialManager.ListarComercial(text);
+            var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
                                                      //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres }), JsonRequestBehavior.AllowGet);
         }

@@ -475,25 +475,25 @@ namespace Molinos.DataAgro.Business.Managers
 
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + proveedor.RazonSocial;
 
-                    oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n";
+                    oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n  ";
 
-                    if (oContrato.ContratoSAP != null) oMensaje.Body += "Contrato SAP: " + oContrato.ContratoSAP.Value + " \r\n";
-                    if (proveedor != null) oMensaje.Body += "Vendedor: " + proveedor.RazonSocial + " \r\n";
-                    if (tipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + tipoNegocio.Descripcion + " \r\n";
-                    if (material != null) oMensaje.Body += "Grano: " + material.Descripcion + " \r\n";
-                    if (oContrato.Cantidad != 0) oMensaje.Body += "Kg: " + oContrato.Cantidad + " \r\n";
-                    if (oContrato.Precio != 0 && moneda != null) oMensaje.Body += "Precio - Moneda: " + oContrato.Precio + " " + moneda.Descripcion + " \r\n";
-                    if (campania != null) oMensaje.Body += "Campaña: " + campania.Descripcion + " \r\n";
-                    if (localidad != null && provincia != null) oMensaje.Body += "Procedencia: " + provincia.Nombre + ", " + localidad.Nombre + " \r\n";
-                    if (oContrato.ImporteSustentable != null && monedaSust != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + monedaSust.Descripcion + " \r\n";
-                    if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado Hasta " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n";
-                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pago a " + oContrato.DiasPesificado.Value + " Días" + " \r\n";
-                    if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n";
+                    if (oContrato.ContratoSAP != null) oMensaje.Body += "Contrato SAP: " + oContrato.ContratoSAP.Value + " \r\n  ";
+                    if (proveedor != null) oMensaje.Body += "Vendedor: " + proveedor.RazonSocial + " \r\n  ";
+                    if (tipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + tipoNegocio.Descripcion + " \r\n  ";
+                    if (material != null) oMensaje.Body += "Grano: " + material.Descripcion + " \r\n  ";
+                    if (oContrato.Cantidad != 0) oMensaje.Body += "Kg: " + oContrato.Cantidad + " \r\n  ";
+                    if (oContrato.Precio != 0 && moneda != null) oMensaje.Body += "Precio - Moneda: " + oContrato.Precio + " " + moneda.Descripcion + " \r\n  ";
+                    if (campania != null) oMensaje.Body += "Campaña: " + campania.Descripcion + " \r\n  ";
+                    if (localidad != null && provincia != null) oMensaje.Body += "Procedencia: " + provincia.Nombre + ", " + localidad.Nombre + " \r\n  ";
+                    if (oContrato.ImporteSustentable != null && monedaSust != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + monedaSust.Descripcion + " \r\n  ";
+                    if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado Hasta " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n  ";
+                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pago a " + oContrato.DiasPesificado.Value + " Días" + " \r\n  ";
+                    if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n  ";
 
-                    oMensaje.Body += "\r\nPor consultas, contactarse con " + (comercial != null ? comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                        "\r\n\r\nSaludos Cordiales" +
-                        "\r\n\r\nMolinos Agro S.A." +
-                        "\r\n\r\nwww.molinosagro.com.ar";
+                    oMensaje.Body += "\r\n  Por consultas, contactarse con " + (comercial != null ? comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                        "  \r\n\r\n  Saludos Cordiales" +
+                        "  \r\n\r\n  Molinos Agro S.A." +
+                        "  \r\n\r\n  www.molinosagro.com.ar";
 
                     oMensaje.BodyEncoding = System.Text.Encoding.UTF8;
 

@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Interfaces
 
         Task<EntityErrors> EliminarComercialAsync(int intComercialId);
 
-        List<Comercial> ListarComercial(string comercial);
+        List<Comercial> ListarComercial(string comercial, List<int> comerciales);
         
         bool ComercialExiste(string ActiveDirectoryId);
 
