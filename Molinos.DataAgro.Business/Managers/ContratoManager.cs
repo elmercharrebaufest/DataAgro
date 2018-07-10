@@ -234,6 +234,11 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+                if (oContratoSave.Estado > (int)EnumEstadoContrato.Con_Error)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede modificar"));
+                    return oEntityErrors;
+                }
             }
 
 
@@ -468,23 +473,27 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            Contrato oContratoSave = new Contrato();
+            var  oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 
-            if (oContrato.Estado != 0)
+            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Pendiente || oContratoSave.Estado == (int)EnumEstadoContrato.Oferta))
             {
-                oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+                try
+                {
+                    oContratoSave.Cantidad += oContratoSave.Ampliaciones.Value;
+                    oContratoSave.Ampliaciones = 0;
+                }
+                catch { }
+
+                oContratoSave.Estado = (int)EnumEstadoContrato.Confirmado;
+
+                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
+
+                await mobjUnitOfWork.SaveChangesAsync();
             }
-
-            try {
-                oContratoSave.Cantidad += oContratoSave.Ampliaciones.Value;
-                oContratoSave.Ampliaciones = 0;
-            } catch { }
-
-            oContratoSave.Estado = (int)EnumEstadoContrato.Confirmado;
-
-            mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede confirmar"));
+            }
 
             return oEntityErrors;
         }
@@ -492,76 +501,83 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<GrabarContratoResult> FinalizarContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            
-            Contrato oContratoSave = new Contrato();
+            var  oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 
-            if (oContrato.Estado != 0)
+            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado == (int)EnumEstadoContrato.Con_Error))
             {
-                oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-            }
-            
-            var objCampania = await mobjCampaniaManager.TraerCampaniaAsync(oContratoSave.CampanaId);
-            var objMaterial = await mobjMaterialManager.TraerMaterialAsync(oContratoSave.MaterialId);
-            var objProvincia = await mobjProvinciaManager.TraerProvinciaAsync(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
-            var objTiponegocio = await mobjTipoNegocioManager.TraerTipoNegociodAsync(oContratoSave.TipoNegocioId);
-            var objLocalidad = await mobjLocalidadManager.TraerLocalidadAsync(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
-            var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
-            var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
+                var objCampania = await mobjCampaniaManager.TraerCampaniaAsync(oContratoSave.CampanaId);
+                var objMaterial = await mobjMaterialManager.TraerMaterialAsync(oContratoSave.MaterialId);
+                var objProvincia = await mobjProvinciaManager.TraerProvinciaAsync(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
+                var objTiponegocio = await mobjTipoNegocioManager.TraerTipoNegociodAsync(oContratoSave.TipoNegocioId);
+                var objLocalidad = await mobjLocalidadManager.TraerLocalidadAsync(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
+                var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
+                var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
 
-            oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
-            mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-            await mobjUnitOfWork.SaveChangesAsync();
-            
-            try
-            {
-                string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
-
-                oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-
-                oContratoSave.Estado = (int)EnumEstadoContrato.Finalizado;
-                try
-                {
-                    oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
-                }
-                catch
-                {
-                    oContratoSave.ContratoSAP = 0;
-                }
-
-                try
-                {
-                    //Envio de mail
-                    mobjProveedorManager.EnviarEmail(oContratoSave, idActiveDirectory);
-                }
-                catch { }
-
-
+                oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
                 mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
                 await mobjUnitOfWork.SaveChangesAsync();
+
+                try
+                {
+                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
+
+                    oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+
+                    oContratoSave.Estado = (int)EnumEstadoContrato.Finalizado;
+                    try
+                    {
+                        oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
+                    }
+                    catch
+                    {
+                        oContratoSave.ContratoSAP = 0;
+                    }
+
+                    try
+                    {
+                        //Envio de mail
+                        mobjProveedorManager.EnviarEmail(oContratoSave, idActiveDirectory);
+                    }
+                    catch { }
+
+
+                    mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
+
+                    await mobjUnitOfWork.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    oEntityErrors.Errores = new List<ErrorMessage>() {
+                        new ErrorMessage() { Message = e.Message}
+                    };
+                }
             }
-            catch (Exception e) {
-                oEntityErrors.Errores = new List<ErrorMessage>() {
-                    new ErrorMessage() { Message = e.Message}
-                };
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya se encuentra Finalizado"));
             }
+
             return oEntityErrors;
         }
 
         public async Task<GrabarContratoResult> BorrarContrato(Contrato oContrato)
         {    
-           var oEntityErrors = new GrabarContratoResult();
+            var oEntityErrors = new GrabarContratoResult();
+            var oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 
-           var oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-         
-           oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
+            if (oContratoSave != null && (oContratoSave.Estado < (int)EnumEstadoContrato.Finalizado))
+            {
+                oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
 
-           mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
+                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
 
-           await mobjUnitOfWork.SaveChangesAsync();
-
-           return oEntityErrors;
-            
+                await mobjUnitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede rechazar"));
+            }
+            return oEntityErrors;
         }
 
         public int ObtenerComercialId(string idActiveDirectory)

@@ -100,21 +100,25 @@ namespace Molinos.DataAgro.Business.Managers
             return oFijacionDePrecio;
         }
 
-        public async Task<GrabarContratoResult> GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion) {
-
-            FijacionDePrecioContrato oFijacionDePrecioContratoSave;
-
+        public async Task<GrabarContratoResult> GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
+        {
+            var oFijacionDePrecioContratoSave = await TraerFijacionDePrecioAsync(oFijacion.FijacionDePrecioContratoId);
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.Errores = new List<ErrorMessage>();
+            
+            if (oFijacionDePrecioContratoSave != null && oFijacionDePrecioContratoSave.Estado <= (int)EnumEstadoContrato.Con_Error)
+            {
+                oFijacionDePrecioContratoSave.Ampliaciones = oFijacion.Ampliaciones.Value;
+                oFijacionDePrecioContratoSave.Estado = (int)EnumEstadoContrato.Pendiente;
 
-            oFijacionDePrecioContratoSave = await TraerFijacionDePrecioAsync(oFijacion.FijacionDePrecioContratoId);
+                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioContratoSave);
 
-            oFijacionDePrecioContratoSave.Ampliaciones = oFijacion.Ampliaciones.Value;
-            oFijacionDePrecioContratoSave.Estado = (int)EnumEstadoContrato.Pendiente;
-
-            mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioContratoSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+                await mobjUnitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede modificar"));
+            }
+            
 
             return oEntityErrors;
 
@@ -180,6 +184,11 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
+                if(oFijacionDePrecioSave.Estado > (int)EnumEstadoContrato.Con_Error)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede modificar"));
+                    return oEntityErrors;
+                }
             }
 
             oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
@@ -209,24 +218,27 @@ namespace Molinos.DataAgro.Business.Managers
 
         public async Task<GrabarFijacionResult> ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio) {
             var oEntityErrors = new GrabarFijacionResult();
+            var oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
 
-            FijacionDePrecioContrato oFijacionDePrecioSave = new FijacionDePrecioContrato();
+            if ( oFijacionDePrecioSave != null && ( oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Oferta))
+            {
+                try
+                {
+                    oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
+                    oFijacionDePrecioSave.Ampliaciones = 0;
+                }
+                catch { }
 
-            if (oFijacionDePrecio.Estado != 0) {
-                oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
+                oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Confirmado;
+
+                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
+
+                await mobjUnitOfWork.SaveChangesAsync();
             }
-
-            try {
-                oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
-                oFijacionDePrecioSave.Ampliaciones = 0;
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede confirmar"));
             }
-            catch { }
-
-            oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Confirmado;
-
-            mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
 
             return oEntityErrors;
         }
@@ -234,22 +246,23 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<GrabarFijacionResult> FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarFijacionResult();
+            var oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
 
-            FijacionDePrecioContrato oFijacionDePrecioSave = new FijacionDePrecioContrato();
+            if(oFijacionDePrecioSave != null && (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Con_Error))
+            {
+                oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Finalizado;
 
-            if (oFijacionDePrecio.Estado != 0) {
-                oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
+                //Envio de mail
+                mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
+
+                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
+
+                await mobjUnitOfWork.SaveChangesAsync();
             }
-            
-            oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Finalizado;
-
-            //Envio de mail
-            mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
-
-            mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage ("La Fijación ya se encuentra Finalizada"));
+            }
             return oEntityErrors;
         }
 
@@ -271,6 +284,26 @@ namespace Molinos.DataAgro.Business.Managers
 
             await mobjUnitOfWork.SaveChangesAsync();
 
+            return oEntityErrors;
+        }
+
+        public async Task<GrabarContratoResult> BorrarFijacion(FijacionDePrecioContrato oContrato)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            var oContratoSave = await TraerFijacionDePrecioAsync(oContrato.FijacionDePrecioContratoId);
+
+            if (oContratoSave != null && (oContratoSave.Estado < (int)EnumEstadoContrato.Finalizado))
+            {
+                oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
+
+                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oContratoSave);
+
+                await mobjUnitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede rechazar"));
+            }
             return oEntityErrors;
         }
     }

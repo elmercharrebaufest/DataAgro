@@ -176,7 +176,7 @@ function CreateGridInformeCompraNet() {
                     ] },
             { field: "Dolarizado", columns: [
                     { field: "Dolarizado", title: "Dolar.", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; } },
-                { field: "Fecha_Dolarizado", title: "Fecha", filterable: false, width: 80}
+                { field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80}
                 ] },
             { field: "Pesificado", columns: [
                     { field: "Pesificado", title: "Pesif. ", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },

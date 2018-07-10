@@ -167,6 +167,18 @@ namespace WebDataAgro.Controllers
 
         }
 
+        public async Task<ActionResult> BorrarFijacion(FijacionDePrecioContrato oParam)
+        {
+            var model = await mobjFijacionDePrecioContratoManager.BorrarFijacion(oParam);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
         public async Task<ActionResult> ConfirmarFijacion(FijacionDePrecioContrato oParam) {
             GrabarFijacionResult model = new GrabarFijacionResult();
 

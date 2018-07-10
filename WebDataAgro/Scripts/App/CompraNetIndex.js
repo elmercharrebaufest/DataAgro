@@ -136,7 +136,9 @@ function botonVisualizar(dataItem, icono) {
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
         "'" + dataItem.Proveedor + "'" + ',' +
-        "'" + dataItem.ContratoId + "'" +
+        "'" + dataItem.ContratoId + "'" + ',' +
+        "'" + dataItem.TipoNegocioId + "'" + ',' +
+        "'" + dataItem.FijacionDePrecioContratoId + "'" +
             ')"><i class="fa  '+ icono + '" aria-hidden="true"></i></button>';
 }
 
@@ -145,7 +147,7 @@ function AutoRecargar() {
         if (document.getElementById('checkRecarga').checked == true) {
             recargarGrilla();
         }
-    }, 15000);
+    }, 60000);
 };
 
 function recargarGrilla() {
@@ -264,7 +266,7 @@ function CreateGridInformeCompraNet() {
             { field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
                 if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
-                            "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocio + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
+                            "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3) {
                         return dataItem.Ampliaciones;
                     } else {
@@ -951,8 +953,6 @@ function ModalConfirmado(contratoId, proveedor, fechaDesdeHasta, tipo, material,
 }
 
 function ObtenerDatosModalConfirmado() {
-
-
     var objConfirmado = {};
 
 
@@ -983,14 +983,16 @@ function Confirmar(confirmarContratoFijacion) {
    }
 
 function ObtenerDatosModalBorrado() {
-
-
     var objConfirmado = {};
 
-    objConfirmado.contratoId = $("#contratoModalBorrar").val();
-
-    var result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
-
+    if ($("#tipoNegocioModalBorrar").val() === '3') {
+        objConfirmado.FijacionDePrecioContratoId = $("#contratoModalBorrar").val();
+        var result = MSExecuteOnServer('/CompraNet/BorrarFijacion', objConfirmado);
+    } else {
+        objConfirmado.contratoId = $("#contratoModalBorrar").val();
+        var result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
+    }
+    
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1083,10 +1085,10 @@ function ObtenerDatosModalAmpliaciones() {
 
 function GuardarAmpliacion(ampliacion) {
 
-    if ($("#tipoNegocioIdAmpliaciones").val() == 'A PRECIO' || $("#tipoNegocioIdAmpliaciones").val() == 'A FIJAR') {
-        var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionContrato', ampliacion);
-    } else {
+    if ($("#tipoNegocioIdAmpliaciones").val() === "3") {
         var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionFijacion', ampliacion);
+    } else {
+        var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionContrato', ampliacion);
     }
 
     if (result != null) {
@@ -1164,9 +1166,16 @@ function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, 
 }
 
 
-function ModalBorrar(proveedor, id) {
+function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
     $("#proveedor_a_borrar").text(proveedor);
-    $("#contratoModalBorrar").val(id);
 
+    if (tipoNegocio === "3") {
+        $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
+    } else {
+        $("#contratoModalBorrar").val(id);
+    }
+    
+    $("#tipoNegocioModalBorrar").val(tipoNegocio);
+    
     $("#modalBorrar").modal('show');
 }

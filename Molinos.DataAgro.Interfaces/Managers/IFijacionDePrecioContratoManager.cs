@@ -24,6 +24,8 @@ namespace Molinos.DataAgro.Interfaces
 
         Task<EntityErrors> EliminarFijacionDePrecioAsync(int intFijacionId);
 
+        Task<GrabarContratoResult> BorrarFijacion(FijacionDePrecioContrato oContrato);
+
         Task<GrabarFijacionResult> FinalizarFijacion(FijacionDePrecioContrato oParam, string activeDiretoryId);
     }
 }
