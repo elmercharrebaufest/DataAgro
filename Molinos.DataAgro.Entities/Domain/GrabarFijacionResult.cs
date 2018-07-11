@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Entities
 
         public GrabarFijacionResult()
         {
-
+            Errores = new List<ErrorMessage>();
         }
     }
 }

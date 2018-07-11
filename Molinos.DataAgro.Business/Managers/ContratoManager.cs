@@ -201,15 +201,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
 
-            oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
-            oContratoSave.Estado = oContratoSave.Base == true ? (int)EnumEstadoContrato.Oferta : (int)EnumEstadoContrato.Pendiente;
+            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado))
+            {
 
-            mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
+                oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
+                oContratoSave.Estado = oContratoSave.Base == true ? (int)EnumEstadoContrato.Oferta : (int)EnumEstadoContrato.Pendiente;
 
-            await mobjUnitOfWork.SaveChangesAsync();
+                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
+
+                await mobjUnitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede ampliar"));
+            }
 
             return oEntityErrors;
-
         }
 
         public async Task<GrabarContratoResult> GrabarContrato(Contrato oContrato)
@@ -554,7 +561,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya se encuentra Finalizado"));
+                if (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya se encuentra Finalizado"));
+                } else if (oContratoSave.Estado == (int)EnumEstadoContrato.Rechazado)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya ha sido Rechazado"));
+                }
+                else if (oContratoSave.Estado == (int)EnumEstadoContrato.Pendiente || oContratoSave.Estado == (int)EnumEstadoContrato.Oferta)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato debe ser Confirmado"));
+                }
             }
 
             return oEntityErrors;

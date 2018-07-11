@@ -248,7 +248,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarFijacionResult();
             var oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
 
-            if(oFijacionDePrecioSave != null && (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Con_Error))
+            if (oFijacionDePrecioSave != null && (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Con_Error))
             {
                 oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Finalizado;
 
@@ -261,9 +261,20 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage ("La Fijación ya se encuentra Finalizada"));
+                if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación ya se encuentra Finalizada"));
+                }
+                else if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Rechazado)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación ya ha sido Rechazada"));
+                }
+                else if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Oferta)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación debe ser Confirmada"));
+                }
             }
-            return oEntityErrors;
+                return oEntityErrors;
         }
 
         public async Task<EntityErrors> EliminarFijacionDePrecioAsync(int intFijacionId)

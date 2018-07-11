@@ -415,9 +415,9 @@ body.modal-open {
     position: fixed;
 }
 
-.k-loading-mask {
+/*.k-loading-mask {
     display: none;
-}
+}*/
 
 .modal-dialog.pendienteM{
     padding-top:5px;
