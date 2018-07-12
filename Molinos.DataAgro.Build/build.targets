@@ -22,9 +22,9 @@
     <ZipDir>..\Deploy\**\*.zip</ZipDir>
     <CmdDir>..\Deploy\**\*.cmd</CmdDir>
     
-    <!--<DeployParametersWeb>..\WebDataAgro\*.DeployParameters.xml</DeployParametersWeb>-->
+    <DeployParametersWeb>..\WebDataAgro\*.DeployParameters.xml</DeployParametersWeb>
     
-    <!--<BatDir>..\Molinos.DataAgro.Build\DeployBat\*.bat</BatDir>-->
+    <BatDir>..\Molinos.DataAgro.Build\DeployBat\*.bat</BatDir>
     
   </PropertyGroup>
 

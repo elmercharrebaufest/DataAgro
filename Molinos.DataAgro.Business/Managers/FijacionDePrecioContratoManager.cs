@@ -78,9 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public async Task<FijacionDePrecioContrato> TraerFijacionDePrecioAsync(int intFijacionId)
         {
-            var oFijacionDePrecio = new FijacionDePrecioContrato();
-
-            oFijacionDePrecio = await mobjUnitOfWork.Repository<FijacionDePrecioContrato>()
+            var oFijacionDePrecio = await mobjUnitOfWork.Repository<FijacionDePrecioContrato>()
                                  .Queryable()
                                  .Where(x => x.FijacionDePrecioContratoId == intFijacionId)
                                  .SingleOrDefaultAsync();

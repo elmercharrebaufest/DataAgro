@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <!-- Import the MSBuild Tasks -->
-  <!-- <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" /> -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <!-- Import the customized-by-project targets -->
   <Import Project="$(MSBuildProjectDirectory)\build.targets" />
 
@@ -73,7 +73,7 @@
     <Copy SourceFiles="@(ZipDir)" DestinationFiles="@(ZipDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(CmdDir)" DestinationFiles="@(CmdDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
 
-    <!--
+    
     <ItemGroup>
       <DeployParametersWeb Include="$(DeployParametersWeb)"/>
     </ItemGroup>
@@ -103,7 +103,6 @@
     <Zip Files="@(OutputPackDir)" WorkingDirectory="$(OutputPackDir)" ZipFileName="$(OutputPackDir).zip" />
 
     <RemoveDir Directories="$(OutputPackDir)"/>
-    -->
 
     <!-- Finish Build-->
     <Message Text="*** Build Finished ***" />
