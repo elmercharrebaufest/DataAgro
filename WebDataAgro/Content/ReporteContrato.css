@@ -29,3 +29,7 @@
 div > label {
     margin-left: 10px;
 }
+
+.k-filter-menu .k-button {
+    width: auto!important;
+}

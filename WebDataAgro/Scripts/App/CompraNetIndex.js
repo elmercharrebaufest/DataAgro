@@ -155,6 +155,14 @@ $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
 }
 
 function CreateGridInformeCompraNet() {
+    var defaultFilter = { field: "Fecha", operator: "eq", value: new Date };
+    
+
+    kendo.ui.FilterMultiCheck.prototype.options.messages =
+        $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
+            "selectedItemsFormat": ""
+        });
+
     var ds = {
         transport: {
             read: {
@@ -186,28 +194,26 @@ function CreateGridInformeCompraNet() {
                 }
             },
         },
-        requestStart: function () {
-            kendo.ui.progress($("#loading"), false);
-        },
-        requestEnd: function () {
-            kendo.ui.progress($("#loading"), false);
-        },
-        columnMenuInit: function (e) {
-            var filterMultiCheck = e.container.find(".k-filterable").data("kendoFilterMultiCheck");
-            if (filterMultiCheck) {
-                console.log(filterMultiCheck.checkSource.data())
-                filterMultiCheck.checkSource.read();
-            }
-        },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "Estado_Order", dir: "asc" },
-            { field: "Fecha", dir: "desc" }],
+        sort: [{ field: "Fecha", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20,
-        filter: { field:"Fecha", operator:"eq", value: new Date },
+        filter: defaultFilter,
     };
+    var customTextFilter =
+        {
+            extra: false,
+            operators: { string: { contains: "Contains" } },
+            ui: function (element) {
+                var parent = element.parent();
+                while (parent.children().length > 1)
+                    $(parent.children()[0]).remove();
 
+                parent.prepend("<input data-bind=\"value:filters[0].value\" class=\"k-textbox\" type=\"text\">");
+            }
+        }
+    
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         dataBound: function () {
@@ -235,7 +241,8 @@ function CreateGridInformeCompraNet() {
                     } else if (dataItem.Estado == 6) {
                         return '<div class="statusborrado "></div>' + dataItem.Proveedor;
                     }
-                }
+                },
+                filterable: { ui: createMultiSelectProveedor }
             },
             { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
             { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
@@ -279,9 +286,9 @@ function CreateGridInformeCompraNet() {
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70 },
             { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70,                 
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }                
             },
-            { field: "Estado_Contrato", title: "Estado", filterable: {
+            { field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente",
@@ -296,7 +303,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Estado_Contrato: "Rechazado",
                     },]
-                }, itemTemplate: function (e) {
+            }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
                 }, template: function (dataItem) {
                     if (dataItem.Estado == 1 && ($("#perfil").val() == "Mesa")) { //pendiente
@@ -378,13 +385,17 @@ function CreateGridInformeCompraNet() {
                 previous: "Ir a la p&aacute;gina anterior",
                 next: "Ir a la p&aacute;gina siguiente",
                 last: "Ir a la &uacute;ltima p&aacute;gina",
-                refresh: "Recargar"
+                refresh: "Recargar"               
             },
             input: true,
             numeric: true
         },
         scrollable: false,
-        sortable: true,
+        sortable: {
+            mode: "multiple",
+            allowUnsort: true,
+            showIndexes: false
+        },
         selectable: "row",
         
         filterable: {
@@ -419,8 +430,86 @@ function CreateGridInformeCompraNet() {
                     lte: "Menor que o igual a",                    
                 }
             }
+        },
+        filterMenuInit: function (e) {
+            if (e.field == "Proveedor" || e.field == "Comercial" ) {
+                $(e.container).css("width", "300px")
+            }
         }
     });
+    var checkInputs = function (elements) {
+        elements.each(function () {
+            var element = $(this);
+            var input = element.children("input");
+
+            input.prop("checked", element.hasClass("k-state-selected"));
+        });
+    };
+    function createMultiSelect(element, textField, valueField, url) {
+        element.removeAttr("data-bind");
+
+        element.kendoMultiSelect({
+
+            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
+            dataBound: function () {
+                var items = this.ul.find("li");
+                setTimeout(function () {
+                    checkInputs(items);
+                });
+            },
+
+            dataTextField: textField,
+            dataValueField: valueField,
+            autoClose: false,
+            autoBind: false,
+            delay: 300,
+            dataSource: {
+                serverFiltering: true,
+                filter: [],
+                transport: {
+                    read: {
+                        url: url,
+                        data: function () {
+                            return {
+                                text: element.data("kendoMultiSelect").input.val()
+                            };
+                        },
+                        prefix: ""
+                    }
+                },
+
+            },
+            change: function (e) {
+                var items = this.ul.find("li");
+                checkInputs(items);
+
+                var filter = { logic: "or", filters: [] };
+                var values = this.value();
+                $.each(values, function (i, v) {
+                    if (v !== '') {
+                        filter.filters.push({ field: valueField, operator: "eq", value: v });
+                    }
+                });
+                if (values.length === 0) {
+                    $("#gridInformeCompraNet").data("kendoGrid").dataSource.filter(defaultFilter);
+                } else {
+                    $("#gridInformeCompraNet").data("kendoGrid").dataSource.filter(filter);
+                }
+            }
+        });
+        setTimeout(function () {
+            $(".k-multiselect").parent().children(".k-dropdown").remove();
+            $(".k-multiselect").parent().children("div").find('button').remove();
+        }, 200);
+    };
+
+    function createMultiSelectProveedor(element) {
+        return createMultiSelect(element, "Proveedor", "ProveedorId", "/CompraNet/ListarProveedor");
+    };
+
+    function createMultiSelectComercial(element) {
+        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
+    };
 }
 
 function InicializarElementosModalPendiente() {
@@ -1156,11 +1245,16 @@ function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, 
 
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");
-    $("#visualizar_sustentablePrecio").text(sustentablePrecio != "undefined" && sustentablePrecio != "null" && sustentablePrecio  != 0 ? sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : "") : "");
-    $("#visualizar_dolarizadoFecha").text(dolarizadoFecha != "undefined" && dolarizadoFecha != "null" ? dolarizadoFecha : "");
-    $("#visualizar_pesificadoDias").text(pesificadoDias != "undefined" && pesificadoDias != "null" ? pesificadoDias : "");
-    $("#visualizar_informaSIO").text(informaSIO != "undefined" && informaSIO != "null" && informaSIO != "false" ? "Si" : "");
-    $("#visualizar_trigoEspecial").text(trigoEspecial != "undefined" && trigoEspecial != "null" && trigoEspecial != "false" ? "Si" : "");
+    (sustentablePrecio === "undefined" || sustentablePrecio === "null" || sustentablePrecio === 0) ? $("#sustentableDivVisualizar").hide() : $("#sustentableDivVisualizar").show();
+    $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
+    (dolarizadoFecha === "undefined" || dolarizadoFecha === "null") ? $("#dolarizadoFechaDivVisualizar").hide() : $("#dolarizadoFechaDivVisualizar").show();
+    $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
+    (pesificadoDias === "undefined" || pesificadoDias === "null") ? $("#pesificadoDiasDivVisualizar").hide() : $("#pesificadoDiasDivVisualizar").show();
+    $("#visualizar_pesificadoDias").text(pesificadoDias);
+    (informaSIO === "undefined" || informaSIO === "null" || informaSIO === "false") ? $("#informaSIODivVisualizar").hide() : $("#informaSIODivVisualizar").show();
+    $("#visualizar_informaSIO").text("Si");
+    (trigoEspecial === "undefined" || trigoEspecial === "null" || trigoEspecial === "false") ? $("#trigoEspecialDivVisualizar").hide() : $("#trigoEspecialDivVisualizar").show();
+    $("#visualizar_trigoEspecial").text("Si");
     $("#visualizar_observacion").text(Observacion != "undefined" && Observacion ? Observacion : "");
     $("#modalVisualizar").modal('show');
 }

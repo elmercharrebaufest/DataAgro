@@ -3420,7 +3420,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<Proveedor> ListarProveedor(string proveedor)
         {
-            return mobjUnitOfWork.Repository<Proveedor>().Queryable().Where(x => proveedor != "" && (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor))).Take(15).ToList();
+            return mobjUnitOfWork.Repository<Proveedor>().Queryable().Where(x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor))).Take(15).ToList();
         }
 
         public class ZMPES5130

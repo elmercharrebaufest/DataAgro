@@ -415,11 +415,11 @@ body.modal-open {
     position: fixed;
 }
 
-/*.k-loading-mask {
-    display: none;
-}*/
-
 .modal-dialog.pendienteM{
     padding-top:5px;
     padding-bottom:10px;
+}
+
+.k-filter-menu .k-button {
+    width: auto !important;
 }

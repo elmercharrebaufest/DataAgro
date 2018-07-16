@@ -321,7 +321,7 @@ namespace Molinos.DataAgro.Business
 
         public List<Comercial> ListarComercial(string comercial, List<int> comerciales)
         {
-            return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => comercial != "" && comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial))).Take(15).ToList();
+            return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial))).Take(15).ToList();
         }
 
     }

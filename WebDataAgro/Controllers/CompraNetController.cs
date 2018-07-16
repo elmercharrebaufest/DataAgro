@@ -1,9 +1,11 @@
 ﻿using Autofac.Extras.NLog;
+using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Interfaces;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Core;
@@ -257,6 +259,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {
+            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
             var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);
@@ -340,5 +343,15 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        public ActionResult ListarProveedor(string text = "")
+        {
+            var proveedores = mobjProveedorManager.ListarProveedor(text);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ListarComercial(string text = "")
+        {
+            var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
+            return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
+        }
     }
 }

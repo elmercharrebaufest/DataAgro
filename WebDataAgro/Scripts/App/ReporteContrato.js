@@ -6,7 +6,13 @@ $(document).ready(function () {
 
 
 function CreateGridInformeCompraNet() {
+    
     var defaultFilter = { field: "Estado_Contrato", operator: "eq", value: "Finalizado" };
+
+    kendo.ui.FilterMultiCheck.prototype.options.messages =
+        $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
+            "selectedItemsFormat": ""
+        });
     var ds = {
         transport: {
             read: {
@@ -45,16 +51,10 @@ function CreateGridInformeCompraNet() {
                 }
             },
         },
-        requestStart: function () {
-            kendo.ui.progress($("#loading"), false);
-        },
-        requestEnd: function () {
-            kendo.ui.progress($("#loading"), false);
-        },
-        
+                
         serverPaging: true,
         serverSorting: true,
-        sort: { field: "Fecha", dir: "desc" },
+        sort: [{ field: "Fecha", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20,
         filter: defaultFilter
@@ -103,7 +103,7 @@ function CreateGridInformeCompraNet() {
             },
 
             {
-                field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor, extra: false },
+                field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor},
             },
             {
                 field: "Negocio", width: 90, filterable: {
@@ -168,7 +168,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 },
                 ]
             },
-            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial, extra: false }},
+            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial }},
             { field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false},
@@ -184,7 +184,8 @@ function CreateGridInformeCompraNet() {
                 ] },
             { field: "NoInformaSIO", title: "No informa SIO", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
             { field: "TrigoEspecial", title: "Trigo Especial", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
-            { field: "Estado_Contrato", title: "Estado", width: 90, filterable: {
+            {
+                field: "Estado_Contrato", title: "Estado", width: 90,sortable: false, filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente",
@@ -199,7 +200,8 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Estado_Contrato: "Rechazado",
                     },]
-                } },
+                }
+            },
             { field: "Observacion", type: "string", filterable: false, attributes: {"class": "ColumnaObservacion"}}
         ],
         excelExport: function (e) {
@@ -246,7 +248,11 @@ function CreateGridInformeCompraNet() {
             numeric: true
         },
         scrollable: false,
-        sortable: true,
+        sortable: {
+            mode: "multiple",
+            allowUnsort: true,
+            showIndexes: false
+        },
         selectable: "row",
 
         filterable: {
@@ -280,17 +286,38 @@ function CreateGridInformeCompraNet() {
             }
         },
         filterMenuInit: function (e) {
-            $(e.container).css("width", "200px")
+            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field =="Localidad") {
+                $(e.container).css("width", "300px")
+            } else {
+                $(e.container).css("width", "150px")
+            }
         }
     });
 
+    var checkInputs = function (elements) {
+        elements.each(function () {
+            var element = $(this);
+            var input = element.children("input");
 
+            input.prop("checked", element.hasClass("k-state-selected"));
+        });
+    };
     function createMultiSelect(element, textField, valueField, url ) {
         element.removeAttr("data-bind");
 
         element.kendoMultiSelect({
+
+            itemTemplate: "<input type='checkbox'/> #:data."+textField+"#",
+            dataBound: function () {
+                var items = this.ul.find("li");
+                setTimeout(function () {
+                    checkInputs(items);
+                });
+            },
+
             dataTextField: textField,
             dataValueField: valueField,
+            autoClose: false,
             autoBind: false,
             delay: 300,
             dataSource: {
@@ -310,6 +337,9 @@ function CreateGridInformeCompraNet() {
 
             },
             change: function (e) {
+                var items = this.ul.find("li");
+                checkInputs(items);
+
                 var filter = { logic: "or", filters: [] };
                 var values = this.value();
                 $.each(values, function (i, v) {

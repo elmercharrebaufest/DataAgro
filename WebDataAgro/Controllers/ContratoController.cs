@@ -1,4 +1,5 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.Containers;
+using KendoGridBinder.ModelBinder.Mvc;
 using Mastersoft.Framework.DataRepository;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
@@ -48,31 +49,32 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {
+            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
             var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);
         }
 
-        public ActionResult ListarComercial(string text)
+        public ActionResult ListarComercial(string text = "")
         {
             var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
                                                      //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ListarProvincia(string text)
+        public ActionResult ListarProvincia(string text = "")
         {
             var provincias = mobjProvinciaManager.ListarProvincia(text);            
             return Json(provincias.Select(x => new { x.ProvinciaId, Provincia = x.Nombre }), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ListarLocalidad(string text)
+        public ActionResult ListarLocalidad(string text = "")
         {
             var localidades = mobjLocalidadManager.ListarLocalidad(text);
             return Json(localidades.Select(x => new { x.LocalidadId, Localidad = x.Nombre }), JsonRequestBehavior.AllowGet);
         }
         
-        public ActionResult ListarProveedor(string text)
+        public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = mobjProveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);

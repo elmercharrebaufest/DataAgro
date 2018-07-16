@@ -180,7 +180,7 @@ namespace Molinos.DataAgro.Business
 
         public List<Localidad> ListarLocalidad(string localidad)
         {
-            return mobjUnitOfWork.Repository<Localidad>().Queryable().Where(x => localidad != "" && x.Nombre.Contains(localidad)).Take(15).ToList();
+            return mobjUnitOfWork.Repository<Localidad>().Queryable().Where(x => localidad == "" || x.Nombre.Contains(localidad)).Take(15).ToList();
         }        
     }
 }

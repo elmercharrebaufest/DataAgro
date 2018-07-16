@@ -134,7 +134,7 @@ namespace Molinos.DataAgro.Business
 
         public List<Provincia> ListarProvincia(string provincia)
         {
-            return mobjUnitOfWork.Repository<Provincia>().Queryable().Where(x => provincia != "" && x.Nombre.Contains(provincia)).Take(15).ToList();
+            return mobjUnitOfWork.Repository<Provincia>().Queryable().Where(x => provincia == "" || x.Nombre.Contains(provincia)).Take(15).ToList();
         }
 
 
