@@ -92,14 +92,14 @@
       <BatQaPackDir Include="$(OutputPackDir)\*Qa.bat"/>
       <OutputPackDir Include="$(OutputPackDir)\**\*.*"/>
     </ItemGroup>
-
+    <!-- 
     <FileUpdate Files="@(BatProdPackDir)"
                 Regex="(.*\\)([^\\]*)(.DeployParameters.xml&quot;)$"
-                ReplacementText="$1VICSCATOPROD$3" />
+                ReplacementText="$1Prod$3" />
 
     <FileUpdate Files="@(BatQaPackDir)"
                 Regex="(.*\\)([^\\]*)(.DeployParameters.xml&quot;)$"
-                ReplacementText="$1VICSCATOQA$3" />
+                ReplacementText="$1Qa$3" />-->
     <Zip Files="@(OutputPackDir)" WorkingDirectory="$(OutputPackDir)" ZipFileName="$(OutputPackDir).zip" />
 
     <RemoveDir Directories="$(OutputPackDir)"/>
