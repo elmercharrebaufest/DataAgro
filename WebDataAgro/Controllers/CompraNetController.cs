@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -259,7 +260,14 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {
-            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
+            if (request.SortObjects != null)
+            {
+                request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
+            }
+            else
+            {
+                request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
+            }
             var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);
