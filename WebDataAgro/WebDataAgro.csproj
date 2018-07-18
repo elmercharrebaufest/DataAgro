@@ -179,6 +179,7 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\CentroController.cs" />
     <Compile Include="Controllers\ComercialController.cs" />
     <Compile Include="Controllers\CompraNetController.cs" />
     <Compile Include="Controllers\FijacionDePrecioController.cs" />
@@ -186,7 +187,6 @@
     <Compile Include="Controllers\CondicionController.cs" />
     <Compile Include="Controllers\CubproveedoresController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\PreslipController.cs" />
     <Compile Include="Controllers\ContratoController.cs" />
     <Compile Include="Controllers\ProveedorController.cs" />
     <Compile Include="Controllers\DestinatarioController.cs" />
@@ -207,6 +207,7 @@
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
+    <Compile Include="Models\CentroModel.cs" />
     <Compile Include="Models\ComercialModel.cs" />
     <Compile Include="Models\CompraNetModel.cs" />
     <Compile Include="Models\CondicionModel.cs" />
@@ -218,7 +219,6 @@
     <Compile Include="Models\FijacionDePrecioModel.cs" />
     <Compile Include="Models\LocalidadModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
-    <Compile Include="Models\PreslipModel.cs" />
     <Compile Include="Models\ProvinciaModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -845,13 +845,13 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AbmCentro.js" />
     <Content Include="Scripts\App\AbmComercial.js" />
     <Content Include="Scripts\App\AbmCondicion.js" />
     <Content Include="Scripts\App\AbmDestinatario.js" />
     <Content Include="Scripts\App\AbmFijacionDePrecio.js" />
     <Content Include="Scripts\App\AbmLocalidad.js" />
     <Content Include="Scripts\App\AbmMaterial.js" />
-    <Content Include="Scripts\App\AbmPreslip.js" />
     <Content Include="Scripts\App\AbmProvincia.js" />
     <Content Include="Scripts\App\Agenda.js" />
     <Content Include="Scripts\App\agregarproveedor.js" />
@@ -2310,7 +2310,6 @@
     <Content Include="Views\Contactos\Agregar.cshtml" />
     <Content Include="Views\Contactos\Detalle.cshtml" />
     <Content Include="Views\FijacionDePrecio\Index.cshtml" />
-    <Content Include="Views\Preslip\Index.cshtml" />
     <Content Include="Views\CompraNet\Index.cshtml" />
     <Content Include="Views\CompraNet\CrearContrato.cshtml" />
     <Content Include="Views\CompraNet\CrearFijacion.cshtml" />
@@ -2324,6 +2323,7 @@
     <Content Include="Views\CompraNet\ModalPendiente.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Contrato\Index.cshtml" />
+    <Content Include="Views\Centro\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,6 +1,6 @@
 ﻿var viewModel;
 
-var datosIniAbmComercial;
+var datosIniAbmCentro;
 
 $(document).ready(function () {
 
@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     InicializarElementos();
 
-    CreateGridComercial();
+    CreateGridCentro();
 
     CrearViewModel();
 
@@ -146,7 +146,7 @@ function CrearResultadosDataSource(datos) {
     return ds;
 }
 
-function CreateGridComercial() {
+function CreateGridCentro() {
 
     $("#gridIniComercial").kendoGrid({
         columns: [
@@ -247,7 +247,7 @@ function InicializarCombos() {
             ShowErrorMessages(data.Errores);
         }
         else {
-            datosIniAbmComercial = data;
+            datosIniAbmCentro = data;
             AsignarCombos();
             InicializarBusquedaInicial();
         }
@@ -258,8 +258,8 @@ function InicializarCombos() {
 
 function AsignarCombos() {
 
-    viewModel.set("PerfilCombo", datosIniAbmComercial.Datos.Perfil);
-    viewModel.set("ComercialCombo", datosIniAbmComercial.Datos.Comercial);
+    viewModel.set("PerfilCombo", datosIniAbmCentro.Datos.Perfil);
+    viewModel.set("ComercialCombo", datosIniAbmCentro.Datos.Comercial);
     //viewModel.set("GrupoDeComprasCombo", datosIniAbmComercial.Datos.GrupoDeCompras);
 }
 

@@ -151,6 +151,26 @@ namespace Molinos.DataAgro.Business
             return null;
         }
 
+        public async Task<List<CentroCombo>> GetAbmCentroComboAsync()
+        {
+            try
+            {
+                return await mobjUnitOfWork.Repository<Centro>()
+                                           .Queryable()
+                                           .OrderBy(x => x.Descripcion)
+                                           .Select(x => new CentroCombo()
+                                           {
+                                               CodigoSap = x.CodigoSap,
+                                               Descripcion = x.Descripcion
+                                           })
+                                           .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                var a = 1;
+            }
+            return null;
+        }
 
         public async Task<List<Perfil>> GetPerfilComboAsync()
         {
@@ -169,16 +189,6 @@ namespace Molinos.DataAgro.Business
                                        .ToListAsync();
         }
 
-
-        public async Task<List<TipoDeNegocio>> GetTipoDeNegocioComboAsync()
-        {
-            return await mobjUnitOfWork.Repository<TipoDeNegocio>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync(); 
-        }
-
-
         public async Task<List<Campaña>> GetCampañaComboAsync()
         {
             return await mobjUnitOfWork.Repository<Campaña>()
@@ -186,7 +196,6 @@ namespace Molinos.DataAgro.Business
                                        .OrderBy(x => x.Descripcion)
                                        .ToListAsync(); 
         }
-
     }
 }
 

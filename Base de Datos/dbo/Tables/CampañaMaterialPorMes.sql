@@ -2,7 +2,7 @@
     [CampañaMaterialPorMesId] INT        NOT NULL,
     [NroItem]                 INT        NULL,
     [Mes]                     INT        NULL,
-    [Toneladas]               FLOAT (53) NULL,
+    [Toneladas]               FLOAT      NULL,
     [CampañaMaterialId]       INT        NULL,
     [Año]                     INT        NULL,
     [ComercialId]             INT        NULL,

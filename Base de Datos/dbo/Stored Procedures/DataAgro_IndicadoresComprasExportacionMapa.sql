@@ -1,5 +1,5 @@
 ﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]  
+CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]  
 
 @ProvinciaId int =null  ,
 
@@ -8,8 +8,8 @@ create PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]
 @MaterialId int =null  ,
 
 @CampañaId int =null ,
-
-@comercialId int =44   
+@ComercialId int =null,
+@ComercialGenerador Int=null  
 
 as
 
@@ -34,24 +34,8 @@ end
 
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
 
-  
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
---insert into @EmpleadoTable select * from Empleados
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
 select p.cuit,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,prv.Nombre as Provincia,emp.Apellido + ' ' + emp.Nombres as Comercial
 ,case when cmm.Mes=1 then 'ENERO'
@@ -83,6 +67,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 inner join segmentacion seg on p.segmentacionId=seg.segmentacionId
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and (( @ProvinciaId is null) 

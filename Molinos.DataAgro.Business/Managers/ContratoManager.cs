@@ -286,12 +286,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.ContratoSAP = oContrato.ContratoSAP;
             }
 
-            if (oContratoSave.ContratoId == Constants.Object_Added)
-            {
-                oContratoSave.ContratoId = ((mobjUnitOfWork.Repository<Contrato>().Queryable().Max(x => (int?)x.ContratoId)) ?? 0) + 1;
-            }
-
-
             mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
 
             await mobjUnitOfWork.SaveChangesAsync();

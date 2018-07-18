@@ -1,7 +1,8 @@
-﻿--[DataAgro_Gauget_TraerExcel] 44,6,null
-create procedure [dbo].[DataAgro_Gauget_TraerExcel]
+﻿
+CREATE procedure [dbo].[DataAgro_Gauget_TraerExcel]
 
 @comercialId int = null,
+@ComercialGenerador Int=null,
 @CampañaId int = null,
 @MaterialId int = null  
 
@@ -9,22 +10,7 @@ as
 
 declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
    
-
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
 create table #Valor (MaterialId int,CampañaId int,CUIT float , Objetivo float, Compras float default(0),Porcentaje float default(0) )
 
@@ -35,7 +21,7 @@ inner join Proveedor p on o.ProveedorId = p.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (o.campañaId = @CampañaId))
---and ((@comercialId is null) or (pc.ComercialId = @comercialId))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and ((@MaterialId is null) or (o.MaterialId = @MaterialId))
 group by o.MaterialId,o.CampañaId ,p.cuit
 having sum(ToneladasObjetivos) > 0
@@ -51,7 +37,7 @@ inner join Proveedor p on cm.ProveedorId = p.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (cm.campañaId = @CampañaId))
---and ((@comercialId is null) or (pc.ComercialId = @comercialId))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and ((@MaterialId is null) or (cm.MaterialId = @MaterialId))
 group by cm.MaterialId,cm.campañaId,p.cuit) b
 where #Valor.MaterialId = b.MaterialId and #Valor.CampañaId = b.CampañaId and #Valor.CUIT = b.CUIT and  b.Toneladas > 0
@@ -94,6 +80,7 @@ left join CampañaMaterialPorMes cmm on cm.CampañaMaterialId=cmm.CampañaMateri
 where 
 ((@CampañaId is null) or (val.campañaId = @CampañaId and cm.campañaId=@CampañaId  ))
 and ((@MaterialId is null) or (val.MaterialId = @MaterialId and cm.MaterialId=@MaterialId ))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and val.Porcentaje > cast(0 as float)
 
 union all
@@ -119,6 +106,7 @@ inner join segmentacion seg on seg.SegmentacionId = p.SegmentacionId
 where 
 ((@CampañaId is null) or (val.campañaId = @CampañaId  ))
 and ((@MaterialId is null) or (val.MaterialId = @MaterialId ))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and val.Porcentaje = cast(0 as float) 
 ORDER BY P.CUIT
 

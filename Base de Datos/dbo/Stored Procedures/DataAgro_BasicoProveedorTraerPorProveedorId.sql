@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE [dbo].DataAgro_BasicoProveedorTraerPorProveedorId
+CREATE PROCEDURE [dbo].[DataAgro_BasicoProveedorTraerPorProveedorId]
 (
 	 @ProveedorId INT,
 	 @ComercialId INT

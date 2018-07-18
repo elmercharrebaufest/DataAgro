@@ -1,10 +1,10 @@
-﻿
-CREATE PROCEDURE [dbo].[DataAgro_IndicadoresAcopioBarra]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresAcopioBarra]  
 
  @SegmentacionId VARCHAR(max) ,
  @MaterialId int ,
  @CampañaId int , 
- @ComercialId int
+ @ComercialId int =null,
+ @ComercialGenerador Int=null
 
  as
 
@@ -15,7 +15,7 @@ declare @SegmentacionSecuencia TABLE (Item INT)
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;  
    
 --RECURSIVIDAD
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 --create table #Valores(MasTn5000 float,MasCl5000 int,MasTn1000 float,MasCl1000 int,MasTn100 float,MasCl100 int)
 
@@ -35,6 +35,7 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
 where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
@@ -53,6 +54,7 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
 where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
@@ -74,6 +76,7 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
 where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))
@@ -93,6 +96,7 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Acopio cm on p.ProveedorId= cm.ProveedorId
 inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
 where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and((@MaterialId is null) or (cmm.MaterialId = @MaterialId))

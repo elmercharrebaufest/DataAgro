@@ -64,6 +64,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Domain\AbmAreaInfluencia.cs" />
     <Compile Include="Domain\AbmCanalOperacion.cs" />
+    <Compile Include="Domain\AbmCentro.cs" />
     <Compile Include="Domain\AbmComercial.cs" />
     <Compile Include="Domain\AbmCondicion.cs" />
     <Compile Include="Domain\AbmContacto.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Domain\AbmLocalidad.cs" />
     <Compile Include="Domain\AbmMaterial.cs" />
     <Compile Include="Domain\AbmMoneda.cs" />
-    <Compile Include="Domain\AbmPreslip.cs" />
     <Compile Include="Domain\AbmProvincia.cs" />
     <Compile Include="Domain\AbmTipoNegocio.cs" />
     <Compile Include="Domain\Actividades.cs" />
@@ -99,6 +99,7 @@
     <Compile Include="Domain\TraerProveedor.cs" />
     <Compile Include="Domain\BusquedaHome.cs" />
     <Compile Include="Domain\Home.cs" />
+    <Compile Include="Entities\Centro.cs" />
     <Compile Include="Entities\Acopio.cs" />
     <Compile Include="Entities\AcopioCampaña.cs" />
     <Compile Include="Entities\AcopioMaterial.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Entities\Objetivo.cs" />
     <Compile Include="Entities\Perfil.cs" />
     <Compile Include="Entities\PostIt.cs" />
-    <Compile Include="Entities\Preslip.cs" />
     <Compile Include="Entities\Proveedor.cs" />
     <Compile Include="Entities\ProveedorCanalOperacion.cs" />
     <Compile Include="Entities\ProveedorComercial.cs" />
@@ -151,7 +151,6 @@
     <Compile Include="Entities\RG2300.cs" />
     <Compile Include="Entities\Segmentacion.cs" />
     <Compile Include="Entities\TipoActividad.cs" />
-    <Compile Include="Entities\TipoDeNegocio.cs" />
     <Compile Include="Entities\TipoNegocio.cs" />
     <Compile Include="Entities\TipoTelefono.cs" />
     <Compile Include="Entities\Zona.cs" />

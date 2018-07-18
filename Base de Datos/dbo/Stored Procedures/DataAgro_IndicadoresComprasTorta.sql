@@ -1,33 +1,19 @@
-﻿
-CREATE  PROCEDURE [dbo].[DataAgro_IndicadoresComprasTorta]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasTorta]  
 
 @MaterialId int   ,
 
 @CampañaId int    ,
 
-@ComercialId int   
+@ComercialId int =null,
+@ComercialGenerador Int=null   
 
 as
 declare @ProveedoresTable TABLE ( ProveedorId int , Segmentacion varchar(255))
 declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
    
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
 
---insert into @EmpleadoTable select * from Empleados
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 
 insert into @ProveedoresTable(ProveedorId)
@@ -37,13 +23,12 @@ inner join CampañaMaterial cm on cm.CampañaMaterialId=cmm.CampañaMaterialId
 inner join proveedor p on p.ProveedorId= cm.ProveedorId
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
---
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
 
-where   ( (@MaterialId is null) or (CM.MaterialId=@MaterialId ))
-
-and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId) )
+where((@MaterialId is null) or (CM.MaterialId=@MaterialId ))
+and ((@CampañaId is null) or (cm.CampañaId = @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 
 
 select  seg.Descripcion as Provincia,count(p.proveedorId)as cuit,0 as Tonelada
@@ -64,8 +49,9 @@ inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 inner join Material m on cm.MaterialId = m.MaterialId
 inner join Campaña c on cm.CampañaId = c.CampañaId
 inner join segmentacion seg on p.SegmentacionId=seg.SegmentacionId
-where   ( (@MaterialId is null) or (CM.MaterialId=@MaterialId ))
-and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId) )
+where   ((@MaterialId is null) or (CM.MaterialId=@MaterialId ))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId)) 
 group by seg.Descripcion
 
 

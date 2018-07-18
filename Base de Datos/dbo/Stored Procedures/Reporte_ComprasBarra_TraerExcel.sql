@@ -1,12 +1,11 @@
-﻿
-
-create procedure [dbo].[Reporte_ComprasBarra_TraerExcel]
+﻿CREATE procedure [dbo].[Reporte_ComprasBarra_TraerExcel]
 
  @Mes int= null,
  @SegmentacionId VARCHAR(max) ,
  @MaterialId int= null,
  @CampañaId int= null,
- @comercialId int =null  
+ @comercialId int =null,
+ @ComercialGenerador Int=null
 
 as
 
@@ -16,22 +15,7 @@ declare @SegmentacionSecuencia TABLE (Item INT)
 
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
---insert into @EmpleadoTable select * from Empleados
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 create table #Valores(Toneladas float,Cuit varchar(100),Material varchar(100),Campaña varchar(100),Año varchar(100),Segmentación varchar(100),Provincia varchar(100),Comercial varchar(100),Mes varchar(100),Criterio varchar(100),razonSocial varchar(100))
 insert into #Valores (Cuit ,Toneladas ,Material,Campaña,Año,Segmentación,Provincia,Comercial,Mes,Criterio,razonSocial )
@@ -69,6 +53,7 @@ and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and p.cuit in (
 select distinct  p.cuit
 from proveedor p
@@ -118,6 +103,7 @@ and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and p.cuit in (
 select distinct  p.cuit
 from proveedor p
@@ -150,7 +136,7 @@ when cmm.Mes=11 then 'NOVIEMBRE'
 when cmm.Mes=12 then 'DICIEMBRE' 
 else 'SIN MES'
 end  as Mes,
-'Menos de 2500 TN.',
+'Menos de 5000 TN.',
 p.RazonSocial as razonSocial
 
 from CampañaMaterialPorMes cmm
@@ -168,6 +154,7 @@ and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 and p.cuit in (
 select distinct  p.cuit
 from proveedor p
@@ -179,7 +166,7 @@ and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
 group by p.cuit
-having sum(cmm.toneladas) < 2500 )
+having sum(cmm.toneladas) < 5000 )
 order by p.cuit 
 
 select * from #Valores

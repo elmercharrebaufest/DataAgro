@@ -1,10 +1,10 @@
-﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresExportacionBarraAcopio]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresExportacionBarraAcopio]
 
-  @SegmentacionId VARCHAR(max) ,
+ @SegmentacionId VARCHAR(max),
  @MaterialId int,
  @CampañaId int,
- @ComercialId int = 44  
+ @ComercialId int =null,
+ @ComercialGenerador Int=null
  
 as
 
@@ -28,9 +28,7 @@ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmenta
 --	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
 --)
 
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId;
-
-
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador;
 
 
 create table #Valores(Criterio varchar(100),Toneladas float,Cuit varchar(100),Material varchar(100),Campaña varchar(100)
@@ -38,7 +36,7 @@ create table #Valores(Criterio varchar(100),Toneladas float,Cuit varchar(100),Ma
 
 
 insert into #Valores (Criterio,Cuit ,Toneladas ,Material,Campaña,Provincia,Segmentación,Comercial,razonSocial)
-select 'Mas de 5000 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
+select 'Mas de 40000 TN55.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
 prv.Nombre as Provincia,
 case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial,p.RazonSocial
@@ -56,6 +54,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and p.cuit in (
@@ -70,13 +69,53 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.cuit
-having sum(cmm.toneladas) > 5000 )
+having sum(cmm.toneladas) > 40000 )
 
 ORDER BY P.CUIT
+
+
+insert into #Valores (Criterio,Cuit ,Toneladas ,Material,Campaña,Provincia,Segmentación,Comercial,razonSocial)
+select 'Entre 20000 y 40000 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
+prv.Nombre as Provincia,
+case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
+,emp.Apellido + ' ' + emp.Nombres as Comercial,p.razonSocial
+
+from AcopioMaterial cm
+inner join Acopio cp on cp.AcopioId=cm.AcopioId
+inner join proveedor p on p.ProveedorId= cp.ProveedorId
+inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
+inner join segmentacion seg on p.segmentacionId=seg.segmentacionId
+inner join Localidad loc on cp.LocalidadId=loc.LocalidadId
+inner join Provincia prv on loc.ProvinciaId = prv.ProvinciaId 
+inner join Material m on cm.MaterialId = m.MaterialId
+inner join Campaña c on cm.CampañaId = c.CampañaId
+
+where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
+and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ( (@comercialId is null) or (pc.ComercialId= @comercialId))
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
+and p.cuit in (
+select distinct  p.cuit
+from proveedor p
+inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
+inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
+inner join Acopio cm on p.ProveedorId= cm.ProveedorId
+inner join AcopioMaterial cmm on cm.AcopioId=cmm.AcopioId
+where ( (@CampañaId is null) or (cmm.CampañaId= @CampañaId))
+and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
+and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
+group by p.cuit
+having sum(cmm.toneladas) between 20000 and 40000 )
+
+ORDER BY P.CUIT
+
  
   
 insert into #Valores (Criterio,Cuit ,Toneladas ,Material,Campaña,Provincia,Segmentación,Comercial,razonSocial)
-select 'Entre 2500 y 5000 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
+select 'Entre 10000 y 20000 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
 prv.Nombre as Provincia,
 case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial,p.razonSocial
@@ -94,6 +133,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and p.cuit in (
@@ -108,13 +148,13 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.cuit
-having sum(cmm.toneladas) between 2500 and 5000 )
+having sum(cmm.toneladas) between 10000 and 20000 )
 
 ORDER BY P.CUIT
 
 
 insert into #Valores (Criterio,Cuit ,Toneladas ,Material,Campaña,Provincia,Segmentación,Comercial,razonSocial)
-select 'Menos de 2500 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
+select 'Menos de 10000 TN.',p.cuit,cm.toneladas as Tonelada,m.Descripcion as Material,c.Descripcion as Campaña,
 prv.Nombre as Provincia,
 case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
 ,emp.Apellido + ' ' + emp.Nombres as Comercial,p.razonSocial
@@ -132,6 +172,7 @@ inner join Campaña c on cm.CampañaId = c.CampañaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and p.cuit in (
@@ -146,7 +187,7 @@ and ( (@MaterialId is null) or (cmm.MaterialId= @MaterialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 group by p.cuit
-having sum(cmm.toneladas) < 2500 )
+having sum(cmm.toneladas) < 10000 )
 ORDER BY P.CUIT
 
 

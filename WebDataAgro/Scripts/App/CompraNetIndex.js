@@ -155,9 +155,9 @@ $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
 }
 
 function CreateGridInformeCompraNet() {
+
     var defaultFilter = { field: "Fecha", operator: "eq", value: new Date };
     
-
     kendo.ui.FilterMultiCheck.prototype.options.messages =
         $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
             "selectedItemsFormat": ""
@@ -201,19 +201,7 @@ function CreateGridInformeCompraNet() {
         pageSize: 20,
         filter: defaultFilter,
     };
-    var customTextFilter =
-        {
-            extra: false,
-            operators: { string: { contains: "Contains" } },
-            ui: function (element) {
-                var parent = element.parent();
-                while (parent.children().length > 1)
-                    $(parent.children()[0]).remove();
-
-                parent.prepend("<input data-bind=\"value:filters[0].value\" class=\"k-textbox\" type=\"text\">");
-            }
-        }
-    
+        
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         dataBound: function () {

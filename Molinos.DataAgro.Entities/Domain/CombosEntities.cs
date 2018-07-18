@@ -136,6 +136,12 @@ namespace Molinos.DataAgro.Entities
             this.Descripcion = Descripcion;
         }
     }
+    public class CentroCombo
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+    }
 }
 
 

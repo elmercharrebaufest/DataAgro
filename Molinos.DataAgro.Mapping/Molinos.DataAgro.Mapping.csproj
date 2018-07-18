@@ -107,7 +107,6 @@
     <Compile Include="Mapping\ObjetivoMap.cs" />
     <Compile Include="Mapping\PerfilMap.cs" />
     <Compile Include="Mapping\PostItMap.cs" />
-    <Compile Include="Mapping\PreslipMap.cs" />
     <Compile Include="Mapping\ProveedorCanalOperacionMap.cs" />
     <Compile Include="Mapping\ProveedorComercialMap.cs" />
     <Compile Include="Mapping\ProveedorCondicionMap.cs" />
@@ -119,9 +118,9 @@
     <Compile Include="Mapping\RG2300Map.cs" />
     <Compile Include="Mapping\SegmentacionMap.cs" />
     <Compile Include="Mapping\TipoActividadMap.cs" />
-    <Compile Include="Mapping\TipoDeNegocioMap.cs" />
     <Compile Include="Mapping\TipoNegocioMap.cs" />
     <Compile Include="Mapping\TipoTelefonoMap.cs" />
+    <Compile Include="Mapping\CentroMap.cs" />
     <Compile Include="Mapping\ZonaMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

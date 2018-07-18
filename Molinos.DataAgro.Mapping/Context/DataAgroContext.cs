@@ -76,14 +76,13 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new InformeComercialProduccionMap());
             modelBuilder.Configurations.Add(new InformeComercialAlmacenamientoMap());
             modelBuilder.Configurations.Add(new FijacionDePrecioMap());
-            modelBuilder.Configurations.Add(new PreslipMap());
-            modelBuilder.Configurations.Add(new TipoDeNegocioMap());
             modelBuilder.Configurations.Add(new InformeComercialEstadoMap());
             modelBuilder.Configurations.Add(new MonedaMap());
             modelBuilder.Configurations.Add(new TipoNegocioMap());
             modelBuilder.Configurations.Add(new ContratoMap());
             modelBuilder.Configurations.Add(new FijacionDePrecioContratoMap());
             modelBuilder.Configurations.Add(new EstadoContratoMap());
+            modelBuilder.Configurations.Add(new CentroMap());
         }
     }
 }

@@ -152,6 +152,7 @@
     <Compile Include="Managers\CampañaMaterialManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\ComercialManager.cs" />
+    <Compile Include="Managers\CentroManager.cs" />
     <Compile Include="Managers\CompraNetManager.cs" />
     <Compile Include="Managers\ComprasManager.cs" />
     <Compile Include="Managers\CondicionManager.cs" />
@@ -169,7 +170,6 @@
     <Compile Include="Managers\LocalidadManager.cs" />
     <Compile Include="Managers\MaterialManager.cs" />
     <Compile Include="Managers\MonedaManager.cs" />
-    <Compile Include="Managers\PreslipManager.cs" />
     <Compile Include="Managers\ProveedorManager.cs" />
     <Compile Include="Managers\ProvinciaManager.cs" />
     <Compile Include="Managers\ReportesManager.cs" />

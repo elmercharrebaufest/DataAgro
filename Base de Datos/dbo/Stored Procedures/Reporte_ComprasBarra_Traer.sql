@@ -1,13 +1,12 @@
 ﻿
-
-create procedure [dbo].[Reporte_ComprasBarra_Traer]
+CREATE procedure [dbo].[Reporte_ComprasBarra_Traer]
  
  @Mes int= null,
  @SegmentacionId VARCHAR(max) ,
  @MaterialId int= null,
  @CampañaId int= null,
- @comercialId int =null  
-
+ @comercialId int =null,
+ @ComercialGenerador Int=null  
 as
 
  
@@ -15,7 +14,7 @@ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres 
    
 declare @SegmentacionSecuencia TABLE (Item INT)    
 
-insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
+insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',');
 
 --RECURSIVIDAD
 --WITH Empleados 
@@ -33,7 +32,7 @@ insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmenta
 
 --insert into @EmpleadoTable select * from Empleados
 
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 create table #Valores(MasTn5000 float,MasCl5000 int,MasTn1000 float,MasCl1000 int,MasTn100 float,MasCl100 int)
 
@@ -47,6 +46,7 @@ inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
 and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
+and  ( (@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
@@ -66,6 +66,7 @@ inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
 and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
+and  ( (@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
@@ -84,12 +85,13 @@ inner join CampañaMaterialPorMes cmm on cm.CampañaMaterialId=cmm.CampañaMater
 inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
-and ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
+and ((@MaterialId is null) or (cm.MaterialId= @MaterialId))
+and  ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 and ( (@Mes is null) or (cmm.Mes = @Mes))
 group by p.cuit
-having sum(cmm.toneladas) < 2500 )b) c
+having sum(cmm.toneladas) < 5000 )b) c
 
 
 

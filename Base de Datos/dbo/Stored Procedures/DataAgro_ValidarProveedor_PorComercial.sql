@@ -1,33 +1,29 @@
-﻿
-Create procedure [dbo].[DataAgro_ValidarProveedor_PorComercial]
+﻿CREATE procedure [dbo].[DataAgro_ValidarProveedor_PorComercial]
 
 @comercialId int,
 @proveedorId int= null
 
 AS
 
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---    --RECURSIVIDAD
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
 
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
- 
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @comercialId
+WITH Empleados 
+( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)
+AS
+(
+	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory
+    FROM Comercial  
+	WHERE ComercialId = @comercialId 
+	UNION ALL 
+    --RECURSIVIDAD
+	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory
+	FROM Comercial A
+	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+)
 
 
   SELECT 1 as Val 
   into #valor
-  FROM @EmpleadoTable e 
+  FROM Empleados e 
   inner join ProveedorComercial pc on e.ComercialId = pc.ComercialId 
   WHERE pc.ProveedorId = @proveedorId 
 
@@ -40,4 +36,3 @@ else
 begin
    select cast(0 as int) as valor
 end
-

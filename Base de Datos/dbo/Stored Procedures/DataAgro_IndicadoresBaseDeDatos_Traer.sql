@@ -1,14 +1,14 @@
-﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresBaseDeDatos_Traer]  
+﻿CREATE  PROCEDURE [dbo].[DataAgro_IndicadoresBaseDeDatos_Traer]  
 
-@fechaDesde datetime=null,
-@fechaHasta datetime=null,
-@Mes int=null,
-@SegmentacionId VARCHAR(max) ,
-@CampañaId int = null,
-@Toneladas float = null,
-@ComercialId int = null,
-@MaterialId int = null
+	@fechaDesde datetime=null,
+	@fechaHasta datetime=null,
+	@Mes int=null,
+	@SegmentacionId VARCHAR(max) ,
+	@CampañaId int = null,
+	@Toneladas float = null,
+	@ComercialId int = null,
+	@ComercialGenerador Int=null,
+	@MaterialId int = null
 
 as 
 declare @Proveedores TABLE (Item INT) 
@@ -18,22 +18,7 @@ declare @SegmentacionSecuencia TABLE (Item INT)
 
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
---insert into @EmpleadoTable select * from Empleados
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
 insert into @Proveedores(Item)
 select distinct p.ProveedorId 
@@ -44,6 +29,8 @@ inner join Segmentacion s on  p.SegmentacionId = s.SegmentacionId
 left join Campo ca on p.ProveedorId = ca.ProveedorId
 left join CampoMaterial cam on cam.CampoId= ca.CampoId
 where cast(p.fechaAlta as date) between @fechaDesde and @fechaHasta
+
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
@@ -109,6 +96,9 @@ inner join @EmpleadoTable  e on e.ComercialId = pc.ComercialId
 LEFT join Estado est on est.EstadoId = pee.EstadoId
 where 
 ( @MaterialId is null or exists (select 1 from CampoMaterial cp2 where cp2.MaterialId = @MaterialId and cp.CampoMaterialid = cp2.CampoMaterialid) )
+
 and ( @CampañaId is null or exists (select 1 from CampoMaterial cp3 where cp3.CampañaId = @CampañaId and cp.CampoMaterialid = cp3.CampoMaterialid) )
+
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
 Group by p.cuit, p.razonsocial, est.descripcion, s.descripcion,s.grupo, p.fechaAlta, e.Apellido + ' ' + e.Nombres, M.Descripcion

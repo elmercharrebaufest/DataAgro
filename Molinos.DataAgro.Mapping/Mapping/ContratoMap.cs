@@ -13,8 +13,8 @@ namespace Molinos.DataAgro.Entities
             this.HasKey(x => x.ContratoId);
 
 
-            //Property(x => x.ContratoId).HasColumnName(@"ContratoId").HasColumnType("int").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
-            Property(x => x.ContratoId).HasColumnName(@"ContratoId").HasColumnType("int").IsRequired(); 
+            Property(x => x.ContratoId).HasColumnName(@"ContratoId").HasColumnType("int").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            //Property(x => x.ContratoId).HasColumnName(@"ContratoId").HasColumnType("int").IsRequired(); 
             Property(x => x.MaterialId).HasColumnName(@"MaterialId").HasColumnType("int").IsRequired();
             Property(x => x.TipoNegocioId).HasColumnName(@"TipoNegocioId").HasColumnType("int").IsRequired();
             Property(x => x.Cantidad).HasColumnName(@"Cantidad").HasColumnType("float").IsRequired();

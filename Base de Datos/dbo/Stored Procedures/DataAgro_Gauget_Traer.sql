@@ -1,29 +1,15 @@
-﻿
-create procedure [dbo].[DataAgro_Gauget_Traer]
+﻿CREATE  procedure [dbo].[DataAgro_Gauget_Traer]
 
 @comercialId int = null,
+@ComercialGenerador Int=null,
 @CampañaId int = null,
 @MaterialId int = null
 
 as
 
 declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
-   
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
 
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 create table #Valor (MaterialId int,CampañaId int,CUIT float , Objetivo float, Compras float default(0),Porcentaje float default(0) )
 
@@ -35,6 +21,7 @@ inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (o.campañaId = @CampañaId))
 and ((@MaterialId is null) or (o.MaterialId = @MaterialId))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 group by o.MaterialId,o.CampañaId ,p.cuit
 having sum(ToneladasObjetivos) > 0
 
@@ -49,6 +36,7 @@ inner join ProveedorComercial pc on pc.proveedorId= p.proveedorId
 inner join @EmpleadoTable  emp on pc.ComercialId = emp.ComercialId
 where ((@CampañaId is null) or (cm.campañaId = @CampañaId))
 and ((@MaterialId is null) or (cm.MaterialId = @MaterialId))
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 group by cm.MaterialId,cm.campañaId,p.cuit) b
 where #Valor.MaterialId = b.MaterialId and #Valor.CampañaId = b.CampañaId and #Valor.CUIT = b.CUIT and  b.Toneladas > 0
 

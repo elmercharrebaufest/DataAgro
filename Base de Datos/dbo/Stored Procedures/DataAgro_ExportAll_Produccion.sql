@@ -1,5 +1,5 @@
 ﻿
-CREATE procedure [dbo].DataAgro_ExportAll_Produccion 
+CREATE procedure [dbo].[DataAgro_ExportAll_Produccion] 
 
 	@Proveedores VARCHAR(max)
 

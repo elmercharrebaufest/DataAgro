@@ -1,11 +1,11 @@
-﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresAcopio]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresAcopio]  
 
-  @ProvinciaId int = null  ,
+ @ProvinciaId int = null  ,
  @SegmentacionId VARCHAR(max) ,
  @MaterialId int = null  ,
  @CampañaId int  = null,
- @ComercialId int  =null
+ @ComercialId int  =null,
+ @ComercialGenerador Int=null
 
 as
 
@@ -29,25 +29,9 @@ declare @SegmentacionSecuencia TABLE (Item INT)
 
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
    
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 create table #Valores(Prov varchar(200),Cl bigint,Tn Float)
-
- 
 
 insert into #Valores(Prov,Cl)
 
@@ -80,7 +64,7 @@ and (( @ProvinciaId is null)
 
 and cp.LocalidadId is not null and prv.ProvinciaId is not null
 
-
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
  
 
 update #Valores
@@ -117,6 +101,7 @@ and (( @ProvinciaId is null)
 
 and cp.LocalidadId is not null and prv.ProvinciaId is not null
 
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
 group by p.cuit ,prv.Nombre)  b
 

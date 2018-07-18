@@ -21,13 +21,15 @@ BEGIN
 		Material.Descripcion as Material,
 		MonedaId,
 		FijacionDePrecioContrato.Ampliaciones,
-		EstadoContrato.Descripcion as Estado,
+		(case when FijacionDePrecioContrato.Estado =1 then 'Pendiente' else
+			((case when FijacionDePrecioContrato.Estado =2 then 'Confirmado' else
+			((case when FijacionDePrecioContrato.Estado =3 then 'Oferta' else
+			((case when FijacionDePrecioContrato.Estado =4 then 'Con Error' else 'Finalizado' end)) end)) end)) end) Estado,
 		Observacion
 		FROM FijacionDePrecioContrato
 		INNER JOIN Proveedor on Proveedor.ProveedorId = FijacionDePrecioContrato.ProveedorId
 		LEFT JOIN Comercial on Comercial.ComercialId = FijacionDePrecioContrato.ComercialId
 		LEFT JOIN Material on Material.MaterialId = FijacionDePrecioContrato.MaterialId
-		INNER JOIN EstadoContrato on EstadoContrato.EstadoContratoId = FijacionDePrecioContrato.Estado
 		WHERE (FijacionDePrecioContrato.ContratoId = @ContratoId OR @ContratoId=0) 
 
 

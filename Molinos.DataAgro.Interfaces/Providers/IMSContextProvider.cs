@@ -1,5 +1,4 @@
-﻿
-using Mastersoft.Framework.DataRepository;
+﻿using Mastersoft.Framework.DataRepository;
 
 namespace Molinos.DataAgro.Interfaces
 {

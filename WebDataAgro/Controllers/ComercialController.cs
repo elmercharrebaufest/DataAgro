@@ -43,10 +43,8 @@ namespace WebDataAgro.Controllers
             }
 
             return View(ActionView);
-
         }
-
-
+        
         public async Task<ActionResult> Inicializar()
         {
             var model = new DatosIniAbmComercialModel
@@ -62,7 +60,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
 
         public async Task<ActionResult> Buscar()
         {
@@ -81,8 +78,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
+        
         public async Task<ActionResult> ComercialCombo(AbmComercialParam oParam)
         {
             var model = new DataAbmComercial
@@ -97,7 +93,6 @@ namespace WebDataAgro.Controllers
             };
 
         }
-        
 
         public async Task<ActionResult> Aplicar(AbmComercialParam oParam)
         {
@@ -121,7 +116,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
         public async Task<ActionResult> Grabar(Comercial oComercial)
         {
             var model = new AbmComercialResult();
@@ -141,7 +135,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
 
         public async Task<ActionResult> Eliminar(AbmComercialParam oParam)
         {
@@ -166,7 +159,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
         public ActionResult Cancelar()
         {
             var model = new AbmComercialResult();
@@ -177,8 +169,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
 

@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE DataAgro_ComercialesJerarquicos_Traer   
+CREATE PROCEDURE [dbo].[DataAgro_ComercialesJerarquicos_Traer]   
     @comercialId int  
 AS   
 
@@ -19,7 +19,7 @@ declare @comercialABuscar int;
 
 if (@perfilId = @perfilIdVisualizador OR @perfilId = @perfilIdAdministrativo)
 begin
-	set @comercialABuscar =(select comercialId from comercial where PerfilId = @perfilIdDirector and EmpleadorACargo is null)
+	set @comercialABuscar =(select comercialId from comercial where PerfilId = @perfilIdDirector)
 end 
 else
 begin 

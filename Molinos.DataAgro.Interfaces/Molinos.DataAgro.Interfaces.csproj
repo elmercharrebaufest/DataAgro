@@ -130,6 +130,7 @@
     <Compile Include="Managers\ICampañaMaterial.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
     <Compile Include="Managers\IComercialManager.cs" />
+    <Compile Include="Managers\ICentroManager.cs" />
     <Compile Include="Managers\ICompraNetManager.cs" />
     <Compile Include="Managers\IComprasManager.cs" />
     <Compile Include="Managers\ICondicionManager.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Managers\IFijacionDePrecioManager.cs" />
     <Compile Include="Managers\IInformeComercialManager.cs" />
     <Compile Include="Managers\IMonedaManager.cs" />
-    <Compile Include="Managers\IPreslipManager.cs" />
     <Compile Include="Managers\IProveedorManager.cs" />
     <Compile Include="Managers\IDestinatarioManager.cs" />
     <Compile Include="Managers\IHomeManager.cs" />

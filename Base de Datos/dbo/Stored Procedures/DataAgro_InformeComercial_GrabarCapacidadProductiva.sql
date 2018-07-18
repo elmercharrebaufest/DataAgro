@@ -1,5 +1,5 @@
 ﻿
-create PROCEDURE DataAgro_InformeComercial_GrabarCapacidadProductiva
+CREATE PROCEDURE [dbo].[DataAgro_InformeComercial_GrabarCapacidadProductiva]
 	@inf varchar(MAX)
 as
 

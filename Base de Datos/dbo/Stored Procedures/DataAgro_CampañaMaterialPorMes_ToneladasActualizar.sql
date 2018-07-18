@@ -1,5 +1,5 @@
 ﻿
-CREATE PROCEDURE DataAgro_CampañaMaterialPorMes_ToneladasActualizar
+CREATE PROCEDURE [dbo].[DataAgro_CampañaMaterialPorMes_ToneladasActualizar]
 
 @cosecha varchar(50),
 @material int,

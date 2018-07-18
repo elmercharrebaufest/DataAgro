@@ -112,10 +112,7 @@
     <Build Include="dbo\Tables\Zona.sql" />
     <Build Include="dbo\Tables\Provincia.sql" />
     <Build Include="dbo\Tables\CanalOperacion.sql" />
-    <Build Include="dbo\Tables\%27Datos básicos_%27.sql" />
     <Build Include="dbo\Tables\ComercialZona.sql" />
-    <Build Include="dbo\Tables\%27Datos contacto comercial_%27.sql" />
-    <Build Include="dbo\Tables\%27Datos de proveedor_%27.sql" />
     <Build Include="dbo\Tables\Destinatario.sql" />
     <Build Include="dbo\Tables\Proveedor.sql" />
     <Build Include="dbo\Tables\Condicion.sql" />
@@ -131,10 +128,7 @@
     <Build Include="dbo\Tables\StoresDeUsuarios.sql" />
     <Build Include="dbo\Tables\TipoActividad.sql" />
     <Build Include="dbo\Tables\GrupoDeCompras.sql" />
-    <Build Include="dbo\Tables\%27Capacidad productiva_%27.sql" />
     <Build Include="dbo\Tables\Errores.sql" />
-    <Build Include="dbo\Tables\%27Datos de contacto_%27.sql" />
-    <Build Include="dbo\Tables\Almacenamiento_.sql" />
     <Build Include="dbo\Tables\Reportes.sql" />
     <Build Include="dbo\Tables\TipoTelefono.sql" />
     <Build Include="dbo\Tables\Estado.sql" />
@@ -221,8 +215,6 @@
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_Reporte.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_GrabarCapacidadProductiva.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ComercialesJerarquicos_Traer.sql" />
-    <Build Include="dbo\Tables\TipoDeNegocio.sql" />
-    <Build Include="dbo\Tables\Preslip.sql" />
     <Build Include="dbo\Tables\FijacionDePrecio.sql" />
     <Build Include="dbo\Tables\Moneda.sql" />
     <Build Include="dbo\Tables\TipoNegocio.sql" />
@@ -232,10 +224,15 @@
     <Build Include="dbo\Stored Procedures\DataAgro_BasicoFijacionPrecioContratoTraerPorFiltro.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BasicoProveedorTraerPorCuit.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaProveedores.sql" />
-    <Build Include="dbo\Tables\GrupoDeComprasSAP.sql" />
     <Build Include="dbo\Tables\EstadoContrato.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerAlmacenamiento.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerMaterialesAModificar.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerInformesGenerado.sql" />
+    <Build Include="dbo\Tables\Centro.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
+    <None Include="Molinos.DataAgro.Database.bfdev226.publish.xml" />
+    <None Include="Molinos.DataAgro.Database.gvicsql2014test.publish.xml" />
   </ItemGroup>
 </Project>

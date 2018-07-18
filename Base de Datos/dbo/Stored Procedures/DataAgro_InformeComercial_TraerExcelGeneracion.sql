@@ -1,5 +1,5 @@
 ﻿
-create PROCEDURE [dbo].[DataAgro_InformeComercial_TraerExcelGeneracion] 
+CREATE PROCEDURE [dbo].[DataAgro_InformeComercial_TraerExcelGeneracion] 
 
 
 AS
@@ -14,6 +14,7 @@ com.Nombres + ' ' + com.Apellido as Comercial,
 			from InformeComercialProduccion ifp
 			inner Join Material m on ifp.MaterialId = m.MaterialId
 			where ifp.InformeComercialId = ic.InformeComercialId 
+			group by m.Descripcion
 			FOR XML PATH('')
 		), 1, 0, '')) AS Materiales
 

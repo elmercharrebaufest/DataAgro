@@ -1,16 +1,13 @@
-﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresComprasMapa]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasMapa]  
 
+@ProvinciaId int,
+@SegmentacionId VARCHAR(max),
 
-@ProvinciaId int   ,
+@MaterialId int,
+@CampañaId int,
 
-@SegmentacionId VARCHAR(max) ,
-
-@MaterialId int   ,
-
-@CampañaId int  ,
-
-@comercialId int  
+@ComercialId int =null,
+@ComercialGenerador Int=null 
 
 as
 
@@ -32,22 +29,7 @@ end
 
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@SegmentacionId,',') ;
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
---insert into @EmpleadoTable select * from Empleados
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
  
 create table #Valores(Prov varchar(200),Cl bigint,Tn Float)
 
@@ -67,10 +49,10 @@ inner join Localidad loc on p.LocalidadId= loc.LocalidadId
 
 inner join provincia prv on loc.ProvinciaId = prv.ProvinciaId
 
-where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
+where ((@MaterialId is null) or (cm.MaterialId= @MaterialId))
 
-and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
-
+and ((@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
 and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
@@ -101,9 +83,9 @@ inner join provincia prv on loc.ProvinciaId = prv.ProvinciaId
 
 where ( (@MaterialId is null) or (cm.MaterialId= @MaterialId))
 
-and ( (@CampañaId is null) or (cm.CampañaId= @CampañaId))
-
-and (( @SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
+and ((@CampañaId is null) or (cm.CampañaId= @CampañaId))
+and ((@comercialId is null) or (pc.ComercialId= @comercialId))
+and ((@SegmentacionId is null) or (@SegmentacionId= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
 --and ((@ProvinciaId is null) or (p.provinciaId = @ProvinciaId))

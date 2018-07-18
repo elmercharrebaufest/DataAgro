@@ -1,33 +1,15 @@
-﻿
-create PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionTorta]  
+﻿CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionTorta]  
  
-@MaterialId int  =null,
+ @MaterialId int  =null,
+ @CampañaId int =null,
+ @ComercialId int  =null,
+ @ComercialGenerador Int=null
 
-@CampañaId int =null,
+aS
 
-@ComercialId int  =44
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
 
- aS
-
- declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
-   
-
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
---insert into @EmpleadoTable select * from Empleados
-
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador
 
 select p.cuit,cmm.toneladas as Toneladas,m.Descripcion as Material,c.Descripcion as Campaña,cast(cmm.Año as varchar(20)) as Año,
 case when seg.grupo ='Productores' then 'Productores ' + seg.Descripcion   else seg.Descripcion end as Segmentación
@@ -63,7 +45,7 @@ left join provincia prv on loc.ProvinciaId = prv.ProvinciaId
 where   ( (@MaterialId is null) or (CM.MaterialId=@MaterialId ))
 
 and ( (@CampañaId is null) or (cm.CampañaId = @CampañaId) )
-
+and ((@ComercialId is null) or ( pc.ComercialId = @ComercialId))
 
 
 ORDER BY P.CUIT

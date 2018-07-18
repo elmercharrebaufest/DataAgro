@@ -10,26 +10,24 @@ CREATE Procedure [dbo].[DataAgro_Proveedores_Cubo]
 as
 
 --RECURSIVIDAD
---WITH Empleados 
---( ComercialId)
---AS
---(
---	SELECT ComercialId
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
+WITH Empleados 
+( ComercialId)
+AS
+(
+	SELECT ComercialId
+    FROM Comercial  
+	WHERE ComercialId = @comercialId 
+	UNION ALL 
+	SELECT A.ComercialId
+	FROM Comercial A
+	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+)
 
---select * 
---into #Empleados
---from Empleados
+select * 
+into #Empleados
+from Empleados
 
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
  
-insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
 
 SELECT 
 	p.Calificacion, 
@@ -51,7 +49,7 @@ SELECT
 into #ProveedorAux
 FROM Proveedor p  
 LEFT join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId 
-INNER join @EmpleadoTable e on e.ComercialId = pc.ComercialId
+INNER join #Empleados e on e.ComercialId = pc.ComercialId
 LEFT join Estado est on p.EstadoId = est.EstadoId
 LEFT join FACACOP fc on p.CUIT = fc.CUIT
 LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId AND CC.EsPrincipal = 1
@@ -64,15 +62,15 @@ LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId AND CC.EsPrinci
 	INSERT INTO @ProveedorEstado 
 	select 
 		distinct t.ProveedorId , 
-		case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+		case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  #Empleados)) 
 		then 4 else 
-			case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))  
+			case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  #Empleados))  
 			then 5  else
-					case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))  
+					case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  #Empleados))  
 					then 1  else
-							case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))  
+							case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  #Empleados))  
 							then 2 else
-								case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))  
+								case when exists(select 1 from ProveedorEstado pee where t.ProveedorId = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  #Empleados))  
 								then 3  else
 										(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.ProveedorId)
 								ENd
@@ -81,7 +79,7 @@ LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId AND CC.EsPrinci
 			ENd
 		ENd as Estado
 		from #ProveedorAux t 
-	LEFT join ProveedorEstado pe on t.ProveedorId = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
+	LEFT join ProveedorEstado pe on t.ProveedorId = pe.ProveedorId and pe.ComercialId in (select ComercialId from  #Empleados)
 	--where pe.ComercialId in (select ComercialId from  #Empleados)
 	--group by pe.ProveedorId
 
@@ -117,7 +115,7 @@ prca.[Nombre] as ProvinciaAcopio
 into #Prueba
 from proveedor p
 inner join [ProveedorComercial] pc on p.ProveedorId  = pc.ProveedorId
-inner join @EmpleadoTable emp on pc.ComercialId = emp.ComercialId
+inner join #Empleados emp on pc.ComercialId = emp.ComercialId
 left join [Localidad] l on p.localidadId = l.localidadId
 left join [Provincia] pr on pr.provinciaid = l.provinciaid
 inner join [Segmentacion] s on s.segmentacionId = p.segmentacionId
@@ -253,4 +251,4 @@ BEGIN
 END
 
 DROP TABLE #Prueba
---DROP TABLE @EmpleadoTable
+DROP TABLE #Empleados

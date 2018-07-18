@@ -34,8 +34,7 @@ namespace Molinos.DataAgro.Business
 
         public async Task<DatosIniAbmComercial> TraerDatosInicialesAsync()
         {
-
-            //si es alta le madno cero, si modifico le mando el id desde la grilla
+            //si es alta le mandoo cero, si modifico le mando el id desde la grilla
             var qry = new CombosQueries(mobjUnitOfWork);
 
             var oDatosIniciales = new DatosIniAbmComercial()
@@ -89,7 +88,6 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-
         public async Task<Comercial> TraerComercialAsync(int intComercialId)
         {
             var oComercial = new Comercial();
@@ -125,9 +123,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-
-
-
+            
             // Agregar el mensaje de entity error si el usuario no existe  en AD 
 
             try
@@ -141,7 +137,6 @@ namespace Molinos.DataAgro.Business
                         oEntityErrors.HayError = true;
                         oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El usuario no existe en AD " });
                         return oEntityErrors;
-
                     }
                 }
             }
@@ -149,8 +144,6 @@ namespace Molinos.DataAgro.Business
             {
 
             }
-
-
 
             Comercial oComercialSave;
             var XComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
@@ -164,12 +157,8 @@ namespace Molinos.DataAgro.Business
                     oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El usuario de Active Directory Ya ha sido usado por otro comercial " });
                     return oEntityErrors;
                 }
-
-
-
-
+                
                 //XComercial.
-
 
                 oComercialSave = new Comercial()
                 {
@@ -189,8 +178,7 @@ namespace Molinos.DataAgro.Business
                         return oEntityErrors;
                     }
                 }
-
-
+                
                 //var perfiles = mobjUnitOfWork.Repository<Perfil>().Queryable();            
                 //var perfilId = perfiles.FirstOrDefault(p => p.PerfilId == comercial.ComercialId ).PerfilId;
                 //if (comercial.PerfilId == 3)
