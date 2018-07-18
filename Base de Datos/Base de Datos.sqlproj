@@ -233,6 +233,6 @@
   <ItemGroup>
     <None Include="Comparacion.scmp" />
     <None Include="Molinos.DataAgro.Database.bfdev226.publish.xml" />
-    <None Include="Molinos.DataAgro.Database.gvicsql2014test.publish.xml" />
+    <None Include="Molinos.DataAgro.Database.vicsql2014test.publish.xml" />
   </ItemGroup>
 </Project>
