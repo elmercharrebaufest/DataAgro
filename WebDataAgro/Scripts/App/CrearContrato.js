@@ -254,7 +254,7 @@ function InicializarElementos() {
 
     $("#precioId").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "n2",
         spinners: false,
         min: 0
     });

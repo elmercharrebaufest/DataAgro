@@ -749,11 +749,11 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
         spinners: false,
         min: 0
     });
-
+    precio = precio.replace(".", ",");
     $("#precioModalPendienteId").kendoNumericTextBox({
-        value: precio ,
+        value: precio,
         culture: "es-AR",
-        format: "n0",
+        format: "n2",
         spinners: false,
         min: 0
     });
@@ -1218,7 +1218,7 @@ function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, 
     $("#visualizar_comercial").text(comercial);
     $("#visualizar_material").text(material);
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
-    $("#visualizar_precio").text(kendo.toString(parseInt(precio), "n0") + " " + moneda);
+    $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda);
     $("#visualizar_campana").text(campana);
    
 
