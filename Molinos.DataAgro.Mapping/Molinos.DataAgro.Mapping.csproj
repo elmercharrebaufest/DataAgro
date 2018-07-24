@@ -82,6 +82,7 @@
     <Compile Include="Mapping\CampoMap.cs" />
     <Compile Include="Mapping\CampoMaterialMap.cs" />
     <Compile Include="Mapping\CanalOperacionMap.cs" />
+    <Compile Include="Mapping\BoletoCompraNetMap.cs" />
     <Compile Include="Mapping\ComercialMap.cs" />
     <Compile Include="Mapping\ComercialZonaMap.cs" />
     <Compile Include="Mapping\CondicionMap.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Mapping\SegmentacionMap.cs" />
     <Compile Include="Mapping\TipoActividadMap.cs" />
     <Compile Include="Mapping\TipoNegocioMap.cs" />
+    <Compile Include="Mapping\BolsaCompraNetMap.cs" />
+    <Compile Include="Mapping\ClasificacionCompraNetMap.cs" />
     <Compile Include="Mapping\TipoTelefonoMap.cs" />
     <Compile Include="Mapping\CentroMap.cs" />
     <Compile Include="Mapping\ZonaMap.cs" />

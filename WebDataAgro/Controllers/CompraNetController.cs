@@ -268,6 +268,8 @@ namespace WebDataAgro.Controllers
             {
                 request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
             }
+            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
+
             var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
 
             return Json(model);

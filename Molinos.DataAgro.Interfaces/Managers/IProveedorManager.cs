@@ -1,15 +1,14 @@
-﻿using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
+﻿using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
 using System.Collections.Generic;
 
 using System.Threading.Tasks;
 
-namespace Molinos.DataAgro.Interfaces {
+namespace Molinos.DataAgro.Interfaces
+{
     public interface IProveedorManager
     {
-        Task<StoredPorProveedorResult> TraerProveedor(int ProveedorId, string UsuarioDirectory);
+        Task<StoredPorProveedorResult> TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo);
 
         Task<DatosIniProveedor> TraerDatosCombo(int ProveedorId);
 

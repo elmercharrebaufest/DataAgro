@@ -1,9 +1,5 @@
-﻿using Mastersoft.Framework.Standard;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities
 {
@@ -160,19 +156,4 @@ namespace Molinos.DataAgro.Entities
         public int ZonaId { get; set; }
         public string Descripcion { get; set; }
     }
-
-
-
-    /*public class GrabarPostItResult
-    {
-        public EntityErrors errores { get; set; }
-        public int? ProveedorId { get; set; }
-
-
-        public GrabarPostItResult()
-        {
-
-        }
-
-    }*/
 }

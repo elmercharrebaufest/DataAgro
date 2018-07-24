@@ -25,7 +25,6 @@ namespace Molinos.DataAgro.Entities
         public string CodigoPostal { get; set; }
         public Nullable<int> AreaInfluenciaId { get; set; }
         public Nullable<double> AlmacVolAnualTotal { get; set; }
-        //public Nullable<double> AlmacCapacidadPropia { get; set; }
         public Nullable<bool> AlmacHabilitadoSojaSust { get; set; }
         public Nullable<double> AlmacTonsMaxSojaSust { get; set; }
         public Nullable<double> AlmacHectSojaSust { get; set; }
@@ -46,7 +45,12 @@ namespace Molinos.DataAgro.Entities
         public Nullable<System.DateTime> FechaUltimoContacto { get; set; }
         public string RiesgoComercialSap { get; set; }
         public Nullable<DateTime> FechaAlta { get; set; }
-
+        public Nullable<int> LocalidadCompraNetId { get; set; }
+        public Nullable<int> ProvinciaCompraNetId { get; set; }
+        public Nullable<int> ClasificacionCompraNetId { get; set; }
+        public Nullable<int> BoletoCompraNetId { get; set; }
+        public Nullable<int> BolsaCompraNetId { get; set; }
+                    
         public Proveedor()
         {
             

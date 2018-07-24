@@ -617,6 +617,14 @@ function armarContacto() {
     $("#daco-arin").html(basico[0].AreaInfluencia == null ? "No posee" : basico[0].AreaInfluencia);
     $("#daco-inte").html(basico[0].Intermediario == null ? "No posee" : basico[0].Intermediario);
     $("#daco-come").html(basico[0].Observaciones == null ? "No posee" : basico[0].Observaciones);
+
+    $("#daco-clascomnet").html(basico[0].ClasificacionCompraNet == null ? "No posee" : basico[0].ClasificacionCompraNet);
+    $("#daco-bolecomnet").html(basico[0].BoletoCompraNet == null ? "No posee" : basico[0].BoletoCompraNet);
+    $("#daco-bolscomnet").html(basico[0].BolsaCompraNet == null ? "No posee" : basico[0].BolsaCompraNet);
+    $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet=="" ) ? "No posee" : basico[0].ProvinciaCompraNet);
+    $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].LocalidadCompraNet);
+
+
     if (comerciales.length == 0) {
 
     } else {

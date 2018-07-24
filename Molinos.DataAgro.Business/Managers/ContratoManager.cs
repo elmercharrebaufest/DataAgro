@@ -276,7 +276,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Observacion = oContrato.Observacion;
             oContratoSave.Ampliaciones = oContrato.Ampliaciones;
 
-            if (oContratoSave.Fecha != null)
+            if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
             {
                 oContratoSave.Fecha = oContrato.Fecha;
             }

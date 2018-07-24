@@ -104,6 +104,7 @@
     <Folder Include="Security\" />
     <Folder Include="dbo\Functions\" />
     <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\Script Posdeployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\AreaInfluencia.sql" />
@@ -169,7 +170,6 @@
     <Build Include="dbo\Stored Procedures\DataAgro_ActividadTraerPorProveedorId.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ActualizarComercialHome.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_Proveedores_Cubo.sql" />
-    <Build Include="dbo\Stored Procedures\DataAgro_BasicoProveedorTraerPorProveedorId.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_Contactos_Exportar.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ActualizarEstadoProveedor.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ComprasPorComercialId.sql" />
@@ -229,10 +229,16 @@
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerMaterialesAModificar.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerInformesGenerado.sql" />
     <Build Include="dbo\Tables\Centro.sql" />
+    <Build Include="dbo\Tables\BoletoCompraNet.sql" />
+    <Build Include="dbo\Tables\ClasificacionCompraNet.sql" />
+    <Build Include="dbo\Tables\BolsaCompraNet.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
     <None Include="Molinos.DataAgro.Database.bfdev226.publish.xml" />
     <None Include="Molinos.DataAgro.Database.vicsql2014test.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />
   </ItemGroup>
 </Project>

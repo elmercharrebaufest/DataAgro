@@ -108,7 +108,6 @@ namespace Molinos.DataAgro.Business
             }
            
             Centro oCentroSave;
-            var XComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
             if (oCentro.ObjectState == 0)
             {
                 oCentroSave = new Centro()

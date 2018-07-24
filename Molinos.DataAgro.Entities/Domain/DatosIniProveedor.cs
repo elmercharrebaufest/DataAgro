@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities
 {
@@ -19,7 +16,9 @@ namespace Molinos.DataAgro.Entities
         public List<InteresQry> inte { get; set; }
         public List<TipoActividadQry> tipoact { get; set; }
         public List<ContactoComercialQry> concom { get; set; }
-
+        public List<ClasificacionCompraNetQry> ClasComNet { get; set; }
+        public List<BoletoCompraNetQry> BoleComNet { get; set; }
+        public List<BolsaCompraNetQry> BolsComNet { get; set; }
         public DatosIniProveedor()
         {
             segm = new List<SegmentacionQry>();
@@ -33,6 +32,9 @@ namespace Molinos.DataAgro.Entities
             inte = new List<InteresQry>();
             tipoact = new List<TipoActividadQry>();
             concom = new List<ContactoComercialQry>();
+            ClasComNet = new List<ClasificacionCompraNetQry>();
+            BoleComNet = new List<BoletoCompraNetQry>();
+            BolsComNet = new List<BolsaCompraNetQry>();
         }
     }
 

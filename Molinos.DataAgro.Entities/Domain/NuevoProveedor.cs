@@ -117,6 +117,11 @@ namespace Molinos.DataAgro.Entities
         public string comentario { get; set; }
         public string nomReferente { get; set; }
         public int? calificacion { get; set; }
+        public int? ProvinciaCompraNet { get; set; }
+        public int? LocalidadCompraNet { get; set; }
+        public int? ClasificacionCompraNet { get; set; }
+        public int? BoletoCompraNet { get; set; }
+        public int? BolsaCompraNet { get; set; }
     }
 
     public class Telefono
@@ -142,71 +147,44 @@ namespace Molinos.DataAgro.Entities
     public class Produccion
     {
         public List<CamposProduccion> CamposProduccion { get; set; }
-
         public double? TonsMaxAprobSojaSust { get; set; }
-
         public string habilitaoSojaSust { get; set; }
-
         public double? hasAprobSojaSust { get; set; }
-
-        public double? volumenAnualTotalTns { get; set; }
-        
+        public double? volumenAnualTotalTns { get; set; }        
         public List<Objetivos> objetivos { get; set; }
-
         public List<Objetivos> eliminarobjetivos { get; set; }
-
         public int? CampoId { get; set; }
 
         public Produccion()
         {
             eliminarobjetivos = new List<Objetivos>();
         }
-
-
     }
 
     public class CamposProduccion
     {
         public string archivo { get; set; }
-
         public byte[] archivofile { get; set; }
-
         public string archivoFileResult { get; set; }
-
         public List<Granos> granos { get; set; }
-
         public List<Granos> eliminarproduccion { get; set; }
-
         public int item { get; set; }
-
         public int localidad { get; set; }
-
         public string localidadNom { get; set; }
-
         public int provincia { get; set; }
-
         public string provinciaNom { get; set; }
-
         public int? hectareas { get; set; }
-
         public string coordenadas { get; set; }
-
         public int? CampoId { get; set; }
-
     }
 
     public class Granos
     {
         public string grano { get; set; }
-
         public int granoId { get; set; }
-
         public int? hectareas { get; set; }
-
         public string hectareasNom { get; set; }
-
         public int? toneladas { get; set; }
-
         public int campañaId { get; set; }
     }
 
@@ -218,55 +196,35 @@ namespace Molinos.DataAgro.Entities
     public class CamposAlmacenamiento
     {
         public int? CampoId { get; set; }
-
         public string archivo { get; set; }
-
         public byte[] archivofile { get; set; }
-
         public string archivoFileResult { get; set; }
-
         public List<GranosAlmacenamiento> granosAlmacenamiento { get; set; }
-
         public List<GranosAlmacenamiento> eliminargranoalmacenamiento { get; set; }
-
         public List<GranosAlmacenamientoGrano> granosAlmacenamientoGrano { get; set; }
-
         public List<GranosAlmacenamientoGrano> eliminargranoalmacenamientograno { get; set; }
-
-
         public int item { get; set; }
-
         public int localidad { get; set; }
-
         public string localidadNom { get; set; }
-
         public int provincia { get; set; }
-
         public string provinciaNom { get; set; }
-
-        //public int hectareasAlmacenamiento { get; set; }
-
         public string coordenadasAlmacenamiento { get; set; }
+        //public int hectareasAlmacenamiento { get; set; }
     }
 
     public class GranosAlmacenamiento
     {
 
         public int campañaId { get; set; }
-
         public double? toneladasAlmacenamiento { get; set; }
-
         public bool? hasArrendadas { get; set; }
     }
 
     public class GranosAlmacenamientoGrano
     {
         public int granoId { get; set; }
-
         public int campañaId { get; set; }
-
         public double? toneladasAlmacenamiento { get; set; }
-
     }
 
     public class ContactosComercial

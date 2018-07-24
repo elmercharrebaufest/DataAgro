@@ -126,6 +126,24 @@ namespace Molinos.DataAgro.Entities
         public string Nombres;
     }
 
+    public class ClasificacionCompraNetQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
+
+    public class BoletoCompraNetQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
+
+    public class BolsaCompraNetQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
+
     public class EstadosContratos {
 
         public int EstadosContratosId { get; set; }

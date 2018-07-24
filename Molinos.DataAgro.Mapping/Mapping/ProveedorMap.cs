@@ -32,16 +32,7 @@ namespace Molinos.DataAgro.Entities
 
             this.Property(t => t.GrupoCompras)
                 .HasMaxLength(255);
-
-            /*this.Property(t => t.LinkCoface)
-                .HasMaxLength(200);
-
-            this.Property(t => t.LinkSAP)
-                .HasMaxLength(200);
-
-            this.Property(t => t.LinkNosis)
-                .HasMaxLength(200);*/
-
+            
             this.Property(t => t.Email1)
                 .HasMaxLength(255);
 
@@ -86,7 +77,6 @@ namespace Molinos.DataAgro.Entities
             this.Property(t => t.CodigoPostal).HasColumnName("CodigoPostal");
             this.Property(t => t.AreaInfluenciaId).HasColumnName("AreaInfluenciaId");
             this.Property(t => t.AlmacVolAnualTotal).HasColumnName("AlmacVolAnualTotal");
-            //this.Property(t => t.AlmacCapacidadPropia).HasColumnName("AlmacCapacidadPropia");
             this.Property(t => t.AlmacHabilitadoSojaSust).HasColumnName("AlmacHabilitadoSojaSust");
             this.Property(t => t.AlmacTonsMaxSojaSust).HasColumnName("AlmacTonsMaxSojaSust");
             this.Property(t => t.AlmacHectSojaSust).HasColumnName("AlmacHectSojaSust");
@@ -107,6 +97,11 @@ namespace Molinos.DataAgro.Entities
             this.Property(t => t.FechaUltimoContacto).HasColumnName("FechaUltimoContacto");
             this.Property(t => t.RiesgoComercialSap).HasColumnName("RiesgoComercialSap");
             this.Property(t => t.FechaAlta).HasColumnName("FechaAlta");
+            this.Property(t => t.ProvinciaCompraNetId).HasColumnName("ProvinciaCompraNetId");
+            this.Property(t => t.LocalidadCompraNetId).HasColumnName("LocalidadCompraNetId");
+            this.Property(t => t.ClasificacionCompraNetId).HasColumnName("ClasificacionCompraNetId");
+            this.Property(t => t.BoletoCompraNetId).HasColumnName("BoletoCompraNetId");
+            this.Property(t => t.BolsaCompraNetId).HasColumnName("BolsaCompraNetId");
         }
     }
 }

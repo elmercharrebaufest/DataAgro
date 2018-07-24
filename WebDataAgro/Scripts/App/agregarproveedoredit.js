@@ -37,151 +37,7 @@ function armarBasico(basico) {
         $("#nocliente").attr("checked",true);
     } else
         $("#nocliente").attr("checked", false);
-    /*$("#nomReferente").val(basico.NombreReferente);
-    if (basico.Email1) {
-        $("#Email1").val(basico.Email1);
-    }
-    if (basico.Email2) {
-        if (!($("#Email2") && $("#Email2").length > 0)) {
-            var div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email2" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail2" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail2").click(function () {
-                $(this).parent().remove();
-            });
-        }
-        $("#Email2").val(basico.Email2);
-
-    }
-    if (basico.Email3) {
-        if (!($("#Email3") && $("#Email3").length > 0)) {
-            var div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email3" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail3" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail3").click(function () {
-                $(this).parent().remove();
-            });
-        }
-        $("#Email3").val(basico.Email3);
-    }
-
-    if (basico.Email4) {
-
-        if (!($("#Email4") && $("#Email4").length > 0)) {
-            var div = "";
-            div += '<div class="formulario-campo">'
-                + '<input type="text" class="campo-input-text" id="Email4" style="margin-right:0px;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail4" />'
-                + '</div>';
-            $(".contacto-basico-emails").append(div);
-
-            $("#eliminarMail4").click(function () {
-                $(this).parent().remove();
-            });
-        }
-        $("#Email4").val(basico.Email4);
-    }
-
-    if (basico.Telefono1) {
-        $("#Telefono1").val(basico.Telefono1);
-        $("#TipoTelefono1").val(basico.TipoTelefono1Id);
-    }
-
-    if (basico.Telefono2) {
-
-
-        if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
-
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
-            htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono2">';
-            htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
-                (function (i) {
-                    htmlTipoTelefono += '<option value="' + resultInit.tiptel[i].TipoTelefonoId + '">' + resultInit.tiptel[i].Descripcion + '</option>';
-                })(ii);
-            }
-            htmlTipoTelefono += '</select>'
-                + '<input type="text" placeholder="Telefono"  class="campo-input-text" id="Telefono2" style="margin-right: 0;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarTelefono2" />'
-                + '</div>';
-
-            $(".contacto-basico-telefonos").append(htmlTipoTelefono);
-
-            $("#eliminarTelefono2").click(function () {
-                $(this).parent().remove();
-            });
-
-        }
-        
-        $("#Telefono2").val(basico.Telefono2);
-        $("#TipoTelefono2").val(basico.TipoTelefono2Id);
-    }
-
-    if (basico.Telefono3) {
-    
-
-        if (!($("#Telefono3") && $("#Telefono3").length > 0)) {
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
-            htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono3">';
-            htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
-                (function (i) {
-                    htmlTipoTelefono += '<option value="' + resultInit.tiptel[i].TipoTelefonoId + '">' + resultInit.tiptel[i].Descripcion + '</option>';
-                })(ii);
-            }
-            htmlTipoTelefono += '</select>'
-                + '<input type="text" placeholder="Telefono"  class="campo-input-text" id="Telefono3" style="margin-right: 0;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarTelefono3" />'
-                + '</div>';
-
-            $(".contacto-basico-telefonos").append(htmlTipoTelefono);
-
-            $("#eliminarTelefono3").click(function () {
-                $(this).parent().remove();
-            });
-
-        }
-        $("#Telefono3").val(basico.Telefono3);
-        $("#TipoTelefono3").val(basico.TipoTelefono3Id);
-    }
-
-    if (basico.Telefono4) {
-
-
-        if (!($("#Telefono4") && $("#Telefono4").length > 0)) {
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
-            htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono4">';
-            htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
-                (function (i) {
-                    htmlTipoTelefono += '<option value="' + resultInit.tiptel[i].TipoTelefonoId + '">' + resultInit.tiptel[i].Descripcion + '</option>';
-                })(ii);
-            }
-            htmlTipoTelefono += '</select>'
-                + '<input type="text" placeholder="Telefono"  class="campo-input-text" id="Telefono4" style="margin-right: 0;" />'
-                + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarTelefono4" />'
-                + '</div>';
-
-            $(".contacto-basico-telefonos").append(htmlTipoTelefono);
-
-            $("#eliminarTelefono4").click(function () {
-                $(this).parent().remove();
-            });
-
-        }
-        $("#Telefono4").val(basico.Telefono4);
-        $("#TipoTelefono4").val(basico.TipoTelefono4Id);
-    }
-
-    */
+   
 
     $("#calificacion").val(basico.Calificacion);
     $("#calificacion").multiselect("refresh");
@@ -234,7 +90,27 @@ function armarBasico(basico) {
         $("#influencia-multizona").prop("checked", false);
     }
 
-}
+    if (basico.ProvinciaCompraNet) {
+        $("#provincia-compranet").val($("#provincia option").filter(function () { return $(this).html() == basico.ProvinciaCompraNet; }).val());
+        $("#provincia-compranet").trigger("change");
+    }
+    if (basico.LocalidadCompraNet) {
+        $("#localidad-compranet").val($("#localidad-compranet option").filter(function () { return $(this).html() == basico.LocalidadCompraNet; }).val());
+        $("#localidad-compranet").trigger("change");
+    }
+    if (basico.ClasificacionCompraNet) {
+        $("#clasificacion-compranet").val($("#clasificacion-compranet option").filter(function () { return $(this).html() == basico.ClasificacionCompraNet; }).val());
+        $("#clasificacion-compranet").trigger("change");
+    }
+
+    if (basico.BoletoCompraNet) {
+        $("#boleto-compranet").val($("#boleto-compranet option").filter(function () { return $(this).html() == basico.BoletoCompraNet; }).val());
+        $("#boleto-compranet").trigger("change");
+    }
+    if (basico.BolsaCompraNet) {
+    $("#bolsa-compranet").val($("#bolsa-compranet option").filter(function () { return $(this).html() == basico.BolsaCompraNet; }).val());    
+    } $("#bolsa-compranet").trigger("change");
+    }
 
 function armarComercial(comerciales) {
 
@@ -576,7 +452,6 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             var obj = {};
 
             obj.hectareas = grupoacopio[0][i].ArrendadoPropio;
-            /////////////////////////////////////////////
             obj.item = capProdCantAlmacenamiento;
 
            obj.localidad = grupoacopio[0][i].LocalidadId;
@@ -585,7 +460,6 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
 
             obj.provincia = grupoacopio[0][i].ProvinciaId;
             obj.provinciaNom = grupoacopio[0][i].Provincia;
-            //obj.coordenadasAlmacenamiento = ??
 
             obj.archivo = grupoacopio[0][i].KMZnombre;
 
@@ -593,8 +467,6 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
 
             obj.coordenadasAlmacenamiento = grupoacopio[0][i].Coordenadas;
             
-            //obj.hectareasAlmacenamiento = grupoacopio[0][i].ArrendadoPropio;
-
             obj.CampoId = grupoacopio[0][i].CampoId;
 
             obj.granosAlmacenamiento = [];
@@ -621,8 +493,6 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 (function (j) {
                     if (grupoacopio[0][i].Granos[j].CampañaId) {
                         obj.granosAlmacenamiento.push({
-                            /*granoId: grupoacopio[0][i].Granos[j].MaterialId,
-                            granoAlmacenamiento: grupoacopio[0][i].Granos[j].Material,*/
                             campañaId: grupoacopio[0][i].Granos[j].CampañaId,
                             campaña: grupoacopio[0][i].Granos[j].Campaña,
                             toneladasAlmacenamiento: grupoacopio[0][i].Granos[j].Toneladas,
@@ -681,10 +551,8 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
 function armarObjetivos(objetivo) {
     var htmlCampañaGranoObjetivo = "";
     var cant = objetivo.length ? objetivo.length : 0;
-    for (var z = 0; z < cant; z++) {
-            
+    for (var z = 0; z < cant; z++) {            
             $("#granoObjetivo" + cantGranoObjetivo).val(objetivo[z].MaterialId);
-            //$("#granoObjetivo" + cantGranoObjetivo).trigger("change");
             var obj = {
                 MaterialId: objetivo[z].MaterialId,
                 elemId: cantGranoObjetivo
@@ -715,22 +583,14 @@ function armarObjetivos(objetivo) {
                 htmlCampañaGranoObjetivo += '</select>'
                                             +'<select class="campo-input-select campo-sin-span grano" id="campañaObjetivo' + cantGranoObjetivo + '">';
                 htmlCampañaGranoObjetivo +=  '<option value = "null">Seleccione...</option>';
-                /*for (var ii in resultCampaña) {
-                    (function (i) {
-                        htmlCampañaGranoObjetivo += '<option value="' + resultCampaña[i].CampañaId + '">' + resultCampaña[i].Descripcion + '</option>';
-                    })(ii);
-                }*/
                 htmlCampañaGranoObjetivo +=     '</select>'
                                                 + '<input type="text" class="campo-input-text toneladasObjetivo" style="margin-left: 20px;" id="toneladasObjetivo' + cantGranoObjetivo + '" />'
                                                 + '<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivos" id="eliminarObjetivo'+cantGranoObjetivo+'" />'
                                             + '</div>';
-
-                //$(".lineaObjetivos" + (cantGranoObjetivo - 1)).prepend(htmlCampañaGranoObjetivo);
                 $("#formulario-contacto .datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoObjetivo);
 
                 $("#eliminarObjetivo").show();
                 $("#granoObjetivo" + cantGranoObjetivo + "").change(function (x) {
-                    //console.log("x", $(this).val());
                     var obj = {
                         MaterialId: $(this).val(),
                         elemId: $(this).prop("id").split("granoObjetivo")[1]
@@ -741,66 +601,21 @@ function armarObjetivos(objetivo) {
                 $("#eliminarObjetivo" + cantGranoObjetivo).click(function () {
                     eliminarObjetivo(this);
                 });
-
             }
-
-
-
-            /*
-            if (z < objetivo.length-1){
-                $(".agregargranoObjetivo").trigger("click");
-            }
-            */
-            /*
-            cantGranoObjetivo++;
-            console.log("z", z, objetivo[z]);
-            htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + '">' +
-                                            '<select class="campo-input-select campo-sin-span grano" id="campañaObjetivo' + cantGranoObjetivo + '">' +
-                                                '<option value = "null">Seleccione...</option>';
-            for (var ii in objetivo) {
-                (function (i) {
-                    htmlCampañaGranoObjetivo += '<option value="' + resultCampaña[i].CampañaId + '">' + resultCampaña[i].Descripcion + '</option>';
-                })(ii);
-            }
-            htmlCampañaGranoObjetivo +=     '</select>'
-                                            + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
-                                                + '<option disabled selected value="">Seleccionar...</option>'
-                                            + '</select>'
-                                            + '<input type="text" class="campo-input-text toneladasObjetivo" style="margin-left: 20px;" id="toneladasObjetivo' + cantGranoObjetivo + '" />'
-                                        + '</div>';
-
-            $//(".lineaObjetivos" + (cantGranoObjetivo - 1)).prepend(htmlCampañaGranoObjetivo);
-            $(".datos-produccion-cap-prod-editor-granos-cantidades-grupo").append(htmlCampañaGranoObjetivo);
-
-            
-            $("#campañaObjetivo" + cantGranoObjetivo + "").change(function (x) {
-                //console.log("x", $(this).val());
-                var obj = {
-                    CampañaId: $(this).val(),
-                    elemId: $(this).prop("id").split("campañaObjetivo")[1]
-                };
-                armarSelectGranoObjetivo(obj);
-            });
-
-            $("#eliminarObjetivo").show();
-
-            */
     }
     
 }
 
 function eliminarObjetivo(elem) {
-
-
     var val = $(elem).prop("id").split("eliminarObjetivo")[1];
 
-        var obj = {
+    var obj = {
             granoId: $("#granoObjetivo" + val).val(),
             grano: $("#granoObjetivo" + val).find('option:selected').text(),
             campañaId: $("#campañaObjetivo" + val).val(),
             campaña: $("#campañaObjetivo" + val).find('option:selected').text(),
             toneladasObjetivo: $("#toneladasObjetivo" + val).val()
-        };
+    };
 
         if (obj.granoId != "null" && obj.campañaId != "null")
             aEliminarObjetivos.push(obj);

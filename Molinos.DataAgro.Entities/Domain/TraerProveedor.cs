@@ -84,6 +84,12 @@ namespace Molinos.DataAgro.Entities
         public string NombreReferente { get; set; }
         public Nullable<int> ProveedorId { get; set; }
         public Nullable<bool> ClienteMOA { get; set; }
+        public string ProvinciaCompraNet { get; set; }
+        public string LocalidadCompraNet { get; set; }
+        public string ClasificacionCompraNet { get; set; }
+        public string BoletoCompraNet { get; set; }
+        public string BolsaCompraNet { get; set; }
+
     }
 
     public class BasicoProveedorTraerPorProveedor
@@ -241,7 +247,6 @@ namespace Molinos.DataAgro.Entities
     public class RptContactosInfo
     {
         //Contactos Comerciales
-        //public List<ContactosComerciales> ContactosComerciales { get; set; }
         public int EliminaDetalle { get; set; }
         public string TieneContactos { get; set; }
         public string Nombres { get; set; }

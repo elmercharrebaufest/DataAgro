@@ -170,10 +170,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> TraerProveedor(int ProveedorId)
         {
-            var model = new StoredPorProveedorResult();
-
-            model = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory);            
-            //  model = await mobjProveedorManager.TraerDatosCombo();           
+            var model = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory, GlobalVariables.Equipo);      
 
             return new JsonResult()
             {
@@ -185,13 +182,8 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Iniciliazar(int ProveedorId)
         {
-            var model = new DatosIniProveedor();
-
-            model = await mobjProveedorManager.TraerDatosCombo(ProveedorId);
+            var model =  await mobjProveedorManager.TraerDatosCombo(ProveedorId);
             
-
-
-
             return new JsonResult()
             {
                 Data = model,
@@ -260,19 +252,6 @@ namespace WebDataAgro.Controllers
         public async Task<ActionResult> TraerRazonSocial(string cuit)
         {
             var model = new ProveedorNuevo();
-            
-            /*   
-            var a = new Compras.Z_MPRFC_DATOS_COMPRAS();
-
-            var ParametroDeLaCompra = new Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASRequest();
-            var DatosDeLaCompra= new Compras.ZMPES5130();
-
-
-            var w = new Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient();
-
-            w.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS(a);
-
-    */
 
             model = await mobjProveedorManager.TraerRazonSocial(cuit);
 
@@ -355,7 +334,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            var datos = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory);
+            var datos = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory, GlobalVariables.Equipo);
 
             var oLstProveedor = new LstProveedor(mobjreportesManager);
 

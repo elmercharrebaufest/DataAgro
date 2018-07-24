@@ -112,6 +112,8 @@
     <Compile Include="Entities\Campo.cs" />
     <Compile Include="Entities\CampoMaterial.cs" />
     <Compile Include="Entities\CanalOperacion.cs" />
+    <Compile Include="Entities\BolsaCompraNet.cs" />
+    <Compile Include="Entities\BoletoCompraNet.cs" />
     <Compile Include="Entities\Comercial.cs" />
     <Compile Include="Entities\ComercialZona.cs" />
     <Compile Include="Entities\Condicion.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Entities\Segmentacion.cs" />
     <Compile Include="Entities\TipoActividad.cs" />
     <Compile Include="Entities\TipoNegocio.cs" />
+    <Compile Include="Entities\ClasificacionCompraNet.cs" />
     <Compile Include="Entities\TipoTelefono.cs" />
     <Compile Include="Entities\Zona.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
