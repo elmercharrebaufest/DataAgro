@@ -1,6 +1,6 @@
 ﻿using Mastersoft.Framework.Interfaces;
 
-namespace Molinos.DataAgro.Entities
+namespace Molinos.DataAgro.Entities.Entities
 {
     public partial class Centro : Entity
     {

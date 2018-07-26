@@ -1,5 +1,5 @@
-﻿using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;

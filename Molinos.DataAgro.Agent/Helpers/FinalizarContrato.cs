@@ -1,8 +1,8 @@
-﻿using System;
-using System.Configuration;
-using Molinos.DataAgro.Entities;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.FinalizarContrato;
-using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Entities;
+using System;
+using System.Configuration;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {

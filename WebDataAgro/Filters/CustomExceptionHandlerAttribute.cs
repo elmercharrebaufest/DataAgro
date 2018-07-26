@@ -16,6 +16,7 @@ using Molinos.DataAgro.Entities;
 using System.IO;
 using System.Configuration;
 using NLog;
+using Molinos.DataAgro.Entities.Entities;
 
 namespace WebDataAgro.Filters
 {

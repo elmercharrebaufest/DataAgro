@@ -5,8 +5,9 @@ using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent.Helpers;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;
@@ -105,6 +106,24 @@ namespace Molinos.DataAgro.Business.Managers
                                 .AsNoTracking()
                                 .Select(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).ToListAsync();
 
+            datosCombo.Clasificacion = await mobjUnitOfWork.Repository<ClasificacionCompraNet>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+
+            datosCombo.Bolsa = await mobjUnitOfWork.Repository<BolsaCompraNet>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.Destino = await mobjUnitOfWork.Repository<Centro>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.Condicion = await mobjUnitOfWork.Repository<CondicionFijacion>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues) {
@@ -175,6 +194,14 @@ namespace Molinos.DataAgro.Business.Managers
             if (!oParam.ComercialId.HasValue || oParam.ComercialId == 0)
             {
                 oErrorMessages.Add(new ErrorMessage("El campo 'Comercial' no debe estar vacio", "ComercialId"));
+            }
+            if (oParam.ProvinciaId == 1 && oParam.EstablecimientoPropio == null)
+            {
+                oErrorMessages.Add(new ErrorMessage("El campo 'Establecimiento' no debe estar vacio cuando Provincia es Buenos Aires", "EstablecimientoPropio"));
+            }
+            if (oParam.TipoNegocioId==1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
+            {
+                oErrorMessages.Add(new ErrorMessage("El 'Plazos y Topes de Fijación' no debe estar vacio cuando el contrato es 'A FIJAR'", "EstablecimientoPropio"));
             }
             return oErrorMessages;
 
@@ -248,7 +275,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
@@ -273,8 +299,26 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.TrigoEspecial = oContrato.TrigoEspecial;
             oContratoSave.Estado = oContrato.Estado;
             oContratoSave.UsuarioId = oContrato.UsuarioId;
-            oContratoSave.Observacion = oContrato.Observacion;
             oContratoSave.Ampliaciones = oContrato.Ampliaciones;
+            oContratoSave.Observacion = oContrato.Observacion;
+            oContratoSave.DestinoId = oContrato.DestinoId;
+            oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
+            oContratoSave.Consignatario = oContrato.Consignatario;
+            oContratoSave.PlanCanje = oContrato.PlanCanje;
+            oContratoSave.CondicionFijacionId = oContrato.CondicionFijacionId;
+            oContratoSave.CD = oContrato.CD;
+            oContratoSave.Warrant = oContrato.Warrant;
+            oContratoSave.PagoDirectoVendedor = oContrato.PagoDirectoVendedor;
+            oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
+            oContratoSave.CalidadEspecial = oContrato.CalidadEspecial;
+            oContratoSave.ValorCalidadEspecial = oContrato.ValorCalidadEspecial;
+            oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio;
+            oContratoSave.ClasificacionId = oContrato.ClasificacionId;
+            oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
+            oContratoSave.BoletoId = oContrato.BoletoId;
+            oContratoSave.BolsaId = oContrato.BolsaId;
+            oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
+            oContratoSave.HastaFijacion = oContrato.HastaFijacion;
 
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
             {

@@ -2,6 +2,7 @@
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System.Threading.Tasks;

@@ -2,7 +2,8 @@
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;

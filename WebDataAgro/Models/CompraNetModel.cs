@@ -1,13 +1,9 @@
-﻿using System;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Entities;
-
-namespace WebDataAgro.Models {
+namespace WebDataAgro.Models
+{
 
     public class DatosIniCompraNetModel {
 

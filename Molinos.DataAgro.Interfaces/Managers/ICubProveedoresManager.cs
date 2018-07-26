@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Entities;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities.Dto;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {

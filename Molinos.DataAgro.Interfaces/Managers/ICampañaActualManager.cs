@@ -1,5 +1,5 @@
 ﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces

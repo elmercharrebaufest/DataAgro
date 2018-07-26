@@ -1,16 +1,10 @@
-﻿using System;
+﻿using Mastersoft.Framework.Standard;
+using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Domain;
 
 namespace WebDataAgro.Models
 {
-   
+
     public class ReportesModel
     {
         public List<MSErrorMessage> Errores { get; set; }

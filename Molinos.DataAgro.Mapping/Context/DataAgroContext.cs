@@ -1,17 +1,11 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Diagnostics;
-
-using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.DataRepository;
-
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Entities;
+using System;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
 
 namespace Molinos.DataAgro.Mapping.Context
 {
@@ -31,6 +25,10 @@ namespace Molinos.DataAgro.Mapping.Context
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            MapearAssemblyDe<Contrato>(modelBuilder, x => x.Namespace == typeof(Contrato).Namespace,
+                excluir: null);
+
             modelBuilder.Configurations.Add(new ErroresMap());
             modelBuilder.Configurations.Add(new ReportesMap());
             modelBuilder.Configurations.Add(new AreaInfluenciaMap());
@@ -40,7 +38,7 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new MaterialMap());
             modelBuilder.Configurations.Add(new ProvinciaMap());
             modelBuilder.Configurations.Add(new LocalidadMap());
-            modelBuilder.Configurations.Add(new ProveedorMap());
+            //modelBuilder.Configurations.Add(new ProveedorMap());
             modelBuilder.Configurations.Add(new ComercialMap());
             modelBuilder.Configurations.Add(new ProveedorComercialMap());
             modelBuilder.Configurations.Add(new AcopioMap());
@@ -86,6 +84,25 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new BoletoCompraNetMap());
             modelBuilder.Configurations.Add(new BolsaCompraNetMap());
             modelBuilder.Configurations.Add(new CentroMap());
+            modelBuilder.Configurations.Add(new CondicionFijacionMap());
+        }
+
+        private void MapearAssemblyDe<TEntidad>(DbModelBuilder modelBuilder, Predicate<Type> incluir, Predicate<Type> excluir)
+        {
+            var tiposEntidades = typeof(TEntidad).Assembly.GetTypes()
+                .Where(x => incluir(x));
+            if (excluir != null)
+            {
+                tiposEntidades = tiposEntidades.Where(x => !excluir(x));
+            }
+
+            tiposEntidades = tiposEntidades.Where(x => x.Name == "Proveedor");
+           
+            var metodo = modelBuilder.GetType().GetMethod("Entity");
+            foreach (var tipoEntidad in tiposEntidades)
+            {
+                metodo.MakeGenericMethod(tipoEntidad).Invoke(modelBuilder, null);
+            }
         }
     }
 }

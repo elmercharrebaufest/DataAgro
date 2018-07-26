@@ -1,7 +1,8 @@
 ﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
-using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;
@@ -43,10 +44,7 @@ namespace Molinos.DataAgro.Business
                             .Select(x => x.CAMP )
                             .Distinct()
                             .OrderByDescending(x => x.CampañaId)
-                               .ToList();
-
-
-
+                            .ToList();
                 return query;
             }
             catch (Exception ex)
@@ -77,23 +75,6 @@ namespace Molinos.DataAgro.Business
             var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
             var oProveedorComercial= mobjUnitOfWork.Repository<ProveedorComercial>().Queryable();
 
-
-            //var query = 
-            /*
-            var query = oCampañaMaterial
-                        .Join(oMaterial, a => new { a.MaterialId,a.CampañaId }, b => new { b.MaterialId, CampañaId= (int)b.CampañaId },(a, b) => new {  CAM = a, M = b })
-                        .Join(oCampaña, a =>  a.M.CampañaId, b => b.CampañaId, (a, b) => new { a.CAM,a.M , C = b })
-                        .Join(oProveedorComercial, a=> a.CAM.ProveedorId,b => b.ProveedorId, (a, b) => new { a.CAM, a.M,a.C, CP = b })
-                        .Where(x=> x.CP.ComercialId == idComercial)
-                        .OrderByDescending(x => x.CAM.CampañaId)
-                        .GroupBy(x=> new { x.M.Descripcion})                        
-                        .Select(x => new MaterialCampaña()
-                        {
-                            Nombre = x.Key.Descripcion,
-                            Toneladas = x.Sum(p=> p.CAM.ToneladasCompradas),
-                            Campaña = x.Max(p=> p.C.Descripcion)
-                        });
-            */
             var lista = new List<MaterialCampaña>();
             try
             { 
@@ -188,11 +169,6 @@ namespace Molinos.DataAgro.Business
 
             return CampañaMaterial;
         }
-
-        //public Task<CampañaHome> TraerCampañaHomeAsync()
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
     
 }

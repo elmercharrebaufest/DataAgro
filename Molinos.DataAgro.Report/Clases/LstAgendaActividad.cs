@@ -4,6 +4,8 @@ using Mastersoft.Framework.DataRepository;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;

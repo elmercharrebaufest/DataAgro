@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Molinos.DataAgro.Entities.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Molinos.DataAgro.Entities;
-
 
 namespace Molinos.DataAgro.Interfaces
 {

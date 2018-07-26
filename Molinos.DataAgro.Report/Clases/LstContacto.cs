@@ -1,25 +1,13 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-using DataDynamics.ActiveReports.Export.Pdf;
-
-using OfficeOpenXml;
-
-using Mastersoft.Framework.Standard;
-using Mastersoft.Framework.DataRepository;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Business;
-using System.Drawing;
-using System.Diagnostics;
-using Molinos.DataAgro.Business.Managers;
+﻿using DataDynamics.ActiveReports.Export.Pdf;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using OfficeOpenXml;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report
 {

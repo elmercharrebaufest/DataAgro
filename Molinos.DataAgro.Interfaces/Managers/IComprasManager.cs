@@ -1,5 +1,4 @@
-﻿
-using Molinos.DataAgro.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces.Managers

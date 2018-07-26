@@ -1,13 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
+﻿using Molinos.DataAgro.Entities.Dto;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using DataDynamics.ActiveReports;
-using DataDynamics.ActiveReports.Document;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Domain;
 
 namespace Molinos.DataAgro.Report
 {

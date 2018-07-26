@@ -1,7 +1,8 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -183,9 +184,7 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> ConfirmarFijacion(FijacionDePrecioContrato oParam) {
-            GrabarFijacionResult model = new GrabarFijacionResult();
-
-            model = await mobjFijacionDePrecioContratoManager.ConfirmarFijacion(oParam);
+            var model = await mobjFijacionDePrecioContratoManager.ConfirmarFijacion(oParam);
 
             return new JsonResult() {
                 Data = model,
@@ -195,9 +194,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> FinalizarFijacion(FijacionDePrecioContrato oParam) {
 
-            GrabarFijacionResult model = new GrabarFijacionResult();
-
-            model = await mobjFijacionDePrecioContratoManager.FinalizarFijacion(oParam, idActiveDirectory);
+            var model = await mobjFijacionDePrecioContratoManager.FinalizarFijacion(oParam, idActiveDirectory);
 
             return new JsonResult() {
                 Data = model,
@@ -363,5 +360,16 @@ namespace WebDataAgro.Controllers
             var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
+
+        //public async Task<ActionResult> TraerClasificacionPorProveedor(int? ProveedorId)
+        //{
+        //    var model = await mobjProveedorManager.TraerClasificacion(ProveedorId);
+
+        //    return new JsonResult()
+        //    {
+        //        Data = model,
+        //        MaxJsonLength = Int32.MaxValue
+        //    };
+        //}
     }
 }

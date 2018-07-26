@@ -423,3 +423,7 @@ body.modal-open {
 .k-filter-menu .k-button {
     width: auto !important;
 }
+
+.checks-adicionales{
+    display:contents;
+}

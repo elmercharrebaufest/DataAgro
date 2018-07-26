@@ -83,6 +83,7 @@
     <Compile Include="Mapping\CampoMaterialMap.cs" />
     <Compile Include="Mapping\CanalOperacionMap.cs" />
     <Compile Include="Mapping\BoletoCompraNetMap.cs" />
+    <Compile Include="Mapping\CondicionFijacionMap.cs" />
     <Compile Include="Mapping\ComercialMap.cs" />
     <Compile Include="Mapping\ComercialZonaMap.cs" />
     <Compile Include="Mapping\CondicionMap.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Molinos.DataAgro.Entities.Entities;
+using System.Data.Entity.ModelConfiguration;
 
 namespace Molinos.DataAgro.Entities
 {

@@ -1,6 +1,6 @@
-﻿
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
@@ -194,9 +194,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> TraerLocalidad(int Id)
         {
-            var model = new List<Localidad>();
-
-            model = await mobjProveedorManager.TraerLocalidad(Id);
+            var model = await mobjProveedorManager.TraerLocalidad(Id);
 
             return new JsonResult()
             {
@@ -251,9 +249,7 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> TraerRazonSocial(string cuit)
         {
-            var model = new ProveedorNuevo();
-
-            model = await mobjProveedorManager.TraerRazonSocial(cuit);
+            var model = await mobjProveedorManager.TraerRazonSocial(cuit);
 
             return new JsonResult()
             {

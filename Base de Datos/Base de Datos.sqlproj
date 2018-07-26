@@ -232,6 +232,9 @@
     <Build Include="dbo\Tables\BoletoCompraNet.sql" />
     <Build Include="dbo\Tables\ClasificacionCompraNet.sql" />
     <Build Include="dbo\Tables\BolsaCompraNet.sql" />
+    <Build Include="dbo\Tables\CondicionFijacion.sql" />
+    <Build Include="dbo\Tables\StandarDeCalidad.sql" />
+    <Build Include="dbo\Tables\CalidadesEspeciales.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

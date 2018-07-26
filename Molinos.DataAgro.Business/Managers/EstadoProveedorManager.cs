@@ -4,6 +4,8 @@ using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Agent.DatosDelProveedor;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;

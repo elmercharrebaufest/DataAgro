@@ -1,11 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using Mastersoft.Framework.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using Mastersoft.Framework.Interfaces;
-
-namespace Molinos.DataAgro.Entities
+namespace Molinos.DataAgro.Entities.Entities
 {
     public partial class Provincia : Entity
     {

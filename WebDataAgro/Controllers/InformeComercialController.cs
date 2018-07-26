@@ -1,8 +1,8 @@
 ﻿
 using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Domain;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;

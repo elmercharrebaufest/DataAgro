@@ -1,5 +1,7 @@
 ﻿using DataDynamics.ActiveReports.Export.Pdf;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using OfficeOpenXml;
 using System.Collections.Generic;

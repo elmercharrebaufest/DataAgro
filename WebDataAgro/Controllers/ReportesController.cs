@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
 using System;
@@ -82,12 +83,8 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> TraerDatosReporteObjetivoGauge(ParamReportes oParamReportes)
         {
-            List<ResultObjetivoGaugeReportes> model = new List<ResultObjetivoGaugeReportes>();
-
             oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            
-
-            model = await mobjReportesManager.TraerObjetivosGauge(oParamReportes);
+            var model = await mobjReportesManager.TraerObjetivosGauge(oParamReportes);
 
             return new JsonResult()
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities;
-
+using Molinos.DataAgro.Entities.Dto;
 
 namespace WebDataAgro.Models
 {

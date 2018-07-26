@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 

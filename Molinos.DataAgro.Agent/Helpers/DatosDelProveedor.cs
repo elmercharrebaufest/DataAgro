@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Molinos.DataAgro.Agent.DatosDelProveedor;
 using System.Configuration;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Dto;
+using Molinos.DataAgro.Entities.Dto;
 
 namespace Molinos.DataAgro.Agent
 {

@@ -1,17 +1,13 @@
 ﻿
+using Mastersoft.Framework.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Entity;
-
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Entities.Common.Enums;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
@@ -196,6 +192,15 @@ namespace Molinos.DataAgro.Business
                                        .OrderBy(x => x.Descripcion)
                                        .ToListAsync(); 
         }
+
+        public async Task<List<ClasificacionCompraNet>> GetClasificacionComboAsync()
+        {
+            return await mobjUnitOfWork.Repository<ClasificacionCompraNet>()
+                                       .Queryable()
+                                       .OrderBy(x => x.Descripcion)
+                                       .ToListAsync();
+        }
+        
     }
 }
 

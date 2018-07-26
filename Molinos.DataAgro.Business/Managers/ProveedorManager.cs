@@ -3,7 +3,8 @@ using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
 using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
 using System;
@@ -205,17 +206,44 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().FirstOrDefault(x => x.CUIT == oDatosLocalidadProvinciaFiltro.CUIT);
 
-                var oCampoIdAx = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => x.ProveedorId == oProveedor.ProveedorId).Select(z => z.CampoId);
-
-                var oCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>().Queryable().AsNoTracking().Where(x => oCampoIdAx.Contains(x.CampoId) && x.MaterialId == oDatosLocalidadProvinciaFiltro.MaterialId && x.CampañaId == oDatosLocalidadProvinciaFiltro.CampanaId).Select(z => z.CampoId);
-
-                int? localidadId = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => oCampoMaterial.Contains(x.CampoId)).Select(z => z.LocalidadId).FirstOrDefault();
-
-                if (localidadId != null)
+                if (oProveedor.ProvinciaCompraNetId != null && oProveedor.LocalidadCompraNetId != null)
                 {
                     valor = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking()
-                        .Where(x => x.LocalidadId == localidadId)
-                        .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(), a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia { CUIT = oProveedor.CUIT, Localidad = a.Nombre, LocalidadId = a.LocalidadId, Provincia = b.Nombre, ProvinciaId = b.ProvinciaId, ProveedorId = oProveedor.ProveedorId, RazonSocial = oProveedor.RazonSocial }).FirstOrDefault();
+                            .Where(x => x.LocalidadId == oProveedor.LocalidadCompraNetId)                            
+                            .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(),
+                            a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia
+                            {
+                                CUIT = oProveedor.CUIT,
+                                Localidad = a.Nombre,
+                                LocalidadId = a.LocalidadId,
+                                Provincia = b.Nombre,
+                                ProvinciaId = b.ProvinciaId,
+                                ProveedorId = oProveedor.ProveedorId,
+                                RazonSocial = oProveedor.RazonSocial,
+                                ClasificacionId = oProveedor.ClasificacionCompraNetId??0,
+                                BoletoId=oProveedor.BoletoCompraNetId??0,
+                                BolsaId=oProveedor.BolsaCompraNetId??0
+                            }).FirstOrDefault();
+
+                }
+                else
+                {
+                    var oCampoIdAx = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => x.ProveedorId == oProveedor.ProveedorId).Select(z => z.CampoId);
+
+                    var oCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>().Queryable().AsNoTracking().Where(x => oCampoIdAx.Contains(x.CampoId) && x.MaterialId == oDatosLocalidadProvinciaFiltro.MaterialId && x.CampañaId == oDatosLocalidadProvinciaFiltro.CampanaId).Select(z => z.CampoId);
+
+                    int? localidadId = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => oCampoMaterial.Contains(x.CampoId)).Select(z => z.LocalidadId).FirstOrDefault();
+
+                    if (localidadId != null)
+                    {
+                        valor = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking()
+                            .Where(x => x.LocalidadId == localidadId)
+                            .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(), a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia { CUIT = oProveedor.CUIT, Localidad = a.Nombre, LocalidadId = a.LocalidadId, Provincia = b.Nombre, ProvinciaId = b.ProvinciaId, ProveedorId = oProveedor.ProveedorId, RazonSocial = oProveedor.RazonSocial,
+                                ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0,
+                                BoletoId = oProveedor.BoletoCompraNetId ?? 0,
+                                BolsaId = oProveedor.BolsaCompraNetId ?? 0
+                            }).FirstOrDefault();
+                    }
                 }
             }
             catch
@@ -3239,7 +3267,7 @@ namespace Molinos.DataAgro.Business.Managers
         public async Task<List<BusquedaHome>> DevolverProveedores(string filtro)
         {
             var query = mobjUnitOfWork.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", filtro);
-            return query.ToList();
+            return query.Take(15).ToList();
         }
 
         public List<Proveedor> ListarProveedor(string proveedor)

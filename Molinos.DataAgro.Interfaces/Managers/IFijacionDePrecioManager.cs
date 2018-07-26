@@ -3,6 +3,8 @@
 using Mastersoft.Framework.Standard;
 
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Interfaces
 {

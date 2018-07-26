@@ -1,9 +1,6 @@
 ﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
-using System;
+using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WebDataAgro.Models
 {

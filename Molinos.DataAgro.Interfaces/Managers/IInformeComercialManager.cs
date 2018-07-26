@@ -1,5 +1,5 @@
 ﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Domain;
+using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

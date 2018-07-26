@@ -1,5 +1,5 @@
 ﻿
-using System.ComponentModel.DataAnnotations.Schema;
+using Molinos.DataAgro.Entities.Entities;
 using System.Data.Entity.ModelConfiguration;
 
 namespace Molinos.DataAgro.Entities

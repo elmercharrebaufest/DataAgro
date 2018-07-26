@@ -1,10 +1,5 @@
-﻿using Molinos.DataAgro.Entities;
-using System;
-using System.Collections.Generic;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Mapping
 {
