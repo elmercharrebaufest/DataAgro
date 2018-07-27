@@ -19,6 +19,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<BolsaCompraNetQry> Bolsa { get; set; }
         public List<CentroQry> Destino { get; set; }
         public List<CondicionFijacionQry> Condicion { get; set; }
+        public List<StandardDeCalidadQry> Standard { get; set; }
+        
+
 
         public DatosIniContrato()
         {
@@ -36,6 +39,7 @@ namespace Molinos.DataAgro.Entities.Dto
             Bolsa = new List<BolsaCompraNetQry>();
             Destino = new List<CentroQry>();
             Condicion = new List<CondicionFijacionQry>();
+            Standard = new List<StandardDeCalidadQry>();
         }
     }
 

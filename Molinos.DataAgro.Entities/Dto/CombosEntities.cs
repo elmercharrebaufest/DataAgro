@@ -151,6 +151,19 @@
         public string Descripcion;
         public string CodigoSap;
     }
+    public class StandardDeCalidadQry
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+    }
+    public class CalidadesEspecialesQry
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+        public string MaterialId;
+    }
     public class EstadosContratos {
 
         public int EstadosContratosId { get; set; }

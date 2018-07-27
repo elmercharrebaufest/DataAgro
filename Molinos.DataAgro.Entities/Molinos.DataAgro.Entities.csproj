@@ -112,6 +112,8 @@
     <Compile Include="EntitiesValidates\Provincia.cs" />
     <Compile Include="EntitiesValidates\TipoNegocio.cs" />
     <Compile Include="EntitiesValidates\AreaInfluencia.cs" />
+    <Compile Include="Entities\CalidadesEspeciales.cs" />
+    <Compile Include="Entities\StandardDeCalidad.cs" />
     <Compile Include="Entities\Centro.cs" />
     <Compile Include="Entities\Acopio.cs" />
     <Compile Include="Entities\AcopioCampaña.cs" />

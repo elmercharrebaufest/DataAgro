@@ -116,15 +116,15 @@
         <div class="row">
             <div id="planCanjeConsignatarioIdDiv">
                 <div class="col-md-2">
-                    <label>Plan canje</label>
+                    <label style="padding-top: 0px;">Plan canje</label>
                 </div>
                 <div class="col-md-2 checks-adicionales">
                     <input id="planCanjeId" class="campo-input-input" type="checkbox" />
                     <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-            
+
                 <div class="col-md-2">
-                    <label>Consignatario</label>
+                    <label style="padding-top: 0px;">Consignatario</label>
                 </div>
                 <div class="col-md-4 checks-adicionales">
                     <input id="consignatarioId" class="campo-input-input" type="checkbox" />
@@ -132,7 +132,7 @@
                 </div>
             </div>
         </div>
-            
+
         <div id="fechasDiv" class="row">
             <div>
                 <div class="col-md-2">
@@ -330,6 +330,7 @@
                 </div>
             </div>
         </div>
+
         <div id="DatosPago" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Pago
         </div>
@@ -361,6 +362,37 @@
                     <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                     <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
+            </div>
+        </div>
+
+        <div id="DatosCalidades" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+            <i class="fa fa-plus"></i> Calidad
+        </div>
+
+        <div class="datos-calidades" display="block">
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Standard de calidad</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="standardCalidadId" data-bind="source: StandardCombo, value: Parametros.standardCalidadId, disabled: isControlDisabled" style="max-width:550px"></select>
+                    <img id="errstandardCalidadId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
+            <div id="especialesId" class="row" hidden>
+                <div class="col-md-2">
+                    <label>Calidades Especiales </label>
+                </div>
+                <div class="col-md-10 calidad">
+                    <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled" style="max-width:200px"></select>
+                    <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
+                    <span id="pesificadoDiv">
+                        <input id="valorEspecialesId" placeholder="VALOR DE CALIDAD" style="width:347px" />
+                        <img id="errvalorEspecialesId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
+
             </div>
         </div>
 

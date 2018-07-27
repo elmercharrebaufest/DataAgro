@@ -303,6 +303,19 @@ namespace WebDataAgro.Controllers
             return material.CampañaId;
         }
 
+        public async Task<ActionResult> TraerCalidadesPorMaterial(int? MaterialId)
+        {
+            if (MaterialId == null) MaterialId = 0;
+
+            var model = await mobjCampañaManager.TraerCalidadPorMaterial(Convert.ToInt32(MaterialId));
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         public ActionResult ObtenerComercialId()
         {
             var ComercialId = mobjContratoManager.ObtenerComercialId(idActiveDirectory);
@@ -360,16 +373,5 @@ namespace WebDataAgro.Controllers
             var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
-
-        //public async Task<ActionResult> TraerClasificacionPorProveedor(int? ProveedorId)
-        //{
-        //    var model = await mobjProveedorManager.TraerClasificacion(ProveedorId);
-
-        //    return new JsonResult()
-        //    {
-        //        Data = model,
-        //        MaxJsonLength = Int32.MaxValue
-        //    };
-        //}
     }
 }

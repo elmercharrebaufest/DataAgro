@@ -123,7 +123,11 @@ namespace Molinos.DataAgro.Business.Managers
                                 .Queryable()
                                 .AsNoTracking()
                                 .Select(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-
+            datosCombo.Standard = await mobjUnitOfWork.Repository<StandardDeCalidad>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new StandardDeCalidadQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues) {
@@ -310,7 +314,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Warrant = oContrato.Warrant;
             oContratoSave.PagoDirectoVendedor = oContrato.PagoDirectoVendedor;
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
-            oContratoSave.CalidadEspecial = oContrato.CalidadEspecial;
+            oContratoSave.CalidadEspecialId = oContrato.CalidadEspecialId;
             oContratoSave.ValorCalidadEspecial = oContrato.ValorCalidadEspecial;
             oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio;
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;

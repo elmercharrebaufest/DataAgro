@@ -42,6 +42,8 @@ IF NOT EXISTS (select 1 from CondicionFijacion where Descripcion = 'HASTA 14.30 
 IF NOT EXISTS (select 1 from CondicionFijacion where Descripcion = 'MERCADO MOA') BEGIN insert into CondicionFijacion(Descripcion,CodigoSap) values ('MERCADO MOA', '07'); END 
 
 --CalidadesEspeciales
-IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Dañados') BEGIN insert into CalidadesEspeciales (Descripcion,CodigoSap) values ('Dañados','MPSOJGDA'); END
-IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Granos verdes') BEGIN insert into CalidadesEspeciales (Descripcion,CodigoSap) values ('Granos verdes','MPSOJGVE'); END
-
+IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Dañados') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Dañados','MPSOJGDA',3); END
+IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Granos verdes') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Granos verdes','MPSOJGVE',3); END
+IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Cuerpos extraños') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Cuerpos extraños','MPSOJCEX',3); END
+IF NOT EXISTS (select 1 from CalidadesEspeciales where CodigoSap = 'MPMAZGRA') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Grado','MPMAZGRA',1); END
+IF NOT EXISTS (select 1 from CalidadesEspeciales where CodigoSap = 'MPTRPGRA') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Grado','MPTRPGRA',2); END

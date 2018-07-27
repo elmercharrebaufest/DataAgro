@@ -85,6 +85,8 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new BolsaCompraNetMap());
             modelBuilder.Configurations.Add(new CentroMap());
             modelBuilder.Configurations.Add(new CondicionFijacionMap());
+            modelBuilder.Configurations.Add(new CalidadesEspecialesMap());
+            modelBuilder.Configurations.Add(new StandardDeCalidadMap());
         }
 
         private void MapearAssemblyDe<TEntidad>(DbModelBuilder modelBuilder, Predicate<Type> incluir, Predicate<Type> excluir)

@@ -45,10 +45,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CondicionFijacionId { get; set; }
         public bool CD { get; set; }
         public bool Warrant { get; set; }
-        public bool PagoDirectoVendedor { get; set; }
-        public int StandardDeCalidadId { get; set; }
-        public int CalidadEspecial { get; set; }
-        public int ValorCalidadEspecial { get; set; }
+        public bool? PagoDirectoVendedor { get; set; }
+        public int? StandardDeCalidadId { get; set; }
+        public int? CalidadEspecialId { get; set; }
+        public decimal ValorCalidadEspecial { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int BoletoId { get; set; }
         public int? BolsaId { get; set; }

@@ -427,3 +427,8 @@ body.modal-open {
 .checks-adicionales{
     display:contents;
 }
+
+.calidad {
+    display: flex;
+
+}

@@ -49,8 +49,8 @@ namespace Molinos.DataAgro.Entities
             Property(x => x.Warrant).HasColumnName(@"Warrant").HasColumnType("bit").IsOptional();
             Property(x => x.PagoDirectoVendedor).HasColumnName(@"PagoDirectoVendedor").HasColumnType("bit").IsOptional();
             Property(x => x.StandardDeCalidadId).HasColumnName(@"StandardDeCalidadId").HasColumnType("int").IsOptional();
-            Property(x => x.CalidadEspecial).HasColumnName(@"CalidadEspecial").HasColumnType("int").IsOptional();
-            Property(x => x.ValorCalidadEspecial).HasColumnName(@"ValorCalidadEspecial").HasColumnType("int").IsOptional();
+            Property(x => x.CalidadEspecialId).HasColumnName(@"CalidadEspecialId").HasColumnType("int").IsOptional();
+            Property(x => x.ValorCalidadEspecial).HasColumnName(@"ValorCalidadEspecial").HasColumnType("decimal").IsOptional();
             Property(x => x.EstablecimientoPropio).HasColumnName(@"EstablecimientoPropio").HasColumnType("bit").IsOptional();
             Property(x => x.ClasificacionId).HasColumnName(@"ClasificacionId").HasColumnType("int").IsOptional();
             Property(x => x.BoletoId).HasColumnName(@"BoletoId").HasColumnType("int").IsOptional();

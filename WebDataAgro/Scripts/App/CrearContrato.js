@@ -25,6 +25,7 @@ function InicializarElementos() {
     $(".datos-establecimiento").hide();
     $(".datos-topesplazos").hide();
     $(".datos-pago").hide();
+    $(".datos-calidades").hide();
 
     $("#proveedorId").kendoDropDownList({
         optionLabel: "SELECCIONE UN PROVEEDOR...",
@@ -308,7 +309,7 @@ function InicializarElementos() {
         }
     });
 
-    var bolsaFisico = $("#bolsaFisicoId").kendoDropDownList({
+    $("#bolsaFisicoId").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
@@ -332,7 +333,7 @@ function InicializarElementos() {
         }
     });
 
-    var bolsaFisico = $("#condicionFijacionId").kendoDropDownList({
+    $("#condicionFijacionId").kendoDropDownList({
         optionLabel: "SELECCIONE CONDICIÓN...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
@@ -353,6 +354,56 @@ function InicializarElementos() {
     $("#condicionFijacionModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#condicionFijacionModalPendienteId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+
+    $("#standardCalidadId").kendoDropDownList({
+        optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#standardCalidadId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#standardCalidadId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    $("#standardCalidadModalPendienteId").kendoDropDownList({
+        optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#standardCalidadModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#standardCalidadModalPendienteId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+
+    $("#calidadesEspecialesId").kendoDropDownList({
+        optionLabel: "SELECCIONE CALIDAD",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#calidadesEspecialesId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#calidadesEspecialesId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    $("#calidadesEspecialesModalPendienteId").kendoDropDownList({
+        optionLabel: "SELECCIONE CALIDAD ESPECIAL...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#calidadesEspecialesModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#calidadesEspecialesModalPendienteId").data("kendoDropDownList");
             dropdownlist.text("");
         }
     });
@@ -392,6 +443,12 @@ function InicializarElementos() {
         min: 0
     });
     
+    $("#valorEspecialesId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: 0
+    });
 
     var hoy = new Date();
     var anio = hoy.getFullYear();
@@ -482,6 +539,14 @@ function InicializarElementos() {
         }
     });
 
+    $("#DatosCalidades").click(function () {
+        if (document.querySelector(".datos-calidades").style.display == "none") {
+            document.querySelector(".datos-calidades").style.display = "block";
+        } else {
+            document.querySelector(".datos-calidades").style.display = "none";
+        }
+    });
+
     $("#DatosEstablecimiento").click(function () {
         if (document.querySelector(".datos-establecimiento").style.display == "none") {
             document.querySelector(".datos-establecimiento").style.display = "block";
@@ -519,6 +584,8 @@ function InicializarElementos() {
             $("#baseDiv").hide();
             $("#DatosAdicionales").hide();
             $(".datos-adicionales").hide();
+            $("#DatosCalidades").hide();
+            $(".datos-calidades").hide();
             $(".datos-boleto").hide();
             $(".datos-topesplazos").hide();
             $(".datos-pago").hide();
@@ -544,6 +611,7 @@ function InicializarElementos() {
             $("#DatosTopesPlazos").show();
             $("#DatosPago").show();
             $("#DatosEstablecimiento").show();
+            $("#DatosCalidades").show();
             $("#baseDiv").show();
             $("#DatosAdicionales").show();
             $("#ContratoDiv").hide();
@@ -617,7 +685,10 @@ function InicializarElementos() {
     });
 
     $('select[id="material"]').change(function () {
-        if ($(this).val() != "") CargarCampaniaPorMaterial($(this).val());
+        if ($(this).val() != "") {
+            CargarCampaniaPorMaterial($(this).val());
+            CargarCalidadPorMaterial($(this).val())
+        }
     });
     
     $('select[id="provinciaId"]').change(function () {
@@ -643,6 +714,16 @@ function InicializarElementos() {
         }
     });
 
+    $('#standardCalidadId').change(function () {
+        if ($(this).val() == 2) {
+            $("#especialesId").show();
+        }
+        else {
+            $("#especialesId").hide();
+            $("#calidadesEspecialesId").data("kendoDropDownList").value("");
+            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+        }
+    });
 }
 
 function CargarCampaniaPorMaterial(value) {
@@ -655,6 +736,11 @@ function CargarCampaniaPorMaterial(value) {
 
 
     $("#campanaId").data("kendoDropDownList").value(campanaActualId);
+}
+
+function CargarCalidadPorMaterial(value) {
+    var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
+    viewModel.set("EspecialesCombo", calidadGrano);
 }
 
 
@@ -700,6 +786,8 @@ function CrearViewModel() {
             "cdId": null,
             "warrantId": null,
             "pagoDirectoId": null,
+            "standardCalidadId": null,
+            "calidadesEspecialesId":null,
 
             "proveedorIdModal": null,
             "comercialIdModal": null,
@@ -741,7 +829,9 @@ function CrearViewModel() {
             "consignatarioIdModal": null,
             "cDIdModal": null,
             "warrantIdModal": null,
-            "pagoDirectoIdModal": null
+            "pagoDirectoIdModal": null,
+            "standardCalidadIdModal": null,
+            "calidadesEspecialesIdModal": null,
         };
 
         viewModel = kendo.observable({
@@ -759,6 +849,8 @@ function CrearViewModel() {
             SustentableMonedaCombo: [],
             EstadoCombo: [],
             CondicionFijacionCombo: [],
+            StandardCombo: [],
+            EspecialesCombo:[],
 
             ComercialComboModalPendiente: [],
             MaterialComboModalPendiente: [],
@@ -771,6 +863,8 @@ function CrearViewModel() {
             Clasificacion: [],        
             CondicionFijacionComboModalPendiente:[],
             Destino: [],
+            StandardComboModalPendiente: [],
+            EspecialesComboModalPendiente:[],
             isControlDisabled: true,
 
         });
@@ -799,6 +893,7 @@ function InicializarDatos() {
 
 function AsignarDatos()
 {
+
     viewModel.set("ProveedorCombo", datosIniCrearContrato.Datos.proveedor);
     viewModel.set("ComercialCombo", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialCombo", datosIniCrearContrato.Datos.material);
@@ -813,6 +908,8 @@ function AsignarDatos()
     viewModel.set("DestinoCombo", datosIniCrearContrato.Datos.Destino);
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionCombo", datosIniCrearContrato.Datos.Condicion);
+    viewModel.set("StandardCombo", datosIniCrearContrato.Datos.Standard);
+    
 
     viewModel.set("ComercialComboModalPendiente", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialComboModalPendiente", datosIniCrearContrato.Datos.material);
@@ -826,7 +923,8 @@ function AsignarDatos()
     viewModel.set("DestinoComboModalPendiente", datosIniCrearContrato.Datos.Destino);
     viewModel.set("BolsaComboComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
-    
+    viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
+
     viewModel.set("isControlDisabled", false);
 
     var comercialId = MSExecuteOnServer('/CompraNet/ObtenerComercialId');
@@ -835,6 +933,10 @@ function AsignarDatos()
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
+    if ($("#destinoid").data("kendoDropDownList")) $("#destinoid").data("kendoDropDownList").value("1");
+    var materialId = $('select[id="material"]').val();
+    var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: materialId });
+    viewModel.set("EspecialesCombo", calidadGrano);
 }
 
 function LimpiarValidaciones() {
@@ -880,6 +982,9 @@ function LimpiarValidaciones() {
     $("#errCDId").css("display", "none");
     $("#errWarrantId").css("display", "none");
     $("#errpagoDirectoId").css("display", "none");
+    $("#errstandardCalidadId").css("display", "none");
+    $("#errcalidadesEspecialesId").css("display", "none");
+    $("#errvalorEspecialesId").css("display", "none");
 }
 
 function ObtenerDatos() {
@@ -928,9 +1033,13 @@ function ObtenerDatos() {
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
     obj.consignatario = $("#consignatarioId").is(":checked") ? true : false;
-    obj.cd = $("#CDId").is(":checked") ? true : false;
-    obj.warrant = $("#WarrantId").is(":checked") ? true : false;
-    obj.pagoDirecto = $("#pagoDirectoId").is(":checked") ? true : false;
+    obj.CD = $("#CDId").is(":checked") ? true : false;
+    obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
+    obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
+    obj.StandardDeCalidadId = $("#standardCalidadId").val();
+    obj.CalidadEspecialId = $("#calidadesEspecialesId").val();
+    obj.ValorCalidadEspecial = $("#valorEspecialesId").val();
+    
 
     if ($("#boletoConfirmaId").is(':checked'))
     {
