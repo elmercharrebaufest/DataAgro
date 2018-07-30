@@ -374,6 +374,24 @@ namespace Molinos.DataAgro.Business.Managers
             var oEstadoContrato = mobjUnitOfWork.Repository<EstadoContrato>()
                             .Queryable();
 
+            var oDestino = mobjUnitOfWork.Repository<Centro>()
+                            .Queryable();
+            
+            var oCondicionFijacion = mobjUnitOfWork.Repository<CondicionFijacion>()
+                            .Queryable();
+
+            var oStandardDeCalidad = mobjUnitOfWork.Repository<StandardDeCalidad>()
+                            .Queryable();
+
+            var oCalidadEspecial = mobjUnitOfWork.Repository<CalidadesEspeciales>()
+                            .Queryable();
+
+            var oBoletoCompraNet = mobjUnitOfWork.Repository<BoletoCompraNet>()
+                            .Queryable();
+
+            var oBolsaCompraNet = mobjUnitOfWork.Repository<BolsaCompraNet>()
+                            .Queryable();
+
             var queryContratos =
                 from cont in oContrato
                 join prove in oProveedor on cont.ProveedorId equals prove.ProveedorId into proves
@@ -396,6 +414,19 @@ namespace Molinos.DataAgro.Business.Managers
                 from provi in provis.DefaultIfEmpty()
                 join estado in oEstadoContrato on cont.Estado equals estado.EstadoContratoId into estados
                 from estado in estados.DefaultIfEmpty()
+                join centro in oDestino on cont.DestinoId equals centro.Id into destinos
+                from centro in destinos.DefaultIfEmpty()
+                join condicionFijacion in oCondicionFijacion on cont.CondicionFijacionId equals condicionFijacion.Id into condicionFijacions
+                from condicionFijacion in condicionFijacions.DefaultIfEmpty()
+                join standardDeCalidad in oStandardDeCalidad on cont.StandardDeCalidadId equals standardDeCalidad.Id into standardsDeCalidad
+                from standardDeCalidad in standardsDeCalidad.DefaultIfEmpty()
+                join calidadEspecial in oCalidadEspecial on cont.CalidadEspecialId equals calidadEspecial.Id into calidadesEspecial
+                from calidadEspecial in calidadesEspecial.DefaultIfEmpty()
+                join boletoCompranet in oBoletoCompraNet on cont.BoletoId equals boletoCompranet.Id into boletosCompranet
+                from boletoCompranet in boletosCompranet.DefaultIfEmpty()
+                join bolsaCompranet in oBolsaCompraNet on cont.BolsaId equals bolsaCompranet.Id into bolsasCompranet
+                from bolsaCompranet in bolsasCompranet.DefaultIfEmpty()
+
                 where listComercialesId.Contains(cont.ComercialId != null ? cont.ComercialId.Value : 0)
                 select new BasicoContrato()
                 {
@@ -445,7 +476,20 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = ((decimal)cont.ImporteSustentable) != null && ((decimal)cont.ImporteSustentable) > 0,
                     Dolarizado = cont.FechaDolarizado!=null,
                     Pesificado = cont.DiasPesificado!=null,
-                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP
+                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP,
+                    Destino = cont.DestinoId,
+                    Consignatario = null,
+                    PlanCanje = false,
+                    CondicionFijacion = cont.CondicionFijacionId,
+                    CD = false,
+                    Warrant = false,
+                    PagoDirectoVendedor= false,
+                    StandardDeCalidad = cont.StandardDeCalidadId,
+                    CalidadEspecial = cont.CalidadEspecialId,
+                    ValorCalidadEspecial = cont.ValorCalidadEspecial,
+                    EstablecimientoPropio = false,
+                    BoletoId = cont.BoletoId,
+                    BolsaId = cont.BolsaId,
                 };
 
             var queryFijacion =
@@ -508,7 +552,20 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = false,
                     Dolarizado = false,
                     Pesificado = false,
-                    Negocio = fijac.ContratoId
+                    Negocio = null,
+                    Destino = null,
+                    Consignatario = null,
+                    PlanCanje = false,
+                    CondicionFijacion = null,
+                    CD = false,
+                    Warrant = false,
+                    PagoDirectoVendedor = false,
+                    StandardDeCalidad = null,
+                    CalidadEspecial = null,
+                    ValorCalidadEspecial = null,
+                    EstablecimientoPropio = false,
+                    BoletoId = null,
+                    BolsaId = null,
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
