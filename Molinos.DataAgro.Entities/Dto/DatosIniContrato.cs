@@ -20,7 +20,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CentroQry> Destino { get; set; }
         public List<CondicionFijacionQry> Condicion { get; set; }
         public List<StandardDeCalidadQry> Standard { get; set; }
-        
+        public List<TipoDBQry> TipoDB { get; set; }
+        public List<TipoPeriodoDBQry> TipoPeriodoDB { get; set; }
+        public List<MonedaQry> MonedaDescuento { get; set; }
+
 
 
         public DatosIniContrato()
@@ -40,6 +43,9 @@ namespace Molinos.DataAgro.Entities.Dto
             Destino = new List<CentroQry>();
             Condicion = new List<CondicionFijacionQry>();
             Standard = new List<StandardDeCalidadQry>();
+            TipoDB = new List<TipoDBQry>();
+            TipoPeriodoDB = new List<TipoPeriodoDBQry>();
+            MonedaDescuento = new List<MonedaQry>();
         }
     }
 

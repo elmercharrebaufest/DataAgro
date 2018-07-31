@@ -10,9 +10,7 @@ $(document).ready(function () {
     CrearViewModel();
 
     InicializarElementos();
-
     InicializarDatos();
-
 });
 
 
@@ -26,7 +24,8 @@ function InicializarElementos() {
     $(".datos-topesplazos").hide();
     $(".datos-pago").hide();
     $(".datos-calidades").hide();
-
+    $(".datos-descuentos").hide();
+    
     $("#proveedorId").kendoDropDownList({
         optionLabel: "SELECCIONE UN PROVEEDOR...",
         dataTextField: "Descripcion",
@@ -530,12 +529,20 @@ function InicializarElementos() {
             document.querySelector(".datos-boleto").style.display = "none";
         }
     });
-
+    
     $("#DatosPago").click(function () {
         if (document.querySelector(".datos-pago").style.display == "none") {
             document.querySelector(".datos-pago").style.display = "block";
         } else {
             document.querySelector(".datos-pago").style.display = "none";
+        }
+    });
+
+    $("#DatosDescuentos").click(function () {
+        if (document.querySelector(".datos-descuentos").style.display == "none") {
+            document.querySelector(".datos-descuentos").style.display = "block";
+        } else {
+            document.querySelector(".datos-descuentos").style.display = "none";
         }
     });
 
@@ -653,7 +660,7 @@ function InicializarElementos() {
             $("#BolsaConfirmaDiv").hide();
             $("#bolsaConfirmaId").data("kendoDropDownList").value("");
         }
-    });
+    });    
 
     $("#boletoFisicoId").click(function () {
         if ($(this).is(':checked')) {
@@ -666,6 +673,17 @@ function InicializarElementos() {
         else {
             $("#BolsaFisicoDiv").hide();
             $("#bolsaFisicoId").data("kendoDropDownList").value("");
+        }
+    });
+
+    $("#boletoNingunoId").click(function () {
+        if ($(this).is(':checked')) {
+            $("#BolsaConfirmaDiv").hide();
+            $("#BolsaFisicoDiv").hide();
+            $("#boletoFisicoId").prop("checked", false);
+            $("#boletoConfirmaId").prop("checked", false);
+            $("#bolsaFisicoId").data("kendoDropDownList").value("");
+            $("#bolsaConfirmaId").data("kendoDropDownList").value("");
         }
     });
 
@@ -724,6 +742,78 @@ function InicializarElementos() {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }
     });
+    $("#tipoPeriodoDBId").kendoDropDownList({
+        optionLabel: "DESCUENTOS",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#tipoPeriodoDBId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#tipoPeriodoDBId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    $("#TipoDBId").kendoDropDownList({
+        optionLabel: "TIPO",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#TipoDBId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#TipoDBId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    $("#fechaDesdeDescuentoId").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+    $("#fechaHastaDescuentoId").kendoDatePicker({
+        value: datehasta,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+    $("#ImporteDescuentoId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: null,
+    });
+    $("#descuentoMonedaId").kendoDropDownList({
+        optionLabel: "Moneda",
+        dataTextField: "Descripcion",
+        dataValueField: "MonedaId"
+    });
+
+    $("#descuentoMonedaId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#descuentoMonedaId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    $("#PorcentajeDescuentoId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: 0
+    });
+
+  $('select[id="tipoPeriodoDBId"]').change(function () {
+        if ($(this).val() == 1) {
+            $(".fecha-descuento").hide();
+            $("#fechaHastaDescuentoId").val("");
+            $("#fechaDesdeDescuentoId").val("");
+        }
+        else {
+            $(".fecha-descuento").show();
+            $("#fechaDesdeDescuentoId").val(date)
+            $("#fechaHastaDescuentoId").val(datehasta)
+        }
+    });
+    $("#IngresarDescuento").click(AgregarDescuentos);
 }
 
 function CargarCampaniaPorMaterial(value) {
@@ -742,7 +832,6 @@ function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     viewModel.set("EspecialesCombo", calidadGrano);
 }
-
 
 function CargarLocalidadPorProvincia(value) {
 
@@ -787,8 +876,9 @@ function CrearViewModel() {
             "warrantId": null,
             "pagoDirectoId": null,
             "standardCalidadId": null,
-            "calidadesEspecialesId":null,
-
+            "calidadesEspecialesId": null,
+            "tipoPeriodoDBId": null,
+          
             "proveedorIdModal": null,
             "comercialIdModal": null,
             "comercialDescModal": null,
@@ -832,6 +922,8 @@ function CrearViewModel() {
             "pagoDirectoIdModal": null,
             "standardCalidadIdModal": null,
             "calidadesEspecialesIdModal": null,
+            "tipoPeriodoDBIdModal": null,
+            "Descuentos": null
         };
 
         viewModel = kendo.observable({
@@ -850,7 +942,9 @@ function CrearViewModel() {
             EstadoCombo: [],
             CondicionFijacionCombo: [],
             StandardCombo: [],
-            EspecialesCombo:[],
+            EspecialesCombo: [],
+            TipoPeriodoDBCombo:[],
+            TipoDBCombo: [],
 
             ComercialComboModalPendiente: [],
             MaterialComboModalPendiente: [],
@@ -866,13 +960,13 @@ function CrearViewModel() {
             StandardComboModalPendiente: [],
             EspecialesComboModalPendiente:[],
             isControlDisabled: true,
-
+            Descuentos: []
         });
 
         kendo.bind($("#CrearContrato"), viewModel);
         kendo.bind($("#CompraNet"), viewModel);
         kendo.bind($("#modalPendienteDiv"), viewModel);
-
+        kendo.bind("#tabla-descuentos", viewModel);
     }
 
 function InicializarDatos() {
@@ -893,7 +987,6 @@ function InicializarDatos() {
 
 function AsignarDatos()
 {
-
     viewModel.set("ProveedorCombo", datosIniCrearContrato.Datos.proveedor);
     viewModel.set("ComercialCombo", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialCombo", datosIniCrearContrato.Datos.material);
@@ -910,6 +1003,9 @@ function AsignarDatos()
     viewModel.set("CondicionFijacionCombo", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardCombo", datosIniCrearContrato.Datos.Standard);
     
+    viewModel.set("TipoPeriodoDBCombo", datosIniCrearContrato.Datos.TipoPeriodoDB);
+    viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB );
+    viewModel.set("DescuentoMonedaCombo", datosIniCrearContrato.Datos.MonedaDescuento );
 
     viewModel.set("ComercialComboModalPendiente", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialComboModalPendiente", datosIniCrearContrato.Datos.material);
@@ -934,6 +1030,7 @@ function AsignarDatos()
     if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
     if ($("#destinoid").data("kendoDropDownList")) $("#destinoid").data("kendoDropDownList").value("1");
+    if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1")
     var materialId = $('select[id="material"]').val();
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: materialId });
     viewModel.set("EspecialesCombo", calidadGrano);
@@ -985,11 +1082,20 @@ function LimpiarValidaciones() {
     $("#errstandardCalidadId").css("display", "none");
     $("#errcalidadesEspecialesId").css("display", "none");
     $("#errvalorEspecialesId").css("display", "none");
+
+    $("#errtipoPeriodoDBId").css("display", "none");
+    $("#errTipoDBId").css("display", "none");
+    $("#errfechaDesdeDescuentoId").css("display", "none");
+    $("#errfechaHastaDescuentoId").css("display", "none");
+    $("#errImporteDescuentoId").css("display", "none");
+    $("#errdescuentoMonedaId").css("display", "none");
+    $("#errPorcentajeDescuentoId").css("display", "none");
 }
 
 function ObtenerDatos() {
 
     var obj = {}; 
+
     var fecha = new Date();
     var fechaHoy = new Date(
         fecha.getFullYear(),
@@ -1039,7 +1145,6 @@ function ObtenerDatos() {
     obj.StandardDeCalidadId = $("#standardCalidadId").val();
     obj.CalidadEspecialId = $("#calidadesEspecialesId").val();
     obj.ValorCalidadEspecial = $("#valorEspecialesId").val();
-    
 
     if ($("#boletoConfirmaId").is(':checked'))
     {
@@ -1068,6 +1173,8 @@ function ObtenerDatos() {
 
     obj.ProveedorId = proveedorId;
 
+    obj.Descuentos = viewModel.Descuentos;
+
     GrabarContrato(obj);
 }
  
@@ -1091,7 +1198,6 @@ function GrabarContrato(nuevoContrato) {
         else {
             window.location.href = window.location.origin + "/CompraNet";
             MensInfo("Se ha realizado la operacion con exito");
-            //window.location.href = window.location.origin + "/Proveedor/Detalle?ProveedorId=" + result.ProveedorId;
         }
     }
 }
@@ -1245,4 +1351,60 @@ function limpiarBoleto() {
     $("#BolsaFisicoDiv").hide();
     $("#bolsaFisicoId").data("kendoDropDownList").value("");
     $("#boletoNingunoId").prop("checked", false);
+}
+
+function AgregarDescuentos() {
+
+    var descuento = {
+        Id: 0,
+        TipoPeriodoDBDesc: $("#tipoPeriodoDBId").data("kendoDropDownList").text(),
+        TipoPeriodoDBId: $("#tipoPeriodoDBId").data("kendoDropDownList").value(),
+        TipoDBDesc: $("#TipoDBId").data("kendoDropDownList").text(),
+        TipoDBId: $("#TipoDBId").data("kendoDropDownList").value(),
+        FechaDesde: $("#fechaDesdeDescuentoId").val(),
+        FechaHasta: $("#fechaHastaDescuentoId").val(),
+        Importe: $("#ImporteDescuentoId").val(),
+        MonedaId: $("#descuentoMonedaId").data("kendoDropDownList").text(),
+        Porcentaje: $("#PorcentajeDescuentoId").val(),
+        Borrar: function () {
+            viewModel.Descuentos.remove(this);
+        }
+    };
+    var err = validarDescuento(descuento)
+    if (ExistsErrorMessages(err)) {
+            MensErr(err[0]);
+    }
+    else {
+        viewModel.Descuentos.push(descuento);
+    }
+}
+
+function validarDescuento(descuento) {
+    var errores = [];
+
+    if (descuento.TipoPeriodoDBId === 0 || descuento.TipoPeriodoDBId === "" || descuento.TipoPeriodoDBId === null) {
+        errores.push("El campo Descuento no puede estar vacio")
+    }
+    if (descuento.TipoDBId === 0 || descuento.TipoDBId === null || descuento.TipoDBId === "") {
+        errores.push("El campo Tipo no puede estar vacio")
+    }
+    if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == "Undefined" || descuento.FechaHasta == "" || descuento.FechaHasta == "Undefined"  )) {
+        errores.push("La fecha no puede estar vacia")        
+    }    
+    var fechaD = kendo.parseDate(descuento.FechaDesde, "dd-MM-yyyy");
+    var fechaH = kendo.parseDate(descuento.FechaHasta, "dd-MM-yyyy");
+    if (descuento.TipoPeriodoDBId != 1 && (!fechaD || !fechaH)) {
+        errores.push("La fecha no es válida");
+    }
+    if (descuento.Importe === "" || descuento.Importe === null) {
+        errores.push("El campo Importe no puede estar vacio")
+    }
+    if (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId ==="Undefined") {
+        errores.push("El campo Moneda no puede estar vacio")
+    }
+    if (descuento.Porcentaje === "" || descuento.Porcentaje === null || descuento.Porcentaje === "undefined") {
+        errores.push("El campo Porcentaje no puede estar vacio")
+    }
+
+    return errores
 }

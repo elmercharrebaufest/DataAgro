@@ -113,6 +113,9 @@
     <Compile Include="EntitiesValidates\TipoNegocio.cs" />
     <Compile Include="EntitiesValidates\AreaInfluencia.cs" />
     <Compile Include="Entities\CalidadesEspeciales.cs" />
+    <Compile Include="Entities\DescuentosBonificaciones.cs" />
+    <Compile Include="Entities\TipoPeriodoDB.cs" />
+    <Compile Include="Entities\TipoDB.cs" />
     <Compile Include="Entities\StandardDeCalidad.cs" />
     <Compile Include="Entities\Centro.cs" />
     <Compile Include="Entities\Acopio.cs" />

@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -83,21 +84,22 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? Negocio { get; set; }
 
         public string Clasificacion { get; set; }
-        public int Destino { get; set; }
+        public int? Destino { get; set; }
         public int? CantidadCamiones { get; set; }
-        public bool? Consignatario { get; set; }
+        public bool Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
-        public int CondicionFijacion { get; set; }
-        public bool CD { get; set; }
-        public bool Warrant { get; set; }
-        public bool PagoDirectoVendedor { get; set; }
-        public int StandardDeCalidad { get; set; }
-        public int CalidadEspecial { get; set; }
-        public int ValorCalidadEspecial { get; set; }
-        public bool EstablecimientoPropio { get; set; }
-        public int BoletoId { get; set; }
+        public int? CondicionFijacion { get; set; }
+        public bool? CD { get; set; }
+        public bool? Warrant { get; set; }
+        public bool? PagoDirectoVendedor { get; set; }
+        public int? StandardDeCalidad { get; set; }
+        public int? CalidadEspecial { get; set; }
+        public decimal? ValorCalidadEspecial { get; set; }
+        public bool? EstablecimientoPropio { get; set; }
+        public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
 
+        public List<DescuentosBonificaciones> Descuentos { get; set; }
     }
 
 

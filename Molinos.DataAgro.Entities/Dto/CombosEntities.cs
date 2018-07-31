@@ -164,6 +164,18 @@
         public string CodigoSap;
         public string MaterialId;
     }
+    public class TipoDBQry
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;        
+    }
+    public class TipoPeriodoDBQry
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+    }
     public class EstadosContratos {
 
         public int EstadosContratosId { get; set; }

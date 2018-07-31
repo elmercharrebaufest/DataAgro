@@ -47,3 +47,12 @@ IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Granos ver
 IF NOT EXISTS (select 1 from CalidadesEspeciales where Descripcion = 'Cuerpos extraños') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Cuerpos extraños','MPSOJCEX',3); END
 IF NOT EXISTS (select 1 from CalidadesEspeciales where CodigoSap = 'MPMAZGRA') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Grado','MPMAZGRA',1); END
 IF NOT EXISTS (select 1 from CalidadesEspeciales where CodigoSap = 'MPTRPGRA') BEGIN insert into CalidadesEspeciales (Descripcion, CodigoSap, MaterialId) values ('Grado','MPTRPGRA',2); END
+
+--TipoDB
+IF NOT EXISTS (select 1 from TipoDB where Descripcion = 'Sobre el precio') BEGIN insert into TipoDB (Descripcion, CodigoSap) values ('Sobre el precio','S'); END
+IF NOT EXISTS (select 1 from TipoDB where Descripcion = 'Por Fuera del Precio') BEGIN insert into TipoDB (Descripcion, CodigoSap) values ('Por Fuera del Precio','A'); END
+
+--TipoPeriodoDB
+IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Generales') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Generales','G'); END
+IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Por Fecha de Entrega') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Por Fecha de Entrega','E'); END
+IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Por Fecha de Fijación') BEGIN insert into TipoPeriodoDB (Descripcion, CodigoSap) values ('Por Fecha de Fijación','F'); END

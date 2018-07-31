@@ -235,6 +235,9 @@
     <Build Include="dbo\Tables\CondicionFijacion.sql" />
     <Build Include="dbo\Tables\StandardDeCalidad.sql" />
     <Build Include="dbo\Tables\CalidadesEspeciales.sql" />
+    <Build Include="dbo\Tables\DescuentosBonificaciones.sql" />
+    <Build Include="dbo\Tables\TipoDB.sql" />
+    <Build Include="dbo\Tables\TipoPeriodoDB.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

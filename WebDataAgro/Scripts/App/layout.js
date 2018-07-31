@@ -4,12 +4,6 @@ var options = {};
 var strFiltro = "";
 var notificaciones = [];
 
-
-
-    
-
-
-
 function ArmarNotificaciones() {
 
     var result = MSExecuteOnServer('/Home/TraerActividadesPorComercialId');
@@ -60,8 +54,84 @@ function ArmarNotificaciones() {
     }
 }
 
+function mobile() {
+    var ww = document.body.clientWidth;
+
+    if (ww < 578) {
+        $(".buscador-nav-li").hide();
+        $(".li-contacto").attr("display", "inline-block");
+        $(".li-contacto").removeClass("float-right");
+        
+    }
+    else {
+
+        $(".li-contacto").addClass("float-right");
+        $(".buscador-nav-li").show();
+    }
+
+    if (ww < 750) {
+        $("#segundo").addClass("left");
+        $(".padding").css({ paddingTop: "0px" });
+
+        $(".nav-text1").removeClass("dropdown-toggle");
+        $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#reportes");
+        $("#informes").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
+
+        $(".nav-text2").removeClass("dropdown-toggle");
+        $(".nav-text2").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#informes");
+        $("#reportes").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
+
+        $(".nav-text3").removeClass("dropdown-toggle");
+        $(".nav-text3").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#tablas");
+        $("#tablas").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
+
+       
+        $("#segundo").appendTo(".navbar-header");
+        $("#segundo").addClass("floatito");
+       
+        $(".icons").addClass("float-left");
+        $(".imgs").removeClass("padding");
+        //$("#segundo").addClass("padding-top");
+        
+       
+        //$("#segundo").removeClass(".no-margin-top");
+        
+
+        
+
+    }
+
+    else {
+        $("#segundo").removeClass("left").addClass("navbar-right");
+
+        $(".nav-text1").addClass("dropdown-toggle");
+        $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
+        $("#informes").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
+
+        $(".nav-text2").addClass("dropdown-toggle");
+        $(".nav-text2").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
+        $("#reportes").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
+
+        $(".nav-text3").addClass("dropdown-toggle");
+        $(".nav-text3").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
+        $("#tablas").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
+
+        $("#segundo").appendTo("#myNavbar"); 
+        $("#segundo").removeClass("floatito");
+        $(".icons").removeClass("float-left");
+
+        $(".imgs").addClass("padding");
+        //$("#segundo").removeClass("padding-top");
+      
+        
+       
+
+       }
+}
+
 $(document).ready(function () {
     
+    mobile();
     
 
     $(".miscontactos-nav").parent().attr("href",window.location.origin);
@@ -370,4 +440,5 @@ function inicializarLayout() {
     }   
 }
 
+$(window).resize(mobile);
 

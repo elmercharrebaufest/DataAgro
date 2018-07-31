@@ -313,13 +313,15 @@ function inicializarElementos(){
 									var sd = $("<div id='sindatos'>").appendTo(graficoid).css({
 										padding: 25,
 										'font-size': 20,
-										'text-align': 'center',
+                                        'text-align': 'center',
+                                        backgroundColor: '#f0f0f0',
 										'margin-top': 30
 									});
 									$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 										width: 30,
 										height: 30,
-										'vertical-align': 'top'
+                                        'vertical-align': 'top',
+                                        backgroundColor: '#f0f0f0'
 									});
 									$("<span>").appendTo(sd).html("No se encontraron resultados").css({
 										'vertical-align': 'top',
@@ -328,7 +330,8 @@ function inicializarElementos(){
 									});
 									$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 										width: 30,
-										height: 30,
+                                        height: 30,
+                                        backgroundColor: '#f0f0f0',
 										'vertical-align': 'top'
 									});				
 								}
@@ -402,22 +405,26 @@ function inicializarElementos(){
 											var sd = $("<div id='sindatos'>").appendTo(graficoid).css({
 												padding: 25,
 												'font-size': 20,
-												'text-align': 'center',
+                                                'text-align': 'center',
+                                                backgroundColor: '#f0f0f0',
 												'margin-top': 30
 											});
 											$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 												width: 30,
-												height: 30,
+                                                height: 30,
+                                                backgroundColor: '#f0f0f0',
 												'vertical-align': 'top'
 											});
 											$("<span>").appendTo(sd).html("No se encontraron resultados").css({
 												'vertical-align': 'top',
-												'padding-left': 10,
+                                                'padding-left': 10,
+                                                backgroundColor: '#f0f0f0',
 												'padding-right': 10
 											});
 											$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 												width: 30,
-												height: 30,
+                                                height: 30,
+                                                backgroundColor: '#f0f0f0',
 												'vertical-align': 'top'
 											});				
 										}
@@ -436,22 +443,26 @@ function inicializarElementos(){
 											var sd = $("<div id='sindatos'>").appendTo(graficoid).css({
 												padding: 25,
 												'font-size': 20,
-												'text-align': 'center',
+                                                'text-align': 'center',
+                                                backgroundColor: '#f0f0f0',
 												'margin-top': 30
 											});
 											$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 												width: 30,
-												height: 30,
+                                                height: 30,
+                                                backgroundColor: '#f0f0f0',
 												'vertical-align': 'top'
 											});
 											$("<span>").appendTo(sd).html("No se encontraron resultados").css({
 												'vertical-align': 'top',
-												'padding-left': 10,
+                                                'padding-left': 10,
+                                                backgroundColor: '#f0f0f0',
 												'padding-right': 10
 											});
 											$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 												width: 30,
-												height: 30,
+                                                height: 30,
+                                                backgroundColor: '#f0f0f0',
 												'vertical-align': 'top'
 											});				
 										}
@@ -571,22 +582,26 @@ function inicializarElementos(){
 				var sd = $("<div id='sindatos'>").appendTo(graficoid).css({
 					padding: 25,
 					'font-size': 20,
-					'text-align': 'center',
+                    'text-align': 'center',
+                    backgroundColor: '#f0f0f0',
 					'margin-top': 30
 				});
 				$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 					width: 30,
-					height: 30,
+                    height: 30,
+                    backgroundColor: '#f0f0f0',
 					'vertical-align': 'top'
 				});
 				$("<span>").appendTo(sd).html("No se encontraron resultados").css({
 					'vertical-align': 'top',
-					'padding-left': 10,
+                    'padding-left': 10,
+                    backgroundColor: '#f0f0f0',
 					'padding-right': 10
 				});
 				$("<img src='../Content/Images/agro.png'>").appendTo(sd).css({
 					width: 30,
-					height: 30,
+                    height: 30,
+                    backgroundColor: '#f0f0f0',
 					'vertical-align': 'top'
 				});				
 			}
@@ -832,6 +847,7 @@ function armarGraficoMapa(arrData){
 		region: 'AR',
 		displayMode: 'regions',
 		resolution: 'provinces',
+        backgroundColor: '#f0f0f0',
 	    colorAxis: {colors: ['yellow', 'orange', 'green']},
 		legend: {
                 numberFormat: "###.### TNs."
@@ -901,20 +917,21 @@ function armarGraficoTorta(arrData,titulo) {
 
 	data.addRow(['Total: ' + total.getValue(0, 1).toLocaleString() + " Tn", 0,'Total: ' + total.getValue(0, 1).toLocaleString() + " Tn"]);
 	
-	var colores = ['aqua','black','blue','brown','cadetblue','chartreuse','coral','cornflowerblue','crimson','darkgreen','darkmagenta', 'darkorange', 'pink'];
+    var colores = ['#f6e58d', '#ff7979', '#badc58', '#c7ecee', '#e056fd', '#686de0', '#30336b', '#ff3f34', '#05c46b', '#ffa801', '#B33771', '#58B19F', '#a4b0be'];
 	
 	
 	var options = null;
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 		options = {
 		  title: titulo ? titulo : "",
-		  is3D: true,
+		  //is3D: true,
 		  //pieSliceText: 'value-and-percentage'
 		  pieSliceText: 'none',
 		  sliceVisibilityThreshold: 0,
 		  tooltip: {isHtml: true},
 		  chartArea:{left:0,width:'100%',height:'70%'},
 		  //legend:{ position:{left:-10}, textStyle: { fontSize: 12, bold : true}},
+          backgroundColor: '#f0f0f0',
 		  colors: colores,
 		  'legend': {'position': 'none'}
 		};
@@ -922,13 +939,14 @@ function armarGraficoTorta(arrData,titulo) {
 	
 		options = {
 		  title: titulo ? titulo : "",
-		  is3D: true,
+		  //is3D: true,
 		  //pieSliceText: 'value-and-percentage'
 		  pieSliceText: 'none',
 		  sliceVisibilityThreshold: 0,
 		  tooltip: {isHtml: true},
 		  chartArea:{left:0,width:'100%',height:'70%'},
-		  colors: colores,
+          colors: colores,
+          backgroundColor: '#f0f0f0',
 		  legend:{ position:{left:-10}, textStyle: { fontSize: 12, bold : true}}
 		};
 	
@@ -1023,10 +1041,13 @@ function armarGraficoBarrasCompras(datos){
       ],
 	  vAxis: {formatOptions: {format:'###.###',groupingSymbol: '.'}},
      // hAxis: {title: "date"},
-      seriesType: "bars",
+        seriesType: "bars",
+        backgroundColor: '#f0f0f0',
       
       series: { 
-		  1: {type: "line", targetAxisIndex:1}}
+            1: { type: "line", targetAxisIndex: 1 }
+        }
+
     };
 	
 	var chart = new google.visualization.ComboChart(document.getElementById('graficoR'));
@@ -1063,7 +1084,8 @@ function armarGraficoBarrasAcopio(datos){
       ],
 	  vAxis: {formatOptions: {format:'###.###',groupingSymbol: '.'}},
      // hAxis: {title: "date"},
-      seriesType: "bars",
+        seriesType: "bars",
+        backgroundColor: '#f0f0f0',
       
       series: { 
 		  1: {type: "line", targetAxisIndex:1}}
@@ -1104,7 +1126,8 @@ function armarGraficoBarrasProduccion(datos){
       ],
 	  vAxis: {formatOptions: {format:'###.###',groupingSymbol: '.'}},
      // hAxis: {title: "date"},
-      seriesType: "bars",
+        seriesType: "bars",
+        backgroundColor: '#f0f0f0',
       
       series: { 
 		  1: {type: "line", targetAxisIndex:1}}
@@ -1152,7 +1175,8 @@ function armarGraficoBarras(datos){
       ],
 	  vAxis: {formatOptions: {format:'###.###',groupingSymbol: '.'}},
      // hAxis: {title: "date"},
-      seriesType: "bars",
+        seriesType: "bars",
+        backgroundColor: '#f0f0f0',
       
       series: { 
 		  1: {type: "line", targetAxisIndex:1}}
@@ -1190,7 +1214,8 @@ function armarGraficoGaudge(datos){
            redFrom: 0, redTo: 40,
           yellowFrom:40, yellowTo: 70,
           greenFrom:70, greenTo: 100,
-          minorTicks: 5
+            minorTicks: 5,
+          backgroundColor: '#f0f0f0'
         };
 
         var chart = new google.visualization.Gauge(document.getElementById('graficoR'));

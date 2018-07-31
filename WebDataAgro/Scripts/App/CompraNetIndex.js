@@ -11,6 +11,8 @@ $(document).ready(function () {
 
     AutoRecargar();
 
+    grid();
+
     //+ datos modal//
 
     $(".masDatos").on("click", function () {
@@ -215,7 +217,8 @@ function CreateGridInformeCompraNet() {
         },
         columns: [
             {
-                field: "Proveedor", type: "string", width: 150, template: function (dataItem) {
+                field: "Proveedor", type: "string", width: 150,                  
+                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 2) {
@@ -232,11 +235,11 @@ function CreateGridInformeCompraNet() {
                 },
                 filterable: { ui: createMultiSelectProveedor }
             },
-            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
-            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
+            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: { "class": "red" } },
+            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45, attributes: { "class": "red" } },
             {
                 field: "TipoNegocio", type: "string", filterable: {
-                    multi: true,  dataSource: [{
+                    multi: true, attributes: { style: "display: none " }, dataSource: [{
                         TipoNegocio: "A FIJAR",
                     }, {
                         TipoNegocio: "A PRECIO",
@@ -246,7 +249,7 @@ function CreateGridInformeCompraNet() {
                 }, title: "Tipo", width: 70 },
             {
                 field: "Material", type: "string", filterable: {
-                    multi: true, dataSource: [{
+                    multi: true, attributes: { style: "display: none " }, dataSource: [{
                         Material: "Maiz Duro Dentado",
                     }, {
                         Material: "Trigo Pan",
@@ -257,8 +260,8 @@ function CreateGridInformeCompraNet() {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>"
                 }, template: "#=Material#"
             },
-            { field: "Cantidad", type: "number", width: 70, format: "{0:n0}" },
-            { field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
+            { field: "Cantidad", type: "number", width: 70, format: "{0:n0}", attributes: { "class": "red" } },
+            { field: "Ampliaciones", type: "number", width: 60, attributes: { style: "display: none " }, template: function (dataItem) {
                 if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
@@ -269,14 +272,15 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { field: "Precio", type: "number", width: 70, format: "{0:n2}" },
-            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70 },
-            { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70 },
-            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate },
+            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "red" } },
+            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "red" } },
+            { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "red" } },
+            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "red" } },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }                
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial, attributes: { "class": " red  ", } }                
             },
-            { field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
+            {
+                field: "Estado_Contrato", sortable: false, title: "Estado", attributes: { "class": "red" }, filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente",
@@ -731,6 +735,15 @@ function InicializarElementosModalPendiente() {
 
 }
 
+function grid() {
+    var ww = document.body.clientWidth;
+    if (ww < 700) {
+    $(".red").hide();
+    }
+    else {
+        $(".red").show();
+    }
+}
 
 function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId) {
 
@@ -950,7 +963,6 @@ function LimpiarPendiente() {
     $('.masDatosPendiente').show();
     $('.datosEditarPendiente').show();
 }
-
 
 function ModalFinalizado(contratoId,tipoId, fijacionDePrecioContratoId) {
 
@@ -1260,4 +1272,10 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
     
     $("#modalBorrar").modal('show');
+
+
 }
+
+
+$(window).resize(grid);
+

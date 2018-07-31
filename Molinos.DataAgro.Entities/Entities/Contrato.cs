@@ -1,6 +1,7 @@
 ﻿using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Entities.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -38,22 +39,24 @@ namespace Molinos.DataAgro.Entities.Entities
         public double? Ampliaciones { get; set; } // Cantidad
         public string Observacion { get; set; }
         public int ClasificacionId { get; set; }//ClasificacionId
-        public int DestinoId { get; set; }
+        public int? DestinoId { get; set; }
         public int? CantidadCamiones { get; set; }
-        public bool? Consignatario { get; set; }
+        public bool Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
         public int? CondicionFijacionId { get; set; }
-        public bool CD { get; set; }
-        public bool Warrant { get; set; }
+        public bool? CD { get; set; }
+        public bool? Warrant { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
         public int? StandardDeCalidadId { get; set; }
         public int? CalidadEspecialId { get; set; }
-        public decimal ValorCalidadEspecial { get; set; }
+        public decimal? ValorCalidadEspecial { get; set; }
         public bool? EstablecimientoPropio { get; set; }
-        public int BoletoId { get; set; }
+        public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
+        [InverseProperty("Contrato")]
+        public ICollection<DescuentosBonificaciones> Descuentos { get; set; }
         public Contrato()
         {
             this.Cantidad = 0;

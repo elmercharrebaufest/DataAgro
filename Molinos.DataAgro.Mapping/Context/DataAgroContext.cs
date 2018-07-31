@@ -87,6 +87,9 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new CondicionFijacionMap());
             modelBuilder.Configurations.Add(new CalidadesEspecialesMap());
             modelBuilder.Configurations.Add(new StandardDeCalidadMap());
+            modelBuilder.Configurations.Add(new DescuentosBonificacionesMap());
+            modelBuilder.Configurations.Add(new TipoDBMap());
+            modelBuilder.Configurations.Add(new TipoPeriodoDBMap());
         }
 
         private void MapearAssemblyDe<TEntidad>(DbModelBuilder modelBuilder, Predicate<Type> incluir, Predicate<Type> excluir)

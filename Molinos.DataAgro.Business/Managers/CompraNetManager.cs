@@ -1,10 +1,12 @@
 ﻿using Autofac.Extras.NLog;
 using Mastersoft.Framework.DataRepository;
 using Mastersoft.Framework.Interfaces;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Mapping.Context;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
@@ -38,8 +40,7 @@ namespace Molinos.DataAgro.Business
             };
 
             return oDatosIniciales;
-        }
-
+        }        
     }
 }
 

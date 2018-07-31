@@ -432,3 +432,43 @@ body.modal-open {
     display: flex;
 
 }
+#descuento-datos{
+    display:flex;
+}
+
+#descuentos-bonificaciones {
+    border-collapse: collapse;
+}
+
+#IngresarDescuento {
+    vertical-align: initial;
+}
+#tabla-descuentos{
+    overflow:auto;
+    width:500px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#tabla-descuentos div {
+    border-bottom: 1px solid #bdbcbc
+}
+
+#eliminar-descuento {
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-size: 25px;
+    float: left;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: none !important;
+    box-shadow: none !important;
+    color: #787878;
+}
+@media only screen and (max-width: 768px) {
+    #descuento-datos {
+        display:inherit;
+    }
+
+}

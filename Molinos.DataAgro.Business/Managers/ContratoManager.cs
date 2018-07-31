@@ -127,7 +127,18 @@ namespace Molinos.DataAgro.Business.Managers
                                 .Queryable()
                                 .AsNoTracking()
                                 .Select(x => new StandardDeCalidadQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            
+            datosCombo.TipoDB = await mobjUnitOfWork.Repository<TipoDB>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new TipoDBQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.TipoPeriodoDB = await mobjUnitOfWork.Repository<TipoPeriodoDB>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new TipoPeriodoDBQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.MonedaDescuento = await mobjUnitOfWork.Repository<Moneda>()
+                                .Queryable()
+                                .AsNoTracking()
+                                .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues) {
@@ -323,7 +334,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.BolsaId = oContrato.BolsaId;
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
-
+            oContratoSave.Descuentos = oContrato.Descuentos;
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
             {
                 oContratoSave.Fecha = oContrato.Fecha;
@@ -478,16 +489,17 @@ namespace Molinos.DataAgro.Business.Managers
                     Pesificado = cont.DiasPesificado!=null,
                     Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP,
                     Destino = cont.DestinoId,
-                    Consignatario = null,
-                    PlanCanje = false,
+                    CantidadCamiones = cont.CantidadCamiones,
+                    Consignatario = cont.Consignatario,
+                    PlanCanje = cont.PlanCanje,
                     CondicionFijacion = cont.CondicionFijacionId,
-                    CD = false,
-                    Warrant = false,
-                    PagoDirectoVendedor= false,
+                    CD = cont.CD,
+                    Warrant = cont.Warrant,
+                    PagoDirectoVendedor= cont.PagoDirectoVendedor,
                     StandardDeCalidad = cont.StandardDeCalidadId,
                     CalidadEspecial = cont.CalidadEspecialId,
                     ValorCalidadEspecial = cont.ValorCalidadEspecial,
-                    EstablecimientoPropio = false,
+                    EstablecimientoPropio = cont.EstablecimientoPropio,
                     BoletoId = cont.BoletoId,
                     BolsaId = cont.BolsaId,
                 };
@@ -554,12 +566,13 @@ namespace Molinos.DataAgro.Business.Managers
                     Pesificado = false,
                     Negocio = null,
                     Destino = null,
-                    Consignatario = null,
+                    CantidadCamiones = null,
+                    Consignatario = false,
                     PlanCanje = false,
                     CondicionFijacion = null,
-                    CD = false,
-                    Warrant = false,
-                    PagoDirectoVendedor = false,
+                    CD = null,
+                    Warrant = null,
+                    PagoDirectoVendedor = null,
                     StandardDeCalidad = null,
                     CalidadEspecial = null,
                     ValorCalidadEspecial = null,

@@ -1,5 +1,11 @@
-﻿@media (min-width: 768px) and (max-width:1025px) {
+﻿@media (min-width:1026px) and (max-width:1199px) {
+    #theBody > div.page-container > div.page-content-wrapper > div > div > div > div.bordertopbottom.grafico > div {
+        position: relative;
+        top: 100%;
+    }
+}
 
+@media (min-width: 768px) and (max-width:1025px) {
     .bordertopbottom:first-of-type{
         height:120px;
     }

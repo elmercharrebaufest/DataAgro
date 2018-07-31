@@ -84,6 +84,9 @@
     <Compile Include="Mapping\CanalOperacionMap.cs" />
     <Compile Include="Mapping\BoletoCompraNetMap.cs" />
     <Compile Include="Mapping\CalidadesEspecialesMap.cs" />
+    <Compile Include="Mapping\DescuentosBonificacionesMap.cs" />
+    <Compile Include="Mapping\TipoPeriodoDBMap.cs" />
+    <Compile Include="Mapping\TipoDBMap.cs" />
     <Compile Include="Mapping\StandardDeCalidadMap.cs" />
     <Compile Include="Mapping\CondicionFijacionMap.cs" />
     <Compile Include="Mapping\ComercialMap.cs" />

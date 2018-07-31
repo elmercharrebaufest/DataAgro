@@ -114,7 +114,7 @@
         </div>
 
         <div class="row">
-            <div id="planCanjeConsignatarioIdDiv">
+            <div id="planCanjeConsignatarioIdDiv"style="display:flex">
                 <div class="col-md-2">
                     <label style="padding-top: 0px;">Plan canje</label>
                 </div>
@@ -190,6 +190,7 @@
                 <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+
         <div id="DatosAdicionales" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Datos adicionales
         </div>
@@ -259,7 +260,6 @@
         <div id="DatosBoleto" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Boleto
         </div>
-
         <div class="datos-boleto" display="block">
             <br />
             <div class="row">
@@ -302,7 +302,6 @@
         <div id="DatosTopesPlazos" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Plazos y Topes de Fijación
         </div>
-
         <div class="datos-topesplazos" display="block">
             <br />
             <div class="row">
@@ -365,10 +364,71 @@
             </div>
         </div>
 
+        <div id="DatosDescuentos" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+            <i class="fa fa-plus"></i> Descuentos y Bonificaciones
+        </div>
+
+        <div class="datos-descuentos" display="block" style="max-width: 785px">
+            <br />
+            <div id="descuento-datos">
+
+                <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
+                <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
+                <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
+                <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
+                <div class="fecha-descuento">
+                    <span id="fechaDesdeDiv">
+                        <input id="fechaDesdeDescuentoId" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" style="width: 150px" />
+                        <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                    <span id="fechaHastaDiv">
+                        <input id="fechaHastaDescuentoId" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" style="width: 150px" />
+                        <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
+            </div>
+            <div>
+                <input id="ImporteDescuentoId" placeholder="IMPORTE" style="width:200px" />
+                <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                <select id="descuentoMonedaId" data-bind="source: DescuentoMonedaCombo, value: Parametros.descuentoMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
+                <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                <input id="PorcentajeDescuentoId" placeholder="PORCENTAJE" style="width:200px" />
+                <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
+            </div><br />
+            <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
+                <span></span>
+                <span hidden></span>
+                <span></span>
+                <span hidden></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <script id="div-template" type="text/x-kendo-template">
+                <div>
+                    <span id="eliminar-descuento" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                    <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span>
+                    <span id="TipoPeriodoDBId" hidden> #:TipoPeriodoDBId#</span><br />
+                    <span>#: TipoDBDesc#</span>
+                    <span hidden>#: TipoDBId# </span>
+                    <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
+                    <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
+                    <span>Importe #:Importe#</span>
+                    <span>#:MonedaId#</span>
+                    <span>Porc #:Porcentaje#</span>
+                    <br /><br />
+                </div>
+            </script>
+        </div>
+
         <div id="DatosCalidades" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Calidad
         </div>
-
         <div class="datos-calidades" display="block">
             <br />
             <div class="row">
@@ -399,7 +459,6 @@
         <div id="DatosEstablecimiento" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
             <i class="fa fa-plus"></i> Establecimiento
         </div>
-
         <div class="datos-establecimiento" display="block">
             <br />
             <div class="row">
@@ -433,4 +492,4 @@
                 </span>
             </div>
         </div>
-
+</div>

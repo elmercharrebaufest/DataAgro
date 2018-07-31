@@ -17,7 +17,7 @@ using static WebDataAgro.MvcApplication;
 namespace WebDataAgro.Controllers
 {
     public class CompraNetController : Controller
-    {        
+    {
         private IHomeManager mobjHomeManager;
 
         private ICompraNetManager mobjCompraNetManager;
@@ -55,7 +55,7 @@ namespace WebDataAgro.Controllers
             mobjMaterialManager = oMaterialManager;
             mobjProveedorManager = oProveedorManager;
             mobjLocalidadManager = ojLocalidadManager;
-            mobjLogger = oLogger;            
+            mobjLogger = oLogger;
             idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 
@@ -63,54 +63,63 @@ namespace WebDataAgro.Controllers
         // Metodos Publicos
         //-----------------------------------------------------
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             return View();
 
         }
 
-        public ActionResult CrearContrato() {
+        public ActionResult CrearContrato()
+        {
 
             return View();
         }
 
-        public ActionResult CrearFijacion() {
+        public ActionResult CrearFijacion()
+        {
 
             return View();
         }
 
-        public async Task<ActionResult> Inicializar() {
+        public async Task<ActionResult> Inicializar()
+        {
             var model = new DatosIniCompraNetModel();
 
             var activeDirectory = Util.GetIdActiveDirectory();
             model.Datos = await mobjCompraNetManager.TraerDatosInicialesAsync(activeDirectory);
-            
-            return new JsonResult() {
+
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> InicializarContrato() {
+        public async Task<ActionResult> InicializarContrato()
+        {
             var model = new ContratoModel_prueba
             {
                 Datos = await mobjContratoManager.TraerDatosCombo()
             };
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> InicializarFijacion() {
+        public async Task<ActionResult> InicializarFijacion()
+        {
             var model = new FijacionDePrecioContratoModel
             {
                 Datos = await mobjFijacionDePrecioContratoManager.TraerDatosInicialesAsync()
             };
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -127,12 +136,13 @@ namespace WebDataAgro.Controllers
                 var comercial = await mobjComercialManager.TraerComercialAsync(oParam.ComercialId.Value);
                 oParam.GrupoCompra = comercial.GrupoDeCompras ?? 0;
             }
-            
+
             oParam.UsuarioId = idActiveDirectory;
 
             var model = await mobjContratoManager.GrabarContrato(oParam);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -150,10 +160,11 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> ConfirmarContrato(Contrato oParam)
-        {         
+        {
             var model = await mobjContratoManager.ConfirmarContrato(oParam);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -183,20 +194,24 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> ConfirmarFijacion(FijacionDePrecioContrato oParam) {
+        public async Task<ActionResult> ConfirmarFijacion(FijacionDePrecioContrato oParam)
+        {
             var model = await mobjFijacionDePrecioContratoManager.ConfirmarFijacion(oParam);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> FinalizarFijacion(FijacionDePrecioContrato oParam) {
+        public async Task<ActionResult> FinalizarFijacion(FijacionDePrecioContrato oParam)
+        {
 
             var model = await mobjFijacionDePrecioContratoManager.FinalizarFijacion(oParam, idActiveDirectory);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -217,7 +232,8 @@ namespace WebDataAgro.Controllers
         {
             var model = await mobjContratoManager.GrabarAmpliacionContrato(oParam);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -227,7 +243,8 @@ namespace WebDataAgro.Controllers
         {
             var model = await mobjFijacionDePrecioContratoManager.GrabarAmpliacionFijacion(oParam);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -248,7 +265,8 @@ namespace WebDataAgro.Controllers
         {
             var model = await mobjContratoManager.TraerContratoAsync(Convert.ToInt32(contratoId));
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -278,19 +296,21 @@ namespace WebDataAgro.Controllers
 
             var model = await mobjCampañaManager.TraerCampañaPorMaterial(Convert.ToInt32(MaterialId));
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public async Task<ActionResult> TraerLocalidadPorProvincia(int? ProvinciaId)
         {
             if (ProvinciaId == null) ProvinciaId = 0;
 
             var model = await mobjLocalidadManager.TraerLocalidadPorProvincia(ProvinciaId.Value);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
@@ -299,7 +319,7 @@ namespace WebDataAgro.Controllers
         public async Task<int?> TraerCampanaActualMaterial(int MaterialId)
         {
             var material = await mobjMaterialManager.TraerMaterialAsync(MaterialId);
-            
+
             return material.CampañaId;
         }
 
@@ -327,19 +347,20 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<int> ObtenerProveedorId (string Cuit)
-        {          
+        public async Task<int> ObtenerProveedorId(string Cuit)
+        {
             return (await mobjProveedorManager.TraerProveedorPorCuit(Cuit)).ProveedorId;
         }
 
-        public async Task<ActionResult> ObtenerProvinciaLocalidad (string Cuit)
+        public async Task<ActionResult> ObtenerProvinciaLocalidad(string Cuit)
         {
             var model = await mobjProveedorManager.TraerLocalidadProveedorPorCuitAsync(Cuit);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
-            }; 
+            };
         }
 
         public async Task<ActionResult> ObtenerProvinciaLocalidadProv(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)
@@ -357,7 +378,8 @@ namespace WebDataAgro.Controllers
         {
             var model = await mobjProveedorManager.TraerProveedor(ProveedorId);
 
-            return new JsonResult() {
+            return new JsonResult()
+            {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };

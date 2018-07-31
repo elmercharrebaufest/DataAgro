@@ -12,9 +12,9 @@
 }
 @section LinksContacto {
     <div class="navbar navbar-inverse navbar-fixed-top nav-bar-segundo">
-        <div class="container">
+        <div class="container" id="search-bar">
             <div class="navbar-collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav links">
                     <li class="img-links" style="height:60px;">
                         <a href="http://www.bolsadecereales.com" target="_blank" title="Bolsa de Cereales" class="marcador">
                             <img src="~/Content/Images/bolsacereales.png" />
@@ -63,7 +63,7 @@
                     </li>
                     @if (ViewBag.edita != false)
                     {
-                        <li class="li-contacto">
+                        <li class="li-contacto float-right">
                             <div class="agregarcontacto-nav">
                                 <a href="/Proveedor/Agregar">
                                     <div id="AgregarContacto" class="btnagregar">

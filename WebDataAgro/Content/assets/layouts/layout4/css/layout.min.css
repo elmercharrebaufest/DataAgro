@@ -709,7 +709,6 @@
 }
 @media (max-width: 991px) {
     .page-container {
-        margin: 0!important;
         padding: 10px 10px 0
     }
     .page-header-fixed.page-header-fixed-mobile .page-container {
@@ -718,7 +717,6 @@
 }
 @media (max-width: 767px) {
     .page-container {
-        margin: 0!important;
         padding: 0
     }
 }
