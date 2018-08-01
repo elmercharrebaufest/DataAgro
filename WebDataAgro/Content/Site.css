@@ -162,10 +162,6 @@ li {
     float: right;
     display: inline; 
 }
-.red {
-    background-color: red;
-}
-
 .nav-bar-segundo li a {
     color: #7F7F7F !important;
     background-color: transparent !important;

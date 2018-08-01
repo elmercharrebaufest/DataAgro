@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
         Task<List<Material>> TraerMaterialPorCampaña(int CampañaId);
 
         Task<List<Campaña>> TraerCampañaPorMaterial(int MaterialId);
-        Task<List<CalidadesEspeciales>> TraerCalidadPorMaterial(int MaterialId);
+        Task<List<CalidadEspecial>> TraerCalidadPorMaterial(int MaterialId);
         Task<List<Campaña>> TraerCampañasPorGrano(int MaterialId);
 
         Task<Campaña> TraerCampaniaAsync(int CampaniaId);

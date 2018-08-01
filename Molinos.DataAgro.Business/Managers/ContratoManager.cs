@@ -394,7 +394,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oStandardDeCalidad = mobjUnitOfWork.Repository<StandardDeCalidad>()
                             .Queryable();
 
-            var oCalidadEspecial = mobjUnitOfWork.Repository<CalidadesEspeciales>()
+            var oCalidadEspecial = mobjUnitOfWork.Repository<CalidadEspecial>()
                             .Queryable();
 
             var oBoletoCompraNet = mobjUnitOfWork.Repository<BoletoCompraNet>()
@@ -488,6 +488,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Dolarizado = cont.FechaDolarizado!=null,
                     Pesificado = cont.DiasPesificado!=null,
                     Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP,
+                    Clasificacion = cont.ClasificacionId,
                     Destino = cont.DestinoId,
                     CantidadCamiones = cont.CantidadCamiones,
                     Consignatario = cont.Consignatario,
@@ -502,6 +503,8 @@ namespace Molinos.DataAgro.Business.Managers
                     EstablecimientoPropio = cont.EstablecimientoPropio,
                     BoletoId = cont.BoletoId,
                     BolsaId = cont.BolsaId,
+                    DesdeFijacion = DbFunctions.TruncateTime(cont.DesdeFijacion),
+                    HastaFijacion = DbFunctions.TruncateTime(cont.HastaFijacion),
                 };
 
             var queryFijacion =
@@ -565,6 +568,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Dolarizado = false,
                     Pesificado = false,
                     Negocio = null,
+                    Clasificacion= null,
                     Destino = null,
                     CantidadCamiones = null,
                     Consignatario = false,
@@ -579,6 +583,8 @@ namespace Molinos.DataAgro.Business.Managers
                     EstablecimientoPropio = false,
                     BoletoId = null,
                     BolsaId = null,
+                    DesdeFijacion = null,
+                    HastaFijacion = null,
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);

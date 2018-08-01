@@ -56,8 +56,8 @@
                             </div>
                         </div>
                     </div>
-                    <span/>
-                    <div class="col-xs-12 noPadding noFijacion" >
+                    <span />
+                    <div class="col-xs-12 noPadding noFijacion">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
                             <h5 class="linea-pendiente">Entrega Hasta:</h5>
                         </div>
@@ -131,7 +131,54 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-xs-12 noPadding noFijacion">
+                        <div class="col-xs-3 col-sm-2 noPaddingLeft">
+                            <h5>Clasificación:</h5>
+                        </div>
+                        <div class="col-xs-9 col-sm-4 noPaddingRight">
+                            <div class="campo clearfix">
+                                <select id="clasificacionModalPendienteId" data-bind="source: ClasificacionCombo, value: Parametros.Clasificacion, disabled: isControlDisabled"></select>
+                                <img id="errclasificacionModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 noPadding noFijacion">
+                        <div class="col-xs-3 col-sm-2 noPaddingLeft">
+                            <h5>Destino:</h5>
+                        </div>
+                        <div class="col-xs-9 col-sm-4 noPaddingRight">
+                            <div class="campo clearfix">
+                                <select id="destinoModalPendienteId" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled"></select>
+                                <img id="errprecioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 noPadding noFijacion">
+                            <div class="col-xs-3 col-sm-3 noPaddingLeft"style="display: inline-flex;">
+                                <h5>Plan Canje:</h5>
+                                <input id="planCanjeModalPendienteId" class="campo-input-input" type="checkbox" style="margin: auto;" />
+                                <img id="errplanCanjeModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                            <div class="col-xs-3 col-sm-3 noPaddingLeft"style="display: inline-flex;">
+                                <h5>Consignatario:</h5>
+                                <input id="consignatarioModalPendienteId" class="campo-input-input" type="checkbox" style="margin: auto;" />
+                                <img id="errconsignatarioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                    </div>
+
+                    <div class="col-xs-12 noPadding noFijacion">
+                        <div class="col-xs-3 col-sm-2 noPaddingLeft">
+                            <h5 class="linea-pendiente">Cantidad <br /> Camiones:</h5>
+                        </div>
+                        <div class="col-xs-9 col-sm-4 noPaddingRight">
+                            <div class="campo clearfix">
+                                <input type="text" placeholder="0" class="campo-input-text k-textbox" id="cantidadCamionesModalPendienteId" />
+                                <img id="errcantidadCamionesModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 noPadding noFijacion" style="display:inline-block">
                         <div class="col-xs-3 col-sm-2 noPaddingLeft">
                             <h5>Procedencia:</h5>
                         </div>
@@ -171,107 +218,335 @@
                         </div>
                     </div>
                     <div class="col-xs-12 noPadding noFijacion">
-                        <div class="col-xs-3 col-sm-2">
-                            <h5>Base</h5>
-                        </div>
-                        <div class="col-xs-3 col-sm-2 noPaddingLeft">
-                            <input id="baseModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.baseIdModal, disabled: isControlDisabled" type="checkbox" />
+                        <div class="col-xs-3 col-sm-2" style="display:inline-flex">
+                            <h5>Base</h5>                        
+                            <input id="baseModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.baseIdModal, disabled: isControlDisabled" type="checkbox" style="margin: auto;" />
                         </div>
                     </div>
                 </div>
-                <!--adicionales-->
-                <div class="col-xs-12 noPadding">
-                    <div class="masDatosPendiente btnDestacado btnAzul noFijacion">
-                        <i class="fa fa-plus"></i> Datos Adicionales
-                    </div>
-                </div>
-                <div class="col-xs-12 noPadding datosEditarAdicionalesPendiente" style="display: none;">
-                    <div class="menosDatosPendiente btnDestacado btnAzul"><i class="fa fa-arrow-left"></i> Volver</div>
-                    <div class="row noPadding">
-                        <div class="col-xs-3 col-sm-4">
-                            <h5>Sustentable:</h5>
-                        </div>
-                        <div class="col-xs-1 col-sm-1">
-                            <label for="sust">
-                                <input id="sustentableModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.sustentableIdModal, disabled: isControlDisabled" type="checkbox" />
-                                <img id="errsustentableModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                            </label>
-                        </div>
-                        <div id="sustentableDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
-                            <div class="col-xs-6 col-sm-6">
-                                <input type="text" placeholder="0" class="campo-input-text k-textbox" id="sustentablePrecioModalPendienteId" />
-                                <img id="errsustentableprecioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                            </div>
-                            <div class="col-xs-6 col-sm-6">
-                                <select id="sustentableMonedaModalPendienteId" data-bind="source: SustentableMonedaComboModalPendiente, value: Parametros.sustentableMonedaIdModal, disabled: isControlDisabled"></select>
-                                <img id="errsustentableMonedaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                            </div>
+                    <!--adicionales-->
+                    <div class="col-xs-12 noPadding">
+                        <div class="masDatosPendiente btnDestacado btnAzul noFijacion">
+                            <i class="fa fa-plus"></i> Datos Adicionales
                         </div>
                     </div>
-                    <div class="row noPadding">
-                        <div class="col-xs-3 col-sm-4">
-                            <h5>Dolarizado:</h5>
+                    <div class="col-xs-12 noPadding datosEditarAdicionalesPendiente" style="display: none;">
+                        <div class="menosDatosPendiente btnDestacado btnAzul"><i class="fa fa-arrow-left"></i> Volver</div>
+                        <div id="DatosAdicionales" class="btnagregar btnDestacado btnAzul" type="button">
+                            <i class="fa fa-plus"></i> Datos adicionales
                         </div>
-                        <div class="col-xs-1 col-sm-1">
-                            <label for="dolariz">
-                                <input id="dolarizadoModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoIdModal, disabled: isControlDisabled" type="checkbox" />
-                                <img id="errdolarizadoModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                            </label>
+                        <div class="datos-adicionales" display="block">
+                            <br />
+                            <div class="row noPadding">
+                                <div class="col-xs-3 col-sm-4">
+                                    <h5>Sustentable:</h5>
+                                </div>
+                                <div class="col-xs-1 col-sm-1">
+                                    <label for="sust">
+                                        <input id="sustentableModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.sustentableIdModal, disabled: isControlDisabled" type="checkbox" />
+                                        <img id="errsustentableModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                    </label>
+                                </div>
+                                <div id="sustentableDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
+                                    <div class="col-xs-6 col-sm-6">
+                                        <input type="text" placeholder="0" class="campo-input-text k-textbox" id="sustentablePrecioModalPendienteId" />
+                                        <img id="errsustentableprecioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6">
+                                        <select id="sustentableMonedaModalPendienteId" data-bind="source: SustentableMonedaComboModalPendiente, value: Parametros.sustentableMonedaIdModal, disabled: isControlDisabled"></select>
+                                        <img id="errsustentableMonedaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row noPadding">
+                                <div class="col-xs-3 col-sm-4">
+                                    <h5>Dolarizado:</h5>
+                                </div>
+                                <div class="col-xs-1 col-sm-1">
+                                    <label for="dolariz">
+                                        <input id="dolarizadoModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoIdModal, disabled: isControlDisabled" type="checkbox" />
+                                        <img id="errdolarizadoModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                    </label>
+                                </div>
+                                <div id="dolarizadoDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
+                                    <div class="col-xs-12">
+                                        <div class="campo clearfix">
+                                            <input id="dolarizadoFechaModalPendienteId" type="date" data-bind="value: Parametros.dolarizadoFechaIdModal" />
+                                            <img id="errdolarizadoFechaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row noPadding">
+                                <div class="col-xs-3 col-sm-4">
+                                    <h5>Pesificado:</h5>
+                                </div>
+                                <div class="col-xs-1 col-sm-1">
+                                    <label for="pesif">
+                                        <input id="pesificadoModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.pesificadoIdModal, disabled: isControlDisabled" type="checkbox" />
+                                        <img id="errpesificadoModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                    </label>
+                                </div>
+                                <div id="pesificadoDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
+                                    <div class="col-xs-12">
+                                        <div class="campo clearfix">
+                                            <input type="text" class="campo-input-text k-textbox" placeholder="Cantidad de días" id="pesificadoDiasModalPendienteId" />
+                                            <img id="errpesificadoDiasModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-3 col-sm-4">
+                                    <h5>Informa SIO:</h5>
+                                </div>
+                                <div class="col-xs-1 col-sm-1">
+                                    <input id="noInformaSioModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioIdModal, disabled: isControlDisabled" type="checkbox" />
+                                    <img id="errnoInformaSioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                                <div class="col-xs-12 noPadding">
+                                    <div class="col-xs-1 noPadding" aria-hidden="true">
+                                        <input type="hidden" class="campo-input-text" id="contratoIdModal" />
+                                        <input type="hidden" class="campo-input-text" id="fijacionIdModal" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-3 col-sm-4">
+                                    <h5>Trigo Especial:</h5>
+                                </div>
+                                <div class="col-xs-1 col-sm-4">
+                                    <input id="trigoEspecialModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialIdModal, disabled: isControlDisabled" type="checkbox" />
+                                    <img id="errtrigoEspecialModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
                         </div>
-                        <div id="dolarizadoDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
-                            <div class="col-xs-12">
-                                <div class="campo clearfix">
-                                    <input id="dolarizadoFechaModalPendienteId" type="date" data-bind="value: Parametros.dolarizadoFechaIdModal" />
-                                    <img id="errdolarizadoFechaModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
+
+                        <div id="DatosBoleto" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Boleto
+                        </div>
+                        <div class="datos-boleto" display="block">
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Confirma</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="boletoConfirmaIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.boletoConfirmaId, disabled: isControlDisabled" type="checkbox" style="float: left; margin: 10px;" />
+                                    <img id="errBoletoConfirmaIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    <div class="col-xs-6 col-sm-6" id="BolsaConfirmaDivModalPendiente" hidden>
+                                        <select id="bolsaConfirmaIdModalPendiente" data-bind="source: BolsaComboModalPendiente, value: Parametros.bolsaConfirmaIdModalPendiente, disabled: isControlDisabled"></select>
+                                        <img id="errBolsaConfirmaIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Físico</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="boletoFisicoIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.boletoFisicoId  , disabled: isControlDisabled" type="checkbox" style="float: left; margin: 10px;"/>
+                                    <img id="errBoletoFisicoIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    <div class="col-xs-6 col-sm-6" id="BolsaFisicoDivModalPendiente" hidden>
+                                        <select id="bolsaFisicoIdModalPendiente" data-bind="source: BolsaComboModalPendiente, value: Parametros.bolsaFisicoIdModalPendiente, disabled: isControlDisabled"></select>
+                                        <img id="errbolsaFisicoIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Ninguno</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="boletoNingunoIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.boletoNingunoId  , disabled: isControlDisabled" type="checkbox" style="float: left; margin: 10px;"/>
+                                    <img id="errBoletoNingunoIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="DatosTopesPlazos" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Plazos y Topes de Fijación
+                        </div>
+                        <div class="datos-topesplazos" display="block">
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Fecha Desde-Hasta Fijación</label>
+                                </div>
+                                <div class="col-xs-9 col-sm-4 noPaddingRight">
+                                    <div id="fechaDesdeTopeDivModalPendiente" >
+                                        <input id="fechaDesdeTopeIdModalPendiente" type="date" data-bind="value: Parametros.fechaDesdeTopeIdModalPendiente"  />
+                                        <img id="errfechaDesdeTopeIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                    <div id="fechaHastaTopeDiv">
+                                        <input id="fechaHastaTopeIdModalPendiente" type="date" data-bind="value: Parametros.fechaHastaTopeIdModalPendiente" />
+                                        <img id="errfechaHastaTopeIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Condición fijación</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <select id="condicionFijacionIdModalPendiente" data-bind="source:CondicionFijacionComboModalPendiente, value: Parametros.CondicionFijacionIdModalPendiente, disabled: isControlDisabled" style="max-width:550px"></select>
+                                    <img id="errcondicionFijacionIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="DatosPago" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Pago
+                        </div>
+                        <div class="datos-pago" display="block">
+                            <br />
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>CD</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="CDIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.CDModalPendiente, disabled: isControlDisabled" type="checkbox" />
+                                    <img id="errCDIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Warrant</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="WarrantIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.WarrantModalPendiente, disabled: isControlDisabled" type="checkbox" />
+                                    <img id="errWarrantIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Pago directo al vendedor</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="pagoDirectoIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.pagoDirectoModalPendiente, disabled: isControlDisabled" type="checkbox" />
+                                    <img id="errpagoDirectoIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="DatosDescuentos" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Descuentos y Bonificaciones
+                        </div>
+
+                        <div class="datos-descuentos" display="block" style="max-width: 785px">
+                            <br />
+                            <div id="descuento-datos">
+
+                                <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
+                                <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
+                                <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
+                                <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
+                                <div class="fecha-descuento">
+                                    <span id="fechaDesdeDiv">
+                                        <input id="fechaDesdeDescuentoId" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" style="width: 150px" />
+                                        <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                                    </span>
+                                    <span id="fechaHastaDiv">
+                                        <input id="fechaHastaDescuentoId" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" style="width: 150px" />
+                                        <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <input id="ImporteDescuentoId" placeholder="IMPORTE" style="width:200px" />
+                                <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                                <select id="descuentoMonedaId" data-bind="source: DescuentoMonedaCombo, value: Parametros.descuentoMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
+                                <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                                <input id="PorcentajeDescuentoId" placeholder="PORCENTAJE" style="width:200px" />
+                                <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                                <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
+                            </div><br />
+                            <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
+                                <span></span>
+                                <span hidden></span>
+                                <span></span>
+                                <span hidden></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <script id="div-template" type="text/x-kendo-template">
+                                <div>
+                                    <span id="eliminar-descuento" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                    <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span>
+                                    <span id="TipoPeriodoDBId" hidden> #:TipoPeriodoDBId#</span><br />
+                                    <span>#: TipoDBDesc#</span>
+                                    <span hidden>#: TipoDBId# </span>
+                                    <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
+                                    <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
+                                    <span>Importe #:Importe#</span>
+                                    <span>#:MonedaId#</span>
+                                    <span>Porc #:Porcentaje#</span>
+                                    <br /><br />
+                                </div>
+                            </script>
+                        </div>
+
+                        <div id="DatosCalidades" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Calidad
+                        </div>
+                        <div class="datos-calidades" display="block">
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Standard de calidad</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <select id="standardCalidadIdModalPendiente" data-bind="source: StandardComboModalPendiente, value: Parametros.standardCalidadIdModalPendiente, disabled: isControlDisabled" style="max-width:550px"></select>
+                                    <img id="errstandardCalidadIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                            <div id="especialesIdModalPendiente" class="row" hidden>
+                                <div class="col-md-2">
+                                    <label>Calidades Especiales </label>
+                                </div>
+                                <div class="col-md-10 calidad">
+                                    <select id="calidadesEspecialesIdModalPendiente" data-bind="source: EspecialesComboModalPendiente, value: Parametros.calidadesEspecialesIdModalPendiente, disabled: isControlDisabled" style="max-width:200px"></select>
+                                    <img id="errcalidadesEspecialesIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    <span id="pesificadoDiv">
+                                        <input type="text" id="valorEspecialesIdModalPendiente" class="campo-input-text k-textbox" placeholder="VALOR DE CALIDAD"  />
+                                        <img id="errvalorEspecialesIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="DatosEstablecimiento" class="btnagregar btnDestacado btnAzul" type="button" style="max-width: 785px">
+                            <i class="fa fa-plus"></i> Establecimiento
+                        </div>
+                        <div class="datos-establecimiento" display="block">
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Propio</label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="establecimientoIdModalPendiente" name="establecimiento" value="Propio" type="radio" />
+                                    <img id="errEstablecimientoPropioIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Arrendado </label>
+                                </div>
+                                <div class="col-md-4 checks-adicionales">
+                                    <input id="establecimientoIdModalPendiente" name="establecimiento" value="Arrendado" type="radio" />
+                                    <img id="errEstablecimientoPropioIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row noPadding">
-                        <div class="col-xs-3 col-sm-4">
-                            <h5>Pesificado:</h5>
-                        </div>
-                        <div class="col-xs-1 col-sm-1">
-                            <label for="pesif">
-                                <input id="pesificadoModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.pesificadoIdModal, disabled: isControlDisabled" type="checkbox" />
-                                <img id="errpesificadoModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                            </label>
-                        </div>
-                        <div id="pesificadoDivModalPendiente" class="col-xs-8 col-sm-7" hidden>
-                            <div class="col-xs-12">
-                                <div class="campo clearfix">
-                                    <input type="text" class="campo-input-text k-textbox" placeholder="Cantidad de días" id="pesificadoDiasModalPendienteId" />
-                                    <img id="errpesificadoDiasModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-3 col-sm-4">
-                            <h5>Informa SIO:</h5>
-                        </div>
-                        <div class="col-xs-1 col-sm-1">
-                            <input id="noInformaSioModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioIdModal, disabled: isControlDisabled" type="checkbox" />
-                            <img id="errnoInformaSioModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                        </div>
-                        <div class="col-xs-12 noPadding">
-                            <div class="col-xs-1 noPadding" aria-hidden="true">
-                                <input type="hidden" class="campo-input-text" id="contratoIdModal" />
-                                <input type="hidden" class="campo-input-text" id="fijacionIdModal" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-3 col-sm-4">
-                            <h5>Trigo Especial:</h5>
-                        </div>
-                        <div class="col-xs-1 col-sm-4">
-                            <input id="trigoEspecialModalPendienteId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialIdModal, disabled: isControlDisabled" type="checkbox" />
-                            <img id="errtrigoEspecialModalPendienteId" src="~/Content/Images/error.png" style="display:none" />
-                        </div>
-                    </div>
                 </div>
-            </div>
             <div class="modal-footer">
                 <div class="col-xs-6 noPadding">
                     <button type="button" id="modificarContratoPendiente" class="myBtn btnSubmit" data-dismiss="modal">Guardar</button>

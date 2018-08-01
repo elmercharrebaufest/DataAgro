@@ -83,7 +83,7 @@
     <Compile Include="Mapping\CampoMaterialMap.cs" />
     <Compile Include="Mapping\CanalOperacionMap.cs" />
     <Compile Include="Mapping\BoletoCompraNetMap.cs" />
-    <Compile Include="Mapping\CalidadesEspecialesMap.cs" />
+    <Compile Include="Mapping\CalidadEspecialMap.cs" />
     <Compile Include="Mapping\DescuentosBonificacionesMap.cs" />
     <Compile Include="Mapping\TipoPeriodoDBMap.cs" />
     <Compile Include="Mapping\TipoDBMap.cs" />

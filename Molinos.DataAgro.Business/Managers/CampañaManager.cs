@@ -144,9 +144,9 @@ namespace Molinos.DataAgro.Business
                 return new List<Campaña>();
             }
         }
-        public Task<List<CalidadesEspeciales>> TraerCalidadPorMaterial(int MaterialId)
+        public Task<List<CalidadEspecial>> TraerCalidadPorMaterial(int MaterialId)
         {
-            var oCalidad = mobjUnitOfWork.Repository<CalidadesEspeciales>().Queryable();
+            var oCalidad = mobjUnitOfWork.Repository<CalidadEspecial>().Queryable();
 
             var query = oCalidad.Where(z => z.MaterialId == MaterialId).ToListAsync();
 

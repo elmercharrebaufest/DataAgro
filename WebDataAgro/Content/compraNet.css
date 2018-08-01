@@ -183,17 +183,17 @@
 }
 
 .modal .modal-header {
-    padding: 15px;
+    padding: 6px;
     border-bottom: none;
 }
 
 .modal .modal-body {
-    padding: 0 15px 15px 15px;
+    padding: 0 15px 0px 15px;
 }
 
 .modal .modal-footer {
     border: none;
-    padding: 15px;
+    padding: 0 15px 0px 15px;
     margin: 0;
 }
 

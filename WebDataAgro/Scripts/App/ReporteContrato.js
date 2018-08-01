@@ -47,7 +47,8 @@ function CreateGridInformeCompraNet() {
                     Sustentable: { type: "boolean" },
                     Dolarizado: { type: "boolean" },
                     NoInformaSIO: { type: "boolean" },
-                    TrigoEspecial: {type: "boolean"}
+                    TrigoEspecial: { type: "boolean" },
+                    DesdeFijacion: {type:"date"},
                 }
             },
         },

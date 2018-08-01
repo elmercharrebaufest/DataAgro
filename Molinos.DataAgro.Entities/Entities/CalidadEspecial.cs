@@ -2,7 +2,7 @@
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class CalidadesEspeciales : Entity
+    public partial class CalidadEspecial : Entity
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }

@@ -112,7 +112,7 @@
     <Compile Include="EntitiesValidates\Provincia.cs" />
     <Compile Include="EntitiesValidates\TipoNegocio.cs" />
     <Compile Include="EntitiesValidates\AreaInfluencia.cs" />
-    <Compile Include="Entities\CalidadesEspeciales.cs" />
+    <Compile Include="Entities\CalidadEspecial.cs" />
     <Compile Include="Entities\DescuentosBonificaciones.cs" />
     <Compile Include="Entities\TipoPeriodoDB.cs" />
     <Compile Include="Entities\TipoDB.cs" />

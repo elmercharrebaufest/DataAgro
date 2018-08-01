@@ -78,15 +78,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Observacion_F { get; set; }
 
         public int? FijacionDePrecioContratoId { get; set; }
-        public bool Sustentable { get; set; }
-        public bool Dolarizado { get; set; }
-        public bool Pesificado { get; set; }
+        public bool? Sustentable { get; set; }
+        public bool? Dolarizado { get; set; }
+        public bool? Pesificado { get; set; }
         public int? Negocio { get; set; }
 
-        public string Clasificacion { get; set; }
+        public int? Clasificacion { get; set; }
         public int? Destino { get; set; }
         public int? CantidadCamiones { get; set; }
-        public bool Consignatario { get; set; }
+        public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
         public int? CondicionFijacion { get; set; }
         public bool? CD { get; set; }
@@ -98,7 +98,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
-
+        public DateTime? DesdeFijacion { get; set; }
+        public DateTime? HastaFijacion { get; set; }
         public List<DescuentosBonificaciones> Descuentos { get; set; }
     }
 

@@ -234,7 +234,7 @@
     <Build Include="dbo\Tables\BolsaCompraNet.sql" />
     <Build Include="dbo\Tables\CondicionFijacion.sql" />
     <Build Include="dbo\Tables\StandardDeCalidad.sql" />
-    <Build Include="dbo\Tables\CalidadesEspeciales.sql" />
+    <Build Include="dbo\Tables\CalidadEspecial.sql" />
     <Build Include="dbo\Tables\DescuentosBonificaciones.sql" />
     <Build Include="dbo\Tables\TipoDB.sql" />
     <Build Include="dbo\Tables\TipoPeriodoDB.sql" />

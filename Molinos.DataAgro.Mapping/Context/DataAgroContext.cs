@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Mapping.Context
             modelBuilder.Configurations.Add(new BolsaCompraNetMap());
             modelBuilder.Configurations.Add(new CentroMap());
             modelBuilder.Configurations.Add(new CondicionFijacionMap());
-            modelBuilder.Configurations.Add(new CalidadesEspecialesMap());
+            modelBuilder.Configurations.Add(new CalidadEspecialMap());
             modelBuilder.Configurations.Add(new StandardDeCalidadMap());
             modelBuilder.Configurations.Add(new DescuentosBonificacionesMap());
             modelBuilder.Configurations.Add(new TipoDBMap());

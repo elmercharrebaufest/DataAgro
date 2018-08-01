@@ -59,5 +59,6 @@
 	CONSTRAINT [FK_Contrato_BolsaCompraNet] FOREIGN KEY ([BolsaId]) REFERENCES [BolsaCompraNet]([Id]),
     CONSTRAINT [FK_Contrato_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro](Id),
     CONSTRAINT [FK_Contrato_CondicionFijacion] FOREIGN KEY ([CondicionFijacionId]) REFERENCES [CondicionFijacion]([Id]), 
-    CONSTRAINT [FK_Contrato_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad](Id)
+    CONSTRAINT [FK_Contrato_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad](Id),
+	CONSTRAINT [FK_Contrato_CalidadEspecial] FOREIGN KEY (CalidadEspecialId) REFERENCES [CalidadEspecial](Id)
 )

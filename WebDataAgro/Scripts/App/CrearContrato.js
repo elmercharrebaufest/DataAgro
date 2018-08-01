@@ -258,7 +258,7 @@ function InicializarElementos() {
         }
     });
     $("#clasificacionModalPendienteId").kendoDropDownList({
-        optionLabel: "SELECCIONE UNA CLASIFICACIÓN...",
+        optionLabel: "CLASIFICACIÓN...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
     });
@@ -282,7 +282,18 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+    $("#destinoModalPendienteId").kendoDropDownList({
+        optionLabel: "DESTINO...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
 
+    $("#destinoModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#destinoModalPendienteId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
     $("#bolsaConfirmaId").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
@@ -295,15 +306,15 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#bolsaConfirmaModalPendienteId").kendoDropDownList({
+    $("#bolsaConfirmaIdModalPendiente").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
     });
 
-    $("#bolsaConfirmaModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
+    $("#bolsaConfirmaIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
-            var dropdownlist = $("#bolsaConfirmaModalPendienteId").data("kendoDropDownList");
+            var dropdownlist = $("#bolsaConfirmaIdModalPendiente").data("kendoDropDownList");
             dropdownlist.text("");
         }
     });
@@ -319,15 +330,14 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#bolsaFisicoModalPendienteId").kendoDropDownList({
+    $("#bolsaFisicoIdModalPendiente").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
     });
-
-    $("#bolsaFisicoModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
+    $("#bolsaFisicoIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
-            var dropdownlist = $("#bolsaFisicoModalPendienteId").data("kendoDropDownList");
+            var dropdownlist = $("#bolsaFisicoIdModalPendiente").data("kendoDropDownList");
             dropdownlist.text("");
         }
     });
@@ -344,19 +354,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#condicionFijacionModalPendienteId").kendoDropDownList({
-        optionLabel: "SELECCIONE CONDICIÓN...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#condicionFijacionModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#condicionFijacionModalPendienteId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
-
+    
     $("#standardCalidadId").kendoDropDownList({
         optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
         dataTextField: "Descripcion",
@@ -369,19 +367,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#standardCalidadModalPendienteId").kendoDropDownList({
-        optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#standardCalidadModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#standardCalidadModalPendienteId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
-
+    
     $("#calidadesEspecialesId").kendoDropDownList({
         optionLabel: "SELECCIONE CALIDAD",
         dataTextField: "Descripcion",
@@ -393,19 +379,7 @@ function InicializarElementos() {
             var dropdownlist = $("#calidadesEspecialesId").data("kendoDropDownList");
             dropdownlist.text("");
         }
-    });
-    $("#calidadesEspecialesModalPendienteId").kendoDropDownList({
-        optionLabel: "SELECCIONE CALIDAD ESPECIAL...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#calidadesEspecialesModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#calidadesEspecialesModalPendienteId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
+    });    
 
     $("#cantidadId").kendoNumericTextBox({
         culture: "es-AR",
@@ -415,6 +389,12 @@ function InicializarElementos() {
     });
 
     $("#cantidadCamionesId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
+    $("#cantidadCamionesModalPendienteId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
         spinners: false,
@@ -923,7 +903,9 @@ function CrearViewModel() {
             "standardCalidadIdModal": null,
             "calidadesEspecialesIdModal": null,
             "tipoPeriodoDBIdModal": null,
-            "Descuentos": null
+            "Descuentos": null,
+            "fechaDesdeTopeIdModalPendiente":null,
+            "fechaHastaTopeIdModalPendiente":null
         };
 
         viewModel = kendo.observable({
@@ -1017,9 +999,10 @@ function AsignarDatos()
     viewModel.set("CampanaComboModalPendiente", datosIniCrearContrato.Datos.campaña);
     viewModel.set("ClasificacionComboModalPendiente", datosIniCrearContrato.Datos.Clasificacion);
     viewModel.set("DestinoComboModalPendiente", datosIniCrearContrato.Datos.Destino);
-    viewModel.set("BolsaComboComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
+    viewModel.set("BolsaComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
+    viewModel.set("EspecialesComboModalPendiente", datosIniCrearContrato.Datos.Standard);
 
     viewModel.set("isControlDisabled", false);
 

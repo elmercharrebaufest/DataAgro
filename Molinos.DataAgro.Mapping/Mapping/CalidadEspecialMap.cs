@@ -4,9 +4,9 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace Molinos.DataAgro.Entities
 {
-    public class CalidadesEspecialesMap : EntityTypeConfiguration<CalidadesEspeciales>
+    public class CalidadEspecialMap : EntityTypeConfiguration<CalidadEspecial>
     {
-        public CalidadesEspecialesMap()
+        public CalidadEspecialMap()
         {
             // Primary Key
             this.HasKey(t => t.Id);
@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities
                 .HasMaxLength(100);
 
             // Table & Column Mappings
-            this.ToTable("CalidadesEspeciales");
+            this.ToTable("CalidadEspecial");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Descripcion).HasColumnName("Descripcion");
             this.Property(t => t.CodigoSap).HasColumnName("CodigoSap");
