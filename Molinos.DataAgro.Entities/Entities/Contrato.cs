@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ClasificacionId { get; set; }//ClasificacionId
         public int? DestinoId { get; set; }
         public int? CantidadCamiones { get; set; }
-        public bool Consignatario { get; set; }
+        public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
         public int? CondicionFijacionId { get; set; }
         public bool? CD { get; set; }

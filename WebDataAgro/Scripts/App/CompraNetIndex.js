@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     AutoRecargar();
 
-    //grid();
+    //mobile();
 
     //+ datos modal//
 
@@ -226,13 +226,44 @@ function CreateGridInformeCompraNet() {
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         dataBound: function () {
+            //var ww = document.body.clientWidth;
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
             $("td:has(div.statusconfirmado)").css('border-bottom', '5px solid #179e2b');
             $("td:has(div.statusoferta)").css('border-bottom', '5px solid #00adf5');
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
-            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");}
+            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial"); }
+            //function mobile () {
+            //if (ww < 768) {
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("FechaDesde");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("FechaHasta");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("TipoNegocio");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Material");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Cantidad");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Ampliaciones");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Precio");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Campania");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("ContratoSAP");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Fecha");
+            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
+            //}
+            //else {
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("FechaDesde");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("FechaHasta");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("TipoNegocio");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Material");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Cantidad");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Ampliaciones");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Precio");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Campania");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("ContratoSAP");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Fecha");
+            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Comercial");
+            //    }
+            //}
+            //mobile();
+           
         },
         columns: [
             {
@@ -254,8 +285,8 @@ function CreateGridInformeCompraNet() {
                 },
                 filterable: { ui: createMultiSelectProveedor }
             },
-            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: { "class": "red" } },
-            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45, attributes: { "class": "red" } },
+            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45 },
+            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45 },
             {
                 field: "TipoNegocio", type: "string", filterable: {
                     multi: true, attributes: { style: "display: none " }, dataSource: [{
@@ -280,7 +311,7 @@ function CreateGridInformeCompraNet() {
                 }, template: "#=Material#"
             },
             { field: "Cantidad", type: "number", width: 70, format: "{0:n0}" },
-            { field: "Ampliaciones", type: "number", width: 60, attributes: { style: "display: none " }, template: function (dataItem) {
+            { field: "Ampliaciones", type: "number", width: 60, template: function (dataItem) {
                 if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
@@ -296,7 +327,7 @@ function CreateGridInformeCompraNet() {
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "red" } },
             { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "red" } },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial, attributes: { "class": " red  ", } }                
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial, attributes: { "class": " red  " } }                
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
@@ -1453,7 +1484,5 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
 
 
 }
-
-
-//$(window).resize(grid);
+//$(window).resize(mobile);
 

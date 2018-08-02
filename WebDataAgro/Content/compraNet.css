@@ -470,5 +470,20 @@ body.modal-open {
     #descuento-datos {
         display:inherit;
     }
+}
 
+@media (max-width: 767px) {
+    .k-header[data-field*="FechaDesde"],
+    .k-header[data-field*="FechaHasta"],
+    .k-header[data-field*="TipoNegocio"],
+    .k-header[data-field*="Material"],
+    .k-header[data-field*="Cantidad"],
+    .k-header[data-field*="Ampliaciones"],
+    .k-header[data-field*="Precio"],
+    .k-header[data-field*="Campania"],
+    .k-header[data-field*="ContratoSAP"],
+    .k-header[data-field*="Fecha"],
+    .k-header[data-field*="Comercial"] {
+        display: none;
+    }
 }

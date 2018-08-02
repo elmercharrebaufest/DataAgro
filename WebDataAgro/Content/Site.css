@@ -65,7 +65,9 @@ li {
 .navbar-nav a{
     cursor:pointer;
 }
-
+.navbar-header {
+    height:59px;
+}
 .navbar-nav {
     margin: 0px;
 }
