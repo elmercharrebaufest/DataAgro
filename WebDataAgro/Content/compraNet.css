@@ -209,7 +209,6 @@
 }
 
 #modalVisualizar .campo {
-    width: 100%;
     color: #787878;
     border-color: #dbdbdb;
     background-color: #fff;
@@ -223,6 +222,11 @@
     border-bottom: 0;
     color: #333!important;
 
+}
+
+#modalVisualizar .marginCero {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #modalVisualizar .campoAdicionales {
@@ -390,7 +394,8 @@ textarea.k-textbox {
 }
 
 #modalVisualizar .campo.campoAdicionales.observacion p {
-    margin: 20px 0 10px 100px;
+    margin: 0px 0 10px 100px;
+    padding-top: 5px;
 }
 
 #gridInformeCompraNet {

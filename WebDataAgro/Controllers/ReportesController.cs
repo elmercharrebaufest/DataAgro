@@ -18,12 +18,12 @@ namespace WebDataAgro.Controllers
         private IHomeManager mobjHomeManager;
         private IReportesManager mobjReportesManager;
         private IComercialManager mobcomercialmanager;
-        private string idActiveDirectory;
         
-        public ReportesController(IMSContextProvider oMSContextProvider, IReportesManager oReportesManager, IHomeManager oHomeManager, IComercialManager oMScomercialmanager)
+        
+        public ReportesController(IReportesManager oReportesManager, IHomeManager oHomeManager, IComercialManager oMScomercialmanager)
         {
             mobjReportesManager = oReportesManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             mobjHomeManager = oHomeManager;
             mobcomercialmanager = oMScomercialmanager;
         }
@@ -33,7 +33,7 @@ namespace WebDataAgro.Controllers
             string ActionView = "";
             ViewBag.esadmin = false;
 
-            if (!mobcomercialmanager.ComercialExiste(idActiveDirectory))
+            if (!mobcomercialmanager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
@@ -52,27 +52,22 @@ namespace WebDataAgro.Controllers
             return View(ActionView);
         }
 
-        public async Task<ActionResult> TraerDatosCombo()
+        public ActionResult TraerDatosCombo()
         {
-            var model =  await mobjReportesManager.TraerDatosIniciales(idActiveDirectory);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjReportesManager.TraerDatosIniciales(GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
-        public async Task<ActionResult> TraerDatosReporteComprasBarra(ParamReportes oParamReportes)
+        public ActionResult TraerDatosReporteComprasBarra(ParamReportes oParamReportes)
         {
             List<ResultComprasBarrasReportes> model = new List<ResultComprasBarrasReportes>();
 
-            
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            model = await mobjReportesManager.TraerComprasBarra(oParamReportes);
+            model = mobjReportesManager.TraerComprasBarra(oParamReportes);
 
             return new JsonResult()
             {
@@ -81,10 +76,10 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> TraerDatosReporteObjetivoGauge(ParamReportes oParamReportes)
+        public ActionResult TraerDatosReporteObjetivoGauge(ParamReportes oParamReportes)
         {
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            var model = await mobjReportesManager.TraerObjetivosGauge(oParamReportes);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
+            var model = mobjReportesManager.TraerObjetivosGauge(oParamReportes);
 
             return new JsonResult()
             {
@@ -93,61 +88,58 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> TraerDatosReporteCompras(ParamReportes oParamReportes)
+        public ActionResult TraerDatosReporteCompras(ParamReportes oParamReportes)
         {
-           dynamic model = new List<ResulIndicadores>();
+            dynamic model = new List<ResulIndicadores>();
 
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            if (oParamReportes.Indicadores== "compras")
+
+            if (oParamReportes.Indicadores == "compras")
             {
-                if (oParamReportes.Grafico =="mapa")
+                if (oParamReportes.Grafico == "mapa")
                 {
-                  model = await mobjReportesManager.TraerComprasMapa(oParamReportes);
+                    model = mobjReportesManager.TraerComprasMapa(oParamReportes);
                 }
 
                 if (oParamReportes.Grafico == "torta")
                 {
-                    model = await mobjReportesManager.TraerComprasTorta(oParamReportes);
+                    model = mobjReportesManager.TraerComprasTorta(oParamReportes);
                 }
- 
+
             }
 
             if (oParamReportes.Indicadores == "capacidadproductiva")
             {
                 if (oParamReportes.Grafico == "mapa")
                 {
-                    model = await mobjReportesManager.TraerCapacidadProductivaMapa(oParamReportes);
+                    model = mobjReportesManager.TraerCapacidadProductivaMapa(oParamReportes);
                 }
 
                 if (oParamReportes.Grafico == "barras")
                 {
-                    model = await mobjReportesManager.TraerCapacidadProductivaBarra(oParamReportes);
+                    model = mobjReportesManager.TraerCapacidadProductivaBarra(oParamReportes);
                 }
-
-              
             }
 
             if (oParamReportes.Indicadores == "capacidadacopio")
             {
                 if (oParamReportes.Grafico == "mapa")
                 {
-                    model = await mobjReportesManager.TraerCapacidadDeAcopioMapa(oParamReportes);
+                    model = mobjReportesManager.TraerCapacidadDeAcopioMapa(oParamReportes);
                 }
 
                 if (oParamReportes.Grafico == "barras")
                 {
-                    model = await mobjReportesManager.TraerCapacidadDeAcopioBarra(oParamReportes);
+                    model = mobjReportesManager.TraerCapacidadDeAcopioBarra(oParamReportes);
                 }
-
             }
 
             if (oParamReportes.Indicadores == "basededatos")
             {
                 if (oParamReportes.Grafico == "torta")
                 {
-                    
+
                 }
 
             }
@@ -160,33 +152,20 @@ namespace WebDataAgro.Controllers
 
         }
 
-        
-
-        public async Task<ActionResult> TraerDatosGrillaBD(ParamReportes oParamReportes)
+        public ActionResult TraerDatosGrillaBD(ParamReportes oParamReportes)
         {
-
-            var ComercialId =  await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-            
-
-
-
-
-            var model = await mobjReportesManager.TraerDatosGrillaBD(oParamReportes);
-
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjReportesManager.TraerDatosGrillaBD(oParamReportes),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public async Task<ActionResult> ExportarIndicadores(ParamReportes oParamReportes)
         {
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
             List<ResultIndicadoresReportesmini> ListaResult =  new List<ResultIndicadoresReportesmini>();
@@ -200,7 +179,7 @@ namespace WebDataAgro.Controllers
             {
                 if (oParamReportes.Grafico == "mapa")
                 {
-                   ListaResult = await mobjReportesManager.TraerComprasMapaExportacion(filtrosconvertidos);
+                   ListaResult = mobjReportesManager.TraerComprasMapaExportacion(filtrosconvertidos);
                 }
 
                 if (oParamReportes.Grafico == "torta")
@@ -268,7 +247,7 @@ namespace WebDataAgro.Controllers
         #region Exportacion
         public async Task<ActionResult> ExportarCompraMapaIndicadores(ParamReportes oParamReportes)
         {
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
             List<ResultIndicadoresReportesmini> ListaResult = new List<ResultIndicadoresReportesmini>();
@@ -279,7 +258,7 @@ namespace WebDataAgro.Controllers
 
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
-            ListaResult = await mobjReportesManager.TraerComprasMapaExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerComprasMapaExportacion(filtrosconvertidos);
 
             var datos = new ResultComprasReportesExcel
             {
@@ -300,18 +279,15 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> ExportarCompraTortaIndicadores(ParamReportes oParamReportes)
         {
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
-
-            List<ResultIndicadoresReportesTorta> ListaResult = new List<ResultIndicadoresReportesTorta>();
-
             var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
-            ListaResult = await mobjReportesManager.TraerComprasTortaExportacion(filtrosconvertidos);
+            var ListaResult = mobjReportesManager.TraerComprasTortaExportacion(filtrosconvertidos);
 
             var datos = new ResultComprasTortaReportesExcel
             {
@@ -333,28 +309,22 @@ namespace WebDataAgro.Controllers
 
             string Mititulo = "Compras";
 
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
-
-
-            List<ResultComprasBarrasReportesmini> ListaResult = new List<ResultComprasBarrasReportesmini>();
 
             var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
-
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
-
-            ListaResult = await mobjReportesManager.TraerComprasBarraExportacion(filtrosconvertidos);
+            var ListaResult = mobjReportesManager.TraerComprasBarraExportacion(filtrosconvertidos);
 
             var datos = new ResultComprasBarrasReportesExcel
             {
                 Titulo = Mititulo,
                 Lista = ListaResult,
-
-
+                
                 oFiltros = oParamReportes
             };
 
@@ -374,19 +344,15 @@ namespace WebDataAgro.Controllers
             string Mititulo = "Base De Datos";
 
             
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
-
-
-            BaseDeDatosReturn ListaResult = new BaseDeDatosReturn();
-
             var oLstIndicadores = new LstIndicadores(mobjReportesManager);
 
             var model = new ReportesModel();
 
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
-            ListaResult = await mobjReportesManager.TraerDatosGrillaBD(oParamReportes);
+            var ListaResult = mobjReportesManager.TraerDatosGrillaBD(oParamReportes);
 
             var datos = new ResultDBExcel
             {
@@ -410,7 +376,7 @@ namespace WebDataAgro.Controllers
 
             string Mititulo = "Objetivos";
 
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual =  mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
 
@@ -424,7 +390,7 @@ namespace WebDataAgro.Controllers
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
 
-            ListaResult = await mobjReportesManager.TraerObjetivosGaugeExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerObjetivosGaugeExportacion(filtrosconvertidos);
 
             var datos = new ResultObjetivoGaugeReportesExcel
             {
@@ -450,7 +416,7 @@ namespace WebDataAgro.Controllers
 
             string Mititulo = "Produccion";
 
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
 
@@ -464,7 +430,7 @@ namespace WebDataAgro.Controllers
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
 
-            ListaResult = await mobjReportesManager.TraerCapacidadProductivaMapaExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerCapacidadProductivaMapaExportacion(filtrosconvertidos);
 
             var datos = new ResultProduccionMapaReportesExcel
             {
@@ -491,7 +457,7 @@ namespace WebDataAgro.Controllers
             string Mititulo = "Produccion";
 
             
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
 
@@ -505,7 +471,7 @@ namespace WebDataAgro.Controllers
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
 
-            ListaResult = await mobjReportesManager.TraerCapacidadProductivaBarraExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerCapacidadProductivaBarraExportacion(filtrosconvertidos);
 
             var datos = new ResultProduccionBarraReportesExcel
             {
@@ -532,7 +498,7 @@ namespace WebDataAgro.Controllers
             string Mititulo = "Acopio";
 
             
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual =  mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
 
@@ -546,7 +512,7 @@ namespace WebDataAgro.Controllers
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
 
-            ListaResult = await mobjReportesManager.TraerCapacidadDeAcopioMapaExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerCapacidadDeAcopioMapaExportacion(filtrosconvertidos);
 
             var datos = new ResultAcopioMapaReportesExcel
             {
@@ -572,7 +538,7 @@ namespace WebDataAgro.Controllers
 
             string Mititulo = "Acopio";
 
-            oParamReportes.ComercialActual = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialActual = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
 
 
@@ -586,7 +552,7 @@ namespace WebDataAgro.Controllers
             var filtrosconvertidos = mobjReportesManager.TransformarFiltros(oParamReportes);
 
 
-            ListaResult = await mobjReportesManager.TraerCapacidadDeAcopioBarraExportacion(filtrosconvertidos);
+            ListaResult = mobjReportesManager.TraerCapacidadDeAcopioBarraExportacion(filtrosconvertidos);
 
             var datos = new ResultAcopioBarraReportesExcel
             {

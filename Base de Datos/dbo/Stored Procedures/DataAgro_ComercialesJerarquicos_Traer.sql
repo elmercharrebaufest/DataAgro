@@ -28,16 +28,16 @@ end
 
 --RECURSIVIDAD
 ;WITH Empleados 
-( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
+( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory,GrupoDeComprasId)
 AS
 (
-	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
+	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory,GrupoDeComprasId
     FROM Comercial  
 	WHERE ComercialId = @comercialABuscar 
 	UNION ALL 
-	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
+	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargoId, A.IdActiveDirectory,a.GrupoDeComprasId
 	FROM Comercial A
-	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+	inner join Empleados AS B on A.EmpleadorACargoId = B.ComercialId
 )
 
 

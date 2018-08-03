@@ -1,20 +1,17 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IMonedaManager
     {
-        Task<ResultIniMoneda> TraerTodoAsync();
+        ResultIniMoneda TraerTodo();
 
-        Task<Moneda> TraerMonedadAsync(string MonedaId);
+        Moneda TraerMonedad(string MonedaId);
 
-        Task<EntityErrors> GrabarMonedaAsync(Moneda oMoneda);
+        Resultado GrabarMoneda(Moneda oMoneda);
 
-        Task<EntityErrors> EliminarMonedaAsync(string MonedaId);
+        Resultado EliminarMoneda(string MonedaId);
     }
 }
 

@@ -51,12 +51,6 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mastersoft.Framework.DataRepository">
-      <HintPath>..\Componentes\Mastersoft.Framework.DataRepository.dll</HintPath>
-    </Reference>
-    <Reference Include="Mastersoft.Framework.Interfaces">
-      <HintPath>..\Componentes\Mastersoft.Framework.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -69,68 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Context\DataAgroContext.cs" />
-    <Compile Include="Mapping\AcopioCampañaMap.cs" />
-    <Compile Include="Mapping\AcopioMap.cs" />
-    <Compile Include="Mapping\AcopioMaterialMap.cs" />
-    <Compile Include="Mapping\ActividadMap.cs" />
-    <Compile Include="Mapping\AreaInfluenciaMap.cs" />
-    <Compile Include="Mapping\CampañaMap.cs" />
-    <Compile Include="Mapping\CampañaMaterialHistoricoMap.cs" />
-    <Compile Include="Mapping\CampañaMaterialMap.cs" />
-    <Compile Include="Mapping\CampañaMaterialPorMesMap.cs" />
-    <Compile Include="Mapping\CampoMap.cs" />
-    <Compile Include="Mapping\CampoMaterialMap.cs" />
-    <Compile Include="Mapping\CanalOperacionMap.cs" />
-    <Compile Include="Mapping\BoletoCompraNetMap.cs" />
-    <Compile Include="Mapping\CalidadEspecialMap.cs" />
-    <Compile Include="Mapping\DescuentosBonificacionesMap.cs" />
-    <Compile Include="Mapping\TipoPeriodoDBMap.cs" />
-    <Compile Include="Mapping\TipoDBMap.cs" />
-    <Compile Include="Mapping\StandardDeCalidadMap.cs" />
-    <Compile Include="Mapping\CondicionFijacionMap.cs" />
-    <Compile Include="Mapping\ComercialMap.cs" />
-    <Compile Include="Mapping\ComercialZonaMap.cs" />
-    <Compile Include="Mapping\CondicionMap.cs" />
-    <Compile Include="Mapping\ContactoComercialInteresMap.cs" />
-    <Compile Include="Mapping\ContactoComercialMap.cs" />
     <Compile Include="Mapping\ContratoMap.cs" />
-    <Compile Include="Mapping\DestinatarioMap.cs" />
-    <Compile Include="Mapping\ErroresMap.cs" />
-    <Compile Include="Mapping\EstadoContrato.cs" />
-    <Compile Include="Mapping\EstadoMap.cs" />
-    <Compile Include="Mapping\FACACOPMap.cs" />
-    <Compile Include="Mapping\FijacionDePrecioContratoMap.cs" />
-    <Compile Include="Mapping\FijacionDePrecioMap.cs" />
-    <Compile Include="Mapping\GrupoDeComprasMap.cs" />
-    <Compile Include="Mapping\InformeComercialAlmacenamientoMap.cs" />
-    <Compile Include="Mapping\InformeComercialEstadoMap.cs" />
-    <Compile Include="Mapping\InformeComercialMap.cs" />
-    <Compile Include="Mapping\InformeComercialProduccionMap.cs" />
-    <Compile Include="Mapping\InteresMap.cs" />
-    <Compile Include="Mapping\LocalidadMap.cs" />
     <Compile Include="Mapping\MaterialMap.cs" />
-    <Compile Include="Mapping\MonedaMap.cs" />
-    <Compile Include="Mapping\ObjetivoMap.cs" />
-    <Compile Include="Mapping\PerfilMap.cs" />
-    <Compile Include="Mapping\PostItMap.cs" />
-    <Compile Include="Mapping\ProveedorCanalOperacionMap.cs" />
-    <Compile Include="Mapping\ProveedorComercialMap.cs" />
-    <Compile Include="Mapping\ProveedorCondicionMap.cs" />
-    <Compile Include="Mapping\ProveedorDestinatarioMap.cs" />
-    <Compile Include="Mapping\ProveedorEstadoMap.cs" />
-    <Compile Include="Mapping\ProveedorMap.cs" />
-    <Compile Include="Mapping\ProvinciaMap.cs" />
-    <Compile Include="Mapping\ReportesMap.cs" />
-    <Compile Include="Mapping\RG2300Map.cs" />
-    <Compile Include="Mapping\SegmentacionMap.cs" />
-    <Compile Include="Mapping\TipoActividadMap.cs" />
-    <Compile Include="Mapping\TipoNegocioMap.cs" />
-    <Compile Include="Mapping\BolsaCompraNetMap.cs" />
-    <Compile Include="Mapping\ClasificacionCompraNetMap.cs" />
-    <Compile Include="Mapping\TipoTelefonoMap.cs" />
-    <Compile Include="Mapping\CentroMap.cs" />
-    <Compile Include="Mapping\ZonaMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,146 +1,107 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class ProvinciaManager : IProvinciaManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public ProvinciaManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public ProvinciaManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniProvincia> TraerTodoProvinciaAsync()
+        public ResultIniProvincia TraerTodoProvincia()
         {
             var oResult = new ResultIniProvincia();
-           
-            var oProvincia = mobjUnitOfWork.Repository<Provincia>().Queryable();
 
-            var query = oProvincia
-                        .OrderBy(x => x.Nombre)
-                        .Select(x => new ProvinciaIni()
-                        {
-                             ProvinciaId = x.ProvinciaId,
-                             Nombre = x.Nombre
-                        });
-
-            oResult.Provincia = await query.ToListAsync();
+            oResult.Provincia = repositorio.Listar<Provincia, ProvinciaIni>(x => new ProvinciaIni()
+            {
+                ProvinciaId = x.ProvinciaId,
+                Nombre = x.Nombre
+            }, null, 0, "Nombre");
 
             return oResult;
         }
 
 
-        public async Task<Provincia> TraerProvinciaAsync(int intProvinciaId)
+        public Provincia TraerProvincia(int intProvinciaId)
         {
-            var oProvincia = new Provincia();
-
-            oProvincia = await mobjUnitOfWork.Repository<Provincia>()
-                                 .Queryable()
-                                 .Where(x => x.ProvinciaId == intProvinciaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oProvincia == null)
-            {
-                oProvincia = new Provincia()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oProvincia.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oProvincia;
+            return repositorio.Obtener<Provincia>(intProvinciaId) ?? new Provincia();
         }
 
 
-        public async Task<EntityErrors> GrabarProvinciaAsync(Provincia oProvincia)
+        public Resultado GrabarProvincia(Provincia oProvincia)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oProvincia, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oProvincia, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            Provincia oProvinciaSave;
-
-            if (oProvincia.ObjectState == 0)
+            if (oProvincia.ProvinciaId != 0)
             {
-                oProvinciaSave = new Provincia()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oProvinciaSave = TraerProvincia(oProvincia.ProvinciaId);
+                oProvinciaSave.Nombre = oProvincia.Nombre;
             }
             else
             {
-                oProvinciaSave = await TraerProvinciaAsync(oProvincia.ProvinciaId);
+                repositorio.Agregar(oProvincia);
             }
-         
-            oProvinciaSave.Nombre = oProvincia.Nombre;  
-            if (oProvinciaSave.ObjectState == Constants.Object_Added)
+
+            try
             {
-                oProvinciaSave.ProvinciaId = ((mobjUnitOfWork.Repository<Provincia>().Queryable().Max(x => (int?)x.ProvinciaId)) ?? 0) + 1;
+                repositorio.GuardarCambios();
             }
-
-            mobjUnitOfWork.Repository<Provincia>().SaveEntity(oProvinciaSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarProvinciaAsync(int intProvinciaId)
+        public Resultado EliminarProvincia(int intProvinciaId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<Provincia>();
-
-            var oProvincia = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.ProvinciaId == intProvinciaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oProvincia != null)
+            repositorio.Remover<Provincia>(intProvinciaId);
+            try
             {
-                oRepository.Delete(oProvincia);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
         public List<Provincia> ListarProvincia(string provincia)
         {
-            return mobjUnitOfWork.Repository<Provincia>().Queryable().Where(x => provincia == "" || x.Nombre.Contains(provincia)).Take(15).ToList();
+            return repositorio.Listar<Provincia>(x => provincia == "" || x.Nombre.Contains(provincia));
         }
-
-
-
     }
 }
 

@@ -1,60 +1,44 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class AgendaManager : IAgendaManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public AgendaManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public AgendaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
-        public async Task<DatosIniAgendaActividad> TraerDatosInicialesAsync(string ActiveDirectory)
+        public DatosIniAgendaActividad TraerDatosIniciales(List<int> equipo)
         {
-            var qry = new CombosQueries(mobjUnitOfWork);
+            var qry = new CombosQueries(logger, repositorio);
 
-            var oDatosIniciales = new DatosIniAgendaActividad()
+            return new DatosIniAgendaActividad()
             {
-                TiposActividades = await qry.GetTipoActividadComboAsync(),
-                Proveedores = await qry.GetProveedorPorComercialComboAsync(ActiveDirectory),                
+                TiposActividades = qry.GetTipoActividadCombo(),
+                Proveedores = qry.GetProveedorPorComercialCombo(equipo),
             };
-
-            return oDatosIniciales;
         }
 
-        public async Task<List<AgendaStore>> ExportarAgenda(RptActividadAgendaParam oParam)
+        public List<AgendaStore> ExportarAgenda(RptActividadAgendaParam oParam, List<int> equipo)
         {
-
-            var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == oParam.ActiveDirectoryId).SingleOrDefault().ComercialId;
-                                
-
-            var Agenda = mobjUnitOfWork.SelStoreAsync<AgendaStore>("DataAgro_TraerAgenda", ComercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
-
-            var oResult = await Agenda.ToListAsync();           
-
-            return oResult;
+            return repositorio.ListarConsulta(new TraerAgenda(equipo, oParam));
         }
 
-        public async Task<List<AgendaStore>> VistaPreviaAgenda(RptActividadAgendaParam oParam)
+        public List<AgendaStore> VistaPreviaAgenda(RptActividadAgendaParam oParam)
         {
-            var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == oParam.ActiveDirectoryId).SingleOrDefault().ComercialId;
-            
-            return mobjUnitOfWork.SelStoreAsync<AgendaStore>("DataAgro_TraerAgenda", ComercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta).ToList();
+            var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == oParam.ActiveDirectoryId, x => x.ComercialId);
+            return repositorio.SelStore<AgendaStore>("DataAgro_TraerAgenda", 0, comercialId, oParam.ActividadDetalle, oParam.TipoActividad, oParam.ProveedorId, oParam.FechaDesde, oParam.FechaHasta);
         }
-
-
     }
 }

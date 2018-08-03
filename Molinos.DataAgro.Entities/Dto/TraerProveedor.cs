@@ -10,13 +10,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ActividadId { get; set; }
         public string Detalle { get; set; }
         public DateTime FechaHoraActividad { get; set; }
-        public Nullable<DateTime> FechaHoraRecordatorio { get; set; }
+        public DateTime? FechaHoraRecordatorio { get; set; }
         public string TipoActividad { get; set; }
         public int ComercialId { get; set; }
-        public Nullable<int> ContactoComercialId { get; set; }
+        public int? ContactoComercialId { get; set; }
         public string ContactoComercial { get; set; }
-        public Nullable<int> ProveedorId { get; set; }
-        public Nullable<DateTime> FechaHoraRecordatorioFin { get; set; }
+        public int? ProveedorId { get; set; }
+        public DateTime? FechaHoraRecordatorioFin { get; set; }
         public string asunto { get; set; }
     }
 
@@ -25,11 +25,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ActividadId { get; set; }
         public string Detalle { get; set; }
         public DateTime FechaHoraActividad { get; set; }
-        public Nullable<DateTime> FechaHoraRecordatorio { get; set; }
-        public Nullable<DateTime> FechaHoraRecordatorioFin { get; set; }
+        public DateTime? FechaHoraRecordatorio { get; set; }
+        public DateTime? FechaHoraRecordatorioFin { get; set; }
         public string TipoActividad { get; set; }
         public string ContactoComercial { get; set; }
-        public Nullable<int> ContactoComercialId { get; set; } 
+        public int? ContactoComercialId { get; set; } 
         public int ComercialId { get; set; }
         public string Asunto { get; set; }
     }

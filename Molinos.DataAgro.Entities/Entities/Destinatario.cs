@@ -1,11 +1,10 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Destinatario : Entity
+    public partial class Destinatario
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int DestinatarioId { get; set; }
 
         public string Descripcion { get; set; }
@@ -14,9 +13,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public Destinatario()
         {
-            this.DestinatarioId = 0;
-            this.Descripcion = "";
-            this.Inhabilitado = false;
+            DestinatarioId = 0;
+            Descripcion = "";
+            Inhabilitado = false;
         }
     }
 }

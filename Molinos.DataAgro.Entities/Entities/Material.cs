@@ -1,22 +1,23 @@
-﻿using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Material : Entity
+    public partial class Material
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int MaterialId { get; set; }
-
         public string Codigo { get; set; }
         public string Descripcion { get; set; }
         public int? CampañaId { get; set; }
 
+        [ForeignKey("CampañaId")]
+        public virtual Campaña Campaña { get; set; }
+
         public Material()
         {
-            this.MaterialId = 0;
-            this.Codigo = "";
-            this.Descripcion = "";
+            Codigo = "";
+            Descripcion = "";
         }
     }
 }

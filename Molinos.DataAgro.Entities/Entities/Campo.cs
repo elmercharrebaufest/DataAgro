@@ -1,11 +1,11 @@
-﻿using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Campo : Entity
+    public partial class Campo
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int CampoId { get; set; }
         public int NroItem { get; set; }
         public int ProveedorId { get; set; }
@@ -16,13 +16,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ArrendaPropia { get; set; }
         public bool HabilitadoSojaSustentable { get; set; }
 
-        public Campo()
-        {
-            
-        }
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; }
+        [ForeignKey("LocalidadId")]
+        public virtual Localidad Localidad { get; set; }
     }
-
-
 }
    
 

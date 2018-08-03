@@ -1,14 +1,11 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class InformeComercialEstado : Entity
+    public partial class InformeComercialEstado
     {
-
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int EstadoInformeId { get; set; }
         public string Descripcion { get; set; }
-
     }
 }

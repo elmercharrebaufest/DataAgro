@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[CampañaMaterialPorMes] (
-    [CampañaMaterialPorMesId] INT        NOT NULL,
+    [CampañaMaterialPorMesId] INT        IDENTITY (1, 1) NOT NULL,
     [NroItem]                 INT        NULL,
     [Mes]                     INT        NULL,
     [Toneladas]               FLOAT      NULL,

@@ -1,19 +1,12 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Moneda : Entity
+    public partial class Moneda
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public string MonedaId { get; set; }
-        public string Descripcion { get; set; }
-       
-
-        public Moneda()
-        {
-            
-        }
+        public string Descripcion { get; set; }       
     }    
 }
    

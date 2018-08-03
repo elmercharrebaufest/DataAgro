@@ -5,23 +5,7 @@ CREATE PROCEDURE [dbo].[DataAgro_TraerContactos]
  
  AS
 
- --declare @comercialId_ INT = @comercialId;
-
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory
---    FROM Comercial  
---	WHERE ComercialId = @comercialId_ 
---	UNION ALL 
---    --RECURSIVIDAD
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
-
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
  
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @comercialId 
 
@@ -101,7 +85,9 @@ SELECT
 	p.ProveedorId,
 	p.FechaUltimoContacto,
 	est.Descripcion as Estado ,
-	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 Situacion from rg2300 where CUIT = p.CUIT),'') as situacion 
+	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,
+	p.RiesgoComercialSap, 
+	isnull((select TOP 1 Situacion from rg2300 where CUIT = p.CUIT),'') as situacion 
 FROM Proveedor p 
 LEFT join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId 
 INNER join @EmpleadoTable e on e.ComercialId = pc.ComercialId

@@ -84,7 +84,7 @@
                 <label>Destino</label>
             </div>
             <div class="col-md-10">
-                <select id="destinoid" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled" style="max-width:550px"></select>
+                <select id="destinoId" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled" style="max-width:550px"></select>
                 <img id="errDestinoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -388,19 +388,17 @@
                 </div>
             </div>
             <div>
-                <input id="ImporteDescuentoId" placeholder="IMPORTE" style="width:200px" />
+                <input id="ImporteDescuentoId" type="text" placeholder="IMPORTE" style="width:200px" />
                 <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 <select id="descuentoMonedaId" data-bind="source: DescuentoMonedaCombo, value: Parametros.descuentoMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
                 <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
-                <input id="PorcentajeDescuentoId" placeholder="PORCENTAJE" style="width:200px" />
+                <input id="PorcentajeDescuentoId" type="text" placeholder="PORCENTAJE" style="width:200px" />
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
             </div><br />
             <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
                 <span></span>
-                <span hidden></span>
                 <span></span>
-                <span hidden></span>
                 <span></span>
                 <span></span>
                 <span></span>
@@ -412,10 +410,8 @@
             <script id="div-template" type="text/x-kendo-template">
                 <div>
                     <span id="eliminar-descuento" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                    <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span>
-                    <span id="TipoPeriodoDBId" hidden> #:TipoPeriodoDBId#</span><br />
+                    <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span><br />
                     <span>#: TipoDBDesc#</span>
-                    <span hidden>#: TipoDBId# </span>
                     <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
                     <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
                     <span>Importe #:Importe#</span>

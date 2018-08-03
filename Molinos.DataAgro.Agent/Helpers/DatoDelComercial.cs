@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.DatosDelComercial;
 using Molinos.DataAgro.Entities;
 
@@ -11,8 +12,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class DatoDelComercial
     {
+        private readonly ILogger logger;
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
+
+        public DatoDelComercial(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public Z_MPRFC_DATOS_COMERCIALResponse ObtenerDatosDeComercial(string Usuario)
         {
@@ -37,6 +44,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
         }

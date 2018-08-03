@@ -1,221 +1,153 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Dto;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace Molinos.DataAgro.Business
 {
     public class CampañaMaterialManager : ICampañaMaterial
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public CampañaMaterialManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public CampañaMaterialManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
-        public async Task<EntityErrors> TraerCampañasPorGrano(List<CampañaMaterialSAPDTO> oCampañaMaterialSAP)
+        public Resultado TraerCampañasPorGrano(List<CampañaMaterialSAPDTO> oCampañaMaterialSAP)
         {
-
-            var oEntityErrors = new EntityErrors();
-            var oProveedores = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking();
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>().Queryable().AsNoTracking();
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking();
-            var oCampañaMaterial = mobjUnitOfWork.Repository<CampañaMaterial>().Queryable().AsNoTracking();
-            var oCampañaMaterialPorMes = mobjUnitOfWork.Repository<CampañaMaterialPorMes>().Queryable().AsNoTracking();
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
-            int? ProveedorId;
-            int? MaterialId;
-            int? ComercialId;
-
+            var oEntityErrors = new Resultado();
 
             foreach (var camp in oCampañaMaterialSAP)
             {
-                
-                ProveedorId = null;
+                Proveedor proveedor = null;
                 if (!string.IsNullOrEmpty(camp.CUIT))
                 {
-                    var proveedor = oProveedores.FirstOrDefault(x => x.CUIT == camp.CUIT);
-                    if (proveedor != null)
+                    proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == camp.CUIT);
+                    if (proveedor == null)
                     {
-                        ProveedorId = proveedor.ProveedorId;
-                    }
-                    else
-                    {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "No existe el CUIT" });
+                        oEntityErrors.Error("Proveedor", "No existe el CUIT");
                         return oEntityErrors;
                     }
                 }
 
-                int? CampañaId = null;
+                Campaña campania = null;
                 if (!string.IsNullOrEmpty(camp.Campaña))
                 {
-                    var campaña = oCampaña.FirstOrDefault(x => x.Descripcion == camp.Campaña);
-                    if (campaña != null)
+                    campania = repositorio.Obtener<Campaña>(x => x.Descripcion == camp.Campaña);
+                    if (campania == null)
                     {
-                        CampañaId = campaña.CampañaId;
-                    }
-                    else
-                    {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "No existe la Campaña." });
+                        oEntityErrors.Error("Campaña", "No existe la Campaña");
                         return oEntityErrors;
                     }
                 }
 
-                MaterialId = null;
+                Material material = null;
                 if (!string.IsNullOrEmpty(camp.Material))
                 {
-                    var material = oMaterial.FirstOrDefault(x => x.Codigo== camp.Material);
-                    if (material != null)
+                    material = repositorio.Obtener<Material>(x => x.Codigo == camp.Material);
+                    if (material == null)
                     {
-                        MaterialId = material.MaterialId;
-                    }
-                    else
-                    {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "No existe el Material." });
+                        oEntityErrors.Error("Material", "No existe el Material");
                         return oEntityErrors;
                     }
                 }
-                
-                ComercialId = null;
 
-                string Comercialaux = ConfigurationManager.AppSettings["Comercial"].ToString();
-                string Comercialauxiliar = ConfigurationManager.AppSettings["ComercialAuxiliar"].ToString();
 
+
+                string comercialaux = ConfigurationManager.AppSettings["Comercial"].ToString();
+                string comercialauxiliar = ConfigurationManager.AppSettings["ComercialAuxiliar"].ToString();
+                Comercial comercial = null;
                 if (!string.IsNullOrEmpty(camp.Comercial))
                 {
-                    var auxcomercial = string.Empty;
-                    if (camp.Comercial == Comercialaux)
-                    {
-                        auxcomercial = Comercialauxiliar;
-                    }
-                    else
-                    {
-                        auxcomercial = camp.Comercial.ToLower().Trim();
-                    }
+                    var auxcomercial = camp.Comercial == comercialaux ? comercialauxiliar : camp.Comercial.ToLower().Trim();
 
-                    var comercial = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower().Trim() == auxcomercial);
+                    comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == auxcomercial);
 
                     if (comercial != null)
                     {
-                        ComercialId = comercial.ComercialId;
-                    }
-                    else
-                    {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "No existe el comercial." });
+                        oEntityErrors.Error("Comercial", "No existe el Comercial");
                         return oEntityErrors;
                     }
                 }
 
-                
-                var oCampañaMaterialSave = await  ObtenerCampañaIdMaterial(ProveedorId, MaterialId,CampañaId,(double)camp.Toneladas, camp.Mes, (int)camp.Año);
+                var campaniamaterial = ObtenerCampañaIdMaterial(proveedor, material, campania, (double)camp.Toneladas, camp.Mes, (int)camp.Año);
 
-                var CampañaMaterialPorMes = await GuardarMes(oCampañaMaterialSave.CampañaMaterialId, camp.Mes, (double)camp.Toneladas, (int)camp.Año,(int)ComercialId);
+                GuardarMes(campaniamaterial, camp.Mes, (double)camp.Toneladas, (int)camp.Año, comercial.ComercialId);
 
-                mobjUnitOfWork.Repository<CampañaMaterial>().SaveEntity(oCampañaMaterialSave);
-
-                mobjUnitOfWork.Repository<CampañaMaterialPorMes>().SaveEntity(CampañaMaterialPorMes);
                 try
                 {
-                    mobjUnitOfWork.SaveChanges();
+                    repositorio.GuardarCambios();
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex);
                     throw;
                 }
-                
-            }
 
-            
+            }
             return oEntityErrors;
         }
 
 
-        public async Task<CampañaMaterialPorMes> GuardarMes(int CampañaMaterialId,string Mes, double Toneladas, int Año, int ComercialId)
+        private CampañaMaterialPorMes GuardarMes(CampañaMaterial campaniamaterial, string mes, double toneladas, int anio, int comercialId)
         {
-            int MesId = DevolverIdMes(Mes);
-            var oCampañaMaterialMes = mobjUnitOfWork.Repository<CampañaMaterialPorMes>().Queryable();
-            var oCampañaMaterialPorMesSave = oCampañaMaterialMes.FirstOrDefault(x => x.CampañaMaterialId == CampañaMaterialId
-               && x.Mes == MesId && x.Año == Año && x.ComercialId == ComercialId);
+            int mesId = DevolverIdMes(mes);
+            var oCampañaMaterialPorMesSave = repositorio.Obtener<CampañaMaterialPorMes>(x => x.CampañaMaterialId == campaniamaterial.CampañaMaterialId
+               && x.Mes == mesId && x.Año == anio && x.ComercialId == comercialId);
 
             if (oCampañaMaterialPorMesSave != null)
             {
-                oCampañaMaterialPorMesSave.ObjectState = Constants.Object_Modified;
-                oCampañaMaterialPorMesSave.Toneladas = Toneladas;
+                oCampañaMaterialPorMesSave.Toneladas = toneladas;
             }
             else
             {
-                var campañaMaterialPorMesId = oCampañaMaterialMes.Max(x => (int?)x.CampañaMaterialPorMesId ?? 0) + 1;
-
-                oCampañaMaterialPorMesSave = new CampañaMaterialPorMes()
+                oCampañaMaterialPorMesSave = repositorio.Agregar(new CampañaMaterialPorMes()
                 {
-                    CampañaMaterialPorMesId= campañaMaterialPorMesId,
-                    CampañaMaterialId =CampañaMaterialId,
-                    NroItem= 1,
-                    Mes= MesId,
-                    Año=Año,
-                    ObjectState = Constants.Object_Added,
-                    ComercialId =ComercialId,
-                    Toneladas= Toneladas
-                };
-
-               
-
+                    CampañaMaterial = campaniamaterial,
+                    NroItem = 1,
+                    Mes = mesId,
+                    Año = anio,
+                    ComercialId = comercialId,
+                    Toneladas = toneladas
+                });
             }
 
             return oCampañaMaterialPorMesSave;
         }
 
-        public async Task<CampañaMaterial> ObtenerCampañaIdMaterial(int? proveedorId,int? MaterialId,int? CampañaId,double? total,string Mes,int Año)
+        private CampañaMaterial ObtenerCampañaIdMaterial(Proveedor proveedor, Material Material, Campaña Campania, double? total, string mes, int anio)
         {
-            int MesId = DevolverIdMes(Mes);
+            int mesId = DevolverIdMes(mes);
 
-            var oCampañaMaterial = mobjUnitOfWork.Repository<CampañaMaterial>().Queryable().AsNoTracking();
-            var campañamaterial = oCampañaMaterial.FirstOrDefault(x => x.CampañaId == CampañaId
-               && x.ProveedorId == proveedorId && x.MaterialId == MaterialId);
+            var campaniamaterial = repositorio.Obtener<CampañaMaterial>(x => x.Campaña.CampañaId == Campania.CampañaId && x.Proveedor.ProveedorId == proveedor.ProveedorId && x.Material.MaterialId == Material.MaterialId);
 
-            if (campañamaterial != null)
+            if (campaniamaterial != null)
             {
-                double TotalTonelada = mobjUnitOfWork.Repository<CampañaMaterialPorMes>().Queryable().AsNoTracking().
-                            Where(x => x.CampañaMaterialId == campañamaterial.CampañaMaterialId && (! (x.Mes == MesId && x.Año == Año)))
+                double totalTonelada = repositorio.Listar<CampañaMaterialPorMes>
+                            (x => x.CampañaMaterial.CampañaMaterialId == campaniamaterial.CampañaMaterialId && (!(x.Mes == mesId && x.Año == anio)))
                             .Sum(x => x.Toneladas) ?? 0;
-                TotalTonelada += (double)total;
-                campañamaterial.ToneladasCompradas = (double)TotalTonelada;
-                campañamaterial.ObjectState = Constants.Object_Modified;
-                return campañamaterial;
+                totalTonelada += (double)total;
+                campaniamaterial.ToneladasCompradas = totalTonelada;
             }
             else
             {
-                var campañaMaterialId = oCampañaMaterial.Max(x => (int?)x.CampañaMaterialId ?? 0) +1;
-                var oCampañaMaterialSave = new CampañaMaterial()
+                campaniamaterial = repositorio.Agregar(new CampañaMaterial()
                 {
-                    CampañaId=(int)CampañaId,
-                    MaterialId= (int)MaterialId,
-                    ProveedorId= (int)proveedorId,
-                    NroItem= 1,
-                    CampañaMaterialId= campañaMaterialId,
-                    ToneladasCompradas = (double)total,
-                    ObjectState = Constants.Object_Added
-                };
-
-                return oCampañaMaterialSave;
-            } 
+                    Campaña = Campania,
+                    Material = Material,
+                    Proveedor = proveedor,
+                    NroItem = 1,
+                    ToneladasCompradas = (double)total
+                });
+            }
+            return campaniamaterial;
         }
 
         private int DevolverIdMes(string mES)

@@ -81,15 +81,6 @@
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\KendoGridBinder.2.0.0\lib\net45\KendoGridBinder.dll</HintPath>
     </Reference>
-    <Reference Include="Mastersoft.Framework.DataRepository">
-      <HintPath>..\Componentes\Mastersoft.Framework.DataRepository.dll</HintPath>
-    </Reference>
-    <Reference Include="Mastersoft.Framework.Interfaces">
-      <HintPath>..\Componentes\Mastersoft.Framework.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Mastersoft.Framework.Standard">
-      <HintPath>..\Componentes\Mastersoft.Framework.Standard.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -159,9 +150,7 @@
     <Compile Include="Managers\ContratoManager.cs" />
     <Compile Include="Managers\CubProveedoresManager.cs" />
     <Compile Include="Managers\DestinatarioManager.cs" />
-    <Compile Include="Managers\ErroresManager.cs" />
     <Compile Include="Managers\EstadoProveedorManager.cs" />
-    <Compile Include="Managers\FacacopManager.cs" />
     <Compile Include="Managers\FijacionDePrecioContratoManager.cs" />
     <Compile Include="Managers\FijacionDePrecioManager.cs" />
     <Compile Include="Managers\Helper.cs" />
@@ -203,6 +192,10 @@
     <ProjectReference Include="..\Molinos.DataAgro.Mapping\Molinos.DataAgro.Mapping.csproj">
       <Project>{90563d62-22f4-47d1-9d47-69f61169c3e2}</Project>
       <Name>Molinos.DataAgro.Mapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
+      <Project>{1780ae7c-4c4c-49a2-96fa-19a86db3d220}</Project>
+      <Name>Molinos.DataAgro.Repository</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

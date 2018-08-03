@@ -1,19 +1,17 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IMaterialManager
     {
-        Task<ResultIniMaterial> TraerFiltroMaterialAsync(ParamAbmMaterial oParam);
+        ResultIniMaterial TraerFiltroMaterial(ParamAbmMaterial oParam);
 
-        Task<Material> TraerMaterialAsync(int intMaterialId);
+        Material TraerMaterial(int intMaterialId);
 
-        Task<EntityErrors> GrabarMaterialAsync(Material oMaterial);
+        Resultado GrabarMaterial(Material oMaterial);
 
-        Task<EntityErrors> EliminarMaterialAsync(int intMaterialId);
+        Resultado EliminarMaterial(int intMaterialId);
     }
 }
 

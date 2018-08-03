@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
                 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -171,7 +171,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
                 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -232,7 +232,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
                 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -295,7 +295,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -377,7 +377,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -444,7 +444,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -505,7 +505,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -569,7 +569,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -631,7 +631,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -1012,7 +1012,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                await oReportesManager.GrabarReporteAsync(oReporte);
+                oReportesManager.GrabarReporte(oReporte);
             }
 
             return identif;

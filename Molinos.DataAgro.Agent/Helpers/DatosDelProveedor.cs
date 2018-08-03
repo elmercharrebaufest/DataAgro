@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.DatosDelProveedor;
-using System.Configuration;
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Dto;
 using Molinos.DataAgro.Entities.Dto;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
     public class DatosProveedor
     {
+        private readonly ILogger logger;
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
+
+        public DatosProveedor(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public List<ZMPES5140> ObtenerDatosDeProveedor(List<Datos> datos)
         {
@@ -50,6 +53,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
         }

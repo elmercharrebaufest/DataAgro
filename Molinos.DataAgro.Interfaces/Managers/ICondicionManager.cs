@@ -1,20 +1,17 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ICondicionManager
     {
-        Task<ResultIniCondicion> TraerTodoCondicionAsync();
+        ResultIniCondicion TraerTodoCondicion();
 
-        Task<Condicion> TraerCondicionAsync(int intCondicionId);
+        Condicion TraerCondicion(int intCondicionId);
 
-        Task<EntityErrors> GrabarCondicionAsync(Condicion oCondicion);
+        Resultado GrabarCondicion(Condicion oCondicion);
 
-        Task<EntityErrors> EliminarCondicionAsync(int intCondicionId);
+        Resultado EliminarCondicion(int intCondicionId);
     }
 }
 

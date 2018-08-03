@@ -1,31 +1,33 @@
-﻿
-using Mastersoft.Framework.Interfaces;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Actividad : Entity
+    public partial class Actividad
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ActividadId { get; set; }
         public int TipoActividadId { get; set; }
         public string Detalle { get; set; }
         public int ProveedorId { get; set; }
-        public System.DateTime FechaHoraActividad { get; set; }
-        public Nullable<System.DateTime> FechaHoraRecordatorio { get; set; }
-        public Nullable<int> ComercialId { get; set; }
-        public Nullable<int> ContactoComercialId { get; set; }
+        public DateTime FechaHoraActividad { get; set; }
+        public DateTime? FechaHoraRecordatorio { get; set; }
+        public int? ComercialId { get; set; }
+        public int? ContactoComercialId { get; set; }        
         public string asunto { get; set; }
-        public Nullable<System.DateTime> FechaHoraRecordatorioFin { get; set; }
+        public DateTime? FechaHoraRecordatorioFin { get; set; }
 
-        public Actividad()
-        {
-            
-        }
+        [ForeignKey("TipoActividadId")]
+        public virtual TipoActividad TipoActividad { get; set; }
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; }
+        [ForeignKey("ComercialId")]
+        public virtual Comercial Comercial { get; set; }
+        [ForeignKey("ContactoComercialId")]
+        public virtual ContactoComercial ContactoComercial { get; set; }
+
     }
-
-
 }
    
 

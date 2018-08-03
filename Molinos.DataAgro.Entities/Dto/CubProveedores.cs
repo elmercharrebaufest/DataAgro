@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -17,15 +16,15 @@ namespace Molinos.DataAgro.Entities.Dto
     }
 
 
-    public class ParamCubProveedores : IEntityValid
+    public class ParamCubProveedores
     {
-        public Nullable<int> proveedorId { get; set; }
-        public Nullable<int> provinciaId { get; set; }
-        public Nullable<int> LocalidadId { get; set; }
-        public Nullable<int> EstadoId { get; set; }
-        public Nullable<int> SegmentacionId { get; set; }
-        public Nullable<int> material { get; set; }
-        public Nullable<int> ComercialId { get; set; }
+        public int? proveedorId { get; set; }
+        public int? provinciaId { get; set; }
+        public int? LocalidadId { get; set; }
+        public int? EstadoId { get; set; }
+        public int? SegmentacionId { get; set; }
+        public int? material { get; set; }
+        public int? ComercialId { get; set; }
 
         //--------------------------------------------------------------------------------
         //  Constructor
@@ -41,20 +40,10 @@ namespace Molinos.DataAgro.Entities.Dto
             this.material = null;
             this.ComercialId = null;
         }
-
-        //--------------------------------------------------------------------------------
-        //   Implementacion de IEntityValid
-        //--------------------------------------------------------------------------------
-
-        public bool Validate(List<ErrorMessage> oErrorMessages)
-        {
-            return oErrorMessages.Count == 0;
-        }
-
     }
 
 
-    public class ResultCubProveedores : EntityErrors
+    public class ResultCubProveedores : Resultado
     {
         public List<ProveedoresCub> Proveedores { get; set; }
     }
@@ -70,17 +59,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public string AreaDeInfluencia { get; set; }
         public string MaterialCampaña { get; set; }
         public string Campaña { get; set; }
-        public Nullable<double> ToneladasCompradas { get; set; }
-        public Nullable<double> ToneladasObjetivo { get; set; }
+        public double? ToneladasCompradas { get; set; }
+        public double? ToneladasObjetivo { get; set; }
         public string CampañaCampo { get; set; }
         public string MaterialCampo { get; set; }
-        public Nullable<double> HectCampo { get; set; }
-        public Nullable<double> TonCampo { get; set; }
+        public double? HectCampo { get; set; }
+        public double? TonCampo { get; set; }
         public string LocalidadCampo { get; set; }
         public string ProvinciaCampo { get; set; }
         public string CampañaAcopio { get; set; }
-        public Nullable<double> PorcentajeAcopio { get; set; }
-        public Nullable<double> TonAcopio { get; set; }
+        public double? PorcentajeAcopio { get; set; }
+        public double? TonAcopio { get; set; }
         public string LocalidadAcopio { get; set; }
         public string ProvinciaAcopio { get; set; }
     }

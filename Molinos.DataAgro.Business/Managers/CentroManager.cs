@@ -1,158 +1,107 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
 
     public class CentroManager : ICentroManager
     { 
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public CentroManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public CentroManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
-        public async Task<DatosIniAbmCentro> TraerDatosInicialesAsync()
+        public DatosIniAbmCentro TraerDatosIniciales()
         {
-            //si es alta le mandoo cero, si modifDatosIniAbmCentroico le mando el id desde la grilla
-            var qry = new CombosQueries(mobjUnitOfWork);
-
-            var oDatosIniciales = new DatosIniAbmCentro()
+            var qry = new CombosQueries(logger, repositorio);
+            return new DatosIniAbmCentro()
             {
-                Centro = await ObtenerCentros(0)
+                Centro = qry.GetAbmCentroCombo()
             };
-
-            return oDatosIniciales;
         }
 
-        public async Task<ResultIniCentro> TraerTodoCentroAsync()
+        public ResultIniCentro TraerTodoCentro()
         {
-            var oResult = new ResultIniCentro();
-
-            var oCentro = mobjUnitOfWork.Repository<Centro>().Queryable();
-
-            var query = oCentro
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new CentroIni()
-                        {
-                            Id = x.Id,
-                            Descripcion = x.Descripcion,
-                            CodigoSap = x.CodigoSap
-                        });
-
-            oResult.Centro = await query.ToListAsync();
-
-            return oResult;
-        }
-
-        public async Task<List<CentroCombo>> ObtenerCentros(int centroId)
-        {
-            var list = new List<CentroCombo>();
-            var qry = new CombosQueries(mobjUnitOfWork);
-
-            list = await qry.GetAbmCentroComboAsync();
-
-            if (centroId != 0)
+            return new ResultIniCentro
             {
-                var resultStored = mobjUnitOfWork.SelStore<Centro>("DataAgro_ComercialesJerarquicos_Traer", centroId).ToList();
-                list.RemoveAll(x => resultStored.Any(z => z.Id == x.Id));
-            }
-
-            return list;
-        }
-
-        public async Task<Centro> TraerCentroAsync(int id)
-        {
-            var oCentro = new Centro();
-
-            oCentro = await mobjUnitOfWork.Repository<Centro>()
-                                 .Queryable()
-                                 .Where(x => x.Id == id)
-                                 .SingleOrDefaultAsync();
-
-            if (oCentro == null)
-            {
-                oCentro = new Centro()
+                Centro = repositorio.Listar<Centro, CentroIni>(x => new CentroIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oCentro.ObjectState = Constants.Object_Modified;
-            }
-
-            return oCentro;
+                    Id = x.Id,
+                    Descripcion = x.Descripcion,
+                    CodigoSap = x.CodigoSap
+                }, null, 0, "Descripcion")
+            };
         }
 
-        public async Task<EntityErrors> GrabarCentroAsync(Centro oCentro)
+        public Centro TraerCentro(int id)
         {
-            var oEntityErrors = new EntityErrors();
+            return repositorio.Obtener<Centro>(id) ?? new Centro();
+        }
 
-            EntityValid.ValidateAll(oCentro, oEntityErrors.ListaErrores);
+        public Resultado GrabarCentro(Centro oCentro)
+        {
+            var oEntityErrors = new Resultado();
 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            EntityValid.ValidateAll(oCentro, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-           
-            Centro oCentroSave;
-            if (oCentro.ObjectState == 0)
+
+            if (oCentro.Id != 0)
             {
-                oCentroSave = new Centro()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oCentroSave = TraerCentro(oCentro.Id);
+                oCentroSave.Descripcion = oCentro.Descripcion;
+                oCentroSave.CodigoSap = oCentro.CodigoSap;
             }
             else
             {
-                oCentroSave = await TraerCentroAsync(oCentro.Id);
+                repositorio.Agregar(oCentro);
             }
 
-            oCentroSave.Descripcion = oCentro.Descripcion;
-            oCentroSave.CodigoSap = oCentro.CodigoSap;
-
-            mobjUnitOfWork.Repository<Centro>().SaveEntity(oCentroSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             logger.Debug("Guardando el centro:" + oCentro.Descripcion);
 
             return oEntityErrors;
         }
 
-        public async Task<EntityErrors> EliminarCentroAsync(int id)
+        public Resultado EliminarCentro(int id)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<Centro>();
+            repositorio.Remover<Centro>(id);
 
-            var oCentro = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.Id == id)
-                                 .SingleOrDefaultAsync();
-
-            if (oCentro != null)
+            logger.Debug("Eliminando el centro:" + id);
+            try
             {
-                oRepository.Delete(oCentro);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
-            logger.Debug("Eliminando el centro:" + oCentro.Descripcion);
-
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
     }

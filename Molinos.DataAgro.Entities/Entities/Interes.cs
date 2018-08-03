@@ -1,21 +1,17 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public class Interes : Entity
+    public class Interes
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int InteresId { get; set; }
 
         public string Descripcion { get; set; }
-
-
+        
         public Interes()
         {
-            this.InteresId = 0;
-            this.Descripcion = "";
-
+            Descripcion = "";
         }
     }
 }

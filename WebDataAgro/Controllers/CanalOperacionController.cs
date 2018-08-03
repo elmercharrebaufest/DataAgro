@@ -1,6 +1,4 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -26,11 +24,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniCanalOperacionModel();
 
-            var result = await mobjCanalOperacionManager.TraerTodoCanalOperacionAsync();
+            var result = mobjCanalOperacionManager.TraerTodoCanalOperacion();
 
             if (result != null)
             {
@@ -45,20 +43,12 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Aplicar(AbmCanalOperacionParam oParam)
+        public ActionResult Aplicar(AbmCanalOperacionParam oParam)
         {
-            var model = new AbmCanalOperacionResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
+            var model = new AbmCanalOperacionResult
             {
-                model.CanalOperacion = await mobjCanalOperacionManager.TraerCanalOperacionAsync(oParam.CanalOperacionId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
+                CanalOperacion = mobjCanalOperacionManager.TraerCanalOperacion(oParam.CanalOperacionId)
+            };
 
             return new JsonResult()
             {
@@ -68,15 +58,15 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Grabar(CanalOperacion oCanalOperacion)
+        public ActionResult Grabar(CanalOperacion oCanalOperacion)
         {
             var model = new AbmCanalOperacionResult();
 
-            var entityErrors = await mobjCanalOperacionManager.GrabarCanalOperacionAsync(oCanalOperacion);
+            var entityErrors = mobjCanalOperacionManager.GrabarCanalOperacion(oCanalOperacion);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
+            model.Errores = entityErrors.Errores;
 
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.CanalOperacion = oCanalOperacion;
             }
@@ -90,24 +80,11 @@ namespace WebDataAgro.Controllers
 
 
 
-        public async Task<ActionResult> Eliminar(AbmCanalOperacionParam oParam)
+        public ActionResult Eliminar(AbmCanalOperacionParam oParam)
         {
-            var model = new AbmCanalOperacionResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjCanalOperacionManager.EliminarCanalOperacionAsync(oParam.CanalOperacionId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCanalOperacionManager.EliminarCanalOperacion(oParam.CanalOperacionId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -115,11 +92,9 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Cancelar()
         {
-            var model = new AbmCanalOperacionResult();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmCanalOperacionResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }

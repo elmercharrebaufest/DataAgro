@@ -36,7 +36,7 @@ declare @Proveedores TABLE (Item INT)
 declare @HectareaSecuencia TABLE (Item INT) 
 declare @ToneladaSecuencia TABLE (Item INT)        
 declare @CondicionSecuencia TABLE (Item INT)
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
                   
 insert into @PeriodoDeTiempoSecuencia (Item) select Item  from dbo.Split (@PeriodoDeTiempo,'|')        
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmentacion,'|')        
@@ -48,20 +48,6 @@ insert into @HectareaSecuencia (Item) select Item  from dbo.Split (@Hectarea,'|'
 insert into @ToneladaSecuencia (Item) select Item  from dbo.Split (@Tonelada,'|');      
 insert into @CondicionSecuencia (Item) select Item from dbo.Split (@Condicion,'|');
 
---RECURSIVIDAD
---WITH Empleados 
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras)
---AS
---(
---	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory,GrupoDeCompras
---    FROM Comercial  
---	WHERE ComercialId = @comercialId 
---	UNION ALL 
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory,a.GrupoDeCompras
---	FROM Comercial A
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
---)
---insert into @EmpleadoTable select * from Empleados
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @comercialId 
 
@@ -149,7 +135,7 @@ and ((@ComercialFiltro is null)
 	or (e.ComercialId = @ComercialFiltro))
 and ((@Zona is null) 
 	or (@Zona  ='0')
-	or (e.GrupoDeCompras = @Zona))
+	or (e.GrupoDeComprasId = @Zona))
 	
 	DECLARE @ProveedorEstado TABLE(ProveedorId INT, EstadoId INT)
 

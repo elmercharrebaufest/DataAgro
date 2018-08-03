@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -17,7 +16,7 @@ namespace WebDataAgro.Controllers
 
         private IHomeManager mobjHomeManager;
 
-        private string idActiveDirectory;
+        
 
         private IComercialManager mobjComercialManager;
 
@@ -25,9 +24,9 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public CubProveedoresController(IMSContextProvider oMSContextProvider, ICubProveedoresManager oCubProveedoresManager, IHomeManager oHomeManager, IComercialManager oComercialManager)
+        public CubProveedoresController(ICubProveedoresManager oCubProveedoresManager, IHomeManager oHomeManager, IComercialManager oComercialManager)
         {
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             mobjCubProveedoresManager = oCubProveedoresManager;
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -48,18 +47,16 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Inicializar()
+        public ActionResult Inicializar()
         {
-            var model = new DatosIniCubProveedoresModel();
-
-            var ActiveDirectory = Util.GetIdActiveDirectory();
-            model.Datos = await mobjCubProveedoresManager.TraerDatosInicialesAsync(ActiveDirectory);
-
-            model.Param = mobjCubProveedoresManager.TraerParam();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new DatosIniCubProveedoresModel
+                {
+                    Datos = mobjCubProveedoresManager.TraerDatosIniciales(GlobalVariables.Equipo),
+
+                    Param = mobjCubProveedoresManager.TraerParam()
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -67,47 +64,38 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Validar(ParamCubProveedores oParam)
         {
-            var model = new CubProveedoresModel();
-
-            var entityErrors = mobjCubProveedoresManager.Validar(oParam);
-
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
-
-            return Json(model);
+            return Json(new CubProveedoresModel());
         }
 
 
-        public async Task<ActionResult> Listar(ParamCubProveedores oParam)
+        public ActionResult Listar(ParamCubProveedores oParam)
         {
             var model = new CubProveedoresModel();
 
-            oParam.ComercialId = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParam.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var datos = await mobjCubProveedoresManager.TraerDatosAsync(oParam);
+            var datos = mobjCubProveedoresManager.TraerDatos(oParam);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(datos);
+            model.Errores = datos.Errores;
 
-            if (model.Errores.Count == 0)
+            if (model.HayErrores)
             {
                 if (datos.Proveedores.Count == 0)
                 {
-                    model.Errores.Add(new MSErrorMessage() { Message = "No hay datos para listar", Source = "aviso" });
+                    model.Error("aviso", "No hay datos para listar");
                 }
             }
-
-            if (model.Errores.Count == 0)
+            else
             {
                 model.Proveedores = datos.Proveedores;
             }
-
+            
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
 

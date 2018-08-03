@@ -1,8 +1,10 @@
 ﻿using System;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class CampañaActual
+    public class CampañaActual : IEntityKeyValid
     {
         public string Material { get; set; }
         public string Campaña { get; set; }
@@ -12,19 +14,16 @@ namespace Molinos.DataAgro.Entities.Dto
             Material = String.Empty;
             Campaña = String.Empty;
         }
-    }
 
-    public class CampaniaActual
-    {
-        public string Material { get; set; }
-        public string Campania { get; set; }
-
-        public CampaniaActual()
+        public bool ValidateKey(Resultado oErrorMessages)
         {
-            Material = String.Empty;
-            Campania = String.Empty;
+            //TODO CHEQUEAR
+            return !oErrorMessages.HayErrores;
         }
-    }
 
-    
+        public bool Validate(Resultado oErrorMessages)
+        {
+            return !oErrorMessages.HayErrores;
+        }
+    }    
 }

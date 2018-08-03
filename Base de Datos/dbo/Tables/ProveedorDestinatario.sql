@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ProveedorDestinatario] (
-    [ContactoDestinatarioId] INT NOT NULL,
+    [ContactoDestinatarioId] INT IDENTITY (1, 1) NOT NULL,
     [ProveedorId]            INT NOT NULL,
     [NroItem]                INT NOT NULL,
     [DestinatarioId]         INT NOT NULL,

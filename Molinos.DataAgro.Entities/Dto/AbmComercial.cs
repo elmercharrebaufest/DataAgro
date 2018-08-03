@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -11,15 +10,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<GrupoDeCompras> GrupoDeCompras { get; set; }
     }
 
-    public class DataAbmComercial
+    public class DataAbmComercial : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public List<ComercialCombo> Comercial { get; set; }
 
         public DataAbmComercial()
         {
             Comercial = new List<ComercialCombo>();
-            Errores = new List<MSErrorMessage>();
         }
 
     }

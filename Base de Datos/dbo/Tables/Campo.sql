@@ -1,11 +1,11 @@
 ﻿CREATE TABLE [dbo].[Campo] (
-    [CampoId]                   INT           NOT NULL,
+    [CampoId]                   INT           IDENTITY (1, 1) NOT NULL,
     [NroItem]                   INT           NOT NULL,
     [ProveedorId]               INT           NOT NULL,
     [LocalidadId]               INT           NOT NULL,
     [Coordenadas]               VARCHAR (50)  NULL,
     [KMZnombre]                 VARCHAR (150) NULL,
-    [KMZfile]                   TEXT          NULL,
+    [KMZfile]                   NVARCHAR (255)          NULL,
     [ArrendaPropia]             INT           NULL,
     [HabilitadoSojaSustentable] BIT           NULL,
     CONSTRAINT [PK_Campo] PRIMARY KEY CLUSTERED ([CampoId] ASC),

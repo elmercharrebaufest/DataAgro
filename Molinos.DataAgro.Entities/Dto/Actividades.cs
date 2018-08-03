@@ -28,11 +28,11 @@ namespace Molinos.DataAgro.Entities.Dto
     {        
         public int tipoactividad { get; set; }
         public string detalle { get; set; }
-        public Nullable<DateTime> fechaYHoraRecordatorio { get; set; }
-        public Nullable<DateTime> fechaYHoraRecordatorioFin { get; set; }
+        public DateTime? fechaYHoraRecordatorio { get; set; }
+        public DateTime? fechaYHoraRecordatorioFin { get; set; }
         public string asunto { get; set; }
         public DateTime fechaYHoraActividad { get; set; }
-        public Nullable<int> contacto { get; set; }
+        public int? contacto { get; set; }
         public int enviar { get; set; }
         public int ActividadId { get; set; }
         public int ComercialId { get; set; }
@@ -58,9 +58,9 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string tipoactividad { get; set; }
         public string detalle { get; set; }
-        public Nullable<DateTime> fechaYHoraRecordatorio { get; set; }
+        public DateTime? fechaYHoraRecordatorio { get; set; }
         public DateTime fechaYHoraActividad { get; set; }
-        public Nullable<int> contacto { get; set; }        
+        public int? contacto { get; set; }        
         public int ActividadId { get; set; }       
         public int ProveedorId { get; set; }
 

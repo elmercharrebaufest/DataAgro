@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[RG2300] (
-    [Id]                 INT            NOT NULL,
+    [Id]                 INT            IDENTITY (1, 1) NOT NULL,
     [CUIT]               VARCHAR (100)  NOT NULL,
     [RazonSocial]        VARCHAR (1000) NOT NULL,
     [Categoria]          VARCHAR (500)  NOT NULL,

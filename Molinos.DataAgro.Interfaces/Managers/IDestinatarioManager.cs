@@ -1,19 +1,17 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IDestinatarioManager
     {        
-        Task<ResultIniDestinatario> TraerTodoDestinatarioAsync();
+        ResultIniDestinatario TraerTodoDestinatario();
 
-        Task<Destinatario> TraerDestinatarioAsync(int intDestinatarioId);
+        Destinatario TraerDestinatario(int intDestinatarioId);
 
-        Task<EntityErrors> GrabarDestinatarioAsync(Destinatario oDestinatario);
+        Resultado GrabarDestinatario(Destinatario oDestinatario);
 
-        Task<EntityErrors> EliminarDestinatarioAsync(int intDestinatarioId);
+        Resultado EliminarDestinatario(int intDestinatarioId);
 
     }
 }

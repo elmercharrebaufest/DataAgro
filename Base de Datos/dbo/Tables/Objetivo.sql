@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Objetivo] (
-    [ObjetivoId]         INT        NOT NULL,
+    [ObjetivoId]         INT        IDENTITY (1, 1) NOT NULL,
     [CampañaId]          INT        NULL,
     [MaterialId]         INT        NULL,
     [ToneladasObjetivos] FLOAT (53) NULL,

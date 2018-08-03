@@ -1,19 +1,17 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ICanalOperacionManager
-    {        
-        Task<ResultIniCanalOperacion> TraerTodoCanalOperacionAsync();
+    {
+        ResultIniCanalOperacion TraerTodoCanalOperacion();
 
-        Task<CanalOperacion> TraerCanalOperacionAsync(int intCanalOperacionId);
+        CanalOperacion TraerCanalOperacion(int intCanalOperacionId);
 
-        Task<EntityErrors> GrabarCanalOperacionAsync(CanalOperacion oCanalOperacion);
+        Resultado GrabarCanalOperacion(CanalOperacion oCanalOperacion);
 
-        Task<EntityErrors> EliminarCanalOperacionAsync(int intCanalOperacionId);
+        Resultado EliminarCanalOperacion(int intCanalOperacionId);
     }
 }
 

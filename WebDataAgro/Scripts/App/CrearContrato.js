@@ -487,7 +487,8 @@ function InicializarElementos() {
     });
 
     $("#DatosAdicionales").click(function () {
-        if (document.querySelector(".datos-adicionales").style.display == "none"){
+        if (document.querySelector(".datos-adicionales").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-adicionales").style.display = "block";
         } else {
             document.querySelector(".datos-adicionales").style.display = "none";           
@@ -496,6 +497,7 @@ function InicializarElementos() {
 
     $("#DatosTopesPlazos").click(function () {
         if (document.querySelector(".datos-topesplazos").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-topesplazos").style.display = "block";            
         } else {
             document.querySelector(".datos-topesplazos").style.display = "none";
@@ -504,6 +506,7 @@ function InicializarElementos() {
 
     $("#DatosBoleto").click(function () {
         if (document.querySelector(".datos-boleto").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-boleto").style.display = "block";
         } else {
             document.querySelector(".datos-boleto").style.display = "none";
@@ -512,6 +515,7 @@ function InicializarElementos() {
     
     $("#DatosPago").click(function () {
         if (document.querySelector(".datos-pago").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-pago").style.display = "block";
         } else {
             document.querySelector(".datos-pago").style.display = "none";
@@ -520,6 +524,7 @@ function InicializarElementos() {
 
     $("#DatosDescuentos").click(function () {
         if (document.querySelector(".datos-descuentos").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-descuentos").style.display = "block";
         } else {
             document.querySelector(".datos-descuentos").style.display = "none";
@@ -528,6 +533,7 @@ function InicializarElementos() {
 
     $("#DatosCalidades").click(function () {
         if (document.querySelector(".datos-calidades").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-calidades").style.display = "block";
         } else {
             document.querySelector(".datos-calidades").style.display = "none";
@@ -536,6 +542,7 @@ function InicializarElementos() {
 
     $("#DatosEstablecimiento").click(function () {
         if (document.querySelector(".datos-establecimiento").style.display == "none") {
+            CerrarDatosPendientes();
             document.querySelector(".datos-establecimiento").style.display = "block";
         } else {
             document.querySelector(".datos-establecimiento").style.display = "none";
@@ -784,11 +791,13 @@ function InicializarElementos() {
   $('select[id="tipoPeriodoDBId"]').change(function () {
         if ($(this).val() == 1) {
             $(".fecha-descuento").hide();
+            $(".fecha-descuento-pendiente").hide();
             $("#fechaHastaDescuentoId").val("");
             $("#fechaDesdeDescuentoId").val("");
         }
         else {
             $(".fecha-descuento").show();
+            $(".fecha-descuento-pendiente").show();
             $("#fechaDesdeDescuentoId").val(date)
             $("#fechaHastaDescuentoId").val(datehasta)
         }
@@ -807,7 +816,15 @@ function CargarCampaniaPorMaterial(value) {
 
     $("#campanaId").data("kendoDropDownList").value(campanaActualId);
 }
-
+function CerrarDatosPendientes() {
+    document.querySelector(".datos-adicionales").style.display = "none";
+    document.querySelector(".datos-topesplazos").style.display = "none";
+    document.querySelector(".datos-boleto").style.display = "none";
+    document.querySelector(".datos-pago").style.display = "none";
+    document.querySelector(".datos-descuentos").style.display = "none";
+    document.querySelector(".datos-calidades").style.display = "none";
+    document.querySelector(".datos-establecimiento").style.display = "none";
+}
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     viewModel.set("EspecialesCombo", calidadGrano);
@@ -943,12 +960,13 @@ function CrearViewModel() {
             EspecialesComboModalPendiente:[],
             isControlDisabled: true,
             Descuentos: []
+
         });
 
         kendo.bind($("#CrearContrato"), viewModel);
         kendo.bind($("#CompraNet"), viewModel);
         kendo.bind($("#modalPendienteDiv"), viewModel);
-        kendo.bind("#tabla-descuentos", viewModel);
+        kendo.bind($("#tabla-descuentos"), viewModel);
     }
 
 function InicializarDatos() {
@@ -1002,7 +1020,6 @@ function AsignarDatos()
     viewModel.set("BolsaComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
-    viewModel.set("EspecialesComboModalPendiente", datosIniCrearContrato.Datos.Standard);
 
     viewModel.set("isControlDisabled", false);
 
@@ -1353,6 +1370,14 @@ function AgregarDescuentos() {
             viewModel.Descuentos.remove(this);
         }
     };
+    $("#tipoPeriodoDBId").data("kendoDropDownList").value("");
+    $("#TipoDBId").data("kendoDropDownList").value("");
+    $("#fechaDesdeDescuentoId").val("");
+    $("#fechaHastaDescuentoId").val("");
+    $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+    $("#descuentoMonedaId").data("kendoDropDownList").text("");
+    $("#PorcentajeDescuentoId").data("kendoNumericTextBox").value("");
+
     var err = validarDescuento(descuento)
     if (ExistsErrorMessages(err)) {
             MensErr(err[0]);

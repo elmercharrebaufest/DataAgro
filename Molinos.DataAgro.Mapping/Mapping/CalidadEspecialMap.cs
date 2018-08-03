@@ -4,7 +4,7 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace Molinos.DataAgro.Entities
 {
-    public class CalidadEspecialMap : EntityTypeConfiguration<CalidadEspecial>
+    public class CalidadEspecialMap : EntityTypeConfiguration<DescuentoDto>
     {
         public CalidadEspecialMap()
         {

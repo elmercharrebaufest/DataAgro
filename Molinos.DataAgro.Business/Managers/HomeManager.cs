@@ -1,57 +1,51 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class HomeManager : IHomeManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ICampañaManager mobCampaña;
         private IEstadoProveedorManager mobEstado;
         private ILogger logger;
 
-        public HomeManager(ILogger logger, IMSContextProvider oMSContextProvider, IEstadoProveedorManager mobEstado, ICampañaManager campañaManager)
+        public HomeManager(ILogger logger, IRepositorio repositorio, IEstadoProveedorManager mobEstado, ICampañaManager campañaManager)
         {
             this.logger = logger;
             this.mobEstado = mobEstado;
             this.mobCampaña = campañaManager;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniContacto> TraerTodoContactoAsync(int idComercial)
+        public ResultIniContacto TraerTodoContacto(int idComercial)
         {
-            var res = new ResultIniContacto();
+            var query = repositorio.SelStore<Contactos>("DataAgro_TraerContactos", 0, idComercial);
 
-            var query = mobjUnitOfWork.SelStore<Contactos>("DataAgro_TraerContactos", idComercial);
-
-            res.Contactos = DevolverContactosIni(query.ToList());
-
-            return res;
+            return new ResultIniContacto
+            {
+                Contactos = DevolverContactosIni(query)
+            };
         }
 
-        public async Task<ResultIniContacto> TraerBusquedaContactoAsync(oParamBusqueda oParam)
+        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam)
         {
             var res = new ResultIniContacto();
 
-            var query = mobjUnitOfWork.SelStore<Contactos>("DataAgro_BusquedaContactos", oParam.Campaña,
+            var query = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion,oParam.Comercial,oParam.Zona);
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Comercial, oParam.Zona);
 
             res.Contactos = DevolverContactosIni(query.ToList());
 
@@ -183,145 +177,87 @@ namespace Molinos.DataAgro.Business.Managers
                 return "";
         }
 
-        public async Task<CampañaHome> TraerInfoCampañaAsync(int idComercial)
+        public CampañaHome TraerInfoCampaña(int idComercial, List<int> equipo)
         {
-            return await mobCampaña.TraerCampañaHomeAsync(idComercial);
+            return mobCampaña.TraerCampañaHome(idComercial, equipo);
         }
 
-        public async Task<int> TraerIdComercial(string idActiveDirectory)
+        public int TraerIdComercial(string idActiveDirectory)
         {
-            var oComercial = new Comercial();
+            return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
+        }
 
-            oComercial = await mobjUnitOfWork.Repository<Comercial>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Where(x => x.IdActiveDirectory == idActiveDirectory)
-                                .SingleOrDefaultAsync();
-
-            if (oComercial != null)
+        public DatosIniciales TraerInfoIniciales(List<int> equipo)
+        {
+            var DatosIni = new DatosIniciales
             {
-                return oComercial.ComercialId;
-            }
+                camp = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion },null, 0, "CampañaId", Entities.Helpers.DirOrden.Desc),
 
-            return 0;
-        }
+                mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }),
 
-        public async Task<DatosIniciales> TraerInfoInicialesAsync(int comercialId)
-        {
-            var DatosIni = new DatosIniciales();
+                segm = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }),
 
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
+                tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
 
-            DatosIni.camp = await mobjUnitOfWork.Repository<Campaña>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .OrderByDescending(x=> x.CampañaId)
-                                .Select(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToListAsync();
+                est = repositorio.Listar<Estado, EstadoQry>(x => new EstadoQry() { EstadoId = x.EstadoId, Descripcion = x.Descripcion }),
 
-            DatosIni.mat = await mobjUnitOfWork.Repository<Material>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new MaterialesQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }).ToListAsync();
+                cond = repositorio.Listar<Condicion, CondicionPreferenteQry>(x => new CondicionPreferenteQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion }),
 
-            DatosIni.segm = await mobjUnitOfWork.Repository<Segmentacion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }).ToListAsync();
+                come = repositorio.Listar<Comercial, ComercialQry>(s => new ComercialQry() { ComercialId = s.ComercialId, IdActiveDirectory = s.IdActiveDirectory }, x => equipo.Contains(x.ComercialId)),
 
-            DatosIni.tipoact = await mobjUnitOfWork.Repository<TipoActividad>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosIni.est = await mobjUnitOfWork.Repository<Estado>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new EstadoQry() { EstadoId = x.EstadoId, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosIni.cond = await mobjUnitOfWork.Repository<Condicion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CondicionPreferenteQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion }).ToListAsync();
-
-            var query = mobjUnitOfWork.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", comercialId);
-            DatosIni.come = query.ToList().Select(s => new ComercialQry() {ComercialId = s.Id,IdActiveDirectory=s.Nombre }).ToList();
-
-            query = mobjUnitOfWork.SelStore<FakeHome>("DataAgro_Zona_TraerPorComerciales", comercialId);
-            DatosIni.zona = query.ToList().Select(s => new ZonaQry() { ZonaId = s.Id, Descripcion = s.Nombre }).ToList();
-
+                zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { ZonaId = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId), 0, "Descripcion")
+            };
             return DatosIni;
 
         }
 
-        public async Task<List<BusquedaHome>> BusquedaHome(string filtro,int ComercialId)
+        public List<BusquedaHome> BusquedaHome(string filtro, int ComercialId)
         {
-            var query = mobjUnitOfWork.SelStore<BusquedaHome>("DataAgro_BusquedaHome", filtro, ComercialId);
-            return query.ToList(); 
+            var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
+            return query.ToList();
         }
-        //public async Task<List<BusquedaHome>> BusquedaHome(string filtro)
-        //{
-        //    var query = mobjUnitOfWork.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", filtro);
-        //    return query.ToList();
-        //}
-        public async Task<List<ActividadRecordatorio>> TraerActividadesPorComercialId(int ComercialId)
-        {
-            var oActividad = mobjUnitOfWork.Repository<Actividad>().Queryable();
-            var oTipoActividad = mobjUnitOfWork.Repository<TipoActividad>().Queryable();
-            var oContacto = mobjUnitOfWork.Repository<ContactoComercial>().Queryable();
 
+        public List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId)
+        {
             var list = new List<ActividadRecordatorio>();
             ActividadRecordatorio act = null;
 
-            var query = oActividad
-                        .Join(oTipoActividad, a => a.TipoActividadId, b => b.TipoActividadId, (a, b) => new { AC = a, TA = b })
-                        .Join(oContacto,a=> a.AC.ContactoComercialId, b => b.ContactoComercialId, (a, b) => new { a.AC, a.TA , CO = b })
-                        .Where(x => x.AC.ComercialId == ComercialId && x.AC.FechaHoraRecordatorio.HasValue
-                                && x.AC.FechaHoraRecordatorio.Value >= DateTime.Now)
-                        .Select(x => new ActividadRecordatorioGrid
-                        {
-                            ActividadId = x.AC.ActividadId,
-                            Comentarios = x.AC.Detalle,
-                            FechaRecordatorio = x.AC.FechaHoraRecordatorio.Value,
-                            Tema = x.TA.Descripcion,
-                            Contacto = x.CO.Nombres + " " + x.CO.Apellido,
-                            ProveedorId = x.CO.ProveedorId
-                        });
 
-
-            var result = await query.ToListAsync();
-
-            result = result.OrderBy(x => x.FechaRecordatorio).ToList();
+            var result = repositorio.Listar<Actividad, ActividadRecordatorioGrid>(x => new ActividadRecordatorioGrid
+            {
+                ActividadId = x.ActividadId,
+                Comentarios = x.Detalle,
+                FechaRecordatorio = x.FechaHoraRecordatorio.Value,
+                Tema = x.TipoActividad.Descripcion,
+                Contacto = x.ContactoComercial.Nombres + " " + x.ContactoComercial.Apellido,
+                ProveedorId = x.ContactoComercial.Proveedor.ProveedorId
+            }, x => x.ComercialId == ComercialId && x.FechaHoraRecordatorio.HasValue && x.FechaHoraRecordatorio.Value > DateTime.Now).OrderBy(x => x.FechaRecordatorio);
 
             foreach (var item in result)
             {
-                act = new ActividadRecordatorio();
-                act.ActividadId = item.ActividadId;
-                act.Comentarios = item.Comentarios;
-                act.Contacto = item.Contacto;
-                act.Tema = item.Tema;
-                if (item.FechaRecordatorio.Date == DateTime.Now.Date)
-                    act.Dia = "Hoy ";
-                else
-                    act.Dia = item.FechaRecordatorio.ToString("dd/MM/yyyy") + " ";
-
-                act.Hora = item.FechaRecordatorio.ToString("HH:mm");
-                act.ProveedorId = item.ProveedorId;
-                list.Add(act);
+                list.Add(new ActividadRecordatorio
+                {
+                    ActividadId = item.ActividadId,
+                    Comentarios = item.Comentarios,
+                    Contacto = item.Contacto,
+                    Tema = item.Tema,
+                    Dia = item.FechaRecordatorio.Date == DateTime.Now.Date ? act.Dia = "Hoy " : act.Dia = item.FechaRecordatorio.ToString("dd/MM/yyyy") + " ",
+                    Hora = item.FechaRecordatorio.ToString("HH:mm"),
+                    ProveedorId = item.ProveedorId
+                });
             }
 
             return list;
-
         }
 
-        public async Task<List<ContactoIni>> ExportarContactos(List<int> Ids,string idActiveDirectory)
+        public List<ContactoIni> ExportarContactos(List<int> Ids, string idActiveDirectory)
         {
 
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
+            var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
 
             if (oComerciales != null)
             {
-                var query = mobjUnitOfWork.SelStoreAsync<Contactos>("DataAgro_Contactos_Exportar", string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
-                var Contactos = await query.ToListAsync();
+                var Contactos = repositorio.SelStore<Contactos>("DataAgro_Contactos_Exportar", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
 
                 var aux = DevolverContactosIni(Contactos);
 
@@ -342,86 +278,62 @@ namespace Molinos.DataAgro.Business.Managers
                 return new List<ContactoIni>();
         }
 
-        public async Task<ExportAll> ExportarAll(List<int> Ids, string idActiveDirectory)
+        public ExportAll ExportarAll(List<int> Ids, string idActiveDirectory)
         {
             ExportAll exp = new ExportAll();
 
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
+            var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
 
             if (oComerciales != null)
             {
-                var Contacto = mobjUnitOfWork.SelStoreAsync<ContactoAll>("DataAgro_ExportAll_Contacto", string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
-                exp.contacto = await Contacto.ToListAsync();
+                exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
 
-                var Objetivo = mobjUnitOfWork.SelStoreAsync<ObjetivoAll>("DataAgro_ExportAll_Objetivos", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.objetivo = await Objetivo.ToListAsync();
+                exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
-                var ContactoPrincipal = mobjUnitOfWork.SelStoreAsync<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.ContactosPrincipales = await ContactoPrincipal.ToListAsync();
+                exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
-                var produccion = mobjUnitOfWork.SelStoreAsync<ProduccionAll>("DataAgro_ExportAll_Produccion", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.produccion = await produccion.ToListAsync();
+                exp.produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
-                var almacenamiento = mobjUnitOfWork.SelStoreAsync<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.almacenamiento = await almacenamiento.ToListAsync();
+                exp.almacenamiento = repositorio.SelStore<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
-                var agenda = mobjUnitOfWork.SelStoreAsync<AgendaAll>("DataAgro_ExportAll_Actividades", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.agenda = await agenda.ToListAsync();
+                exp.agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
-                var compras = mobjUnitOfWork.SelStoreAsync<ComprasAll>("DataAgro_ExportAll_Compras", string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
-                exp.compras = await compras.ToListAsync();
+                exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
 
                 return exp;
             }
             else
+            {
                 return new ExportAll();
+            }
         }
-
-
-        public async Task<PostIt> TraerTextoAsync(int idComercial)
+        
+        public PostIt TraerTexto(int idComercial)
         {
-            var oPos = mobjUnitOfWork.Repository<PostIt>().Queryable().AsNoTracking();
-
-            var post = await oPos
-                .Where(x => x.ComercialId == idComercial)
-                .FirstOrDefaultAsync();
-
-            return post;
+            return repositorio.Obtener<PostIt>(x => x.ComercialId == idComercial);
         }
 
-        public async Task<GrabarPostItResult> GuardarPostItAsync(PostIt post)
+        public GrabarPostItResult GuardarPostIt(PostIt post)
         {
             var oEntityErrors = new GrabarPostItResult();
-            oEntityErrors.errores = new EntityErrors();
             try
-            { 
-                var oPos = mobjUnitOfWork.Repository<PostIt>().Queryable();
-
-                var postit = await oPos
-                    .Where(x => x.ComercialId == post.ComercialId)
-                    .SingleOrDefaultAsync();
+            {
+                var postit = repositorio.Obtener<PostIt>(x => x.ComercialId == post.ComercialId);
 
                 if (postit == null)
                 {
-                    postit = new PostIt()
-                    {
-                        ComercialId = post.ComercialId,
-                        ObjectState = Constants.Object_Added
-                    };
+                    repositorio.Agregar(post);
                 }
                 else
-                    postit.ObjectState = Constants.Object_Modified;
-
-
-
-                postit.Texto = post.Texto;
-                mobjUnitOfWork.Repository<PostIt>().SaveEntity(postit);
-                mobjUnitOfWork.SaveChanges();
-
+                {
+                    postit.Texto = post.Texto;
+                }
+                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
-                oEntityErrors.errores= new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                logger.Error(ex);
+                oEntityErrors.Error("", ex.Message);
             }
             return oEntityErrors;
         }

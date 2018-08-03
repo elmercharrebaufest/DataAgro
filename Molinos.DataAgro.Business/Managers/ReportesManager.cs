@@ -1,30 +1,26 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ReportesManager : IReportesManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public ReportesManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public ReportesManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
 
@@ -32,101 +28,67 @@ namespace Molinos.DataAgro.Business.Managers
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<EntityErrors> GrabarReporteAsync(Reportes oReporte)
+        public Resultado GrabarReporte(Reportes oReporte)
         {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<Reportes>();
-
-            oRepository.Insert(oReporte);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            var oEntityErrors = new Resultado();
+            repositorio.Agregar(oReporte);
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
 
-        /*public void Inicializar(MSContext oContexto)
+        public Reportes ObtenerReporte(string identificador)
         {
-            throw new NotImplementedException();
+            return repositorio.Obtener<Reportes>(identificador);
         }
 
-        public void Inicializar(MSContext oContexto, IUnitOfWorkAsync oUnitOfWork)
+        public DatosInicialesReportes TraerDatosIniciales(string idActiveDirectory)
         {
-            throw new NotImplementedException();
-        }*/
+            int ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
 
-        public async Task<Reportes> ObtenerReporteAsync(string identificador)
-        {
-            var oReportes = mobjUnitOfWork.Repository<Reportes>().Queryable();
+            var Datos = new DatosInicialesReportes
+            {
+                camp = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry
+                {
+                    CampañaId = x.CampañaId,
+                    Descripcion = x.Descripcion
+                }, null, 3, "CampañaId", DirOrden.Desc)
+            };
 
-            var query = oReportes
-                        .Where(x => x.Identificador == identificador);
-
-            var result = await query.FirstOrDefaultAsync();
-            
-            return result;
-        }
-
-        public async Task<DatosInicialesReportes> TraerDatosIniciales(string idActiveDirectory)
-        {
-
-
-            int ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory == idActiveDirectory).ComercialId;
-
-            DatosInicialesReportes Datos = new DatosInicialesReportes();
-            Datos.camp = await mobjUnitOfWork.Repository<Campaña>().
-                                Queryable().AsNoTracking()
-                                .OrderByDescending(x=> x.CampañaId)
-                                .Select(x=> new CampañaQry {
-                                    CampañaId = x.CampañaId,
-                                    Descripcion = x.Descripcion
-                                }).Take(3)
-                                .ToListAsync();
-            /*
-            Datos.come = await mobjUnitOfWork.Repository<Comercial>().
-                                Queryable().AsNoTracking().
-                                Select(x => new ComercialQry
-                                {
-                                    ComercialId = x.ComercialId,
-                                    IdActiveDirectory = x.IdActiveDirectory
-                                }).ToListAsync();
-            */
-            var query = mobjUnitOfWork.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", ComercialId);
+            var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
             Datos.come = query.ToList().Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
 
-            Datos.mat = await mobjUnitOfWork.Repository<Material>().
-                                Queryable().AsNoTracking().
-                                Select(x => new MaterialesQry
-                                {
-                                    Descripcion = x.Descripcion,
-                                    MaterialId = x.MaterialId
-                                }).ToListAsync();
+            Datos.mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry
+            {
+                Descripcion = x.Descripcion,
+                MaterialId = x.MaterialId
+            });
 
-            Datos.provs = await mobjUnitOfWork.Repository<Provincia>().
-                                Queryable().AsNoTracking().
-                                Select(x => new ProvinciaQry
-                                {
-                                    Nombre = x.Nombre,
-                                    Provinciaid = x.ProvinciaId
-                                }).ToListAsync();
+            Datos.provs = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry
+            {
+                Nombre = x.Nombre,
+                Provinciaid = x.ProvinciaId
+            });
 
-            Datos.segm = await mobjUnitOfWork.Repository<Segmentacion>().
-                                Queryable().AsNoTracking().
-                                Select(x => new SegmentacionQry
-                                {
-                                    Descripcion = x.Descripcion,
-                                    Grupo = x.Grupo,
-                                    SegmentacionId = x.SegmentacionId
-                                }).ToListAsync();
+            Datos.segm = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry
+            {
+                Descripcion = x.Descripcion,
+                Grupo = x.Grupo,
+                SegmentacionId = x.SegmentacionId
+            });
 
-            Datos.estic = await mobjUnitOfWork.Repository<InformeComercialEstado>().
-                                Queryable().AsNoTracking().
-                                Select(x => new EstadoICQry
-                                {
-                                    Descripcion = x.Descripcion,
-                                    EstadoInformeId = x.EstadoInformeId
-                                }).ToListAsync();
-
+            Datos.estic = repositorio.Listar<InformeComercialEstado, EstadoICQry>(x => new EstadoICQry
+            {
+                Descripcion = x.Descripcion,
+                EstadoInformeId = x.EstadoInformeId
+            });
 
             return Datos;
         }
@@ -134,55 +96,41 @@ namespace Molinos.DataAgro.Business.Managers
         #region Compras
 
         #region Mapa
-        public async Task<List<ResulIndicadores>> TraerComprasMapa(ParamReportes oParamReportes)
+        public List<ResulIndicadores> TraerComprasMapa(ParamReportes oParamReportes)
 
         {
-            var actividadhistoria = await mobjUnitOfWork.SelStoreAsync<ResulIndicadores>("DataAgro_IndicadoresComprasMapa", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-
-            return (actividadhistoria);
-
-
+            return repositorio.SelStore<ResulIndicadores>("DataAgro_IndicadoresComprasMapa", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultIndicadoresReportesmini>> TraerComprasMapaExportacion(ParamReportes oParamReportes)
+        public List<ResultIndicadoresReportesmini> TraerComprasMapaExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultIndicadoresReportesmini>("DataAgro_IndicadoresComprasExportacionMapa", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return  resultados;
+            return repositorio.SelStore<ResultIndicadoresReportesmini>("DataAgro_IndicadoresComprasExportacionMapa", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
         #region Torta
-        public async Task<List<ResulIndicadores>> TraerComprasTorta(ParamReportes oParamReportes)
+        public List<ResulIndicadores> TraerComprasTorta(ParamReportes oParamReportes)
         {
-            var actividadhistoria = await mobjUnitOfWork.SelStoreAsync<ResulIndicadores>("DataAgro_IndicadoresComprasTorta", oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (actividadhistoria);
+            return repositorio.SelStore<ResulIndicadores>("DataAgro_IndicadoresComprasTorta", 0, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
 
-        public async Task<List<ResultIndicadoresReportesTorta>> TraerComprasTortaExportacion(ParamReportes oParamReportes)
+        public List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultIndicadoresReportesTorta>("DataAgro_IndicadoresComprasExportacionTorta", oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-
-            return (resultados);
-
+            return repositorio.SelStore<ResultIndicadoresReportesTorta>("DataAgro_IndicadoresComprasExportacionTorta", 0, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
         #region Barra
-        public async Task<List<ResultComprasBarrasReportes>> TraerComprasBarra(ParamReportes oParamReportes)
+        public List<ResultComprasBarrasReportes> TraerComprasBarra(ParamReportes oParamReportes)
         {
-            var comprasBarra = await mobjUnitOfWork.SelStoreAsync<ResultComprasBarrasReportes>("Reporte_ComprasBarra_Traer", oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-
-            return comprasBarra;
+            return repositorio.SelStore<ResultComprasBarrasReportes>("Reporte_ComprasBarra_Traer", 0, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultComprasBarrasReportesmini>> TraerComprasBarraExportacion(ParamReportes oParamReportes)
+        public List<ResultComprasBarrasReportesmini> TraerComprasBarraExportacion(ParamReportes oParamReportes)
         {
 
-            var comprasBarra = await mobjUnitOfWork.SelStoreAsync<ResultComprasBarrasReportesmini>("Reporte_ComprasBarra_TraerExcel", oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-
-            return comprasBarra;
-
+            return repositorio.SelStore<ResultComprasBarrasReportesmini>("Reporte_ComprasBarra_TraerExcel", 0, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
@@ -191,33 +139,28 @@ namespace Molinos.DataAgro.Business.Managers
         #region Productiva
 
         #region Mapa
-        public async Task<List<ResulIndicadores>> TraerCapacidadProductivaMapa(ParamReportes oParamReportes)
+        public List<ResulIndicadores> TraerCapacidadProductivaMapa(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResulIndicadores>("DataAgro_IndicadoresProductiva", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResulIndicadores>("DataAgro_IndicadoresProductiva", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultProduccionMapaReportes>> TraerCapacidadProductivaMapaExportacion(ParamReportes oParamReportes)
+        public List<ResultProduccionMapaReportes> TraerCapacidadProductivaMapaExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultProduccionMapaReportes>("DataAgro_IndicadoresExportacionMapaProductiva", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResultProduccionMapaReportes>("DataAgro_IndicadoresExportacionMapaProductiva", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
 
 
         #region Barras
-        public async Task<List<ResultComprasBarrasReportes>> TraerCapacidadProductivaBarra(ParamReportes oParamReportes)
+        public List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultComprasBarrasReportes>("DataAgro_IndicadoresProductivaBarra", oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-
-            return (resultados);
+            return repositorio.SelStore<ResultComprasBarrasReportes>("DataAgro_IndicadoresProductivaBarra", 0, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultProduccionBarraReportes>> TraerCapacidadProductivaBarraExportacion(ParamReportes oParamReportes)
+        public List<ResultProduccionBarraReportes> TraerCapacidadProductivaBarraExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultProduccionBarraReportes>("DataAgro_IndicadoresExportacionBarraProductiva", oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResultProduccionBarraReportes>("DataAgro_IndicadoresExportacionBarraProductiva", 0, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
@@ -225,58 +168,51 @@ namespace Molinos.DataAgro.Business.Managers
 
         #region Acopio
         #region Mapa
-        public async Task<List<ResulIndicadores>> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes)
+        public List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResulIndicadores>("DataAgro_IndicadoresAcopio", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResulIndicadores>("DataAgro_IndicadoresAcopio", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultAcopioMapaReportes>> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes)
+        public List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultAcopioMapaReportes>("DataAgro_IndicadoresExportacionMapaAcopio", oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial,oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResultAcopioMapaReportes>("DataAgro_IndicadoresExportacionMapaAcopio", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
 
         #region Barra
-        public async Task<List<ResultComprasBarrasReportes>> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes)
+        public List<ResultComprasBarrasReportes> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultComprasBarrasReportes>("DataAgro_IndicadoresAcopioBarra", oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResultComprasBarrasReportes>("DataAgro_IndicadoresAcopioBarra", 0, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-        public async Task<List<ResultAcopioBarraReportes>> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes)
+        public List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes)
         {
-            var resultados = await mobjUnitOfWork.SelStoreAsync<ResultAcopioBarraReportes>("DataAgro_IndicadoresExportacionBarraAcopio", oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual).ToListAsync();
-            return (resultados);
+            return repositorio.SelStore<ResultAcopioBarraReportes>("DataAgro_IndicadoresExportacionBarraAcopio", 0, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion 
         #endregion
 
 
         #region Objetivos
-        public async Task<List<ResultObjetivoGaugeReportes>> TraerObjetivosGauge(ParamReportes oParamReportes)
+        public List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes)
         {
-            var GaugeReporte = await mobjUnitOfWork.SelStoreAsync<ResultObjetivoGaugeReportes>("DataAgro_Gauget_Traer", oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Cosecha, oParamReportes.Grano).ToListAsync();
-            return GaugeReporte;
+            return repositorio.SelStore<ResultObjetivoGaugeReportes>("DataAgro_Gauget_Traer", 0, oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Cosecha, oParamReportes.Grano);
         }
 
-        public async Task<List<ResultObjetivoGaugeReportes>> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes)
+        public List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes)
         {
 
-            var comprasBarra = await mobjUnitOfWork.SelStoreAsync<ResultObjetivoGaugeReportes>("DataAgro_Gauget_TraerExcel", oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Cosecha, oParamReportes.Grano).ToListAsync();
+            return repositorio.SelStore<ResultObjetivoGaugeReportes>("DataAgro_Gauget_TraerExcel", 0, oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Cosecha, oParamReportes.Grano);
 
-            return comprasBarra;
-
-        } 
+        }
         #endregion
 
-        public async Task<BaseDeDatosReturn> TraerDatosGrillaBD(ParamReportes oParamReportes)
+        public BaseDeDatosReturn TraerDatosGrillaBD(ParamReportes oParamReportes)
         {
 
             BaseDeDatosReturn datosGrilla = new BaseDeDatosReturn();
 
-            datosGrilla.valoresGrilla = await mobjUnitOfWork.SelStoreAsync<valoresGrilla>("DataAgro_IndicadoresBaseDeDatos_Traer", oParamReportes.FechaDesde, oParamReportes.FechaHasta, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Cosecha, oParamReportes.Toneladas, oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Grano).ToListAsync();
+            datosGrilla.valoresGrilla = repositorio.SelStore<valoresGrilla>("DataAgro_IndicadoresBaseDeDatos_Traer", 0, oParamReportes.FechaDesde, oParamReportes.FechaHasta, oParamReportes.Mes, oParamReportes.Segmentacion, oParamReportes.Cosecha, oParamReportes.Toneladas, oParamReportes.Comercial, oParamReportes.ComercialActual, oParamReportes.Grano);
 
             datosGrilla.graficoBaseDatos = datosGrilla.valoresGrilla.GroupBy(x => x.Segmentación).Select(x => new graficoBaseDatos()
             {
@@ -284,7 +220,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Toneladas = 0   //x.Sum(y => y.Toneladas)
             }).ToList();
 
-            datosGrilla.graficoBaseDatos.ForEach(x => x.Toneladas= datosGrilla.valoresGrilla.Where(y => y.Segmentación == x.segmentacion).Select(c => c.Cuit).Distinct().Count());
+            datosGrilla.graficoBaseDatos.ForEach(x => x.Toneladas = datosGrilla.valoresGrilla.Where(y => y.Segmentación == x.segmentacion).Select(c => c.Cuit).Distinct().Count());
 
             datosGrilla.graficoBaseDatos = datosGrilla.graficoBaseDatos.OrderByDescending(x => x.Toneladas).ToList();
 
@@ -294,93 +230,16 @@ namespace Molinos.DataAgro.Business.Managers
 
         //BASEDEDATOS
 
-        public async Task<List<ResulIndicadores>> TraerBasedeDatos(ParamReportes oParamReportes)
+        public List<ResulIndicadores> TraerBasedeDatos(ParamReportes oParamReportes)
         {
             return new List<ResulIndicadores>();
         }
-
-        public async Task<List<ResultIndicadoresReportesmini>> TraerBaseDeDatosExportacion(ParamReportes oParamReportes)
-        {
-            var provincia = mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking();
-            var proveedorcomercial = mobjUnitOfWork.Repository<ProveedorComercial>().Queryable().AsNoTracking();
-            var campanamaterial = mobjUnitOfWork.Repository<CampañaMaterial>().Queryable().AsNoTracking();
-            var campanamaterialxMes = mobjUnitOfWork.Repository<CampañaMaterialPorMes>().Queryable().AsNoTracking();
-            var acopiocampana = mobjUnitOfWork.Repository<AcopioCampaña>().Queryable().AsNoTracking();
-            var proveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking();
-            var acopio = mobjUnitOfWork.Repository<Acopio>().Queryable().AsNoTracking();
-            var datos = await proveedor
-
-                .GroupJoin(provincia, x => x.ProvinciaId, y => y.ProvinciaId, (x, y) => new { x.FechaAlta, x.SegmentacionId, x.CUIT, x.ProveedorId, NombreProvincia = y.FirstOrDefault().Nombre, y.FirstOrDefault().ProvinciaId })
-                .GroupJoin(campanamaterial, x => x.ProveedorId, y => y.ProveedorId, (x, y) => new { x.FechaAlta, x.SegmentacionId, y.FirstOrDefault().CampañaId, x.ProveedorId, x.NombreProvincia, x.CUIT, x.ProvinciaId, y.FirstOrDefault().CampañaMaterialId, y.FirstOrDefault().MaterialId, y.FirstOrDefault().ToneladasCompradas })
-                .GroupJoin(campanamaterialxMes, x => x.CampañaMaterialId, y => y.CampañaMaterialId, (x, y) => new { x.FechaAlta, x.MaterialId, y.FirstOrDefault().Mes, x.SegmentacionId, x.CampañaId, x.ProveedorId, x.NombreProvincia, x.ProvinciaId, x.CUIT, y.FirstOrDefault().Toneladas })
-                .GroupJoin(proveedorcomercial, x => x.ProveedorId, y => y.ProveedorId, (x, y) => new { x.FechaAlta, x.MaterialId, x.Mes, x.SegmentacionId, x.CampañaId, x.ProveedorId, x.NombreProvincia, x.ProvinciaId, x.CUIT, x.Toneladas, y.FirstOrDefault().ComercialId })
-
-
-
-                .Where(x => (oParamReportes.Grano == x.MaterialId || oParamReportes.Grano == null)
-                 && (oParamReportes.Cosecha == x.CampañaId || oParamReportes.Cosecha == null)
-                 && (oParamReportes.Provincia == x.ProvinciaId || oParamReportes.Provincia == null)
-                 //Todo Segmentacion
-                 //&& (oParamReportes.Segmentacion == x.SegmentacionId || oParamReportes.Segmentacion == null)
-                 && (oParamReportes.FechaDesde <= x.FechaAlta && oParamReportes.FechaHasta >= x.FechaAlta)
-                 && (oParamReportes.Comercial == x.ComercialId || oParamReportes.Comercial == null)
-                  && (oParamReportes.Mes == x.Mes || oParamReportes.Mes == null)
-                 )
-
-
-                //.GroupBy(grp => grp.ProvinciaId)
-
-
-
-
-                .Select(X => new ResultIndicadoresReportesmini
-                {
-
-                    Cuit = X.CUIT,
-                    Toneladas = X.Toneladas
-
-
-
-
-                }).ToListAsync();
-
-
-
-            var m = datos;
-
-
-
-
-            return (datos);
-
-
-
-
-
-
-
-        }
-
-
-
-
 
         public ParamReportes TransformarFiltros(ParamReportes oParamReportes)
         {
             var properties = oParamReportes.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             List<ExcelEncabezado> resultado = new List<ExcelEncabezado>();
-
-
-            var modelgrano = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking();
-            var modelProvincia = mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking();
-            var modelCosecha = mobjUnitOfWork.Repository<Campaña>().Queryable().AsNoTracking();
-            var modelSegmentacion = mobjUnitOfWork.Repository<Segmentacion>().Queryable().AsNoTracking();
-            var modelComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
-            var modelObjetivos = mobjUnitOfWork.Repository<Objetivo>().Queryable().AsNoTracking();
-
-
-
-
+            
             foreach (var prop in properties)
             {
                 var nombre = prop.Name;
@@ -418,19 +277,19 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (nombre.ToLower() == "grano" && value != null)
                 {
-                      oParamReportes.GRANO_ = modelgrano.Where(x => x.MaterialId == oParamReportes.Grano).Select(x => x.Descripcion).FirstOrDefault();
+                      oParamReportes.GRANO_ = repositorio.Obtener<Material, string>(x => x.MaterialId == oParamReportes.Grano, x => x.Descripcion);
                 }
 
 
                 if (nombre.ToLower() == "provincia" && value != null)
                 {
-                    oParamReportes.PROVINCIA_ = modelProvincia.Where(x => x.ProvinciaId== oParamReportes.Provincia).Select(x => x.Nombre).FirstOrDefault();
+                    oParamReportes.PROVINCIA_ = repositorio.Obtener<Provincia, string>(x => x.ProvinciaId== oParamReportes.Provincia, x => x.Nombre);
                 }
 
 
                 if (nombre.ToLower() == "cosecha" && value != null)
                 {
-                    oParamReportes.COSECHA_ = modelCosecha.Where(x => x.CampañaId == oParamReportes.Cosecha).Select(x => x.Descripcion).FirstOrDefault();
+                    oParamReportes.COSECHA_ = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParamReportes.Cosecha, x => x.Descripcion);
                 }
 
                 if (nombre.ToLower() == "segmentacion" && value != null)
@@ -438,12 +297,12 @@ namespace Molinos.DataAgro.Business.Managers
                     var V1 = oParamReportes.Segmentacion.Split(',');
                     var segmenta = V1.ToList().Select(x => int.Parse(x)).ToList();
                     if (!segmenta.Any(x => x == 0))
-                        oParamReportes.SEGMENTACION_ = string.Join(",", modelSegmentacion.Where(x => segmenta.Contains(x.SegmentacionId)).Select(x => x.Descripcion));
+                        oParamReportes.SEGMENTACION_ = string.Join(",", repositorio.Listar<Segmentacion, string>(x => x.Descripcion, x => segmenta.Contains(x.SegmentacionId)));
                 }
 
                 if (nombre.ToLower() == "objetivos" && value != null)
                 {
-                    oParamReportes.OBJETIVOS_ = modelObjetivos.Where(x => x.ObjetivoId== oParamReportes.Comercial).Select(x => x.ToneladasObjetivos.ToString() + " Toneladas ").FirstOrDefault();
+                    oParamReportes.OBJETIVOS_ = repositorio.Obtener<Objetivo, string>(x => x.ObjetivoId== oParamReportes.Comercial, x => x.ToneladasObjetivos.ToString() + " Toneladas ");
                 }
 
                 if (nombre.ToLower() == "fechadesde" && value != null)
@@ -475,23 +334,15 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (nombre.ToLower() == "comercial" && value != null)
                 {
-                    oParamReportes.COMERCIAL_ = modelComercial.Where(x => x.ComercialId == oParamReportes.Comercial).Select(x => x.Nombres + " " + x.Apellido).FirstOrDefault();
+                    oParamReportes.COMERCIAL_ = repositorio.Obtener<Comercial, string>(x => x.ComercialId == oParamReportes.Comercial, x => x.Nombres + " " + x.Apellido);
                 }
 
                 if (nombre.ToLower() == "comercialactual" && value != null)
                 {
-                    oParamReportes.COMERCIALACTUAL_ = modelComercial.Where(x => x.ComercialId == oParamReportes.ComercialActual).Select(x => x.Nombres + " " + x.Apellido).FirstOrDefault();
+                    oParamReportes.COMERCIALACTUAL_ = repositorio.Obtener<Comercial, string>(x => x.ComercialId == oParamReportes.ComercialActual, x => x.Nombres + " " + x.Apellido);
                 }
-
             }
-
-
-            return oParamReportes;
-
-         
-        }
-
-       
-     
+            return oParamReportes;         
+        }     
     }
 }

@@ -92,17 +92,6 @@
       <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mastersoft.Framework.DataRepository">
-      <HintPath>..\Componentes\Mastersoft.Framework.DataRepository.dll</HintPath>
-    </Reference>
-    <Reference Include="Mastersoft.Framework.Interfaces, Version=500.5.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Componentes\Mastersoft.Framework.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Mastersoft.Framework.Standard, Version=500.5.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Componentes\Mastersoft.Framework.Standard.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />

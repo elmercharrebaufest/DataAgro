@@ -1,172 +1,121 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class CondicionManager : ICondicionManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public CondicionManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public CondicionManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniCondicion> TraerTodoCondicionAsync()
+        public ResultIniCondicion TraerTodoCondicion()
         {
-            var oResult = new ResultIniCondicion();
-           
-            var oCondicion = mobjUnitOfWork.Repository<Condicion>().Queryable();
-
-            var query = oCondicion
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new CondicionIni()
-                        {
-                             CondicionId = x.CondicionId,
-                             Descripcion = x.Descripcion
-                        });
-
-            oResult.Condicion = await query.ToListAsync();
-
-            return oResult;
-        }
-
-
-        public async Task<Condicion> TraerCondicionAsync(int intCondicionId)
-        {
-            var oCondicion = new Condicion();
-
-            oCondicion = await mobjUnitOfWork.Repository<Condicion>()
-                                 .Queryable()
-                                 .Where(x => x.CondicionId == intCondicionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oCondicion == null)
+            return new ResultIniCondicion
             {
-                oCondicion = new Condicion()
+                Condicion = repositorio.Listar<Condicion, CondicionIni>(x => new CondicionIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oCondicion.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oCondicion;
+                    CondicionId = x.CondicionId,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion")
+            };
         }
 
 
-        public async Task<EntityErrors> GrabarCondicionAsync(Condicion oCondicion)
+        public Condicion TraerCondicion(int intCondicionId)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oCondicion, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            return repositorio.Obtener<Condicion>(intCondicionId) ?? new Condicion();
+        }
+
+        public Resultado GrabarCondicion(Condicion oCondicion)
+        {
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oCondicion, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            Condicion oCondicionSave;
+            oEntityErrors = ValidarCondicion(oCondicion);
 
-            if (oCondicion.ObjectState == 0)
+            if (oEntityErrors.HayErrores)
             {
-                oCondicionSave = new Condicion()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oCondicionSave = await TraerCondicionAsync(oCondicion.CondicionId);
-            }
-
-            var validacion = ValidarCondicion(oCondicion, oCondicionSave.ObjectState,
-                (oCondicionSave.ObjectState == Constants.Object_Modified ? (int?)oCondicion.CondicionId : null));
-
-            if (validacion != null)
-            {
-                oEntityErrors.ListaErrores.Add(validacion);
                 return oEntityErrors;
             }
 
-            oCondicionSave.Descripcion = oCondicion.Descripcion;
-            oCondicionSave.Inhabilitado = oCondicion.Inhabilitado;
-            if (oCondicionSave.ObjectState == Constants.Object_Added)
+            if (oCondicion.CondicionId != 0)
             {
-                oCondicionSave.CondicionId = ((mobjUnitOfWork.Repository<Condicion>().Queryable().Max(x => (int?)x.CondicionId)) ?? 0) + 1;
+                var oCondicionSave = TraerCondicion(oCondicion.CondicionId);
+
+                oCondicionSave.Descripcion = oCondicion.Descripcion;
+                oCondicionSave.Inhabilitado = oCondicion.Inhabilitado;
+            }
+            else
+            {
+                repositorio.Agregar(oCondicion);
             }
 
-            mobjUnitOfWork.Repository<Condicion>().SaveEntity(oCondicionSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarCondicionAsync(int intCondicionId)
+        public Resultado EliminarCondicion(int intCondicionId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<Condicion>();
-
-            var oCondicion = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.CondicionId == intCondicionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oCondicion != null)
+            repositorio.Remover<Condicion>(intCondicionId);
+            try
             {
-                oRepository.Delete(oCondicion);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
         #region Validar
-        public ErrorMessage ValidarCondicion(Condicion oCondiciones, int ObjectState, int? Id = null)
+        public Resultado ValidarCondicion(Condicion oCondiciones)
         {
-            var oCondicion = mobjUnitOfWork.Repository<Condicion>().Queryable();
-
-            Condicion val = null;
-
-            if (ObjectState == Constants.Object_Added)
+            var resultado = new Resultado();
+            if (repositorio.Existe<Condicion>(x => x.Descripcion == oCondiciones.Descripcion && x.CondicionId != oCondiciones.CondicionId))
             {
-                val = oCondicion
-                    .Where(x => x.Descripcion == oCondiciones.Descripcion).FirstOrDefault();
+                resultado.Error("Descripcion", "Existe un registro de iguales carecteristicas.");
             }
-            else if (ObjectState == Constants.Object_Modified)
-            {
-                val = oCondicion
-                    .Where(x => x.Descripcion == oCondiciones.Descripcion
-                    && x.CondicionId != Id).FirstOrDefault();
-            }
-
-            if (val != null)
-            {
-                return new ErrorMessage() { Message = "Existe un registro de iguales carecteristicas." };
-            }
-            return null;
+            return resultado;
         } 
         #endregion
 

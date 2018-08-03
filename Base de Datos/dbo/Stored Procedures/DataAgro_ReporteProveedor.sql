@@ -97,7 +97,7 @@ BEGIN
 	C.Nombres LIKE '%'+ @Valor+'%'
 	OR
 	C.Apellido LIKE '%' +@Valor+'%'
-	ORDER BY ProveedorId
+	ORDER BY p.ProveedorId
 
 	
 	drop table #ProveedorAux

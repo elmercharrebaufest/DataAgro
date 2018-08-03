@@ -1,6 +1,4 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -16,16 +14,16 @@ namespace WebDataAgro.Controllers
     {
         private ICondicionManager mobjCondicionManager;
 
-        private string idActiveDirectory;
+        
 
         //-----------------------------------------------------------------------------------
         //  Constructor
         //-----------------------------------------------------------------------------------
 
-        public CondicionController(IMSContextProvider oMSContextProvider, ICondicionManager oCondicionManager)
+        public CondicionController(ICondicionManager oCondicionManager)
         {
             mobjCondicionManager = oCondicionManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
@@ -43,11 +41,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniCondicionModel();
 
-            var result = await mobjCondicionManager.TraerTodoCondicionAsync();
+            var result = mobjCondicionManager.TraerTodoCondicion();
 
             if (result != null)
             {
@@ -62,38 +60,28 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Aplicar(AbmCondicionParam oParam)
+        public ActionResult Aplicar(AbmCondicionParam oParam)
         {
-            var model = new AbmCondicionResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.Condicion = await mobjCondicionManager.TraerCondicionAsync(oParam.CondicionId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmCondicionResult
+                {
+                    Condicion = mobjCondicionManager.TraerCondicion(oParam.CondicionId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
 
-        public async Task<ActionResult> Grabar(Condicion oCondicion)
+        public ActionResult Grabar(Condicion oCondicion)
         {
             var model = new AbmCondicionResult();
 
-            var entityErrors = await mobjCondicionManager.GrabarCondicionAsync(oCondicion);
+            var entityErrors = mobjCondicionManager.GrabarCondicion(oCondicion);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
+            model.Errores = entityErrors.Errores;
 
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.Condicion = oCondicion;
             }
@@ -105,30 +93,14 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
-
-        public async Task<ActionResult> Eliminar(AbmCondicionParam oParam)
+        public ActionResult Eliminar(AbmCondicionParam oParam)
         {
-            var model = new AbmCondicionResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjCondicionManager.EliminarCondicionAsync(oParam.CondicionId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCondicionManager.EliminarCondicion(oParam.CondicionId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
 
         public ActionResult Cancelar()
         {
@@ -140,9 +112,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
     }
 }
 

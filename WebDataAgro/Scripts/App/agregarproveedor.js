@@ -1563,7 +1563,6 @@ function armarFuncionalidades() {
 
     });
 
-
     $("#produccion").click(function () {
         $("#basico").removeClass("whc-selected");
         $("#contacto").removeClass("whc-selected");
@@ -1720,8 +1719,7 @@ function armarFuncionalidades() {
             
             $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
             $(".formulario-footer-siguiente").hide();
-
-
+            
         }
     });
     
@@ -2645,7 +2643,6 @@ function armarSelectGranoObjetivo(obj) {
     }
 }
 
-
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
@@ -2655,9 +2652,6 @@ function validateNumber(number) {
     var re = /^[0-9]+$/;
     return re.test(number);
 }
-
-
-
 
 function comprobarInputs(){
     var hayErrores = 0;

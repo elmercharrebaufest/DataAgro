@@ -1,187 +1,138 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class LocalidadManager : ILocalidadManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public LocalidadManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public LocalidadManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<DatosIniAbmLocalidad> TraerDatosInicialesAsync()
+        public DatosIniAbmLocalidad TraerDatosIniciales()
         {
-            var qry = new CombosQueries(mobjUnitOfWork);
+            var qry = new CombosQueries(logger, repositorio);
 
             var oDatosIniciales = new DatosIniAbmLocalidad()
             {
-                Provincia = await qry.GetProvinciaComboAsync()
+                Provincia = qry.GetProvinciaCombo()
             };
 
             return oDatosIniciales;
         }
 
 
-        public async Task<ResultIniLocalidad> TraerFiltroLocalidadAsync(ParamAbmLocalidad oParam)
+        public ResultIniLocalidad TraerFiltroLocalidad(ParamAbmLocalidad oParam)
         {
             var oResult = new ResultIniLocalidad();
 
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable();
-            var oProvincia = mobjUnitOfWork.Repository<Provincia>().Queryable();
-
-            var query = oLocalidad
-                        .Join(oProvincia, a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new { LOC = a, PRO = b })
-                        .Where(x => (oParam.Nombre.Trim() == "" || x.LOC.Nombre.Contains(oParam.Nombre.Trim())) &&
-                                    (oParam.ProvinciaId == null || x.LOC.ProvinciaId == oParam.ProvinciaId))
-                        .Take(500)
-                        .OrderBy(x => x.PRO.Nombre)
-                        .ThenBy(x => x.LOC.Nombre)
-                        .Select(x => new LocalidadIni()
-                        {
-                            LocalidadId = x.LOC.LocalidadId,
-                            CodLocalidad = x.LOC.CodLocalidad,
-                            Nombre = x.LOC.Nombre,
-                            ProNombre = x.PRO.Nombre,
-                        });
-
-          
-
-            oResult.Localidad = await query.ToListAsync();
+            oResult.Localidad = repositorio.Listar<Localidad, LocalidadIni>(x => new LocalidadIni()
+            {
+                LocalidadId = x.LocalidadId,
+                CodLocalidad = x.CodLocalidad,
+                Nombre = x.Nombre,
+                ProNombre = x.Provincia.Nombre,
+            },
+                x => (oParam.Nombre.Trim() == "" || x.Nombre.Contains(oParam.Nombre.Trim())) &&
+                (oParam.ProvinciaId == null || x.ProvinciaId == oParam.ProvinciaId)
+            , 500).OrderBy(x => x.ProNombre).ThenBy(x => x.Nombre).ToList();
 
             return oResult;
         }
 
-        public async Task<ResultIniLocalidad> TraerLocalidadPorProvincia(int ProvinciaId) {
+        public ResultIniLocalidad TraerLocalidadPorProvincia(int provinciaId)
+        {
             var oResult = new ResultIniLocalidad();
 
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable();
-            var oProvincia = mobjUnitOfWork.Repository<Provincia>().Queryable();
-
-            var query = oLocalidad
-                        .Join(oProvincia, a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new { LOC = a, PRO = b })
-                        .Where(x => x.LOC.ProvinciaId == ProvinciaId)
-                        .Select(x => new LocalidadIni() {
-                            LocalidadId = x.LOC.LocalidadId,
-                            CodLocalidad = x.LOC.CodLocalidad,
-                            Nombre = x.LOC.Nombre,
-                            ProNombre = x.PRO.Nombre,
-                        });
-            
-            oResult.Localidad = await query.ToListAsync();
+            oResult.Localidad = repositorio.Listar<Localidad, LocalidadIni>(x => new LocalidadIni()
+            {
+                LocalidadId = x.LocalidadId,
+                CodLocalidad = x.CodLocalidad,
+                Nombre = x.Nombre,
+                ProNombre = x.Provincia.Nombre,
+            }, x => x.ProvinciaId == provinciaId);
 
             return oResult;
         }
 
-        public async Task<Localidad> TraerLocalidadAsync(int intLocalidadId)
+        public Localidad TraerLocalidad(int intLocalidadId)
         {
-            var oLocalidad = new Localidad();
-
-            oLocalidad = await mobjUnitOfWork.Repository<Localidad>()
-                                 .Queryable()
-                                 .Where(x => x.LocalidadId == intLocalidadId)
-                                 .SingleOrDefaultAsync();
-
-            if (oLocalidad == null)
-            {
-                oLocalidad = new Localidad()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oLocalidad.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oLocalidad;
+            return repositorio.Obtener<Localidad>(intLocalidadId);
         }
 
 
-        public async Task<EntityErrors> GrabarLocalidadAsync(Localidad oLocalidad)
+        public Resultado GrabarLocalidad(Localidad oLocalidad)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oLocalidad, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oLocalidad, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-
-            Localidad oLocalidadSave;
-
-            if (oLocalidad.ObjectState == 0)
+            
+            if (oLocalidad.LocalidadId != 0)
             {
-                oLocalidadSave = new Localidad()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oLocalidadSave = TraerLocalidad(oLocalidad.LocalidadId);
+                oLocalidadSave.CodLocalidad = oLocalidad.CodLocalidad;
+                oLocalidadSave.Nombre = oLocalidad.Nombre;
+                oLocalidadSave.ProvinciaId = oLocalidad.ProvinciaId;
             }
             else
             {
-                oLocalidadSave = await TraerLocalidadAsync(oLocalidad.LocalidadId);
+                repositorio.Agregar(oLocalidad);
             }
-         
-            oLocalidadSave.CodLocalidad = oLocalidad.CodLocalidad;  
-            oLocalidadSave.Nombre = oLocalidad.Nombre;  
-            oLocalidadSave.ProvinciaId = oLocalidad.ProvinciaId; 
-             
-            if (oLocalidadSave.ObjectState == Constants.Object_Added)
+
+            try
             {
-                oLocalidadSave.LocalidadId = ((mobjUnitOfWork.Repository<Localidad>().Queryable().Max(x => (int?)x.LocalidadId)) ?? 0) + 1;
+                repositorio.GuardarCambios();
             }
-
-            mobjUnitOfWork.Repository<Localidad>().SaveEntity(oLocalidadSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarLocalidadAsync(int intLocalidadId)
+        public Resultado EliminarLocalidad(int intLocalidadId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<Localidad>();
-
-            var oLocalidad = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.LocalidadId == intLocalidadId)
-                                 .SingleOrDefaultAsync();
-
-            if (oLocalidad != null)
+            repositorio.Remover<Localidad>(intLocalidadId);
+            try
             {
-                oRepository.Delete(oLocalidad);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
 
         public List<Localidad> ListarLocalidad(string localidad)
         {
-            return mobjUnitOfWork.Repository<Localidad>().Queryable().Where(x => localidad == "" || x.Nombre.Contains(localidad)).Take(15).ToList();
+            return repositorio.Listar<Localidad>(x => localidad == "" || x.Nombre.Contains(localidad), 15);
         }        
     }
 }

@@ -1,18 +1,9 @@
-﻿using DataDynamics.ActiveReports.Document;
-using DataDynamics.ActiveReports.Export.Pdf;
-using Mastersoft.Framework.DataRepository;
-using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities;
+﻿using DataDynamics.ActiveReports.Export.Pdf;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report.Clases
 {
@@ -29,7 +20,7 @@ namespace Molinos.DataAgro.Report.Clases
         //  Metodos Publicos
         //-----------------------------------------------------------------------------------
 
-        public async Task<string> GenerarListadoAsync(List<AgendaStore> oDatos)
+        public string GenerarListado(List<AgendaStore> oDatos)
         {
             var oRptAgendaActividad = new RptAgendaActividad();
 
@@ -51,13 +42,13 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "Agenda.pdf",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
         }
 
 
-}
+    }
 }

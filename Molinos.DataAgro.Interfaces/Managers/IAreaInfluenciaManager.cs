@@ -1,19 +1,17 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IAreaInfluenciaManager
     {        
-        Task<ResultIniAreaInfluencia> TraerTodoAreaInfluenciaAsync();
+        ResultIniAreaInfluencia TraerTodoAreaInfluencia();
 
-        Task<AreaInfluencia> TraerAreaInfluenciaAsync(int intAreaInfluenciaId);
+        AreaInfluencia TraerAreaInfluencia(int intAreaInfluenciaId);
 
-        Task<EntityErrors> GrabarAreaInfluenciaAsync(AreaInfluencia oAreaInfluencia);
+        Resultado GrabarAreaInfluencia(AreaInfluencia oAreaInfluencia);
 
-        Task<EntityErrors> EliminarAreaInfluenciaAsync(int intAreaInfluenciaId);
+        Resultado EliminarAreaInfluencia(int intAreaInfluenciaId);
     }
 }
 

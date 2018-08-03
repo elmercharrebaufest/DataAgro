@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[AcopioCampaña] (
-    [AcopioCampañaId] INT        NOT NULL,
+    [AcopioCampañaId] INT        IDENTITY (1, 1) NOT NULL,
     [AcopioId]        INT        NOT NULL,
     [NroItem]         INT        NOT NULL,
     [Toneladas]       FLOAT      NULL,

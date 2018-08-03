@@ -1,26 +1,26 @@
-﻿using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Objetivo : Entity
+    public partial class Objetivo
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ObjetivoId { get; set; }
         public int CampañaId { get; set; }
         public int NroItem { get; set; }
         public int ProveedorId { get; set; }
         public int MaterialId { get; set; }
-        public double ToneladasObjetivos { get; set; }
         
+        public double ToneladasObjetivos { get; set; }
 
-        public Objetivo()
-        {
-
-        }
+        [ForeignKey("CampañaId")]
+        public virtual Campaña Campaña { get; set; }
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
     }
-
-
 }
 
 

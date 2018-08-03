@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [dbo].[Material] (
-    [MaterialId]      INT          NOT NULL,
+    [MaterialId]      INT          IDENTITY (1, 1) NOT NULL,
     [Codigo]          VARCHAR (20) NOT NULL,
     [Descripcion]     VARCHAR (50) NOT NULL,
-    [CampañaIdActual] INT          NULL,
+    [CampañaId] INT          NULL,
     CONSTRAINT [PK_Material] PRIMARY KEY CLUSTERED ([MaterialId] ASC),
-    CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaIdActual]) REFERENCES [dbo].[Campaña] ([CampañaId])
+    CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId])
 );
 
 

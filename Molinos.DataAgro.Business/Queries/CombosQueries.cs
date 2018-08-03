@@ -1,205 +1,143 @@
-﻿
-using Mastersoft.Framework.Interfaces;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class CombosQueries
     {
-        //--------------------------------------------------
-        //  Variables Privadas
-        //--------------------------------------------------
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        private IUnitOfWorkAsync mobjUnitOfWork;
 
-        //--------------------------------------------------
-        //  Constructor
-        //--------------------------------------------------
-
-        public CombosQueries(IUnitOfWorkAsync oUnitOfWork)
+        public CombosQueries(ILogger logger,IRepositorio repositorio)
         {
-            mobjUnitOfWork = oUnitOfWork;
+            this.logger = logger;
+            this.repositorio = repositorio;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-         
-        public async Task<List<Provincia>> GetProvinciaComboAsync()
+        public List<Provincia> GetProvinciaCombo()
         {
-            return await mobjUnitOfWork.Repository<Provincia>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Nombre)
-                                       .ToListAsync(); 
+            return repositorio.Listar<Provincia>().OrderBy(x => x.Nombre).ToList(); ;
         }
 
-
-        public async Task<List<LocalidadCombo>> GetLocalidadComboAsync()
+        public List<LocalidadCombo> GetLocalidadCombo()
         {
-            return await mobjUnitOfWork.Repository<Localidad>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Nombre)
-                                       .Select(x => new LocalidadCombo()
-                                       {
-                                           LocalidadId = x.LocalidadId,
-                                           Nombre = x.Nombre
-                                       })
-                                       .ToListAsync();
+            return repositorio.Listar<Localidad, LocalidadCombo>(x => new LocalidadCombo()
+            {
+                LocalidadId = x.LocalidadId,
+                Nombre = x.Nombre
+            }, null, 15, "Nombre");
+        }
+        
+        public List<Estado> GetEstadoCombo()
+        {
+            return repositorio.Listar<Estado>().OrderBy(x => x.Descripcion).ToList();
         }
 
-
-        public async Task<List<Estado>> GetEstadoComboAsync()
+        public List<Segmentacion> GetSegmentacionCombo()
         {
-            return await mobjUnitOfWork.Repository<Estado>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync();
+            return repositorio.Listar<Segmentacion>().OrderBy(x => x.Descripcion).ToList();
         }
 
-
-        public async Task<List<Segmentacion>> GetSegmentacionComboAsync()
+        public List<MaterialCombo> GetMaterialCombo()
         {
-            return await mobjUnitOfWork.Repository<Segmentacion>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync();
+            return repositorio.Listar<Material, MaterialCombo>(x => new MaterialCombo()
+            {
+                MaterialId = x.MaterialId,
+                Descripcion = x.Descripcion
+            }, null, 15, "Descripcion");
         }
 
-
-        public async Task<List<MaterialCombo>> GetMaterialComboAsync()
+        public List<TipoActividadCombo> GetTipoActividadCombo()
         {
-            return await mobjUnitOfWork.Repository<Material>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .Select(x => new MaterialCombo()
-                                       {
-                                           MaterialId = x.MaterialId,
-                                           Descripcion = x.Descripcion
-                                       })
-                                       .ToListAsync();
+            return repositorio.Listar<TipoActividad, TipoActividadCombo>(x => new TipoActividadCombo()
+            {
+                TipoActividadId = x.TipoActividadId,
+                Descripcion = x.Descripcion
+            }, null, 15, "Descripcion");
         }
 
-        public async Task<List<TipoActividadCombo>> GetTipoActividadComboAsync()
+        public List<ProveedorCombo> GetProveedorPorComercialCombo(List<int> equipo)
         {
-            return await mobjUnitOfWork.Repository<TipoActividad>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .Select(x => new TipoActividadCombo()
-                                       {
-                                           TipoActividadId= x.TipoActividadId,
-                                           Descripcion = x.Descripcion
-                                       })
-                                       .ToListAsync();
+            return repositorio.Listar<ProveedorComercial, ProveedorCombo>(
+                x => new ProveedorCombo
+                {
+                    ProveedorId = x.Proveedor.ProveedorId,
+                    RazonSocial = x.Proveedor.RazonSocial
+                }, x => equipo.Contains(x.Comercial.ComercialId));
         }
 
-        public async Task<List<ProveedorCombo>> GetProveedorPorComercialComboAsync(string activeDirectory)
+        public List<ComercialCombo> GetComercialCombo()
         {
-            var oResult = new DatosIniAgendaActividad();            
-
-            var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == activeDirectory).SingleOrDefault().ComercialId;
-                       
-            var proveedores = await mobjUnitOfWork.SelStoreAsync<ProveedorCombo>("DataAgro_TraerProveedorPorComercial", ComercialId).ToListAsync();
-
-            return proveedores.OrderBy(x => x.RazonSocial).ToList();                                  
-                                      
-        }
-
-        public async Task<List<ComercialCombo>> GetComercialComboAsync()
-        {
-            return await mobjUnitOfWork.Repository<Comercial>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Apellido)
-                                       .Select(x => new ComercialCombo()
-                                       {
-                                           ComercialId = x.ComercialId,
-                                           Apellido = x.Apellido
-                                       })
-                                       .ToListAsync();
+            return repositorio.Listar<Comercial, ComercialCombo>(x => new ComercialCombo()
+            {
+                ComercialId = x.ComercialId,
+                Apellido = x.Apellido
+            }, null, 0, "Apellido");
         }
 
 
-        public async Task<List<ComercialCombo>> GetAbmComercialComboAsync()
+        public List<ComercialCombo> GetAbmComercialCombo()
         {
             try
             {
-                return await mobjUnitOfWork.Repository<Comercial>()
-                                           .Queryable()
-                                            .Where(c => c.PerfilId != (int)EnumPerfil.Visualizador || c.PerfilId != (int)EnumPerfil.Administrativo)
-                                           .OrderBy(x => x.Apellido)
-                                           .Select(x => new ComercialCombo()
-                                           {
-                                               ComercialId = x.ComercialId,
-                                               Apellido = x.Apellido + " " + x.Nombres
-                                           })
-                                           .ToListAsync();
+                return repositorio.Listar<Comercial, ComercialCombo>(x => new ComercialCombo()
+                {
+                    ComercialId = x.ComercialId,
+                    Apellido = x.Apellido + " " + x.Nombres
+                }, c => c.Perfil.PerfilId != (int)EnumPerfil.Visualizador || c.Perfil.PerfilId != (int)EnumPerfil.Administrativo, 0, "Apellido");
             }
             catch (Exception ex)
             {
-                var a = 1;
+                logger.Error(ex);
             }
             return null;
         }
 
-        public async Task<List<CentroCombo>> GetAbmCentroComboAsync()
+        public List<CentroCombo> GetAbmCentroCombo()
         {
             try
             {
-                return await mobjUnitOfWork.Repository<Centro>()
-                                           .Queryable()
-                                           .OrderBy(x => x.Descripcion)
-                                           .Select(x => new CentroCombo()
-                                           {
-                                               CodigoSap = x.CodigoSap,
-                                               Descripcion = x.Descripcion
-                                           })
-                                           .ToListAsync();
+                return repositorio.Listar<Centro, CentroCombo>(x => new CentroCombo()
+                {
+                    CodigoSap = x.CodigoSap,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
             }
             catch (Exception ex)
             {
-                var a = 1;
+                logger.Error(ex);
             }
             return null;
         }
 
-        public async Task<List<Perfil>> GetPerfilComboAsync()
+        public List<Perfil> GetPerfilCombo()
         {
-            return await mobjUnitOfWork.Repository<Perfil>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync();
+            return repositorio.Listar<Perfil>().OrderBy(x => x.Descripcion).ToList();
         }
 
 
-        public async Task<List<GrupoDeCompras>> GetGrupoDeComprasComboAsync()
+        public List<GrupoDeCompras> GetGrupoDeComprasCombo()
         {
-            return await mobjUnitOfWork.Repository<GrupoDeCompras>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync();
+            return repositorio.Listar<GrupoDeCompras>().OrderBy(x => x.Descripcion).ToList();
         }
 
-        public async Task<List<Campaña>> GetCampañaComboAsync()
+        public List<Campaña> GetCampañaCombo()
         {
-            return await mobjUnitOfWork.Repository<Campaña>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync(); 
+            return repositorio.Listar<Campaña>().OrderBy(x => x.Descripcion).ToList();
         }
 
-        public async Task<List<ClasificacionCompraNet>> GetClasificacionComboAsync()
+        public List<ClasificacionCompraNet> GetClasificacionCombo()
         {
-            return await mobjUnitOfWork.Repository<ClasificacionCompraNet>()
-                                       .Queryable()
-                                       .OrderBy(x => x.Descripcion)
-                                       .ToListAsync();
-        }        
+            return repositorio.Listar<ClasificacionCompraNet>().OrderBy(x => x.Descripcion).ToList();
+        }
+
     }
 }
 

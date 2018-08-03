@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ContactoComercial] (
-    [ContactoComercialId] INT           NOT NULL,
+    [ContactoComercialId] INT           IDENTITY (1, 1) NOT NULL,
     [ProveedorId]         INT           NOT NULL,
     [Apellido]            VARCHAR (50)  NOT NULL,
     [Nombres]             VARCHAR (50)  NOT NULL,
@@ -15,7 +15,7 @@
     [Email3]              VARCHAR (100) NULL,
     [FechaNacimiento]     DATETIME      NULL,
     [CategoriaId]         INT           NULL,
-    [OtrosIntereses]      TEXT          NULL,
+    [OtrosIntereses]      NVARCHAR (255)          NULL,
     [EsPrincipal]         BIT           NULL,
     [Cargo]               VARCHAR (100) NULL,
     CONSTRAINT [PK_ContactoComercial] PRIMARY KEY CLUSTERED ([ContactoComercialId] ASC),

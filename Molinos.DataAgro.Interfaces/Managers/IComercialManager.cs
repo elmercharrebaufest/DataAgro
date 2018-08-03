@@ -1,34 +1,35 @@
-﻿
-using Mastersoft.Framework.Standard;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IComercialManager
     {
-        Task<DatosIniAbmComercial> TraerDatosInicialesAsync();
+        DatosIniAbmComercial TraerDatosIniciales();
 
-        Task<ResultIniComercial> TraerTodoComercialAsync();
+        ResultIniComercial TraerTodoComercial();
 
-        Task<Comercial> TraerComercialAsync(int intComercialId);
+        Comercial TraerComercial(int intComercialId);
 
-        Task<List<ComercialCombo>> ObtenerComerciales(int intComercialId);
+        List<ComercialCombo> ObtenerComerciales(List<int> equipo);
 
-        Task<EntityErrors> GrabarComercialAsync(Comercial oComercial);
+        Resultado GrabarComercial(Comercial oComercial);
 
-        Task<EntityErrors> EliminarComercialAsync(int intComercialId);
+        Resultado EliminarComercial(int intComercialId);
 
         List<Comercial> ListarComercial(string comercial, List<int> comerciales);
         
         bool ComercialExiste(string ActiveDirectoryId);
 
-        bool ComercialPerteneceProveedor(string ActiveDirectory_Id, int Proveedor_Id);
+        bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId);
 
-        Task<int> VerificarGrupoComercial(string grupoDeCompra);
+        EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId);
 
+        bool EsAdministrador(string activeDirectoryId);
+
+        List<int> ListarEquipo(string idActiveDirectory);
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -11,14 +10,12 @@ namespace Molinos.DataAgro.Entities.Dto
 
 
     }
-    public class DatosIniAgendaActividadModel
+    public class DatosIniAgendaActividadModel : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public DatosIniAgendaActividad Datos { get; set; }
 
         public DatosIniAgendaActividadModel()
         {
-            this.Errores = new List<MSErrorMessage>();
             this.Datos = new DatosIniAgendaActividad();
         }
     }

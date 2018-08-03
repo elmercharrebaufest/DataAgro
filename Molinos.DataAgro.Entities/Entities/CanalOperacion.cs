@@ -1,23 +1,19 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class CanalOperacion : Entity
+    public partial class CanalOperacion
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int CanalOperacionId { get; set; }
 
         public string Descripcion { get; set; }
 
         public bool? Inhabilitado { get; set; }
 
-
         public CanalOperacion()
         {
-            this.CanalOperacionId = 0;
-            this.Descripcion = "";
-            this.Inhabilitado = false;
+            Inhabilitado = false;
         }
     }
 }

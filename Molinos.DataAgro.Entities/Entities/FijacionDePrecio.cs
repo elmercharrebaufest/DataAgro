@@ -1,29 +1,27 @@
-﻿
-using Mastersoft.Framework.Interfaces;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class FijacionDePrecio : Entity
+    public partial class FijacionDePrecio
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int FijacionId { get; set; }
+        public int? MaterialId { get; set; }
+        public decimal? Precio { get; set; }
+        public DateTime? Fecha { get; set; }
+        public int? ProveedorId { get; set; }
 
-        public Nullable<int> MaterialId { get; set; }
-        public Nullable<decimal> Precio { get; set; }
-        public Nullable<System.DateTime> Fecha { get; set; }
-        public Nullable<int> ProveedorId { get; set; }
-
-
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; }
+        
         public FijacionDePrecio()
         {
-            this.FijacionId = 0;
-            this.MaterialId = null;
-            this.Precio = null;
-            this.Fecha = DateTime.Now;
-            this.ProveedorId = null;
-  
+            Precio = null;
+            Fecha = DateTime.Now;
         }
     }
 }

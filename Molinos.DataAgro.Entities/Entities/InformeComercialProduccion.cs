@@ -1,23 +1,27 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class InformeComercialProduccion : Entity
+    public partial class InformeComercialProduccion
     {
-
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int InformeComerciaProduccionId { get; set; }
         public int InformeComercialId { get; set; }
-        public Nullable<int> MaterialId { get; set; }
-        public Nullable<int> Hectareas { get; set; }
-        public Nullable<decimal> Toneladas { get; set; }
-        public Nullable<int> LocalidadId { get; set; }
-        public Nullable<bool> Propio { get; set; }
-        public Nullable<bool> Alquilado { get; set; }
-        public Nullable<bool> RtaOkSap { get; set; }
+        public int? MaterialId { get; set; }
+        public int? Hectareas { get; set; }
+        public decimal? Toneladas { get; set; }
+        public int? LocalidadId { get; set; }
+        public bool? Propio { get; set; }
+        public bool? Alquilado { get; set; }
+        public bool? RtaOkSap { get; set; }
         public string MensajeSap { get; set; }
 
+        [ForeignKey("InformeComercialId")]
+        public virtual InformeComercial InformeComercial { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
+        [ForeignKey("LocalidadId")]
+        public virtual Localidad Localidad { get; set; }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Mastersoft.Framework.Interfaces;
-
-namespace Molinos.DataAgro.Entities.Entities
+﻿namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class StandardDeCalidad : Entity
+    public partial class StandardDeCalidad
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }

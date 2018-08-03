@@ -1,180 +1,84 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class CampañaManager : ICampañaManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public CampañaManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public CampañaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
-        public async Task<Campaña>TraerCampaniaAsync(int campaniaId)
+        public Campaña TraerCampania(int campaniaId)
         {
-            var campania = mobjUnitOfWork.Repository<Campaña>().Queryable();
-
-            var query = await campania.Where(z => z.CampañaId == campaniaId).SingleOrDefaultAsync();
-
-            return query;
+            return repositorio.Obtener<Campaña>(campaniaId);
         }
 
-        public async Task<List<Campaña>> TraerCampañasActivas()
+        public List<Campaña> TraerCampañasActivas()
         {
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>().Queryable();
-            try
-            {
-                var query = oMaterial
-                            .Join(oCampaña, a => a.CampañaId, b => b.CampañaId, (a, b) => new { M = a, CAMP = b })
-                            .Select(x => x.CAMP )
-                            .Distinct()
-                            .OrderByDescending(x => x.CampañaId)
-                            .ToList();
-                return query;
-            }
-            catch (Exception ex)
-            {
-                var a = ex;
-            }
-
-            return new List<Campaña>();
+            return repositorio.Listar<Material, Campaña>(x => x.Campaña);
         }
- 
-
-        public async Task<List<Material>> TraerMaterialPorCampaña(int CampañaId)
+        
+        public List<Material> TraerMaterialPorCampaña(int campanaId)
         {
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
-
-            var query = await oMaterial.Where(z=> z.CampañaId == CampañaId).ToListAsync();
-
-            return query;
-
+            return repositorio.Listar<Material>(x => x.CampañaId == campanaId);
         }
 
-        public async Task<CampañaHome> TraerCampañaHomeAsync(int idComercial)
+        public CampañaHome TraerCampañaHome(int idComercial, List<int> equipo)
         {
             var list = new CampañaHome();
 
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>().Queryable();
-            var oCampañaMaterial = mobjUnitOfWork.Repository<CampañaMaterial>().Queryable();
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
-            var oProveedorComercial= mobjUnitOfWork.Repository<ProveedorComercial>().Queryable();
+            var lista = repositorio.ListarConsulta(new TraerComprasHome(idComercial, equipo));
 
-            var lista = new List<MaterialCampaña>();
-            try
-            { 
-                //lista = query.ToList();
-                lista = mobjUnitOfWork.SelStore<MaterialCampaña>("DataAgro_ComprasHomeTraer", idComercial).ToList();
-            }
-            catch (Exception ex)
+            if (lista.Count() > 5)
             {
-                var a = ex;
-            }
-
-
-
-            if (lista.Count > 5)
-            {
-                var listReformulada = lista.OrderByDescending(x => x.Toneladas).Take(4);
-
-                list.Materiales = listReformulada.ToList();
-
-                double total = 0;
-
-                foreach (var valor in lista)
+                list.Materiales = lista.Take(4).ToList();
+                list.Materiales.Add(new MaterialCampaña()
                 {
-                    if (!listReformulada.Any(x => x.Nombre == valor.Nombre))
-                    {
-                        total += valor.Toneladas;
-                    }
-                }
-
-                list.Materiales.Add(new MaterialCampaña() { Nombre = "Otros", Toneladas = total });
+                    Nombre = "Otros",
+                    Toneladas = lista.Where(x => !list.Materiales.Any(y => y.Nombre == x.Nombre)).Sum(x => x.Toneladas),
+                    Campaña = string.Empty
+                });
             }
             else
-                list.Materiales = lista.OrderByDescending(x => x.Toneladas).ToList();
-
-
+            {
+                list.Materiales = lista.ToList();
+            }
+            
             return list;
         }
 
-        public async Task<List<Campaña>> TraerCampañasPorGrano(int MaterialId)
+        public List<Campaña> TraerCampañasPorGrano(int materialId)
         {
-            var oCampañaMaterialHistorico = mobjUnitOfWork.Repository<CampañaMaterialHistorico>().Queryable().AsNoTracking();
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>().Queryable().AsNoTracking();
-            var campaña = await oCampañaMaterialHistorico
-                .Join(oCampaña, a => a.CampañaId, b => b.CampañaId, (a, b) => new { H = a, CAMP = b })
-                .OrderByDescending(x=> x.CAMP.CampañaId)
-                .Where(x => x.H.MaterialId == MaterialId)
-                .Select(x => x.CAMP).ToListAsync();
-            return campaña;
+            return repositorio.Listar<CampañaMaterialHistorico, Campaña>(x => x.Campaña, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
 
-
-
-        public async Task<List<Campaña>> TraerCampañaPorMaterial(int MaterialId)
+        public List<Campaña> TraerCampañaPorMaterial(int materialId)
         {
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking().FirstOrDefault(x => x.MaterialId == MaterialId);
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>().Queryable().AsNoTracking();
-
-            int? CampañaId = null;
-            if (oMaterial != null)
-            {
-                CampañaId = oMaterial.CampañaId;
-                var campañas = oCampaña.Where(x => x.CampañaId >= CampañaId).OrderByDescending(x=> x.CampañaId).ToList();
-                return campañas;
-            }
-            else
-            {
-                return new List<Campaña>();
-            }
+            return repositorio.Listar<Material, Campaña>(x => x.Campaña, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
-        public Task<List<CalidadEspecial>> TraerCalidadPorMaterial(int MaterialId)
+        public List<CalidadEspecial> TraerCalidadPorMaterial(int materialId)
         {
-            var oCalidad = mobjUnitOfWork.Repository<CalidadEspecial>().Queryable();
-
-            var query = oCalidad.Where(z => z.MaterialId == MaterialId).ToListAsync();
-
-            return query;
+            return repositorio.Listar<CalidadEspecial>(x => x.MaterialId == materialId);
         }
 
-        public CampañaMaterial TraerCampañaMaterial(int CampañaId, int proveedorId, int materialId)
+        public CampañaMaterial TraerCampañaMaterial(int campañaId, int proveedorId, int materialId)
         {
-            var CampañaMaterial = new CampañaMaterial();
-
-            CampañaMaterial = mobjUnitOfWork.Repository<CampañaMaterial>()
-                                 .Queryable()
-                                 .Where(x => x.CampañaId == CampañaId && x.ProveedorId == proveedorId && x.MaterialId == materialId)
-                                 .SingleOrDefault();
-
-            if (CampañaMaterial == null)
-            {
-                CampañaMaterial = new CampañaMaterial()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                CampañaMaterial.ObjectState = Constants.Object_Modified;
-            }
-
-            return CampañaMaterial;
+            return repositorio.Obtener<CampañaMaterial>(x => x.CampañaId == campañaId && x.ProveedorId == proveedorId && x.MaterialId == materialId) ?? new CampañaMaterial();
         }
     }
     

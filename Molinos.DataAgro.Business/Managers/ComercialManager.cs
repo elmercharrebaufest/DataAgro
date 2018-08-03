@@ -1,131 +1,92 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class ComercialManager : IComercialManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public ComercialManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public ComercialManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<DatosIniAbmComercial> TraerDatosInicialesAsync()
+        public DatosIniAbmComercial TraerDatosIniciales()
         {
             //si es alta le mandoo cero, si modifico le mando el id desde la grilla
-            var qry = new CombosQueries(mobjUnitOfWork);
+            var qry = new CombosQueries(logger, repositorio);
 
-            var oDatosIniciales = new DatosIniAbmComercial()
+            return new DatosIniAbmComercial()
             {
-                Comercial = await ObtenerComerciales(0),
-                Perfil = await qry.GetPerfilComboAsync(),
-                GrupoDeCompras = await qry.GetGrupoDeComprasComboAsync()
+                Comercial = ObtenerComerciales(new List<int>()),
+                Perfil = qry.GetPerfilCombo(),
+                GrupoDeCompras = qry.GetGrupoDeComprasCombo()
             };
-
-            return oDatosIniciales;
         }
 
 
-        public async Task<List<ComercialCombo>> ObtenerComerciales(int comercialId)
+        public List<ComercialCombo> ObtenerComerciales(List<int> equipo)
         {
-            var list = new List<ComercialCombo>();
-            var qry = new CombosQueries(mobjUnitOfWork);
+            var qry = new CombosQueries(logger, repositorio);
 
-            list = await qry.GetAbmComercialComboAsync();
+            var list = qry.GetAbmComercialCombo();
 
-            if (comercialId != 0)
-            {
-                var resultStored = mobjUnitOfWork.SelStore<JerarquiaComercial>("DataAgro_ComercialesJerarquicos_Traer", comercialId).ToList();
-                list.RemoveAll(x => resultStored.Any(z => z.ComercialId == x.ComercialId));
-            }
+            list.RemoveAll(x => equipo.Any(z => z == x.ComercialId));
 
             return list;
         }
 
 
-        public async Task<ResultIniComercial> TraerTodoComercialAsync()
+        public ResultIniComercial TraerTodoComercial()
         {
-            var oResult = new ResultIniComercial();
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-            var oPerfil = mobjUnitOfWork.Repository<Perfil>().Queryable();
-
-            var query = oComercial
-                        .Join(oPerfil, a => a.PerfilId, b => b.PerfilId, (a, b) => new { COM = a, PER = b })
-                        .OrderBy(x => x.COM.Apellido)
-                        .Select(x => new ComercialIni()
-                        {
-                            ComercialId = x.COM.ComercialId,
-                            Apellido = x.COM.Apellido,
-                            Nombres = x.COM.Nombres,
-                            PerDescripcion = x.PER.Descripcion
-                        });
-
-            oResult.Comercial = await query.ToListAsync();
-
-            return oResult;
-        }
-
-        public async Task<Comercial> TraerComercialAsync(int intComercialId)
-        {
-            var oComercial = new Comercial();
-
-            oComercial = await mobjUnitOfWork.Repository<Comercial>()
-                                 .Queryable()
-                                 .Where(x => x.ComercialId == intComercialId)
-                                 .SingleOrDefaultAsync();
-
-            if (oComercial == null)
+            return new ResultIniComercial
             {
-                oComercial = new Comercial()
+                Comercial = repositorio.Listar<Comercial, ComercialIni>(x => new ComercialIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oComercial.ObjectState = Constants.Object_Modified;
-            }
+                    ComercialId = x.ComercialId,
+                    Apellido = x.Apellido,
+                    Nombres = x.Nombres,
+                    PerDescripcion = x.Perfil.Descripcion
+                }, null, 0, "Apellido")
+            };
+        }
 
-            return oComercial;
+        public Comercial TraerComercial(int intComercialId)
+        {
+            return repositorio.Obtener<Comercial>(intComercialId) ?? new Comercial();
         }
 
 
-        public async Task<EntityErrors> GrabarComercialAsync(Comercial oComercial)
+        public Resultado GrabarComercial(Comercial oComercial)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            EntityValid.ValidateAll(oComercial, oEntityErrors.ListaErrores);
+            EntityValid.ValidateAll(oComercial, oEntityErrors);
 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-            
-            // Agregar el mensaje de entity error si el usuario no existe  en AD 
 
             try
             {
@@ -135,71 +96,29 @@ namespace Molinos.DataAgro.Business
 
                     if (user == null)
                     {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El usuario no existe en AD " });
+                        oEntityErrors.Error("Usuario", "El usuario no existe en AD ");
                         return oEntityErrors;
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                logger.Error(ex);
             }
-
-            Comercial oComercialSave;
-            var XComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-            if (oComercial.ObjectState == 0)
+            if (repositorio.Existe<Comercial>(x => x.IdActiveDirectory == oComercial.IdActiveDirectory && x.ComercialId != oComercial.ComercialId))
             {
-                // Verificar que ningun otro comercial use el mismo Id de AD
-                //var XComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-                if (XComercial.Where(x => x.IdActiveDirectory == oComercial.IdActiveDirectory).Count() > 0)
-                {
-                    oEntityErrors.HayError = true;
-                    oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El usuario de Active Directory Ya ha sido usado por otro comercial " });
-                    return oEntityErrors;
-                }
-                
-                //XComercial.
-
-                oComercialSave = new Comercial()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                oEntityErrors.Error("Usuario", "El usuario de Active Directory Ya ha sido usado por otro comercial");
+                return oEntityErrors;
             }
-            else
+            if (oComercial.Perfil.PerfilId == (int)EnumPerfil.Director && repositorio.Existe<Comercial>(x => x.Perfil.PerfilId == (int)EnumPerfil.Director && x.ComercialId != oComercial.ComercialId))
             {
-                if (oComercial.PerfilId == (int)EnumPerfil.Director)
-                {
-                    var comercial = XComercial.FirstOrDefault(x => x.PerfilId == (int)EnumPerfil.Director);
-
-                    if (comercial != null)
-                    {
-                        oEntityErrors.HayError = true;
-                        oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "Ya existe un Director " });
-                        return oEntityErrors;
-                    }
-                }
-                
-                //var perfiles = mobjUnitOfWork.Repository<Perfil>().Queryable();            
-                //var perfilId = perfiles.FirstOrDefault(p => p.PerfilId == comercial.ComercialId ).PerfilId;
-                //if (comercial.PerfilId == 3)
-                //{                    
-                //}
-
-                oComercialSave = await TraerComercialAsync(oComercial.ComercialId);
+                oEntityErrors.Error("Perfil", "Ya existe un Director");
+                return oEntityErrors;
             }
-
-            oComercialSave.Apellido = oComercial.Apellido;
-            oComercialSave.Nombres = oComercial.Nombres;
-            oComercialSave.PerfilId = oComercial.PerfilId;
-            oComercialSave.EmpleadorACargo = oComercial.EmpleadorACargo;
-            oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
-            //oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;  
-            oComercialSave.Administrador = oComercial.Administrador;
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "0")
             {
-                DatoDelComercial dat = new DatoDelComercial();
+                var dat = new DatoDelComercial(logger);
 
                 var comercial = dat.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
 
@@ -207,128 +126,130 @@ namespace Molinos.DataAgro.Business
                 {
                     try
                     {
-                        oComercialSave.GrupoDeCompras = await VerificarGrupoComercial(comercial.EX_ZONA);
+                        oComercial.GrupoDeCompras = VerificarGrupoComercial(comercial.EX_ZONA);
                     }
                     catch (Exception ex)
                     {
-
+                        logger.Error(ex);
                         throw;
                     }
 
                 }
             }
 
-
-            if (oComercialSave.ObjectState == Constants.Object_Added)
+            if (oComercial.ComercialId != 0)
             {
-                oComercialSave.ComercialId = ((mobjUnitOfWork.Repository<Comercial>().Queryable().Max(x => (int?)x.ComercialId)) ?? 0) + 1;
+                var oComercialSave = TraerComercial(oComercial.ComercialId);
+                oComercialSave.Apellido = oComercial.Apellido;
+                oComercialSave.Nombres = oComercial.Nombres;
+                oComercialSave.Perfil = oComercial.Perfil;
+                oComercialSave.EmpleadorACargo = oComercial.EmpleadorACargo;
+                oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
+                oComercialSave.Administrador = oComercial.Administrador;
+                oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;
+                oComercialSave.PerfilId = oComercial.PerfilId;
             }
-
-            mobjUnitOfWork.Repository<Comercial>().SaveEntity(oComercialSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
-            return oEntityErrors;
-        }
-
-        public async Task<int> VerificarGrupoComercial(string grupoDeCompra)
-        {
-            var oGrupoDeCompra = mobjUnitOfWork.Repository<GrupoDeCompras>().Queryable().AsNoTracking();
-
-            var grCom = oGrupoDeCompra.Where(x => x.Descripcion == grupoDeCompra).FirstOrDefault();
-
-            if (grCom != null)
-                return grCom.Id;
             else
             {
-                var IdGrupo = ((mobjUnitOfWork.Repository<GrupoDeCompras>().Queryable().Max(x => (int?)x.Id)) ?? 0) + 1;
-                var oGrupoDeCompraSave = new GrupoDeCompras()
-                {
-                    Id = IdGrupo,
-                    Descripcion = grupoDeCompra,
-                    ObjectState = Constants.Object_Added
-                };
-
-                mobjUnitOfWork.Repository<GrupoDeCompras>().SaveEntity(oGrupoDeCompraSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
-
-                return IdGrupo;
+                repositorio.Agregar(oComercial);
             }
-        }
 
-        public async Task<EntityErrors> EliminarComercialAsync(int intComercialId)
-        {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<Comercial>();
-
-            var oComercial = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.ComercialId == intComercialId)
-                                 .SingleOrDefaultAsync();
-
-            if (oComercial != null)
+            try
             {
-                oRepository.Delete(oComercial);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
-        
+
+        private GrupoDeCompras VerificarGrupoComercial(string grupoDeCompra)
+        {
+            var grCom = repositorio.Obtener<GrupoDeCompras>(x => x.Descripcion == grupoDeCompra);
+
+            return grCom ?? repositorio.Agregar(new GrupoDeCompras()
+            {
+                Descripcion = grupoDeCompra,
+            });
+        }
+
+        public Resultado EliminarComercial(int intComercialId)
+        {
+            var oEntityErrors = new Resultado();
+
+            repositorio.Remover<Comercial>(intComercialId);
+
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+
+            return oEntityErrors;
+        }
+
         public bool ComercialExiste(string ActiveDirectoryId)
 
         {
-            bool resultado = false;
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            if (oComercial.Where(x => x.IdActiveDirectory == ActiveDirectoryId).Count() > 0)
-            {
-                resultado = true;
-            }
-
-            return (resultado);
+            return repositorio.Existe<Comercial>(x => x.IdActiveDirectory == ActiveDirectoryId);
         }
 
-        public bool ComercialPerteneceProveedor(string ActiveDirectory_Id, int Proveedor_Id)
+        public bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId)
         {
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            int CId = oComercial.Where(x => x.IdActiveDirectory == ActiveDirectory_Id).FirstOrDefault().ComercialId;
-
-            var query = mobjUnitOfWork.SelStore<Validacion>("DataAgro_ValidarProveedor_PorComercial", CId, Proveedor_Id);
-
-            var res = query.ToList();
-            if (res[0].valor == 1)
-                return true;
-            else
-                return false;
+            return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId));
         }
 
         public List<Comercial> ListarComercial(string comercial, List<int> comerciales)
         {
-            return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial))).Take(15).ToList();
+            return repositorio.Listar<Comercial>(x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
         }
 
-    }
+        public EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId)
+        {
+            return (EnumPerfil)repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeDirectoryId, x => x.PerfilId);
+        }
 
-    internal class Validacion
-    {
-        public int valor { get; set; }
-    }
+        public bool EsAdministrador(string activeDirectoryId)
+        {
+            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Administrador.HasValue ? x.Administrador.Value : false);
+        }
 
-    public class JerarquiaComercial
-    {
-        public Nullable<int> ComercialId { get; set; }
-        public string Apellido { get; set; }
-        public string Nombres { get; set; }
-        public Nullable<int> PerfilId { get; set; }
-        public Nullable<int> EmpleadorACargo { get; set; }
-        public string IdActiveDirectory { get; set; }
-        public Nullable<int> GrupoDeCompras { get; set; }
+        public List<int> ListarEquipo(string idActiveDirectory)
+        {
+            var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
+
+            var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+
+            List<int> listComercialesId;
+            if (comercial.PerfilId == (int)EnumPerfil.Mesa)
+            {
+                listComercialesId = comerciales.Select(x => x.ComercialId).ToList();
+            }
+            else
+            {
+                listComercialesId = ListarEquipo(comercial.ComercialId, comerciales);
+            }
+            return listComercialesId;
+        }
+
+        private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)
+        {
+            var resultado = new List<int> { comercialId };
+            foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
+            {
+                comerciales.Remove(comercial);
+                resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
+            }
+            return resultado;
+        }
     }
 }
     

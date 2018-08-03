@@ -1,13 +1,8 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class ProveedorNuevo : Entity
+    public class ProveedorNuevo
     {
         public string razonSocial { get; set; }
         public int Operable { get; set; }

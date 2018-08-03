@@ -1,21 +1,15 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
-using System.Threading.Tasks;
+﻿using Molinos.DataAgro.Entities.Dto;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ICubProveedoresManager
     {
-        Task<DatosIniCubProveedores> TraerDatosInicialesAsync(string ActiveDirectory);
+        DatosIniCubProveedores TraerDatosIniciales(List<int> equipo);
 
         ParamCubProveedores TraerParam();
 
-        EntityErrors Validar(ParamCubProveedores oParam);
-
-        Task<ResultCubProveedores> TraerDatosAsync(ParamCubProveedores oParam);
-
-        void ActualizarProveedoresCubo(int? ComercialId);
-
+        ResultCubProveedores TraerDatos(ParamCubProveedores oParam);
     }
 }
 

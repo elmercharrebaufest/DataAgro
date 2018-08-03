@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_IMPORTE_DB = contrato.ImporteSustentable != null ? contrato.ImporteSustentable.Value : 0,
                     IM_LOCALIDAD = localidadString,
                     IM_MATERIAL = materialCodigo,
-                    IM_MONEDA = contrato.MonedaId,
+                    IM_MONEDA = contrato.Moneda.MonedaId,
                     IM_NO_INFORMAR_SIO = noInformaSioString,
                     IM_PAGO_DIFERIDO = pagoDiferidoString,
                     IM_PAGO_DIF_ARP = pagoDifArpString,

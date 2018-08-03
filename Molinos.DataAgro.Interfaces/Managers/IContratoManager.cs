@@ -11,20 +11,22 @@ namespace Molinos.DataAgro.Interfaces
     {
         KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId);
 
-        Task<DatosIniContrato> TraerDatosCombo();
+        DatosIniContrato TraerDatosCombo();
 
-        Task<Contrato> TraerContratoAsync(int ContratoId);
+        Contrato TraerContrato(int ContratoId);
 
-        Task<GrabarContratoResult> GrabarContrato(Contrato oContrato);
+        GrabarContratoResult GrabarContrato(Contrato oContrato);
 
-        Task<GrabarContratoResult> ConfirmarContrato(Contrato oContrato);
+        GrabarContratoResult ConfirmarContrato(Contrato oContrato);
 
-        Task<GrabarContratoResult> BorrarContrato(Contrato oContrato);
+        GrabarContratoResult BorrarContrato(Contrato oContrato);
 
-        Task<GrabarContratoResult> FinalizarContrato(Contrato oContrato, string idActiveDirectory);
+        GrabarContratoResult FinalizarContrato(Contrato oContrato, string idActiveDirectory);
 
-        Task<GrabarContratoResult> GrabarAmpliacionContrato(Contrato oContrato);
+        GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
 
         int ObtenerComercialId(string idActiveDirectory);
-     }
+
+        List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
+    }
 }

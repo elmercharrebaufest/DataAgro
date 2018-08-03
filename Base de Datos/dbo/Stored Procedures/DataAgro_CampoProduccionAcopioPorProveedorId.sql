@@ -28,7 +28,7 @@ BEGIN
 		HasArrendadas bit,
 		Coordenadas varchar(50),
 		KMZnombre varchar(150),
-		KMZfile text
+		KMZfile nvarchar(255)
 	)
 	
 	INSERT INTO @CampoAcopio

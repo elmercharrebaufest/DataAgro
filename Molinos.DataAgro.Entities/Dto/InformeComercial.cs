@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -158,16 +157,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
     }
 
-    public class InformeResult
+    public class InformeResult : Resultado
     {
-        public EntityErrors errores { get; set; }
         public int? InformeId { get; set; }
-
-
-        public InformeResult()
-        {
-
-        }
     }
 
     public class InformeList

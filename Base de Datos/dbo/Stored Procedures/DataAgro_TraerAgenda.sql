@@ -10,17 +10,17 @@ AS
 DECLARE @TablaAux TABLE(RazonSocial VARCHAR(500),Detalle VARCHAR(MAX),TipoDeAcividad VARCHAR(200),FechaHoraActividad DATETIME,FechaHoraRecordatorio DATETIME,Apellido VARCHAR(100),NombreContacto VARCHAR(300),ActividadId INT);
 
 WITH Empleados 
-( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)
+( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory)
 AS
 (
-	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory
+	SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory
     FROM Comercial  
 	WHERE ComercialId = @comercialId 
 	UNION ALL 
     --RECURSIVIDAD
-	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory
+	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargoId, A.IdActiveDirectory
 	FROM Comercial A
-	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+	inner join Empleados AS B on A.EmpleadorACargoId = B.ComercialId
 )
 
 

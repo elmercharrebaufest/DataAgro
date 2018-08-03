@@ -1,11 +1,8 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
@@ -15,11 +12,8 @@ namespace WebDataAgro.Controllers
     {
         private IAreaInfluenciaManager mobjAreaInfluenciaManager;
 
-        private string idActiveDirectory;
-
-        public AreaInfluenciaController(IMSContextProvider oMSContextProvider, IAreaInfluenciaManager oAreaInfluenciaManager)
+        public AreaInfluenciaController(IAreaInfluenciaManager oAreaInfluenciaManager)
         {
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjAreaInfluenciaManager = oAreaInfluenciaManager;
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
@@ -53,11 +47,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniAreaInfluenciaModel();
 
-            var result = await mobjAreaInfluenciaManager.TraerTodoAreaInfluenciaAsync();
+            var result = mobjAreaInfluenciaManager.TraerTodoAreaInfluencia();
 
             if (result != null)
             {
@@ -72,23 +66,15 @@ namespace WebDataAgro.Controllers
         }
 
 
-       
 
 
-        public async Task<ActionResult> Aplicar(AbmAreaInfluenciaParam oParam)
+
+        public ActionResult Aplicar(AbmAreaInfluenciaParam oParam)
         {
-            var model = new AbmAreaInfluenciaResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
+            var model = new AbmAreaInfluenciaResult
             {
-                model.AreaInfluencia = await mobjAreaInfluenciaManager.TraerAreaInfluenciaAsync(oParam.AreaInfluenciaId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
+                AreaInfluencia = mobjAreaInfluenciaManager.TraerAreaInfluencia(oParam.AreaInfluenciaId)
+            };
 
             return new JsonResult()
             {
@@ -98,15 +84,14 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Grabar(AreaInfluencia oAreaInfluencia)
+        public ActionResult Grabar(AreaInfluencia oAreaInfluencia)
         {
             var model = new AbmAreaInfluenciaResult();
 
-            var entityErrors = await mobjAreaInfluenciaManager.GrabarAreaInfluenciaAsync(oAreaInfluencia);
+            var entityErrors = mobjAreaInfluenciaManager.GrabarAreaInfluencia(oAreaInfluencia);
+            model.Errores = entityErrors.Errores;
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
-
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.AreaInfluencia = oAreaInfluencia;
             }
@@ -119,24 +104,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Eliminar(AbmAreaInfluenciaParam oParam)
+        public ActionResult Eliminar(AbmAreaInfluenciaParam oParam)
         {
-            var model = new AbmAreaInfluenciaResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjAreaInfluenciaManager.EliminarAreaInfluenciaAsync(oParam.AreaInfluenciaId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjAreaInfluenciaManager.EliminarAreaInfluencia(oParam.AreaInfluenciaId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -144,11 +116,9 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Cancelar()
         {
-            var model = new AbmAreaInfluenciaResult();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmAreaInfluenciaResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }

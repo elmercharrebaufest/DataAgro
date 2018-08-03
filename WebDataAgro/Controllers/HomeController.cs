@@ -17,7 +17,7 @@ namespace WebDataAgro.Controllers
     public class HomeController : Controller
     {
         private IHomeManager mobjHomeManager;
-        private string idActiveDirectory;
+        
         private IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
 
@@ -25,9 +25,9 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public HomeController(IMSContextProvider oMSContextProvider, IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager)
+        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager)
         {
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
@@ -43,7 +43,7 @@ namespace WebDataAgro.Controllers
                 ViewBag.edita = false;
             }
             
-            if (!comercialManager.ComercialExiste(idActiveDirectory))
+            if (!comercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
@@ -68,61 +68,51 @@ namespace WebDataAgro.Controllers
 
             return View("ErrorUsuarioSinDerechos");
         }
-
-
-
-
-
-
-
-        public async Task<ActionResult> Inicializar()
+        
+        public ActionResult Inicializar()
         {
             var model = new ResultIniContactoModel();
 
-            int idComercial = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var result = await mobjHomeManager.TraerTodoContactoAsync(idComercial);
+            var result = mobjHomeManager.TraerTodoContacto(idComercial);
 
-            model.Campaña = await mobjHomeManager.TraerInfoCampañaAsync(idComercial);
+            model.Campaña = mobjHomeManager.TraerInfoCampaña(idComercial, GlobalVariables.Equipo);
 
-            model.Datos = await mobjHomeManager.TraerInfoInicialesAsync(idComercial);
+            model.Datos = mobjHomeManager.TraerInfoIniciales(GlobalVariables.Equipo);
+
+            if (result != null)
+            {
+                model.Contactos = result.Contactos;
+            }
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
+        public ActionResult BusquedaHome(string filtro)
+        {
+            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             
-            if (result != null)
-            {
-                model.Contactos = result.Contactos;
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjHomeManager.BusquedaHome(filtro, idComercial),
                 MaxJsonLength = Int32.MaxValue
             };
 
         }
 
-        public async Task<ActionResult> BusquedaHome(string filtro)
-        {
-            var model = new List<BusquedaHome>();
-
-           int idComercial = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-
-            model = await mobjHomeManager.BusquedaHome(filtro, idComercial);
-
-            return new JsonResult()
-            {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
-        public async Task<ActionResult> TraerBusquedaContacto(oParamBusqueda filtro)
+        public ActionResult TraerBusquedaContacto(oParamBusqueda filtro)
         {
             var model = new ResultIniContactoModel();
 
-            filtro.ComercialId = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            filtro.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var result = await mobjHomeManager.TraerBusquedaContactoAsync(filtro);
+            var result = mobjHomeManager.TraerBusquedaContacto(filtro);
 
             if (result != null)
             {
@@ -137,13 +127,13 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> TraerActividadesPorComercialId()
+        public ActionResult TraerActividadesPorComercialId()
         {
             var model = new ResultActividadesModel();
 
-            var ComercialId = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            var comercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var result = await mobjHomeManager.TraerActividadesPorComercialId(ComercialId);
+            var result = mobjHomeManager.TraerActividadesPorComercialId(comercialId);
 
             if (result != null)
             {
@@ -158,28 +148,7 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> ExportarContactosPDF(string Ids)
-        {
-            
-            List<int> ides = new List<int>();
-
-            Ids.Split(',').ToList().ForEach(x => ides.Add( (Convert.ToInt32(x))));
-
-            var model = new ReportesModel();
-            
-            var datos = await mobjHomeManager.ExportarContactos(ides,idActiveDirectory);
-
-            var oLstContacto = new LstContacto(reportesManager);
-
-            var identif = await oLstContacto.GenerarListadoAsync(datos);
-
-            model.DownloadKey = Util.GetDownloadKey(identif);
-            
-            return Json(model);
-        }
-
-
-        public async Task<ActionResult> ExportarContactosExcel(string Ids)
+        public ActionResult ExportarContactosPDF(string Ids)
         {
 
             List<int> ides = new List<int>();
@@ -188,18 +157,19 @@ namespace WebDataAgro.Controllers
 
             var model = new ReportesModel();
 
-            var datos = await mobjHomeManager.ExportarContactos(ides,idActiveDirectory);
+            var datos = mobjHomeManager.ExportarContactos(ides, GlobalVariables.IdActiveDirectory);
 
             var oLstContacto = new LstContacto(reportesManager);
 
-            var identif = await oLstContacto.GenerarExcelAsync(datos);
+            var identif = oLstContacto.GenerarListado(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
             return Json(model);
         }
 
-        public async Task<ActionResult> ExportarAll(string Ids)
+
+        public ActionResult ExportarContactosExcel(string Ids)
         {
 
             List<int> ides = new List<int>();
@@ -208,11 +178,31 @@ namespace WebDataAgro.Controllers
 
             var model = new ReportesModel();
 
-            var datos = await mobjHomeManager.ExportarAll(ides, idActiveDirectory);
+            var datos = mobjHomeManager.ExportarContactos(ides, GlobalVariables.IdActiveDirectory);
 
             var oLstContacto = new LstContacto(reportesManager);
 
-            var identif = await oLstContacto.GenerarExcelExportAllAsync(datos,Util.ObtenerPerfilDeUsuario(idActiveDirectory));
+            var identif = oLstContacto.GenerarExcel(datos);
+
+            model.DownloadKey = Util.GetDownloadKey(identif);
+
+            return Json(model);
+        }
+
+        public ActionResult ExportarAll(string Ids)
+        {
+
+            List<int> ides = new List<int>();
+
+            Ids.Split(',').ToList().ForEach(x => ides.Add((Convert.ToInt32(x))));
+
+            var model = new ReportesModel();
+
+            var datos = mobjHomeManager.ExportarAll(ides, GlobalVariables.IdActiveDirectory);
+
+            var oLstContacto = new LstContacto(reportesManager);
+
+            var identif = oLstContacto.GenerarExcelExportAll(datos, (int)GlobalVariables.Perfil);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
@@ -237,13 +227,13 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        public async Task<ActionResult> TraerPostIt()
+        public ActionResult TraerPostIt()
         {
             var model = new ResultIniPostItModel();
 
-            int idComercial = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var result = await mobjHomeManager.TraerTextoAsync(idComercial);
+            var result = mobjHomeManager.TraerTexto(idComercial);
 
             if (result != null)
             {
@@ -258,19 +248,19 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> GuardarPostItAsync(PostIt post)
+        public ActionResult GuardarPostIt(PostIt post)
         {
             var model = new GrabarPostItResult();
 
-            int idComercial = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
             post.ComercialId = idComercial;
 
-            if (post.ComercialId  != 0)
+            if (post.ComercialId != 0)
             {
-                model = await mobjHomeManager.GuardarPostItAsync(post);
+                model = mobjHomeManager.GuardarPostIt(post);
             }
-            
+
 
             return new JsonResult()
             {

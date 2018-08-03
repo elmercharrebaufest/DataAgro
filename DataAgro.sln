@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Build", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Test", "Molinos.DataAgro.Test\Molinos.DataAgro.Test.csproj", "{B05004B1-EC9E-4BF2-8E6A-C5262F7827BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Repository", "Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj", "{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,18 @@ Global
 		{B05004B1-EC9E-4BF2-8E6A-C5262F7827BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B05004B1-EC9E-4BF2-8E6A-C5262F7827BC}.Release|x64.ActiveCfg = Release|Any CPU
 		{B05004B1-EC9E-4BF2-8E6A-C5262F7827BC}.Release|x64.Build.0 = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Debug|x64.Build.0 = Debug|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Jenkins|Any CPU.ActiveCfg = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Jenkins|Any CPU.Build.0 = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Jenkins|x64.ActiveCfg = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Jenkins|x64.Build.0 = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Release|x64.ActiveCfg = Release|Any CPU
+		{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,7 +181,7 @@ Global
 		SolutionGuid = {4CC7CFC5-B00C-442F-BAEC-DFD89AFA1741}
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://tfs.baufest.com:8080/tfs/molinos%20rio%20de%20la%20plata
 		SccLocalPath0 = .
@@ -201,8 +215,8 @@ Global
 		SccProjectUniqueName10 = Molinos.DataAgro.Test\\Molinos.DataAgro.Test.csproj
 		SccProjectName10 = Molinos.DataAgro.Test
 		SccLocalPath10 = Molinos.DataAgro.Test
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {4CC7CFC5-B00C-442F-BAEC-DFD89AFA1741}
+		SccProjectUniqueName11 = Molinos.DataAgro.Repository\\Molinos.DataAgro.Repository.csproj
+		SccProjectName11 = Molinos.DataAgro.Repository
+		SccLocalPath11 = Molinos.DataAgro.Repository
 	EndGlobalSection
 EndGlobal

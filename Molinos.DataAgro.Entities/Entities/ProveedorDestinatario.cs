@@ -1,23 +1,21 @@
-﻿using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class ProveedorDestinatario : Entity
+    public partial class ProveedorDestinatario
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ContactoDestinatarioId { get; set; }
         public int ProveedorId { get; set; }
         public int NroItem { get; set; }
         public int DestinatarioId { get; set; }
 
-        public ProveedorDestinatario()
-        {
-            
-        }
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; }
+        [ForeignKey("DestinatarioId")]
+        public virtual Destinatario Destinatario { get; set; }
     }
-
-
 }
    
 

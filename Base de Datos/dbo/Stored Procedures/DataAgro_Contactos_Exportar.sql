@@ -5,25 +5,7 @@ create procedure [dbo].[DataAgro_Contactos_Exportar] --'2,481,485,494,574,589,66
 as
 
 
---WITH Empleados   
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)  
---AS  
---(  
--- SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory  
---    FROM Comercial    
--- WHERE ComercialId = @comercialId   
--- UNION ALL   
---    --RECURSIVIDAD  
--- SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory  
--- FROM Comercial A  
--- inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId  
---)  
-
---select * 
---	into #Empleados
---	from Empleados
-
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
  
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId 
 
@@ -65,7 +47,7 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
  inner join Comercial c on pc.ComercialId = c.ComercialId
  left join FACACOP f on p.CUIT = f.CUIT
  LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId and cc.EsPrincipal = 1
- LEFT JOIN GrupoDeCompras gdc ON gdc.Id = c.GrupoDeCompras
+ LEFT JOIN GrupoDeCompras gdc ON gdc.Id = c.GrupoDeComprasId
  where p.ProveedorId in (select * from @table)
  order by p.RazonSocial desc
  

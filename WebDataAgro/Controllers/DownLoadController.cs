@@ -18,15 +18,13 @@ namespace WebDataAgro.Controllers
             this.reportesManager = reportesManager;
         }
 
-        public async Task<ActionResult> Reporte(string key)
+        public ActionResult Reporte(string key)
         {
             try
             {
                 var param = Util.DecryptString(key);
 
                 var identif = "";
-
-                var cnPrefix = "";
 
                 var partes = param.Split('|');
 
@@ -35,21 +33,9 @@ namespace WebDataAgro.Controllers
                     identif = partes[0];
                 }
 
-                if (partes.Length >= 2)
-                {
-                    cnPrefix = partes[1];
-                }
+                var oReporte = reportesManager.ObtenerReporte(identif);
 
-                var oMSContext = Util.GetMSContext();
-
-                if (cnPrefix.Length > 1)
-                {
-                    oMSContext.CNPrefix = cnPrefix;
-                }
-
-                var oReporte = await reportesManager.ObtenerReporteAsync(identif);
-
-               if (oReporte == null)
+                if (oReporte == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
@@ -65,15 +51,13 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Excel(string key)
+        public ActionResult Excel(string key)
         {
             try
             {
                 var param = Util.DecryptString(key);
 
                 var identif = "";
-
-                var cnPrefix = "";
 
                 var partes = param.Split('|');
 
@@ -82,19 +66,7 @@ namespace WebDataAgro.Controllers
                     identif = partes[0];
                 }
 
-                if (partes.Length >= 2)
-                {
-                    cnPrefix = partes[1];
-                }
-
-                var oMSContext = Util.GetMSContext();
-
-                if (cnPrefix.Length > 1)
-                {
-                    oMSContext.CNPrefix = cnPrefix;
-                }
-
-                var oReporte = await reportesManager.ObtenerReporteAsync(identif);
+                var oReporte = reportesManager.ObtenerReporte(identif);
 
                 if (oReporte == null)
                 {

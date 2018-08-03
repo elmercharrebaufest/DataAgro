@@ -1,17 +1,11 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public class PostIt : Entity
+    public class PostIt
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ComercialId { get; set; }
-        public String Texto { get; set; }
-
-        public PostIt()
-        {
-        }
+        public string Texto { get; set; }
     }
 }

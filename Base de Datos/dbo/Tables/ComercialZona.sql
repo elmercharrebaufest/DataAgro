@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ComercialZona] (
-    [ComercialZonaId] INT NOT NULL,
+    [ComercialZonaId] INT IDENTITY (1, 1) NOT NULL,
     [ComercialId]     INT NOT NULL,
     [NroItem]         INT NOT NULL,
     [ZonaId]          INT NOT NULL,

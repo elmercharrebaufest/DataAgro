@@ -1,12 +1,10 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,7 +13,6 @@ using System.DirectoryServices;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -23,66 +20,54 @@ namespace Molinos.DataAgro.Business.Managers
 
     public class ProveedorManager : IProveedorManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private IRepositorio repositorio;
         private IComercialManager mobComercial;
         private ICampañaMaterial mobCampañaMaterial;
 
         private ILogger logger;
 
-        public ProveedorManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
             this.logger = logger;
             mobComercial = oComercial;
             mobCampañaMaterial = oCampañaMaterial;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
-        public async Task<StoredHistorialResult> TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string TipoActividadId)
+        public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string TipoActividadId)
         {
-            var res = new StoredHistorialResult();
-
-            var actividadhistoria = mobjUnitOfWork.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", ProveedorId, oParam.detalle, TipoActividadId).ToList();
-
-            res.ActividadHistoriaTraerPorProveedores = actividadhistoria.ToList();
-
-            return res;
+            return new StoredHistorialResult
+            {
+                ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId) 
+            };
         }
 
-        public async Task<StoredPorProveedorResult> TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo)
+        public StoredPorProveedorResult TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo)
         {
             var res = new StoredPorProveedorResult();
-            
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory.ToLower() == UsuarioDirectory.ToLower());
-
-            var basico = TraerDatosBasicosProveedor(ProveedorId, oComerciales.ComercialId, equipo);
-
-            //canales de operacion, ProveedorDestinatario y ProveedorCondicion
-
             try
             {
-                var actividad = mobjUnitOfWork.SelStore<ActividadTraer>("DataAgro_ActividadTraerPorProveedorId", ProveedorId).ToList();
-                var contactoscomercial = mobjUnitOfWork.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", ProveedorId).ToList();
-                var campoacopio = mobjUnitOfWork.SelStore<CampoProduccionAcopio>("DataAgro_CampoProduccionAcopioPorProveedorId", ProveedorId).ToList();
-                var actividadhistoria = mobjUnitOfWork.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", ProveedorId, null, null).ToList();
-                var objetivos = mobjUnitOfWork.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", ProveedorId).ToList();
-                var acopiomateriales = mobjUnitOfWork.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", ProveedorId).ToList();
-
-                res.ActividadTraerPorProveedores = actividad.ToList();
-                res.ActividadHistoriaTraerPorProveedores = actividadhistoria.ToList();
-                res.BasicoProveedorTraerPorProveedores = basico.ToList();
-                res.ContactosComercialesTraerPorProveedores = contactoscomercial.ToList();
+                var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
+                res.BasicoProveedorTraerPorProveedores = TraerDatosBasicosProveedor(ProveedorId, oComerciales.ComercialId, equipo);
+                res.ActividadTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadTraerPorProveedorId", 0, ProveedorId);
+                res.ContactosComercialesTraerPorProveedores = repositorio.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", 0, ProveedorId);
+                res.ActividadHistoriaTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, null, null);
+                res.ObjetivosTraerPorProveedorId = repositorio.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", 0, ProveedorId);
+                res.AcopioMaterialPorProveedores = repositorio.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", 0, ProveedorId);
+                var campoacopio = repositorio.SelStore<CampoProduccionAcopio>("DataAgro_CampoProduccionAcopioPorProveedorId", 0, ProveedorId);
                 res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).ToList();
                 res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).ToList();
-                res.DatosContacto = await DevolverDatosContacto(ProveedorId);
-                res.Historial = DevolverHistorial(ProveedorId, UsuarioDirectory);
+
+                res.DatosContacto = DevolverDatosContacto(ProveedorId);
+                res.Historial = Comprar(ProveedorId, UsuarioDirectory);
                 res.CanalesDeOperacion = DevolverCanalesDeOperacionPorProveedor(ProveedorId);
                 res.ProveedorCondicion = DevolverProveedorCondicionPorProveedor(ProveedorId);
                 res.ProveedorDestinatario = DevolverProveedorDestinatarioPorProveedor(ProveedorId);
-                res.ObjetivosTraerPorProveedorId = objetivos;
-                res.AcopioMaterialPorProveedores = acopiomateriales;
+
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
 
@@ -127,175 +112,106 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<Destinatario> DevolverProveedorDestinatarioPorProveedor(int proveedorId)
         {
-            var res = new List<Destinatario>();
-            var oProveedores = mobjUnitOfWork.Repository<ProveedorDestinatario>().Queryable().AsNoTracking();
-            var oDestinatario = mobjUnitOfWork.Repository<Destinatario>().Queryable().AsNoTracking();
-
-            res = oProveedores
-                        .Join(oDestinatario, a => a.DestinatarioId, b => b.DestinatarioId, (a, b) => new { P = a, CO = b })
-                        .Where(x => x.P.ProveedorId == proveedorId)
-                        .Select(x => x.CO).ToList();
-            return res;
+            return repositorio.Listar<ProveedorDestinatario, Destinatario>(x => x.Destinatario, x => x.ProveedorId == proveedorId);
         }
 
         private List<Condicion> DevolverProveedorCondicionPorProveedor(int proveedorId)
         {
-            var res = new List<Condicion>();
-            var oProveedores = mobjUnitOfWork.Repository<ProveedorCondicion>().Queryable().AsNoTracking();
-            var oCondicion = mobjUnitOfWork.Repository<Condicion>().Queryable().AsNoTracking();
-
-            res = oProveedores
-                        .Join(oCondicion, a => a.CondicionId, b => b.CondicionId, (a, b) => new { P = a, CO = b })
-                        .Where(x => x.P.ProveedorId == proveedorId)
-                        .Select(x => x.CO).ToList();
-            return res;
+            return repositorio.Listar<ProveedorCondicion, Condicion>(x => x.Condicion, x => x.ProveedorId == proveedorId);
         }
 
         private List<CanalOperacion> DevolverCanalesDeOperacionPorProveedor(int proveedorId)
         {
-            var res = new List<CanalOperacion>();
-            var oProveedores = mobjUnitOfWork.Repository<ProveedorCanalOperacion>().Queryable().AsNoTracking();
-            var oCanalOperacion = mobjUnitOfWork.Repository<CanalOperacion>().Queryable().AsNoTracking();
-
-            res = oProveedores
-                        .Join(oCanalOperacion, a => a.CanalOperacionId, b => b.CanalOperacionId, (a, b) => new { P = a, CO = b })
-                        .Where(x => x.P.ProveedorId == proveedorId)
-                        .Select(x => x.CO).ToList();
-            return res;
+            return repositorio.Listar<ProveedorCanalOperacion, CanalOperacion>(x => x.CanalOperacion, x => x.ProveedorId == proveedorId);
         }
 
-        public async Task<Actividad> TraerRecordatorioAsync(int ActividadId)
+        public Actividad TraerRecordatorio(int ActividadId)
         {
-            var oActividad = new Actividad();
-
-            oActividad = await mobjUnitOfWork.Repository<Actividad>()
-                                 .Queryable()
-                                 .Where(x => x.ActividadId == ActividadId)
-                                 .SingleOrDefaultAsync();
-
-            if (oActividad == null)
-            {
-                oActividad = new Actividad()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oActividad.ObjectState = Constants.Object_Modified;
-            }
-
-            return oActividad;
+            return repositorio.Obtener<Actividad>(x => x.ActividadId == ActividadId) ?? new Actividad();
         }
 
-        public async Task<DatosLocalidadProvincia> TraerLocalidadProveedorPorCuitAsync(string CUIT)
+        public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(string CUIT)
         {
-            var valor = new DatosLocalidadProvincia();
-
-            valor = mobjUnitOfWork.SelStore<DatosLocalidadProvincia>("DataAgro_BasicoProveedorTraerPorCuit", CUIT).SingleOrDefault();
-
-            return valor;
+            return repositorio.SelStore<DatosLocalidadProvincia>("DataAgro_BasicoProveedorTraerPorCuit", 0, CUIT).SingleOrDefault();
         }
-
-
-        public async Task<DatosLocalidadProvincia> TraerLocalidadProveedorPorCuitAsync(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)
+        
+        public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)
         {
             var valor = new DatosLocalidadProvincia();
             try
             {
 
-                var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().FirstOrDefault(x => x.CUIT == oDatosLocalidadProvinciaFiltro.CUIT);
+                var oProveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oDatosLocalidadProvinciaFiltro.CUIT);
 
-                if (oProveedor.ProvinciaCompraNetId != null && oProveedor.LocalidadCompraNetId != null)
+                if (oProveedor.ProvinciaCompraNet != null && oProveedor.LocalidadCompraNet != null)
                 {
-                    valor = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking()
-                            .Where(x => x.LocalidadId == oProveedor.LocalidadCompraNetId)                            
-                            .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(),
-                            a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia
-                            {
-                                CUIT = oProveedor.CUIT,
-                                Localidad = a.Nombre,
-                                LocalidadId = a.LocalidadId,
-                                Provincia = b.Nombre,
-                                ProvinciaId = b.ProvinciaId,
-                                ProveedorId = oProveedor.ProveedorId,
-                                RazonSocial = oProveedor.RazonSocial,
-                                ClasificacionId = oProveedor.ClasificacionCompraNetId??0,
-                                BoletoId=oProveedor.BoletoCompraNetId??0,
-                                BolsaId=oProveedor.BolsaCompraNetId??0
-                            }).FirstOrDefault();
-
+                    valor = repositorio.Obtener<Localidad, DatosLocalidadProvincia>(x => x.LocalidadId == oProveedor.LocalidadCompraNet.LocalidadId,
+                        x => new DatosLocalidadProvincia
+                        {
+                            CUIT = oProveedor.CUIT,
+                            Localidad = x.Nombre,
+                            LocalidadId = x.LocalidadId,
+                            Provincia = x.Provincia.Nombre,
+                            ProvinciaId = x.Provincia.ProvinciaId,
+                            ProveedorId = oProveedor.ProveedorId,
+                            RazonSocial = oProveedor.RazonSocial,
+                            ClasificacionId = oProveedor.ClasificacionCompraNet.Id,
+                            BoletoId = oProveedor.BoletoCompraNet.Id,
+                            BolsaId = oProveedor.BolsaCompraNet.Id
+                        });
                 }
                 else
                 {
-                    var oCampoIdAx = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => x.ProveedorId == oProveedor.ProveedorId).Select(z => z.CampoId);
-
-                    var oCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>().Queryable().AsNoTracking().Where(x => oCampoIdAx.Contains(x.CampoId) && x.MaterialId == oDatosLocalidadProvinciaFiltro.MaterialId && x.CampañaId == oDatosLocalidadProvinciaFiltro.CampanaId).Select(z => z.CampoId);
-
-                    int? localidadId = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => oCampoMaterial.Contains(x.CampoId)).Select(z => z.LocalidadId).FirstOrDefault();
-
-                    if (localidadId != null)
+                    valor = repositorio.Obtener<CampoMaterial, DatosLocalidadProvincia>(x => x.Campo.Proveedor.ProveedorId == oProveedor.ProveedorId, x => new DatosLocalidadProvincia
                     {
-                        valor = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking()
-                            .Where(x => x.LocalidadId == localidadId)
-                            .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(), a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia { CUIT = oProveedor.CUIT, Localidad = a.Nombre, LocalidadId = a.LocalidadId, Provincia = b.Nombre, ProvinciaId = b.ProvinciaId, ProveedorId = oProveedor.ProveedorId, RazonSocial = oProveedor.RazonSocial,
-                                ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0,
-                                BoletoId = oProveedor.BoletoCompraNetId ?? 0,
-                                BolsaId = oProveedor.BolsaCompraNetId ?? 0
-                            }).FirstOrDefault();
-                    }
+                        CUIT = oProveedor.CUIT,
+                        Localidad = x.Campo.Localidad.Nombre,
+                        LocalidadId = x.Campo.Localidad.LocalidadId,
+                        Provincia = x.Campo.Localidad.Provincia.Nombre,
+                        ProvinciaId = x.Campo.Localidad.Provincia.ProvinciaId,
+                        ProveedorId = oProveedor.ProveedorId,
+                        RazonSocial = oProveedor.RazonSocial,
+                        ClasificacionId = oProveedor.ClasificacionCompraNet.Id,
+                        BoletoId = oProveedor.BoletoCompraNet.Id,
+                        BolsaId = oProveedor.BolsaCompraNet.Id
+                    });
                 }
             }
-            catch
+            catch (Exception e)
             {
+                logger.Error(e);
             }
 
             return valor;
         }
 
-        private async Task<DatosContacto> DevolverDatosContacto(int proveedorId)
+        private DatosContacto DevolverDatosContacto(int proveedorId)
         {
-            var valor = new DatosContacto();
-            //valor.CondicionesPreferentesId = await mobjUnitOfWork.Repository<Condicion>()
-            //                   .Queryable()
-            //                   .AsNoTracking()
-            //                   .Where(x => x.)
-            //                   .Select(x =>  x.CondicionId ).ToListAsync();
-
-            valor = await mobjUnitOfWork.Repository<Proveedor>()
-                               .Queryable()
-                               .AsNoTracking()
-                               .Where(x => x.ProveedorId == proveedorId)
-                               .Select(x => new DatosContacto()
-                               {
-                                   Direccion = x.Direccion,
-                                   CodigoPostal = x.CodigoPostal,
-                                   Intermediario = x.Intermediario
-                               }).FirstOrDefaultAsync();
-
-            return valor;
+            return repositorio.Obtener<Proveedor, DatosContacto>(x => x.ProveedorId == proveedorId, x => new DatosContacto()
+            {
+                Direccion = x.Direccion,
+                CodigoPostal = x.CodigoPostal,
+                Intermediario = x.Intermediario
+            });
         }
 
-        public async Task<EntityErrors> GrabarRecordatorioAsync(ActividadInsetarIni oParam)
+        public Resultado GrabarRecordatorio(ActividadInsetarIni oParam)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
             Actividad oActividadSave;
 
             if (oParam.ActividadId == 0)
             {
-                oActividadSave = new Actividad()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                oActividadSave = new Actividad();
             }
             else
             {
-                oActividadSave = await TraerRecordatorioAsync(oParam.ActividadId);
+                oActividadSave = TraerRecordatorio(oParam.ActividadId);
             }
 
             oActividadSave.ComercialId = oParam.ComercialId;
-            oActividadSave.ContactoComercialId = oParam.contacto;  // ToDo cambiar por el id del contact
+            oActividadSave.ContactoComercialId = oParam.contacto;
             oActividadSave.Detalle = oParam.detalle;
             oActividadSave.FechaHoraActividad = oParam.fechaYHoraActividad;
             oActividadSave.FechaHoraRecordatorio = oParam.fechaYHoraRecordatorio;
@@ -304,36 +220,23 @@ namespace Molinos.DataAgro.Business.Managers
             oActividadSave.asunto = oParam.asunto;
             oActividadSave.FechaHoraRecordatorioFin = oParam.fechaYHoraRecordatorioFin;
 
-            if (oActividadSave.ObjectState == Constants.Object_Added)
-            {
-                oActividadSave.ActividadId = ((mobjUnitOfWork.Repository<Actividad>().Queryable().Max(x => (int?)x.ActividadId)) ?? 0) + 1;
-            }
+            repositorio.Agregar(oActividadSave);
 
-            mobjUnitOfWork.Repository<Actividad>().SaveEntity(oActividadSave);
-
-            var proveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().FirstOrDefault(x => x.ProveedorId == oParam.ProveedorId);
-            proveedor.ObjectState = Constants.Object_Modified;
+            var proveedor = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
             proveedor.FechaUltimoContacto = DateTime.Now;
-            mobjUnitOfWork.Repository<Proveedor>().SaveEntity(proveedor);
-
 
             try
             {
+                repositorio.GuardarCambios();
 
-
-                await mobjUnitOfWork.SaveChangesAsync();
-
-
-
-                if ((oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
-                    /*|| (oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaTareas"]))*/)
+                if ((oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"])))
                 {
                     EnviarCita(oParam);
                 }
             }
             catch (Exception ex)
             {
-
+                logger.Error(ex);
                 throw;
             }
 
@@ -346,12 +249,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var oContacto = mobjUnitOfWork.Repository<ContactoComercial>()
-                                 .Queryable().AsNoTracking();
-
-                var resContacto = oContacto.Where(x => x.ContactoComercialId == oParam.contacto).FirstOrDefault();
-
-                MailMessage oMensaje = new MailMessage();
+                var oMensaje = new MailMessage();
 
                 oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
 
@@ -367,8 +265,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oMensaje.Subject = oParam.asunto;
                 }
 
-                var proveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking().FirstOrDefault(x => x.ProveedorId == oParam.ProveedorId);
-                var comercial = mobjUnitOfWork.Repository<ContactoComercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.ProveedorId == oParam.ProveedorId && x.ContactoComercialId == oParam.contacto);
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
+                var comercial = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId && x.ContactoComercialId == oParam.contacto);
 
 
                 oMensaje.Body = "CUIT: " + proveedor.CUIT + "\r\nRazón Social: " + proveedor.RazonSocial;
@@ -430,21 +328,16 @@ namespace Molinos.DataAgro.Business.Managers
 
                 int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
-                    oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
                 else
-                    oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
 
-                if (ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S")
-                    oCliente.UseDefaultCredentials = true;
-                else
-                    oCliente.UseDefaultCredentials = false;
-
-
-                if (ConfigurationManager.AppSettings["EnableSSL"] == "S")
-                    oCliente.EnableSsl = true;
-                else
-                    oCliente.EnableSsl = false;
-
+                oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                         ConfigurationManager.AppSettings["CredentialPassword"]);
 
@@ -453,76 +346,67 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                var a = 1;
+                logger.Error(ex);
             }
-
         }
 
         public void EnviarEmail(Contrato oContrato, string idActiveDirectory)
         {
             try
             {
-                Contrato contrato = mobjUnitOfWork.Repository<Contrato>().Queryable().FirstOrDefault(x => x.ContratoId == oContrato.ContratoId);
-
-                ContactoComercial proveedorContacto = mobjUnitOfWork.Repository<ContactoComercial>().Queryable().FirstOrDefault(x => x.ProveedorId == contrato.ProveedorId);
-
-                Comercial comercial = mobjUnitOfWork.Repository<Comercial>().Queryable().FirstOrDefault(x => x.ComercialId == contrato.ComercialId);
-
+                var contrato = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == contrato.ProveedorId);
+                
                 string emailComercial = "";
                 string emailJefe = "";
 
-                if (comercial != null)
+                if (contrato.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(comercial.IdActiveDirectory); } catch { }
+                    try { emailComercial = GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
 
-                    Comercial jefeComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.ComercialId == comercial.EmpleadorACargo);
-
-                    try { emailJefe = GetEmailUserActiveDirectory(jefeComercial.IdActiveDirectory); } catch { }
-
+                    try { emailJefe = GetEmailUserActiveDirectory(contrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
                 }
 
                 if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
                 {
-                    MailMessage oMensaje = new MailMessage();
-
-                    oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
+                    var oMensaje = new MailMessage
+                    {
+                        From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                    };
 
                     oMensaje.To.Add(proveedorContacto.Email1);
                     if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
 
-                    TipoNegocio tipoNegocio = mobjUnitOfWork.Repository<TipoNegocio>().Queryable().AsNoTracking().FirstOrDefault(x => x.TipoNegocioId == oContrato.TipoNegocioId);
-                    Material material = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking().FirstOrDefault(x => x.MaterialId == oContrato.MaterialId);
-                    Moneda moneda = mobjUnitOfWork.Repository<Moneda>().Queryable().AsNoTracking().FirstOrDefault(x => x.MonedaId == oContrato.MonedaId);
-                    Campaña campania = mobjUnitOfWork.Repository<Campaña>().Queryable().AsNoTracking().FirstOrDefault(x => x.CampañaId == oContrato.CampanaId);
-                    Localidad localidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking().FirstOrDefault(x => x.LocalidadId == oContrato.LocalidadId);
-                    Provincia provincia = mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking().FirstOrDefault(x => x.ProvinciaId == oContrato.ProvinciaId);
-                    Moneda monedaSust = mobjUnitOfWork.Repository<Moneda>().Queryable().AsNoTracking().FirstOrDefault(x => x.MonedaId == oContrato.MonedaIdSustentable);
-                    Proveedor proveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().FirstOrDefault(x => x.ProveedorId == contrato.ProveedorId);
+                    var tipoNegocio = oContrato.TipoNegocio;
+                    var material = oContrato.Material;
+                    var moneda = oContrato.Moneda;
 
-                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + proveedor.RazonSocial;
+                    //var proveedor = contrato.Proveedor;
+
+                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + contrato.Proveedor.RazonSocial;
 
                     oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n  ";
 
                     if (oContrato.ContratoSAP != null) oMensaje.Body += "Contrato SAP: " + oContrato.ContratoSAP.Value + " \r\n  ";
-                    if (proveedor != null) oMensaje.Body += "Vendedor: " + proveedor.RazonSocial + " \r\n  ";
-                    if (tipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + tipoNegocio.Descripcion + " \r\n  ";
-                    if (material != null) oMensaje.Body += "Grano: " + material.Descripcion + " \r\n  ";
+                    if (contrato.Proveedor != null) oMensaje.Body += "Vendedor: " + contrato.Proveedor.RazonSocial + " \r\n  ";
+                    if (oContrato.TipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + oContrato.TipoNegocio.Descripcion + " \r\n  ";
+                    if (oContrato.Material != null) oMensaje.Body += "Grano: " + oContrato.Material.Descripcion + " \r\n  ";
                     if (oContrato.Cantidad != 0) oMensaje.Body += "Kg: " + oContrato.Cantidad + " \r\n  ";
                     if (oContrato.Precio != 0 && moneda != null) oMensaje.Body += "Precio - Moneda: " + oContrato.Precio + " " + moneda.Descripcion + " \r\n  ";
-                    if (campania != null) oMensaje.Body += "Campaña: " + campania.Descripcion + " \r\n  ";
-                    if (localidad != null && provincia != null) oMensaje.Body += "Procedencia: " + provincia.Nombre + ", " + localidad.Nombre + " \r\n  ";
-                    if (oContrato.ImporteSustentable != null && monedaSust != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + monedaSust.Descripcion + " \r\n  ";
+                    if (oContrato.Campana != null) oMensaje.Body += "Campaña: " + oContrato.Campana.Descripcion + " \r\n  ";
+                    if (oContrato.Localidad != null && oContrato.Provincia != null) oMensaje.Body += "Procedencia: " + oContrato.Provincia.Nombre + ", " + oContrato.Localidad.Nombre + " \r\n  ";
+                    if (oContrato.ImporteSustentable != null && oContrato.MonedaSustentable != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + oContrato.MonedaSustentable.Descripcion + " \r\n  ";
                     if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado Hasta " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n  ";
                     if (oContrato.DiasPesificado != null) oMensaje.Body += "Pago a " + oContrato.DiasPesificado.Value + " Días" + " \r\n  ";
                     if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n  ";
 
-                    oMensaje.Body += "\r\n  Por consultas, contactarse con " + (comercial != null ? comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                    oMensaje.Body += "\r\n  Por consultas, contactarse con " + (contrato.Comercial != null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                         "  \r\n\r\n  Saludos Cordiales" +
                         "  \r\n\r\n  Molinos Agro S.A." +
                         "  \r\n\r\n  www.molinosagro.com.ar";
 
-                    oMensaje.BodyEncoding = System.Text.Encoding.UTF8;
+                    oMensaje.BodyEncoding = Encoding.UTF8;
 
                     oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
 
@@ -530,30 +414,24 @@ namespace Molinos.DataAgro.Business.Managers
 
                     int Condicion = 0;
                     if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
-                        oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                    {
+                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                    }
                     else
-                        oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                    {
+                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                    }
 
-                    if (ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S")
-                        oCliente.UseDefaultCredentials = true;
-                    else
-                        oCliente.UseDefaultCredentials = false;
-
-
-                    if (ConfigurationManager.AppSettings["EnableSSL"] == "S")
-                        oCliente.EnableSsl = true;
-                    else
-                        oCliente.EnableSsl = false;
-
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";                    
                     oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                             ConfigurationManager.AppSettings["CredentialPassword"]);
-
                     oCliente.Send(oMensaje);
                 }
             }
             catch (Exception ex)
             {
-                var a = 1;
+                logger.Error(ex);
             }
         }
 
@@ -561,19 +439,15 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                ContactoComercial proveedorContacto = mobjUnitOfWork.Repository<ContactoComercial>().Queryable().FirstOrDefault(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
-                Comercial comercial = mobjUnitOfWork.Repository<Comercial>().Queryable().FirstOrDefault(x => x.ComercialId == oFijacionDePrecioContrato.ComercialId);
+                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
+                var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecioContrato.FijacionDePrecioContratoId);
                 string emailComercial = "";
                 string emailJefe = "";
 
-                if (comercial != null)
+                if (fijacion.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(comercial.IdActiveDirectory); } catch { }
-
-                    Comercial jefeComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.ComercialId == comercial.EmpleadorACargo);
-
-                    try { emailJefe = GetEmailUserActiveDirectory(jefeComercial.IdActiveDirectory); } catch { }
-
+                    try { emailComercial = GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try { emailJefe = GetEmailUserActiveDirectory(fijacion.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
                 if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
@@ -587,28 +461,24 @@ namespace Molinos.DataAgro.Business.Managers
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
 
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
-
-                    Proveedor proveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking().FirstOrDefault(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
-
-                    TipoNegocio tipoNegocio = mobjUnitOfWork.Repository<TipoNegocio>().Queryable().AsNoTracking().FirstOrDefault(x => x.TipoNegocioId == 3);
-                    Material material = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking().FirstOrDefault(x => x.MaterialId == oFijacionDePrecioContrato.MaterialId);
-                    Moneda moneda = mobjUnitOfWork.Repository<Moneda>().Queryable().AsNoTracking().FirstOrDefault(x => x.MonedaId == oFijacionDePrecioContrato.MonedaId);
+                    
+                    var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
 
                     oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n";
 
-                    if (oFijacionDePrecioContrato.ContratoId != null) oMensaje.Body += "Se creo una fijacion para el Contrato SAP: " + oFijacionDePrecioContrato.ContratoId + " \r\n";
-                    if (proveedor != null) oMensaje.Body += "Vendedor: " + proveedor.RazonSocial + " \r\n";
+                    if (fijacion.Contrato != null) oMensaje.Body += "Se creo una fijacion para el Contrato SAP: " + fijacion.Contrato.ContratoId + " \r\n";
+                    if (fijacion.Proveedor != null) oMensaje.Body += "Vendedor: " + fijacion.Proveedor.RazonSocial + " \r\n";
                     if (tipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + tipoNegocio.Descripcion + " \r\n";
-                    if (material != null) oMensaje.Body += "Grano: " + material.Descripcion + " \r\n";
-                    if (oFijacionDePrecioContrato.Cantidad != 0) oMensaje.Body += "Kg: " + oFijacionDePrecioContrato.Cantidad + " \r\n";
-                    if (oFijacionDePrecioContrato.Precio != 0 && moneda != null) oMensaje.Body += "Precio - Moneda: " + oFijacionDePrecioContrato.Precio + " " + moneda.Descripcion + " \r\n";
+                    if (fijacion.Material != null) oMensaje.Body += "Grano: " + fijacion.Material.Descripcion + " \r\n";
+                    if (fijacion.Cantidad != 0) oMensaje.Body += "Kg: " + fijacion.Cantidad + " \r\n";
+                    if (fijacion.Precio != 0 && fijacion.Moneda != null) oMensaje.Body += "Precio - Moneda: " + fijacion.Precio + " " + fijacion.Moneda.Descripcion + " \r\n";
 
-                    oMensaje.Body += "\r\nPor consultas, contactarse con " + (comercial != null ? comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                    oMensaje.Body += "\r\nPor consultas, contactarse con " + (fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                         "\r\n\r\nSaludos Cordiales" +
                         "\r\n\r\nMolinos Agro S.A." +
                         "\r\n\r\nwww.molinosagro.com.ar";
 
-                    oMensaje.BodyEncoding = System.Text.Encoding.UTF8;
+                    oMensaje.BodyEncoding = Encoding.UTF8;
 
                     oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
 
@@ -616,21 +486,16 @@ namespace Molinos.DataAgro.Business.Managers
 
                     int Condicion = 0;
                     if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
-                        oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                    {
+                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                    }
                     else
-                        oCliente = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                    {
+                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                    }
 
-                    if (ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S")
-                        oCliente.UseDefaultCredentials = true;
-                    else
-                        oCliente.UseDefaultCredentials = false;
-
-
-                    if (ConfigurationManager.AppSettings["EnableSSL"] == "S")
-                        oCliente.EnableSsl = true;
-                    else
-                        oCliente.EnableSsl = false;
-
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                     oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                             ConfigurationManager.AppSettings["CredentialPassword"]);
 
@@ -639,7 +504,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                var a = 1;
+                logger.Error(ex);
             }
         }
 
@@ -667,164 +532,77 @@ namespace Molinos.DataAgro.Business.Managers
             return email;
         }
 
-        public async Task<EntityErrors> EliminarRecordatorio(int Id)
+        public Resultado EliminarRecordatorio(int Id)
         {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<Actividad>();
-
-            var oActividad = await oRepository
-                             .Queryable()
-                             .Where(x => x.ActividadId == Id)
-                             .SingleOrDefaultAsync();
-
-            if (oActividad != null)
-            {
-                oRepository.Delete(oActividad);
-            }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            var oEntityErrors = new Resultado();
+            repositorio.Remover<Actividad>(Id);
+            repositorio.GuardarCambios();
             return oEntityErrors;
         }
 
-        public async Task<DatosIniProveedor> TraerDatosCombo(int ProveedorId)
+        public DatosIniProveedor TraerDatosCombo(int ProveedorId)
         {
-            var DatosCombo = new DatosIniProveedor();
+            var DatosCombo = new DatosIniProveedor
+            {
+                segm = repositorio.Listar<Segmentacion, SegmentacionQry>(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }),
+                tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(x => new TipoTelefonoQry() { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
+                prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre }),
+                loc = new List<LocalidadQry>(),
+                cope = repositorio.Listar<CanalOperacion, CanalOperacionQry>(x => new CanalOperacionQry() { CanalOperacionId = x.CanalOperacionId, Descripcion = x.Descripcion, Inhabilitado = false }),
+                gran = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion/*, CampañaIdActual = x.CampañaIdActual*/ }),
+                dest = repositorio.Listar<Destinatario, DestinatarioQry>(x => new DestinatarioQry() { DestinatarioId = x.DestinatarioId, Descripcion = x.Descripcion, Inhabilitado = false }),
+                cond = repositorio.Listar<Condicion, CondicionQry>(x => new CondicionQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = false }),
+                inte = repositorio.Listar<Interes, InteresQry>(x => new InteresQry() { InteresId = x.InteresId, Descripcion = x.Descripcion }),
+                tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
+                concom = repositorio.Listar<ContactoComercial, ContactoComercialQry>(x => new ContactoComercialQry() { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres }),
+                ClasComNet = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }),
+                BoleComNet = repositorio.Listar<BoletoCompraNet, BoletoCompraNetQry>(x => new BoletoCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }),
+                BolsComNet = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion })
+            };
 
-            DatosCombo.segm = await mobjUnitOfWork.Repository<Segmentacion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new SegmentacionQry() { SegmentacionId = x.SegmentacionId, Descripcion = x.Descripcion, Grupo = x.Grupo }).ToListAsync();
-
-            DatosCombo.tiptel = await mobjUnitOfWork.Repository<TipoTelefono>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoTelefonoQry() { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }).ToListAsync();
-
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking();
-
-            DatosCombo.prov = await mobjUnitOfWork.Repository<Provincia>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Join(oLocalidad, a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new { P = a, L = b })
-                                .GroupBy(x => new { x.P.ProvinciaId, x.P.Nombre })
-                                .Select(x => new ProvinciaQry() { Provinciaid = x.Key.ProvinciaId, Nombre = x.Key.Nombre }).ToListAsync();
-
-            DatosCombo.loc = new List<LocalidadQry>();
-            DatosCombo.cope = await mobjUnitOfWork.Repository<CanalOperacion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CanalOperacionQry() { CanalOperacionId = x.CanalOperacionId, Descripcion = x.Descripcion, Inhabilitado = false }).ToListAsync();
-
-            DatosCombo.gran = await mobjUnitOfWork.Repository<Material>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new MaterialQry() { MaterialId = x.MaterialId, Codigo = x.Codigo, Descripcion = x.Descripcion/*, CampañaIdActual = x.CampañaIdActual*/ }).ToListAsync();
-
-            DatosCombo.dest = await mobjUnitOfWork.Repository<Destinatario>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new DestinatarioQry() { DestinatarioId = x.DestinatarioId, Descripcion = x.Descripcion, Inhabilitado = false }).ToListAsync();
-
-            DatosCombo.cond = await mobjUnitOfWork.Repository<Condicion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CondicionQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = false }).ToListAsync();
-
-            DatosCombo.inte = await mobjUnitOfWork.Repository<Interes>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new InteresQry() { InteresId = x.InteresId, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosCombo.tipoact = await mobjUnitOfWork.Repository<TipoActividad>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosCombo.concom = await mobjUnitOfWork.Repository<ContactoComercial>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Where(x => x.ProveedorId == ProveedorId)
-                                .Select(x => new ContactoComercialQry() { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres }).ToListAsync();
-
-            DatosCombo.ClasComNet = await mobjUnitOfWork.Repository<ClasificacionCompraNet>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosCombo.BoleComNet = await mobjUnitOfWork.Repository<BoletoCompraNet>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new BoletoCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-
-            DatosCombo.BolsComNet = await mobjUnitOfWork.Repository<BolsaCompraNet>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
             return DatosCombo;
         }
 
-        public async Task<List<Localidad>> TraerLocalidad(int Id)
+        public List<Localidad> TraerLocalidad(int Id)
         {
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable();
-
-            List<Localidad> localidad = oLocalidad.Where(x => x.ProvinciaId == Id).ToList();
-
-            return localidad;
+            return repositorio.Listar<Localidad>(x => x.ProvinciaId == Id);
         }
 
-        public async Task<ProveedorNuevo> TraerRazonSocial(string cuit)
+        public ProveedorNuevo TraerRazonSocial(string cuit)
         {
-            var oRazonSocial = mobjUnitOfWork.Repository<RG2300>().Queryable();
-
-            var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable();
-
-            ProveedorNuevo razonsocial = new ProveedorNuevo();
-
-
-
-
-            razonsocial = await oRazonSocial.Where(x => x.CUIT == cuit).Select(x => new ProveedorNuevo
-            {
-                CUIT = x.CUIT,
-                Operable = 1,
-                Condicion = x.Situacion,
-                razonSocial = x.RazonSocial
-            }).FirstOrDefaultAsync();
-
+            var razonsocial = repositorio.Obtener<RG2300, ProveedorNuevo>(x => x.CUIT == cuit,
+                x => new ProveedorNuevo
+                {
+                    CUIT = x.CUIT,
+                    Operable = 1,
+                    Condicion = x.Situacion,
+                    razonSocial = x.RazonSocial
+                });
             if (razonsocial == null)
             {
                 razonsocial = new ProveedorNuevo() { Condicion = "no incluido", CUIT = cuit, Operable = 0, razonSocial = "No existe Razon Social" };
             }
+            else
+            {
 
-            razonsocial.Existe = oProveedor.Where(x => x.CUIT == cuit).Select(z => 1).DefaultIfEmpty(0).First();
+                razonsocial.Existe = repositorio.Existe<Proveedor>(x => x.CUIT == cuit) ? 1 : 0;
+            }
 
             TraerEstado(razonsocial);
 
             return razonsocial;
         }
 
-        public async Task<ProveedorQry> TraerProveedorPorCuit(string cuit)
+        public ProveedorQry TraerProveedorPorCuit(string cuit)
         {
-
-            var oProveedor = await mobjUnitOfWork.Repository<Proveedor>()
-
-                   .Queryable()
-                   .AsNoTracking()
-                   .Where(x => x.CUIT == cuit)
-                   .Select(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial }).FirstOrDefaultAsync();
-
-            return oProveedor;
+            return repositorio.Obtener<Proveedor, ProveedorQry>(x => x.CUIT == cuit, x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
         }
 
         public void TraerEstado(ProveedorNuevo prov)
         {
-            var oFacacop = mobjUnitOfWork.Repository<FACACOP>().Queryable().AsNoTracking()
-                            .Where(x => x.CUIT == prov.CUIT)
-                            .FirstOrDefault();
+            var oFacacop = repositorio.Existe<FACACOP>(x => x.CUIT == prov.CUIT);
 
-            if (oFacacop != null)
+            if (oFacacop)
             {
                 prov.Operable = 0;
                 prov.Condicion = "Apocrifos";
@@ -853,356 +631,157 @@ namespace Molinos.DataAgro.Business.Managers
                     return;
                 }
             }
-
-
         }
 
-        public async Task<List<ContactoComercial>> TraerContacto(int ProveedorId)
+        public List<ContactoComercial> TraerContacto(int ProveedorId)
         {
-            var oContactoComercial = mobjUnitOfWork.Repository<ContactoComercial>().Queryable();
-            List<ContactoComercial> contactocomercial = new List<ContactoComercial>();
-
-            contactocomercial = await oContactoComercial.AsNoTracking().Where(z => z.ProveedorId == ProveedorId).ToListAsync();
-
-            return contactocomercial;
-
+            return repositorio.Listar<ContactoComercial>(z => z.ProveedorId == ProveedorId);
         }
 
-        public async Task<GrabarProveedorResult> GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
+        public GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
-
-
-
             var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors.Errores = new EntityErrors();
 
-            var oProveedores = mobjUnitOfWork.Repository<Proveedor>().Queryable();
-            var oRg2300 = mobjUnitOfWork.Repository<RG2300>().Queryable();
-            var oFACACOP = mobjUnitOfWork.Repository<FACACOP>().Queryable();
-            var oContactoComercial = mobjUnitOfWork.Repository<ContactoComercial>().Queryable();
-            var oContactoComercialInteres = mobjUnitOfWork.Repository<ContactoComercialInteres>().Queryable();
-            var oCampo = mobjUnitOfWork.Repository<Campo>().Queryable();
-            var oCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>().Queryable();
-            var oAcopio = mobjUnitOfWork.Repository<Acopio>().Queryable();
-            var oAcopioMaterial = mobjUnitOfWork.Repository<AcopioMaterial>().Queryable();
-            var oAcopioCampaña = mobjUnitOfWork.Repository<AcopioCampaña>().Queryable();
-            var oProveedorCanalOperacion = mobjUnitOfWork.Repository<ProveedorCanalOperacion>().Queryable();
-            var oProveedorComercial = mobjUnitOfWork.Repository<ProveedorComercial>().Queryable();
-            var oProveedorCondicion = mobjUnitOfWork.Repository<ProveedorCondicion>().Queryable();
-            var oProveedorDestinatario = mobjUnitOfWork.Repository<ProveedorDestinatario>().Queryable();
-            var oCampañaMaterial = mobjUnitOfWork.Repository<Objetivo>().Queryable();
-            var oComercials = mobjUnitOfWork.Repository<Comercial>().Queryable();
-            
-            var existe = oProveedores.AsNoTracking().Any(x => x.CUIT == oParam.basicos.cuit);
-            
-            if (existe)
+            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "Ya existe un proveedor con ese CUIT" } } };
+                oEntityErrors.Error("Proveedor", "Ya existe un proveedor con ese CUIT");
                 return oEntityErrors;
             }
 
-            var existeRG = oRg2300.AsNoTracking().Any(x => x.CUIT == oParam.basicos.cuit);
-
-            if (!existeRG)
+            if (!repositorio.Existe<RG2300>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "No existe el CUIT" } } };
+                oEntityErrors.Error("RG2300", "No existe el CUIT");
                 return oEntityErrors;
             }
 
-            var existeFA = oFACACOP.AsNoTracking().Any(x => x.CUIT == oParam.basicos.cuit);
-
-            if (existeFA)
+            if (repositorio.Existe<FACACOP>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = "El CUIT es Apocrifo" } } };
+                oEntityErrors.Error("FACACOP", "El CUIT es Apocrifo");
                 return oEntityErrors;
             }
 
-            int Id = oProveedores.AsNoTracking().Select(x => x.ProveedorId)
-                         .DefaultIfEmpty(0)
-                         .Max();
-
-            Proveedor proveedor = new Proveedor();
-            proveedor.ProveedorId = Id + 1;
-
-            if (oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null")
-                proveedor.AlmacHabilitadoSojaSust = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust));
-            else
-                proveedor.AlmacHabilitadoSojaSust = null;
-
-            proveedor.AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust;
-            proveedor.AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust;
-            proveedor.AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns;
-
-            if (oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null")
-                proveedor.AreaInfluenciaId = Convert.ToInt32(oParam.contacto.areaDeInfluencia);
-            else
-                proveedor.AreaInfluenciaId = null;
-
-            proveedor.CUIT = oParam.basicos.cuit;
-            proveedor.RazonSocial = oParam.basicos.RazonSocial;
-            proveedor.SegmentacionId = oParam.basicos.segmentacion;
-            proveedor.Calificacion = oParam.basicos.calificacion;
-            proveedor.ProvinciaCompraNetId = oParam.basicos.ProvinciaCompraNet;
-            proveedor.LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet;            
-            proveedor.ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet;
-            proveedor.BoletoCompraNetId = oParam.basicos.BoletoCompraNet;
-            proveedor.BolsaCompraNetId = oParam.basicos.BolsaCompraNet;
-            proveedor.Observaciones = oParam.basicos.comentario;
-            proveedor.SegmentacionId = oParam.basicos.segmentacion;
-
-            proveedor.CodigoPostal = oParam.contacto.codpost;            
-            proveedor.Direccion = oParam.contacto.direccion;
-            proveedor.Intermediario = oParam.contacto.intermediario;
-            proveedor.LocalidadId = oParam.contacto.localidad;
-            proveedor.ObjectState = Constants.Object_Added;
-            proveedor.EstadoId = 1;
-            proveedor.FechaAlta = DateTime.Now;
-
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
+            var proveedor = new Proveedor
+            {
+                AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null,
+                AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust,
+                AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust,
+                AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns,
+                AreaInfluencia = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? repositorio.Obtener<AreaInfluencia>(Convert.ToInt32(oParam.contacto.areaDeInfluencia)) : null,
+                CUIT = oParam.basicos.cuit,
+                RazonSocial = oParam.basicos.RazonSocial,
+                SegmentacionId = oParam.basicos.segmentacion,
+                Calificacion = oParam.basicos.calificacion,
+                ProvinciaCompraNetId = oParam.basicos.ProvinciaCompraNet,
+                LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet,
+                ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet,
+                BoletoCompraNetId = oParam.basicos.BoletoCompraNet,
+                BolsaCompraNetId = oParam.basicos.BolsaCompraNet,
+                Observaciones = oParam.basicos.comentario,
+                CodigoPostal = oParam.contacto.codpost,
+                Direccion = oParam.contacto.direccion,
+                Intermediario = oParam.contacto.intermediario,
+                LocalidadId = oParam.contacto.localidad,
+                EstadoId = 1,
+                FechaAlta = DateTime.Now
+            };
+            var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
+            var oEstados = repositorio.Listar<Estado>();
             if (ConfigurationManager.AppSettings["SinConexionSap"].ToString() != "1")
             {
-                var listaDeCuit = new List<Datos>();
-                var oEstados = mobjUnitOfWork.Repository<Estado>().Queryable().AsNoTracking().ToList();
-                var usuarioPrueba = idActiveDirectory;
+                var listaDeCuit = repositorio.SelStore<Datos>("DataAgro_ActualizarComercialHome", 0, comercial.ComercialId).Where(x => x.CUIT == oParam.basicos.cuit).ToList();
 
-                if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+                if (listaDeCuit.Any() && ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
                 {
-                    usuarioPrueba = ConfigurationManager.AppSettings["SapPruebaUser"];
-                }
-                var com = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory == idActiveDirectory);
-                var listProve = mobjUnitOfWork.SelStore<Datos>("DataAgro_ActualizarComercialHome", com.ComercialId).ToList();
-
-                foreach (var x in listProve)
-                {
-                    if (x.CUIT == oParam.basicos.cuit)
+                    foreach(var x in listaDeCuit)
                     {
-                        listaDeCuit.Add(new Datos() { CUIT = x.CUIT, UsuarioDirectory = x.UsuarioDirectory });
+                        x.UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
                     }
                 }
 
-                if (listaDeCuit.Count == 0)
-                {
-                    if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
-                    {
-                        listaDeCuit.Add(new Datos() { CUIT = oParam.basicos.cuit, UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"].ToString() });
-                    }
-                    else
-                    {
-                        listaDeCuit.Add(new Datos() { CUIT = oParam.basicos.cuit, UsuarioDirectory = idActiveDirectory });
-                    }
-                }
-
-                var list = new DatosProveedor().ObtenerDatosDeProveedor(listaDeCuit);
+                var list = new DatosProveedor(logger).ObtenerDatosDeProveedor(listaDeCuit);
 
                 if (list.Count > 0)
                 {
                     foreach (var lista in list)
                     {
-                        var comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == lista.USUARIO.ToLower());
-                        
+                        var comercialLista = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == lista.USUARIO);
+
                         if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
                         {
                             string aux = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower();
-                            comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == aux);
+                            comercialLista = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == aux);
                         }
 
-                        if (comercial != null)
+                        if (comercialLista != null)
                         {
-
-                            var ProvEstados = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().Where(x => x.ProveedorId == proveedor.ProveedorId && x.ComercialId == comercial.ComercialId).ToList();
-                            if (ProvEstados.Count == 0)
+                            repositorio.Agregar(new ProveedorEstado
                             {
-                                //Agregar
-                                int id = mobjUnitOfWork.Repository<ProveedorEstado>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => x.ProveedorEstadoId)
-                                    .DefaultIfEmpty(0)
-                                    .Max();
-
-                                ProveedorEstado pe = new ProveedorEstado();
-
-                                pe.ComercialId = comercial.ComercialId;
-                                var Est = oEstados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault();
-                                pe.EstadoId = Est != null ? Est.EstadoId : 1;
-                                pe.ObjectState = Constants.Object_Added;
-                                pe.ProveedorEstadoId = id + 1;
-                                pe.ProveedorId = proveedor.ProveedorId;
-
-                                mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
-                            }
-                            else
-                            {
-                                //modificar
-                                foreach (var pe in ProvEstados)
-                                {
-                                    pe.ComercialId = comercial.ComercialId;
-                                    var Est = oEstados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault();
-                                    pe.EstadoId = Est != null ? Est.EstadoId : 1;
-                                    pe.ObjectState = Constants.Object_Modified;
-                                    pe.ProveedorEstadoId = pe.ProveedorEstadoId;
-                                    pe.ProveedorId = proveedor.ProveedorId;
-                                    mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
-                                }
-
-                            }
-
-
-
-
-                            proveedor.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
-
+                                Comercial = comercialLista,
+                                Estado = oEstados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault() ?? oEstados.Where(x => x.EstadoId == 1).FirstOrDefault(),
+                                Proveedor = proveedor
+                            });
                         }
-
+                        proveedor.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
                     }
-
-                    mobjUnitOfWork.SaveChanges();
                 }
                 else
                 {
-
-                    int id = mobjUnitOfWork.Repository<ProveedorEstado>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => x.ProveedorEstadoId)
-                                    .DefaultIfEmpty(0)
-                                    .Max();
-                    
-                    var comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == idActiveDirectory);
-                    ProveedorEstado pe = new ProveedorEstado();
-                    pe.ComercialId = comercial.ComercialId;
-                    pe.ObjectState = Constants.Object_Added;
-                    pe.ProveedorEstadoId = id + 1;
-                    pe.ProveedorId = proveedor.ProveedorId;
-
-                    if (oParam.basicos.nocliente == 1)
+                    repositorio.Agregar(new ProveedorEstado
                     {
-                        pe.EstadoId = int.Parse(ConfigurationManager.AppSettings["NoCliente"]);
-                    }
-                    else
-                        pe.EstadoId = int.Parse(ConfigurationManager.AppSettings["PotencialCliente"]);
-
-                    mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
-
-
-                    mobjUnitOfWork.SaveChanges();
-
+                        Comercial = comercial,
+                        Proveedor = proveedor,
+                        Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault()
+                    });
                 }
             }
             else
             {
-                if (oParam.basicos.nocliente == 1)
-                    proveedor.EstadoId = int.Parse(ConfigurationManager.AppSettings["NoCliente"]);
-                else
-                    proveedor.EstadoId = int.Parse(ConfigurationManager.AppSettings["PotencialCliente"]);
+                proveedor.Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault();
             }
+            repositorio.Agregar(proveedor);
 
-            mobjUnitOfWork.Repository<Proveedor>().SaveEntity(proveedor);
-            try
+            repositorio.Agregar(new ProveedorComercial()
             {
-                await mobjUnitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            var oComercial = new Comercial();
-            oComercial = await mobjUnitOfWork.Repository<Comercial>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Where(x => x.IdActiveDirectory == idActiveDirectory)
-                                .SingleOrDefaultAsync();
-
-            ProveedorComercial proveedorcomercial = new ProveedorComercial();
-            int ProveedorComercialId = oProveedorComercial.AsNoTracking().Select(x => x.ProveedorComercialId)
-                         .DefaultIfEmpty(0)
-                         .Max();
-            //TODO: buscar el ultimo item
-            int ProveedorComercialItem = 0;
-            //int ProveedorComercialItem = oProveedorComercial.Where(x => x.ComercialId == oComercial.ComercialId && x.ProveedorId == proveedor.ProveedorId).Max(x=> x.Item);
-            
-            proveedorcomercial.ComercialId = oComercial.ComercialId;
-            proveedorcomercial.NroItem = ProveedorComercialItem + 1; ;
-            proveedorcomercial.ObjectState = Constants.Object_Added;
-            proveedorcomercial.ProveedorComercialId = ProveedorComercialId + 1;
-            proveedorcomercial.ProveedorId = proveedor.ProveedorId;
-
-            mobjUnitOfWork.Repository<ProveedorComercial>().SaveEntity(proveedorcomercial);
-            try
-            {
-                await mobjUnitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                Comercial = comercial,
+                NroItem = 1,
+                Proveedor = proveedor
+            });
 
             if (oParam.contactocomercial != null && oParam.contactocomercial.Count > 0)
             {
                 foreach (var param in oParam.contactocomercial)
                 {
-                    int ContactoComercialId = oContactoComercial.AsNoTracking().Select(x => x.ContactoComercialId)
-                         .DefaultIfEmpty(0)
-                         .Max();
-                    ContactoComercial contactocomercial = new ContactoComercial();
-                    contactocomercial.ContactoComercialId = ContactoComercialId + 1;
-                    contactocomercial.Apellido = param.apellido;
-                    contactocomercial.Cargo = param.cargo;
-                    contactocomercial.Email1 = param.emails[0];
-                    contactocomercial.Email2 = param.emails[1];
-                    contactocomercial.Email3 = param.emails[2];
-                    contactocomercial.EsPrincipal = param.principal;
-                    contactocomercial.FechaNacimiento = param.fechaNacimiento;
-                    contactocomercial.Nombres = param.nombre;
-                    contactocomercial.ObjectState = Constants.Object_Added;
-                    contactocomercial.OtrosIntereses = param.otrosIntereses;
-                    contactocomercial.ProveedorId = proveedor.ProveedorId;
-                    contactocomercial.Puesto = param.puesto;
-                    contactocomercial.Telefono1 = param.telefonos[0].telefono;
-                    contactocomercial.Telefono2 = param.telefonos[1].telefono;
-                    contactocomercial.Telefono3 = param.telefonos[2].telefono;
-                    contactocomercial.TipoTelefono1Id = (param.telefonos[0].tipoTelefono.HasValue ? (int?)param.telefonos[0].tipoTelefono.Value : null);
-                    contactocomercial.TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null);
-                    contactocomercial.TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null);
-                    mobjUnitOfWork.Repository<ContactoComercial>().SaveEntity(contactocomercial);
-                    
-                    try
+                    var contactoComercial = new ContactoComercial
                     {
-                        await mobjUnitOfWork.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
-                    
-                    int cant = 1;
-                    int ContactoComercialInteresId = oContactoComercialInteres.AsNoTracking()
-                            .Select(x => x.ContactoComercialInteresId)
-                            .DefaultIfEmpty(0)
-                            .Max();
+                        Apellido = param.apellido,
+                        Cargo = param.cargo,
+                        Email1 = param.emails[0],
+                        Email2 = param.emails[1],
+                        Email3 = param.emails[2],
+                        EsPrincipal = param.principal,
+                        FechaNacimiento = param.fechaNacimiento,
+                        Nombres = param.nombre,
+                        OtrosIntereses = param.otrosIntereses,
+                        Proveedor = proveedor,
+                        Puesto = param.puesto,
+                        Telefono1 = param.telefonos[0].telefono,
+                        Telefono2 = param.telefonos[1].telefono,
+                        Telefono3 = param.telefonos[2].telefono,
+                        TipoTelefono1Id = (param.telefonos[0].tipoTelefono.HasValue ? (int?)param.telefonos[0].tipoTelefono.Value : null),
+                        TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null),
+                        TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null)
+                    };
+                    repositorio.Agregar(contactoComercial);
 
+                    int cant = 1;
                     foreach (var interes in param.intereses)
                     {
-                        ContactoComercialInteres contactocomercialinteres = new ContactoComercialInteres();
-                        contactocomercialinteres.ContactoComercialInteresId = ContactoComercialInteresId + cant;
-                        contactocomercialinteres.ContactoComercialId = contactocomercial.ContactoComercialId;
-                        contactocomercialinteres.InteresId = interes;
-                        contactocomercialinteres.NroItem = cant;
-                        contactocomercialinteres.ObjectState = Constants.Object_Added;
-                        mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(contactocomercialinteres);
-
-                        try
+                        repositorio.Agregar(new ContactoComercialInteres
                         {
-                            await mobjUnitOfWork.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw;
-                        }
-
-                        cant++;
-
+                            ContactoComercial = contactoComercial,
+                            Interes = repositorio.Obtener<Interes>(interes),
+                            NroItem = cant++,
+                        });
                     }
                 }
             }
@@ -1210,66 +789,33 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Count > 0)
             {
                 int item = 1;
-                int CampoId = oCampo.AsNoTracking()
-                            .Select(x => x.CampoId)
-                            .DefaultIfEmpty(0)
-                            .Max();
                 foreach (var cmp in oParam.produccion.CamposProduccion)
                 {
-
-                    Campo campo = new Campo();
-                    campo.CampoId = CampoId + item;
-                    campo.ArrendaPropia = cmp.hectareas;
-                    campo.Coordenadas = cmp.coordenadas;
-                    campo.HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust));
-                    campo.KMZfile = cmp.archivoFileResult;
-                    campo.KMZnombre = cmp.archivo;
-                    campo.LocalidadId = cmp.localidad;
-                    campo.NroItem = item;
-                    campo.ObjectState = Constants.Object_Added;
-                    campo.ProveedorId = proveedor.ProveedorId;
-
-                    mobjUnitOfWork.Repository<Campo>().SaveEntity(campo);
-                    try
+                    var campo = new Campo
                     {
-                        await mobjUnitOfWork.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
-
-                    item++;
+                        ArrendaPropia = cmp.hectareas,
+                        Coordenadas = cmp.coordenadas,
+                        HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)),
+                        KMZfile = cmp.archivoFileResult,
+                        KMZnombre = cmp.archivo,
+                        LocalidadId = cmp.localidad,
+                        NroItem = item++,
+                        Proveedor = proveedor
+                    };
+                    repositorio.Agregar(campo);
 
                     int itemCM = 1;
-                    int CampoMaterialId = oCampoMaterial.AsNoTracking()
-                            .Select(x => x.CampoMaterialid)
-                            .DefaultIfEmpty(0)
-                            .Max();
                     foreach (var grn in cmp.granos)
                     {
-                        
-                        CampoMaterial campomaterial = new CampoMaterial();
-                        campomaterial.CampañaId = grn.campañaId;
-                        campomaterial.CampoId = campo.CampoId;
-                        campomaterial.CampoMaterialid = CampoMaterialId + itemCM;
-                        campomaterial.Hectareas = grn.hectareas.HasValue ? grn.hectareas : null;
-                        campomaterial.MaterialId = grn.granoId;
-                        campomaterial.NroItem = itemCM;
-                        campomaterial.ObjectState = Constants.Object_Added;
-                        campomaterial.Toneladas = grn.toneladas.HasValue ? grn.toneladas : null;
-
-                        mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(campomaterial);
-                        try
+                        repositorio.Agregar(new CampoMaterial
                         {
-                            await mobjUnitOfWork.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw;
-                        }
-
-                        itemCM++;
+                            CampañaId = grn.campañaId,
+                            Campo = campo,
+                            Hectareas = grn.hectareas.HasValue ? grn.hectareas : null,
+                            MaterialId = grn.granoId,
+                            NroItem = itemCM++,
+                            Toneladas = grn.toneladas.HasValue ? grn.toneladas : null
+                        });
                     }
 
                 }
@@ -1278,213 +824,88 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.almacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento.Count > 0)
             {
                 int item = 1;
-                int AcopioId = oAcopio.AsNoTracking()
-                            .Select(x => x.AcopioId)
-                            .DefaultIfEmpty(0)
-                            .Max();
                 foreach (var cmp in oParam.almacenamiento.CamposAlmacenamiento)
                 {
-
-
-                    Acopio acopio = new Acopio();
-                    acopio.AcopioId = AcopioId + item;
-                    //acopio.ArrendadoPropio = cmp.hectareasAlmacenamiento;
-                    acopio.Coordenadas = cmp.coordenadasAlmacenamiento;
-                    acopio.KMZfile = cmp.archivoFileResult;
-                    acopio.KMZnombre = cmp.archivo;
-                    acopio.LocalidadId = cmp.localidad;
-                    acopio.NroItem = item;
-                    acopio.ObjectState = Constants.Object_Added;
-                    acopio.ProveedorId = proveedor.ProveedorId;
-
-                    mobjUnitOfWork.Repository<Acopio>().SaveEntity(acopio);
-                    try
+                    var acopio = new Acopio
                     {
-                        await mobjUnitOfWork.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
-
-                    item++;
+                        Coordenadas = cmp.coordenadasAlmacenamiento,
+                        KMZfile = cmp.archivoFileResult,
+                        KMZnombre = cmp.archivo,
+                        LocalidadId = cmp.localidad,
+                        NroItem = item++,
+                        Proveedor = proveedor
+                    };
+                    repositorio.Agregar(acopio);
 
                     int itemCM = 1;
-                    int AcopioCampañaId = oAcopioCampaña.AsNoTracking()
-                             .Select(x => x.AcopioCampañaId)
-                            .DefaultIfEmpty(0)
-                            .Max();
                     foreach (var grn in cmp.granosAlmacenamiento)
                     {
-
-
-                        AcopioCampaña acopiocampaña = new AcopioCampaña();
-                        acopiocampaña.AcopioId = acopio.AcopioId;
-                        acopiocampaña.AcopioCampañaId = AcopioCampañaId + itemCM;
-                        acopiocampaña.CampañaId = grn.campañaId;
-                        //acopiomaterial.MaterialId = grn.granoId;
-                        acopiocampaña.HasArrendadas = grn.hasArrendadas;
-                        acopiocampaña.NroItem = itemCM;
-                        acopiocampaña.ObjectState = Constants.Object_Added;
-                        //acopiomaterial.Porcentaje = grn.porcentajeAlmacenamiento;
-                        acopiocampaña.Toneladas = grn.toneladasAlmacenamiento;
-
-                        mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(acopiocampaña);
-                        try
+                        repositorio.Agregar(new AcopioCampaña
                         {
-                            await mobjUnitOfWork.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw;
-                        }
-
-                        itemCM++;
+                            Acopio = acopio,
+                            CampañaId = grn.campañaId,
+                            HasArrendadas = grn.hasArrendadas,
+                            NroItem = itemCM++,
+                            Toneladas = grn.toneladasAlmacenamiento
+                        });
                     }
 
                     itemCM = 1;
-                    int AcopioMaterialId = oAcopioMaterial.AsNoTracking()
-                             .Select(x => x.AcopioMaterialId)
-                            .DefaultIfEmpty(0)
-                            .Max();
                     foreach (var grn in cmp.granosAlmacenamientoGrano)
                     {
-
-                        AcopioMaterial acopiomaterial = new AcopioMaterial();
-                        acopiomaterial.AcopioId = acopio.AcopioId;
-                        acopiomaterial.AcopioMaterialId = AcopioMaterialId + itemCM;
-                        acopiomaterial.CampañaId = grn.campañaId;
-                        //acopiomaterial.MaterialId = grn.granoId;
-                        acopiomaterial.MaterialId = grn.granoId;
-                        acopiomaterial.NroItem = itemCM;
-                        acopiomaterial.ObjectState = Constants.Object_Added;
-                        //acopiomaterial.Porcentaje = grn.porcentajeAlmacenamiento;
-                        acopiomaterial.Toneladas = grn.toneladasAlmacenamiento;
-
-                        mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(acopiomaterial);
-                        try
+                        repositorio.Agregar(new AcopioMaterial
                         {
-                            await mobjUnitOfWork.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw;
-                        }
-
-                        itemCM++;
+                            Acopio = acopio,
+                            CampañaId = grn.campañaId,
+                            MaterialId = grn.granoId,
+                            NroItem = itemCM++,
+                            Toneladas = grn.toneladasAlmacenamiento
+                        });
                     }
-
-
-
-
-
-
                 }
             }
 
             if (oParam.contacto.canalesOperacion != null && oParam.contacto.canalesOperacion.Count > 0)
             {
-                List<ProveedorCanalOperacion> proveedorcanaloperacion = new List<ProveedorCanalOperacion>();
                 int itemPCO = 1;
-                int ProveedorCanalOperacionId = oProveedorCanalOperacion.AsNoTracking()
-                         .Select(x => x.ContactoCanalOperacionId)
-                         .DefaultIfEmpty(0)
-                         .Max();
+
                 foreach (var param in oParam.contacto.canalesOperacion)
                 {
-
-
-                    ProveedorCanalOperacion pco = new ProveedorCanalOperacion();
-                    pco.CanalOperacionId = param;
-                    pco.ContactoCanalOperacionId = ProveedorCanalOperacionId + itemPCO;
-                    pco.NroItem = itemPCO.ToString();
-                    pco.ObjectState = Constants.Object_Added;
-                    pco.ProveedorId = proveedor.ProveedorId;
-
-                    proveedorcanaloperacion.Add(pco);
-
+                    repositorio.Agregar(new ProveedorCanalOperacion
+                    {
+                        CanalOperacionId = param,
+                        NroItem = itemPCO.ToString(),
+                        Proveedor = proveedor
+                    });
                     itemPCO++;
-
-                }
-
-                mobjUnitOfWork.Repository<ProveedorCanalOperacion>().SaveRange(proveedorcanaloperacion);
-                try
-                {
-                    await mobjUnitOfWork.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    throw;
                 }
             }
 
-
-
-
-
             if (oParam.contacto.condPreferentes != null && oParam.contacto.condPreferentes.Count > 0)
             {
-                List<ProveedorCondicion> proveedorcondicion = new List<ProveedorCondicion>();
                 int itemPCO = 1;
-                int ProveedorCondicionId = oProveedorCondicion.AsNoTracking().Select(x => x.ContactoCondicionId)
-                         .DefaultIfEmpty(0)
-                         .Max();
                 foreach (var param in oParam.contacto.condPreferentes)
                 {
-
-
-                    ProveedorCondicion pc = new ProveedorCondicion();
-                    pc.CondicionId = param;
-                    pc.ContactoCondicionId = ProveedorCondicionId + itemPCO;
-                    pc.NroItem = itemPCO;
-                    pc.ObjectState = Constants.Object_Added;
-                    pc.ProveedorId = proveedor.ProveedorId;
-
-                    proveedorcondicion.Add(pc);
-                    itemPCO++;
-
-                }
-                mobjUnitOfWork.Repository<ProveedorCondicion>().SaveRange(proveedorcondicion);
-                try
-                {
-                    await mobjUnitOfWork.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    throw;
+                    repositorio.Agregar(new ProveedorCondicion
+                    {
+                        CondicionId = param,
+                        NroItem = itemPCO++,
+                        Proveedor = proveedor
+                    });
                 }
             }
 
             if (oParam.contacto.entregaA != null && oParam.contacto.entregaA.Count > 0)
             {
-                List<ProveedorDestinatario> proveedordestinatario = new List<ProveedorDestinatario>();
                 int itemPCO = 1;
-                int ProveedorDestinatarioId = oProveedorDestinatario.AsNoTracking().Select(x => x.ContactoDestinatarioId)
-                         .DefaultIfEmpty(0)
-                         .Max();
                 foreach (var param in oParam.contacto.entregaA)
                 {
-
-
-                    ProveedorDestinatario pd = new ProveedorDestinatario();
-                    pd.ContactoDestinatarioId = ProveedorDestinatarioId + itemPCO;
-                    pd.DestinatarioId = param;
-                    pd.NroItem = itemPCO;
-                    pd.ObjectState = Constants.Object_Added;
-                    pd.ProveedorId = proveedor.ProveedorId;
-
-                    proveedordestinatario.Add(pd);
-                    itemPCO++;
-
-                }
-                mobjUnitOfWork.Repository<ProveedorDestinatario>().SaveRange(proveedordestinatario);
-                try
-                {
-                    await mobjUnitOfWork.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    throw;
+                    repositorio.Agregar(new ProveedorDestinatario
+                    {
+                        DestinatarioId = param,
+                        NroItem = itemPCO++,
+                        Proveedor = proveedor
+                    });
                 }
             }
 
@@ -1492,152 +913,98 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oParam.produccion.objetivos.OrderBy(z => z.campañaId);
 
-                List<Objetivo> campañamaterial = new List<Objetivo>();
-
-                int CampañaActualId = 0;
-                int ItemCampañaActual = 0;
-                int itemCampañaMaterialId = 0;
-
+                int itemCampañaActual = 0;
                 foreach (var param in oParam.produccion.objetivos)
                 {
-                    int CampañaMaterialId = oCampañaMaterial.AsNoTracking().Select(x => x.ObjetivoId)
-                         .DefaultIfEmpty(0)
-                         .Max();
-
-                    if (CampañaActualId != param.campañaId)
+                    repositorio.Agregar(new Objetivo
                     {
-                        CampañaActualId = param.campañaId;
-                        ItemCampañaActual = 0;
-                    }
-
-                    ItemCampañaActual++;
-                    itemCampañaMaterialId++;
-
-                    Objetivo cm = new Objetivo();
-                    cm.CampañaId = param.campañaId;
-                    cm.ObjetivoId = CampañaMaterialId + itemCampañaMaterialId;
-                    cm.MaterialId = param.granoId;
-                    cm.NroItem = ItemCampañaActual;
-                    cm.ObjectState = Constants.Object_Added;
-                    cm.ProveedorId = proveedor.ProveedorId;
-                    cm.ToneladasObjetivos = Convert.ToDouble(param.toneladasObjetivo);
-
-                    campañamaterial.Add(cm);
-
+                        CampañaId = param.campañaId,
+                        MaterialId = param.granoId,
+                        NroItem = itemCampañaActual++,
+                        Proveedor = proveedor,
+                        ToneladasObjetivos = Convert.ToDouble(param.toneladasObjetivo)
+                    });
                 }
-                mobjUnitOfWork.Repository<Objetivo>().SaveRange(campañamaterial);
-                try
-                {
-                    await mobjUnitOfWork.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-
             }
-
-            oEntityErrors.ProveedorId = proveedor.ProveedorId;
-            oEntityErrors.Errores = new EntityErrors();
-            //await mobjUnitOfWork.SaveChangesAsync();
-
-            return oEntityErrors;
-        }
-
-        public async Task<GrabarProveedorResult> UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory)
-        {
-
-            var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors.Errores = new EntityErrors();
-           
-            var Error = await UpdateDatosBasicosProveedor(oParam, idActiveDirectory);
-
-            if (Error != null)
-            {
-                oEntityErrors.Errores = Error;
-                return oEntityErrors;
-            }
-            var ErrorContacto = await UpdateDatosContacto(oParam);
-
-            if (ErrorContacto != null)
-            {
-                oEntityErrors.Errores = ErrorContacto;
-                return oEntityErrors;
-            }
-            var ErrorComercial = await UpdateContactoComerciales(oParam);
-
-            if (ErrorComercial != null)
-            {
-                oEntityErrors.Errores = ErrorComercial;
-                return oEntityErrors;
-            }
-            var ErrorProduccion = await UpdateProduccion(oParam);
-            
-            if (ErrorProduccion != null)
-            {
-                oEntityErrors.Errores = ErrorProduccion;
-                return oEntityErrors;
-            }
-            var ErrorAlmacenamiento = await UpdateAlmacenamiento(oParam);
-            
-            if (ErrorAlmacenamiento != null)
-            {
-                oEntityErrors.Errores = ErrorAlmacenamiento;
-                return oEntityErrors;
-            }
-
             try
             {
-                await mobjUnitOfWork.SaveChangesAsync();
+                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
-                oEntityErrors.Errores = new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                oEntityErrors.Error("", ex.Message);
                 return oEntityErrors;
             }
-
-            oEntityErrors.ProveedorId = oParam.ProveedorId;
-
+            oEntityErrors.ProveedorId = proveedor.ProveedorId;
             return oEntityErrors;
-
         }
 
-        private ErrorMessage Validar(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
-            throw new NotImplementedException();
-        }
+            var resultado = UpdateDatosBasicosProveedor(oParam, idActiveDirectory);
 
-        public async Task<Proveedor> TraerProveedor(int? proveedorId)
-        {
-            var oProveedor = await mobjUnitOfWork.Repository<Proveedor>()
-                                 .Queryable()
-                                 .Where(x => x.ProveedorId == proveedorId)
-                                 .SingleOrDefaultAsync();
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateDatosContacto(oParam);
 
-            oProveedor.ObjectState = Constants.Object_Modified;
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateContactoComerciales(oParam);
 
-            return oProveedor;
-        }
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateProduccion(oParam);
 
-        public async Task<EntityErrors> UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory)
-        {
-            Proveedor oProveedorSave;
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateAlmacenamiento(oParam);
 
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
 
             try
             {
-                oProveedorSave = await TraerProveedor(oParam.ProveedorId);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("", ex.Message);
+                return resultado;
+            }
 
-                if (oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null")
-                    oProveedorSave.AlmacHabilitadoSojaSust = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust));
-                else
-                    oProveedorSave.AlmacHabilitadoSojaSust = null;
+            resultado.ProveedorId = oParam.ProveedorId;
 
+            return resultado;
+
+        }
+
+        public Proveedor TraerProveedor(int? proveedorId)
+        {
+            return proveedorId.HasValue ? repositorio.Obtener<Proveedor>(proveedorId.Value) : null;
+        }
+
+        public GrabarProveedorResult UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory)
+        {
+            var resultado = new GrabarProveedorResult();
+            try
+            {
+                var oProveedorSave = TraerProveedor(oParam.ProveedorId);
+
+                oProveedorSave.AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null;
                 oProveedorSave.AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns;
-
                 oProveedorSave.AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust;
                 oProveedorSave.AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust;
-                oProveedorSave.Calificacion = oParam.basicos.calificacion;                
+                oProveedorSave.Calificacion = oParam.basicos.calificacion;
                 oProveedorSave.Observaciones = oParam.basicos.comentario;
                 oProveedorSave.SegmentacionId = oParam.basicos.segmentacion;
                 oProveedorSave.CodigoPostal = oParam.contacto.codpost;
@@ -1645,281 +1012,158 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.Intermediario = oParam.contacto.intermediario;
                 oProveedorSave.LocalidadId = oParam.contacto.localidad;
                 oProveedorSave.ProvinciaId = oParam.contacto.provincia;
+                oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? Convert.ToInt32(oParam.contacto.areaDeInfluencia) : (int?)null;
 
-                if (oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null")
-                    oProveedorSave.AreaInfluenciaId = Convert.ToInt32(oParam.contacto.areaDeInfluencia);
-                else
-                    oProveedorSave.AreaInfluenciaId = null;
-
-
-                var oProveedorEstados = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().AsNoTracking();
-                var ProveedorId = mobjUnitOfWork.Repository<Proveedor>().Queryable().AsNoTracking().FirstOrDefault(x => x.CUIT == oParam.basicos.cuit).ProveedorId;
-                var ComercialId = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory == idActiveDirectory).ComercialId;
-                var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
-
-
-
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
+                var oEstados = repositorio.Listar<Estado>();
                 if (ConfigurationManager.AppSettings["SinConexionSap"].ToString() != "1")
                 {
-                    var listaDeCuit = new List<Datos>();
-                    var oEstados = mobjUnitOfWork.Repository<Estado>().Queryable().AsNoTracking().ToList();
-                    var usuarioPrueba = idActiveDirectory;
+                    var listaDeCuit = repositorio.SelStore<Datos>("DataAgro_ActualizarComercialHome", 0, comercial.ComercialId).Where(x => x.CUIT == oParam.basicos.cuit).ToList();
 
-                    if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+                    if (listaDeCuit.Any() && ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
                     {
-                        usuarioPrueba = ConfigurationManager.AppSettings["SapPruebaUser"];
-                    }
-
-
-                    var listProve = mobjUnitOfWork.SelStore<Datos>("DataAgro_ActualizarComercialHome", ComercialId).ToList();
-
-                    foreach (var x in listProve)
-                    {
-                        if (x.CUIT == oParam.basicos.cuit)
+                        foreach (var x in listaDeCuit)
                         {
-
-                            if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
-                            {
-                                listaDeCuit.Add(new Datos() { CUIT = x.CUIT, UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"].ToString() });
-                            }
-                            else
-                            {
-                                listaDeCuit.Add(new Datos() { CUIT = x.CUIT, UsuarioDirectory = x.UsuarioDirectory });
-                            }
+                            x.UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
                         }
                     }
 
-
-
-                    //listaDeCuit.Add(new Datos() { CUIT = oParam.basicos.cuit, UsuarioDirectory = usuarioPrueba });
-
-
-                    var list = new DatosProveedor().ObtenerDatosDeProveedor(listaDeCuit);
+                    var list = new DatosProveedor(logger).ObtenerDatosDeProveedor(listaDeCuit);
 
                     if (list.Count > 0)
                     {
                         foreach (var lista in list)
                         {
-
-                            var comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == lista.USUARIO.ToLower());
-
+                            var comercialLista = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == lista.USUARIO.ToLower());
 
                             if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
                             {
                                 string aux = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower();
-                                comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == aux);
+                                comercialLista = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == aux);
                             }
 
-                            if (comercial != null)
+                            if (comercialLista != null)
                             {
 
-                                var ProvEstados = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().Where(x => x.ProveedorId == ProveedorId && x.ComercialId == comercial.ComercialId).ToList();
-                                if (ProvEstados.Count == 0)
+                                var provEstados = repositorio.Listar<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.ComercialId == comercialLista.ComercialId);
+                                var est = oEstados.FirstOrDefault(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()) ?? oEstados.FirstOrDefault(x => x.EstadoId == 1);
+                                if (provEstados.Count == 0)
                                 {
-                                    //Agregar
-                                    int id = mobjUnitOfWork.Repository<ProveedorEstado>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.ProveedorEstadoId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
-
-
-
-                                    ProveedorEstado pe = new ProveedorEstado();
-
-                                    pe.ComercialId = comercial.ComercialId;
-                                    var Est = oEstados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault();
-                                    pe.EstadoId = Est != null ? Est.EstadoId : 1;
-                                    pe.ObjectState = Constants.Object_Added;
-                                    pe.ProveedorEstadoId = id + 1;
-                                    pe.ProveedorId = ProveedorId;
-
-                                    mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                                    repositorio.Agregar(new ProveedorEstado
+                                    {
+                                        Comercial = comercial,
+                                        Estado = est,
+                                        Proveedor = proveedor
+                                    });
                                 }
                                 else
                                 {
-                                    //modificar
-                                    foreach (var pe in ProvEstados)
+                                    foreach (var pe in provEstados)
                                     {
-                                        pe.ComercialId = comercial.ComercialId;
-                                        var Est = oEstados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault();
-                                        pe.EstadoId = Est != null ? Est.EstadoId : 1;
-                                        pe.ObjectState = Constants.Object_Modified;
-                                        pe.ProveedorEstadoId = pe.ProveedorEstadoId;
-                                        pe.ProveedorId = ProveedorId;
-                                        mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                                        pe.Estado = est;
                                     }
-
                                 }
 
-
-
-
                                 oProveedorSave.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
-
                             }
-
                         }
-
-                        mobjUnitOfWork.SaveChanges();
                     }
                     else
                     {
-                        if (oParam.basicos.nocliente == 1)
-                            oProveedorSave.EstadoId = int.Parse(ConfigurationManager.AppSettings["NoCliente"]);
-                        else
-                            oProveedorSave.EstadoId = int.Parse(ConfigurationManager.AppSettings["PotencialCliente"]);
+                        oProveedorSave.Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault();
 
-
-
-                        var comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory == idActiveDirectory);
                         if (comercial != null)
                         {
-
-                            var ProvEstados = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().Where(x => x.ProveedorId == ProveedorId && x.ComercialId == comercial.ComercialId).ToList();
-                            if (ProvEstados.Count == 0)
+                            var provEstados = repositorio.Listar<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.ComercialId == comercial.ComercialId);
+                            if (provEstados.Count == 0)
                             {
-                                //Agregar
-                                int id = mobjUnitOfWork.Repository<ProveedorEstado>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => x.ProveedorEstadoId)
-                                    .DefaultIfEmpty(0)
-                                    .Max();
-
-
-
-                                ProveedorEstado pe = new ProveedorEstado();
-
-                                pe.ComercialId = comercial.ComercialId;
-                                pe.EstadoId = oProveedorSave.EstadoId.Value;
-                                pe.ObjectState = Constants.Object_Added;
-                                pe.ProveedorEstadoId = id + 1;
-                                pe.ProveedorId = ProveedorId;
-
-                                mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                                repositorio.Agregar(new ProveedorEstado
+                                {
+                                    Comercial = comercial,
+                                    Estado = oProveedorSave.Estado,
+                                    Proveedor = proveedor
+                                });
                             }
                             else
                             {
-                                //modificar
-                                foreach (var pe in ProvEstados)
+                                foreach (var pe in provEstados)
                                 {
-                                    pe.ComercialId = comercial.ComercialId;
-                                    pe.EstadoId = oProveedorSave.EstadoId.Value;
-                                    pe.ObjectState = Constants.Object_Modified;
-                                    pe.ProveedorEstadoId = pe.ProveedorEstadoId;
-                                    pe.ProveedorId = ProveedorId;
-                                    mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                                    pe.Estado = oProveedorSave.Estado;
                                 }
-
                             }
                         }
                     }
                 }
                 else
                 {
-                    if (oParam.basicos.nocliente == 1)
-                        oProveedorSave.EstadoId = int.Parse(ConfigurationManager.AppSettings["NoCliente"]);
-                    else
-                        oProveedorSave.EstadoId = int.Parse(ConfigurationManager.AppSettings["PotencialCliente"]);
-
-
-                    var comercial = oComerciales.FirstOrDefault(x => x.IdActiveDirectory == idActiveDirectory);
+                    oProveedorSave.Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault();
                     if (comercial != null)
                     {
-
-                        var ProvEstados = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().Where(x => x.ProveedorId == ProveedorId && x.ComercialId == comercial.ComercialId).ToList();
-                        if (ProvEstados.Count == 0)
+                        var provEstados = repositorio.Listar<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.ComercialId == comercial.ComercialId);
+                        if (provEstados.Count == 0)
                         {
-                            //Agregar
-                            int id = mobjUnitOfWork.Repository<ProveedorEstado>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => x.ProveedorEstadoId)
-                                .DefaultIfEmpty(0)
-                                .Max();
-
-
-
-                            ProveedorEstado pe = new ProveedorEstado();
-
-                            pe.ComercialId = comercial.ComercialId;
-                            pe.EstadoId = oProveedorSave.EstadoId.Value;
-                            pe.ObjectState = Constants.Object_Added;
-                            pe.ProveedorEstadoId = id + 1;
-                            pe.ProveedorId = ProveedorId;
-
-                            mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                            repositorio.Agregar(new ProveedorEstado
+                            {
+                                Comercial = comercial,
+                                Estado = oProveedorSave.Estado,
+                                Proveedor = proveedor
+                            });
                         }
                         else
                         {
-                            //modificar
-                            foreach (var pe in ProvEstados)
+                            foreach (var pe in provEstados)
                             {
-                                pe.ComercialId = comercial.ComercialId;
-                                pe.EstadoId = oProveedorSave.EstadoId.Value;
-                                pe.ObjectState = Constants.Object_Modified;
-                                pe.ProveedorEstadoId = pe.ProveedorEstadoId;
-                                pe.ProveedorId = ProveedorId;
-                                mobjUnitOfWork.Repository<ProveedorEstado>().SaveEntity(pe);
+                                pe.Estado = oProveedorSave.Estado;
                             }
-
                         }
                     }
-
-
                 }
-
-                mobjUnitOfWork.Repository<Proveedor>().SaveEntity(oProveedorSave);
+                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateDatosContacto(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateDatosContacto(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                var ErrorCanal = await UpdateCanalOperacion(oParam);
+                var ErrorCanal = UpdateCanalOperacion(oParam);
                 if (ErrorCanal != null)
                     return ErrorCanal;
 
 
-                var ErrorDestinatario = await UpdateDestinatario(oParam);
+                var ErrorDestinatario = UpdateDestinatario(oParam);
                 if (ErrorDestinatario != null)
                     return ErrorDestinatario;
 
 
-                var ErrorCondicion = await UpdateCondicion(oParam);
+                var ErrorCondicion = UpdateCondicion(oParam);
                 if (ErrorCondicion != null)
                     return ErrorCondicion;
 
-                var ErrorObjetivos = await UpdateObjetivos(oParam);
+                var ErrorObjetivos = UpdateObjetivos(oParam);
                 if (ErrorObjetivos != null)
                     return ErrorObjetivos;
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateCanalOperacion(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateCanalOperacion(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                List<ProveedorCanalOperacion> oCanalSave;
-
-                oCanalSave = await mobjUnitOfWork.Repository<ProveedorCanalOperacion>()
-                                     .Queryable()
-                                     .AsNoTracking()
-                                     .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                     .ToListAsync();
+                var oCanalSave = repositorio.Listar<ProveedorCanalOperacion>(x => x.ProveedorId == oParam.ProveedorId);
 
 
                 #region Eliminar
@@ -1928,50 +1172,36 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (!oParam.contacto.canalesOperacion.Contains(can.CanalOperacionId))
                     {
-                        can.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<ProveedorCanalOperacion>().SaveEntity(can);
+                        repositorio.Remover(can);
                     }
                 }
 
                 #endregion
-
-
-                var id = mobjUnitOfWork.Repository<ProveedorCanalOperacion>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => x.ContactoCanalOperacionId)
-                                    .DefaultIfEmpty(0)
-                                    .Max();
-
                 foreach (var can in oParam.contacto.canalesOperacion)
                 {
                     if (!oCanalSave.Any(x => x.CanalOperacionId == can))
                     {
-                        id = id + 1;
-                        //crear nuevo objeto
-                        var a = new ProveedorCanalOperacion() { ContactoCanalOperacionId = id, CanalOperacionId = can, NroItem = "1", ProveedorId = (int)oParam.ProveedorId, ObjectState = Constants.Object_Added };
-                        mobjUnitOfWork.Repository<ProveedorCanalOperacion>().SaveEntity(a);
+                        repositorio.Agregar(new ProveedorCanalOperacion()
+                        {
+                            NroItem = "1",
+                            ProveedorId = (int)oParam.ProveedorId
+                        });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateDestinatario(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateDestinatario(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                List<ProveedorDestinatario> oDestinatarioSave;
-
-                oDestinatarioSave = await mobjUnitOfWork.Repository<ProveedorDestinatario>()
-                                     .Queryable()
-                                     .AsNoTracking()
-                                     .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                     .ToListAsync();
+                var oDestinatarioSave = repositorio.Listar<ProveedorDestinatario>();
 
 
                 #region Eliminar
@@ -1980,103 +1210,75 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (!oParam.contacto.entregaA.Contains(dest.DestinatarioId))
                     {
-
-                        dest.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<ProveedorDestinatario>().SaveEntity(dest);
+                        repositorio.Remover(dest);
                     }
                 }
 
                 #endregion
-                var id = mobjUnitOfWork.Repository<ProveedorDestinatario>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.ContactoDestinatarioId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
                 foreach (var can in oParam.contacto.entregaA)
                 {
                     if (!oDestinatarioSave.Any(x => x.DestinatarioId == can))
                     {
-                        //crear nuevo objeto
-                        id = id + 1;
-                        var a = new ProveedorDestinatario() { ContactoDestinatarioId = id, DestinatarioId = can, NroItem = 1, ProveedorId = (int)oParam.ProveedorId, ObjectState = Constants.Object_Added };
-                        mobjUnitOfWork.Repository<ProveedorDestinatario>().SaveEntity(a);
+                        repositorio.Agregar(new ProveedorDestinatario()
+                        {
+                            NroItem = 1,
+                            ProveedorId = (int)oParam.ProveedorId
+                        });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateCondicion(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateCondicion(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                List<ProveedorCondicion> oCondicionSave;
-
-                oCondicionSave = await mobjUnitOfWork.Repository<ProveedorCondicion>()
-                                     .Queryable()
-                                     .AsNoTracking()
-                                     .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                     .ToListAsync();
-
+                var oCondicionSave = repositorio.Listar<ProveedorCondicion>(x => x.ProveedorId == oParam.ProveedorId);
 
                 #region Eliminar
 
                 foreach (var cond in oCondicionSave)
                 {
-                    if (!oParam.contacto.condPreferentes.Contains(cond.CondicionId))
+                    if (!oParam.contacto.condPreferentes.Contains(cond.Condicion.CondicionId))
                     {
-                        cond.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<ProveedorCondicion>().SaveEntity(cond);
+                        repositorio.Remover(cond);
                     }
                 }
 
                 #endregion
-                var id = mobjUnitOfWork.Repository<ProveedorCondicion>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.ContactoCondicionId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
                 if (oParam.contacto != null)
                 {
                     foreach (var cond in oParam.contacto.condPreferentes)
                     {
                         if (!oCondicionSave.Any(x => x.CondicionId == cond))
                         {
-                            //crear nuevo objeto
-                            id = id + 1;
-                            var a = new ProveedorCondicion() { ContactoCondicionId = id, CondicionId = cond, NroItem = 1, ProveedorId = (int)oParam.ProveedorId, ObjectState = Constants.Object_Added };
-                            mobjUnitOfWork.Repository<ProveedorCondicion>().SaveEntity(a);
+
+                            repositorio.Agregar(new ProveedorCondicion()
+                            {
+                                CondicionId = cond,
+                                NroItem = 1,
+                                ProveedorId = (int)oParam.ProveedorId
+                            });
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
             return null;
         }
 
-        public async Task<EntityErrors> UpdateObjetivos(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateObjetivos(NuevoProveedor oParam)
         {
-            List<Objetivo> oCampañaSave;
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable().AsNoTracking();
-
-            oCampañaSave = await mobjUnitOfWork.Repository<Objetivo>()
-                                     .Queryable()
-                                     .Join(oMaterial, a => a.MaterialId, b => b.MaterialId, (a, b) => new { CAMP = a, MAT = b })
-                                     .Where(x => x.CAMP.ProveedorId == oParam.ProveedorId && x.CAMP.CampañaId >= x.MAT.CampañaId)
-                                     .Select(x => x.CAMP)
-                                     .ToListAsync();
-
-
-
+            var oCampañaSave = repositorio.Listar<Objetivo>(x => x.ProveedorId == oParam.ProveedorId && x.CampañaId >= x.Material.CampañaId);
             #region Eliminar
 
             if (oParam.produccion.eliminarobjetivos.Count > 0)
@@ -2085,8 +1287,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oParam.produccion.eliminarobjetivos.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
                     {
-                        camp.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<Objetivo>().SaveEntity(camp);
+                        repositorio.Remover(camp);
                     }
                 }
             }
@@ -2094,12 +1295,6 @@ namespace Molinos.DataAgro.Business.Managers
             #endregion
 
             #region Agregar
-            var id = mobjUnitOfWork.Repository<Objetivo>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.ObjetivoId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
 
             if (oParam.produccion.objetivos != null && oParam.produccion.objetivos.Count > 0)
             {
@@ -2107,18 +1302,14 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (!oCampañaSave.Any(x => x.CampañaId == obj.campañaId && x.MaterialId == obj.granoId))
                     {
-                        id = id + 1;
-                        var oCampañaMaterial = new Objetivo()
+                        repositorio.Agregar(new Objetivo()
                         {
-                            ObjetivoId = id,
                             NroItem = 1,
                             CampañaId = obj.campañaId,
                             MaterialId = obj.granoId,
                             ProveedorId = (int)oParam.ProveedorId,
-                            ToneladasObjetivos = Convert.ToDouble(obj.toneladasObjetivo),
-                            ObjectState = Constants.Object_Added
-                        };
-                        mobjUnitOfWork.Repository<Objetivo>().SaveEntity(oCampañaMaterial);
+                            ToneladasObjetivos = Convert.ToDouble(obj.toneladasObjetivo)
+                        });
                     }
                 }
             }
@@ -2128,93 +1319,40 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var camp in oCampañaSave)
             {
-
-                if (oParam.produccion.objetivos != null)
+                if (oParam.produccion.objetivos != null && oParam.produccion.objetivos.Any(x => x.campañaId == camp.Campaña.CampañaId && x.granoId == camp.Material.MaterialId))
                 {
-                    if (oParam.produccion.objetivos.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
-                    {
-                        var mod = oParam.produccion.objetivos.Where(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId).First();
-                        camp.CampañaId = mod.campañaId;
-                        camp.MaterialId = mod.granoId;
-                        camp.ToneladasObjetivos = Convert.ToDouble(mod.toneladasObjetivo);
-
-                        camp.ObjectState = Constants.Object_Modified;
-
-
-                        //var oCampañaMaterial = new CampañaMaterial() { CampañaId= camp., ProveedorId = (int)oParam.ProveedorId, ToneladasObjetivo = camp.ToneladasObjetivo, ObjectState = Constants.Object_Added };
-                        mobjUnitOfWork.Repository<Objetivo>().SaveEntity(camp);
-                    }
+                    var mod = oParam.produccion.objetivos.Where(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId).First();
+                    camp.CampañaId = mod.campañaId;
+                    camp.MaterialId = mod.granoId;
+                    camp.ToneladasObjetivos = Convert.ToDouble(mod.toneladasObjetivo);
                 }
             }
-
-
-
+            
             #endregion
             return null;
 
         }
 
-        public async Task<EntityErrors> UpdateContactoComerciales(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateContactoComerciales(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                var idComercial = mobjUnitOfWork.Repository<ContactoComercial>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.ContactoComercialId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
-
-                var idInteres = mobjUnitOfWork.Repository<ContactoComercialInteres>()
-                                       .Queryable()
-                                       .AsNoTracking()
-                                       .Select(x => x.ContactoComercialInteresId)
-                                       .DefaultIfEmpty(0)
-                                       .Max();
-
-                var oContactoSave = await mobjUnitOfWork.Repository<ContactoComercial>()
-                                     .Queryable()
-                                     .AsNoTracking()
-                                     .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                     .ToListAsync();
-
-
+                var oContactoSave = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId);
+                var proveedor = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
                 #region Eliminar
 
                 foreach (var can in oContactoSave)
                 {
-                    if (oParam.contactocomercial != null)
+                    if ((oParam.contactocomercial != null && !oParam.contactocomercial.Any(x => x.contactoComercialId == can.ContactoComercialId)) || oParam.contactocomercial == null)
                     {
-                        if (!oParam.contactocomercial.Any(x => x.contactoComercialId == can.ContactoComercialId))
-                        {
-                            var oContactoComercialInteresEliminar = await mobjUnitOfWork.Repository<ContactoComercialInteres>()
-                                         .Queryable()
-                                         .Where(x => x.ContactoComercialId == can.ContactoComercialId)
-                                         .ToListAsync();
-                            foreach (var interes in oContactoComercialInteresEliminar)
-                            {
-                                interes.ObjectState = Constants.Object_Deleted;
-                                mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(interes);
-                            }
+                        var oContactoComercialInteresEliminar = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercialId == can.ContactoComercialId);
 
-                            can.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<ContactoComercial>().SaveEntity(can);
-                        }
-                    }
-                    else
-                    {
-                        var oContactoComercialInteresEliminar = await mobjUnitOfWork.Repository<ContactoComercialInteres>()
-                                        .Queryable()
-                                        .Where(x => x.ContactoComercialId == can.ContactoComercialId)
-                                        .ToListAsync();
                         foreach (var interes in oContactoComercialInteresEliminar)
                         {
-                            interes.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(interes);
+                            repositorio.Remover(interes);
                         }
-
-                        can.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<ContactoComercial>().SaveEntity(can);
+                        repositorio.Remover(can);
                     }
                 }
 
@@ -2227,13 +1365,9 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (can.contactoComercialId == 0)
                         {
-                            idComercial = idComercial + 1;
-
-                            //crear nuevo objeto y agregar lo que falta
-                            var contactoComercial = new ContactoComercial()
+                            var contacto = new ContactoComercial()
                             {
-                                ContactoComercialId = idComercial,
-                                ProveedorId = (int)oParam.ProveedorId,
+                                Proveedor = proveedor,
                                 Nombres = can.nombre,
                                 Apellido = can.apellido,
                                 Cargo = can.cargo,
@@ -2249,19 +1383,19 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoTelefono3Id = can.telefonos[2].tipoTelefono,
                                 Email1 = can.emails[0],
                                 Email2 = can.emails[1],
-                                Email3 = can.emails[2],
-                                ObjectState = Constants.Object_Added
+                                Email3 = can.emails[2]
                             };
-                            mobjUnitOfWork.Repository<ContactoComercial>().SaveEntity(contactoComercial);
+                            repositorio.Agregar(contacto);
 
                             var nroItem = 1;
-
                             foreach (var valor in can.intereses)
                             {
-                                idInteres = idInteres + 1;
-                                var ContactoIntereses = new ContactoComercialInteres() { ContactoComercialInteresId = idInteres, NroItem = nroItem, InteresId = valor, ContactoComercialId = idComercial, ObjectState = Constants.Object_Added };
-                                mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(ContactoIntereses);
-                                nroItem = nroItem + 1;
+                                repositorio.Agregar(new ContactoComercialInteres()
+                                {
+                                    NroItem = nroItem++,
+                                    InteresId = valor,
+                                    ContactoComercial = contacto
+                                });
                             }
                         }
                     }
@@ -2273,157 +1407,97 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var con in oContactoSave)
                 {
-                    if (oParam.contactocomercial != null)
+                    if (oParam.contactocomercial != null && oParam.contactocomercial.Any(x => x.contactoComercialId == con.ContactoComercialId))
                     {
+                        //Todo Agregar los objetos que faltan
+                        var mod = oParam.contactocomercial.Where(x => x.contactoComercialId == con.ContactoComercialId).First();
+                        con.Apellido = mod.apellido;
+                        con.Nombres = mod.nombre;
+                        con.Proveedor = proveedor;
+                        con.OtrosIntereses = mod.otrosIntereses;
+                        con.Puesto = mod.puesto;
+                        con.Telefono1 = mod.telefonos[0].telefono;
+                        con.Telefono2 = mod.telefonos[1].telefono;
+                        con.Telefono3 = mod.telefonos[2].telefono;
+                        con.TipoTelefono1Id = mod.telefonos[0].tipoTelefono;
+                        con.TipoTelefono2Id = mod.telefonos[1].tipoTelefono;
+                        con.TipoTelefono3Id = mod.telefonos[2].tipoTelefono;
+                        con.Email1 = mod.emails[0];
+                        con.Email2 = mod.emails[1];
+                        con.Email3 = mod.emails[2];
+                        con.EsPrincipal = mod.principal;
+                        con.FechaNacimiento = mod.fechaNacimiento;
+                        con.Cargo = mod.cargo;
 
+                        #region Eliminar Intereses Contactos
+                        var oContactosInteresesSave = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercial.ContactoComercialId == mod.contactoComercialId);
 
-                        if (oParam.contactocomercial.Any(x => x.contactoComercialId == con.ContactoComercialId))
+                        foreach (var can in oContactosInteresesSave)
                         {
-                            //Todo Agregar los objetos que faltan
-                            var mod = oParam.contactocomercial.Where(x => x.contactoComercialId == con.ContactoComercialId).First();
-                            con.Apellido = mod.apellido;
-                            con.Nombres = mod.nombre;
-                            con.ProveedorId = (int)oParam.ProveedorId;
-                            con.OtrosIntereses = mod.otrosIntereses;
-                            con.Puesto = mod.puesto;
-                            con.Telefono1 = mod.telefonos[0].telefono;
-                            con.Telefono2 = mod.telefonos[1].telefono;
-                            con.Telefono3 = mod.telefonos[2].telefono;
-                            con.TipoTelefono1Id = mod.telefonos[0].tipoTelefono;
-                            con.TipoTelefono2Id = mod.telefonos[1].tipoTelefono;
-                            con.TipoTelefono3Id = mod.telefonos[2].tipoTelefono;
-                            con.Email1 = mod.emails[0];
-                            con.Email2 = mod.emails[1];
-                            con.Email3 = mod.emails[2];
-                            con.EsPrincipal = mod.principal;
-                            con.FechaNacimiento = mod.fechaNacimiento;
-                            con.Cargo = mod.cargo;
-                            con.ObjectState = Constants.Object_Modified;
-                            mobjUnitOfWork.Repository<ContactoComercial>().SaveEntity(con);
-
-                            var oContactosInteresesSave = await mobjUnitOfWork.Repository<ContactoComercialInteres>()
-                                                         .Queryable()
-                                                         .AsNoTracking()
-                                                         .Where(x => x.ContactoComercialId == mod.contactoComercialId)
-                                                         .ToListAsync();
-
-
-                            #region Eliminar Intereses Contactos
-
-                            foreach (var can in oContactosInteresesSave)
+                            if (!mod.intereses.Contains(can.Interes.InteresId))
                             {
-                                if (!mod.intereses.Contains(can.InteresId))
-                                {
-                                    can.ObjectState = Constants.Object_Deleted;
-                                    mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(can);
-                                }
+                                repositorio.Remover(can);
                             }
-
-                            #endregion
-
-                            #region Agregar Intereses Contactos
-                            if (mod.intereses != null)
-                            {
-                                foreach (var can in mod.intereses)
-                                {
-                                    if (!oContactosInteresesSave.Any(x => x.InteresId == can))
-                                    {
-                                        idInteres = idInteres + 1;
-                                        //crear nuevo objeto
-                                        var a = new ContactoComercialInteres() { ContactoComercialInteresId = idInteres, ContactoComercialId = (int)mod.contactoComercialId, NroItem = 1, InteresId = can, ObjectState = Constants.Object_Added };
-                                        mobjUnitOfWork.Repository<ContactoComercialInteres>().SaveEntity(a);
-                                    }
-                                }
-                            }
-                            #endregion
                         }
+
+                        #endregion
+
+                        #region Agregar Intereses Contactos
+                        if (mod.intereses != null)
+                        {
+                            foreach (var can in mod.intereses)
+                            {
+                                if (!oContactosInteresesSave.Any(x => x.InteresId == can))
+                                {
+                                    repositorio.Agregar(new ContactoComercialInteres()
+                                    {
+                                        ContactoComercial = con,
+                                        NroItem = 1,
+                                        InteresId = can
+                                    });
+                                }
+                            }
+                        }
+                        #endregion
                     }
                 }
 
 
 
                 #endregion
-
-
-
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateProduccion(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateProduccion(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                var idCampo = mobjUnitOfWork.Repository<Campo>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.CampoId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
-
-                var idCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>()
-                                       .Queryable()
-                                       .AsNoTracking()
-                                       .Select(x => x.CampoMaterialid)
-                                       .DefaultIfEmpty(0)
-                                       .Max();
-
-                var oCampoSave = await mobjUnitOfWork.Repository<Campo>()
-                                     .Queryable()
-                                     .AsNoTracking()
-                                     .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                     .ToListAsync();
-
+                var oCampoSave = repositorio.Listar<Campo>(x => x.ProveedorId == oParam.ProveedorId);
                 #region Eliminar
 
                 foreach (var cam in oCampoSave)
                 {
-                    if (oParam.produccion.CamposProduccion != null)
+                    if ((oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion != null) || oParam.produccion.CamposProduccion == null)
                     {
                         if (!oParam.produccion.CamposProduccion.Any(x => x.CampoId == cam.CampoId))
                         {
-                            var oCampoEliminar = await mobjUnitOfWork.Repository<CampoMaterial>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.CampoId == oParam.produccion.CampoId)
-                                         .ToListAsync();
+                            var oCampoEliminar = repositorio.Listar<CampoMaterial>(x => x.CampoId == oParam.produccion.CampoId);
 
                             foreach (var campmat in oCampoEliminar)
                             {
                                 if (!oParam.produccion.objetivos.Any(x => x.campañaId == campmat.CampañaId && x.granoId == campmat.MaterialId))
                                 {
-                                    campmat.ObjectState = Constants.Object_Deleted;
-                                    mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(campmat);
+                                    repositorio.Remover(campmat);
                                 }
                             }
-
-                            cam.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<Campo>().SaveEntity(cam);
+                            repositorio.Remover(cam);
                         }
-                    }
-                    else
-                    {
-                        var oCampoEliminar = await mobjUnitOfWork.Repository<CampoMaterial>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.CampoId == cam.CampoId)
-                                         .ToListAsync();
-
-
-
-
-                        foreach (var campmat in oCampoEliminar)
-                        {
-                            campmat.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(campmat);
-                        }
-
-                        cam.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<Campo>().SaveEntity(cam);
                     }
                 }
                 #endregion
@@ -2431,51 +1505,34 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Agregar
                 if (oParam.produccion.CamposProduccion != null)
                 {
-
-
                     foreach (var cam in oParam.produccion.CamposProduccion)
                     {
                         if (cam.CampoId.GetValueOrDefault(0) == 0)
                         {
-                            idCampo = idCampo + 1;
-                            var produccion = new Campo()
+                            var produccion = repositorio.Agregar(new Campo()
                             {
-                                CampoId = idCampo,
                                 Coordenadas = cam.coordenadas,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 ArrendaPropia = cam.hectareas,
-
-                                //HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)),
                                 NroItem = 1,
-                                ProveedorId = (int)oParam.ProveedorId,
-
-                                ObjectState = Constants.Object_Added
-
-                            };
-                            mobjUnitOfWork.Repository<Campo>().SaveEntity(produccion);
+                                ProveedorId = (int)oParam.ProveedorId
+                            });
 
                             if (cam.granos != null)
                             {
                                 foreach (var valor in cam.granos)
                                 {
-                                    if (valor.granoId != null && valor.campañaId != null)
+                                    repositorio.Agregar(new CampoMaterial()
                                     {
-                                        idCampoMaterial = idCampoMaterial + 1;
-                                        var ContactoIntereses = new CampoMaterial()
-                                        {
-                                            CampoMaterialid = idCampoMaterial,
-                                            NroItem = 1,
-                                            MaterialId = (int)valor.granoId,
-                                            CampañaId = (int)valor.campañaId,
-                                            CampoId = idCampo,
-                                            Hectareas = valor.hectareas.HasValue ? valor.hectareas : null,
-                                            Toneladas = valor.toneladas.HasValue ? valor.toneladas : null,
-                                            ObjectState = Constants.Object_Added
-                                        };
-                                        mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(ContactoIntereses);
-                                    }
+                                        NroItem = 1,
+                                        MaterialId = valor.granoId,
+                                        CampañaId = valor.campañaId,
+                                        Campo = produccion,
+                                        Hectareas = valor.hectareas.HasValue ? valor.hectareas : null,
+                                        Toneladas = valor.toneladas.HasValue ? valor.toneladas : null,
+                                    });
                                 }
                             }
                         }
@@ -2494,40 +1551,18 @@ namespace Molinos.DataAgro.Business.Managers
                             var mod = oParam.produccion.CamposProduccion.Where(x => x.CampoId == campo.CampoId).First();
 
                             #region Set Campos
-                            campo.CampoId = (int)mod.CampoId;
                             campo.Coordenadas = mod.coordenadas;
                             campo.KMZfile = mod.archivoFileResult;
                             campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
                             campo.ArrendaPropia = mod.hectareas;
-                            //cam.HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)),
-                            //cam.NroItem = 1,
                             campo.Coordenadas = mod.coordenadas;
-                            campo.LocalidadId = mod.localidad;
                             campo.ProveedorId = (int)oParam.ProveedorId;
-                            campo.ObjectState = Constants.Object_Modified;
-                            mobjUnitOfWork.Repository<Campo>().SaveEntity(campo);
                             #endregion
 
-                            var oCampoMaterialSave = await mobjUnitOfWork.Repository<CampoMaterial>()
-                                                         .Queryable()
-                                                         .AsNoTracking()
-                                                         .Where(x => x.CampoId == mod.CampoId)
-                                                         .ToListAsync();
-
                             #region Eliminar Campo Material
-                            /*foreach (var can in oCampoMaterialSave)
-                            {
-                                if (mod.granos != null)
-                                {
-                                    if (!mod.granos.Any(x => x.granoId == can.MaterialId && x.campañaId == can.CampañaId))
-                                    {
-                                        can.ObjectState = Constants.Object_Deleted;
-                                        mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(can);
-                                    }
-                                }
-                            }*/
 
+                            var oCampoMaterialSave = repositorio.Listar<CampoMaterial>(x => x.CampoId == mod.CampoId);
                             foreach (var can in oParam.produccion.CamposProduccion)
                             {
                                 if (can.eliminarproduccion != null && can.eliminarproduccion.Count > 0)
@@ -2536,15 +1571,11 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         if (can.eliminarproduccion.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
                                         {
-                                            camp.ObjectState = Constants.Object_Deleted;
-                                            mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(camp);
+                                            repositorio.Remover(camp);
                                         }
                                     }
                                 }
-
                             }
-
-
 
                             #endregion
 
@@ -2555,46 +1586,34 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     if (!oCampoMaterialSave.Any(x => x.MaterialId == gra.granoId && x.CampañaId == gra.campañaId))
                                     {
-                                        idCampoMaterial = idCampoMaterial + 1;
-                                        var ContactoIntereses = new CampoMaterial()
+                                        repositorio.Agregar(new CampoMaterial()
                                         {
-                                            CampoMaterialid = idCampoMaterial,
                                             NroItem = 1,
                                             MaterialId = gra.granoId,
                                             CampañaId = gra.campañaId,
-                                            CampoId = (int)mod.CampoId,
+                                            Campo = campo,
                                             Hectareas = gra.hectareas,
-                                            Toneladas = gra.toneladas,
-                                            ObjectState = Constants.Object_Added
-                                        };
-                                        mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(ContactoIntereses);
+                                            Toneladas = gra.toneladas
+                                        });
                                     }
                                 }
                             }
                             #endregion
 
                             #region Modificar Campo Material
-                            //foreach (var campoModificar in oParam.produccion.CamposProduccion)
-                            //{ 
 
                             foreach (var campmaterial in oCampoMaterialSave)
                             {
-                                if (mod.granos != null)
+                                if (mod.granos != null && mod.granos.Any(x => x.granoId == campmaterial.MaterialId && x.campañaId == campmaterial.CampañaId))
                                 {
-                                    if (mod.granos.Any(x => x.granoId == campmaterial.MaterialId && x.campañaId == campmaterial.CampañaId))
-                                    {
-                                        var grano = mod.granos.Where(x => x.granoId == campmaterial.MaterialId && x.campañaId == campmaterial.CampañaId).First();
-                                        campmaterial.CampoId = (int)mod.CampoId;
-                                        campmaterial.CampañaId = grano.campañaId;
-                                        campmaterial.MaterialId = grano.granoId;
-                                        campmaterial.Hectareas = grano.hectareas;
-                                        campmaterial.Toneladas = grano.toneladas;
-                                        campmaterial.ObjectState = Constants.Object_Modified;
-                                        mobjUnitOfWork.Repository<CampoMaterial>().SaveEntity(campmaterial);
-                                    }
+                                    var grano = mod.granos.Where(x => x.granoId == campmaterial.MaterialId && x.campañaId == campmaterial.CampañaId).First();
+                                    campmaterial.Campo = campo;
+                                    campmaterial.CampañaId = grano.campañaId;
+                                    campmaterial.MaterialId = grano.granoId;
+                                    campmaterial.Hectareas = grano.hectareas;
+                                    campmaterial.Toneladas = grano.toneladas;
                                 }
                             }
-                            //}
                             #endregion
                         }
                     }
@@ -2605,116 +1624,29 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
-        public async Task<EntityErrors> UpdateAlmacenamiento(NuevoProveedor oParam)
+        public GrabarProveedorResult UpdateAlmacenamiento(NuevoProveedor oParam)
         {
+            var resultado = new GrabarProveedorResult();
             try
             {
-                var idAcopio = mobjUnitOfWork.Repository<Acopio>()
-                                        .Queryable()
-                                        .AsNoTracking()
-                                        .Select(x => x.AcopioId)
-                                        .DefaultIfEmpty(0)
-                                        .Max();
-
-                var idAcopioMaterial = mobjUnitOfWork.Repository<AcopioMaterial>()
-                                       .Queryable()
-                                       .AsNoTracking()
-                                       .Select(x => x.AcopioMaterialId)
-                                       .DefaultIfEmpty(0)
-                                       .Max();
-
-                var idAcopioCampaña = mobjUnitOfWork.Repository<AcopioCampaña>()
-                                       .Queryable()
-                                       .AsNoTracking()
-                                       .Select(x => x.AcopioCampañaId)
-                                       .DefaultIfEmpty(0)
-                                       .Max();
-
-                var oAcopioSave = await mobjUnitOfWork.Repository<Acopio>()
-                                 .Queryable()
-                                 .AsNoTracking()
-                                 .Where(x => x.ProveedorId == oParam.ProveedorId)
-                                 .ToListAsync();
-
+                var oAcopioSave = repositorio.Listar<Acopio>(x => x.ProveedorId == oParam.ProveedorId);
                 #region Eliminar Almacenamiento
 
                 foreach (var cam in oAcopioSave)
                 {
-                    if (oParam.almacenamiento != null)
+                    if ((oParam.almacenamiento != null && !oParam.almacenamiento.CamposAlmacenamiento.Any(x => x.CampoId == cam.AcopioId)) || oParam.almacenamiento == null)
                     {
-                        if (!oParam.almacenamiento.CamposAlmacenamiento.Any(x => x.CampoId == cam.AcopioId))
-                        {
-                            var oCampoEliminar = await mobjUnitOfWork.Repository<AcopioMaterial>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.AcopioId == cam.AcopioId)
-                                         .ToListAsync();
+                        var oCampoEliminar = repositorio.Listar<AcopioMaterial>(x => x.AcopioId == cam.AcopioId);
+                        var oAcopioCampañaEliminar = repositorio.Listar<AcopioCampaña>(x => x.AcopioId == cam.AcopioId);
 
-                            var oAcopioCampañaEliminar = await mobjUnitOfWork.Repository<AcopioCampaña>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.AcopioId == cam.AcopioId)
-                                         .ToListAsync();
-
-
-                            #region eliminar acopio material
-                            foreach (var campmat in oCampoEliminar)
-                            {
-                                campmat.ObjectState = Constants.Object_Deleted;
-                                mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(campmat);
-                            }
-                            #endregion
-
-                            #region Eliminar Acopio Campaña
-                            foreach (var acopcamp in oAcopioCampañaEliminar)
-                            {
-                                acopcamp.ObjectState = Constants.Object_Deleted;
-                                mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(acopcamp);
-                            }
-                            #endregion
-
-                            cam.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<Acopio>().SaveEntity(cam);
-
-
-
-                        }
-                    }
-                    else
-                    {
-                        var oCampoEliminar = await mobjUnitOfWork.Repository<AcopioMaterial>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.AcopioId == cam.AcopioId)
-                                         .ToListAsync();
-
-                        var oAcopioCampañaEliminar = await mobjUnitOfWork.Repository<AcopioCampaña>()
-                                         .Queryable()
-                                         .AsNoTracking()
-                                         .Where(x => x.AcopioId == cam.AcopioId)
-                                         .ToListAsync();
-
-                        foreach (var campmat in oCampoEliminar)
-                        {
-                            campmat.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(campmat);
-                        }
-
-                        #region Eliminar Acopio Campaña
-                        foreach (var acopcamp in oAcopioCampañaEliminar)
-                        {
-                            acopcamp.ObjectState = Constants.Object_Deleted;
-                            mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(acopcamp);
-                        }
-                        #endregion
-
-                        cam.ObjectState = Constants.Object_Deleted;
-                        mobjUnitOfWork.Repository<Acopio>().SaveEntity(cam);
+                        repositorio.RemoverTodos(oCampoEliminar);
+                        repositorio.RemoverTodos(oAcopioCampañaEliminar);
+                        repositorio.Remover(cam);
                     }
                 }
                 #endregion
@@ -2722,45 +1654,32 @@ namespace Molinos.DataAgro.Business.Managers
                 #region Agregar
                 if (oParam.almacenamiento != null)
                 {
-
-
                     foreach (var cam in oParam.almacenamiento.CamposAlmacenamiento)
                     {
                         if (cam.CampoId.GetValueOrDefault(0) == 0)
                         {
-                            idAcopio = idAcopio + 1;
-                            var acopio = new Acopio()
+                            var acopio = repositorio.Agregar(new Acopio()
                             {
-                                AcopioId = idAcopio,
                                 Coordenadas = cam.coordenadasAlmacenamiento,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 NroItem = 1,
-                                ProveedorId = (int)oParam.ProveedorId,
-
-                                ObjectState = Constants.Object_Added
-
-                            };
-
-                            mobjUnitOfWork.Repository<Acopio>().SaveEntity(acopio);
+                                ProveedorId = (int)oParam.ProveedorId
+                            });
 
                             if (cam.granosAlmacenamientoGrano != null)
                             {
                                 foreach (var valor in cam.granosAlmacenamientoGrano)
                                 {
-                                    idAcopioMaterial = idAcopioMaterial + 1;
-                                    var ContactoIntereses = new AcopioMaterial()
+                                    repositorio.Agregar(new AcopioMaterial()
                                     {
-                                        AcopioMaterialId = idAcopioMaterial,
                                         NroItem = 1,
                                         CampañaId = valor.campañaId,
-                                        AcopioId = idAcopio,
+                                        Acopio = acopio,
                                         MaterialId = valor.granoId,
-                                        Toneladas = valor.toneladasAlmacenamiento,
-                                        ObjectState = Constants.Object_Added
-                                    };
-                                    mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(ContactoIntereses);
+                                        Toneladas = valor.toneladasAlmacenamiento
+                                    });
 
                                 }
                             }
@@ -2768,18 +1687,14 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 foreach (var acopiocamp in cam.granosAlmacenamiento)
                                 {
-                                    idAcopioCampaña = idAcopioCampaña + 1;
-                                    var ContactoCampaña = new AcopioCampaña()
+                                    repositorio.Agregar(new AcopioCampaña()
                                     {
-                                        AcopioCampañaId = idAcopioCampaña + 1,
                                         NroItem = 1,
                                         CampañaId = acopiocamp.campañaId,
-                                        AcopioId = idAcopio,
+                                        Acopio = acopio,
                                         HasArrendadas = acopiocamp.hasArrendadas,
-                                        Toneladas = acopiocamp.toneladasAlmacenamiento,
-                                        ObjectState = Constants.Object_Added
-                                    };
-                                    mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(ContactoCampaña);
+                                        Toneladas = acopiocamp.toneladasAlmacenamiento
+                                    });
                                 }
                             }
                         }
@@ -2803,36 +1718,13 @@ namespace Molinos.DataAgro.Business.Managers
                             acopio.KMZfile = mod.archivoFileResult;
                             acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;
-                            acopio.LocalidadId = mod.localidad;
                             acopio.ProveedorId = (int)oParam.ProveedorId;
-                            acopio.ObjectState = Constants.Object_Modified;
-                            mobjUnitOfWork.Repository<Acopio>().SaveEntity(acopio);
                             #endregion
 
-                            var oCampoMaterialSave = await mobjUnitOfWork.Repository<AcopioMaterial>()
-                                                         .Queryable()
-                                                         .AsNoTracking()
-                                                         .Where(x => x.AcopioId == mod.CampoId)
-                                                         .ToListAsync();
-
-                            var oCampoCampañaSave = await mobjUnitOfWork.Repository<AcopioCampaña>()
-                                                         .Queryable()
-                                                         .AsNoTracking()
-                                                         .Where(x => x.AcopioId == mod.CampoId)
-                                                         .ToListAsync();
+                            var oCampoMaterialSave = repositorio.Listar<AcopioMaterial>(x => x.Acopio.AcopioId == mod.CampoId);
+                            var oCampoCampañaSave = repositorio.Listar<AcopioCampaña>(x => x.Acopio.AcopioId == mod.CampoId);
 
                             #region Eliminar Campo Material
-                            /*foreach (var can in oCampoMaterialSave)
-                            {
-                                if (mod.granosAlmacenamientoGrano != null)
-                                {
-                                    if (!mod.granosAlmacenamientoGrano.Any(x => x.campañaId == can.CampañaId && x.granoId == can.MaterialId))
-                                    {
-                                        can.ObjectState = Constants.Object_Deleted;
-                                        mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(can);
-                                    }
-                                }
-                            }*/
 
                             foreach (var can in oParam.almacenamiento.CamposAlmacenamiento)
                             {
@@ -2842,36 +1734,18 @@ namespace Molinos.DataAgro.Business.Managers
                                     {
                                         if (can.eliminargranoalmacenamientograno.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
                                         {
-                                            camp.ObjectState = Constants.Object_Deleted;
-                                            mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(camp);
+                                            repositorio.Remover(camp);
                                         }
                                     }
                                 }
 
-                            }
-
-
-
-                            /*
-                            foreach (var campacop in oCampoCampañaSave)
-                            {
-                                if (!mod.granosAlmacenamiento.Any(x => x.campañaId == campacop.CampañaId))
-                                {
-                                    campacop.ObjectState = Constants.Object_Deleted;
-                                    mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(campacop);
-                                }
-                            }*/
-
-                            foreach (var can in oParam.almacenamiento.CamposAlmacenamiento)
-                            {
                                 if (can.eliminargranoalmacenamiento != null && can.eliminargranoalmacenamiento.Count > 0)
                                 {
                                     foreach (var camp in oCampoCampañaSave)
                                     {
                                         if (can.eliminargranoalmacenamiento.Any(x => x.campañaId == camp.CampañaId && x.hasArrendadas == camp.HasArrendadas))
                                         {
-                                            camp.ObjectState = Constants.Object_Deleted;
-                                            mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(camp);
+                                            repositorio.Remover(camp);
                                         }
                                     }
                                 }
@@ -2885,22 +1759,17 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 foreach (var gra in mod.granosAlmacenamientoGrano)
                                 {
-                                    if (!oCampoMaterialSave.Any(x => x.CampañaId == gra.campañaId && x.MaterialId == gra.granoId))
+                                    if (!oCampoMaterialSave.Any(x => x.Campaña.CampañaId == gra.campañaId && x.MaterialId == gra.granoId))
                                     {
-                                        idAcopioMaterial = idAcopioMaterial + 1;
-                                        var ContactoIntereses = new AcopioMaterial()
+                                        repositorio.Agregar(new AcopioMaterial()
                                         {
-                                            AcopioMaterialId = idAcopioMaterial,
                                             NroItem = 1,
                                             CampañaId = gra.campañaId,
                                             MaterialId = gra.granoId,
-                                            AcopioId = acopio.AcopioId,
-                                            Toneladas = gra.toneladasAlmacenamiento,
-                                            ObjectState = Constants.Object_Added
-                                        };
-                                        mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(ContactoIntereses);
+                                            Acopio = acopio,
+                                            Toneladas = gra.toneladasAlmacenamiento
+                                        });
                                     }
-
                                 }
                             }
                             #endregion
@@ -2912,18 +1781,14 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     if (!oCampoCampañaSave.Any(x => x.CampañaId == camp.campañaId))
                                     {
-                                        idAcopioCampaña = idAcopioCampaña + 1;
-                                        var ContactoCampaña = new AcopioCampaña()
+                                        repositorio.Agregar(new AcopioCampaña()
                                         {
-                                            AcopioCampañaId = idAcopioCampaña,
                                             NroItem = 1,
                                             CampañaId = camp.campañaId,
                                             HasArrendadas = camp.hasArrendadas,
-                                            AcopioId = acopio.AcopioId,
+                                            Acopio = acopio,
                                             Toneladas = camp.toneladasAlmacenamiento,
-                                            ObjectState = Constants.Object_Added
-                                        };
-                                        mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(ContactoCampaña);
+                                        });
                                     }
                                 }
                             }
@@ -2937,12 +1802,10 @@ namespace Molinos.DataAgro.Business.Managers
                                     if (mod.granosAlmacenamientoGrano.Any(x => x.campañaId == campmaterial.CampañaId && x.granoId == campmaterial.MaterialId))
                                     {
                                         var grano = mod.granosAlmacenamientoGrano.Where(x => x.campañaId == campmaterial.CampañaId && x.granoId == campmaterial.MaterialId).First();
-                                        campmaterial.AcopioId = (int)mod.CampoId;
+                                        campmaterial.Acopio = acopio;
                                         campmaterial.CampañaId = grano.campañaId;
                                         campmaterial.Toneladas = grano.toneladasAlmacenamiento;
                                         campmaterial.MaterialId = grano.granoId;
-                                        campmaterial.ObjectState = Constants.Object_Modified;
-                                        mobjUnitOfWork.Repository<AcopioMaterial>().SaveEntity(campmaterial);
                                     }
                                 }
                             }
@@ -2956,12 +1819,10 @@ namespace Molinos.DataAgro.Business.Managers
                                     if (mod.granosAlmacenamiento.Any(x => x.campañaId == campcampaña.CampañaId))
                                     {
                                         var campaña = mod.granosAlmacenamiento.Where(x => x.campañaId == campcampaña.CampañaId).First();
-                                        campcampaña.AcopioId = (int)mod.CampoId;
+                                        campcampaña.Acopio = acopio;
                                         campcampaña.CampañaId = campaña.campañaId;
                                         campcampaña.Toneladas = campaña.toneladasAlmacenamiento;
                                         campcampaña.HasArrendadas = campaña.hasArrendadas;
-                                        campcampaña.ObjectState = Constants.Object_Modified;
-                                        mobjUnitOfWork.Repository<AcopioCampaña>().SaveEntity(campcampaña);
                                     }
                                 }
                             }
@@ -2975,224 +1836,86 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
-                return new EntityErrors() { HayError = true, ListaErrores = new List<ErrorMessage>() { new ErrorMessage() { Message = ex.Message } } };
+                resultado.Error("", ex.Message);
             }
-            return null;
-        }
-
-        private Historial DevolverHistorial(int proveedorId, string Usuario)
-        {
-            var res = new Historial();
-
-            res = Comprar(proveedorId, Usuario);
-
-
-            return res;
-
+            return resultado;
         }
 
         public Historial Comprar(int proveedorId, string UsuarioDirectory)
         {
-            Historial historial = new Historial();
-            List<GranoHistorial> list = new List<GranoHistorial>();
-            List<campañaTotal> listCampañaTotal = new List<campañaTotal>();
-
-            GranoHistorial gr = null;
-            CampañaHistorial cH = null;
-            GranoTotales gt = null;
-            campañaTotal ct = null;
-
+            var historial = new Historial();
+            
             try
             {
                 List<ZMPES5130> hist = new List<ZMPES5130>();
-                ZMPES5130 zmp = null;
 
-                var oMateriales = mobjUnitOfWork.Repository<Material>()
-                    .Queryable()
-                    .AsNoTracking()
-                    .ToList();
-
-                var oCampaña = mobjUnitOfWork.Repository<Campaña>()
-                    .Queryable()
-                    .AsNoTracking()
-                    .ToList();
-
-                var oProveedor = mobjUnitOfWork.Repository<Proveedor>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Where(x => x.ProveedorId == proveedorId)
-                                .SingleOrDefault();
-
-                var oCampañaMaterial = mobjUnitOfWork.Repository<CampañaMaterial>()
-                                       .Queryable()
-                                       .AsNoTracking()
-                                       .Where(x => x.ProveedorId == proveedorId)
-                                       .ToList();
-
-                var listMateriales = oCampañaMaterial.GroupBy(x => new { x.MaterialId }).Select(x => x.Key.MaterialId).ToList();
-
-
-                //foreach (var campañamaterial in oCampañaMaterial)
-                foreach (var MaterialId in listMateriales)
+                var proveedor = repositorio.Obtener<Proveedor>(proveedorId);
+                var listMateriales = repositorio.Listar<CampañaMaterial,Material>(x => x.Material,x => x.Proveedor.ProveedorId == proveedorId);
+                foreach (var material in listMateriales)
                 {
-
-                    int? CampañaId;
-
-                    var oMaterial = oMateriales.FirstOrDefault(x => x.MaterialId == MaterialId);
-
-                    if (oMaterial != null)
+                    Comercial comercial = null;
+                    if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && UsuarioDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
                     {
-                        CampañaId = oMaterial.CampañaId;
-
-
-
-                        var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking();
-                        int? ComercialId = 0;
-
-                        if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && UsuarioDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
-                        {
-                            string aux = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower();
-                            ComercialId = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == aux).ComercialId;
-                        }
-                        else
-                        {
-                            ComercialId = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == UsuarioDirectory.ToLower()).ComercialId;
-                        }
-
-
-
-
-                        /*********************** Campaña Anterior *****************************************************/
-                        var oCampañaMaterialAnt = oCampañaMaterial
-                                                  .Where(x => x.ProveedorId == proveedorId && x.CampañaId == (CampañaId - 1) && x.MaterialId == MaterialId)
-                                                  .ToList();
-
-                        foreach (var cmaux in oCampañaMaterialAnt)
-                        {
-                            /*var oCampañaMaterialPorMes = mobjUnitOfWork.Repository<CampañaMaterialPorMes>()
-                                                     .Queryable()
-                                                     .AsNoTracking()
-                                                     .Where(x => x.CampañaMaterialId == cmaux.CampañaMaterialId)
-                                                     .ToList();*/
-
-                            var oCampañaMaterialPorMes = mobjUnitOfWork.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", ComercialId, cmaux.CampañaMaterialId).ToList();
-
-
-                            foreach (var cmpm in oCampañaMaterialPorMes)
-                            {
-                                zmp = new ZMPES5130();
-                                zmp.ANIO = cmpm.Año.Value.ToString();
-                                zmp.COSECHA = oCampaña.Where(x => x.CampañaId == cmaux.CampañaId).ToList()[0].Descripcion;
-                                zmp.MATERIAL = MaterialId.ToString();
-                                zmp.MES = cmpm.Mes.Value.ToString();
-                                zmp.TN_COMPRADAS = decimal.Parse(cmpm.Toneladas.Value.ToString());
-                                zmp.VENDEDOR = oProveedor.CUIT;
-                                hist.Add(zmp);
-                            }
-
-                        }
-
-
-                        /*********************** Campaña Actual  *****************************************************/
-                        var oCampañaMaterialAct = oCampañaMaterial
-                                                  .Where(x => x.ProveedorId == proveedorId && x.CampañaId == CampañaId && x.MaterialId == MaterialId)
-                                                  .ToList();
-
-                        foreach (var cmaux in oCampañaMaterialAct)
-                        {
-                            var oCampañaMaterialPorMes = mobjUnitOfWork.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", ComercialId, cmaux.CampañaMaterialId).ToList();
-
-                            /*mobjUnitOfWork.Repository<CampañaMaterialPorMes>()
-                                                 .Queryable()
-                                                 .AsNoTracking()
-                                                 .Where(x => x.CampañaMaterialId == cmaux.CampañaMaterialId)
-                                                 .ToList();
-                                                 */
-                            foreach (var cmpm in oCampañaMaterialPorMes)
-                            {
-                                zmp = new ZMPES5130();
-                                zmp.ANIO = cmpm.Año.Value.ToString();
-                                zmp.COSECHA = oCampaña.Where(x => x.CampañaId == cmaux.CampañaId).ToList()[0].Descripcion;
-                                zmp.MATERIAL = MaterialId.ToString();
-                                zmp.MES = cmpm.Mes.Value.ToString();
-                                zmp.TN_COMPRADAS = decimal.Parse(cmpm.Toneladas.Value.ToString());
-                                zmp.VENDEDOR = oProveedor.CUIT;
-                                hist.Add(zmp);
-                            }
-
-
-                        }
-
-
-
-                        /*********************** Campaña Nueva *****************************************************/
-
-                        var oCampañaMaterialSig = oCampañaMaterial
-                                              .Where(x => x.ProveedorId == proveedorId && x.CampañaId == (CampañaId + 1) && x.MaterialId == MaterialId)
-                                              .ToList();
-
-                        foreach (var cmaux in oCampañaMaterialSig)
-                        {
-
-
-                            var oCampañaMaterialPorMes = mobjUnitOfWork.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", ComercialId, cmaux.CampañaMaterialId).ToList();
-
-                            /*mobjUnitOfWork.Repository<CampañaMaterialPorMes>()
-                                                     .Queryable()
-                                                     .AsNoTracking()
-                                                     .Where(x => x.CampañaMaterialId == cmaux.CampañaMaterialId)
-                                                     .ToList();*/
-                            //aca arriba falta agregar la validacion por comercial.
-
-
-                            foreach (var cmpm in oCampañaMaterialPorMes)
-                            {
-                                zmp = new ZMPES5130();
-                                zmp.ANIO = cmpm.Año.Value.ToString();
-                                zmp.COSECHA = oCampaña.Where(x => x.CampañaId == cmaux.CampañaId).ToList()[0].Descripcion;
-                                zmp.MATERIAL = MaterialId.ToString();
-                                zmp.MES = cmpm.Mes.Value.ToString();
-                                zmp.TN_COMPRADAS = decimal.Parse(cmpm.Toneladas.Value.ToString());
-                                zmp.VENDEDOR = oProveedor.CUIT;
-                                hist.Add(zmp);
-                            }
-                        }
+                        string aux = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower();
+                        comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == aux);
                     }
+                    else
+                    {
+                        comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
+                    }
+                    
+                    var campaniaActual = material.Campaña.CampañaId;
+                    var oCampañaMaterialAnteriorActualNueva = repositorio.Listar<CampañaMaterial>(x => x.Proveedor.ProveedorId == proveedorId && (x.Campaña.CampañaId == (campaniaActual - 1) || x.Campaña.CampañaId == campaniaActual || x.Campaña.CampañaId == (campaniaActual + 1)) && x.Material.MaterialId == material.MaterialId);
+
+                    foreach (var cmaux in oCampañaMaterialAnteriorActualNueva)
+                    {
+                        var oCampañaMaterialPorMes = repositorio.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", 0, comercial.ComercialId, cmaux.CampañaMaterialId);
+
+                        foreach (var cmpm in oCampañaMaterialPorMes)
+                        {
+                            hist.Add(new ZMPES5130
+                            {
+                                ANIO = cmpm.Año.Value.ToString(),
+                                COSECHA = cmaux.Campaña.Descripcion,
+                                MATERIAL = material.MaterialId.ToString(),
+                                MES = cmpm.Mes.Value.ToString(),
+                                TN_COMPRADAS = decimal.Parse(cmpm.Toneladas.Value.ToString()),
+                                VENDEDOR = proveedor.CUIT
+                            });
+                        }
+
+                    }                    
                 }
-                /*
-                var SapCompras = new ComprasAgent();
-             
-                var hist = SapCompras.Comprar(oProveedor.CUIT, UsuarioDirectory);
-                */
+
                 var listMaterial = hist.GroupBy(z => z.MATERIAL).ToList();
-                ct = new campañaTotal();
+
+                var ct = new campañaTotal();
                 ct.Nombre = "0";
 
+                var list = new List<GranoHistorial>();
                 foreach (var mat in listMaterial)
                 {
-                    var Camp = hist.Where(x => x.MATERIAL == mat.Key).GroupBy(z => z.COSECHA);
-
-                    gr = new GranoHistorial() { Nombre = oMateriales.Where(x => x.MaterialId.ToString() == mat.Key).First().Descripcion };
-
                     ct.grano.Add(new GranoTotales()
                     {
-                        Grano = oMateriales.Where(x => x.MaterialId.ToString() == mat.Key).First().Descripcion,
+                        Grano = listMateriales.Where(x => x.MaterialId.ToString() == mat.Key).First().Descripcion,
                         Total = hist.Where(x => x.MATERIAL == mat.Key).Sum(x => x.TN_COMPRADAS).ToString()
                     });
 
+                    var Camp = hist.Where(x => x.MATERIAL == mat.Key).GroupBy(z => z.COSECHA);
+                    var gr = new GranoHistorial() { Nombre = listMateriales.Where(x => x.MaterialId.ToString() == mat.Key).First().Descripcion };
                     foreach (var camp in Camp)
                     {
-                        var GranosPorCampaña = hist.Where(x => x.MATERIAL == mat.Key && x.COSECHA == camp.Key)
+                        var granosPorCampaña = hist.Where(x => x.MATERIAL == mat.Key && x.COSECHA == camp.Key)
                             .Select(x => new CampañaPorMes() { Mes = int.Parse(x.MES), Año = int.Parse(x.ANIO), Total = (double)x.TN_COMPRADAS })
                             .OrderBy(x => x.Año).ThenBy(x => x.Mes).ToList();
 
-                        gr.campañas.Add(new CampañaHistorial() { Nombre = camp.Key, Campañas = GranosPorCampaña });
+                        gr.campañas.Add(new CampañaHistorial() { Nombre = camp.Key, Campañas = granosPorCampaña });
                     }
 
                     list.Add(gr);
                 }
 
-                listCampañaTotal.Add(ct);
+                historial.camp.Add(ct);
 
                 historial.HistorialGrano = list;
 
@@ -3207,72 +1930,35 @@ namespace Molinos.DataAgro.Business.Managers
                     foreach (var m in materiales)
                     {
                         var total = hist.Where(x => x.MATERIAL == m.Key && x.COSECHA == ca.Key).Sum(x => x.TN_COMPRADAS);
-                        ct.grano.Add(new GranoTotales() { Grano = oMateriales.Where(x => x.MaterialId.ToString() == m.Key).First().Descripcion, Total = total.ToString() });
+                        ct.grano.Add(new GranoTotales() { Grano = listMateriales.Where(x => x.MaterialId.ToString() == m.Key).First().Descripcion, Total = total.ToString() });
                     }
-                    listCampañaTotal.Add(ct);
+                    historial.camp.Add(ct);
                 }
-
-                historial.camp = listCampañaTotal;
-
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
             return historial;
         }
 
-        private int DevolverIdMes(string mES)
+        public List<ReporteProveedor> ObtenerReporteProveedor(string Valor, string idActiveDirectory)
         {
-            switch (mES.ToLower())
-            {
 
-                case "enero":
-                    return 1;
-                case "febrero":
-                    return 2;
-                case "marzo":
-                    return 3;
-                case "abril":
-                    return 4;
-                case "mayo":
-                    return 5;
-                case "junio":
-                    return 6;
-                case "julio":
-                    return 7;
-                case "agosto":
-                    return 8;
-                case "septiembre":
-                    return 9;
-                case "octubre":
-                    return 10;
-                case "noviembre":
-                    return 11;
-                case "diciembre":
-                    return 12;
-            }
-            return 1;
+            var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower(), x => x.ComercialId);
+
+            return repositorio.SelStore<ReporteProveedor>("DataAgro_ReporteProveedor", 0, Valor, comercialId);
         }
 
-        public async Task<List<ReporteProveedor>> ObtenerReporteProveedor(string Valor, string idActiveDirectory)
+        public List<BusquedaHome> DevolverProveedores(string filtro)
         {
-
-            var oComerciales = mobjUnitOfWork.Repository<Comercial>().Queryable().AsNoTracking().FirstOrDefault(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
-
-            return mobjUnitOfWork.SelStore<ReporteProveedor>("DataAgro_ReporteProveedor", Valor, oComerciales.ComercialId).ToList();
-        }
-
-
-        public async Task<List<BusquedaHome>> DevolverProveedores(string filtro)
-        {
-            var query = mobjUnitOfWork.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", filtro);
-            return query.Take(15).ToList();
+            return repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", 15, filtro);
         }
 
         public List<Proveedor> ListarProveedor(string proveedor)
         {
-            return mobjUnitOfWork.Repository<Proveedor>().Queryable().Where(x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor))).Take(15).ToList();
+            return repositorio.Listar<Proveedor>(x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
         }
 
         public class ZMPES5130
@@ -3292,125 +1978,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<BasicoProveedor> TraerDatosBasicosProveedor(int proveedorId, int comercialId, List<int> equipo)
         {
-            var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable();
-            var oEstado = mobjUnitOfWork.Repository<Estado>().Queryable();
-            var oFacacop = mobjUnitOfWork.Repository<FACACOP>().Queryable();
-            var oRg2300 = mobjUnitOfWork.Repository<RG2300>().Queryable();
-            var oSegmentacion = mobjUnitOfWork.Repository<Segmentacion>().Queryable();
-            var oContactoComercial = mobjUnitOfWork.Repository<ContactoComercial>().Queryable();
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable();
-            var oProvincia = mobjUnitOfWork.Repository<Provincia>().Queryable();
-            var oCanalOperacion = mobjUnitOfWork.Repository<CanalOperacion>().Queryable();
-            var oDestinatario = mobjUnitOfWork.Repository<Destinatario>().Queryable();
-            var oCondicion = mobjUnitOfWork.Repository<Condicion>().Queryable();
-            var oAreaInfluencia = mobjUnitOfWork.Repository<AreaInfluencia>().Queryable();
-            var oGrupoCompras = mobjUnitOfWork.Repository<GrupoDeCompras>().Queryable();
-            var oProveedorComercial = mobjUnitOfWork.Repository<ProveedorComercial>().Queryable();
-            var oProveedorCanalOperacion = mobjUnitOfWork.Repository<ProveedorCanalOperacion>().Queryable();
-            var oProveedorDestinatario = mobjUnitOfWork.Repository<ProveedorDestinatario>().Queryable();
-            var oProveedorCondicion = mobjUnitOfWork.Repository<ProveedorCondicion>().Queryable();
-            var oClasificacionCompranet = mobjUnitOfWork.Repository<ClasificacionCompraNet>().Queryable();
-            var oBoletoCompranet = mobjUnitOfWork.Repository<BoletoCompraNet>().Queryable();
-            var oBolsaCompraNet = mobjUnitOfWork.Repository<BolsaCompraNet>().Queryable();
-
-            var estadosDisponibles = mobjUnitOfWork.Repository<ProveedorEstado>().Queryable().Where(x => x.ProveedorId == proveedorId && equipo.Contains(x.ComercialId)).Select(x => x.EstadoId).ToList();
-            var estado = estadosDisponibles.Contains(4) ? 4 : estadosDisponibles.Contains(5) ? 5 : estadosDisponibles.Contains(1) ? 1 : estadosDisponibles.Contains(2) ? 2 : estadosDisponibles.Contains(3) ? 3 : 0;
-            var queryBasicoProveedor =
-                from prove in oProveedor
-                join est in oEstado on (estado == 0 ? prove.EstadoId : estado) equals est.EstadoId into ests
-                from est in ests.DefaultIfEmpty()
-                join fac in oFacacop on prove.CUIT equals fac.CUIT into facs
-                from fac in facs.DefaultIfEmpty()
-                join rg in oRg2300 on prove.CUIT equals rg.CUIT into rgs
-                from rg in rgs.DefaultIfEmpty()
-                join seg in oSegmentacion on prove.SegmentacionId equals seg.SegmentacionId into segs
-                from seg in segs.DefaultIfEmpty()
-                join con in oContactoComercial on prove.ProveedorId equals con.ProveedorId into cons
-                from con in cons.DefaultIfEmpty()
-                join pco in oProveedorComercial on prove.ProveedorId equals pco.ProveedorId into pcos
-                from pco in pcos.DefaultIfEmpty()
-                join com in oComercial on pco.ComercialId equals com.ComercialId into coms
-                from com in coms.DefaultIfEmpty()
-                join loc in oLocalidad on prove.LocalidadId equals loc.LocalidadId into locs
-                from loc in locs.DefaultIfEmpty()
-                join prov in oProvincia on prove.ProvinciaId equals prov.ProvinciaId into provs
-                from prov in provs.DefaultIfEmpty()
-                join loccn in oLocalidad on prove.LocalidadCompraNetId equals loccn.LocalidadId into loccns
-                from loccn in loccns.DefaultIfEmpty()
-                join provcn in oProvincia on prove.ProvinciaCompraNetId equals provcn.ProvinciaId into provcns
-                from provcn in provcns.DefaultIfEmpty()
-                join pcaop in oProveedorCanalOperacion on prove.ProveedorId equals pcaop.ProveedorId into pcaops
-                from pcaop in pcaops.DefaultIfEmpty()
-                join caop in oCanalOperacion on pcaop.CanalOperacionId equals caop.CanalOperacionId into caops
-                from caop in caops.DefaultIfEmpty()
-                join pd in oProveedorDestinatario on prove.ProveedorId equals pd.ProveedorId into pds
-                from pd in pds.DefaultIfEmpty()
-                join des in oDestinatario on pd.DestinatarioId equals des.DestinatarioId into dess
-                from des in dess.DefaultIfEmpty()
-                join pc in oProveedorCondicion on prove.ProveedorId equals pc.ProveedorId into pcs
-                from pc in pcs.DefaultIfEmpty()
-                join cond in oCondicion on pc.CondicionId equals cond.CondicionId into conds
-                from cond in conds.DefaultIfEmpty()
-                join ari in oAreaInfluencia on prove.AreaInfluenciaId equals ari.AreaInfluenciaId into aris
-                from ari in aris.DefaultIfEmpty()
-                join gc in oGrupoCompras on com.GrupoDeCompras equals gc.Id into gcs
-                from gc in gcs.DefaultIfEmpty()
-                join clascn in oClasificacionCompranet on prove.ClasificacionCompraNetId equals clascn.Id into clascns
-                from clascn in clascns.DefaultIfEmpty()
-                join bolscn in oBolsaCompraNet on prove.BolsaCompraNetId equals bolscn.Id into bolscns
-                from bolscn in bolscns.DefaultIfEmpty()
-                join bolecn in oBoletoCompranet on prove.BoletoCompraNetId equals bolecn.Id into bolecns
-                from bolecn in bolecns.DefaultIfEmpty()
-                where prove.ProveedorId == proveedorId
-                select new BasicoProveedor() {
-                    ProveedorId = prove.ProveedorId,
-                    RazonSocial= prove.RazonSocial,
-                    CUIT= prove.CUIT,
-                    Estado= est.Descripcion,
-                    Facacop= (fac.CUIT == null)? 0:1,
-                    RiesgoComercialSap= prove.RiesgoComercialSap,
-                    Situacion= rg.Situacion,
-                    Segmentacion= seg.Descripcion,
-                    Email1= con.Email1,
-                    Email2= con.Email2,
-                    Email3= con.Email3,
-                    Email4= null,
-                    Telefono1 = con.Telefono1,
-                    Telefono2= con.Telefono2,
-                    Telefono3 = con.Telefono3,
-                    Telefono4= null,
-                    Observaciones= prove.Observaciones,
-                    FechaUltimoContacto= prove.FechaUltimoContacto,
-                    Nombres=com.Nombres,
-                    Apellido=com.Apellido,
-                    Direccion=prove.Direccion,
-                    Provincia=prov.Nombre,
-                    Localidad=loc.Nombre,
-                    CanalOperacion=caop.Descripcion,
-                    Destinatario=des.Descripcion,
-                    Condicion=cond.Descripcion,
-                    AreaInfluencia=ari.Descripcion,
-                    Intermediario=prove.Intermediario,
-                    Calificacion=prove.Calificacion,
-                    GrupoDeCompras= gc.Descripcion ?? "",
-                    CodigoPostal=prove.CodigoPostal,
-                    TipoTelefono1Id= con.TipoTelefono1Id,
-                    TipoTelefono2Id= con.TipoTelefono2Id ,
-                    TipoTelefono3Id= con.TipoTelefono3Id,
-                    TipoTelefono4Id= null,
-                    NombreReferente = (con.Nombres == null && con.Apellido == null)?"No Posee": con.Nombres +" "+ con.Apellido,
-                    ClienteMOA=prove.ClienteMOA,
-                    ProvinciaCompraNet= provcn.Nombre ?? "",
-                    LocalidadCompraNet= loccn.Nombre ?? "",
-                    ClasificacionCompraNet=clascn.Descripcion,
-                    BoletoCompraNet=bolecn.Descripcion,
-                    BolsaCompraNet=bolscn.Descripcion
-
-                };
-
-            return queryBasicoProveedor.ToList();
-            
+            return repositorio.ListarConsulta(new TraerDatosBasicosProveedor(proveedorId, comercialId, equipo));
         }
     }
 }

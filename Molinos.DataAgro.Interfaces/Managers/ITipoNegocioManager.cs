@@ -1,19 +1,17 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ITipoNegocioManager
     {
-        Task<ResultIniTipoNegocio> TraerTodoAsync();
+        ResultIniTipoNegocio TraerTodo();
 
-        Task<TipoNegocio> TraerTipoNegociodAsync(int TipoNegocioId);
+        TipoNegocio TraerTipoNegociod(int TipoNegocioId);
 
-        Task<EntityErrors> GrabarTipoNegocioAsync(TipoNegocio oTipoNegocio);
+        Resultado GrabarTipoNegocio(TipoNegocio oTipoNegocio);
 
-        Task<EntityErrors> EliminarTipoNegocioAsync(int TipoNegocioId);
+        Resultado EliminarTipoNegocio(int TipoNegocioId);
     }
 }
 

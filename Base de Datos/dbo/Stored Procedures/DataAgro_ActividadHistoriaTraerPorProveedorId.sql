@@ -31,7 +31,7 @@ BEGIN
 
   A.FechaHoraRecordatorio, 
   A.FechaHoraRecordatorioFin,  
-  A.Asunto,
+  A.asunto,
 
   TA.Descripcion AS TipoActividad,  
 

@@ -1,15 +1,13 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -23,7 +21,7 @@ namespace Molinos.DataAgro.Business.Managers
 
     public class ContratoManager : IContratoManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
         
         private IMaterialManager mobjMaterialManager;
@@ -35,14 +33,14 @@ namespace Molinos.DataAgro.Business.Managers
         private IComercialManager mobjComercialManager;
 
         
-        public ContratoManager(ILogger logger, IMSContextProvider oMSContextProvider, 
+        public ContratoManager(ILogger logger, IRepositorio repositorio, 
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
             ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager, 
             ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager, 
             IComercialManager oMSComercialManager)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
             mobjMaterialManager = oMSMaterialManager;
             mobjCampaniaManager = oMSCampaniaManager;
             mobjProvinciaManager = oMSProvinciaManager;
@@ -52,96 +50,49 @@ namespace Molinos.DataAgro.Business.Managers
             mobjTipoNegocioManager = oMSTipoNegocioManager;
         }
 
-        public async Task<DatosIniContrato> TraerDatosCombo()
+        public DatosIniContrato TraerDatosCombo()
         {
             var datosCombo = new DatosIniContrato();
-            
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking();
 
-            datosCombo.prov = await mobjUnitOfWork.Repository<Provincia>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Join(oLocalidad, a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new { P = a, L = b })
-                                .GroupBy(x => new { x.P.ProvinciaId, x.P.Nombre })
-                                .Select(x => new ProvinciaQry() { Provinciaid = x.Key.ProvinciaId, Nombre = x.Key.Nombre }).ToListAsync();
+            datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre });
 
             datosCombo.loc = new List<LocalidadQry>();
 
-            datosCombo.campaña = await mobjUnitOfWork.Repository<Campaña>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
 
-            datosCombo.material = await mobjUnitOfWork.Repository<Material>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
 
-            datosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
-                             .Queryable()
-                             .AsNoTracking()
-                             .OrderBy(x => x.Nombres)
-                             .ThenBy(x => x.Apellido)
-                             .Where(x =>  x.PerfilId  == (int)EnumPerfil.Comercial || x.PerfilId == (int)EnumPerfil.Jefe || x.PerfilId == (int)EnumPerfil.Mesa)
-                             .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
+            datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
+                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial || x.Perfil.PerfilId == (int)EnumPerfil.Jefe || x.Perfil.PerfilId == (int)EnumPerfil.Mesa), 0, "Comercial")                              ;
 
-            datosCombo.monedaSustentable = await mobjUnitOfWork.Repository<Moneda>()
-                                 .Queryable()
-                                 .AsNoTracking()
-                                 .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
-                               .Queryable()
-                               .AsNoTracking()
-                               .OrderBy(x => x.RazonSocial)
-                               .Select(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial }).ToListAsync();
-            
-            datosCombo.tiponegocio = await mobjUnitOfWork.Repository<TipoNegocio>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.proveedor = repositorio.Listar<Proveedor, ProveedorQry>(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
 
-            datosCombo.Clasificacion = await mobjUnitOfWork.Repository<ClasificacionCompraNet>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
 
-            datosCombo.Bolsa = await mobjUnitOfWork.Repository<BolsaCompraNet>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.Destino = await mobjUnitOfWork.Repository<Centro>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.Condicion = await mobjUnitOfWork.Repository<CondicionFijacion>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.Standard = await mobjUnitOfWork.Repository<StandardDeCalidad>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new StandardDeCalidadQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.TipoDB = await mobjUnitOfWork.Repository<TipoDB>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoDBQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.TipoPeriodoDB = await mobjUnitOfWork.Repository<TipoPeriodoDB>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new TipoPeriodoDBQry() { Id = x.Id, Descripcion = x.Descripcion }).ToListAsync();
-            datosCombo.MonedaDescuento = await mobjUnitOfWork.Repository<Moneda>()
-                                .Queryable()
-                                .AsNoTracking()
-                                .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
+            datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.Bolsa = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.Destino = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.Condicion = repositorio.Listar<CondicionFijacion, CondicionFijacionQry>(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.Standard = repositorio.Listar<StandardDeCalidad, StandardDeCalidadQry>(x => new StandardDeCalidadQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.TipoDB = repositorio.Listar<TipoDB, TipoDBQry>(x => new TipoDBQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.TipoPeriodoDB = repositorio.Listar<TipoPeriodoDB, TipoPeriodoDBQry>(x => new TipoPeriodoDBQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
+
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
-            foreach (int estadoValue in estadosValues) {
+            foreach (int estadoValue in estadosValues)
+            {
                 string estadoName = Enum.GetName(typeof(EnumEstadoContrato), estadoValue);
 
                 EstadosContratos item = new EstadosContratos(estadoValue, estadoName);
@@ -152,140 +103,120 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        private List<ErrorMessage> Validar(Contrato oParam, List<ErrorMessage> oErrorMessages)
+        private Resultado Validar(Contrato oParam, Resultado oErrorMessages)
         {
 
             if (oParam.ProveedorId == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Proveedor' no debe estar vacio", "ProveedorId"));
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
             }
             if (oParam.MaterialId == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Material' no debe estar vacio", "Material"));
+                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
             }
 
             if (oParam.Cantidad == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Cantidad' no debe estar vacio", "Cantidad"));
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
             }
             if (oParam.Precio == 0 && oParam.TipoNegocioId != 1)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Precio' no debe estar vacio", "Precio"));
+                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            if (oParam.LocalidadId == null && oParam.TipoNegocioId == 1 || oParam.LocalidadId == null && oParam.TipoNegocioId == 2) {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Localidad' no debe estar vacio", "LocalidadId"));
+            if (oParam.LocalidadId == 0 && oParam.TipoNegocioId == 1 || oParam.LocalidadId == 0 && oParam.TipoNegocioId == 2)
+            {
+                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
             }
-            if (oParam.ProvinciaId == null && oParam.TipoNegocioId == 1 || oParam.ProvinciaId == null && oParam.TipoNegocioId == 2) {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Provincia' no debe estar vacio", "ProvinciaId"));
+            if (oParam.ProvinciaId == 0 && oParam.TipoNegocioId == 1 || oParam.ProvinciaId == 0 && oParam.TipoNegocioId == 2)
+            {
+                oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacio");
             }
             if (oParam.FechaEntrega.Year == 1)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Fecha de Entrega' no debe estar vacio", "FechaEntrega"));
+                oErrorMessages.Error("FechaEntrega", "El campo 'Fecha de Entrega' no debe estar vacio");
             }
             if (oParam.FechaDesde.Year == 1)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Fecha Desde' no debe estar vacio", "FechaDesde"));
+                oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacio");
             }
             if (oParam.FechaHasta.Year == 1)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Fecha Hasta' no debe estar vacio", "FechaHasta"));
+                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
             }
             if (oParam.FechaHasta.Year == 1)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Fecha Hasta' no debe estar vacio", "FechaHasta"));
+                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
             }
             if (string.IsNullOrEmpty(oParam.MonedaId))
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Moneda' no debe estar vacio", "MonedaId"));
+                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
             if (oParam.TipoNegocioId == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Tipo de Negocio' no debe estar vacio", "TipoNegocioId"));
+                oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacio");
             }
             if (oParam.CampanaId == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Campaña' no debe estar vacio", "CampañaId"));
+                oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
             }
-            if (!oParam.ComercialId.HasValue || oParam.ComercialId == 0)
+            if (oParam.ComercialId == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Comercial' no debe estar vacio", "ComercialId"));
+                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
             if (oParam.ProvinciaId == 1 && oParam.EstablecimientoPropio == null)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Establecimiento' no debe estar vacio cuando Provincia es Buenos Aires", "EstablecimientoPropio"));
+                oErrorMessages.Error("EstablecimientoPropio", "El campo 'Establecimiento' no debe estar vacio cuando Provincia es Buenos Aires");
             }
-            if (oParam.TipoNegocioId==1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
+            if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
             {
-                oErrorMessages.Add(new ErrorMessage("El 'Plazos y Topes de Fijación' no debe estar vacio cuando el contrato es 'A FIJAR'", "EstablecimientoPropio"));
+                oErrorMessages.Error("EstablecimientoPropio", "El 'Plazos y Topes de Fijación' no debe estar vacio cuando el contrato es 'A FIJAR'");
             }
             return oErrorMessages;
-
         }
 
-        public async Task<Contrato> TraerContratoAsync(int ContratoId)
+        public Contrato TraerContrato(int contratoId)
         {
-            var oContrato = await mobjUnitOfWork.Repository<Contrato>()
-                           .Queryable()
-                           .Where(x => x.ContratoId == ContratoId)
-                           .SingleOrDefaultAsync();
-
-            oContrato.ObjectState = Constants.Object_Modified;
-
-            return oContrato;
+            return repositorio.Obtener<Contrato>(contratoId);
         }
 
-        public async Task<GrabarContratoResult> GrabarAmpliacionContrato(Contrato oContrato) {
-
-            Contrato oContratoSave;
-
+        public GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato)
+        {
             var oEntityErrors = new GrabarContratoResult();
-            oEntityErrors.Errores = new List<ErrorMessage>();
+            var oContratoSave = TraerContrato(oContrato.ContratoId);
 
-            oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-
-            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado))
             {
-
                 oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
-                oContratoSave.Estado = oContratoSave.Base == true ? (int)EnumEstadoContrato.Oferta : (int)EnumEstadoContrato.Pendiente;
+                oContratoSave.EstadoId = oContratoSave.Base == true ? (int)EnumEstadoContrato.Oferta : (int)EnumEstadoContrato.Pendiente;
 
-                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                repositorio.GuardarCambios();
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede ampliar"));
+                oEntityErrors.Error("", "El contrato no se puede ampliar");
             }
 
             return oEntityErrors;
         }
 
-        public async Task<GrabarContratoResult> GrabarContrato(Contrato oContrato)
+        public GrabarContratoResult GrabarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            Validar(oContrato, oEntityErrors.Errores);
+            Validar(oContrato, oEntityErrors);
 
             if (oEntityErrors.Errores.Count > 0)
             {
                 return oEntityErrors;
             }
 
-            Contrato oContratoSave;
+            var oContratoSave = oContrato;
 
-            if (oContrato.ContratoId == 0)
+            if (oContrato.ContratoId != 0)
             {
-                oContratoSave = new Contrato()
+                oContratoSave = TraerContrato(oContrato.ContratoId);
+                if (oContratoSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
-                if (oContratoSave.Estado > (int)EnumEstadoContrato.Con_Error)
-                {
-                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede modificar"));
+                    oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
             }
@@ -307,7 +238,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ProvinciaId = oContrato.ProvinciaId;
             oContratoSave.Base = oContrato.Base;
             oContratoSave.ImporteSustentable = oContrato.ImporteSustentable;
-            oContratoSave.MonedaIdSustentable = oContrato.MonedaIdSustentable;
+            oContratoSave.MonedaSustentableId = oContrato.MonedaSustentableId;
             oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
@@ -331,10 +262,26 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;
             oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
             oContratoSave.BoletoId = oContrato.BoletoId;
-            oContratoSave.BolsaId = oContrato.BolsaId;
+            oContratoSave.BolsaId = oContrato.BolsaId==0?null: oContrato.BolsaId;
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
-            oContratoSave.Descuentos = oContrato.Descuentos;
+
+            if (oContratoSave.Descuentos != null)
+            {
+                foreach (var descExistente in oContratoSave.Descuentos)
+                {
+                    if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == descExistente.Id))
+                    {
+                        repositorio.Remover(descExistente);
+                    }
+                }
+            }
+
+            foreach (var descuento in oContrato.Descuentos.Where(x => x.Id == 0))
+            {
+                descuento.Contrato = oContratoSave;
+                repositorio.Agregar(descuento);
+            }
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
             {
                 oContratoSave.Fecha = oContrato.Fecha;
@@ -345,262 +292,27 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.ContratoSAP = oContrato.ContratoSAP;
             }
 
-            mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            if (oContratoSave.ContratoId == 0)
+            {
+                repositorio.Agregar(oContratoSave);
+            }
+            repositorio.GuardarCambios();
             return oEntityErrors;
         }
 
         public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId)
         {
-            var oResult = new StoredPorContratoResult();
-
-            var oContrato = mobjUnitOfWork.Repository<Contrato>().Queryable();
-
-            var oFijacion = mobjUnitOfWork.Repository<FijacionDePrecioContrato>().Queryable();
-
-            var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable();
-
-            var oComercial = mobjUnitOfWork.Repository<Comercial>().Queryable();
-
-            var oMaterial = mobjUnitOfWork.Repository<Material>()
-                            .Queryable();
-
-            var oTipoNegocio = mobjUnitOfWork.Repository<TipoNegocio>()
-                            .Queryable();
-
-            var oMoneda = mobjUnitOfWork.Repository<Moneda>()
-                            .Queryable();
-
-            var oCampaña = mobjUnitOfWork.Repository<Campaña>()
-                            .Queryable();
-
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>()
-                            .Queryable();
-
-            var oProvincia = mobjUnitOfWork.Repository<Provincia>()
-                            .Queryable();
-
-            var oEstadoContrato = mobjUnitOfWork.Repository<EstadoContrato>()
-                            .Queryable();
-
-            var oDestino = mobjUnitOfWork.Repository<Centro>()
-                            .Queryable();
-            
-            var oCondicionFijacion = mobjUnitOfWork.Repository<CondicionFijacion>()
-                            .Queryable();
-
-            var oStandardDeCalidad = mobjUnitOfWork.Repository<StandardDeCalidad>()
-                            .Queryable();
-
-            var oCalidadEspecial = mobjUnitOfWork.Repository<CalidadEspecial>()
-                            .Queryable();
-
-            var oBoletoCompraNet = mobjUnitOfWork.Repository<BoletoCompraNet>()
-                            .Queryable();
-
-            var oBolsaCompraNet = mobjUnitOfWork.Repository<BolsaCompraNet>()
-                            .Queryable();
-
-            var queryContratos =
-                from cont in oContrato
-                join prove in oProveedor on cont.ProveedorId equals prove.ProveedorId into proves
-                from prove in proves.DefaultIfEmpty()
-                join come in oComercial on cont.ComercialId equals come.ComercialId into comes
-                from come in comes.DefaultIfEmpty()
-                join mat in oMaterial on cont.MaterialId equals mat.MaterialId into mats
-                from mat in mats.DefaultIfEmpty()
-                join tine in oTipoNegocio on cont.TipoNegocioId equals tine.TipoNegocioId into tines
-                from tine in tines.DefaultIfEmpty()
-                join mone in oMoneda on cont.MonedaId equals mone.MonedaId into mones
-                from mone in mones.DefaultIfEmpty()
-                join moneSust in oMoneda on cont.MonedaIdSustentable equals moneSust.MonedaId into monesSust
-                from moneSust in monesSust.DefaultIfEmpty()
-                join camp in oCampaña on cont.CampanaId equals camp.CampañaId into camps
-                from camp in camps.DefaultIfEmpty()
-                join loc in oLocalidad on cont.LocalidadId equals loc.LocalidadId into locs
-                from loc in locs.DefaultIfEmpty()
-                join provi in oProvincia on cont.ProvinciaId equals provi.ProvinciaId into provis
-                from provi in provis.DefaultIfEmpty()
-                join estado in oEstadoContrato on cont.Estado equals estado.EstadoContratoId into estados
-                from estado in estados.DefaultIfEmpty()
-                join centro in oDestino on cont.DestinoId equals centro.Id into destinos
-                from centro in destinos.DefaultIfEmpty()
-                join condicionFijacion in oCondicionFijacion on cont.CondicionFijacionId equals condicionFijacion.Id into condicionFijacions
-                from condicionFijacion in condicionFijacions.DefaultIfEmpty()
-                join standardDeCalidad in oStandardDeCalidad on cont.StandardDeCalidadId equals standardDeCalidad.Id into standardsDeCalidad
-                from standardDeCalidad in standardsDeCalidad.DefaultIfEmpty()
-                join calidadEspecial in oCalidadEspecial on cont.CalidadEspecialId equals calidadEspecial.Id into calidadesEspecial
-                from calidadEspecial in calidadesEspecial.DefaultIfEmpty()
-                join boletoCompranet in oBoletoCompraNet on cont.BoletoId equals boletoCompranet.Id into boletosCompranet
-                from boletoCompranet in boletosCompranet.DefaultIfEmpty()
-                join bolsaCompranet in oBolsaCompraNet on cont.BolsaId equals bolsaCompranet.Id into bolsasCompranet
-                from bolsaCompranet in bolsasCompranet.DefaultIfEmpty()
-
-                where listComercialesId.Contains(cont.ComercialId != null ? cont.ComercialId.Value : 0)
-                select new BasicoContrato()
-                {
-                    ContratoId = SqlFunctions.StringConvert((double)cont.ContratoId).Trim(),
-                    
-                    ProveedorId = cont.ProveedorId,
-                    ComercialId = cont.ComercialId,
-                    MaterialId = cont.MaterialId,
-                    TipoNegocioId = cont.TipoNegocioId,
-                    Cantidad = cont.Cantidad,
-                    Precio = cont.Precio,
-                    FechaEntrega = cont.FechaEntrega,
-                    CampanaId = cont.CampanaId,
-                    FechaDesde = DbFunctions.TruncateTime(cont.FechaDesde),
-                    FechaHasta = DbFunctions.TruncateTime(cont.FechaHasta),
-                    MonedaId = cont.MonedaId,
-                    Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = DbFunctions.TruncateTime(cont.Fecha),
-                    Fecha_Order = cont.Fecha,
-                    GrupoCompra = cont.GrupoCompra,
-                    ProvinciaId = cont.ProvinciaId,
-                    LocalidadId = cont.LocalidadId,
-                    Base = cont.Base,
-                    Importe_Sustentable = ((decimal)cont.ImporteSustentable),
-                    MonedaId_Sustentable = cont.MonedaIdSustentable,
-                    Moneda_Sustentable = moneSust == null ? "" : moneSust.Descripcion,
-                    Fecha_Dolarizado = DbFunctions.TruncateTime(cont.FechaDolarizado),
-                    Dias_Pesificado = cont.DiasPesificado,
-                    NoInformaSIO = cont.NoInformaSio,
-                    TrigoEspecial = cont.TrigoEspecial,
-                    Estado = cont.Estado,
-                    Estado_Contrato = estado.Descripcion,
-                    Estado_Order = estado.Orden,
-                    UsuarioId = cont.UsuarioId,
-                    ContratoSAP = cont.ContratoSAP,
-                    Ampliaciones = cont.Ampliaciones,
-                    Cuit = prove == null ? "" : prove.CUIT,
-                    Proveedor = prove == null ? "" : prove.RazonSocial,                    
-                    Comercial = come == null ? "" : come.Nombres + " " + come.Apellido,
-                    Material = mat == null ? "" : mat.Descripcion,
-                    Campania = camp == null ? "" : camp.Descripcion,
-                    Provincia = provi == null ? "" : provi.Nombre,
-                    TipoNegocio = tine == null ? "" : tine.Descripcion,
-                    Localidad = loc == null ? "" : loc.Nombre,
-                    Observacion = cont.Observacion != null ? cont.Observacion : "",
-                    FijacionDePrecioContratoId = null,
-                    Sustentable = ((decimal)cont.ImporteSustentable) != null && ((decimal)cont.ImporteSustentable) > 0,
-                    Dolarizado = cont.FechaDolarizado!=null,
-                    Pesificado = cont.DiasPesificado!=null,
-                    Negocio = (cont.ContratoSAP == 0 || cont.ContratoSAP == null) ? cont.ContratoId : cont.ContratoSAP,
-                    Clasificacion = cont.ClasificacionId,
-                    Destino = cont.DestinoId,
-                    CantidadCamiones = cont.CantidadCamiones,
-                    Consignatario = cont.Consignatario,
-                    PlanCanje = cont.PlanCanje,
-                    CondicionFijacion = cont.CondicionFijacionId,
-                    CD = cont.CD,
-                    Warrant = cont.Warrant,
-                    PagoDirectoVendedor= cont.PagoDirectoVendedor,
-                    StandardDeCalidad = cont.StandardDeCalidadId,
-                    CalidadEspecial = cont.CalidadEspecialId,
-                    ValorCalidadEspecial = cont.ValorCalidadEspecial,
-                    EstablecimientoPropio = cont.EstablecimientoPropio,
-                    BoletoId = cont.BoletoId,
-                    BolsaId = cont.BolsaId,
-                    DesdeFijacion = DbFunctions.TruncateTime(cont.DesdeFijacion),
-                    HastaFijacion = DbFunctions.TruncateTime(cont.HastaFijacion),
-                };
-
-            var queryFijacion =
-                from fijac in oFijacion
-                join prove in oProveedor on fijac.ProveedorId equals prove.ProveedorId into proves
-                from prove in proves.DefaultIfEmpty()
-                join come in oComercial on fijac.ComercialId equals come.ComercialId into comes
-                from come in comes.DefaultIfEmpty()
-                join mat in oMaterial on fijac.MaterialId equals mat.MaterialId into mats
-                from mat in mats.DefaultIfEmpty()
-                join mone in oMoneda on fijac.MonedaId equals mone.MonedaId into mones
-                from mone in mones.DefaultIfEmpty()
-                join estado in oEstadoContrato on fijac.Estado equals estado.EstadoContratoId into estados
-                from estado in estados.DefaultIfEmpty()
-                where listComercialesId.Contains(fijac.ComercialId)
-                select new BasicoContrato()
-                {
-                    ContratoId = SqlFunctions.StringConvert((double)fijac.ContratoId).Trim(),
-                    ProveedorId = fijac.ProveedorId,
-                    ComercialId = fijac.ComercialId,
-                    MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
-                    TipoNegocioId = 3,
-                    Cantidad = fijac.Cantidad,
-                    Precio = fijac.Precio,
-                    FechaEntrega = null,
-                    CampanaId = 0,
-                    FechaDesde = null,
-                    FechaHasta = null,
-                    MonedaId = fijac.MonedaId,
-                    Moneda = mone == null ? "" : mone.Descripcion,
-                    Fecha = DbFunctions.TruncateTime(fijac.Fecha),
-                    Fecha_Order = fijac.Fecha,
-                    GrupoCompra = 0,
-                    ProvinciaId = null,
-                    LocalidadId = null,
-                    Base = null,
-                    Importe_Sustentable = null,
-                    MonedaId_Sustentable = "",
-                    Moneda_Sustentable = "",
-                    Fecha_Dolarizado = null,
-                    Dias_Pesificado = null,
-                    NoInformaSIO = null,
-                    TrigoEspecial = null,
-                    Estado = fijac.Estado,
-                    Estado_Contrato = estado.Descripcion,
-                    Estado_Order = estado.Orden,
-                    UsuarioId = "",
-                    ContratoSAP = null,
-                    Ampliaciones = fijac.Ampliaciones,
-                    Cuit = prove == null ? "" : prove.CUIT,
-                    Proveedor = prove == null ? "" : prove.RazonSocial,
-                    Comercial = come == null ? "" : come.Nombres + " " + come.Apellido,
-                    Material = mat == null ? "" : mat.Descripcion,
-                    Campania = "",
-                    Provincia = "",
-                    TipoNegocio = "FIJACION",
-                    Localidad = "",
-                    Observacion = fijac.Observacion != null ? fijac.Observacion : "",
-                    FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
-                    Sustentable = false,
-                    Dolarizado = false,
-                    Pesificado = false,
-                    Negocio = null,
-                    Clasificacion= null,
-                    Destino = null,
-                    CantidadCamiones = null,
-                    Consignatario = false,
-                    PlanCanje = false,
-                    CondicionFijacion = null,
-                    CD = null,
-                    Warrant = null,
-                    PagoDirectoVendedor = null,
-                    StandardDeCalidad = null,
-                    CalidadEspecial = null,
-                    ValorCalidadEspecial = null,
-                    EstablecimientoPropio = false,
-                    BoletoId = null,
-                    BolsaId = null,
-                    DesdeFijacion = null,
-                    HastaFijacion = null,
-                };
-
-            queryContratos = queryContratos.Union(queryFijacion);
-            
-            return new KendoGrid<BasicoContrato>(request, queryContratos);
-
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, listComercialesId));
         }
-        
 
-        public async Task<GrabarContratoResult> ConfirmarContrato(Contrato oContrato)
+
+        public GrabarContratoResult ConfirmarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            var  oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+            var oContratoSave = TraerContrato(oContrato.ContratoId);
 
-            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Pendiente || oContratoSave.Estado == (int)EnumEstadoContrato.Oferta))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta))
             {
                 try
                 {
@@ -609,53 +321,50 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch { }
 
-                oContratoSave.Estado = (int)EnumEstadoContrato.Confirmado;
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
-                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                repositorio.GuardarCambios();
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede confirmar"));
+                oEntityErrors.Error("", "El contrato no se puede confirmar");
             }
 
             return oEntityErrors;
         }
 
-        public async Task<GrabarContratoResult> FinalizarContrato(Contrato oContrato, string idActiveDirectory)
+        public GrabarContratoResult FinalizarContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var  oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+            var oContratoSave = TraerContrato(oContrato.ContratoId);
 
-            if (oContratoSave != null && (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado == (int)EnumEstadoContrato.Con_Error))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
-                var objCampania = await mobjCampaniaManager.TraerCampaniaAsync(oContratoSave.CampanaId);
-                var objMaterial = await mobjMaterialManager.TraerMaterialAsync(oContratoSave.MaterialId);
-                var objProvincia = await mobjProvinciaManager.TraerProvinciaAsync(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
-                var objTiponegocio = await mobjTipoNegocioManager.TraerTipoNegociodAsync(oContratoSave.TipoNegocioId);
-                var objLocalidad = await mobjLocalidadManager.TraerLocalidadAsync(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
-                var objProveedor = await mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
-                var objComercial = await mobjComercialManager.TraerComercialAsync(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
-
-                oContratoSave.Estado = (int)EnumEstadoContrato.Con_Error;
-                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-                await mobjUnitOfWork.SaveChangesAsync();
-
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                repositorio.GuardarCambios();
                 try
                 {
+                    var objCampania = mobjCampaniaManager.TraerCampania(oContratoSave.CampanaId);
+                    var objMaterial = mobjMaterialManager.TraerMaterial(oContratoSave.MaterialId);
+                    var objProvincia = mobjProvinciaManager.TraerProvincia(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
+                    var objTiponegocio = mobjTipoNegocioManager.TraerTipoNegociod(oContratoSave.TipoNegocioId);
+                    var objLocalidad = mobjLocalidadManager.TraerLocalidad(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
+                    var objProveedor = mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
+                    var objComercial = mobjComercialManager.TraerComercial(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
+
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
 
-                    oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+                    oContratoSave = TraerContrato(oContrato.ContratoId);
 
-                    oContratoSave.Estado = (int)EnumEstadoContrato.Finalizado;
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     try
                     {
                         oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
                     }
-                    catch
+                    catch (Exception e)
                     {
                         oContratoSave.ContratoSAP = 0;
+                        logger.Error(e);
                     }
 
                     try
@@ -663,61 +372,59 @@ namespace Molinos.DataAgro.Business.Managers
                         //Envio de mail
                         mobjProveedorManager.EnviarEmail(oContratoSave, idActiveDirectory);
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }
 
-
-                    mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-                    await mobjUnitOfWork.SaveChangesAsync();
+                    repositorio.GuardarCambios();
                 }
                 catch (Exception e)
                 {
-                    oEntityErrors.Errores = new List<ErrorMessage>() {
-                        new ErrorMessage() { Message = e.Message}
-                    };
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
                 }
             }
             else
             {
-                if (oContratoSave.Estado == (int)EnumEstadoContrato.Confirmado)
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya se encuentra Finalizado"));
-                } else if (oContratoSave.Estado == (int)EnumEstadoContrato.Rechazado)
-                {
-                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato ya ha sido Rechazado"));
+                    oEntityErrors.Error("", "El contrato ya se encuentra Finalizado");
                 }
-                else if (oContratoSave.Estado == (int)EnumEstadoContrato.Pendiente || oContratoSave.Estado == (int)EnumEstadoContrato.Oferta)
+                else if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage("El contrato debe ser Confirmado"));
+                    oEntityErrors.Error("", "El contrato ya ha sido Rechazado");
+                }
+                else if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta)
+                {
+                    oEntityErrors.Error("", "El contrato debe ser Confirmado");
                 }
             }
-
+            repositorio.GuardarCambios();
             return oEntityErrors;
         }
 
-        public async Task<GrabarContratoResult> BorrarContrato(Contrato oContrato)
-        {    
+        public GrabarContratoResult BorrarContrato(Contrato oContrato)
+        {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = await TraerContratoAsync(oContrato.ContratoId);
+            var oContratoSave = TraerContrato(oContrato.ContratoId);
 
-            if (oContratoSave != null && (oContratoSave.Estado < (int)EnumEstadoContrato.Finalizado))
+            if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado))
             {
-                oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
 
-                mobjUnitOfWork.Repository<Contrato>().SaveEntity(oContratoSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                repositorio.GuardarCambios();
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("El contrato no se puede rechazar"));
+                oEntityErrors.Error("", "El contrato no se puede rechazar");
             }
             return oEntityErrors;
         }
 
         public int ObtenerComercialId(string idActiveDirectory)
         {
-            return mobjUnitOfWork.Repository<Comercial>().Queryable().Where(x => x.IdActiveDirectory == idActiveDirectory).SingleOrDefault().ComercialId;
+            return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x=> x.ComercialId);
         }
 
         public string SAPFinalizarContrato(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string comercial)
@@ -725,6 +432,31 @@ namespace Molinos.DataAgro.Business.Managers
             var SapFinalizarContrato = new FinalizarContratoAgent(logger);
             return SapFinalizarContrato.Finalizar(contrato, campaniaDescripcion, materialCodigo, provinciaId, tiponegocioDescripcion, localidadCod, proveedorCUIT, comercial);
         }
+
+        public List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId)
+        {
+            return repositorio.Listar<DescuentoBonificacion, DescuentoBonificacionDto>(desc => new DescuentoBonificacionDto()
+            {
+                ContratoId = desc.ContratoId,
+                Id = desc.Id,
+                FechaDesde = desc.FechaDesde != null ? SqlFunctions.DateName("day", desc.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)desc.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", desc.FechaDesde) : "",
+
+                FechaHasta = desc.FechaHasta != null ? SqlFunctions.DateName("day", desc.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)desc.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", desc.FechaHasta) : "",
+                Importe = desc.Importe,
+                Porcentaje = desc.Porcentaje,
+                MonedaId = desc.MonedaId,
+                TipoDBId = desc.TipoDBId,
+                TipoDBDesc = desc.TipoDB.Descripcion,
+                TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
+                TipoPeriodoDBId = desc.TipoPeriodoDBId
+            },
+            x => x.ContratoId == contratoId);
+        }
+
 
     }
 

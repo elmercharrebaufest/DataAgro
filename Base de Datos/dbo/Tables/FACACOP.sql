@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[FACACOP] (
-    [Id]                      INT           NOT NULL,
+    [Id]                      INT           IDENTITY (1, 1) NOT NULL,
     [CUIT]                    CHAR (11)     NOT NULL,
     [Fecha1]                  DATETIME      NOT NULL,
     [Fecha2]                  DATETIME      NOT NULL,

@@ -13,7 +13,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
         public DateTime? FechaEntrega { get; set; }
-
         public int CampanaId { get; set; }
         public DateTime? FechaDesde { get; set; }
         public DateTime? FechaHasta { get; set; }
@@ -25,7 +24,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ComercialId { get; set; }
         public int? ProvinciaId { get; set; }
         public int? LocalidadId { get; set; }
-
         public bool? Base { get; set; }
         public decimal? Importe_Sustentable { get; set; }
         public string MonedaId_Sustentable { get; set; }
@@ -83,8 +81,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Pesificado { get; set; }
         public int? Negocio { get; set; }
 
-        public int? Clasificacion { get; set; }
-        public int? Destino { get; set; }
+        public int? ClasificacionId { get; set; }
+        public string ClasificacionDescripcion { get; set; }
+        public int? DestinoId { get; set; }
+        public string DestinoDescripcion { get; set; }
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
@@ -98,9 +98,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
+        public string BoletoDescripcion { get; set; }
+        public string BolsaDescripcion { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
-        public List<DescuentosBonificaciones> Descuentos { get; set; }
+        public string CondicionFijacionDescripcion { get; set; }
+        public List<DescuentoBonificacion> Descuentos { get; set; }
     }
 
 

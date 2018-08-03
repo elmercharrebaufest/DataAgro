@@ -1,61 +1,76 @@
 ﻿
-using Mastersoft.Framework.Interfaces;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Proveedor : Entity
+    public partial class Proveedor
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ProveedorId { get; set; }
         public string CUIT { get; set; }
         public int? EstadoId { get; set; }
         public string RazonSocial { get; set; }
         public int SegmentacionId { get; set; }
         public string NombreReferente { get; set; }
-        public Nullable<int> Calificacion { get; set; }
+        public int? Calificacion { get; set; }
         public string Intermediario { get; set; }
         public string Observaciones { get; set; }
         public string Direccion { get; set; }
-        public Nullable<int> LocalidadId { get; set; }
-        public Nullable<int> ProvinciaId { get; set; }
+        public int? LocalidadId { get; set; }
+        public int? ProvinciaId { get; set; }
         public string CodigoPostal { get; set; }
-        public Nullable<int> AreaInfluenciaId { get; set; }
-        public Nullable<double> AlmacVolAnualTotal { get; set; }
-        public Nullable<bool> AlmacHabilitadoSojaSust { get; set; }
-        public Nullable<double> AlmacTonsMaxSojaSust { get; set; }
-        public Nullable<double> AlmacHectSojaSust { get; set; }
-        public Nullable<bool> ClienteMOA { get; set; }
+        public int? AreaInfluenciaId { get; set; }
+        public double? AlmacVolAnualTotal { get; set; }
+        public bool? AlmacHabilitadoSojaSust { get; set; }
+        public double? AlmacTonsMaxSojaSust { get; set; }
+        public double? AlmacHectSojaSust { get; set; }
+        public bool? ClienteMOA { get; set; }
         public string GrupoCompras { get; set; }
         public string Email1 { get; set; }
         public string Email2 { get; set; }
         public string Email3 { get; set; }
         public string Email4 { get; set; }
         public string Telefono1 { get; set; }
-        public Nullable<int> TipoTelefono1Id { get; set; }
+        public int? TipoTelefono1Id { get; set; }
         public string Telefono2 { get; set; }
-        public Nullable<int> TipoTelefono2Id { get; set; }
+        public int? TipoTelefono2Id { get; set; }
         public string Telefono3 { get; set; }
-        public Nullable<int> TipoTelefono3Id { get; set; }
+        public int? TipoTelefono3Id { get; set; }
         public string Telefono4 { get; set; }
-        public Nullable<int> TipoTelefono4Id { get; set; }
-        public Nullable<System.DateTime> FechaUltimoContacto { get; set; }
+        public int? TipoTelefono4Id { get; set; }
+        public DateTime? FechaUltimoContacto { get; set; }
         public string RiesgoComercialSap { get; set; }
-        public Nullable<DateTime> FechaAlta { get; set; }
-        public Nullable<int> LocalidadCompraNetId { get; set; }
-        public Nullable<int> ProvinciaCompraNetId { get; set; }
-        public Nullable<int> ClasificacionCompraNetId { get; set; }
-        public Nullable<int> BoletoCompraNetId { get; set; }
-        public Nullable<int> BolsaCompraNetId { get; set; }
-                    
-        public Proveedor()
-        {
-            
-        }
+        public DateTime? FechaAlta { get; set; }
+        public int? LocalidadCompraNetId { get; set; }
+        public int? ProvinciaCompraNetId { get; set; }
+        public int? ClasificacionCompraNetId { get; set; }
+        public int? BoletoCompraNetId { get; set; }
+        public int? BolsaCompraNetId { get; set; }
+
+        [ForeignKey("EstadoId")]
+        public virtual Estado Estado { get; set; }
+        [ForeignKey("SegmentacionId")]
+        public virtual Segmentacion Segmentacion { get; set; }
+        [ForeignKey("LocalidadId")]
+        public virtual Localidad Localidad { get; set; }
+        [ForeignKey("ProvinciaId")]
+        public virtual Provincia Provincia { get; set; }
+        [ForeignKey("AreaInfluenciaId")]
+        public virtual AreaInfluencia AreaInfluencia { get; set; }
+
+        [ForeignKey("LocalidadCompraNetId")]
+        public virtual Localidad LocalidadCompraNet { get; set; }
+        [ForeignKey("ProvinciaCompraNetId")]
+        public virtual Provincia ProvinciaCompraNet { get; set; }
+        [ForeignKey("ClasificacionCompraNetId")]
+        public virtual ClasificacionCompraNet ClasificacionCompraNet { get; set; }
+        [ForeignKey("BoletoCompraNetId")]
+        public virtual BoletoCompraNet BoletoCompraNet { get; set; }
+        [ForeignKey("BolsaCompraNetId")]
+        public virtual BolsaCompraNet BolsaCompraNet { get; set; }
     }
-
-
 }
    
 

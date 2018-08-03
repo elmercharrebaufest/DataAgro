@@ -69,13 +69,13 @@ namespace Molinos.DataAgro.Report.Clases
                     Contenido = ms.ToArray()
                 };
                 
-                await reportesManager.GrabarReporteAsync(oReporte);
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
         }
 
-        public async Task<string> GenerarInformesExcelAsync(List<ResultCapacidadProductiva> oDatos)
+        public string GenerarInformesExcel(List<ResultCapacidadProductiva> oDatos)
         {
             var excel = new ExcelPackage();
 
@@ -116,8 +116,8 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "CapacidadProductiva.xlsx",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
@@ -177,7 +177,7 @@ namespace Molinos.DataAgro.Report.Clases
                     Contenido = ms.ToArray()
                 };
                 
-                await reportesManager.GrabarReporteAsync(oReporte);
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;

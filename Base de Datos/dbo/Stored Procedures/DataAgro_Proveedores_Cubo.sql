@@ -20,7 +20,7 @@ AS
 	UNION ALL 
 	SELECT A.ComercialId
 	FROM Comercial A
-	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId
+	inner join Empleados AS B on A.EmpleadorACargoId = B.ComercialId
 )
 
 select * 

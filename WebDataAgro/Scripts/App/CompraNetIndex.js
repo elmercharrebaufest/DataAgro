@@ -10,6 +10,7 @@ $(document).ready(function () {
     InicializarElementosModalPendiente();
 
     AutoRecargar();
+    CrearViewModel()
 
     //mobile();
 
@@ -30,6 +31,7 @@ $(document).ready(function () {
         $('.datosEditarAdicionalesPendiente').show();
         $('.masDatosPendiente').hide();
         $('.datosEditarPendiente').hide();
+        CerrarDatosPendientes();
     });
     $(".menosDatosPendiente").on("click", function () {
         $('.datosEditarAdicionalesPendiente').hide();
@@ -84,8 +86,8 @@ function botonPendiente(dataItem, icono) {
         "'" + dataItem.NoInformaSIO + "'" + ',' +
         "'" + dataItem.TrigoEspecial + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-        "'" + dataItem.Clasificacion + "'" + ',' +
-        "'" + dataItem.Destino + "'" + ',' +
+        "'" + dataItem.DestinoId + "'" + ',' +
+        "'" + dataItem.DestinoDescripcion + "'" + ',' +
         "'" + dataItem.PlanCanje + "'" + ',' +
         "'" + dataItem.Consignatario + "'" + ',' +
         "'" + dataItem.CantidadCamiones + "'" + ',' +
@@ -101,6 +103,8 @@ function botonPendiente(dataItem, icono) {
         "'" + dataItem.CalidadEspecial + "'" + ',' +
         "'" + dataItem.ValorCalidadEspecial + "'" + ',' +
         "'" + dataItem.EstablecimientoPropio + "'" + ',' +
+        "'" + dataItem.ClasificacionId + "'" + ',' +
+        "'" + dataItem.ClasificacionDescripcion + "'" +
         ')"><i class="fa ' + icono + '"></i></button>';
 }
 
@@ -148,7 +152,28 @@ function botonVisualizar(dataItem, icono) {
     "'" + dataItem.Estado + "'" + ',' +
     "'" + htmlEncode(dataItem.Observacion) + "'" + ',' +
     "'" + dataItem.Moneda + "'" + ',' +
-    "'" + dataItem.Moneda_Sustentable + "'" +
+    "'" + dataItem.Moneda_Sustentable + "'" + ',' +
+    "'" + dataItem.DestinoId + "'" + ',' +
+    "'" + dataItem.DestinoDescripcion + "'" + ',' +
+    "'" + dataItem.CantidadCamiones + "'" + ',' +
+    "'" + dataItem.Consignatario + "'" + ',' +
+    "'" + dataItem.PlanCanje + "'" + ',' +
+    "'" + dataItem.CondicionFijacion + "'" + ',' +
+    "'" + dataItem.CD + "'" + ',' +
+    "'" + dataItem.Warrant + "'" + ',' +
+    "'" + dataItem.PagoDirectoVendedor + "'" + ',' +
+    "'" + dataItem.StandardDeCalidad + "'" + ',' +
+    "'" + dataItem.CalidadEspecial + "'" + ',' +
+    "'" + dataItem.ValorCalidadEspecial + "'" + ',' +
+    "'" + dataItem.EstablecimientoPropio + "'" + ',' +
+    "'" + dataItem.BoletoId + "'" + ',' +
+    "'" + dataItem.BolsaId + "'" + ',' +
+    "'" + dataItem.BoletoDescripcion + "'" + ',' +
+    "'" + dataItem.BolsaDescripcion + "'" + ',' +
+    "'" + formatearFecha(dataItem.DesdeFijacion) + ' - ' + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
+    "'" + dataItem.CondicionFijacionDescripcion + "'" + ',' +
+    "'" + dataItem.ClasificacionId + "'" + ',' +
+    "'" + dataItem.ClasificacionDescripcion + "'" +
     ')"><i class="fa ' + icono +' aria-hidden="true"></i></button>' ;
 }
 
@@ -226,7 +251,6 @@ function CreateGridInformeCompraNet() {
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         dataBound: function () {
-            //var ww = document.body.clientWidth;
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
             $("td:has(div.statusconfirmado)").css('border-bottom', '5px solid #179e2b');
             $("td:has(div.statusoferta)").css('border-bottom', '5px solid #00adf5');
@@ -234,35 +258,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
             if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial"); }
-            //function mobile () {
-            //if (ww < 768) {
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("FechaDesde");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("FechaHasta");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("TipoNegocio");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Material");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Cantidad");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Ampliaciones");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Precio");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Campania");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("ContratoSAP");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Fecha");
-            //    $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
-            //}
-            //else {
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("FechaDesde");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("FechaHasta");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("TipoNegocio");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Material");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Cantidad");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Ampliaciones");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Precio");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Campania");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("ContratoSAP");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Fecha");
-            //    $("#gridInformeCompraNet").data("kendoGrid").showColumn("Comercial");
-            //    }
-            //}
-            //mobile();
+            
            
         },
         columns: [
@@ -769,7 +765,7 @@ function InicializarElementosModalPendiente() {
         $(".modal").modal('hide');
         return true;
     });
-    
+
     $("#finalizarConfirmado").click(function () {
         ObtenerDatosModalConfirmado();
     });
@@ -821,12 +817,9 @@ function InicializarElementosModalPendiente() {
             $("#pesificadoDiasModalPendienteId").val("");
         }
     });
-
+    
     $('select[id="materialModalPendiente"]').change(function () {
-
-        var resultGrano = MSExecuteOnServer('/CompraNet/TraerCampanaPorMaterial', { MaterialId: $(this).val() });
-
-        viewModel.set("CampanaComboModalPendiente", resultGrano);
+        cargarPorMaterial($(this).val());        
     });
 
     $("#boletoConfirmaIdModalPendiente").click(function () {
@@ -883,8 +876,17 @@ function InicializarElementosModalPendiente() {
     });
 }
 
+function cargarPorMaterial(material){
+    var resultGrano = MSExecuteOnServer('/CompraNet/TraerCampanaPorMaterial', { MaterialId: material });
+    viewModel.set("CampanaComboModalPendiente", resultGrano);
+
+    var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: material });
+    viewModel.set("EspecialesComboModalPendiente", calidadGrano);
+}
+
 function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, fechaHasta, fecha, tipoId, MaterialId, cantidad, ampliaciones, precio, MonedaId, campana, provincia, localidad, comercial, nroSAP, base, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, noInformaSIO, trigoEspecial, fijacionId, clasificacion, destino, planCanje, consignatario, cantidadCamiones, boleto, bolsa, desdeFijacion, hastaFijacion, condicion, cd, warrant, pagoDirectoVendedor, standardDeCalidad, calidadEspecial, valorCalidadEspecial, establecimientoPropio) {
 
+    
     LimpiarPendiente();
 
     if (tipoId === "3") {
@@ -960,7 +962,6 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
     $("#cantidadModalPendienteId").val(cantidad);
     $("#precioModalPendienteId").val(precio);
     $("#precioMonedaModalPendienteId").data("kendoDropDownList").value(MonedaId);
-    $("#campanaModalPendienteId").data("kendoDropDownList").value(campana);
     $("#provinciaId").data("kendoDropDownList").value(provincia);
     $("#clasificacionModalPendienteId").data("kendoDropDownList").value(clasificacion);
     $("#destinoModalPendienteId").data("kendoDropDownList").value(destino);
@@ -970,6 +971,9 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
     CargarLocalidadPorProvincia(provincia);
     if (!(localidad == "null" || localidad == "undefined")) $("#LocalidadId").data("kendoDropDownList").value(localidad);
     if (!(comercial == "null" || comercial == "undefined")) $("#comercialModalPendienteId").data("kendoDropDownList").value(comercial);
+
+    cargarPorMaterial(MaterialId);
+    $("#campanaModalPendienteId").data("kendoDropDownList").value(campana);
 
     if (base == "true") {
         $("#baseModalPendienteId").prop("checked", true);
@@ -1033,7 +1037,34 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
         $("#calidadesEspecialesIdModalPendiente").data("kendoDropDownList").value(calidadEspecial);
         $("#valorEspecialesIdModalPendiente").val(valorCalidadEspecial);
     }
-    establecimientoPropio == "true" ? $("#establecimientoIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoIdModalPendiente").prop("checked", true):false;
+    establecimientoPropio == "true" ? $("#establecimientoIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoIdModalPendiente").prop("checked", true) : false;
+
+    var iteraciones = viewModel.Descuentos.length;
+    for (var i = 0; i < iteraciones; i++) {
+        viewModel.Descuentos.pop();
+    }
+
+    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contratoId });
+
+    $.each(descuentosDto, function (key, descuento) {
+        var descuentoKendo = {
+            Id: descuento.Id,
+            TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
+            TipoPeriodoDBId: descuento.TipoPeriodoDBId,
+            TipoDBDesc: descuento.TipoDBDesc,
+            TipoDBId: descuento.TipoDBId,
+            FechaDesde: descuento.FechaDesde,
+            FechaHasta: descuento.FechaHasta,
+            Importe: descuento.Importe,
+            MonedaId: descuento.MonedaId,
+            Porcentaje: descuento.Porcentaje,
+            ContratoId: descuento.ContratoId,
+            Borrar: function () {
+                viewModel.Descuentos.remove(this);
+            }
+        };
+        viewModel.Descuentos.push(descuentoKendo);
+    });
 }
 
 $("#modalPendiente #tipoModalPendienteId").on("change", function () {
@@ -1109,6 +1140,7 @@ function ObtenerDatosModalPendiente() {
         objPendiente.BoletoId = 3;
         objPendiente.BolsaId = 0;
     }
+    objPendiente.Descuentos = viewModel.Descuentos
 
     ModificarContrato(objPendiente);
 }
@@ -1173,6 +1205,7 @@ function LimpiarPendiente() {
     $("#boletoNingunoIdModalPendiente").prop('checked', false);
     $("#BolsaFisicoDivModalPendiente").hide();
     $("BolsaConfirmaDivModalPendiente").hide();
+
 }
 
 function ModalFinalizado(contratoId,tipoId, fijacionDePrecioContratoId) {
@@ -1404,9 +1437,8 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, cantidad, precio,comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda) {
-
-
+function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion) {
+    
     switch (status) {
         case "1": //pendiente
             $("#modalVisualizar .modal-header > div.status").hide();
@@ -1441,48 +1473,233 @@ function ModalVisualizar(contrato, proveedor,fecha, desdeHasta, tipo, material, 
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
     $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda);
     $("#visualizar_campana").text(campana);
-   
 
     var procedencia = "";
     var provinciaDat = provincia != "undefined" && provincia != "null" ? provincia : "";
     var localidadDat = localidad != "undefined" && localidad != "null" ? localidad : "";
-    if (provinciaDat == "" || localidadDat == "") {
+    if (provinciaDat == "" || localidadDat == "")
+    {
         procedencia = provinciaDat + localidadDat;
-    } else if (provinciaDat != "" && localidadDat != "") {
+    }
+    else if (provinciaDat != "" && localidadDat != "")
+    {
         procedencia = localidadDat + ", " + provinciaDat;
     }
 
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");
-    (sustentablePrecio === "undefined" || sustentablePrecio === "null" || sustentablePrecio === 0) ? $("#sustentableDivVisualizar").hide() : $("#sustentableDivVisualizar").show();
-    $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
-    (dolarizadoFecha === "undefined" || dolarizadoFecha === "null") ? $("#dolarizadoFechaDivVisualizar").hide() : $("#dolarizadoFechaDivVisualizar").show();
-    $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
-    (pesificadoDias === "undefined" || pesificadoDias === "null") ? $("#pesificadoDiasDivVisualizar").hide() : $("#pesificadoDiasDivVisualizar").show();
-    $("#visualizar_pesificadoDias").text(pesificadoDias);
-    (informaSIO === "undefined" || informaSIO === "null" || informaSIO === "false") ? $("#informaSIODivVisualizar").hide() : $("#informaSIODivVisualizar").show();
-    $("#visualizar_informaSIO").text("Si");
-    (trigoEspecial === "undefined" || trigoEspecial === "null" || trigoEspecial === "false") ? $("#trigoEspecialDivVisualizar").hide() : $("#trigoEspecialDivVisualizar").show();
-    $("#visualizar_trigoEspecial").text("Si");
     $("#visualizar_observacion").text(Observacion != "undefined" && Observacion ? Observacion : "");
+    $("#visualizar_destino").text(destinoDescripcion);
+    $("#visualizar_condicionFijacion").text(condicionFijacionId);
+    $("#visualizar_clasificacion").text(clasificacionDescripcion);
+
+    visualizacionRowDoble(pesificadoDias, "pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", informaSIO, "informaSIODivVisualizar", "visualizar_informaSIO");
+    visualizacionRowDoble(sustentablePrecio, "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+    visualizacionPagoYTrigo(trigoEspecial, "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", cd, warrant, pagoDirectoVendedor, "pagoDivVisualizar", "visualizar_pago");
+    visualizacionBoleto(boletoDescripcion, "boletoDivVisualizar", "visualizar_boleto", bolsaDescripcion, "bolsaDivVisualizar", "visualizar_bolsa");
+    visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
+    visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
+
+    if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "")
+    {
+        $("#desdeHastaFijacionDivVisualizar").hide();
+        $("#condicionFijacionDivVisualisar").hide();
+    }
+
+    textoBooleano(informaSIO, "visualizar_informaSIO");
+    textoBooleano(planCanje, "visualizar_planCanje");
+    textoBooleano(consignatario, "visualizar_consignatario");
+    textoCantCamiones(cantidadCamiones, "visualizar_cantidadDeCamiones");
+    textoEstablecimiento(establecimientoPropio, "visualizar_establecimiento");
+
+    if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false")
+    {
+        $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
+    }
+    
     $("#modalVisualizar").modal('show');
+    var iteraciones = viewModel.Descuentos.length;
+    for (var i = 0; i < iteraciones; i++) {
+        viewModel.Descuentos.pop();
+    }
+
+    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
+
+    $.each(descuentosDto, function (key, descuento) {
+        var descuentoKendo = {
+            Id: descuento.Id,
+            TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
+            TipoPeriodoDBId: descuento.TipoPeriodoDBId,
+            TipoDBDesc: descuento.TipoDBDesc,
+            TipoDBId: descuento.TipoDBId,
+            FechaDesde: descuento.FechaDesde,
+            FechaHasta: descuento.FechaHasta,
+            Importe: descuento.Importe,
+            MonedaId: descuento.MonedaId,
+            Porcentaje: descuento.Porcentaje,
+            ContratoId: contratoId,
+           
+        };
+        viewModel.Descuentos.push(descuentoKendo);
+    });
 }
 
+function visualizacionRowDoble(param1, id1, idText1, param2, id2, idText2)
+{
+    if ((param1 === "undefined" || param1 === "null" || param1 === "false") &&
+        (param2 === "undefined" || param2 === "null" || param2 === "false")) {
+        $("#" + id1).hide();
+        $("#" + id2).hide();
+    }
+    else
+    {
+        if (param1 === "undefined" || param1 === "null" || param1 === "false")
+        {
+            $("#" + idText1).text("n/a");
+            $("#" + idText2).text(param2);
+        }
+        else
+        {
+            $("#" + idText2).text("n/a");
+            $("#" + idText1).text(param1);
+        }
+        $("#" + id1).show();
+        $("#" + id2).show();
+    }
+}
 
-function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
+function visualizacionRowSimple(parametro, idDiv, idText) {
+    if (parametro === "undefined" || parametro === "null" || parametro === "false") {
+        $("#" + idDiv).hide();
+    }
+    else {
+        $("#" + idDiv).show();
+        $("#" + idText).text(parametro);
+    }
+}
+
+function textoBooleano(parametro, id) {
+    if (parametro === "undefined" || parametro === "null" || parametro === "false") {
+        $("#" + id).text("No");
+    }
+    else {
+        $("#" + id).text("Si");
+    }
+}
+
+function mostrarPago(cd, warrant, pagoDirectoVendedor, id) {
+    if (cd === "true")
+    {
+        $("#" + id).text("CD");
+    }
+    else if (warrant === "true")
+    {
+        $("#" + id).text("Warrant");
+    }
+    else if (pagoDirectoVendedor === "true")
+    {
+        $("#" + id).text("Pago directo al vendedor");
+    }
+    else {
+        $("#" + id).text("N/A");
+    }
+}
+
+function textoEstablecimiento(parametro, id)
+{
+    if (parametro === "1")
+    {
+        $("#" + id).text("Propio");
+    }
+    else {
+        $("#" + id).text("Arrendado");
+    }
+}
+
+function textoCantCamiones(parametro, id)
+{
+    if (parametro === "undefined" || parametro === "null" || parametro === "false")
+    {
+        $("#" + id).text("n/a");
+    }
+    else {
+        $("#" + id).text(parametro);
+    }
+}
+
+function visualizacionBoleto(boletoDescripcion, idDivBoleto, idTextBoleto, bolsaDescripcion, idDivBolsa, idTextBolsa)
+{
+    if ((boletoDescripcion === "undefined" || boletoDescripcion === "null") && (bolsaDescripcion === "undefined" || bolsaDescripcion === "null"))
+    {
+        $("#" + idDivBoleto).hide();
+        $("#" + idDivBolsa).hide();
+    }
+    else
+    {
+        if (boletoDescripcion === "Ninguno")
+        {
+            $("#" + idTextBoleto).text(boletoDescripcion);
+            $("#" + idTextBolsa).text("n/a");
+        }
+        else
+        {
+            $("#" + idTextBoleto).text(boletoDescripcion);
+            $("#" + idTextBolsa).text(bolsaDescripcion);
+        }
+        
+        $("#" + idDivBoleto).show();
+        $("#" + idDivBolsa).show();
+    }
+}
+
+function visualizacionPagoYTrigo(trigo, idTrigoDiv, idTrigo, cd, warrant, pagoDirectoVendedor, idPagoDiv, idPago)
+{
+    if ((trigo === "undefined" || trigo === "null" || trigo === "false") &&
+        (cd === "undefined" || cd === "null" || cd === "false") &&
+        (warrant === "undefined" || warrant === "null" || warrant === "false") &&
+        (pagoDirectoVendedor === "undefined" || pagoDirectoVendedor === "null" || pagoDirectoVendedor === "false"))
+    {
+        $("#" + idTrigoDiv).hide();
+        $("#" + idPagoDiv).hide();
+    }
+    else {
+        if (trigo === "true") {
+            $("#" + idTrigo).text("Si");
+        }
+        else
+        {
+            $("#" + idTrigo).text("No");
+        }
+        if (cd === "true") {
+            $("#" + idPago).text("CD");
+        }
+        else if (warrant === "true") {
+            $("#" + idPago).text("Warrant");
+        }
+        else
+        {
+            $("#" + idPago).text("Pago directo al vendedor");
+        }
+
+        $("#" + idTrigoDiv).show();
+        $("#" + idPagoDiv).show();
+    }
+}
+
+function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId)
+{
     $("#proveedor_a_borrar").text(proveedor);
 
-    if (tipoNegocio === "3") {
+    if (tipoNegocio === "3")
+    {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
-    } else {
+    } else
+    {
         $("#contratoModalBorrar").val(id);
     }
     
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
     
     $("#modalBorrar").modal('show');
-
-
 }
 //$(window).resize(mobile);
-

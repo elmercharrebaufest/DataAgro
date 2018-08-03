@@ -15,7 +15,7 @@ as
 
 
  
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int);
 
 declare @SegmentacionSecuencia TABLE (Item INT)    
 declare @ProvinciaSecuencia TABLE (Item INT) 

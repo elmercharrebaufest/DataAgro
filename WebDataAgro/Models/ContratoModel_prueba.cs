@@ -1,17 +1,13 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
-using System.Collections.Generic;
+﻿using Molinos.DataAgro.Entities.Dto;
 
 namespace WebDataAgro.Models
 {
-    public class ContratoModel_prueba {
-
-        public List<MSErrorMessage> Errores { get; set; }
+    public class ContratoModel_prueba : Resultado
+    {
         public DatosIniContrato Datos { get; set; }
 
-        public ContratoModel_prueba() {
-
-            this.Errores = new List<MSErrorMessage>();
+        public ContratoModel_prueba()
+        {
             this.Datos = new DatosIniContrato();
         }
     }

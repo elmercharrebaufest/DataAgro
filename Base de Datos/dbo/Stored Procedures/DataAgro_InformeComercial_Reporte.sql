@@ -8,7 +8,7 @@
 )
 AS
 
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int);
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int);
 
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialGenerador;
 
@@ -25,8 +25,8 @@ select
 	0 InformeComercialId
 from campo c
 inner join CampoMaterial cm on c.CampoId = cm.CampoId
-inner join Material m on m.materialId = cm.MaterialId and m.CampañaIdActual = cm.CampañaId
-inner join Campaña camp on  m.CampañaIdActual = camp.CampañaId
+inner join Material m on m.materialId = cm.MaterialId and m.CampañaId = cm.CampañaId
+inner join Campaña camp on  m.CampañaId = camp.CampañaId
 left join 
 (
 	select distinct i.proveedorId,d.MaterialId as MaterialId, i.CampañaId

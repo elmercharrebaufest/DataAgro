@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Actividad] (
-    [ActividadId]              INT           NOT NULL,
+    [ActividadId]              INT           IDENTITY (1, 1) NOT NULL,
     [TipoActividadId]          INT           NOT NULL,
-    [Detalle]                  TEXT          NOT NULL,
+    [Detalle]                  NVARCHAR (255)          NOT NULL,
     [ProveedorId]              INT           NOT NULL,
     [FechaHoraActividad]       DATETIME      NOT NULL,
     [FechaHoraRecordatorio]    DATETIME      NULL,

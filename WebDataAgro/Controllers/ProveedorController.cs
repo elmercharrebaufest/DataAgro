@@ -18,16 +18,16 @@ namespace WebDataAgro.Controllers
         private IProveedorManager mobjProveedorManager;
         private IHomeManager mobjHomeManager;
         private ICampañaManager mobjCampañaManager;
-        private string idActiveDirectory;
+        
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ProveedorController(IMSContextProvider oMSContextProvider, IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
+        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
         {
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             mobjProveedorManager = oProveedorManager;
             mobjHomeManager = oHomeManager;
             mobjCampañaManager = oCampañaManager;
@@ -145,7 +145,7 @@ namespace WebDataAgro.Controllers
             bool mostrarEditar = true;
             
 
-            if (!mobComercialManager.ComercialExiste(idActiveDirectory))
+            if (!mobComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
@@ -156,7 +156,7 @@ namespace WebDataAgro.Controllers
                 mostrarEditar = false;
                 ViewBag.edita = false;
             }
-            else if (!mobComercialManager.ComercialPerteneceProveedor(idActiveDirectory, ProveedorId))
+            else if (!mobComercialManager.ComercialPerteneceProveedor(GlobalVariables.Equipo, ProveedorId))
             {
                 ActionView = "ErrorUsuarioSinDerechos";
             }
@@ -168,110 +168,89 @@ namespace WebDataAgro.Controllers
             return View(ActionView);
         }
 
-        public async Task<ActionResult> TraerProveedor(int ProveedorId)
+        public ActionResult TraerProveedor(int ProveedorId)
         {
-            var model = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory, GlobalVariables.Equipo);      
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo),
                 MaxJsonLength = Int32.MaxValue
             };
 
         }
 
-        public async Task<ActionResult> Iniciliazar(int ProveedorId)
+        public ActionResult Iniciliazar(int proveedorId)
         {
-            var model =  await mobjProveedorManager.TraerDatosCombo(ProveedorId);
-            
             return new JsonResult()
             {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
-        public async Task<ActionResult> TraerLocalidad(int Id)
-        {
-            var model = await mobjProveedorManager.TraerLocalidad(Id);
-
-            return new JsonResult()
-            {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
-        public async Task<ActionResult> CrearActividad(ActividadInsetarIni oParam)
-        {
-            var model = new Actividad();
-            
-            oParam.ComercialId = await mobjHomeManager.TraerIdComercial(idActiveDirectory);
-
-            oParam.UserName = Core.Util.GetNameUser();
-
-            await mobjProveedorManager.GrabarRecordatorioAsync(oParam);
-
-            return new JsonResult()
-            {
-                Data = model,
+                Data = mobjProveedorManager.TraerDatosCombo(proveedorId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> EliminarRecordatorio(int id)
+        public ActionResult TraerLocalidad(int Id)
         {
-            var model = new Actividad();
-
-            await mobjProveedorManager.EliminarRecordatorio(id);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjProveedorManager.TraerLocalidad(Id),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> TraerContacto(int ProveedorId)
+        public ActionResult CrearActividad(ActividadInsetarIni oParam)
         {
-            var model = new List<ContactoComercial>();
+            oParam.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
+            oParam.UserName = GlobalVariables.IdActiveDirectoryCompleto;
 
-            model = await mobjProveedorManager.TraerContacto(ProveedorId);
-            
+            mobjProveedorManager.GrabarRecordatorio(oParam);
+
             return new JsonResult()
             {
-                Data = model,
+                Data = new Actividad(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> TraerRazonSocial(string cuit)
+        public ActionResult EliminarRecordatorio(int id)
         {
-            var model = await mobjProveedorManager.TraerRazonSocial(cuit);
+            mobjProveedorManager.EliminarRecordatorio(id);
 
             return new JsonResult()
             {
-                Data = model,
+                Data = new Actividad(),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
-        public async Task<ActionResult> GrabarProveedor(NuevoProveedor oParam)
+        public ActionResult TraerContacto(int proveedorId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjProveedorManager.TraerContacto(proveedorId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerRazonSocial(string cuit)
+        {
+            return new JsonResult()
+            {
+                Data = mobjProveedorManager.TraerRazonSocial(cuit),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult GrabarProveedor(NuevoProveedor oParam)
         {
 
-             GrabarProveedorResult model = new GrabarProveedorResult();
-
-            //EntityErrors model = null;
+            GrabarProveedorResult model = new GrabarProveedorResult();
 
             if (oParam.ProveedorId != null && oParam.ProveedorId != 0)
             {
-                 model = await mobjProveedorManager.UpdateProveedor(oParam, idActiveDirectory);
+                model = mobjProveedorManager.UpdateProveedor(oParam, GlobalVariables.IdActiveDirectory);
             }
-            else { 
-                 model = await mobjProveedorManager.GrabarNuevoProveedor(oParam, idActiveDirectory);
+            else
+            {
+                model = mobjProveedorManager.GrabarNuevoProveedor(oParam, GlobalVariables.IdActiveDirectory);
             }
 
             return new JsonResult()
@@ -281,46 +260,38 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> TraerCampañasActivas()
+        public ActionResult TraerCampañasActivas()
         {
-            var model = await mobjCampañaManager.TraerCampañasActivas();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCampañaManager.TraerCampañasActivas(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> TraerMaterialPorCampaña(int CampañaId)
+        public ActionResult TraerMaterialPorCampaña(int campañaId)
         {
-            var model = await mobjCampañaManager.TraerMaterialPorCampaña(CampañaId);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCampañaManager.TraerMaterialPorCampaña(campañaId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> TraerCampañaPorMaterial(int MaterialId)
+        public ActionResult TraerCampañaPorMaterial(int materialId)
         {
-            var model = await mobjCampañaManager.TraerCampañaPorMaterial(MaterialId);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCampañaManager.TraerCampañaPorMaterial(materialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActiviad oParam )
+        public ActionResult TraerFiltros(string TipoActividadId, int ProveedorId, HistorialActiviad oParam)
         {
-            var model = await mobjProveedorManager.TraerHistorialActividad(oParam, ProveedorId,  TipoActividadId);
-            
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjProveedorManager.TraerHistorialActividad(oParam, ProveedorId, TipoActividadId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -330,15 +301,14 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            var datos = await mobjProveedorManager.TraerProveedor(ProveedorId, idActiveDirectory, GlobalVariables.Equipo);
+            var datos = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo);
 
             var oLstProveedor = new LstProveedor(mobjreportesManager);
 
-            var identif = await oLstProveedor.GenerarListadoAsync(datos);
+            var identif = oLstProveedor.GenerarListado(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
-
-
+            
             return new JsonResult()
             {
                 Data = model,
@@ -346,39 +316,32 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> TraerCampañasPorGrano(int MaterialId)
+        public ActionResult TraerCampañasPorGrano(int MaterialId)
         {
-            var model = await mobjCampañaManager.TraerCampañasPorGrano(MaterialId);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjCampañaManager.TraerCampañasPorGrano(MaterialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> ObtenerReporteProveedor(string Valor)
+        public ActionResult ObtenerReporteProveedor(string Valor)
         {
-
-            var model = await mobjProveedorManager.ObtenerReporteProveedor(Valor, idActiveDirectory);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjProveedorManager.ObtenerReporteProveedor(Valor, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> BuscarProveedores(string filtro)
+        public ActionResult BuscarProveedores(string filtro)
         {
-            var model = await mobjProveedorManager.DevolverProveedores(filtro);
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjProveedorManager.DevolverProveedores(filtro),
                 MaxJsonLength = Int32.MaxValue
             };
-        }       
+        }
 
     }
 }

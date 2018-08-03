@@ -11,25 +11,7 @@ as
 declare @table as table(item int );
 
 
---WITH Empleados   
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)  
---AS  
---(  
--- SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory  
---    FROM Comercial    
---	WHERE ComercialId = @comercialId   
--- UNION ALL   
---    --RECURSIVIDAD  
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory  
---	FROM Comercial A  
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId  
---)  
-
---select * 
---	into #Empleados
---from Empleados
-
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
  
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId 
 
@@ -93,7 +75,7 @@ Zona varchar(255), FechaAlta varchar(255) )
   from Proveedor p
  inner join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
  inner join Comercial c on pc.ComercialId = c.ComercialId
- inner join GrupoDeCompras gc on c.GrupoDeCompras = gc.Id
+ inner join GrupoDeCompras gc on c.GrupoDeComprasId = gc.Id
  inner join Segmentacion s on p.SegmentacionId = s.SegmentacionId
  left join Localidad l1 on p.LocalidadId = l1.LocalidadId
  left join Provincia p1 on l1.ProvinciaId = p1.ProvinciaId

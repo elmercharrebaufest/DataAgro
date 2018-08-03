@@ -12,12 +12,12 @@ select distinct  m.MaterialId,m.descripcion as Material,
 	select 1
 	from InformeComercial i
 	inner join InformeComercialProduccion d on d.InformeComercialId = i.InformeComercialId
-	where i.ProveedorId = @ProveedorId and m.materialId = d.materialId and i.CampañaId =m.CampañaIdActual
+	where i.ProveedorId = @ProveedorId and m.materialId = d.materialId and i.CampañaId =m.CampañaId
 ) then cast(1 as bit) else cast(0 as bit) end) as Seleccionado
 from campo c
 inner join CampoMaterial cm on c.CampoId = cm.CampoId
-inner join Material m on m.materialId = cm.MaterialId and m.CampañaIdActual = cm.CampañaId and  m.CampañaIdActual = @CampañaId
-inner join Campaña camp on  m.CampañaIdActual = camp.CampañaId
+inner join Material m on m.materialId = cm.MaterialId and m.CampañaId = cm.CampañaId and  m.CampañaId = @CampañaId
+inner join Campaña camp on  m.CampañaId = camp.CampañaId
 left join 
 (
 	select distinct i.informeComercialId , i.proveedorId,d.MaterialId as MaterialId, i.CampañaId

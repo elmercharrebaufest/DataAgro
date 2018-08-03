@@ -1,165 +1,115 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Business
 {
     public class FijacionDePrecioManager : IFijacionDePrecioManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public FijacionDePrecioManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public FijacionDePrecioManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<DatosIniAbmFijacionDePrecio> TraerDatosInicialesAsync()
+        public DatosIniAbmFijacionDePrecio TraerDatosIniciales()
         {
-            var qry = new CombosQueries(mobjUnitOfWork);
+            var qry = new CombosQueries(logger, repositorio);
 
-            var oDatosIniciales = new DatosIniAbmFijacionDePrecio()
+            return new DatosIniAbmFijacionDePrecio()
             {
-                Material = await qry.GetMaterialComboAsync()
+                Material = qry.GetMaterialCombo()
             };
-            
-            return oDatosIniciales;
         }
-
-
-        public async Task<ResultIniFijacionDePrecio> TraerTodoFijacionDePrecioAsync()
+        
+        public ResultIniFijacionDePrecio TraerTodoFijacionDePrecio()
         {
             var oResult = new ResultIniFijacionDePrecio();
-           
-            var oFijacionDePrecio = mobjUnitOfWork.Repository<FijacionDePrecio>().Queryable();
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
 
-            var query = oFijacionDePrecio
-                        .Join(oMaterial, a => a.MaterialId, b => b.MaterialId, (a, b) => new { FDP = a, MAT = b })
-                        .OrderBy(x => x.FDP.Precio)
-                        .Select(x => new FijacionDePrecioIni()
-                        {
-                             FijacionId = x.FDP.FijacionId,
-                             MatDescripcion = x.MAT.Descripcion,
-                             Precio = x.FDP.Precio,
-                             Fecha = x.FDP.Fecha,
-                             ProveedorId = x.FDP.ProveedorId
-                        });
-
-            oResult.FijacionDePrecio = await query.ToListAsync();
+            oResult.FijacionDePrecio = repositorio.Listar<FijacionDePrecio, FijacionDePrecioIni>(x => new FijacionDePrecioIni()
+            {
+                FijacionId = x.FijacionId,
+                MatDescripcion = x.Material.Descripcion,
+                Precio = x.Precio,
+                Fecha = x.Fecha,
+                ProveedorId = x.Proveedor.ProveedorId
+            });
 
             return oResult;
         }
 
-
-        public async Task<FijacionDePrecio> TraerFijacionDePrecioAsync(int intFijacionId)
+        public FijacionDePrecio TraerFijacionDePrecio(int intFijacionId)
         {
-            var oFijacionDePrecio = new FijacionDePrecio();
-
-            oFijacionDePrecio = await mobjUnitOfWork.Repository<FijacionDePrecio>()
-                                 .Queryable()
-                                 .Where(x => x.FijacionId == intFijacionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oFijacionDePrecio == null)
-            {
-                oFijacionDePrecio = new FijacionDePrecio()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oFijacionDePrecio.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oFijacionDePrecio;
+            return repositorio.Obtener<FijacionDePrecio>(intFijacionId) ?? new FijacionDePrecio();
         }
 
 
-        public async Task<EntityErrors> GrabarFijacionDePrecioAsync(FijacionDePrecio oFijacionDePrecio, string idActiveDirectory)
+        public Resultado GrabarFijacionDePrecio(FijacionDePrecio oFijacionDePrecio, string idActiveDirectory)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oFijacionDePrecio, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oFijacionDePrecio, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-
-            FijacionDePrecio oFijacionDePrecioSave;
-
-            if (oFijacionDePrecio.ObjectState == 0)
+            
+            if (oFijacionDePrecio.FijacionId != 0)
             {
-                oFijacionDePrecioSave = new FijacionDePrecio()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionId);
+                oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
+                oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
+                oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
+                oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
             }
             else
             {
-                oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionId);
+                repositorio.Agregar(oFijacionDePrecio);
             }
-         
-            oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;  
-            oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;  
-            oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;  
-            oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;  
-            if (oFijacionDePrecioSave.ObjectState == Constants.Object_Added)
+
+            try
             {
-                oFijacionDePrecioSave.FijacionId = ((mobjUnitOfWork.Repository<FijacionDePrecio>().Queryable().Max(x => (int?)x.FijacionId)) ?? 0) + 1;
+                repositorio.GuardarCambios();
             }
-
-            mobjUnitOfWork.Repository<FijacionDePrecio>().SaveEntity(oFijacionDePrecioSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarFijacionDePrecioAsync(int intFijacionId)
+        public Resultado EliminarFijacionDePrecio(int intFijacionId)
         {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<FijacionDePrecio>();
-
-            var oFijacionDePrecio = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.FijacionId == intFijacionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oFijacionDePrecio != null)
+            var oEntityErrors = new Resultado();
+            repositorio.Remover<FijacionDePrecio>(intFijacionId);
+            try
             {
-                oRepository.Delete(oFijacionDePrecio);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
-
-   
-        public FijacionDePrecio NuevoFijacionDePrecio()
-        {
-            return new FijacionDePrecio();
-        }
-             
-
     }
 }
 

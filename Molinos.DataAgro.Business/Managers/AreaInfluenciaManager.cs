@@ -1,140 +1,95 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class AreaInfluenciaManager : IAreaInfluenciaManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public AreaInfluenciaManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public AreaInfluenciaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-
-        public async Task<ResultIniAreaInfluencia> TraerTodoAreaInfluenciaAsync()
+        public ResultIniAreaInfluencia TraerTodoAreaInfluencia()
         {
-            var oResult = new ResultIniAreaInfluencia();
-           
-            var oAreaInfluencia = mobjUnitOfWork.Repository<AreaInfluencia>().Queryable();
-
-            var query = oAreaInfluencia
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new AreaInfluenciaIni()
-                        {
-                             AreaInfluenciaId = x.AreaInfluenciaId,
-                             Descripcion = x.Descripcion
-                        });
-
-            oResult.AreaInfluencia = await query.ToListAsync();
-
-            return oResult;
-        }
-
-
-        public async Task<AreaInfluencia> TraerAreaInfluenciaAsync(int intAreaInfluenciaId)
-        {
-            var oAreaInfluencia = new AreaInfluencia();
-
-            oAreaInfluencia = await mobjUnitOfWork.Repository<AreaInfluencia>()
-                                 .Queryable()
-                                 .Where(x => x.AreaInfluenciaId == intAreaInfluenciaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oAreaInfluencia == null)
+            return new ResultIniAreaInfluencia
             {
-                oAreaInfluencia = new AreaInfluencia()
+                AreaInfluencia = repositorio.Listar<AreaInfluencia, AreaInfluenciaIni>(x => new AreaInfluenciaIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oAreaInfluencia.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oAreaInfluencia;
+                    AreaInfluenciaId = x.AreaInfluenciaId,
+                    Descripcion = x.Descripcion
+                }, null, 15, "Descripcion")
+            };
         }
-
-
-        public async Task<EntityErrors> GrabarAreaInfluenciaAsync(AreaInfluencia oAreaInfluencia)
+        
+        public AreaInfluencia TraerAreaInfluencia(int intAreaInfluenciaId)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oAreaInfluencia, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            return repositorio.Obtener<AreaInfluencia>(intAreaInfluenciaId) ?? new AreaInfluencia();
+        }
+        
+        public Resultado GrabarAreaInfluencia(AreaInfluencia oAreaInfluencia)
+        {
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oAreaInfluencia, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-
-            AreaInfluencia oAreaInfluenciaSave;
-
-            if (oAreaInfluencia.ObjectState == 0)
+            
+            if (oAreaInfluencia.AreaInfluenciaId != 0)
             {
-                oAreaInfluenciaSave = new AreaInfluencia()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oAreaInfluenciaSave = TraerAreaInfluencia(oAreaInfluencia.AreaInfluenciaId);
+                oAreaInfluenciaSave.Descripcion = oAreaInfluencia.Descripcion;
             }
             else
             {
-                oAreaInfluenciaSave = await TraerAreaInfluenciaAsync(oAreaInfluencia.AreaInfluenciaId);
+                repositorio.Agregar(oAreaInfluencia);
             }
-         
-            oAreaInfluenciaSave.Descripcion = oAreaInfluencia.Descripcion;  
-            if (oAreaInfluenciaSave.ObjectState == Constants.Object_Added)
+
+            try
             {
-                oAreaInfluenciaSave.AreaInfluenciaId = ((mobjUnitOfWork.Repository<AreaInfluencia>().Queryable().Max(x => (int?)x.AreaInfluenciaId)) ?? 0) + 1;
+                repositorio.GuardarCambios();
             }
-
-            mobjUnitOfWork.Repository<AreaInfluencia>().SaveEntity(oAreaInfluenciaSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarAreaInfluenciaAsync(int intAreaInfluenciaId)
+        public Resultado EliminarAreaInfluencia(int intAreaInfluenciaId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<AreaInfluencia>();
-
-            var oAreaInfluencia = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.AreaInfluenciaId == intAreaInfluenciaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oAreaInfluencia != null)
+            repositorio.Remover<AreaInfluencia>(intAreaInfluenciaId);
+            try
             {
-                oRepository.Delete(oAreaInfluencia);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
-
-   
-             
-
     }
 }
 

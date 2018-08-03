@@ -1,5 +1,4 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -22,7 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
     
     public class LocalidadIni
     {
-        public Nullable<int> LocalidadId { get; set; }
+        public int? LocalidadId { get; set; }
         public string CodLocalidad { get; set; }
         public string Nombre { get; set; }
         public string ProNombre { get; set; }

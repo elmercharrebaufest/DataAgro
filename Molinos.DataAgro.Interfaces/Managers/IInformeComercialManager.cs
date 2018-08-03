@@ -1,34 +1,32 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IInformeComercialManager
     {
-        Task<List<InformeComercialMaterialDisponible>> TraerInformeComercialAsync(int ProveedorId);
+        List<InformeComercialMaterialDisponible> TraerInformeComercial(int ProveedorId);
 
-        Task<InformeResult> GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory);
+        InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory);
 
-        Task<RptInformeComercialInfo> GenerarInformeComercial(ParamInformeComercial informe,int InformeId);
+        RptInformeComercialInfo GenerarInformeComercial(ParamInformeComercial informe,int InformeId);
 
-        Task<List<ReportesList>> ListarReportes(ParamReportesIC oParam);
+        List<ReportesList> ListarReportes(ParamReportesIC oParam);
 
-        Task<List<InformeList>> TraerInformesGeneradosAsync() ;
+        List<InformeList> TraerInformesGenerados() ;
 
-        Task<List<ResultCapacidadProductiva>> TraerCapacidadProductivaAsync(string proveedores);
+        List<ResultCapacidadProductiva> TraerCapacidadProductiva(string proveedores);
 
-        Task<int> GrabarCapacidadProductivaAsync(string informes);
+        int GrabarCapacidadProductiva(string informes);
 
-        Task<EntityErrors> RespuestaDeSapCapacidadProductivaAsync(string cuit, string Material, string Respuesta);
+        Resultado RespuestaDeSapCapacidadProductiva(string cuit, string Material, string Respuesta);
 
-        Task<ParamInformeComercial> ReimprimirInformeComercial(int InformeId);
+        ParamInformeComercial ReimprimirInformeComercial(int InformeId);
 
-        Task<List<InformeGeneradoList>> TraerInformeComercialGeneradoAsync(int ProveedorId);
+        List<InformeGeneradoList> TraerInformeComercialGenerado(int ProveedorId);
 
-        Task<EntityErrors> EliminarInformes(int InformeId);
+        Resultado EliminarInformes(int InformeId);
 
-        Task<List<MaterialesModificacionInforme>> TraerInformeMaterialesAsync(int InformeId);
+        List<MaterialesModificacionInforme> TraerInformeMateriales(int InformeId);
     }
 }

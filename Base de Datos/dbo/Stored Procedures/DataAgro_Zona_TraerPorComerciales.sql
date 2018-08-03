@@ -6,17 +6,17 @@ AS
 
 
 WITH Empleados   
-( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory, GrupoDeCompras)  
+( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory, GrupoDeCompras)  
 AS  
 (  
- SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory  ,GrupoDeCompras
+ SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargoId, IdActiveDirectory  ,GrupoDeComprasId
     FROM Comercial    
 	WHERE ComercialId = @comercialId   
  UNION ALL   
     --RECURSIVIDAD  
-	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory  , a.GrupoDeCompras
+	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargoId, A.IdActiveDirectory  , a.GrupoDeComprasId
 	FROM Comercial A  
-	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId  
+	inner join Empleados AS B on A.EmpleadorACargoId = B.ComercialId  
 )  
 
 select gc.Id as Id, gc.Descripcion as Nombre

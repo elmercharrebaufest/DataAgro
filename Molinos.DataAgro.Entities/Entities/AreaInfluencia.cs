@@ -1,22 +1,14 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class AreaInfluencia : Entity
+    public partial class AreaInfluencia
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int AreaInfluenciaId { get; set; }
 
         public string Descripcion { get; set; }
-
-
-        public AreaInfluencia()
-        {
-            this.AreaInfluenciaId = 0;
-            this.Descripcion = "";
-  
-        }
+        
     }
 }
    

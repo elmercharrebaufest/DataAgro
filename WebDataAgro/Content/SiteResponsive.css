@@ -44,7 +44,7 @@
 
 }
 
-@media (min-width:710px) and (max-width: 781px) {
+@media (min-width:768px) and (max-width: 798px) {
     #notas {
         display: none;
     }

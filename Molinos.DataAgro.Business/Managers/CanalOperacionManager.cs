@@ -1,173 +1,119 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class CanalOperacionManager : ICanalOperacionManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
         private ILogger logger;
+        private readonly IRepositorio repositorio;
 
-        public CanalOperacionManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public CanalOperacionManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniCanalOperacion> TraerTodoCanalOperacionAsync()
+        public ResultIniCanalOperacion TraerTodoCanalOperacion()
         {
-            var oResult = new ResultIniCanalOperacion();
-           
-            var oCanalOperacion = mobjUnitOfWork.Repository<CanalOperacion>().Queryable();
-
-            var query = oCanalOperacion
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new CanalOperacionIni()
-                        {
-                             CanalOperacionId = x.CanalOperacionId,
-                             Descripcion = x.Descripcion
-                        });
-
-            oResult.CanalOperacion = await query.ToListAsync();
-
-            return oResult;
+            return new ResultIniCanalOperacion
+            {
+                CanalOperacion = repositorio.Listar<CanalOperacion, CanalOperacionIni>(x => new CanalOperacionIni()
+                {
+                    CanalOperacionId = x.CanalOperacionId,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion")
+            };
         }
 
 
-        public async Task<CanalOperacion> TraerCanalOperacionAsync(int intCanalOperacionId)
+        public CanalOperacion TraerCanalOperacion(int intCanalOperacionId)
         {
-            var oCanalOperacion = new CanalOperacion();
+            return repositorio.Obtener<CanalOperacion>(intCanalOperacionId) ?? new CanalOperacion();
+        }
 
-            oCanalOperacion = await mobjUnitOfWork.Repository<CanalOperacion>()
-                                 .Queryable()
-                                 .Where(x => x.CanalOperacionId == intCanalOperacionId)
-                                 .SingleOrDefaultAsync();
 
-            if (oCanalOperacion == null)
+        public Resultado GrabarCanalOperacion(CanalOperacion oCanalOperacion)
+        {
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oCanalOperacion, oEntityErrors);
+            if (oEntityErrors.HayErrores)
             {
-                oCanalOperacion = new CanalOperacion()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                return oEntityErrors;
             }
-            else
+
+            var validacion = ValidarCanalOperacion(oCanalOperacion);
+            if (validacion.HayErrores)
             {
-                oCanalOperacion.ObjectState = Constants.Object_Modified;
+                return validacion;
             }
             
-            return oCanalOperacion;
-        }
-
-
-        public async Task<EntityErrors> GrabarCanalOperacionAsync(CanalOperacion oCanalOperacion)
-        {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oCanalOperacion, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            if (oCanalOperacion.CanalOperacionId != 0)
             {
-                return oEntityErrors;
-            }
-
-            CanalOperacion oCanalOperacionSave;
-
-            if (oCanalOperacion.ObjectState == 0)
-            {
-                oCanalOperacionSave = new CanalOperacion()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oCanalOperacionSave = TraerCanalOperacion(oCanalOperacion.CanalOperacionId);
+                oCanalOperacionSave.Descripcion = oCanalOperacion.Descripcion;
+                oCanalOperacionSave.Inhabilitado = oCanalOperacion.Inhabilitado;
             }
             else
             {
-                oCanalOperacionSave = await TraerCanalOperacionAsync(oCanalOperacion.CanalOperacionId);
+                repositorio.Agregar(oCanalOperacion);
             }
 
-            var validacion = ValidarCanalOperacion(oCanalOperacion, oCanalOperacionSave.ObjectState,
-                (oCanalOperacionSave.ObjectState == Constants.Object_Modified ? (int?)oCanalOperacion.CanalOperacionId : null));
-
-            if (validacion != null)
+            try
             {
-                oEntityErrors.ListaErrores.Add(validacion);
-                return oEntityErrors;
+                repositorio.GuardarCambios();
             }
-
-            oCanalOperacionSave.Descripcion = oCanalOperacion.Descripcion;
-            oCanalOperacionSave.Inhabilitado = oCanalOperacion.Inhabilitado;
-
-            if (oCanalOperacionSave.ObjectState == Constants.Object_Added)
+            catch (Exception ex)
             {
-                oCanalOperacionSave.CanalOperacionId = ((mobjUnitOfWork.Repository<CanalOperacion>().Queryable().Max(x => (int?)x.CanalOperacionId)) ?? 0) + 1;
+                logger.Error(ex);
+                throw;
             }
-
-            mobjUnitOfWork.Repository<CanalOperacion>().SaveEntity(oCanalOperacionSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarCanalOperacionAsync(int intCanalOperacionId)
+        public Resultado EliminarCanalOperacion(int intCanalOperacionId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<CanalOperacion>();
-
-            var oCanalOperacion = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.CanalOperacionId == intCanalOperacionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oCanalOperacion != null)
+            repositorio.Remover<CanalOperacion>(intCanalOperacionId);
+            try
             {
-                oRepository.Delete(oCanalOperacion);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
         #region Validar
-        public ErrorMessage ValidarCanalOperacion(CanalOperacion oCanalOperaciones, int ObjectState, int? Id = null)
+        public Resultado ValidarCanalOperacion(CanalOperacion oCanalOperaciones)
         {
-            var oCanalOperacion = mobjUnitOfWork.Repository<CanalOperacion>().Queryable();
-
-            CanalOperacion val = null;
-
-            if (ObjectState == Constants.Object_Added)
+            var resultado = new Resultado();
+            if (repositorio.Existe<CanalOperacion>(x => x.Descripcion == oCanalOperaciones.Descripcion && (oCanalOperaciones.CanalOperacionId != x.CanalOperacionId)))
             {
-                val = oCanalOperacion
-                    .Where(x => x.Descripcion == oCanalOperaciones.Descripcion).FirstOrDefault();
+                resultado.Error("Descripcion", "Existe un registro de iguales carecteristicas.");
             }
-            else if (ObjectState == Constants.Object_Modified)
-            {
-                val = oCanalOperacion
-                    .Where(x => x.Descripcion == oCanalOperaciones.Descripcion
-                    && x.CanalOperacionId != Id).FirstOrDefault();
-            }
-
-            if (val != null)
-            {
-                return new ErrorMessage() { Message = "Existe un registro de iguales carecteristicas." };
-            }
-            return null;
+            return resultado;
         } 
         #endregion
 

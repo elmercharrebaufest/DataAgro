@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -9,15 +8,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CentroCombo> Centro { get; set; }
     }
 
-    public class DataAbmCentro
+    public class DataAbmCentro : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public Centro Centro { get; set; }
 
         public DataAbmCentro()
         {
             Centro = new Centro();
-            Errores = new List<MSErrorMessage>();
         }
     }
     

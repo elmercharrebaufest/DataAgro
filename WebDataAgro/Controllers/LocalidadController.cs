@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -16,14 +15,14 @@ namespace WebDataAgro.Controllers
     {
         private ILocalidadManager mobjLocalidadManager;
 
-        private string idActiveDirectory;
+        
 
         private IComercialManager mobjComercialManager;
 
-        public LocalidadController(IMSContextProvider oMSContextProvider, ILocalidadManager oLocalidadManager, IComercialManager oComercialManager)
+        public LocalidadController(ILocalidadManager oLocalidadManager, IComercialManager oComercialManager)
         {
             mobjLocalidadManager = oLocalidadManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
 
             mobjComercialManager = oComercialManager;
             
@@ -43,30 +42,27 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Inicializar()
+        public ActionResult Inicializar()
         {
-            var model = new DatosIniAbmLocalidadModel
-            {
-                Datos = await mobjLocalidadManager.TraerDatosInicialesAsync(),
-
-                Localidad = new Localidad()
-            };
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new DatosIniAbmLocalidadModel
+                {
+                    Datos = mobjLocalidadManager.TraerDatosIniciales(),
+                    Localidad = new Localidad()
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
 
-        public async Task<ActionResult> Filtrar(ParamAbmLocalidad oParam)
+
+        public ActionResult Filtrar(ParamAbmLocalidad oParam)
         {
             var model = new ResultIniLocalidadModel();
 
             oParam.Nombre = oParam.Nombre ?? "";
 
-            var result = await mobjLocalidadManager.TraerFiltroLocalidadAsync(oParam);
+            var result = mobjLocalidadManager.TraerFiltroLocalidad(oParam);
 
             if (result != null)
             {
@@ -81,37 +77,27 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Aplicar(AbmLocalidadParam oParam)
+        public ActionResult Aplicar(AbmLocalidadParam oParam)
         {
-            var model = new AbmLocalidadResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.Localidad = await mobjLocalidadManager.TraerLocalidadAsync(oParam.LocalidadId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmLocalidadResult
+                {
+                    Localidad = mobjLocalidadManager.TraerLocalidad(oParam.LocalidadId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
 
-        public async Task<ActionResult> Grabar(Localidad oLocalidad)
+        public ActionResult Grabar(Localidad oLocalidad)
         {
             var model = new AbmLocalidadResult();
 
-            var entityErrors = await mobjLocalidadManager.GrabarLocalidadAsync(oLocalidad);
+            var entityErrors = mobjLocalidadManager.GrabarLocalidad(oLocalidad);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
-                      
+            model.Errores = entityErrors.Errores;
+
             if (model.Errores.Count > 0)
             {
                 model.Localidad = oLocalidad;
@@ -127,22 +113,9 @@ namespace WebDataAgro.Controllers
 
         public async Task<ActionResult> Eliminar(AbmLocalidadParam oParam)
         {
-            var model = new AbmLocalidadResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjLocalidadManager.EliminarLocalidadAsync(oParam.LocalidadId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjLocalidadManager.EliminarLocalidad(oParam.LocalidadId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -150,16 +123,12 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Cancelar()
         {
-            var model = new AbmLocalidadResult();
-            
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmLocalidadResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
 

@@ -3,7 +3,6 @@ using Autofac.Extras.NLog;
 using Autofac.Integration.Mvc;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,9 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using WebDataAgro.Core;
+using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Interfaces;
+using System.Data.Entity;
 
 namespace WebDataAgro
 {
@@ -24,15 +26,15 @@ namespace WebDataAgro
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //ModelBinders.Binders.Add(typeof(DateTime), new MyDateTimeBinder());
             ModelBinders.Binders.Add(typeof(KendoGridMvcRequest), new KendoGridMvcModelBinder());
 
             //Autofac Configuration
-            var builder = new Autofac.ContainerBuilder();
+            var builder = new ContainerBuilder();
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
 
-            builder.RegisterType<MSContextProvider>().As<IMSContextProvider>().InstancePerRequest();
+            builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerRequest();
+            builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerRequest();
 
             builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
                    .Where(t => t.Name.EndsWith("Manager"))
@@ -47,15 +49,12 @@ namespace WebDataAgro
 
 
         public void Session_OnStart()
-        {            
-            var usuario = Util.GetUsuario();
-            var perfil = Util.ObtenerPerfilDeUsuario(usuario);
-            var equipo = Util.ListarEquipo(usuario);
-            
-            GlobalVariables.Perfil = (EnumPerfil)perfil;
-            GlobalVariables.EsAdministrador = Util.EsAdministrador(usuario);
-            GlobalVariables.TieneEmpleadosACargo = equipo.Count > 1;
-            GlobalVariables.Equipo = equipo;
+        {
+            var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
+        
+            GlobalVariables.Perfil = (EnumPerfil)comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.Equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);   
         }
 
 
@@ -71,7 +70,6 @@ namespace WebDataAgro
             Server.ClearError();
             Response.Redirect("~/Error/");
         }
-
 
         public static class GlobalVariables
         {            
@@ -104,11 +102,7 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return HttpContext.Current.Session["tieneEmpleadosACargo"] as bool? ?? false;
-                }
-                set
-                {
-                    HttpContext.Current.Session["tieneEmpleadosACargo"] = value;
+                    return Equipo.Count > 0;
                 }
             }
 
@@ -121,6 +115,22 @@ namespace WebDataAgro
                 set
                 {
                     HttpContext.Current.Session["equipo"] = value;
+                }
+            }
+
+            public static string IdActiveDirectory
+            {
+                get
+                {
+                    return IdActiveDirectoryCompleto.Split('\\')[1];
+                }
+            }
+
+            public static string IdActiveDirectoryCompleto
+            {
+                get
+                {
+                    return HttpContext.Current.User.Identity.Name;
                 }
             }
         }

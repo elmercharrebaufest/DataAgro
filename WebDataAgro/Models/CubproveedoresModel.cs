@@ -1,32 +1,27 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 
 namespace WebDataAgro.Models
 {
-    public class DatosIniCubProveedoresModel
+    public class DatosIniCubProveedoresModel : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public DatosIniCubProveedores Datos { get; set; }
         public ParamCubProveedores Param { get; set; }
 
         public DatosIniCubProveedoresModel()
         {
-            this.Errores = new List<MSErrorMessage>();
             this.Datos = new DatosIniCubProveedores();
             this.Param = new ParamCubProveedores();
         }
     }
 
 
-    public class CubProveedoresModel
+    public class CubProveedoresModel : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public List<ProveedoresCub> Proveedores { get; set; }
 
         public CubProveedoresModel()
         {
-            this.Errores = new List<MSErrorMessage>();
             this.Proveedores = new List<ProveedoresCub>();
         }
     }

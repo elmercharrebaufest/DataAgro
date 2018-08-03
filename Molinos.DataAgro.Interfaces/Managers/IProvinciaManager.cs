@@ -1,21 +1,18 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IProvinciaManager
     {
-        Task<ResultIniProvincia> TraerTodoProvinciaAsync();
+        ResultIniProvincia TraerTodoProvincia();
 
-        Task<Provincia> TraerProvinciaAsync(int intProvinciaId);
+        Provincia TraerProvincia(int intProvinciaId);
 
-        Task<EntityErrors> GrabarProvinciaAsync(Provincia oProvincia);
+        Resultado GrabarProvincia(Provincia oProvincia);
 
-        Task<EntityErrors> EliminarProvinciaAsync(int intProvinciaId);
+        Resultado EliminarProvincia(int intProvinciaId);
 
         List<Provincia> ListarProvincia(string provincia);
     }

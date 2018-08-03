@@ -1,6 +1,5 @@
 ﻿using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
-using Mastersoft.Framework.DataRepository;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace WebDataAgro.Controllers
     {
         private IHomeManager mobjHomeManager;
         private ICampañaManager mobjCampañaManager;
-        private string idActiveDirectory;
+        
         private IContratoManager mobjContratoManager;
         private IProveedorManager mobjProveedorManager;
         private IComercialManager mobjComercialManager;
@@ -25,9 +24,9 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public ContratoController(IMSContextProvider oMSContextProvider, IHomeManager oHomeManager,  ICampañaManager oCampañaManager, IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
+        public ContratoController(IHomeManager oHomeManager,  ICampañaManager oCampañaManager, IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
         {
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             mobjHomeManager = oHomeManager;
             mobjCampañaManager = oCampañaManager;
             mobjProveedorManager = oProveedorManager;

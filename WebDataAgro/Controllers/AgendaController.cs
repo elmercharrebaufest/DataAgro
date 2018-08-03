@@ -14,15 +14,12 @@ namespace WebDataAgro.Controllers
     public class AgendaController : Controller
     {
         private IAgendaManager mobjAgendaManager;
-        private string idActiveDirectory;
         private IComercialManager mobjComercialManager;
         private readonly IReportesManager reportesManager;
 
-        public AgendaController(IMSContextProvider oMSContextProvider, IAgendaManager oAgendaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
+        public AgendaController(IAgendaManager oAgendaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
         {
             mobjAgendaManager = oAgendaManager;
-
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
             mobjComercialManager = oComercialManager;
             this.reportesManager = reportesManager;
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
@@ -35,17 +32,15 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-   
-        public async Task<ActionResult> Inicializar()
+
+        public ActionResult Inicializar()
         {
-            var model = new DatosIniAgendaActividadModel
-            {
-                Datos = await mobjAgendaManager.TraerDatosInicialesAsync(Util.GetIdActiveDirectory())
-            };
-            
             return new JsonResult()
             {
-                Data = model,
+                Data = new DatosIniAgendaActividadModel
+                {
+                    Datos = mobjAgendaManager.TraerDatosIniciales(GlobalVariables.Equipo)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -54,13 +49,13 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            oParam.ActiveDirectoryId = Util.GetIdActiveDirectory();
+            oParam.ActiveDirectoryId = GlobalVariables.IdActiveDirectory;
 
-            var datos = await mobjAgendaManager.ExportarAgenda(oParam);
+            var datos = mobjAgendaManager.ExportarAgenda(oParam, GlobalVariables.Equipo);
 
             var oLstAgenda = new LstAgendaActividad(reportesManager);                           
             
-            var identif = await oLstAgenda.GenerarListadoAsync(datos);
+            var identif = oLstAgenda.GenerarListado(datos);
 
             if (datos.Count == 0)
             {
@@ -77,17 +72,12 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> VistaPreviaAgenda(RptActividadAgendaParam oParam)
+        public ActionResult VistaPreviaAgenda(RptActividadAgendaParam oParam)
         {
-           
-
-            oParam.ActiveDirectoryId = Util.GetIdActiveDirectory();
-
-           var model = await mobjAgendaManager.VistaPreviaAgenda(oParam);
-
+            oParam.ActiveDirectoryId = GlobalVariables.IdActiveDirectory;
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjAgendaManager.VistaPreviaAgenda(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
         }

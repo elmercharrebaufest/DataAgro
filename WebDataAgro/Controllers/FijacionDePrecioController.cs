@@ -1,23 +1,23 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
     public class FijacionDePrecioController : Controller
     {
         private IFijacionDePrecioManager mobjFijacionDePrecioManager;
-        private string idActiveDirectory;
         
-        public FijacionDePrecioController(IMSContextProvider oMSContextProvider, IFijacionDePrecioManager oFijacionDePrecioManager)
+        
+        public FijacionDePrecioController(IFijacionDePrecioManager oFijacionDePrecioManager)
         {
             mobjFijacionDePrecioManager = oFijacionDePrecioManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
         }
 
         //-----------------------------------------------------
@@ -30,27 +30,25 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Inicializar()
+        public ActionResult Inicializar()
         {
-            var model = new DatosIniAbmFijacionDePrecioModel();
-
-            model.Datos = await mobjFijacionDePrecioManager.TraerDatosInicialesAsync();
-
-            model.FijacionDePrecio = new FijacionDePrecio();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new DatosIniAbmFijacionDePrecioModel
+                {
+                    Datos = mobjFijacionDePrecioManager.TraerDatosIniciales(),
+                    FijacionDePrecio = new FijacionDePrecio()
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniFijacionDePrecioModel();
 
-            var result = await mobjFijacionDePrecioManager.TraerTodoFijacionDePrecioAsync();
+            var result = mobjFijacionDePrecioManager.TraerTodoFijacionDePrecio();
 
             if (result != null)
             {
@@ -65,38 +63,28 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Aplicar(AbmFijacionDePrecioParam oParam)
+        public ActionResult Aplicar(AbmFijacionDePrecioParam oParam)
         {
-            var model = new AbmFijacionDePrecioResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.FijacionDePrecio = await mobjFijacionDePrecioManager.TraerFijacionDePrecioAsync(oParam.FijacionId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmFijacionDePrecioResult
+                {
+                    FijacionDePrecio = mobjFijacionDePrecioManager.TraerFijacionDePrecio(oParam.FijacionId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
 
-        public async Task<ActionResult> Grabar(FijacionDePrecio oFijacionDePrecio)
+        public ActionResult Grabar(FijacionDePrecio oFijacionDePrecio)
         {
             var model = new AbmFijacionDePrecioResult();
 
-            var entityErrors = await mobjFijacionDePrecioManager.GrabarFijacionDePrecioAsync(oFijacionDePrecio, idActiveDirectory);
+            var entityErrors = mobjFijacionDePrecioManager.GrabarFijacionDePrecio(oFijacionDePrecio, GlobalVariables.IdActiveDirectory);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
+            model.Errores = entityErrors.Errores;
 
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.FijacionDePrecio = oFijacionDePrecio;
             }
@@ -109,25 +97,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Eliminar(AbmFijacionDePrecioParam oParam)
+        public ActionResult Eliminar(AbmFijacionDePrecioParam oParam)
         {
-            var model = new AbmFijacionDePrecioResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                errors = await mobjFijacionDePrecioManager.EliminarFijacionDePrecioAsync(oParam.FijacionId);
-            }
-
-            if (errors.ListaErrores.Count > 0)
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjFijacionDePrecioManager.EliminarFijacionDePrecio(oParam.FijacionId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -135,16 +109,12 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Cancelar()
         {
-            var model = new AbmFijacionDePrecioResult();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmFijacionDePrecioResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
 

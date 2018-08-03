@@ -1,26 +1,20 @@
-﻿using System.Threading.Tasks;
-
-using Mastersoft.Framework.Standard;
-
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IFijacionDePrecioManager
     {
-        Task<DatosIniAbmFijacionDePrecio> TraerDatosInicialesAsync();
+        DatosIniAbmFijacionDePrecio TraerDatosIniciales();
 
-        Task<ResultIniFijacionDePrecio> TraerTodoFijacionDePrecioAsync();
+        ResultIniFijacionDePrecio TraerTodoFijacionDePrecio();
 
-        Task<FijacionDePrecio> TraerFijacionDePrecioAsync(int intFijacionId);
+        FijacionDePrecio TraerFijacionDePrecio(int intFijacionId);
 
-        Task<EntityErrors> GrabarFijacionDePrecioAsync(FijacionDePrecio oFijacionDePrecio, string idActiveDirectory);
+        Resultado GrabarFijacionDePrecio(FijacionDePrecio oFijacionDePrecio, string idActiveDirectory);
 
-        Task<EntityErrors> EliminarFijacionDePrecioAsync(int intFijacionId);
-
-        FijacionDePrecio NuevoFijacionDePrecio();
+        Resultado EliminarFijacionDePrecio(int intFijacionId);
+        
     }
 }
 

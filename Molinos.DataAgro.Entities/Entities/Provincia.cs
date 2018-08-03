@@ -1,21 +1,17 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Provincia : Entity
+    public partial class Provincia
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int ProvinciaId { get; set; }
 
         public string Nombre { get; set; }
-
-
+        
         public Provincia()
         {
-            this.ProvinciaId = 0;
             this.Nombre = "";
-  
         }
     }
 }

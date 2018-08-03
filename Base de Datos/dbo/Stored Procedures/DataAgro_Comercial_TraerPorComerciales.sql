@@ -6,21 +6,7 @@ CREATE PROCEDURE [dbo].[DataAgro_Comercial_TraerPorComerciales]
 
 AS
 
---WITH Empleados   
---( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)  
---AS  
---(  
--- SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory  
---    FROM Comercial    
---	WHERE ComercialId = @comercialId   
--- UNION ALL   
---    --RECURSIVIDAD  
---	SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory  
---	FROM Comercial A  
---	inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId  
---)  
-
-declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
 insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
 
 select ComercialId as Id, Apellido + ' ' + Nombres as Nombre

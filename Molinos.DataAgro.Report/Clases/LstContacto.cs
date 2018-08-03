@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Report
         //  Metodos Publicos
         //-----------------------------------------------------------------------------------
 
-        public async Task<string> GenerarListadoAsync(List<ContactoIni> oDatos)
+        public string GenerarListado(List<ContactoIni> oDatos)
         {
             var oRptContacto = new RptContacto();
 
@@ -46,15 +46,15 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.pdf",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
         }
 
-        
-        public async Task<string> GenerarExcelAsync(List<ContactoIni> oDatos)
+
+        public string GenerarExcel(List<ContactoIni> oDatos)
         {
             var excel = new ExcelPackage();
 
@@ -76,14 +76,14 @@ namespace Molinos.DataAgro.Report
                     GrupoDeCompras = x.GrupoDeCompras
                 });
 
-                var oColumnas = query.ToList();                
+                var oColumnas = query.ToList();
 
-                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");                               
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
-                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);       
-                                                   
-                var oPropRow = oColumnas[0].GetType().GetProperties();                  
-                
+                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
+
+                var oPropRow = oColumnas[0].GetType().GetProperties();
+
                 var cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
@@ -91,8 +91,8 @@ namespace Molinos.DataAgro.Report
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-                        
-                    }                    
+
+                    }
                     workSheet.Column(i).AutoFit();
                 };
 
@@ -105,8 +105,8 @@ namespace Molinos.DataAgro.Report
                 workSheet.Cells[1, cantColumns - 1].Value = "Grupo de Compras";
                 workSheet.Column(cantColumns - 1).AutoFit();
 
-                workSheet.Cells[1, cantColumns  ].Value = "Comercial a Cargo";
-                workSheet.Column(cantColumns ).AutoFit();
+                workSheet.Cells[1, cantColumns].Value = "Comercial a Cargo";
+                workSheet.Column(cantColumns).AutoFit();
 
             }
 
@@ -122,65 +122,65 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.xlsx",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
         }
 
 
-        public async Task<string> GenerarExcelExportAllAsync(ExportAll oDatos, int perfil)
-        {        
-         
-            var excel = new ExcelPackage();           
+        public string GenerarExcelExportAll(ExportAll oDatos, int perfil)
+        {
 
-                var oColumnas = oDatos.contacto;
+            var excel = new ExcelPackage();
 
-                var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
+            var oColumnas = oDatos.contacto;
 
-                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);  
+            var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
 
-                var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
+            workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
-                workSheet2.Cells[1, 1].LoadFromCollection(oDatos.objetivo, true);
-              
-                var workSheet3 = excel.Workbook.Worksheets.Add("Datos de contacto");
+            var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
 
-                workSheet3.Cells[1, 1].LoadFromCollection(oDatos.ContactosPrincipales, true);
-            
-                var workSheet4 = excel.Workbook.Worksheets.Add("Produccion");
+            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.objetivo, true);
 
-                workSheet4.Cells[1, 1].LoadFromCollection(oDatos.produccion, true);
-                         
-                var workSheet5 = excel.Workbook.Worksheets.Add("Almacenamiento");
-            
-                workSheet5.Cells[1, 1].LoadFromCollection(oDatos.almacenamiento, true);
+            var workSheet3 = excel.Workbook.Worksheets.Add("Datos de contacto");
 
-                
+            workSheet3.Cells[1, 1].LoadFromCollection(oDatos.ContactosPrincipales, true);
 
-                if (perfil == (int)EnumPerfil.Administrativo || perfil == (int)EnumPerfil.Visualizador)
-                {
+            var workSheet4 = excel.Workbook.Worksheets.Add("Produccion");
 
-               
-                }
+            workSheet4.Cells[1, 1].LoadFromCollection(oDatos.produccion, true);
 
-                var workSheet7 = excel.Workbook.Worksheets.Add("Compras");
+            var workSheet5 = excel.Workbook.Worksheets.Add("Almacenamiento");
 
-                workSheet7.Cells[1, 1].LoadFromCollection(oDatos.compras, true);
-            
-           var oPropRow = oColumnas.GetType().GetProperties();
+            workSheet5.Cells[1, 1].LoadFromCollection(oDatos.almacenamiento, true);
 
-           var cantColumns = oPropRow.Count();
+
+
+            if (perfil == (int)EnumPerfil.Administrativo || perfil == (int)EnumPerfil.Visualizador)
+            {
+
+
+            }
+
+            var workSheet7 = excel.Workbook.Worksheets.Add("Compras");
+
+            workSheet7.Cells[1, 1].LoadFromCollection(oDatos.compras, true);
+
+            var oPropRow = oColumnas.GetType().GetProperties();
+
+            var cantColumns = oPropRow.Count();
 
             if (oColumnas.Count > 0)
             {
-              oPropRow = oColumnas[0].GetType().GetProperties();
+                oPropRow = oColumnas[0].GetType().GetProperties();
 
-              cantColumns = oPropRow.Count();                                             
+                cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
-                {            
+                {
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
                         workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
@@ -216,9 +216,9 @@ namespace Molinos.DataAgro.Report
             workSheet.Column(5).AutoFit();
 
             workSheet.Cells[1, 6].Value = "Domicilio de Actividad";
-            workSheet.Column(6).AutoFit();            
+            workSheet.Column(6).AutoFit();
 
-            
+
 
             workSheet.Cells[1, 9].Value = "Código Postal";
             workSheet.Column(9).AutoFit();
@@ -243,20 +243,20 @@ namespace Molinos.DataAgro.Report
 
             if (oDatos.objetivo.Count > 0)
             {
-            oPropRow = oDatos.objetivo[0].GetType().GetProperties();
+                oPropRow = oDatos.objetivo[0].GetType().GetProperties();
 
-            cantColumns = oPropRow.Count();
+                cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
-            {
-                   
-                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                 {
-                    workSheet2.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                }
-                workSheet2.Column(i).AutoFit();
-            };
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet2.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet2.Column(i).AutoFit();
+                };
             }
 
             j = 1;
@@ -281,17 +281,17 @@ namespace Molinos.DataAgro.Report
             {
                 oPropRow = oDatos.ContactosPrincipales[0].GetType().GetProperties();
 
-            cantColumns = oPropRow.Count();
+                cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
-            {                    
-                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                 {
-                    workSheet3.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet3.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                }
-                workSheet3.Column(i).AutoFit();
-            };
+                    }
+                    workSheet3.Column(i).AutoFit();
+                };
             }
 
             j = 1;
@@ -325,22 +325,22 @@ namespace Molinos.DataAgro.Report
             {
                 oPropRow = oDatos.produccion[0].GetType().GetProperties();
 
-            cantColumns = oPropRow.Count();
+                cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
-            {                   
-                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                 {
-                    workSheet4.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet4.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                }
-                workSheet4.Column(i).AutoFit();
-            };
+                    }
+                    workSheet4.Column(i).AutoFit();
+                };
             }
 
             j = 1;
             while (workSheet4.Cells[1, j].Value != null)
-            {         
+            {
                 workSheet4.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
                 workSheet4.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
@@ -355,24 +355,24 @@ namespace Molinos.DataAgro.Report
 
             workSheet4.Cells[1, 2].Value = "Razón Social";
             workSheet4.Column(2).AutoFit();
-          
+
             if (oDatos.almacenamiento.Count > 0)
             {
-            
-            oPropRow = oDatos.almacenamiento[0].GetType().GetProperties();
 
-            cantColumns = oPropRow.Count();
+                oPropRow = oDatos.almacenamiento[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
 
                 for (int i = 1; i <= cantColumns; i++)
-            {                 
+                {
 
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                {
-                    workSheet5.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                    {
+                        workSheet5.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                }
-                workSheet5.Column(i).AutoFit();
-            };
+                    }
+                    workSheet5.Column(i).AutoFit();
+                };
             }
 
             j = 1;
@@ -513,13 +513,13 @@ namespace Molinos.DataAgro.Report
                     FileName = "Contactos.xlsx",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
-            }        
         }
+    }
     }
 
 

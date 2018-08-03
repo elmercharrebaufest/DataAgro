@@ -1,4 +1,4 @@
-﻿namespace Molinos.DataAgro.Dto
+﻿namespace Molinos.DataAgro.Entities.Dto
 {
     public class CampañaMaterialSAPDTO
     {

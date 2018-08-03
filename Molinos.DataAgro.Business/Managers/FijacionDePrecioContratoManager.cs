@@ -1,29 +1,24 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class FijacionDePrecioContratoManager : IFijacionDePrecioContratoManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private IProveedorManager mobjProveedorManager;
         private ILogger logger;
 
-        public FijacionDePrecioContratoManager(ILogger logger, IMSContextProvider oMSContextProvider, IProveedorManager oMSProveedorManager)
+        public FijacionDePrecioContratoManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
         }
 
@@ -31,288 +26,297 @@ namespace Molinos.DataAgro.Business.Managers
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<DatosIniAbmFijacionDePrecioContrato> TraerDatosInicialesAsync()
+        public DatosIniAbmFijacionDePrecioContrato TraerDatosIniciales()
         {
-            var datosCombo = new DatosIniAbmFijacionDePrecioContrato();
-
-            var oLocalidad = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking();
-
-            datosCombo.material = await mobjUnitOfWork.Repository<Material>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }).ToListAsync();
-
-            datosCombo.moneda = await mobjUnitOfWork.Repository<Moneda>()
-                                    .Queryable()
-                                    .AsNoTracking()
-                                    .Select(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }).ToListAsync();
-
-            datosCombo.comercial = await mobjUnitOfWork.Repository<Comercial>()
-                             .Queryable()
-                             .AsNoTracking()
-                             .Select(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }).ToListAsync();
-
-            datosCombo.proveedor = await mobjUnitOfWork.Repository<Proveedor>()
-                               .Queryable()
-                               .AsNoTracking()
-                               .Select(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial }).ToListAsync();
-
-            return datosCombo;
-        }
-
-
-        public async Task<ResultIniFijacionDePrecioContrato> TraerTodoFijacionDePrecioAsync()
-        {
-            var result = new ResultIniFijacionDePrecioContrato();
-            result.FijacionDePrecioContrato = mobjUnitOfWork.SelStore<FijacionDePrecioContratoIni>("DataAgro_BasicoFijacionPrecioContratoTraerPorFiltro", 0).ToList();
-            return  result;
-        }
-        public async Task<ResultIniFijacionDePrecioContrato> TraerFijacionDePrecioContratoAsync(int ContratoId)
-        {
-            var result = new ResultIniFijacionDePrecioContrato
+            return new DatosIniAbmFijacionDePrecioContrato
             {
-                FijacionDePrecioContrato = mobjUnitOfWork.SelStore<FijacionDePrecioContratoIni>("DataAgro_BasicoFijacionPrecioContratoTraerPorFiltro", ContratoId).ToList()
+                material = repositorio.Listar<Material, MaterialQry>(x =>
+                                                                new MaterialQry()
+                                                                {
+                                                                    MaterialId = x.MaterialId,
+                                                                    Descripcion = x.Descripcion
+                                                                }),
+
+                moneda = repositorio.Listar<Moneda, MonedaQry>(x =>
+                                                                new MonedaQry()
+                                                                {
+                                                                    MonedaId = x.MonedaId,
+                                                                    Descripcion = x.Descripcion
+                                                                }),
+
+                comercial = repositorio.Listar<Comercial, ComercialQry>(x =>
+                                                                new ComercialQry()
+                                                                {
+                                                                    ComercialId = x.ComercialId,
+                                                                    Comercial = x.Nombres + " " + x.Apellido
+                                                                }),
+
+                proveedor = repositorio.Listar<Proveedor, ProveedorQry>(x =>
+                                                                new ProveedorQry()
+                                                                {
+                                                                    ProveedorId = x.ProveedorId,
+                                                                    Descripcion = x.RazonSocial
+                                                                })
             };
-
-            return result;
         }
 
-        public async Task<FijacionDePrecioContrato> TraerFijacionDePrecioAsync(int intFijacionId)
-        {
-            var oFijacionDePrecio = await mobjUnitOfWork.Repository<FijacionDePrecioContrato>()
-                                 .Queryable()
-                                 .Where(x => x.FijacionDePrecioContratoId == intFijacionId)
-                                 .SingleOrDefaultAsync();
 
-            if (oFijacionDePrecio == null)
+        public ResultIniFijacionDePrecioContrato TraerTodoFijacionDePrecio()
+        {
+            return new ResultIniFijacionDePrecioContrato
             {
-                oFijacionDePrecio = new FijacionDePrecioContrato()
+                FijacionDePrecioContrato = BasicoFijacionPrecioContratoTraerPorFiltro(0)
+            };
+        }
+        public ResultIniFijacionDePrecioContrato TraerFijacionDePrecioContrato(int contratoId)
+        {
+            return new ResultIniFijacionDePrecioContrato
+            {
+                FijacionDePrecioContrato = BasicoFijacionPrecioContratoTraerPorFiltro(contratoId)
+            };
+        }
+
+        private List<FijacionDePrecioContratoIni> BasicoFijacionPrecioContratoTraerPorFiltro(int contratoId)
+        {
+            return repositorio.Listar<FijacionDePrecioContrato, FijacionDePrecioContratoIni>(
+                x => new FijacionDePrecioContratoIni
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oFijacionDePrecio.ObjectState = Constants.Object_Modified;
-            }
-
-            return oFijacionDePrecio;
+                    FijacionDePrecioContratoId = x.FijacionDePrecioContratoId,
+                    ContratoId = x.ContratoId,
+                    Proveedor = x.Proveedor.RazonSocial,
+                    Fecha = x.Fecha.ToString(),
+                    Comercial = x.Comercial.Nombres,
+                    Material = x.Material.Descripcion,
+                    Cantidad = x.Cantidad,
+                    MonedaId = x.MonedaId,
+                    Ampliaciones = x.Ampliaciones,
+                    Estado = x.Estado.Descripcion,
+                    Observacion = x.Observacion
+                }, x => contratoId == 0 || x.ContratoId == contratoId);
         }
 
-        public async Task<GrabarContratoResult> GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
+
+        public FijacionDePrecioContrato TraerFijacionDePrecio(int intFijacionId)
         {
-            var oFijacionDePrecioContratoSave = await TraerFijacionDePrecioAsync(oFijacion.FijacionDePrecioContratoId);
+            return repositorio.Obtener<FijacionDePrecioContrato>(intFijacionId) ?? new FijacionDePrecioContrato();
+        }
+
+        public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
+        {
+            var oFijacionDePrecioContratoSave = TraerFijacionDePrecio(oFijacion.FijacionDePrecioContratoId);
             var oEntityErrors = new GrabarContratoResult();
-            
-            if (oFijacionDePrecioContratoSave != null && oFijacionDePrecioContratoSave.Estado <= (int)EnumEstadoContrato.Con_Error)
+
+            if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
             {
                 oFijacionDePrecioContratoSave.Ampliaciones = oFijacion.Ampliaciones.Value;
-                oFijacionDePrecioContratoSave.Estado = (int)EnumEstadoContrato.Pendiente;
-
-                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioContratoSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                oFijacionDePrecioContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede modificar"));
+                oEntityErrors.Error("", "La Fijación no se puede modificar");
             }
-            
-
             return oEntityErrors;
-
         }
 
-        private List<ErrorMessage> Validar(FijacionDePrecioContrato oParam, List<ErrorMessage> oErrorMessages) {
+        private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages) {
 
-            if (oParam.ProveedorId == 0)
+            if (oParam.Proveedor == null)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Proveedor' no debe estar vacio", "ProveedorId"));
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
             }
-            if (oParam.MaterialId == 0)
+            if (oParam.Material == null)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Material' no debe estar vacio", "Material"));
+                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
             }
 
             if (oParam.Cantidad == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Cantidad' no debe estar vacio", "Cantidad"));
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
             }
             if (oParam.Precio == 0)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Precio' no debe estar vacio", "Precio"));
+                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            if (string.IsNullOrEmpty(oParam.MonedaId))
+            if (oParam.Moneda == null)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Moneda' no debe estar vacio", "MonedaId"));
+                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
-            if (oParam.ComercialId == 0)
+            if (oParam.Comercial == null)
             {
-                oErrorMessages.Add(new ErrorMessage("El campo 'Comercial' no debe estar vacio", "ComercialId"));
+                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
           
-
             return oErrorMessages;
         }
 
-        public async Task<GrabarFijacionResult> GrabarFijacionDePrecioAsync(FijacionDePrecioContrato oFijacionDePrecio)
+        public GrabarFijacionResult GrabarFijacionDePrecio(FijacionDePrecioContrato oFijacionDePrecio)
         {
-            //var oEntityErrors = new EntityErrors();
-
-            //EntityValid.ValidateAll(oFijacionDePrecio, oEntityErrors.ListaErrores);
             var oEntityErrors = new GrabarFijacionResult();
-            oEntityErrors.Errores = new List<ErrorMessage>();
 
-            oEntityErrors.Errores = this.Validar(oFijacionDePrecio, oEntityErrors.Errores);
+            this.Validar(oFijacionDePrecio, oEntityErrors);
 
-
-            if (oEntityErrors.Errores.Count > 0)
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            FijacionDePrecioContrato oFijacionDePrecioSave;
-
-            if (oFijacionDePrecio.FijacionDePrecioContratoId == 0)
+            if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
             {
-                oFijacionDePrecioSave = new FijacionDePrecioContrato()
+                var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
+                if (oFijacionDePrecioSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
-                if(oFijacionDePrecioSave.Estado > (int)EnumEstadoContrato.Con_Error)
-                {
-                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede modificar"));
+                    oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;
                 }
-            }
 
-            oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
-            oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
-            oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
-            oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
-            oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
-            oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
-            oFijacionDePrecioSave.ContratoId = oFijacionDePrecio.ContratoId;
-            oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
-            oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
-            oFijacionDePrecioSave.Estado = oFijacionDePrecio.Estado;
-            oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
-
-
-            if (oFijacionDePrecioSave.FijacionDePrecioContratoId == Constants.Object_Added)
-            {
-                oFijacionDePrecioSave.FijacionDePrecioContratoId = ((mobjUnitOfWork.Repository<FijacionDePrecioContrato>().Queryable().Max(x => (int?)x.FijacionDePrecioContratoId)) ?? 0) + 1;
-            }
-
-            mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
-            return oEntityErrors;
-        }
-
-        public async Task<GrabarFijacionResult> ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio) {
-            var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
-
-            if ( oFijacionDePrecioSave != null && ( oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Oferta))
-            {
-                try
-                {
-                    oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
-                    oFijacionDePrecioSave.Ampliaciones = 0;
-                }
-                catch { }
-
-                oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Confirmado;
-
-                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
+                oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
+                oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
+                oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
+                oFijacionDePrecioSave.Estado = oFijacionDePrecio.Estado;
+                oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
+                oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
+                oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
+                oFijacionDePrecioSave.ContratoId = oFijacionDePrecio.ContratoId;
+                oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
+                oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede confirmar"));
+                repositorio.Agregar(oFijacionDePrecio);
+            }
+
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
             }
 
             return oEntityErrors;
         }
 
-        public async Task<GrabarFijacionResult> FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
+        public GrabarFijacionResult ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = await TraerFijacionDePrecioAsync(oFijacionDePrecio.FijacionDePrecioContratoId);
+            var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
 
-            if (oFijacionDePrecioSave != null && (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Con_Error))
+            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
             {
-                oFijacionDePrecioSave.Estado = (int)EnumEstadoContrato.Finalizado;
+                oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
+                oFijacionDePrecioSave.Ampliaciones = 0;
+
+                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
+
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "La Fijación no se puede confirmar");
+            }
+
+            return oEntityErrors;
+        }
+
+        public GrabarFijacionResult FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
+        {
+            var oEntityErrors = new GrabarFijacionResult();
+            var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
+
+            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
+            {
+                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
 
                 //Envio de mail
                 mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
 
-                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oFijacionDePrecioSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
             }
             else
             {
-                if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Confirmado)
+                if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación ya se encuentra Finalizada"));
+                    oEntityErrors.Error("", "La Fijación ya se encuentra Finalizada");
                 }
-                else if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Rechazado)
+                else if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Rechazado)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación ya ha sido Rechazada"));
+                    oEntityErrors.Error("", "La Fijación ya ha sido Rechazada");
                 }
-                else if (oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado == (int)EnumEstadoContrato.Oferta)
+                else if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage("La Fijación debe ser Confirmada"));
+                    oEntityErrors.Error("", "La Fijación debe ser Confirmada");
                 }
             }
-                return oEntityErrors;
-        }
-
-        public async Task<EntityErrors> EliminarFijacionDePrecioAsync(int intFijacionId)
-        {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<FijacionDePrecioContrato>();
-
-            var oFijacionDePrecio = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.FijacionDePrecioContratoId == intFijacionId)
-                                 .SingleOrDefaultAsync();
-
-            if (oFijacionDePrecio != null)
-            {
-                oRepository.Delete(oFijacionDePrecio);
-            }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
             return oEntityErrors;
         }
 
-        public async Task<GrabarContratoResult> BorrarFijacion(FijacionDePrecioContrato oContrato)
+        public Resultado EliminarFijacionDePrecio(int intFijacionId)
+        {
+            var oEntityErrors = new Resultado();
+
+            repositorio.Remover<FijacionDePrecioContrato>(intFijacionId);
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+            return oEntityErrors;
+        }
+
+        public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = await TraerFijacionDePrecioAsync(oContrato.FijacionDePrecioContratoId);
+            var oContratoSave = TraerFijacionDePrecio(oContrato.FijacionDePrecioContratoId);
 
-            if (oContratoSave != null && (oContratoSave.Estado < (int)EnumEstadoContrato.Finalizado))
+            if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado)
             {
-                oContratoSave.Estado = (int)EnumEstadoContrato.Rechazado;
+                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 
-                mobjUnitOfWork.Repository<FijacionDePrecioContrato>().SaveEntity(oContratoSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
             }
             else
             {
-                oEntityErrors.Errores.Add(new ErrorMessage("La Fijación no se puede rechazar"));
+                oEntityErrors.Error("", "La Fijación no se puede rechazar");
             }
             return oEntityErrors;
         }

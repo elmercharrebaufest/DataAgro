@@ -45,7 +45,6 @@ namespace Molinos.DataAgro.Entities.Helpers
 
         private static string DomainMapper(Match match)
         {
-            bool invalid = false;
             // IdnMapping class with default property values.
             IdnMapping idn = new IdnMapping();
 
@@ -56,7 +55,7 @@ namespace Molinos.DataAgro.Entities.Helpers
             }
             catch (ArgumentException)
             {
-                invalid = true;
+                
             }
             return match.Groups[1].Value + domainName;
         }

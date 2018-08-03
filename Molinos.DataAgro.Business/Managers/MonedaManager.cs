@@ -1,11 +1,11 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,13 +14,13 @@ namespace Molinos.DataAgro.Business
 {
     public class MonedaManager : IMonedaManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public MonedaManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public MonedaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
@@ -28,111 +28,74 @@ namespace Molinos.DataAgro.Business
         //--------------------------------------------------
 
 
-        public async Task<ResultIniMoneda> TraerTodoAsync()
+        public ResultIniMoneda TraerTodo()
         {
-            var oResult = new ResultIniMoneda();
-
-            var oMoneda = mobjUnitOfWork.Repository<Moneda>().Queryable();
-
-            var query = oMoneda
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new MonedaIni()
-                        {
-                            MonedaId = x.MonedaId,
-                            Descripcion = x.Descripcion
-                        });
-
-            oResult.Moneda = await query.ToListAsync();
-
-            return oResult;
-        }
-
-        public async Task<Moneda>  TraerMonedadAsync(string MonedaId)
-        {
-            var oMoneda = new Moneda();
-
-            oMoneda = await mobjUnitOfWork.Repository<Moneda>()
-                                 .Queryable()
-                                 .Where(x => x.MonedaId == MonedaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oMoneda == null)
+            return new ResultIniMoneda
             {
-                oMoneda = new Moneda()
+                Moneda = repositorio.Listar<Moneda, MonedaIni>(x => new MonedaIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oMoneda.ObjectState = Constants.Object_Modified;
-            }
-
-            return oMoneda;
+                    MonedaId = x.MonedaId,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion")
+            };
         }
 
-        public async Task<EntityErrors> GrabarMonedaAsync(Moneda oMoneda)
+        public Moneda TraerMonedad(string monedaId)
         {
-            var oEntityErrors = new EntityErrors();
+            return repositorio.Obtener<Moneda>(monedaId) ?? new Moneda();
+        }
 
-            EntityValid.ValidateAll(oMoneda, oEntityErrors.ListaErrores);
+        public Resultado GrabarMoneda(Moneda oMoneda)
+        {
+            var oEntityErrors = new Resultado();
 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            EntityValid.ValidateAll(oMoneda, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            Moneda oMonedaSave;
+            var oMonedaSave = repositorio.Obtener<Moneda>(oMoneda.MonedaId);
 
-            if (oMoneda.ObjectState == 0)
+            if (oMonedaSave == null)
             {
-                oMonedaSave = new Moneda()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                repositorio.Agregar(oMoneda);
             }
             else
             {
-                oMonedaSave = await TraerMonedadAsync(oMoneda.MonedaId);
+                oMonedaSave.Descripcion = oMoneda.Descripcion;
             }
 
-            oMonedaSave.Descripcion = oMoneda.Descripcion;
-        
-
-            mobjUnitOfWork.Repository<Moneda>().SaveEntity(oMonedaSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
-            return oEntityErrors;
-        }
-
-        public async Task<EntityErrors> EliminarMonedaAsync(string MonedaId)
-        {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<Moneda>();
-
-            var oMoneda = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.MonedaId == MonedaId)
-                                 .SingleOrDefaultAsync();
-
-            if (oMoneda != null)
+            try
             {
-                oRepository.Delete(oMoneda);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
 
+        public Resultado EliminarMoneda(string monedaId)
+        {
+            var oEntityErrors = new Resultado();
 
-      
+            repositorio.Remover<Moneda>(monedaId);
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
-
-     
-
+            return oEntityErrors;
+        }
     }
 }
 

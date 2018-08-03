@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[InformeComercialAlmacenamiento] (
-    [InformeComercialAlmacenamientoId] INT             NOT NULL,
+    [InformeComercialAlmacenamientoId] INT             IDENTITY (1, 1) NOT NULL,
     [InformeComercialId]               INT             NULL,
     [Toneladas]                        DECIMAL (18, 2) NULL,
     [LocalidadId]                      INT             NULL,

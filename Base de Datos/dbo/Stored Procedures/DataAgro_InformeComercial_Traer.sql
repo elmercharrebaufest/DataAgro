@@ -8,8 +8,8 @@ AS
 select distinct @ProveedorId as ProveedorId, m.MaterialId,m.descripcion as Material,camp.CampañaId,camp.descripcion as Campaña
 from campo c
 inner join CampoMaterial cm on c.CampoId = cm.CampoId
-inner join Material m on m.materialId = cm.MaterialId and m.CampañaIdActual = cm.CampañaId
-inner join Campaña camp on  m.CampañaIdActual = camp.CampañaId
+inner join Material m on m.materialId = cm.MaterialId and m.CampañaId = cm.CampañaId
+inner join Campaña camp on  m.CampañaId = camp.CampañaId
 left join 
 (
 	select distinct i.proveedorId,d.MaterialId as MaterialId, i.CampañaId

@@ -1,17 +1,10 @@
-﻿using DataDynamics.ActiveReports.Document;
-using DataDynamics.ActiveReports.Export.Pdf;
-using Mastersoft.Framework.DataRepository;
-using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities;
+﻿using DataDynamics.ActiveReports.Export.Pdf;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report.Clases
@@ -37,12 +30,12 @@ namespace Molinos.DataAgro.Report.Clases
         //  Metodos Publicos
         //-----------------------------------------------------------------------------------
 
-        public async Task<string> GenerarListadoAsync(StoredPorProveedorResult oParam)
+        public string GenerarListado(StoredPorProveedorResult oParam)
         {
             var oRptProveedor = new RptProveedor();
 
-            var oDatos = new List<RptProveedorInfo>();           
-            var dato = new RptProveedorInfo();       
+            var oDatos = new List<RptProveedorInfo>();
+            var dato = new RptProveedorInfo();
 
             var oRptContactosInfo = new List<RptContactosInfo>();
             var oRptProduccionInfo = new List<RptProduccionInfo>();
@@ -52,18 +45,18 @@ namespace Molinos.DataAgro.Report.Clases
             var ContactosInfo = new RptContactosInfo();
             var ProduccionInfo = new RptProduccionInfo();
             var AlmacenamientoInfo = new RptAlmacenamientoInfo();
-            var ObjetivosInfo = new RptObjetivosInfo();          
+            var ObjetivosInfo = new RptObjetivosInfo();
 
-        
+
             //Datos Basicos                 
             dato.CUIT = oParam.BasicoProveedorTraerPorProveedores[0].CUIT;
             dato.RazonSocial = oParam.BasicoProveedorTraerPorProveedores[0].RazonSocial;
             dato.Estado = oParam.BasicoProveedorTraerPorProveedores[0].Estado;
             dato.NombreReferente = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].NombreReferente) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].NombreReferente;
             dato.AreaInfluencia = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].AreaInfluencia) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].AreaInfluencia;
-            dato.Calificacion = oParam.BasicoProveedorTraerPorProveedores[0].Calificacion == null ?  "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Calificacion.ToString();
+            dato.Calificacion = oParam.BasicoProveedorTraerPorProveedores[0].Calificacion == null ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Calificacion.ToString();
             dato.Segmentacion = oParam.BasicoProveedorTraerPorProveedores[0].Segmentacion;
-            dato.Email1P = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].Email1) ? "No posee" :  oParam.BasicoProveedorTraerPorProveedores[0].Email1 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email2 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email3 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email4;
+            dato.Email1P = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].Email1) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Email1 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email2 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email3 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Email4;
             dato.Telefono1P = string.IsNullOrEmpty(oParam.BasicoProveedorTraerPorProveedores[0].Telefono1) ? "No posee" : oParam.BasicoProveedorTraerPorProveedores[0].Telefono1 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono2 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono3 + "   " + oParam.BasicoProveedorTraerPorProveedores[0].Telefono4;
 
 
@@ -94,13 +87,13 @@ namespace Molinos.DataAgro.Report.Clases
             for (int z = 0; z < oParam.ProveedorCondicion.Count; z++)
             {
                 dato.Condicion += oParam.ProveedorCondicion[z].Descripcion + "   ";
-            }        
+            }
 
-           oDatos.Add(dato);                
-            
+            oDatos.Add(dato);
+
             for (int i = 0; i < oParam.ContactosComercialesTraerPorProveedores.Count; i++)
             {
-                ContactosInfo.Apellido = oParam.ContactosComercialesTraerPorProveedores[i].Apellido +" "+ oParam.ContactosComercialesTraerPorProveedores[i].Nombres;
+                ContactosInfo.Apellido = oParam.ContactosComercialesTraerPorProveedores[i].Apellido + " " + oParam.ContactosComercialesTraerPorProveedores[i].Nombres;
                 ContactosInfo.Cargo = oParam.ContactosComercialesTraerPorProveedores[i].Cargo;
                 ContactosInfo.Email1 = oParam.ContactosComercialesTraerPorProveedores[i].Email1 + "   " + oParam.ContactosComercialesTraerPorProveedores[i].Email2 + "   " + oParam.ContactosComercialesTraerPorProveedores[i].Email3;
                 ContactosInfo.Interes = oParam.ContactosComercialesTraerPorProveedores[i].Interes;
@@ -109,22 +102,23 @@ namespace Molinos.DataAgro.Report.Clases
                 oRptContactosInfo.Add(ContactosInfo);
             }
 
-            List<int?> campañas = oParam.CampoProduccionAcopioPorProveedores.GroupBy(x => x.CampañaId).OrderByDescending(x => x.Key).Take(2).Select(x=> x.Key).ToList();
-            var listCampañas = oParam.CampoProduccionAcopioPorProveedores.Where(x => campañas.Contains(x.CampañaId)).OrderByDescending(x=> x.CampañaId);
+            List<int?> campañas = oParam.CampoProduccionAcopioPorProveedores.GroupBy(x => x.CampañaId).OrderByDescending(x => x.Key).Take(2).Select(x => x.Key).ToList();
+            var listCampañas = oParam.CampoProduccionAcopioPorProveedores.Where(x => campañas.Contains(x.CampañaId)).OrderByDescending(x => x.CampañaId);
             /*if (oParam.CampoProduccionAcopioPorProveedores.Count >= 2)
             {*/
-                foreach (var campaña in listCampañas) {
-                    ProduccionInfo = new RptProduccionInfo();
-                    //int cant = oParam.CampoProduccionAcopioPorProveedores.Count;
+            foreach (var campaña in listCampañas)
+            {
+                ProduccionInfo = new RptProduccionInfo();
+                //int cant = oParam.CampoProduccionAcopioPorProveedores.Count;
 
-                    ProduccionInfo.ProvinciaProd = campaña.Provincia + "; " + campaña.Localidad; ;
-                    ProduccionInfo.LocalidadProd = campaña.Localidad;
-                    ProduccionInfo.ArrendadoPropio = ((campaña.ArrendadoPropio) == true) ? "Es Propio" : "Es Alquilado";
-                    ProduccionInfo.Material = (string.IsNullOrEmpty(campaña.Material) ? "No posee" : campaña.Material);
-                    ProduccionInfo.Toneladas = (campaña.Toneladas != null ? campaña.Toneladas : 0);
-                    ProduccionInfo.Campaña = (string.IsNullOrEmpty(campaña.Campaña) ? "No posee" : campaña.Campaña);
-                    oRptProduccionInfo.Add(ProduccionInfo);
-                }
+                ProduccionInfo.ProvinciaProd = campaña.Provincia + "; " + campaña.Localidad; ;
+                ProduccionInfo.LocalidadProd = campaña.Localidad;
+                ProduccionInfo.ArrendadoPropio = ((campaña.ArrendadoPropio) == true) ? "Es Propio" : "Es Alquilado";
+                ProduccionInfo.Material = (string.IsNullOrEmpty(campaña.Material) ? "No posee" : campaña.Material);
+                ProduccionInfo.Toneladas = (campaña.Toneladas != null ? campaña.Toneladas : 0);
+                ProduccionInfo.Campaña = (string.IsNullOrEmpty(campaña.Campaña) ? "No posee" : campaña.Campaña);
+                oRptProduccionInfo.Add(ProduccionInfo);
+            }
             /*ProduccionInfo = new RptProduccionInfo();
             ProduccionInfo.ProvinciaProd = oParam.CampoProduccionAcopioPorProveedores[cant - 2].Provincia + "; " + oParam.CampoProduccionAcopioPorProveedores[cant - 2].Localidad;
             ProduccionInfo.LocalidadProd = oParam.CampoProduccionAcopioPorProveedores[cant - 2].Localidad;
@@ -167,14 +161,14 @@ namespace Molinos.DataAgro.Report.Clases
                 AlmacenamientoInfo.CampañaAlm = (string.IsNullOrEmpty(campaña.Campaña) ? "No posee" : campaña.Campaña);
                 oRptAlmacenamientoInfo.Add(AlmacenamientoInfo);
             }
-                /*AlmacenamientoInfo = new RptAlmacenamientoInfo();
-                AlmacenamientoInfo.ProvinciaAlm = oParam.Acopio[cant - 2].Provincia;
-                AlmacenamientoInfo.LocalidadAlm = oParam.Acopio[cant - 2].Localidad;
-                AlmacenamientoInfo.ArrendadoPropioAlm = ((oParam.Acopio[cant - 2].ArrendadoPropio) == true) ? "Es Propio" : "Es Alquilado";
-                AlmacenamientoInfo.MaterialAlm = oParam.Acopio[cant - 2].Material;
-                AlmacenamientoInfo.ToneladasAlm = oParam.Acopio[cant - 2].Toneladas;
-                AlmacenamientoInfo.CampañaAlm = oParam.Acopio[cant - 2].Campaña;
-                oRptAlmacenamientoInfo.Add(AlmacenamientoInfo);*/
+            /*AlmacenamientoInfo = new RptAlmacenamientoInfo();
+            AlmacenamientoInfo.ProvinciaAlm = oParam.Acopio[cant - 2].Provincia;
+            AlmacenamientoInfo.LocalidadAlm = oParam.Acopio[cant - 2].Localidad;
+            AlmacenamientoInfo.ArrendadoPropioAlm = ((oParam.Acopio[cant - 2].ArrendadoPropio) == true) ? "Es Propio" : "Es Alquilado";
+            AlmacenamientoInfo.MaterialAlm = oParam.Acopio[cant - 2].Material;
+            AlmacenamientoInfo.ToneladasAlm = oParam.Acopio[cant - 2].Toneladas;
+            AlmacenamientoInfo.CampañaAlm = oParam.Acopio[cant - 2].Campaña;
+            oRptAlmacenamientoInfo.Add(AlmacenamientoInfo);*/
             /*}
             else if (oParam.Acopio.Count == 1)
             {
@@ -191,7 +185,7 @@ namespace Molinos.DataAgro.Report.Clases
 
             for (int i = 0; i < oParam.ObjetivosTraerPorProveedorId.Count; i++)
             {
-                ObjetivosInfo = new RptObjetivosInfo();              
+                ObjetivosInfo = new RptObjetivosInfo();
 
                 ObjetivosInfo.MaterialObjetivo = oParam.ObjetivosTraerPorProveedorId[i].Material;
                 ObjetivosInfo.ToneladaObjetivo = oParam.ObjetivosTraerPorProveedorId[i].ToneladasObjetivos;
@@ -208,7 +202,7 @@ namespace Molinos.DataAgro.Report.Clases
             oRptProveedor.Objetivos = oRptObjetivosInfo;
 
 
-            oRptProveedor.DataSource = oDatos;    
+            oRptProveedor.DataSource = oDatos;
 
             oRptProveedor.Run(false);
 
@@ -226,13 +220,13 @@ namespace Molinos.DataAgro.Report.Clases
                     FileName = "Proveedor.pdf",
                     Contenido = ms.ToArray()
                 };
-                
-                await reportesManager.GrabarReporteAsync(oReporte);
+
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;
         }
 
 
-}
+    }
 }

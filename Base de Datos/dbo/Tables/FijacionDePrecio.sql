@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[FijacionDePrecio] (
-    [FijacionId]  INT             NOT NULL,
+    [FijacionId]  INT             IDENTITY (1, 1) NOT NULL,
     [MaterialId]  INT             NULL,
     [Precio]      DECIMAL (18, 2) NULL,
     [Fecha]       DATETIME        NULL,

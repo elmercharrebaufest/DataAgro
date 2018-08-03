@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -14,18 +13,15 @@ namespace WebDataAgro.Controllers
 {
     public class ComercialController : Controller
     {
-        private string idActiveDirectory;
-
         private IComercialManager mobjComercialManager;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ComercialController(IMSContextProvider oMSContextProvider, IComercialManager oComercialManager)
+        public ComercialController(IComercialManager oComercialManager)
         {
             mobjComercialManager = oComercialManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
         }
 
         //-----------------------------------------------------
@@ -38,35 +34,32 @@ namespace WebDataAgro.Controllers
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
-            } else if (!mobjComercialManager.ComercialExiste(idActiveDirectory))
+            } else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
 
             return View(ActionView);
         }
-        
-        public async Task<ActionResult> Inicializar()
+
+        public ActionResult Inicializar()
         {
-            var model = new DatosIniAbmComercialModel
-            {
-                Datos = await mobjComercialManager.TraerDatosInicialesAsync(),
-
-                Comercial = new Comercial()
-            };
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new DatosIniAbmComercialModel
+                {
+                    Datos = mobjComercialManager.TraerDatosIniciales(),
+                    Comercial = new Comercial()
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniComercialModel();
 
-            var result = await mobjComercialManager.TraerTodoComercialAsync();
+            var result = mobjComercialManager.TraerTodoComercial();
 
             if (result != null)
             {
@@ -79,51 +72,38 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
-        public async Task<ActionResult> ComercialCombo(AbmComercialParam oParam)
-        {
-            var model = new DataAbmComercial
-            {
-                Comercial = await mobjComercialManager.ObtenerComerciales(oParam.ComercialId)
-            };
 
+        public ActionResult ComercialCombo(AbmComercialParam oParam)
+        {
             return new JsonResult()
             {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
-        public async Task<ActionResult> Aplicar(AbmComercialParam oParam)
-        {
-            var model = new AbmComercialResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.Comercial = await mobjComercialManager.TraerComercialAsync(oParam.ComercialId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
-            return new JsonResult()
-            {
-                Data = model,
+                Data = new DataAbmComercial
+                {
+                    Comercial = mobjComercialManager.ObtenerComerciales(GlobalVariables.Equipo)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public async Task<ActionResult> Grabar(Comercial oComercial)
+        public ActionResult Aplicar(AbmComercialParam oParam)
+        {
+            return new JsonResult()
+            {
+                Data = new AbmComercialResult
+                {
+                    Comercial = mobjComercialManager.TraerComercial(oParam.ComercialId)
+                },
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult Grabar(Comercial oComercial)
         {
             var model = new AbmComercialResult();
 
-            var entityErrors = await mobjComercialManager.GrabarComercialAsync(oComercial);
+            var entityErrors = mobjComercialManager.GrabarComercial(oComercial);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
+            model.Errores = entityErrors.Errores;
 
             if (model.Errores.Count > 0)
             {
@@ -137,25 +117,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> Eliminar(AbmComercialParam oParam)
+        public ActionResult Eliminar(AbmComercialParam oParam)
         {
-            var model = new AbmComercialResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                errors = await mobjComercialManager.EliminarComercialAsync(oParam.ComercialId);
-            }
-
-            if (errors.ListaErrores.Count > 0)
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjComercialManager.EliminarComercial(oParam.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

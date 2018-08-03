@@ -1,11 +1,10 @@
-﻿using Mastersoft.Framework.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Condicion : Entity
+    public partial class Condicion
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int CondicionId { get; set; }
 
         public string Descripcion { get; set; }
@@ -14,9 +13,7 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public Condicion()
         {
-            this.CondicionId = 0;
-            this.Descripcion = "";
-            this.Inhabilitado = false;
+            Descripcion = "";
         }
     }
 }

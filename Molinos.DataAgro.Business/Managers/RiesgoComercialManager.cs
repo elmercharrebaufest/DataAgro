@@ -1,87 +1,62 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+using Molinos.DataAgro.Repository;
+using System;
 
 namespace Molinos.DataAgro.Business
 {
     public class RiesgoComercialManager : IRiesgoComercialManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public RiesgoComercialManager(ILogger logger, IMSContextProvider oMSContextProvider, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public RiesgoComercialManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<EntityErrors> ActualizacionDeRiesgoComercialAsync(RiesgoComercial oParam)
+        public Resultado ActualizacionDeRiesgoComercial(RiesgoComercial oParam)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            EntityValid.ValidateAll(oParam, oEntityErrors.ListaErrores);
+            EntityValid.ValidateAll(oParam, oEntityErrors);
 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            var validacion = ValidarRiesgoComercial(oParam);
+            var oProveedorSave = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.CUIT);
 
-            if (validacion != null)
+            if (oProveedorSave == null)
             {
-                oEntityErrors.ListaErrores.Add(validacion);
+                oEntityErrors.Error("Proveedor", "No existe el proveedor.");
                 return oEntityErrors;
             }
-
-            var oProveedorSave = mobjUnitOfWork.Repository<Proveedor>().Queryable()
-                .Where(x => x.CUIT == oParam.CUIT).FirstOrDefault();
-
-            if (oProveedorSave != null)
+            else
             {
                 oProveedorSave.RiesgoComercialSap = oParam.RiesgoComercialDesc;
 
-                oProveedorSave.ObjectState = Constants.Object_Modified;
-
-                mobjUnitOfWork.Repository<Proveedor>().SaveEntity(oProveedorSave);
-
-                await mobjUnitOfWork.SaveChangesAsync();
-
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
             }
 
             return oEntityErrors;
         }
-
-        #region Validar
-        public ErrorMessage ValidarRiesgoComercial(RiesgoComercial oRiesgoComercial)
-        {
-            var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable();
-            var oEstado = mobjUnitOfWork.Repository<Estado>().Queryable();
-
-            var val = oProveedor.AsNoTracking().Where(x => x.CUIT == oRiesgoComercial.CUIT).FirstOrDefault();
-
-            if (val == null)
-            {
-                return new ErrorMessage() { Message = "No existe el proveedor." };
-            }
-
-           
-
-            return null;
-        }
-        #endregion
     }
 }

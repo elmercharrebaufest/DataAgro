@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
@@ -9,39 +8,39 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IProveedorManager
     {
-        Task<StoredPorProveedorResult> TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo);
+        StoredPorProveedorResult TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo);
 
-        Task<DatosIniProveedor> TraerDatosCombo(int ProveedorId);
+        DatosIniProveedor TraerDatosCombo(int ProveedorId);
 
-        Task<List<Localidad>> TraerLocalidad(int Id);
+        List<Localidad> TraerLocalidad(int Id);
 
-        Task<DatosLocalidadProvincia> TraerLocalidadProveedorPorCuitAsync(string Cuit);
+        DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(string Cuit);
 
-        Task<DatosLocalidadProvincia> TraerLocalidadProveedorPorCuitAsync(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro);
+        DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro);
 
-        Task<ProveedorNuevo> TraerRazonSocial(string cuit);
+        ProveedorNuevo TraerRazonSocial(string cuit);
 
-        Task<EntityErrors> GrabarRecordatorioAsync(ActividadInsetarIni oParam);
+        Resultado GrabarRecordatorio(ActividadInsetarIni oParam);
 
-        Task<EntityErrors> EliminarRecordatorio(int Id);
+        Resultado EliminarRecordatorio(int Id);
 
-        Task<List<ContactoComercial>> TraerContacto(int ProveedorId);
+        List<ContactoComercial> TraerContacto(int ProveedorId);
 
-        Task<GrabarProveedorResult> GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory);
+        GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
-        Task<StoredHistorialResult> TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string ActividadId);
+        StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string ActividadId);
 
-        Task<GrabarProveedorResult> UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory);
+        GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
-        Task<EntityErrors> UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory);
+        GrabarProveedorResult UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
-        Task<List<ReporteProveedor>> ObtenerReporteProveedor(string Valor, string idActiveDirectory);
+        List<ReporteProveedor> ObtenerReporteProveedor(string Valor, string idActiveDirectory);
 
-        Task<ProveedorQry> TraerProveedorPorCuit(string cuit);
+        ProveedorQry TraerProveedorPorCuit(string cuit);
 
-        Task<Proveedor> TraerProveedor(int? proveedorId);
+        Proveedor TraerProveedor(int? proveedorId);
 
-        Task<List<BusquedaHome>> DevolverProveedores(string filtro);
+        List<BusquedaHome> DevolverProveedores(string filtro);
         List<Proveedor> ListarProveedor(string text);
 
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);

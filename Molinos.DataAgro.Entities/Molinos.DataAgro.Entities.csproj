@@ -43,9 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mastersoft.Framework.Standard">
-      <HintPath>..\Componentes\Mastersoft.Framework.Standard.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -71,12 +69,20 @@
     <Compile Include="Dto\AbmContrato.cs" />
     <Compile Include="Dto\AbmDestinatario.cs" />
     <Compile Include="Dto\AbmMoneda.cs" />
-    <Compile Include="EntitiesValidates\FijacionDePrecioContrato.cs" />
+    <Compile Include="Dto\DescuentoBonificacionDto.cs" />
+    <Compile Include="Dto\ErrorMessage.cs" />
+    <Compile Include="Dto\Resultado.cs" />
+    <Compile Include="Entities\DescuentoBonificacion.cs" />
+    <Compile Include="Helpers\AES.cs" />
+    <Compile Include="Helpers\Expresiones.cs" />
+    <Compile Include="Validations\EntityValid.cs" />
+    <Compile Include="Validations\IEntityKeyValid.cs" />
+    <Compile Include="Validations\FijacionDePrecioContrato.cs" />
     <Compile Include="Dto\AbmFijacionDePrecio.cs" />
     <Compile Include="Dto\AbmInteres.cs" />
     <Compile Include="Dto\AbmLocalidad.cs" />
     <Compile Include="Dto\AbmMaterial.cs" />
-    <Compile Include="EntitiesValidates\Moneda.cs" />
+    <Compile Include="Validations\Moneda.cs" />
     <Compile Include="Dto\AbmProvincia.cs" />
     <Compile Include="Dto\AbmTipoNegocio.cs" />
     <Compile Include="Dto\Actividades.cs" />
@@ -101,19 +107,18 @@
     <Compile Include="Dto\TraerProveedor.cs" />
     <Compile Include="Dto\BusquedaHome.cs" />
     <Compile Include="Dto\Home.cs" />
-    <Compile Include="EntitiesValidates\CanalOperacion.cs" />
-    <Compile Include="EntitiesValidates\Centro.cs" />
-    <Compile Include="EntitiesValidates\Comercial.cs" />
-    <Compile Include="EntitiesValidates\Condicion.cs" />
-    <Compile Include="EntitiesValidates\Destinatario.cs" />
-    <Compile Include="EntitiesValidates\FijacionDePrecio.cs" />
-    <Compile Include="EntitiesValidates\Localidad.cs" />
-    <Compile Include="EntitiesValidates\Material.cs" />
-    <Compile Include="EntitiesValidates\Provincia.cs" />
-    <Compile Include="EntitiesValidates\TipoNegocio.cs" />
-    <Compile Include="EntitiesValidates\AreaInfluencia.cs" />
-    <Compile Include="Entities\CalidadEspecial.cs" />
-    <Compile Include="Entities\DescuentosBonificaciones.cs" />
+    <Compile Include="Validations\CanalOperacion.cs" />
+    <Compile Include="Validations\Centro.cs" />
+    <Compile Include="Validations\Comercial.cs" />
+    <Compile Include="Validations\Condicion.cs" />
+    <Compile Include="Validations\Destinatario.cs" />
+    <Compile Include="Validations\FijacionDePrecio.cs" />
+    <Compile Include="Validations\Localidad.cs" />
+    <Compile Include="Validations\Material.cs" />
+    <Compile Include="Validations\Provincia.cs" />
+    <Compile Include="Validations\TipoNegocio.cs" />
+    <Compile Include="Validations\AreaInfluencia.cs" />
+    <Compile Include="Entities\CalidadesEspeciales.cs" />
     <Compile Include="Entities\TipoPeriodoDB.cs" />
     <Compile Include="Entities\TipoDB.cs" />
     <Compile Include="Entities\StandardDeCalidad.cs" />
@@ -140,7 +145,6 @@
     <Compile Include="Entities\ContactoComercialInteres.cs" />
     <Compile Include="Entities\Contrato.cs" />
     <Compile Include="Entities\Destinatario.cs" />
-    <Compile Include="Entities\Errores.cs" />
     <Compile Include="Entities\Estado.cs" />
     <Compile Include="Entities\EstadoContrato.cs" />
     <Compile Include="Entities\FACACOP.cs" />

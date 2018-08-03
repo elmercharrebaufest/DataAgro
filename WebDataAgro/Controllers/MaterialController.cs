@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -16,7 +15,7 @@ namespace WebDataAgro.Controllers
     {
         private IMaterialManager mobjMaterialManager;
 
-        private string idActiveDirectory;
+        
 
         private IComercialManager mobjComercialManager;
 
@@ -24,10 +23,10 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public MaterialController(IMSContextProvider oMSContextProvider, IMaterialManager oMaterialManager, IComercialManager oComercialManager)
+        public MaterialController(IMaterialManager oMaterialManager, IComercialManager oComercialManager)
         {
             mobjMaterialManager = oMaterialManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             mobjComercialManager = oComercialManager;
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
@@ -44,16 +43,16 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-               
 
-        public async Task<ActionResult> Filtrar(ParamAbmMaterial oParam)
+
+        public ActionResult Filtrar(ParamAbmMaterial oParam)
         {
             var model = new ResultIniMaterialModel();
 
             oParam.Codigo = oParam.Codigo ?? "";
             oParam.Descripcion = oParam.Descripcion ?? "";
 
-            var result = await mobjMaterialManager.TraerFiltroMaterialAsync(oParam);
+            var result = mobjMaterialManager.TraerFiltroMaterial(oParam);
 
             if (result != null)
             {
@@ -68,38 +67,28 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public async Task<ActionResult> Aplicar(AbmMaterialParam oParam)
+        public ActionResult Aplicar(AbmMaterialParam oParam)
         {
-            var model = new AbmMaterialResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.Material = await mobjMaterialManager.TraerMaterialAsync(oParam.MaterialId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmMaterialResult
+                {
+                    Material = mobjMaterialManager.TraerMaterial(oParam.MaterialId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
 
-        public async Task<ActionResult> Grabar(Material oMaterial)
+        public ActionResult Grabar(Material oMaterial)
         {
             var model = new AbmMaterialResult();
 
-            var entityErrors = await mobjMaterialManager.GrabarMaterialAsync(oMaterial);
+            var entityErrors = mobjMaterialManager.GrabarMaterial(oMaterial);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
-                        
-            if (model.Errores.Count > 0)
+            model.Errores = entityErrors.Errores;
+
+            if (model.HayErrores)
             {
                 model.Material = oMaterial;
             }
@@ -110,43 +99,24 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-        public async Task<ActionResult> Eliminar(AbmMaterialParam oParam)
+        
+        public ActionResult Eliminar(AbmMaterialParam oParam)
         {
-            var model = new AbmMaterialResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjMaterialManager.EliminarMaterialAsync(oParam.MaterialId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjMaterialManager.EliminarMaterial(oParam.MaterialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
+        
         public ActionResult Cancelar()
         {
-            var model = new AbmMaterialResult();
-                      
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmMaterialResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
     }
 }
 

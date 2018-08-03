@@ -7,28 +7,28 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IHomeManager
     {
-        Task<ResultIniContacto> TraerTodoContactoAsync(int idComercial);
+        ResultIniContacto TraerTodoContacto(int idComercial);
 
-        Task<ResultIniContacto> TraerBusquedaContactoAsync(oParamBusqueda oParam);
+        ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam);
 
-        Task<CampañaHome> TraerInfoCampañaAsync(int idComercial);
+        CampañaHome TraerInfoCampaña(int idComercial, List<int> equipo);
 
-        Task<DatosIniciales> TraerInfoInicialesAsync(int comercialId);
+        DatosIniciales TraerInfoIniciales(List<int> equipo);
 
-        Task<int> TraerIdComercial(string idActiveDirectory);        
+        int TraerIdComercial(string idActiveDirectory);
 
-        Task<List<BusquedaHome>> BusquedaHome(string filtro, int ComercialId);
+        List<BusquedaHome> BusquedaHome(string filtro, int ComercialId);
 
         //Task<List<BusquedaHome>> BusquedaHome(string filtro);
 
-        Task<List<ActividadRecordatorio>> TraerActividadesPorComercialId(int ComercialId);
+        List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId);
 
-        Task<List<ContactoIni>> ExportarContactos(List<int> Ids, string idActiveDirectory);
+        List<ContactoIni> ExportarContactos(List<int> Ids, string idActiveDirectory);
 
-        Task<ExportAll> ExportarAll(List<int> Ids, string idActiveDirectory);
+        ExportAll ExportarAll(List<int> Ids, string idActiveDirectory);
 
-        Task<PostIt> TraerTextoAsync(int idComercial);
+        PostIt TraerTexto(int idComercial);
 
-        Task<GrabarPostItResult> GuardarPostItAsync(PostIt post);
+        GrabarPostItResult GuardarPostIt(PostIt post);
     }
 }

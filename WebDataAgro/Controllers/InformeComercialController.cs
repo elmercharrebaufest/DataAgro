@@ -1,6 +1,4 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -19,16 +17,16 @@ namespace WebDataAgro.Controllers
     {
         private ICondicionManager mobjCondicionManager;
         private IInformeComercialManager mobjInformeComercialManager;
-        private string idActiveDirectory;
+        
         private IComercialManager mobjComercialManager;
         private IHomeManager mobjHomeManager;
         private IReportesManager reportesManager;
 
-        public InformeComercialController(IMSContextProvider oMSContextProvider, ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IComercialManager oComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
+        public InformeComercialController(ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IComercialManager oComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
         {
             mobjCondicionManager = oCondicionManager;
             mobjInformeComercialManager = oInformeComercialManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
 
             mobjComercialManager = oComercialManager;
             mobjHomeManager = oHomeManager;
@@ -59,11 +57,11 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Buscar()
+        public ActionResult Buscar()
         {
             var model = new ResultIniCondicionModel();
 
-            var result = await mobjCondicionManager.TraerTodoCondicionAsync();
+            var result = mobjCondicionManager.TraerTodoCondicion();
 
             if (result != null)
             {
@@ -76,16 +74,16 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-              
-        public async Task<ActionResult> GrabarInformeComercial(Condicion oCondicion)
+
+        public ActionResult GrabarInformeComercial(Condicion oCondicion)
         {
             var model = new AbmCondicionResult();
 
-            var entityErrors = await mobjCondicionManager.GrabarCondicionAsync(oCondicion);
+            var entityErrors = mobjCondicionManager.GrabarCondicion(oCondicion);
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
+            model.Errores = entityErrors.Errores;
 
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.Condicion = oCondicion;
             }
@@ -95,21 +93,21 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-        }       
+        }
 
         public async Task<ActionResult> Listar(ParamInformeComercial oParam)
         {
             var model = new ReportesModel();
 
-            var ComercialId = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            var ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var entityError = await mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId);
+            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId);
 
-            if (!entityError.errores.HayError)
+            if (!entityError.HayErrores)
             {
                 var oLstInformeComercial = new LstInformeComercial(reportesManager);
 
-                var datos = await mobjInformeComercialManager.GenerarInformeComercial(oParam, (int)entityError.InformeId);
+                var datos = mobjInformeComercialManager.GenerarInformeComercial(oParam, (int)entityError.InformeId);
 
                 var identif = await oLstInformeComercial.GenerarListadoAsync(datos);
 
@@ -117,9 +115,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                var list = new List<MSErrorMessage>();
-                entityError.errores.ListaErrores.ForEach(x => list.Add(new MSErrorMessage(x)));
-                model.Errores = list;
+                model.Errores = entityError.Errores;
             }
 
             return new JsonResult()
@@ -129,12 +125,12 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> ListarMateriales(oParamInforme oParam)
+        public ActionResult ListarMateriales(oParamInforme oParam)
         {
             var model = new InformesModel
             {
-                materiales = await mobjInformeComercialManager.TraerInformeComercialAsync(oParam.filtro),
-                InformeGenerado = await mobjInformeComercialManager.TraerInformeComercialGeneradoAsync(oParam.filtro)
+                materiales = mobjInformeComercialManager.TraerInformeComercial(oParam.filtro),
+                InformeGenerado = mobjInformeComercialManager.TraerInformeComercialGenerado(oParam.filtro)
             };
 
             return new JsonResult()
@@ -144,17 +140,13 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> ListarInformes()
+        public ActionResult ListarInformes()
         {
-
-            var model = await mobjInformeComercialManager.TraerInformesGeneradosAsync();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjInformeComercialManager.TraerInformesGenerados(),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public async Task<ActionResult> GenerarExcel(oParamExcel oParamReportes)
@@ -163,11 +155,11 @@ namespace WebDataAgro.Controllers
 
             var oLstIndicadores = new LstInformeComercial(reportesManager);
 
-            var odatos = await mobjInformeComercialManager.TraerCapacidadProductivaAsync(oParamReportes.Informes);
+            var odatos = mobjInformeComercialManager.TraerCapacidadProductiva(oParamReportes.Informes);
 
-            var identif = await oLstIndicadores.GenerarInformesExcelAsync(odatos);
+            var identif = oLstIndicadores.GenerarInformesExcel(odatos);
 
-            var d = await mobjInformeComercialManager.GrabarCapacidadProductivaAsync(oParamReportes.Informes);
+            var d = mobjInformeComercialManager.GrabarCapacidadProductiva(oParamReportes.Informes);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
@@ -179,11 +171,11 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            oParamReportes.ComercialIDGenerador = (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+            oParamReportes.ComercialIDGenerador = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
             var oLstIndicadores = new LstInformeComercial(reportesManager);
 
-            var odatos = await mobjInformeComercialManager.ListarReportes(oParamReportes);
+            var odatos = mobjInformeComercialManager.ListarReportes(oParamReportes);
 
             var identif = await oLstIndicadores.GenerarInformesExcelICAsync(odatos);
 
@@ -197,23 +189,18 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
 
-            var informe = await mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId);
+            var informe = mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId);
 
             if (informe != null)
             {
                 var oLstInformeComercial = new LstInformeComercial(reportesManager);
 
-                var datos = await mobjInformeComercialManager.GenerarInformeComercial(informe, InformeComercialId);
+                var datos = mobjInformeComercialManager.GenerarInformeComercial(informe, InformeComercialId);
 
                 var identif = await oLstInformeComercial.GenerarListadoAsync(datos);
 
                 model.DownloadKey = Util.GetDownloadKey(identif);
             }
-            else
-            {
-                var list = new List<MSErrorMessage>();
-                model.Errores = list;
-            }
 
             return new JsonResult()
             {
@@ -223,57 +210,42 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public async Task<ActionResult> EliminarInformeComercial(int informeComercialId)
+        public ActionResult EliminarInformeComercial(int informeComercialId)
         {
-            var informe = await mobjInformeComercialManager.EliminarInformes(informeComercialId);
-
             return new JsonResult()
             {
-                Data = informeComercialId,
+                Data = mobjInformeComercialManager.EliminarInformes(informeComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
-        public async Task<ActionResult> ModificarInformeComercial(int InformeComercialId)
+        public ActionResult ModificarInformeComercial(int InformeComercialId)
         {
-            var model = new ReportesModificacionModel
-            {
-                parametros = await mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId),
-
-                materiales = await mobjInformeComercialManager.TraerInformeMaterialesAsync(InformeComercialId)
-            };
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new ReportesModificacionModel
+                {
+                    parametros = mobjInformeComercialManager.ReimprimirInformeComercial(InformeComercialId),
+                    materiales = mobjInformeComercialManager.TraerInformeMateriales(InformeComercialId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
-        public async Task<ActionResult> ListarReportes(ParamReportesIC oParam)
+        public ActionResult ListarReportes(ParamReportesIC oParam)
         {
             var model = new List<ReportesList>();
 
             if (oParam.ComercialIDGenerador == null)
             {
-                oParam.ComercialIDGenerador= (int)await mobjHomeManager.TraerIdComercial(idActiveDirectory);
+                oParam.ComercialIDGenerador = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             }
-
-            model = await mobjInformeComercialManager.ListarReportes(oParam);
-            
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjInformeComercialManager.ListarReportes(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
-
-
         }
-
-
     }
 }
 

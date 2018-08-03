@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class FijacionDePrecioContratoIni
     {
         public int FijacionDePrecioContratoId { get; set; }
-        public string ContratoId { get; set; }
+        public int? ContratoId { get; set; }
         public int ProveedorId { get; set; }
         public string Proveedor { get; set; }
         public int? MaterialId { get; set; }

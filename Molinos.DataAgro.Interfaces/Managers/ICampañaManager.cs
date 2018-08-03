@@ -1,23 +1,24 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ICampañaManager
     {
-        Task<CampañaHome> TraerCampañaHomeAsync(int idComercial);
+        CampañaHome TraerCampañaHome(int idComercial, List<int> equipo);
 
-        Task<List<Campaña>> TraerCampañasActivas();
+        List<Campaña> TraerCampañasActivas();
 
-        Task<List<Material>> TraerMaterialPorCampaña(int CampañaId);
+        List<Material> TraerMaterialPorCampaña(int CampañaId);
 
-        Task<List<Campaña>> TraerCampañaPorMaterial(int MaterialId);
-        Task<List<CalidadEspecial>> TraerCalidadPorMaterial(int MaterialId);
-        Task<List<Campaña>> TraerCampañasPorGrano(int MaterialId);
+        List<Campaña> TraerCampañaPorMaterial(int MaterialId);
 
-        Task<Campaña> TraerCampaniaAsync(int CampaniaId);
+        List<Campaña> TraerCampañasPorGrano(int materialId);
+
+        List<CalidadEspecial> TraerCalidadPorMaterial(int MaterialId);
+
+        Campaña TraerCampania(int CampaniaId);
 
     }
 }

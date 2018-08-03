@@ -19,76 +19,181 @@
                 <div class="status borrado-modal"><div>RECHAZADO</div></div>
             </div>
             <div class="modal-body clearfix ">
-                <div id="DivVisualizar" class="col-xs-12 noPadding">
-                    <div id="proveedorDivVisualizar" class="campo clearfix">
+                <div id="DivVisualizar" class="row">
+                    <div id="proveedorDivVisualizar" class="row campo marginCero clearfix">
                         <h3>Proveedor:</h3>
                         <span id="visualizar_proveedor"></span>
                     </div>
-                    <div id="fechaDivVisualizar" class="campo clearfix">
+                    <div id="fechaDivVisualizar" class="row campo marginCero clearfix">
                         <h3>Fecha de Operación:</h3>
-                        <span id="fechacontrato" class="centrar"></span>
+                        <span id="fechacontrato"></span>
                     </div>
-                    <div id="fechaDesdeHastaDivVisualizar" class="campo clearfix">
-                        <h3>Fecha Desde - Fecha Hasta Entrega:</h3>
-                        <span id="visualizar_desdeHasta" class="centrar"></span>
+                    <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero clearfix">
+                        <h3>Fecha Desde - Fecha Hasta (Entrega):</h3>
+                        <span id="visualizar_desdeHasta"></span>
                     </div>
-                    <div class="campo clearfix">
-                        <div id="tipoDivVisualizar" class="col-xs-6 mover-izquierda">
-                            <h3>Tipo:</h3>
-                            <span id="visualizar_tipo" class="centrar"></span>
+                    <div class="row campo marginCero clearfix">
+                        <div id="clasificacionDivVisualizar">
+                            <h3>Clasificación:</h3>
+                            <span id="visualizar_clasificacion"></span>
                         </div>
-                        <div id="materialDivVisualizar" class="col-xs-6 mover-derecha">
+                    </div>
+                    <div class="row marginCero">
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <h3>Material:</h3>
-                            <span id="visualizar_material" class="centrar"></span>
+                            <span id="visualizar_material"></span>
+                        </div>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Tipo:</h3>
+                            <span id="visualizar_tipo"></span>
                         </div>
                     </div>
-                    <div class="campo clearfix">
-                        <div id="cantidadDivVisualizar" class="col-xs-6 mover-izquierda">
-                            <h3>KG:</h3>
-                            <span id="visualizar_cantidad" class="centrar"></span>
-                     
+                    <div class="row marginCero">
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="cantidadDivVisualizar">
+                                <h3>KG:</h3>
+                                <span id="visualizar_cantidad"></span>
+                            </div>
                         </div>
-                        <div id="precioDivVisualizar" class="col-xs-6 mover-derecha">
-                            <h3>Precio:</h3>
-                            <span id="visualizar_precio" class="centrar"></span>
-                        </div>
-                    </div>
-                    <div class="campo clearfix">
-                        <div id="campanaDivVisualizar" class="col-xs-6 mover-izquierda">
-                            <h3>Campaña:</h3>
-                            <span id="visualizar_campana" class="centrar"></span>
-                        </div>
-                        <div id="comercialDivVisualizar" class="col-xs-6 mover-derecha">
-                            <h3>Comercial:</h3>
-                            <span id="visualizar_comercial" class="centrar"></span>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="precioDivVisualizar">
+                                <h3>Precio:</h3>
+                                <span id="visualizar_precio"></span>
+                            </div>
                         </div>
                     </div>
-                    <div id="procedenciaDivVisualizar" class="campo clearfix">
-                        <h3>Procedencia:</h3>
-                        <span id="visualizar_procedencia"></span>
+                    <div class="row marginCero clearfix">
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="campanaDivVisualizar">
+                                <h3>Campaña:</h3>
+                                <span id="visualizar_campana"></span>
+                            </div>
+                        </div>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="comercialDivVisualizar">
+                                <h3>Comercial:</h3>
+                                <span id="visualizar_comercial"></span>
+                            </div>
+                        </div>
                     </div>
+                    <div class="row marginCero">
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="cantidadDeCamionesDivVisualizar">
+                                <h3>Cantidad de Camiones:</h3>
+                                <span id="visualizar_cantidadDeCamiones"></span>
+                            </div>
+                        </div>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="establecimientoDivVisualizar">
+                                <h3>Establecimiento:</h3>
+                                <span id="visualizar_establecimiento"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="planCanjeDivVisualizar">
+                                <h3>Plan Canje:</h3>
+                                <span id="visualizar_planCanje"></span>
+                            </div>
+                        </div>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div id="consignatarioDivVisualizar">
+                                <h3>Consignatario:</h3>
+                                <span id="visualizar_consignatario"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row marginCero clearfix campo col-xs-12 noPadding">
+                        <div id="procedenciaDivVisualizar">
+                            <h3>Procedencia:</h3>
+                            <span id="visualizar_procedencia"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero clearfix campo col-xs-12 noPadding">
+                        <div id="destinoDivVisualizar">
+                            <h3>Destino:</h3>
+                            <span id="visualizar_destino"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div id="sustentableDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Sustentable (Bonificaci&oacute;n):</h3>
+                            <span id="visualizar_sustentablePrecio"></span>
+                        </div>
+                        <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Dolarizado (Fecha l&iacute;mite):</h3>
+                            <span id="visualizar_dolarizadoFecha"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div id="pesificadoDiasDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Pesificado (D&iacute;as diferimiento):</h3>
+                            <span id="visualizar_pesificadoDias"></span>
+                        </div>
+                        <div id="informaSIODivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Informa SIO:</h3>
+                            <span id="visualizar_informaSIO"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div id="trigoEspecialDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Trigo Especial:</h3>
+                            <span id="visualizar_trigoEspecial"></span>
+                        </div>
+                        <div id="pagoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Pago:</h3>
+                            <span id="visualizar_pago"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div id="boletoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Boleto:</h3>
+                            <span id="visualizar_boleto"></span>
+                        </div>
+                        <div id="bolsaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <h3>Bolsa:</h3>
+                            <span id="visualizar_bolsa"></span>
+                        </div>
+                    </div>
+                    <div id="descuentosDivVisualizar">
 
-                    <div id="sustentableDivVisualizar" class="campo campoAdicionales clearfix">
-                        <h3>Sustentable (Bonificaci&oacute;n):</h3>
-                        <span id="visualizar_sustentablePrecio"></span>
+
+                        <div id="descuentosDivVisualizar">
+                            <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">                               
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+
+                            <script id="div-template" type="text/x-kendo-template">
+                                <div>
+                                    <div><strong> Descuentos #: TipoPeriodoDBDesc#</strong></div><br />
+                                    <div>#: TipoDBDesc#</div>
+                                    <div data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </div>
+                                    <div data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</div><br />
+                                    <div>Importe #:Importe#</div>
+                                    <div>#:MonedaId#</div>
+                                    <div>Porc #:Porcentaje#</div>
+                                    <br /><br />
+                                </div>
+                            </script>
+                        </div>
+
                     </div>
-                    <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales clearfix">
-                        <h3>Dolarizado (Fecha l&iacute;mite):</h3>
-                        <span id="visualizar_dolarizadoFecha"></span>
+                    <div id="desdeHastaFijacionDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales">
+                        <h3>Fecha Desde - Fecha Hasta (Fijacion):</h3>
+                        <span id="visualizar_desdeHastaFijacion" class="centrar"></span>
                     </div>
-                    <div id="pesificadoDiasDivVisualizar" class="campo campoAdicionales clearfix">
-                        <h3>Pesificado (D&iacute;as diferimiento):</h3>
-                        <span id="visualizar_pesificadoDias"></span>
+                    <div id="condicionFijacionDivVisualisar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales">
+                        <h3>Condición Fijacion:</h3>
+                        <span id="visualizar_condicionFijacion" class="centrar"></span>
                     </div>
-                    <div id="informaSIODivVisualizar" class="campo campoAdicionales clearfix">
-                        <h3>Informa SIO:</h3>
-                        <span id="visualizar_informaSIO"></span>
-                    </div>
-                    <div id="trigoEspecialDivVisualizar" class="campo campoAdicionales clearfix">
-                        <h3>Trigo Especial:</h3>
-                        <span id="visualizar_trigoEspecial"></span>
-                    </div>
-                    <div class="campo campoAdicionales observacion">
+                    <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales observacion">
                         <h3>Observaci&oacute;n: </h3>
                         <p id="visualizar_observacion"></p>
                     </div>

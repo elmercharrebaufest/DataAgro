@@ -1,28 +1,23 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface ILocalidadManager
     {
-        Task<DatosIniAbmLocalidad> TraerDatosInicialesAsync();
+        DatosIniAbmLocalidad TraerDatosIniciales();
 
-        Task<ResultIniLocalidad> TraerFiltroLocalidadAsync(ParamAbmLocalidad oParam);
+        ResultIniLocalidad TraerFiltroLocalidad(ParamAbmLocalidad oParam);
 
-        Task<ResultIniLocalidad> TraerLocalidadPorProvincia(int ProvinciaId);
+        ResultIniLocalidad TraerLocalidadPorProvincia(int ProvinciaId);
 
-        Task<Localidad> TraerLocalidadAsync(int intLocalidadId);
+        Localidad TraerLocalidad(int intLocalidadId);
 
-        Task<EntityErrors> GrabarLocalidadAsync(Localidad oLocalidad);
+        Resultado GrabarLocalidad(Localidad oLocalidad);
 
-        Task<EntityErrors> EliminarLocalidadAsync(int intLocalidadId);
+        Resultado EliminarLocalidad(int intLocalidadId);
 
         List<Localidad> ListarLocalidad(string localidad);
     }
 }
-
-

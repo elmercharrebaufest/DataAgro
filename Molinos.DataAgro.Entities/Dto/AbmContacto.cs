@@ -1,4 +1,5 @@
-﻿using Mastersoft.Framework.Standard;
+﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,20 +12,20 @@ namespace Molinos.DataAgro.Entities.Dto
         //   Implementacion de IEntityValid
         //--------------------------------------------------------------------------------
 
-        public bool ValidateKey(List<ErrorMessage> oErrorMessages)
+        public bool ValidateKey(Resultado oErrorMessages)
         {
-            return oErrorMessages.Count == 0;
+            return oErrorMessages.HayErrores;
         }
 
 
-        public bool Validate(List<ErrorMessage> oErrorMessages)
+        public bool Validate(Resultado oErrorMessages)
         {
             //if (String.IsNullOrWhiteSpace(this.)
             //{
             //    oErrorMessages.Add(new ErrorMessage("El campo 'Descripción' no debe estar vacio", "Descripcion"));
             //}
 
-            return oErrorMessages.Count == 0;
+            return oErrorMessages.HayErrores;
         }
 
     }

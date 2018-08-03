@@ -1,11 +1,11 @@
-﻿using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class CampoMaterial : Entity
+    public partial class CampoMaterial
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int CampoMaterialid { get; set; }
         public int CampoId { get; set; }
         public int NroItem { get; set; }
@@ -14,13 +14,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? Toneladas { get; set; }
         public int CampañaId { get; set; }
 
-        public CampoMaterial()
-        {
-            
-        }
+        [ForeignKey("CampoId")]
+        public virtual Campo Campo { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
+        [ForeignKey("CampañaId")]
+        public virtual Campaña Campaña { get; set; }
+
     }
-
-
 }
    
 

@@ -1,20 +1,13 @@
-﻿
-using Mastersoft.Framework.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class BoletoCompraNet : Entity
+    public partial class BoletoCompraNet
     {
+        [Key]
         public int Id { get; set; }
         public string Descripcion { get; set; }
-
-        public BoletoCompraNet()
-        {
-            
-        }
     }
-
-
 }
    
 

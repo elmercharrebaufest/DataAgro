@@ -1,172 +1,119 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
     public class DestinatarioManager : IDestinatarioManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public DestinatarioManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public DestinatarioManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniDestinatario> TraerTodoDestinatarioAsync()
+        public ResultIniDestinatario TraerTodoDestinatario()
         {
-            var oResult = new ResultIniDestinatario();
-           
-            var oDestinatario = mobjUnitOfWork.Repository<Destinatario>().Queryable();
-
-            var query = oDestinatario
-                        .OrderBy(x => x.Descripcion)
-                        .Select(x => new DestinatarioIni()
-                        {
-                             DestinatarioId = x.DestinatarioId,
-                             Descripcion = x.Descripcion
-                        });
-
-            oResult.Destinatario = await query.ToListAsync();
-
-            return oResult;
-        }
-
-
-        public async Task<Destinatario> TraerDestinatarioAsync(int intDestinatarioId)
-        {
-            var oDestinatario = new Destinatario();
-
-            oDestinatario = await mobjUnitOfWork.Repository<Destinatario>()
-                                 .Queryable()
-                                 .Where(x => x.DestinatarioId == intDestinatarioId)
-                                 .SingleOrDefaultAsync();
-
-            if (oDestinatario == null)
+            return new ResultIniDestinatario
             {
-                oDestinatario = new Destinatario()
+                Destinatario = repositorio.Listar<Destinatario, DestinatarioIni>(x => new DestinatarioIni()
                 {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oDestinatario.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oDestinatario;
+                    DestinatarioId = x.DestinatarioId,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion")
+            };
         }
 
 
-        public async Task<EntityErrors> GrabarDestinatarioAsync(Destinatario oDestinatario)
+        public Destinatario TraerDestinatario(int intDestinatarioId)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oDestinatario, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            return repositorio.Obtener<Destinatario>(intDestinatarioId) ?? new Destinatario();
+        }
+
+
+        public Resultado GrabarDestinatario(Destinatario oDestinatario)
+        {
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oDestinatario, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            Destinatario oDestinatarioSave;
+            oEntityErrors = ValidarDescripcion(oDestinatario);
 
-            if (oDestinatario.ObjectState == 0)
+            if (oEntityErrors.HayErrores)
             {
-                oDestinatarioSave = new Destinatario()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                return oEntityErrors;
+            }
+
+            if (oDestinatario.DestinatarioId != 0)
+            {
+                var oDestinatarioSave = TraerDestinatario(oDestinatario.DestinatarioId);
+                oDestinatarioSave.Descripcion = oDestinatario.Descripcion;
+                oDestinatarioSave.Inhabilitado = oDestinatario.Inhabilitado;
             }
             else
             {
-                oDestinatarioSave = await TraerDestinatarioAsync(oDestinatario.DestinatarioId);
+                repositorio.Agregar(oDestinatario);
             }
 
-            var validacion = ValidarDescripcion(oDestinatario, oDestinatarioSave.ObjectState,
-                (oDestinatarioSave.ObjectState == Constants.Object_Modified ? (int?)oDestinatario.DestinatarioId : null));
-
-            if (validacion != null)
+            try
             {
-                oEntityErrors.ListaErrores.Add(validacion);
-                return oEntityErrors;
+                repositorio.GuardarCambios();
             }
-         
-            oDestinatarioSave.Descripcion = oDestinatario.Descripcion;
-            oDestinatarioSave.Inhabilitado = oDestinatario.Inhabilitado;
-            if (oDestinatarioSave.ObjectState == Constants.Object_Added)
+            catch (Exception ex)
             {
-                oDestinatarioSave.DestinatarioId = ((mobjUnitOfWork.Repository<Destinatario>().Queryable().Max(x => (int?)x.DestinatarioId)) ?? 0) + 1;
+                logger.Error(ex);
+                throw;
             }
-
-            mobjUnitOfWork.Repository<Destinatario>().SaveEntity(oDestinatarioSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarDestinatarioAsync(int intDestinatarioId)
+        public Resultado EliminarDestinatario(int intDestinatarioId)
         {
-            var oEntityErrors = new EntityErrors();
-
-            var oRepository = mobjUnitOfWork.Repository<Destinatario>();
-
-            var oDestinatario = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.DestinatarioId == intDestinatarioId)
-                                 .SingleOrDefaultAsync();
-
-            if (oDestinatario != null)
+            var oEntityErrors = new Resultado();
+            repositorio.Remover<Destinatario>(intDestinatarioId);
+            try
             {
-                oRepository.Delete(oDestinatario);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
-
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             return oEntityErrors;
         }
 
 
         #region Validar
-        public ErrorMessage ValidarDescripcion(Destinatario oDestinatarios, int ObjectState, int? Id = null)
+        public Resultado ValidarDescripcion(Destinatario oDestinatarios)
         {
-            var oDestinatario = mobjUnitOfWork.Repository<Destinatario>().Queryable();
+            var resultado = new Resultado();
 
-            Destinatario val = null;
-
-            if (ObjectState == Constants.Object_Added)
+            if (repositorio.Existe<Destinatario>(x => x.Descripcion == oDestinatarios.Descripcion && x.DestinatarioId != oDestinatarios.DestinatarioId))
             {
-                val = oDestinatario
-                    .Where(x => x.Descripcion == oDestinatarios.Descripcion).FirstOrDefault();
+                resultado.Error("Descripcion", "Existe un registro de iguales carecteristicas.");
             }
-            else if (ObjectState == Constants.Object_Modified)
-            {
-                val = oDestinatario
-                    .Where(x=> x.Descripcion == oDestinatarios.Descripcion
-                    && x.DestinatarioId != Id).FirstOrDefault();
-            }
-
-            if (val != null)
-            {
-                return new ErrorMessage() { Message = "Existe un registro de iguales carecteristicas." };
-            }
-            return null;
+            return resultado;
         } 
         #endregion
 

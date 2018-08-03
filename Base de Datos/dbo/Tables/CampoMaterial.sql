@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[CampoMaterial] (
-    [CampoMaterialid] INT NOT NULL,
+    [CampoMaterialid] INT IDENTITY (1, 1) NOT NULL,
     [CampoId]         INT NULL,
     [NroItem]         INT NOT NULL,
     [MaterialId]      INT NOT NULL,

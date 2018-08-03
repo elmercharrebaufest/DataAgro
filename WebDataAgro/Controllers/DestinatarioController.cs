@@ -1,6 +1,4 @@
-﻿
-using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -16,16 +14,16 @@ namespace WebDataAgro.Controllers
     {
         private IDestinatarioManager mobjDestinatarioManager;
         
-        private string idActiveDirectory;
+        
 
         //-----------------------------------------------------------------------------------
         //  Constructor
         //-----------------------------------------------------------------------------------
 
-        public DestinatarioController(IMSContextProvider oMSContextProvider, IDestinatarioManager oDestinatarioManager)
+        public DestinatarioController(IDestinatarioManager oDestinatarioManager)
         {
             mobjDestinatarioManager = oDestinatarioManager;
-            idActiveDirectory = oMSContextProvider.GetIdActiveDirectory();
+            
             
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
@@ -42,13 +40,12 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-
-
-        public async Task<ActionResult> Buscar()
+        
+        public ActionResult Buscar()
         {
             var model = new ResultIniDestinatarioModel();
 
-            var result = await mobjDestinatarioManager.TraerTodoDestinatarioAsync();
+            var result = mobjDestinatarioManager.TraerTodoDestinatario();
 
             if (result != null)
             {
@@ -61,40 +58,27 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-        public async Task<ActionResult> Aplicar(AbmDestinatarioParam oParam)
+        
+        public ActionResult Aplicar(AbmDestinatarioParam oParam)
         {
-            var model = new AbmDestinatarioResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                model.Destinatario = await mobjDestinatarioManager.TraerDestinatarioAsync(oParam.DestinatarioId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmDestinatarioResult
+                {
+                    Destinatario = mobjDestinatarioManager.TraerDestinatario(oParam.DestinatarioId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-        public async Task<ActionResult> Grabar(Destinatario oDestinatario)
+        
+        public ActionResult Grabar(Destinatario oDestinatario)
         {
             var model = new AbmDestinatarioResult();
 
-            var entityErrors = await mobjDestinatarioManager.GrabarDestinatarioAsync(oDestinatario);
+            var entityErrors = mobjDestinatarioManager.GrabarDestinatario(oDestinatario);
+            model.Errores = entityErrors.Errores;
 
-            model.Errores = Util.EntityErrorsToMSErrorMessage(entityErrors);
-
-            if (model.Errores.Count > 0)
+            if (model.HayErrores)
             {
                 model.Destinatario = oDestinatario;
             }
@@ -105,45 +89,24 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
-        public async Task<ActionResult> Eliminar(AbmDestinatarioParam oParam)
+        
+        public ActionResult Eliminar(AbmDestinatarioParam oParam)
         {
-            var model = new AbmDestinatarioResult();
-
-            var errors = new EntityErrors();
-
-            if (oParam.Validate(errors.ListaErrores))
-            {
-                await mobjDestinatarioManager.EliminarDestinatarioAsync(oParam.DestinatarioId);
-            }
-            else
-            {
-                model.Errores = Util.EntityErrorsToMSErrorMessage(errors);
-            }
-
             return new JsonResult()
             {
-                Data = model,
+                Data = mobjDestinatarioManager.EliminarDestinatario(oParam.DestinatarioId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
+        
         public ActionResult Cancelar()
         {
-            var model = new AbmDestinatarioResult();
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmDestinatarioResult(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
     }
 }
 

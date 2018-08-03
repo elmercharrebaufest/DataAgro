@@ -1,12 +1,11 @@
 ﻿using Autofac.Extras.NLog;
-using Mastersoft.Framework.DataRepository;
-using Mastersoft.Framework.Interfaces;
-using Mastersoft.Framework.Standard;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Mapping.Context;
-using System.Data.Entity;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,133 +13,97 @@ namespace Molinos.DataAgro.Business
 {
     public class MaterialManager : IMaterialManager
     {
-        private IUnitOfWorkAsync mobjUnitOfWork;
+        private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public MaterialManager(ILogger logger, IMSContextProvider oMSContextProvider)
+        public MaterialManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
-            mobjUnitOfWork = new UnitOfWork(oMSContextProvider.GetMSContext(), new DataAgroContext(oMSContextProvider.GetMSContext()));
+            this.repositorio = repositorio;
         }
 
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public async Task<ResultIniMaterial> TraerFiltroMaterialAsync(ParamAbmMaterial oParam)
+        public ResultIniMaterial TraerFiltroMaterial(ParamAbmMaterial oParam)
         {
             var oResult = new ResultIniMaterial();
-           
-            var oMaterial = mobjUnitOfWork.Repository<Material>().Queryable();
-            
-            var query = oMaterial
-                       .Where(x => (oParam.Codigo.Trim() == "" || x.Codigo.Contains(oParam.Codigo.Trim())) &&
-                                   (oParam.Descripcion.Trim() == "" || x.Descripcion.Contains(oParam.Descripcion.Trim())))
-                       .Take(500)
-                       .OrderBy(x => x.Descripcion)
-                       .Select(x => new MaterialIni()
+
+            oResult.Material = repositorio.Listar<Material, MaterialIni>
+                       (x => new MaterialIni()
                        {
                            MaterialId = x.MaterialId,
                            Codigo = x.Codigo,
                            Descripcion = x.Descripcion
-                       });
-
-
-
-            oResult.Material = await query.ToListAsync();
+                       },
+                       x => (oParam.Codigo.Trim() == "" || x.Codigo.Contains(oParam.Codigo.Trim())) &&
+                                   (oParam.Descripcion.Trim() == "" || x.Descripcion.Contains(oParam.Descripcion.Trim())), 500, "Descripcion");
 
             return oResult;
         }
 
-        public async Task<Material> TraerMaterialAsync(int intMaterialId)
+        public Material TraerMaterial(int intMaterialId)
         {
-            var oMaterial = new Material();
-
-            oMaterial = await mobjUnitOfWork.Repository<Material>()
-                                 .Queryable()
-                                 .Where(x => x.MaterialId == intMaterialId)
-                                 .SingleOrDefaultAsync();
-
-            if (oMaterial == null)
-            {
-                oMaterial = new Material()
-                {
-                    ObjectState = Constants.Object_Added
-                };
-            }
-            else
-            {
-                oMaterial.ObjectState = Constants.Object_Modified;
-            }
-            
-            return oMaterial;
+            return repositorio.Obtener<Material>(intMaterialId) ?? new Material();
         }
 
 
-        public async Task<EntityErrors> GrabarMaterialAsync(Material oMaterial)
+        public Resultado GrabarMaterial(Material oMaterial)
         {
-            var oEntityErrors = new EntityErrors();
-                      
-            EntityValid.ValidateAll(oMaterial, oEntityErrors.ListaErrores);
- 
-            if (oEntityErrors.ListaErrores.Count > 0)
+            var oEntityErrors = new Resultado();
+
+            EntityValid.ValidateAll(oMaterial, oEntityErrors);
+
+            if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
 
-            Material oMaterialSave;
-
-            if (oMaterial.ObjectState == 0)
+            if (oMaterial.MaterialId != 0)
             {
-                oMaterialSave = new Material()
-                {
-                    ObjectState = Constants.Object_Added
-                };
+                var oMaterialSave = TraerMaterial(oMaterial.MaterialId);
+                oMaterialSave.Codigo = oMaterial.Codigo;
+                oMaterialSave.Descripcion = oMaterial.Descripcion;
             }
             else
             {
-                oMaterialSave = await TraerMaterialAsync(oMaterial.MaterialId);
+                repositorio.Agregar(oMaterial);
             }
-         
-            oMaterialSave.Codigo = oMaterial.Codigo;  
-            oMaterialSave.Descripcion = oMaterial.Descripcion;  
-
-            if (oMaterialSave.ObjectState == Constants.Object_Added)
+            try
             {
-                oMaterialSave.MaterialId = ((mobjUnitOfWork.Repository<Material>().Queryable().Max(x => (int?)x.MaterialId)) ?? 0) + 1;
+                repositorio.GuardarCambios();
             }
-
-            mobjUnitOfWork.Repository<Material>().SaveEntity(oMaterialSave);
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
 
-        public async Task<EntityErrors> EliminarMaterialAsync(int intMaterialId)
+        public Resultado EliminarMaterial(int intMaterialId)
         {
-            var oEntityErrors = new EntityErrors();
+            var oEntityErrors = new Resultado();
 
-            var oRepository = mobjUnitOfWork.Repository<Material>();
-
-            var oMaterial = await oRepository
-                                 .Queryable()
-                                 .Where(x => x.MaterialId == intMaterialId)
-                                 .SingleOrDefaultAsync();
-
-            if (oMaterial != null)
+            repositorio.Remover<Material>(intMaterialId);
+            try
             {
-                oRepository.Delete(oMaterial);
+                repositorio.GuardarCambios();
             }
-
-            await mobjUnitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
 
             return oEntityErrors;
         }
 
-   
-             
+
+
 
     }
 }

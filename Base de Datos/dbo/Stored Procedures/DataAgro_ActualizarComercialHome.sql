@@ -6,20 +6,7 @@ CREATE PROCEDURE [dbo].[DataAgro_ActualizarComercialHome] --42
 AS
 BEGIN
 	
-	--WITH Empleados   
-	--( ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory)  
-	--AS  
-	--(  
-	-- SELECT ComercialId, Apellido, Nombres, PerfilId, EmpleadorACargo, IdActiveDirectory  
-	--	FROM Comercial    
-	-- WHERE ComercialId = @ComercialId
-	-- UNION ALL   
-	--	--RECURSIVIDAD  
-	-- SELECT A.ComercialId, A.Apellido, A.Nombres, A.PerfilId, A.EmpleadorACargo, A.IdActiveDirectory  
-	-- FROM Comercial A  
-	-- inner join Empleados AS B on A.EmpleadorACargo = B.ComercialId  
-	--)  
-	declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargo int , IdActiveDirectory varchar(255),GrupoDeCompras int)
+	declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
 	insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
 
 

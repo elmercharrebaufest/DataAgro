@@ -1,54 +1,38 @@
-﻿using Mastersoft.Framework.Standard;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace WebDataAgro.Models
 {
-    public class DatosIniAbmDestinatarioModel
+    public class DatosIniAbmDestinatarioModel : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public Destinatario Destinatario { get; set; }
-
-        public DatosIniAbmDestinatarioModel()
-        {
-            this.Errores = new List<MSErrorMessage>();
-        }
     }
 
 
-    public class ResultIniDestinatarioModel
+    public class ResultIniDestinatarioModel : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public List<DestinatarioIni> Datos { get; set; }
 
         public ResultIniDestinatarioModel()
         {
-            this.Errores = new List<MSErrorMessage>();
             this.Datos = new List<DestinatarioIni>();
         }
     }
 
 
-    public class AbmDestinatarioParam : IEntityValid
+    public class AbmDestinatarioParam
     {
         public int DestinatarioId { get; set; }
-
-        public bool Validate(List<ErrorMessage> oErrorMessages)
-        {
-            return oErrorMessages.Count == 0;
-        }
     }
 
 
-    public class AbmDestinatarioResult
+    public class AbmDestinatarioResult : Resultado
     {
-        public List<MSErrorMessage> Errores { get; set; }
         public Destinatario Destinatario { get; set; }
 
         public AbmDestinatarioResult()
         {
-            this.Errores = new List<MSErrorMessage>();
             this.Destinatario = new Destinatario();
         }
     }

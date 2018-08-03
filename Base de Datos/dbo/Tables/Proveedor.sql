@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Proveedor] (
-    [ProveedorId]             INT           NOT NULL,
+    [ProveedorId]             INT           IDENTITY (1, 1) NOT NULL,
     [CUIT]                    VARCHAR (20)  NOT NULL,
     [EstadoId]                INT           NULL,
     [RazonSocial]             VARCHAR (100) NULL,
@@ -7,7 +7,7 @@
     [NombreReferente]         VARCHAR (100) NULL,
     [Calificacion]            INT           NULL,
     [Intermediario]           VARCHAR (255) NULL,
-    [Observaciones]           TEXT          NULL,
+    [Observaciones]           NVARCHAR (255)          NULL,
     [Direccion]               VARCHAR (100) NULL,
     [LocalidadId]             INT           NULL,
     [CodigoPostal]            VARCHAR (20)  NULL,
