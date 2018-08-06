@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Entities",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Interfaces", "Molinos.DataAgro.Interfaces\Molinos.DataAgro.Interfaces.csproj", "{748944E7-1FA4-4C63-9F4A-12A92C0EB481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Mapping", "Molinos.DataAgro.Mapping\Molinos.DataAgro.Mapping.csproj", "{90563D62-22F4-47D1-9D47-69F61169C3E2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Report", "Molinos.DataAgro.Report\Molinos.DataAgro.Report.csproj", "{9925F118-7FCE-4298-849E-8449AEDD25CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Molinos.DataAgro.Agent", "Molinos.DataAgro.Agent\Molinos.DataAgro.Agent.csproj", "{FE1CA20E-E24A-4781-BE45-390FA7185581}"
@@ -83,18 +81,6 @@ Global
 		{748944E7-1FA4-4C63-9F4A-12A92C0EB481}.Release|Any CPU.Build.0 = Release|Any CPU
 		{748944E7-1FA4-4C63-9F4A-12A92C0EB481}.Release|x64.ActiveCfg = Release|Any CPU
 		{748944E7-1FA4-4C63-9F4A-12A92C0EB481}.Release|x64.Build.0 = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Debug|x64.Build.0 = Debug|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Jenkins|Any CPU.ActiveCfg = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Jenkins|Any CPU.Build.0 = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Jenkins|x64.ActiveCfg = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Jenkins|x64.Build.0 = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Release|x64.ActiveCfg = Release|Any CPU
-		{90563D62-22F4-47D1-9D47-69F61169C3E2}.Release|x64.Build.0 = Release|Any CPU
 		{9925F118-7FCE-4298-849E-8449AEDD25CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9925F118-7FCE-4298-849E-8449AEDD25CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9925F118-7FCE-4298-849E-8449AEDD25CB}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -181,7 +167,7 @@ Global
 		SolutionGuid = {4CC7CFC5-B00C-442F-BAEC-DFD89AFA1741}
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://tfs.baufest.com:8080/tfs/molinos%20rio%20de%20la%20plata
 		SccLocalPath0 = .
@@ -194,29 +180,26 @@ Global
 		SccProjectUniqueName3 = Molinos.DataAgro.Entities\\Molinos.DataAgro.Entities.csproj
 		SccProjectName3 = Molinos.DataAgro.Entities
 		SccLocalPath3 = Molinos.DataAgro.Entities
-		SccProjectUniqueName4 = Molinos.DataAgro.Mapping\\Molinos.DataAgro.Mapping.csproj
-		SccProjectName4 = Molinos.DataAgro.Mapping
-		SccLocalPath4 = Molinos.DataAgro.Mapping
-		SccProjectUniqueName5 = Molinos.DataAgro.Interfaces\\Molinos.DataAgro.Interfaces.csproj
-		SccProjectName5 = Molinos.DataAgro.Interfaces
-		SccLocalPath5 = Molinos.DataAgro.Interfaces
-		SccProjectUniqueName6 = Molinos.DataAgro.Report\\Molinos.DataAgro.Report.csproj
-		SccProjectName6 = Molinos.DataAgro.Report
-		SccLocalPath6 = Molinos.DataAgro.Report
-		SccProjectUniqueName7 = Molinos.DataAgro.Agent\\Molinos.DataAgro.Agent.csproj
-		SccProjectName7 = Molinos.DataAgro.Agent
-		SccLocalPath7 = Molinos.DataAgro.Agent
-		SccProjectUniqueName8 = Base\u0020de\u0020Datos\\Base\u0020de\u0020Datos.sqlproj
-		SccProjectName8 = Base\u0020de\u0020Datos
-		SccLocalPath8 = Base\u0020de\u0020Datos
-		SccProjectUniqueName9 = Molinos.DataAgro.Build\\Molinos.DataAgro.Build.csproj
-		SccProjectName9 = Molinos.DataAgro.Build
-		SccLocalPath9 = Molinos.DataAgro.Build
-		SccProjectUniqueName10 = Molinos.DataAgro.Test\\Molinos.DataAgro.Test.csproj
-		SccProjectName10 = Molinos.DataAgro.Test
-		SccLocalPath10 = Molinos.DataAgro.Test
-		SccProjectUniqueName11 = Molinos.DataAgro.Repository\\Molinos.DataAgro.Repository.csproj
-		SccProjectName11 = Molinos.DataAgro.Repository
-		SccLocalPath11 = Molinos.DataAgro.Repository
+		SccProjectUniqueName4 = Molinos.DataAgro.Interfaces\\Molinos.DataAgro.Interfaces.csproj
+		SccProjectName4 = Molinos.DataAgro.Interfaces
+		SccLocalPath4 = Molinos.DataAgro.Interfaces
+		SccProjectUniqueName5 = Molinos.DataAgro.Report\\Molinos.DataAgro.Report.csproj
+		SccProjectName5 = Molinos.DataAgro.Report
+		SccLocalPath5 = Molinos.DataAgro.Report
+		SccProjectUniqueName6 = Molinos.DataAgro.Agent\\Molinos.DataAgro.Agent.csproj
+		SccProjectName6 = Molinos.DataAgro.Agent
+		SccLocalPath6 = Molinos.DataAgro.Agent
+		SccProjectUniqueName7 = Base\u0020de\u0020Datos\\Base\u0020de\u0020Datos.sqlproj
+		SccProjectName7 = Base\u0020de\u0020Datos
+		SccLocalPath7 = Base\u0020de\u0020Datos
+		SccProjectUniqueName8 = Molinos.DataAgro.Build\\Molinos.DataAgro.Build.csproj
+		SccProjectName8 = Molinos.DataAgro.Build
+		SccLocalPath8 = Molinos.DataAgro.Build
+		SccProjectUniqueName9 = Molinos.DataAgro.Test\\Molinos.DataAgro.Test.csproj
+		SccProjectName9 = Molinos.DataAgro.Test
+		SccLocalPath9 = Molinos.DataAgro.Test
+		SccProjectUniqueName10 = Molinos.DataAgro.Repository\\Molinos.DataAgro.Repository.csproj
+		SccProjectName10 = Molinos.DataAgro.Repository
+		SccLocalPath10 = Molinos.DataAgro.Repository
 	EndGlobalSection
 EndGlobal

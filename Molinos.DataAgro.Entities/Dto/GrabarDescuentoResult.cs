@@ -1,5 +1,4 @@
-﻿using Mastersoft.Framework.Standard;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -13,8 +12,5 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             Errores = new List<ErrorMessage>();
         }
-
-      
-
     }
 }

@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         ResultIniCondicion TraerTodoCondicion();
 
-        Condicion TraerCondicion(int intCondicionId);
+        CondicionDto TraerCondicion(int intCondicionId);
 
         Resultado GrabarCondicion(Condicion oCondicion);
 

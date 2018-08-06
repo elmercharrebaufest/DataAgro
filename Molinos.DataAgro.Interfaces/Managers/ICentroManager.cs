@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         DatosIniAbmCentro TraerDatosIniciales();
         ResultIniCentro TraerTodoCentro();
-        Centro TraerCentro(int id);
+        CentroDto TraerCentro(int id);
         Resultado GrabarCentro(Centro oCentro);
         Resultado EliminarCentro(int id);
     }

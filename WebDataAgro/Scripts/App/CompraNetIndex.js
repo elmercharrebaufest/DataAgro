@@ -86,8 +86,8 @@ function botonPendiente(dataItem, icono) {
         "'" + dataItem.NoInformaSIO + "'" + ',' +
         "'" + dataItem.TrigoEspecial + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-        "'" + dataItem.DestinoId + "'" + ',' +
-        "'" + dataItem.DestinoDescripcion + "'" + ',' +
+        "'" + dataItem.ClasificacionId + "'" + ',' +
+        "'" + dataItem.DestinoId + "'" + ',' +       
         "'" + dataItem.PlanCanje + "'" + ',' +
         "'" + dataItem.Consignatario + "'" + ',' +
         "'" + dataItem.CantidadCamiones + "'" + ',' +
@@ -103,8 +103,6 @@ function botonPendiente(dataItem, icono) {
         "'" + dataItem.CalidadEspecial + "'" + ',' +
         "'" + dataItem.ValorCalidadEspecial + "'" + ',' +
         "'" + dataItem.EstablecimientoPropio + "'" + ',' +
-        "'" + dataItem.ClasificacionId + "'" + ',' +
-        "'" + dataItem.ClasificacionDescripcion + "'" +
         ')"><i class="fa ' + icono + '"></i></button>';
 }
 
@@ -1518,9 +1516,9 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     }
     
     $("#modalVisualizar").modal('show');
-    var iteraciones = viewModel.Descuentos.length;
+    var iteraciones = viewModel.DescuentosVisualizar.length;
     for (var i = 0; i < iteraciones; i++) {
-        viewModel.Descuentos.pop();
+        viewModel.DescuentosVisualizar.pop();
     }
 
     var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
@@ -1537,10 +1535,10 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
             Importe: descuento.Importe,
             MonedaId: descuento.MonedaId,
             Porcentaje: descuento.Porcentaje,
-            ContratoId: contratoId,
+            ContratoId: descuento.contratoId,
            
         };
-        viewModel.Descuentos.push(descuentoKendo);
+        viewModel.DescuentosVisualizar.push(descuentoKendo);
     });
 }
 

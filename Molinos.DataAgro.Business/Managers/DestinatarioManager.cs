@@ -38,9 +38,15 @@ namespace Molinos.DataAgro.Business
         }
 
 
-        public Destinatario TraerDestinatario(int intDestinatarioId)
+        public DestinatarioDto TraerDestinatario(int intDestinatarioId)
         {
-            return repositorio.Obtener<Destinatario>(intDestinatarioId) ?? new Destinatario();
+            return repositorio.Obtener<Destinatario, DestinatarioDto>(x => x.DestinatarioId == intDestinatarioId, 
+                x => new DestinatarioDto
+                {
+                    DestinatarioId = x.DestinatarioId,
+                    Descripcion = x.Descripcion,
+                    Inhabilitado = x.Inhabilitado
+                }) ?? new DestinatarioDto();
         }
 
 
@@ -64,7 +70,7 @@ namespace Molinos.DataAgro.Business
 
             if (oDestinatario.DestinatarioId != 0)
             {
-                var oDestinatarioSave = TraerDestinatario(oDestinatario.DestinatarioId);
+                var oDestinatarioSave = repositorio.Obtener<Destinatario>(oDestinatario.DestinatarioId);
                 oDestinatarioSave.Descripcion = oDestinatario.Descripcion;
                 oDestinatarioSave.Inhabilitado = oDestinatario.Inhabilitado;
             }

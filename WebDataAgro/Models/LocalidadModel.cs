@@ -44,6 +44,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmLocalidadCrearResult : Resultado
+    {
+        public LocalidadDto Localidad { get; set; }
 
+        public AbmLocalidadCrearResult()
+        {
+            this.Localidad = new LocalidadDto();
+        }
+    }
 }
 

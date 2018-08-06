@@ -29,11 +29,11 @@ namespace WebDataAgro.Models
 
     public class AbmCanalOperacionResult : Resultado
     {
-        public CanalOperacion CanalOperacion { get; set; }
+        public CanalOperacionDto CanalOperacion { get; set; }
 
         public AbmCanalOperacionResult()
         {
-            this.CanalOperacion = new CanalOperacion();
+            this.CanalOperacion = new CanalOperacionDto();
         }
     }
 

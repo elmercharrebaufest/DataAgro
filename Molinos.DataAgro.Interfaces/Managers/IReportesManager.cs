@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces
 
         Resultado GrabarReporte(Reportes oReporte);
 
-        Reportes ObtenerReporte(string identificador);
+        ReportesDto ObtenerReporte(string identificador);
 
         DatosInicialesReportes TraerDatosIniciales(string idActiveDirectory);
 

@@ -81,7 +81,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmLocalidadResult
+                Data = new AbmLocalidadCrearResult
                 {
                     Localidad = mobjLocalidadManager.TraerLocalidad(oParam.LocalidadId)
                 },

@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {        
         ResultIniAreaInfluencia TraerTodoAreaInfluencia();
 
-        AreaInfluencia TraerAreaInfluencia(int intAreaInfluenciaId);
+        AreaInfluenciaDto TraerAreaInfluencia(int intAreaInfluenciaId);
 
         Resultado GrabarAreaInfluencia(AreaInfluencia oAreaInfluencia);
 

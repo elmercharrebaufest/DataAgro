@@ -39,6 +39,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmMaterialCrearResult : Resultado
+    {
+        public MaterialDto Material { get; set; }
 
+        public AbmMaterialCrearResult()
+        {
+            this.Material = new MaterialDto();
+        }
+    }
 }
 

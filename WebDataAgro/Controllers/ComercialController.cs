@@ -89,7 +89,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmComercialResult
+                Data = new AbmComercialCrearResult
                 {
                     Comercial = mobjComercialManager.TraerComercial(oParam.ComercialId)
                 },

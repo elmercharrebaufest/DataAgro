@@ -43,6 +43,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmFijacionDePrecioCrearResult : Resultado
+    {
+        public FijacionDePrecioDto FijacionDePrecio { get; set; }
 
+        public AbmFijacionDePrecioCrearResult()
+        {
+            this.FijacionDePrecio = new FijacionDePrecioDto();
+        }
+    }
 }
 

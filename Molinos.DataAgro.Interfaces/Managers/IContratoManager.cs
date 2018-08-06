@@ -12,9 +12,7 @@ namespace Molinos.DataAgro.Interfaces
         KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId);
 
         DatosIniContrato TraerDatosCombo();
-
-        Contrato TraerContrato(int ContratoId);
-
+        
         GrabarContratoResult GrabarContrato(Contrato oContrato);
 
         GrabarContratoResult ConfirmarContrato(Contrato oContrato);

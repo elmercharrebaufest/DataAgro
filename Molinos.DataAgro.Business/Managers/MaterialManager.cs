@@ -5,9 +5,6 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
@@ -43,9 +40,9 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-        public Material TraerMaterial(int intMaterialId)
+        public MaterialDto TraerMaterial(int intMaterialId)
         {
-            return repositorio.Obtener<Material>(intMaterialId) ?? new Material();
+            return repositorio.Obtener<Material, MaterialDto>(x => x.MaterialId == intMaterialId, x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion}) ?? new MaterialDto();
         }
 
 
@@ -62,7 +59,7 @@ namespace Molinos.DataAgro.Business
 
             if (oMaterial.MaterialId != 0)
             {
-                var oMaterialSave = TraerMaterial(oMaterial.MaterialId);
+                var oMaterialSave = repositorio.Obtener<Material>(oMaterial.MaterialId);
                 oMaterialSave.Codigo = oMaterial.Codigo;
                 oMaterialSave.Descripcion = oMaterial.Descripcion;
             }

@@ -270,13 +270,13 @@ function InicializarElementos() {
         }
     });
 
-    $("#destinoid").kendoDropDownList({
+    $("#destinoId").kendoDropDownList({
         optionLabel: "SELECCIONE EL DESTINO...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
     });
 
-    $("#destinoid").closest('.k-dropdown.k-widget').keydown(function (e) {
+    $("#destinoId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#destinoId").data("kendoDropDownList");
             dropdownlist.text("");
@@ -839,8 +839,7 @@ function CargarLocalidadPorProvincia(value) {
 }
 
 function CrearViewModel() {
-
-        var param = {
+    var param = {
             "proveedorId": null,
             "material": null,
             "materialDesc": null,
@@ -923,50 +922,53 @@ function CrearViewModel() {
             "Descuentos": null,
             "fechaDesdeTopeIdModalPendiente":null,
             "fechaHastaTopeIdModalPendiente":null
-        };
+    };
+    viewModel = kendo.observable({
 
-        viewModel = kendo.observable({
+        Parametros: param,
 
-            Parametros: param,
+        ProveedorCombo: [],
+        ComercialCombo: [],
+        MaterialCombo: [],
+        TipoCombo: [],
+        PrecioMonedaCombo: [],
+        CampanaCombo: [],
+        ProvinciaCombo: [],
+        LocalidadCombo: [],
+        SustentableMonedaCombo: [],
+        EstadoCombo: [],
+        CondicionFijacionCombo: [],
+        StandardCombo: [],
+        EspecialesCombo: [],
+        TipoPeriodoDBCombo:[],
+        TipoDBCombo: [],
 
-            ProveedorCombo: [],
-            ComercialCombo: [],
-            MaterialCombo: [],
-            TipoCombo: [],
-            PrecioMonedaCombo: [],
-            CampanaCombo: [],
-            ProvinciaCombo: [],
-            LocalidadCombo: [],
-            SustentableMonedaCombo: [],
-            EstadoCombo: [],
-            CondicionFijacionCombo: [],
-            StandardCombo: [],
-            EspecialesCombo: [],
-            TipoPeriodoDBCombo:[],
-            TipoDBCombo: [],
+        ComercialComboModalPendiente: [],
+        MaterialComboModalPendiente: [],
+        TipoComboModalPendiente: [],
+        PrecioMonedaComboModalPendiente: [],
+        CampanaComboModalPendiente: [],
+        ProvinciaComboModalPendiente: [],
+        LocalidadComboModalPendiente: [],
+        SustentableMonedaComboModalPendiente: [],
+        Clasificacion: [],        
+        CondicionFijacionComboModalPendiente:[],
+        Destino: [],
+        StandardComboModalPendiente: [],
+        EspecialesComboModalPendiente:[],
+        isControlDisabled: true,
+        Descuentos: [],
+        DescuentosVisualizar:[]
 
-            ComercialComboModalPendiente: [],
-            MaterialComboModalPendiente: [],
-            TipoComboModalPendiente: [],
-            PrecioMonedaComboModalPendiente: [],
-            CampanaComboModalPendiente: [],
-            ProvinciaComboModalPendiente: [],
-            LocalidadComboModalPendiente: [],
-            SustentableMonedaComboModalPendiente: [],
-            Clasificacion: [],        
-            CondicionFijacionComboModalPendiente:[],
-            Destino: [],
-            StandardComboModalPendiente: [],
-            EspecialesComboModalPendiente:[],
-            isControlDisabled: true,
-            Descuentos: []
+    });
 
-        });
+    kendo.bind($("#CrearContrato"), viewModel);
+    kendo.bind($("#CompraNet"), viewModel);
+    kendo.bind($("#modalPendienteDiv"), viewModel);
+    kendo.bind($("#tabla-descuentos"), viewModel);
+    kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
 
-        kendo.bind($("#CrearContrato"), viewModel);
-        kendo.bind($("#CompraNet"), viewModel);
-        kendo.bind($("#modalPendienteDiv"), viewModel);
-        kendo.bind($("#tabla-descuentos"), viewModel);
+
     }
 
 function InicializarDatos() {
@@ -1029,7 +1031,7 @@ function AsignarDatos()
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
-    if ($("#destinoid").data("kendoDropDownList")) $("#destinoid").data("kendoDropDownList").value("1");
+    if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
     if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1")
     var materialId = $('select[id="material"]').val();
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: materialId });

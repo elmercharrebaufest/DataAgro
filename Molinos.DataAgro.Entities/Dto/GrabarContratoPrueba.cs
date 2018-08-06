@@ -1,21 +1,12 @@
-﻿using Mastersoft.Framework.Standard;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Molinos.DataAgro.Entities.Dto;
 
-namespace Molinos.DataAgro.Entities {
+namespace Molinos.DataAgro.Entities
+{
 
-    public class GrabarContratoPrueba {
-
-        public EntityErrors errores { get; set; }
+    public class GrabarContratoPrueba : Resultado
+    {
+        
         public int? ProveedorId { get; set; }
-
-
-        public GrabarContratoPrueba() { 
-
-        }
 
     }
 }

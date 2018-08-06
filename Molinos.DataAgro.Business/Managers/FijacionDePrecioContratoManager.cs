@@ -94,16 +94,10 @@ namespace Molinos.DataAgro.Business.Managers
                     Observacion = x.Observacion
                 }, x => contratoId == 0 || x.ContratoId == contratoId);
         }
-
-
-        public FijacionDePrecioContrato TraerFijacionDePrecio(int intFijacionId)
-        {
-            return repositorio.Obtener<FijacionDePrecioContrato>(intFijacionId) ?? new FijacionDePrecioContrato();
-        }
-
+    
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
         {
-            var oFijacionDePrecioContratoSave = TraerFijacionDePrecio(oFijacion.FijacionDePrecioContratoId);
+            var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.FijacionDePrecioContratoId);
             var oEntityErrors = new GrabarContratoResult();
 
             if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
@@ -171,7 +165,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
             {
-                var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
+                var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
                 if (oFijacionDePrecioSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
@@ -211,7 +205,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFijacionResult ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
+            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
             {
@@ -241,7 +235,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFijacionResult FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionDePrecioContratoId);
+            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
             {
@@ -298,7 +292,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = TraerFijacionDePrecio(oContrato.FijacionDePrecioContratoId);
+            var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.FijacionDePrecioContratoId);
 
             if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado)
             {

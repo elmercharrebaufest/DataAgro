@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         ResultIniMaterial TraerFiltroMaterial(ParamAbmMaterial oParam);
 
-        Material TraerMaterial(int intMaterialId);
+        MaterialDto TraerMaterial(int intMaterialId);
 
         Resultado GrabarMaterial(Material oMaterial);
 

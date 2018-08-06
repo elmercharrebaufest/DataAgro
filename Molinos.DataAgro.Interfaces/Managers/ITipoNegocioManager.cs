@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         ResultIniTipoNegocio TraerTodo();
 
-        TipoNegocio TraerTipoNegociod(int TipoNegocioId);
+        TipoNegocioDto TraerTipoNegociod(int TipoNegocioId);
 
         Resultado GrabarTipoNegocio(TipoNegocio oTipoNegocio);
 

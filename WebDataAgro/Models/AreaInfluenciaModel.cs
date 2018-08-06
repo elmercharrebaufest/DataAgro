@@ -30,11 +30,11 @@ namespace WebDataAgro.Models
 
     public class AbmAreaInfluenciaResult : Resultado
     {
-        public AreaInfluencia AreaInfluencia { get; set; }
+        public AreaInfluenciaDto AreaInfluencia { get; set; }
 
         public AbmAreaInfluenciaResult()
         {
-            this.AreaInfluencia = new AreaInfluencia();
+            this.AreaInfluencia = new AreaInfluenciaDto();
         }
     }
 

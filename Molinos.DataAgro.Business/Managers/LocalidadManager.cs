@@ -71,12 +71,10 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-        public Localidad TraerLocalidad(int intLocalidadId)
+        public LocalidadDto TraerLocalidad(int intLocalidadId)
         {
-            return repositorio.Obtener<Localidad>(intLocalidadId);
+            return repositorio.Obtener<Localidad, LocalidadDto>(x => x.LocalidadId == intLocalidadId, x => new LocalidadDto { CodLocalidad = x.CodLocalidad, LocalidadId = x.LocalidadId, Nombre = x.Nombre});
         }
-
-
         public Resultado GrabarLocalidad(Localidad oLocalidad)
         {
             var oEntityErrors = new Resultado();
@@ -90,7 +88,7 @@ namespace Molinos.DataAgro.Business
             
             if (oLocalidad.LocalidadId != 0)
             {
-                var oLocalidadSave = TraerLocalidad(oLocalidad.LocalidadId);
+                var oLocalidadSave = repositorio.Obtener<Localidad>(oLocalidad.LocalidadId);
                 oLocalidadSave.CodLocalidad = oLocalidad.CodLocalidad;
                 oLocalidadSave.Nombre = oLocalidad.Nombre;
                 oLocalidadSave.ProvinciaId = oLocalidad.ProvinciaId;
@@ -130,9 +128,9 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
-        public List<Localidad> ListarLocalidad(string localidad)
+        public List<LocalidadDto> ListarLocalidad(string localidad)
         {
-            return repositorio.Listar<Localidad>(x => localidad == "" || x.Nombre.Contains(localidad), 15);
+            return repositorio.Listar<Localidad,LocalidadDto>(x=>new LocalidadDto { LocalidadId = x.LocalidadId, Nombre= x.Nombre} ,x => localidad == "" || x.Nombre.Contains(localidad), 15);
         }        
     }
 }

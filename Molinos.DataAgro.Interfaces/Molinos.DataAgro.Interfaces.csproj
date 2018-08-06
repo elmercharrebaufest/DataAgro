@@ -129,7 +129,6 @@
     <Compile Include="Managers\IFijacionDePrecioContratoManager.cs" />
     <Compile Include="Managers\IFijacionDePrecioManager.cs" />
     <Compile Include="Managers\IInformeComercialManager.cs" />
-    <Compile Include="Managers\IMonedaManager.cs" />
     <Compile Include="Managers\IProveedorManager.cs" />
     <Compile Include="Managers\IDestinatarioManager.cs" />
     <Compile Include="Managers\IHomeManager.cs" />
@@ -137,7 +136,6 @@
     <Compile Include="Managers\IMaterialManager.cs" />
     <Compile Include="Managers\IProvinciaManager.cs" />
     <Compile Include="Managers\IReportesManager.cs" />
-    <Compile Include="Managers\IRG2300Manager.cs" />
     <Compile Include="Managers\IRiesgoComercialManager.cs" />
     <Compile Include="Managers\ITipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

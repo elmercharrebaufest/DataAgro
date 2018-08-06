@@ -5,7 +5,6 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -23,19 +22,19 @@ namespace Molinos.DataAgro.Business
             this.repositorio = repositorio;
         }
 
-        public Campaña TraerCampania(int campaniaId)
+        public CampañaDto TraerCampania(int campaniaId)
         {
-            return repositorio.Obtener<Campaña>(campaniaId);
+            return repositorio.Obtener<Campaña, CampañaDto>(x => x.CampañaId == campaniaId, x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
         }
 
-        public List<Campaña> TraerCampañasActivas()
+        public List<CampañaDto> TraerCampañasActivas()
         {
-            return repositorio.Listar<Material, Campaña>(x => x.Campaña);
+            return repositorio.Listar<Material, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.CampañaId != null);
         }
         
-        public List<Material> TraerMaterialPorCampaña(int campanaId)
+        public List<MaterialDto> TraerMaterialPorCampaña(int campanaId)
         {
-            return repositorio.Listar<Material>(x => x.CampañaId == campanaId);
+            return repositorio.Listar<Material, MaterialDto>(x => new MaterialDto {CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.CampañaId == campanaId);
         }
 
         public CampañaHome TraerCampañaHome(int idComercial, List<int> equipo)
@@ -62,23 +61,19 @@ namespace Molinos.DataAgro.Business
             return list;
         }
 
-        public List<Campaña> TraerCampañasPorGrano(int materialId)
+        public List<CampañaDto> TraerCampañasPorGrano(int materialId)
         {
-            return repositorio.Listar<CampañaMaterialHistorico, Campaña>(x => x.Campaña, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
+            return repositorio.Listar<CampañaMaterialHistorico, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId,Descripcion= x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
 
-        public List<Campaña> TraerCampañaPorMaterial(int materialId)
+        public List<CampañaDto> TraerCampañaPorMaterial(int materialId)
         {
-            return repositorio.Listar<Material, Campaña>(x => x.Campaña, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
-        }
-        public List<CalidadEspecial> TraerCalidadPorMaterial(int materialId)
-        {
-            return repositorio.Listar<CalidadEspecial>(x => x.MaterialId == materialId);
+            return repositorio.Listar<Material, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
 
-        public CampañaMaterial TraerCampañaMaterial(int campañaId, int proveedorId, int materialId)
+        public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)
         {
-            return repositorio.Obtener<CampañaMaterial>(x => x.CampañaId == campañaId && x.ProveedorId == proveedorId && x.MaterialId == materialId) ?? new CampañaMaterial();
+            return repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto {Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.MaterialId == materialId);
         }
     }
     

@@ -220,16 +220,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-        public ActionResult TraerContacto(int proveedorId)
-        {
-            return new JsonResult()
-            {
-                Data = mobjProveedorManager.TraerContacto(proveedorId),
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
+        
         public ActionResult TraerRazonSocial(string cuit)
         {
             return new JsonResult()

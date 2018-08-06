@@ -71,7 +71,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmMaterialResult
+                Data = new AbmMaterialCrearResult
                 {
                     Material = mobjMaterialManager.TraerMaterial(oParam.MaterialId)
                 },

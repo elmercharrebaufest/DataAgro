@@ -6,7 +6,6 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
@@ -39,9 +38,9 @@ namespace Molinos.DataAgro.Business
         }
 
 
-        public Provincia TraerProvincia(int intProvinciaId)
+        public ProvinciaDto TraerProvincia(int intProvinciaId)
         {
-            return repositorio.Obtener<Provincia>(intProvinciaId) ?? new Provincia();
+            return repositorio.Obtener<Provincia, ProvinciaDto>(x=>x.ProvinciaId == intProvinciaId, x=> new ProvinciaDto {ProvinciaId=x.ProvinciaId, Nombre=x.Nombre }) ?? new ProvinciaDto();
         }
 
 
@@ -58,7 +57,7 @@ namespace Molinos.DataAgro.Business
 
             if (oProvincia.ProvinciaId != 0)
             {
-                var oProvinciaSave = TraerProvincia(oProvincia.ProvinciaId);
+                var oProvinciaSave = repositorio.Obtener<Provincia>(oProvincia.ProvinciaId);
                 oProvinciaSave.Nombre = oProvincia.Nombre;
             }
             else
@@ -98,9 +97,9 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
-        public List<Provincia> ListarProvincia(string provincia)
+        public List<ProvinciaDto> ListarProvincia(string provincia)
         {
-            return repositorio.Listar<Provincia>(x => provincia == "" || x.Nombre.Contains(provincia));
+            return repositorio.Listar<Provincia, ProvinciaDto>(x => new ProvinciaDto { Nombre = x.Nombre, ProvinciaId = x.ProvinciaId },x => provincia == "" || x.Nombre.Contains(provincia));
         }
     }
 }

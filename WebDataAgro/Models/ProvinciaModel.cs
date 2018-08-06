@@ -37,6 +37,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmProvinciaCrearResult : Resultado
+    {
+        public ProvinciaDto Provincia { get; set; }
 
+        public AbmProvinciaCrearResult()
+        {
+            this.Provincia = new ProvinciaDto();
+        }
+    }
 }
 

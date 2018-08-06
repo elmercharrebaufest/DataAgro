@@ -5,8 +5,6 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
@@ -33,9 +31,9 @@ namespace Molinos.DataAgro.Business
             };
         }
         
-        public AreaInfluencia TraerAreaInfluencia(int intAreaInfluenciaId)
+        public AreaInfluenciaDto TraerAreaInfluencia(int intAreaInfluenciaId)
         {
-            return repositorio.Obtener<AreaInfluencia>(intAreaInfluenciaId) ?? new AreaInfluencia();
+            return repositorio.Obtener<AreaInfluencia, AreaInfluenciaDto>(x => x.AreaInfluenciaId == intAreaInfluenciaId, x => new AreaInfluenciaDto { AreaInfluenciaId = x.AreaInfluenciaId, Descripcion = x.Descripcion }) ?? new AreaInfluenciaDto();
         }
         
         public Resultado GrabarAreaInfluencia(AreaInfluencia oAreaInfluencia)
@@ -51,7 +49,7 @@ namespace Molinos.DataAgro.Business
             
             if (oAreaInfluencia.AreaInfluenciaId != 0)
             {
-                var oAreaInfluenciaSave = TraerAreaInfluencia(oAreaInfluencia.AreaInfluenciaId);
+                var oAreaInfluenciaSave = repositorio.Obtener<AreaInfluencia>(oAreaInfluencia.AreaInfluenciaId);
                 oAreaInfluenciaSave.Descripcion = oAreaInfluencia.Descripcion;
             }
             else

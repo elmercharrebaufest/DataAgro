@@ -39,9 +39,10 @@ namespace Molinos.DataAgro.Business
         }
 
 
-        public Condicion TraerCondicion(int intCondicionId)
+        public CondicionDto TraerCondicion(int intCondicionId)
         {
-            return repositorio.Obtener<Condicion>(intCondicionId) ?? new Condicion();
+            return repositorio.Obtener<Condicion, CondicionDto>(x => x.CondicionId == intCondicionId, 
+                x => new CondicionDto { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = x.Inhabilitado}) ?? new CondicionDto();
         }
 
         public Resultado GrabarCondicion(Condicion oCondicion)
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Business
 
             if (oCondicion.CondicionId != 0)
             {
-                var oCondicionSave = TraerCondicion(oCondicion.CondicionId);
+                var oCondicionSave = repositorio.Obtener<Condicion>(oCondicion.CondicionId);
 
                 oCondicionSave.Descripcion = oCondicion.Descripcion;
                 oCondicionSave.Inhabilitado = oCondicion.Inhabilitado;

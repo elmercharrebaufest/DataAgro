@@ -50,9 +50,17 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-        public FijacionDePrecio TraerFijacionDePrecio(int intFijacionId)
+        public FijacionDePrecioDto TraerFijacionDePrecio(int intFijacionId)
         {
-            return repositorio.Obtener<FijacionDePrecio>(intFijacionId) ?? new FijacionDePrecio();
+            return repositorio.Obtener<FijacionDePrecio, FijacionDePrecioDto>(x => x.FijacionId == intFijacionId, 
+                x => new FijacionDePrecioDto
+                {
+                    Fecha = x.Fecha,
+                    FijacionId = x.FijacionId,
+                    MaterialId = x.MaterialId,
+                    Precio = x.Precio,
+                    ProveedorId = x.ProveedorId
+                }) ?? new FijacionDePrecioDto();
         }
 
 
@@ -69,7 +77,7 @@ namespace Molinos.DataAgro.Business
             
             if (oFijacionDePrecio.FijacionId != 0)
             {
-                var oFijacionDePrecioSave = TraerFijacionDePrecio(oFijacionDePrecio.FijacionId);
+                var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecio>(oFijacionDePrecio.FijacionId);
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
                 oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;

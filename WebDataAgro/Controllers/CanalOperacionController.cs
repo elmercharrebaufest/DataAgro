@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -45,14 +46,12 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Aplicar(AbmCanalOperacionParam oParam)
         {
-            var model = new AbmCanalOperacionResult
-            {
-                CanalOperacion = mobjCanalOperacionManager.TraerCanalOperacion(oParam.CanalOperacionId)
-            };
-
             return new JsonResult()
             {
-                Data = model,
+                Data = new AbmCanalOperacionResult
+                {
+                    CanalOperacion = mobjCanalOperacionManager.TraerCanalOperacion(oParam.CanalOperacionId)
+                },
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -68,7 +67,7 @@ namespace WebDataAgro.Controllers
 
             if (model.HayErrores)
             {
-                model.CanalOperacion = oCanalOperacion;
+                model.CanalOperacion = new CanalOperacionDto { CanalOperacionId = oCanalOperacion.CanalOperacionId, Descripcion = oCanalOperacion.Descripcion, Inhabilitado = oCanalOperacion.Inhabilitado};
             }
 
             return new JsonResult()

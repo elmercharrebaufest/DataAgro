@@ -43,6 +43,16 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmComercialCrearResult : Resultado
+    {
+        public ComercialDto Comercial { get; set; }
+
+        public AbmComercialCrearResult()
+        {
+            this.Comercial = new ComercialDto();
+        }
+    }
+
     public class ResultIniPostItModel : Resultado
     {
         public string Texto { get; set; }

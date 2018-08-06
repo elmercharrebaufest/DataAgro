@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Interfaces
 
         ResultIniComercial TraerTodoComercial();
 
-        Comercial TraerComercial(int intComercialId);
+        ComercialDto TraerComercial(int intComercialId);
 
         List<ComercialCombo> ObtenerComerciales(List<int> equipo);
 
@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Interfaces
 
         Resultado EliminarComercial(int intComercialId);
 
-        List<Comercial> ListarComercial(string comercial, List<int> comerciales);
+        List<ComercialDto> ListarComercial(string comercial, List<int> comerciales);
         
         bool ComercialExiste(string ActiveDirectoryId);
 

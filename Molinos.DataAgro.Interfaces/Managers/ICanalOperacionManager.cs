@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         ResultIniCanalOperacion TraerTodoCanalOperacion();
 
-        CanalOperacion TraerCanalOperacion(int intCanalOperacionId);
+        CanalOperacionDto TraerCanalOperacion(int intCanalOperacionId);
 
         Resultado GrabarCanalOperacion(CanalOperacion oCanalOperacion);
 

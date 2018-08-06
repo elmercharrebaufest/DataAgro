@@ -10,10 +10,8 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -174,15 +172,10 @@ namespace Molinos.DataAgro.Business.Managers
             return oErrorMessages;
         }
 
-        public Contrato TraerContrato(int contratoId)
-        {
-            return repositorio.Obtener<Contrato>(contratoId);
-        }
-
         public GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = TraerContrato(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado))
             {
@@ -213,7 +206,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContrato.ContratoId != 0)
             {
-                oContratoSave = TraerContrato(oContrato.ContratoId);
+                oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
                 if (oContratoSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
@@ -310,7 +303,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            var oContratoSave = TraerContrato(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta))
             {
@@ -336,7 +329,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult FinalizarContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = TraerContrato(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
@@ -354,7 +347,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
 
-                    oContratoSave = TraerContrato(oContrato.ContratoId);
+                    oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     try
@@ -407,7 +400,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = TraerContrato(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado))
             {

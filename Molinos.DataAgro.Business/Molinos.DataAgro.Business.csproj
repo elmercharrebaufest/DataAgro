@@ -158,11 +158,9 @@
     <Compile Include="Managers\InformeComercialManager.cs" />
     <Compile Include="Managers\LocalidadManager.cs" />
     <Compile Include="Managers\MaterialManager.cs" />
-    <Compile Include="Managers\MonedaManager.cs" />
     <Compile Include="Managers\ProveedorManager.cs" />
     <Compile Include="Managers\ProvinciaManager.cs" />
     <Compile Include="Managers\ReportesManager.cs" />
-    <Compile Include="Managers\RG2300Manager.cs" />
     <Compile Include="Managers\RiesgoComercialManager.cs" />
     <Compile Include="Managers\TipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,10 +186,6 @@
     <ProjectReference Include="..\Molinos.DataAgro.Interfaces\Molinos.DataAgro.Interfaces.csproj">
       <Project>{748944e7-1fa4-4c63-9f4a-12a92c0eb481}</Project>
       <Name>Molinos.DataAgro.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Molinos.DataAgro.Mapping\Molinos.DataAgro.Mapping.csproj">
-      <Project>{90563d62-22f4-47d1-9d47-69f61169c3e2}</Project>
-      <Name>Molinos.DataAgro.Mapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
       <Project>{1780ae7c-4c4c-49a2-96fa-19a86db3d220}</Project>

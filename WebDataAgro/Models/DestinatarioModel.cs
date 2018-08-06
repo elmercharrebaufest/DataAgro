@@ -37,6 +37,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmDestinatarioCrearResult : Resultado
+    {
+        public DestinatarioDto Destinatario { get; set; }
 
+        public AbmDestinatarioCrearResult()
+        {
+            this.Destinatario = new DestinatarioDto();
+        }
+    }
 }
 

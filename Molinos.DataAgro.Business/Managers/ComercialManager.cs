@@ -71,9 +71,20 @@ namespace Molinos.DataAgro.Business
             };
         }
 
-        public Comercial TraerComercial(int intComercialId)
+        public ComercialDto TraerComercial(int intComercialId)
         {
-            return repositorio.Obtener<Comercial>(intComercialId) ?? new Comercial();
+            return repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x => 
+                new ComercialDto
+                {
+                    IdActiveDirectory = x.IdActiveDirectory,
+                    GrupoDeComprasId = x.GrupoDeComprasId,
+                    Administrador = x.Administrador,
+                    Apellido = x.Apellido,
+                    ComercialId = x.ComercialId,
+                    EmpleadorACargoId = x.EmpleadorACargoId,
+                    Nombres = x.Nombres,
+                    PerfilId = x.PerfilId
+                }) ?? new ComercialDto();
         }
 
 
@@ -139,7 +150,7 @@ namespace Molinos.DataAgro.Business
 
             if (oComercial.ComercialId != 0)
             {
-                var oComercialSave = TraerComercial(oComercial.ComercialId);
+                var oComercialSave = repositorio.Obtener<Comercial>(oComercial.ComercialId);
                 oComercialSave.Apellido = oComercial.Apellido;
                 oComercialSave.Nombres = oComercial.Nombres;
                 oComercialSave.Perfil = oComercial.Perfil;
@@ -169,9 +180,7 @@ namespace Molinos.DataAgro.Business
 
         private GrupoDeCompras VerificarGrupoComercial(string grupoDeCompra)
         {
-            var grCom = repositorio.Obtener<GrupoDeCompras>(x => x.Descripcion == grupoDeCompra);
-
-            return grCom ?? repositorio.Agregar(new GrupoDeCompras()
+            return repositorio.Obtener<GrupoDeCompras>(x => x.Descripcion == grupoDeCompra) ?? repositorio.Agregar(new GrupoDeCompras()
             {
                 Descripcion = grupoDeCompra,
             });
@@ -207,9 +216,10 @@ namespace Molinos.DataAgro.Business
             return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId));
         }
 
-        public List<Comercial> ListarComercial(string comercial, List<int> comerciales)
+        public List<ComercialDto> ListarComercial(string comercial, List<int> comerciales)
         {
-            return repositorio.Listar<Comercial>(x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
+            return repositorio.Listar<Comercial, ComercialDto>( x => new ComercialDto {ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido },
+                x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
         }
 
         public EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId)

@@ -8,17 +8,17 @@ namespace Molinos.DataAgro.Interfaces
     {
         CampañaHome TraerCampañaHome(int idComercial, List<int> equipo);
 
-        List<Campaña> TraerCampañasActivas();
+        List<CampañaDto> TraerCampañasActivas();
 
-        List<Material> TraerMaterialPorCampaña(int CampañaId);
+        List<MaterialDto> TraerMaterialPorCampaña(int CampañaId);
 
-        List<Campaña> TraerCampañaPorMaterial(int MaterialId);
+        List<CampañaDto> TraerCampañaPorMaterial(int MaterialId);
 
-        List<Campaña> TraerCampañasPorGrano(int materialId);
+        List<CampañaDto> TraerCampañasPorGrano(int materialId);
 
-        List<CalidadEspecial> TraerCalidadPorMaterial(int MaterialId);
+        List<CalidadEspecialDto> TraerCalidadPorMaterial(int MaterialId);
 
-        Campaña TraerCampania(int CampaniaId);
+        CampañaDto TraerCampania(int CampaniaId);
 
     }
 }

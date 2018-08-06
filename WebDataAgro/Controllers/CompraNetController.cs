@@ -234,15 +234,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerContrato(string contratoId)
-        {
-            return new JsonResult()
-            {
-                Data = mobjContratoManager.TraerContrato(Convert.ToInt32(contratoId)),
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
         [HttpPost]
         public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {

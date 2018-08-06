@@ -63,7 +63,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmDestinatarioResult
+                Data = new AbmDestinatarioCrearResult
                 {
                     Destinatario = mobjDestinatarioManager.TraerDestinatario(oParam.DestinatarioId)
                 },

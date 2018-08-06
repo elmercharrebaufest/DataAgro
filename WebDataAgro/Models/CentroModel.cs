@@ -31,11 +31,11 @@ namespace WebDataAgro.Models
 
     public class AbmCentroResult : Resultado
     {
-        public Centro Centro { get; set; }
+        public CentroDto Centro { get; set; }
 
         public AbmCentroResult()
         {
-            this.Centro = new Centro();
+            this.Centro = new CentroDto();
         }
     }
 

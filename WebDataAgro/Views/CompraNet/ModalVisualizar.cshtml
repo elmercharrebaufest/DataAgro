@@ -156,34 +156,29 @@
                             <span id="visualizar_bolsa"></span>
                         </div>
                     </div>
-                    <div id="descuentosDivVisualizar">
-
-
+                    <div id="descuentosDivVisualizar" class="row marginCero clearfix col-xs-12 noPadding">
                         <div id="descuentosDivVisualizar">
-                            <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">                               
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
+                            <div id="tabla-descuentos-visualizar" data-template="div-template-visualizar" data-bind="source:DescuentosVisualizar">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
-
-                            <script id="div-template" type="text/x-kendo-template">
-                                <div>
-                                    <div><strong> Descuentos #: TipoPeriodoDBDesc#</strong></div><br />
-                                    <div>#: TipoDBDesc#</div>
-                                    <div data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </div>
-                                    <div data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</div><br />
-                                    <div>Importe #:Importe#</div>
-                                    <div>#:MonedaId#</div>
-                                    <div>Porc #:Porcentaje#</div>
-                                    <br /><br />
+                            <script id="div-template-visualizar" type="text/x-kendo-template">
+                                <div class="row marginCero campo campoAdicionales">
+                                    <span style="float:left;"><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span>
+                                    <span style="float:right;">#: TipoDBDesc#</span><br />
+                                    <span style="float:left;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Desde</strong> #: FechaDesde#&nbsp; </span>
+                                    <span style="float:left;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta</strong> #:FechaHasta#</span>
+                                    <span><strong>Importe </strong>#:Importe# #:MonedaId#</span>
+                                    <span></span>
+                                    <span><strong>Porc</strong> #:Porcentaje#</span>
                                 </div>
                             </script>
                         </div>
-
                     </div>
                     <div id="desdeHastaFijacionDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales">
                         <h3>Fecha Desde - Fecha Hasta (Fijacion):</h3>

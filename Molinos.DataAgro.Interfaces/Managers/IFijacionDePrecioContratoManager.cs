@@ -9,8 +9,6 @@ namespace Molinos.DataAgro.Interfaces
 
         ResultIniFijacionDePrecioContrato TraerTodoFijacionDePrecio();
 
-        FijacionDePrecioContrato TraerFijacionDePrecio(int intFijacionId);
-
         GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion);
 
         ResultIniFijacionDePrecioContrato TraerFijacionDePrecioContrato(int ContratoId);

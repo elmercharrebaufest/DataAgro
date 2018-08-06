@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -64,11 +65,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
-
-
+        
         public ActionResult Aplicar(AbmAreaInfluenciaParam oParam)
         {
             var model = new AbmAreaInfluenciaResult
@@ -93,7 +90,7 @@ namespace WebDataAgro.Controllers
 
             if (model.HayErrores)
             {
-                model.AreaInfluencia = oAreaInfluencia;
+                model.AreaInfluencia = new AreaInfluenciaDto { AreaInfluenciaId = oAreaInfluencia.AreaInfluenciaId, Descripcion = oAreaInfluencia.Descripcion};
             }
 
             return new JsonResult()

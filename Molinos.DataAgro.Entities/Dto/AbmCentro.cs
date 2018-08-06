@@ -10,11 +10,11 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class DataAbmCentro : Resultado
     {
-        public Centro Centro { get; set; }
+        public CentroDto Centro { get; set; }
 
         public DataAbmCentro()
         {
-            Centro = new Centro();
+            Centro = new CentroDto();
         }
     }
     

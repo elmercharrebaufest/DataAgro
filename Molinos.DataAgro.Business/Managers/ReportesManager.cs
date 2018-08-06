@@ -6,7 +6,6 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 
@@ -44,9 +43,9 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public Reportes ObtenerReporte(string identificador)
+        public ReportesDto ObtenerReporte(string identificador)
         {
-            return repositorio.Obtener<Reportes>(identificador);
+            return repositorio.Obtener<Reportes,ReportesDto>(x=>x.Identificador == identificador, x=> new ReportesDto { Identificador= x.Identificador, Contenido=x.Contenido, FileName=x.FileName});
         }
 
         public DatosInicialesReportes TraerDatosIniciales(string idActiveDirectory)

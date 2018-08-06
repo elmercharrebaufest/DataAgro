@@ -64,7 +64,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmCondicionResult
+                Data = new AbmCondicionCrearResult
                 {
                     Condicion = mobjCondicionManager.TraerCondicion(oParam.CondicionId)
                 },

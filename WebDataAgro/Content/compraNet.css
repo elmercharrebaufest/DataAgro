@@ -492,3 +492,7 @@ body.modal-open {
         display: none;
     }
 }
+
+#tabla-descuentos-visualizar .campo span {
+    float: none;
+}

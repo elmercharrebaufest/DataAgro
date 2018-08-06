@@ -39,9 +39,15 @@ namespace Molinos.DataAgro.Business
         }
 
 
-        public CanalOperacion TraerCanalOperacion(int intCanalOperacionId)
+        public CanalOperacionDto TraerCanalOperacion(int intCanalOperacionId)
         {
-            return repositorio.Obtener<CanalOperacion>(intCanalOperacionId) ?? new CanalOperacion();
+            return repositorio.Obtener<CanalOperacion, CanalOperacionDto>(x => x.CanalOperacionId == intCanalOperacionId,
+                x => new CanalOperacionDto
+                {
+                    CanalOperacionId = x.CanalOperacionId,
+                    Descripcion = x.Descripcion,
+                    Inhabilitado = x.Inhabilitado
+                }) ?? new CanalOperacionDto();
         }
 
 
@@ -63,7 +69,7 @@ namespace Molinos.DataAgro.Business
             
             if (oCanalOperacion.CanalOperacionId != 0)
             {
-                var oCanalOperacionSave = TraerCanalOperacion(oCanalOperacion.CanalOperacionId);
+                var oCanalOperacionSave = repositorio.Obtener<CanalOperacion>(oCanalOperacion.CanalOperacionId);
                 oCanalOperacionSave.Descripcion = oCanalOperacion.Descripcion;
                 oCanalOperacionSave.Inhabilitado = oCanalOperacion.Inhabilitado;
             }

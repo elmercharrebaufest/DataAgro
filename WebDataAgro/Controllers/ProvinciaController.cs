@@ -55,7 +55,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmProvinciaResult
+                Data = new AbmProvinciaCrearResult
                 {
                     Provincia = mobjProvinciaManager.TraerProvincia(oParam.ProvinciaId)
                 },

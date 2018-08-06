@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {        
         ResultIniDestinatario TraerTodoDestinatario();
 
-        Destinatario TraerDestinatario(int intDestinatarioId);
+        DestinatarioDto TraerDestinatario(int intDestinatarioId);
 
         Resultado GrabarDestinatario(Destinatario oDestinatario);
 

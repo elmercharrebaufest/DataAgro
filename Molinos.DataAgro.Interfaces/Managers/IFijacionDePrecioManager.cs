@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces
 
         ResultIniFijacionDePrecio TraerTodoFijacionDePrecio();
 
-        FijacionDePrecio TraerFijacionDePrecio(int intFijacionId);
+        FijacionDePrecioDto TraerFijacionDePrecio(int intFijacionId);
 
         Resultado GrabarFijacionDePrecio(FijacionDePrecio oFijacionDePrecio, string idActiveDirectory);
 

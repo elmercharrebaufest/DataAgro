@@ -5,9 +5,6 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
@@ -40,9 +37,9 @@ namespace Molinos.DataAgro.Business
             return oResult;
         }
 
-        public TipoNegocio TraerTipoNegociod(int tipoNegocioId)
+        public TipoNegocioDto TraerTipoNegociod(int tipoNegocioId)
         {
-            return repositorio.Obtener<TipoNegocio>(tipoNegocioId) ?? new TipoNegocio();
+            return repositorio.Obtener<TipoNegocio, TipoNegocioDto>(x => x.TipoNegocioId == tipoNegocioId, x=> new TipoNegocioDto(){TipoNegocioId = x.TipoNegocioId,Descripcion =x.Descripcion}) ?? new TipoNegocioDto();
         }
 
         public Resultado GrabarTipoNegocio(TipoNegocio oTipoNegocio)
@@ -58,7 +55,7 @@ namespace Molinos.DataAgro.Business
 
             if (oTipoNegocio.TipoNegocioId != 0)
             {
-                var oTipoNegocioSave = TraerTipoNegociod(oTipoNegocio.TipoNegocioId);
+                var oTipoNegocioSave = repositorio.Obtener<TipoNegocio>(oTipoNegocio.TipoNegocioId);
                 oTipoNegocioSave.Descripcion = oTipoNegocio.Descripcion;
             }
             else

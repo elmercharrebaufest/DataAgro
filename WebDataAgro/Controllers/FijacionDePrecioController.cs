@@ -67,7 +67,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = new AbmFijacionDePrecioResult
+                Data = new AbmFijacionDePrecioCrearResult
                 {
                     FijacionDePrecio = mobjFijacionDePrecioManager.TraerFijacionDePrecio(oParam.FijacionId)
                 },

@@ -12,12 +12,12 @@ namespace Molinos.DataAgro.Interfaces
 
         ResultIniLocalidad TraerLocalidadPorProvincia(int ProvinciaId);
 
-        Localidad TraerLocalidad(int intLocalidadId);
+        LocalidadDto TraerLocalidad(int intLocalidadId);
 
         Resultado GrabarLocalidad(Localidad oLocalidad);
 
         Resultado EliminarLocalidad(int intLocalidadId);
 
-        List<Localidad> ListarLocalidad(string localidad);
+        List<LocalidadDto> ListarLocalidad(string localidad);
     }
 }

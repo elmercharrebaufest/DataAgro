@@ -8,13 +8,13 @@ namespace Molinos.DataAgro.Interfaces
     {
         ResultIniProvincia TraerTodoProvincia();
 
-        Provincia TraerProvincia(int intProvinciaId);
+        ProvinciaDto TraerProvincia(int intProvinciaId);
 
         Resultado GrabarProvincia(Provincia oProvincia);
 
         Resultado EliminarProvincia(int intProvinciaId);
 
-        List<Provincia> ListarProvincia(string provincia);
+        List<ProvinciaDto> ListarProvincia(string provincia);
     }
 }
 

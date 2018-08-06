@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
 
         DatosIniProveedor TraerDatosCombo(int ProveedorId);
 
-        List<Localidad> TraerLocalidad(int Id);
+        List<LocalidadDto> TraerLocalidad(int Id);
 
         DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(string Cuit);
 
@@ -23,9 +23,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarRecordatorio(ActividadInsetarIni oParam);
 
         Resultado EliminarRecordatorio(int Id);
-
-        List<ContactoComercial> TraerContacto(int ProveedorId);
-
+        
         GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
         StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string ActividadId);
@@ -38,10 +36,10 @@ namespace Molinos.DataAgro.Interfaces
 
         ProveedorQry TraerProveedorPorCuit(string cuit);
 
-        Proveedor TraerProveedor(int? proveedorId);
+        ProveedorDto TraerProveedor(int? proveedorId);
 
         List<BusquedaHome> DevolverProveedores(string filtro);
-        List<Proveedor> ListarProveedor(string text);
+        List<ProveedorDto> ListarProveedor(string text);
 
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
 

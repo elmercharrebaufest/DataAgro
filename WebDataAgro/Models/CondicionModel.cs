@@ -37,6 +37,14 @@ namespace WebDataAgro.Models
         }
     }
 
+    public class AbmCondicionCrearResult : Resultado
+    {
+        public CondicionDto Condicion { get; set; }
 
+        public AbmCondicionCrearResult()
+        {
+            this.Condicion = new CondicionDto();
+        }
+    }
 }
 

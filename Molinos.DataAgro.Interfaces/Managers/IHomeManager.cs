@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Interfaces
 
         ExportAll ExportarAll(List<int> Ids, string idActiveDirectory);
 
-        PostIt TraerTexto(int idComercial);
+        PostItDto TraerTexto(int idComercial);
 
         GrabarPostItResult GuardarPostIt(PostIt post);
     }
