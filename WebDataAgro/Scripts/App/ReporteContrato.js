@@ -1,12 +1,9 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     kendo.culture("es-AR");
     CreateGridInformeCompraNet();
 });
 
-
 function CreateGridInformeCompraNet() {
-    
     var defaultFilter = { field: "Estado_Contrato", operator: "eq", value: "Finalizado" };
 
     kendo.ui.FilterMultiCheck.prototype.options.messages =
@@ -34,7 +31,7 @@ function CreateGridInformeCompraNet() {
                 id: 'Id',
                 fields: {
                     Cuit: { type: "number" },
-                    Negocio: {type:"number"},
+                    Negocio: { type: "number" },
                     Fecha: { type: "date" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
@@ -48,11 +45,11 @@ function CreateGridInformeCompraNet() {
                     Dolarizado: { type: "boolean" },
                     NoInformaSIO: { type: "boolean" },
                     TrigoEspecial: { type: "boolean" },
-                    DesdeFijacion: {type:"date"},
+                    DesdeFijacion: { type: "date" },
                 }
             },
         },
-                
+
         serverPaging: true,
         serverSorting: true,
         sort: [{ field: "Fecha", dir: "desc" }],
@@ -75,7 +72,6 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
-  
         },
         columns: [
             {
@@ -85,26 +81,25 @@ function CreateGridInformeCompraNet() {
                             format: "{0:0}"
                         });
                     }
-                }, template: function(dataItem)
-                {
-                if (dataItem.Estado === 1) {
-                    return '<div class="statuspendiente "></div>' + dataItem.Cuit;
+                }, template: function (dataItem) {
+                    if (dataItem.Estado === 1) {
+                        return '<div class="statuspendiente "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 2) {
-                    return '<div class="statusconfirmado "></div>' + dataItem.Cuit;
+                        return '<div class="statusconfirmado "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 3) {
-                    return '<div class="statusoferta "></div>' + dataItem.Cuit;
+                        return '<div class="statusoferta "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 4) {
-                    return '<div class="statuserror "></div>' + dataItem.Cuit;
+                        return '<div class="statuserror "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 5) {
-                    return '<div class="statusfinalizado "></div>' + dataItem.Cuit;
+                        return '<div class="statusfinalizado "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 6) {
-                    return '<div class="statusborrado "></div>' + dataItem.Cuit;
+                        return '<div class="statusborrado "></div>' + dataItem.Cuit;
                     }
                 }
             },
 
             {
-                field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor},
+                field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor },
             },
             {
                 field: "Negocio", width: 90, filterable: {
@@ -113,9 +108,11 @@ function CreateGridInformeCompraNet() {
                             format: "{0:0}"
                         });
                     }
-                } },
+                }
+            },
             { field: "Fecha", title: "Operacion", filterable: { extra: true }, width: 80, format: _DefaultDateTemplate },
-            { field: "TipoNegocio", title: "Tipo", filterable: {
+            {
+                field: "TipoNegocio", title: "Tipo", filterable: {
                     multi: true, dataSource: [{
                         TipoNegocio: "A FIJAR",
                     }, {
@@ -125,7 +122,8 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, width: 70
             },
-            { field: "Material", filterable: {
+            {
+                field: "Material", filterable: {
                     multi: true, dataSource: [{
                         Material: "Maiz Duro Dentado",
                     }, {
@@ -142,7 +140,8 @@ function CreateGridInformeCompraNet() {
                             format: "{0:n0}"
                         });
                     }
-                }},
+                }
+            },
             {
                 field: "Precio", type: "number", format: "{0:n2}", filterable: {
                     ui: function (element) {
@@ -151,8 +150,10 @@ function CreateGridInformeCompraNet() {
                             decimals: 2
                         });
                     }
-                } },
-            { field: "Moneda", filterable: {
+                }
+            },
+            {
+                field: "Moneda", filterable: {
                     multi: true, dataSource: [{
                         Moneda: "ARP",
                     }, {
@@ -162,31 +163,37 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Provincia", filterable: { ui: createMultiSelectProvincia } },
             { field: "Localidad", filterable: { ui: createMultiSelectLocalidad } },
-            { field:"Campania", value: "Campania", title: "Campaña", filterable: { multi: true } },
+            { field: "Campania", value: "Campania", title: "Campaña", filterable: { multi: true } },
             {
                 title: "Fecha", columns: [
                     { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 80 },
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 },
                 ]
             },
-            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial }},
-            { field: "Sustentable", columns: [
+            { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
+            {
+                field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
-                    { field: "Importe_Sustentable", title: "Importe", filterable: false},
-                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false}
-                    ] },
-            { field: "Dolarizado", columns: [
+                    { field: "Importe_Sustentable", title: "Importe", filterable: false },
+                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false }
+                ]
+            },
+            {
+                field: "Dolarizado", columns: [
                     { field: "Dolarizado", title: "Dolar.", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; } },
-                { field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80}
-                ] },
-            { field: "Pesificado", columns: [
+                    { field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80 }
+                ]
+            },
+            {
+                field: "Pesificado", columns: [
                     { field: "Pesificado", title: "Pesif. ", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
-                    { field: "Dias_Pesificado", title: "Dias", filterable: false}
-                ] },
+                    { field: "Dias_Pesificado", title: "Dias", filterable: false }
+                ]
+            },
             { field: "NoInformaSIO", title: "No informa SIO", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
             { field: "TrigoEspecial", title: "Trigo Especial", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
             {
-                field: "Estado_Contrato", title: "Estado", width: 90,sortable: false, filterable: {
+                field: "Estado_Contrato", title: "Estado", width: 90, sortable: false, filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente",
@@ -203,7 +210,7 @@ function CreateGridInformeCompraNet() {
                     },]
                 }
             },
-            { field: "Observacion", type: "string", filterable: false, attributes: {"class": "ColumnaObservacion"}}
+            { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
@@ -260,7 +267,7 @@ function CreateGridInformeCompraNet() {
             height: 350,
             extra: false,
             checkAll: false,
-                
+
             messages: {
                 info: "Filtros:",
                 filter: "Filtrar",
@@ -272,7 +279,7 @@ function CreateGridInformeCompraNet() {
             },
             operators: {
                 string: {
-                    eq: "Igual",                    
+                    eq: "Igual",
                 },
                 date: {
                     eq: "Igual",
@@ -287,7 +294,7 @@ function CreateGridInformeCompraNet() {
             }
         },
         filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field =="Localidad") {
+            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field == "Localidad") {
                 $(e.container).css("width", "300px")
             } else {
                 $(e.container).css("width", "150px")
@@ -303,12 +310,11 @@ function CreateGridInformeCompraNet() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url ) {
+    function createMultiSelect(element, textField, valueField, url) {
         element.removeAttr("data-bind");
 
         element.kendoMultiSelect({
-
-            itemTemplate: "<input type='checkbox'/> #:data."+textField+"#",
+            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
             dataBound: function () {
                 var items = this.ul.find("li");
                 setTimeout(function () {
@@ -335,7 +341,6 @@ function CreateGridInformeCompraNet() {
                         prefix: ""
                     }
                 },
-
             },
             change: function (e) {
                 var items = this.ul.find("li");
@@ -357,12 +362,11 @@ function CreateGridInformeCompraNet() {
         });
         setTimeout(function () {
             $(".k-multiselect").parent().children(".k-dropdown").remove();
-            $(".k-multiselect").parent().children("div").find('button').remove();          
+            $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
-        
     };
 
-    //Con definir un método de estos para cada columna multiselect estamos, 
+    //Con definir un método de estos para cada columna multiselect estamos,
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
     };

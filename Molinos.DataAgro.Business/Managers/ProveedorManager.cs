@@ -8,10 +8,10 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.DirectoryServices;
 using System.Linq;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -22,15 +22,13 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private IRepositorio repositorio;
         private IComercialManager mobComercial;
-        private ICampañaMaterial mobCampañaMaterial;
 
         private ILogger logger;
 
-        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
         {
             this.logger = logger;
             mobComercial = oComercial;
-            mobCampañaMaterial = oCampañaMaterial;
             this.repositorio = repositorio;
         }
 
@@ -334,17 +332,16 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var contrato = repositorio.Obtener<Contrato>(oContrato.ContratoId);
-                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == contrato.ProveedorId);
+                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oContrato.ProveedorId);
                 
                 string emailComercial = "";
                 string emailJefe = "";
 
-                if (contrato.Comercial != null)
+                if (oContrato.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
+                    try { emailComercial = GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
 
-                    try { emailJefe = GetEmailUserActiveDirectory(contrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
+                    try { emailJefe = GetEmailUserActiveDirectory(oContrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
                 }
 
                 if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
@@ -357,34 +354,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oMensaje.To.Add(proveedorContacto.Email1);
                     if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
+                    
+                    oMensaje.AlternateViews.Add(GetEmbeddedImageContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, emailComercial));
 
-                    var tipoNegocio = oContrato.TipoNegocio;
-                    var material = oContrato.Material;
-                    var moneda = oContrato.Moneda;
-
-                    //var proveedor = contrato.Proveedor;
-
-                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + contrato.Proveedor.RazonSocial;
-
-                    oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n  ";
-
-                    if (oContrato.ContratoSAP != null) oMensaje.Body += "Contrato SAP: " + oContrato.ContratoSAP.Value + " \r\n  ";
-                    if (contrato.Proveedor != null) oMensaje.Body += "Vendedor: " + contrato.Proveedor.RazonSocial + " \r\n  ";
-                    if (oContrato.TipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + oContrato.TipoNegocio.Descripcion + " \r\n  ";
-                    if (oContrato.Material != null) oMensaje.Body += "Grano: " + oContrato.Material.Descripcion + " \r\n  ";
-                    if (oContrato.Cantidad != 0) oMensaje.Body += "Kg: " + oContrato.Cantidad + " \r\n  ";
-                    if (oContrato.Precio != 0 && moneda != null) oMensaje.Body += "Precio - Moneda: " + oContrato.Precio + " " + moneda.Descripcion + " \r\n  ";
-                    if (oContrato.Campana != null) oMensaje.Body += "Campaña: " + oContrato.Campana.Descripcion + " \r\n  ";
-                    if (oContrato.Localidad != null && oContrato.Provincia != null) oMensaje.Body += "Procedencia: " + oContrato.Provincia.Nombre + ", " + oContrato.Localidad.Nombre + " \r\n  ";
-                    if (oContrato.ImporteSustentable != null && oContrato.MonedaSustentable != null) oMensaje.Body += "Sustentable: " + oContrato.ImporteSustentable.Value + " " + oContrato.MonedaSustentable.Descripcion + " \r\n  ";
-                    if (oContrato.FechaDolarizado != null) oMensaje.Body += "Dolarizado Hasta " + oContrato.FechaDolarizado.Value.ToString("dd/MM/yyyy") + " \r\n  ";
-                    if (oContrato.DiasPesificado != null) oMensaje.Body += "Pago a " + oContrato.DiasPesificado.Value + " Días" + " \r\n  ";
-                    if (oContrato.TrigoEspecial != null && oContrato.TrigoEspecial == true) oMensaje.Body += "Trigo especial: Si" + " \r\n  ";
-
-                    oMensaje.Body += "\r\n  Por consultas, contactarse con " + (contrato.Comercial != null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                        "  \r\n\r\n  Saludos Cordiales" +
-                        "  \r\n\r\n  Molinos Agro S.A." +
-                        "  \r\n\r\n  www.molinosagro.com.ar";
+                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
 
                     oMensaje.BodyEncoding = Encoding.UTF8;
 
@@ -420,14 +393,14 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
-                var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecioContrato.FijacionDePrecioContratoId);
+                
                 string emailComercial = "";
                 string emailJefe = "";
 
-                if (fijacion.Comercial != null)
+                if (oFijacionDePrecioContrato.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
-                    try { emailJefe = GetEmailUserActiveDirectory(fijacion.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try { emailComercial = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try { emailJefe = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
                 if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
@@ -440,24 +413,12 @@ namespace Molinos.DataAgro.Business.Managers
                     if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
 
+                    oMensaje.AlternateViews.Add(GetEmbeddedImageFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
+
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
                     
                     var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
-
-                    oMensaje.Body = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.:\r\n\r\n";
-
-                    if (fijacion.Contrato != null) oMensaje.Body += "Se creo una fijacion para el Contrato SAP: " + fijacion.Contrato.ContratoId + " \r\n";
-                    if (fijacion.Proveedor != null) oMensaje.Body += "Vendedor: " + fijacion.Proveedor.RazonSocial + " \r\n";
-                    if (tipoNegocio != null) oMensaje.Body += "Tipo de Negocio: " + tipoNegocio.Descripcion + " \r\n";
-                    if (fijacion.Material != null) oMensaje.Body += "Grano: " + fijacion.Material.Descripcion + " \r\n";
-                    if (fijacion.Cantidad != 0) oMensaje.Body += "Kg: " + fijacion.Cantidad + " \r\n";
-                    if (fijacion.Precio != 0 && fijacion.Moneda != null) oMensaje.Body += "Precio - Moneda: " + fijacion.Precio + " " + fijacion.Moneda.Descripcion + " \r\n";
-
-                    oMensaje.Body += "\r\nPor consultas, contactarse con " + (fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                        "\r\n\r\nSaludos Cordiales" +
-                        "\r\n\r\nMolinos Agro S.A." +
-                        "\r\n\r\nwww.molinosagro.com.ar";
-
+                    
                     oMensaje.BodyEncoding = Encoding.UTF8;
 
                     oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
@@ -488,6 +449,61 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+        private AlternateView GetEmbeddedImageContrato(String filePath, Contrato oContrato, string emailComercial)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = "";
+            htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+            htmlBody += oContrato.Fecha.ToShortDateString() + ", ";
+            htmlBody += oContrato.Material.Descripcion + ", ";
+            htmlBody += "Contrato Nro: " + oContrato.ContratoSAP + "<br /> ";
+            htmlBody += "Vendedor: " + oContrato.Proveedor.RazonSocial + " (" + oContrato.Proveedor.CUIT + ") " + ", ";
+            if (oContrato.ClasificacionId != null) htmlBody += oContrato.Clasificacion.Descripcion + "<br />";
+            if (oContrato.DestinoId != null) htmlBody += "Destino: " + oContrato.Destino.Descripcion + ", ";
+            htmlBody += "Kg: " + oContrato.Cantidad + " <br />  ";
+            if (oContrato.TipoNegocioId == 2) htmlBody += "Precio:" + oContrato.Precio + " " + oContrato.Moneda.Descripcion + "<br /> ";
+            if (oContrato.TipoNegocioId == 1) htmlBody += "A fijar " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
+            htmlBody += "Procedencia: " + oContrato.Localidad.Nombre + ", " + oContrato.Provincia.Nombre + "<br />  ";
+            htmlBody += "Fecha Desde: " + oContrato.FechaDesde.ToShortDateString() + ", Fecha Hasta: " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
+            htmlBody += "Cosecha: " + oContrato.Campana.Descripcion + ", ";
+            if (oContrato.BoletoId != null) htmlBody += "Boleto " + oContrato.Boleto.Descripcion + ", ";
+            if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "<br />  ";
+            if (oContrato.Observacion != null) htmlBody += oContrato.Observacion + "<br />  ";
+
+            htmlBody += "<br /><br />  Por consultas, contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+        private AlternateView GetEmbeddedImageFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = "";
+            htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+            htmlBody +="Fecha: " + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "<br /> ";
+            htmlBody += "Material: " + oFijacionDePrecioContrato.Material.Descripcion + "<br /> ";
+            htmlBody += "Contrato Nro: " + oFijacionDePrecioContrato.ContratoId + " <br />";
+            htmlBody += "Vendedor: " + oFijacionDePrecioContrato.Proveedor.RazonSocial +"(" + oFijacionDePrecioContrato.Proveedor.CUIT + ") <br /> ";
+            if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null) htmlBody += "Clasificacion: " + oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + " <br />";
+            htmlBody += "Kg: " + oFijacionDePrecioContrato.Cantidad + " <br />";
+            htmlBody += "Precio: " + oFijacionDePrecioContrato.Precio + " " + oFijacionDePrecioContrato.Moneda.Descripcion + " <br /> <br />";
+            htmlBody += "Cosecha: " + oFijacionDePrecioContrato.Material.Campaña.Descripcion + " ";
+
+            htmlBody += "<br />  Por consultas, contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
         private string GetEmailUserActiveDirectory(string UserName)
         {
             DirectoryEntry entry = new DirectoryEntry();
@@ -993,6 +1009,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.LocalidadId = oParam.contacto.localidad;
                 oProveedorSave.ProvinciaId = oParam.contacto.provincia;
                 oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? Convert.ToInt32(oParam.contacto.areaDeInfluencia) : (int?)null;
+                oProveedorSave.ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet;
+                oProveedorSave.BoletoCompraNetId = oParam.basicos.BoletoCompraNet;
+                oProveedorSave.BolsaCompraNetId = oParam.basicos.BolsaCompraNet;
+                oProveedorSave.LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet;
+                oProveedorSave.ProvinciaCompraNetId = oParam.basicos.ProvinciaCompraNet;
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);

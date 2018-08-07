@@ -7,9 +7,9 @@ function InicializarElementos() {
     $("#buscar").click(function () {
         buscar();
     });
-    $("#valor").keyup(function (x) { 
+    $("#valor").keyup(function (x) {
         var code = x.which;
-        if(code===13){
+        if (code === 13) {
             buscar();
         }
     });
@@ -35,7 +35,6 @@ function buscar() {
         MensErr("No se encontraron resultados");
         return false;
     } else {
-        
         armarResultado(result);
     }
 }
@@ -121,7 +120,7 @@ function armarResultado(result) {
             field: "ProveedorId",
             title: "Id",
             width: 70,
-            filterable:true
+            filterable: true
         }, {
             field: "CUIT",
             title: "CUIT",
@@ -146,8 +145,6 @@ function armarResultado(result) {
     var grid = $("#grid").data("kendoGrid");
     grid.dataSource.pageSize(12);
     grid.refresh();
-
-
 }
 
 function volver() {

@@ -5,20 +5,16 @@ var datosIniActividad;
 var data = null;
 
 $(document).ready(function () {
-
-    InicializarElementos();   
+    InicializarElementos();
 
     CrearViewModel();
 
-    AsignarBotones();   
+    AsignarBotones();
 
-    InicializarCombos() 
-    
+    InicializarCombos()
 });
 
-
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#Proveedores").kendoDropDownList({
@@ -56,50 +52,45 @@ function InicializarElementos() {
     var mesPost = hoy.getMonth() + 1;
     if (mesPost < 10) {
         mesPost = "0" + mesPost.toString();
-    }   
-   
+    }
+
     if (dia < 10) {
         dia = "0" + dia.toString();
     }
 
-     var date = new Date(anio , mes, dia);
-     var datehasta = new Date(anio, mesPost, dia);
+    var date = new Date(anio, mes, dia);
+    var datehasta = new Date(anio, mesPost, dia);
 
     $("#fechaDesde").kendoDatePicker({
-        value: date,      
+        value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
     $("#fechaHasta").kendoDatePicker({
-        value: datehasta,      
+        value: datehasta,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
-          
+
     //$("#FechaDesde").data("kendoDatePicker").value(date);
     //$("#FechaHasta").data("kendoDatePicker").value(datehasta);
-}    
+}
 
 function InicializarCombos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
         else {
             datosIniActividad = data;
-            AsignarCombos();           
+            AsignarCombos();
         }
     }
 
-    MSExecuteURLOnServerAsync('/Agenda/Inicializar', funcReturn, '',false);
+    MSExecuteURLOnServerAsync('/Agenda/Inicializar', funcReturn, '', false);
 }
 
-    
-
 function CrearViewModel() {
-
     //var ResultadosDataSource = CrearResultadosDataSource([]);
 
     var param = {
@@ -111,22 +102,18 @@ function CrearViewModel() {
     };
 
     viewModel = kendo.observable({
-
-        //Resultados: ResultadosDataSource,     
+        //Resultados: ResultadosDataSource,
 
         Parametros: param,
 
         TipoActividadCombo: [],
-        ProveedorCombo: [],              
-    
+        ProveedorCombo: [],
     });
 
     kendo.bind($("#Agenda"), viewModel);
 }
 
-
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
@@ -143,7 +130,6 @@ function CrearResultadosDataSource(datos) {
 }
 
 function AsignarCombos() {
-
     datosIniActividad.Datos.TiposActividades.push({
         TipoActividadId: null,
         Descripcion: "Todas las Actividades"
@@ -153,8 +139,6 @@ function AsignarCombos() {
         if (a1 == b1) return 0;
         return a1 > b1 ? 1 : -1;
     });
-
-
 
     datosIniActividad.Datos.Proveedores.push({
         ProveedorId: null,
@@ -167,14 +151,11 @@ function AsignarCombos() {
         return a1 > b1 ? 1 : -1;
     });
 
-
     viewModel.set("TipoActividadCombo", datosIniActividad.Datos.TiposActividades);
     viewModel.set("ProveedorCombo", datosIniActividad.Datos.Proveedores);
-   
 }
 
-function AsignarBotones() {    
-
+function AsignarBotones() {
     kendo.culture("es-AR");
     $("#butExport").click(function () {
         Exportar();
@@ -183,12 +164,11 @@ function AsignarBotones() {
     $("#butPrevia").click(function () {
         VistaPrevia();
     });
-    
+
     $("#butCancelar").click(function () {
         Cancelar();
     });
 }
-
 
 function VistaPrevia() {
     var detalle = viewModel.get("Parametros.ActividadDetalle");
@@ -214,7 +194,7 @@ function VistaPrevia() {
     }
 
     var result = MSExecuteOnServer('/Agenda/VistaPreviaAgenda', oParam);
-        
+
     for (var ii in result) {
         (function (i) {
             result[i].FechaHoraRecordatorio = kendo.toString(kendo.parseDate(result[i].FechaHoraRecordatorio), "dd/MM/yy HH:mm");
@@ -222,12 +202,10 @@ function VistaPrevia() {
     }
 
     armarResultado(result);
-    
+
     $("#volver").click(function () {
         volver();
     });
-
-    
 }
 
 function armarResultado(result) {
@@ -236,7 +214,7 @@ function armarResultado(result) {
     $(".formulario").hide();
     $(".resultado-reporteagenda").show();
     $(".Titulo").html("Resultados").css({ "margin": 20, 'text-align': 'center' });
-    kendo.culture("es-AR");    
+    kendo.culture("es-AR");
 
     $("#grid").kendoGrid({
         dataSource: result,
@@ -313,7 +291,7 @@ function armarResultado(result) {
             title: "Contacto Comercial",
             width: 200,
             filterable: true
-        } ]
+        }]
     });
 
     var grid = $("#grid").data("kendoGrid");
@@ -329,19 +307,18 @@ function volver() {
 }
 
 function Exportar() {
+    var detalle = viewModel.get("Parametros.ActividadDetalle");
+    var TipoActividad = viewModel.get("Parametros.TipoActividadId.TipoActividadId");
+    var Proveedor = viewModel.get("Parametros.ProveedorId.ProveedorId");
+    var FechaDesde = viewModel.get("Parametros.FechaDesde");
+    var FechaHasta = viewModel.get("Parametros.FechaHasta");
 
-   var detalle = viewModel.get("Parametros.ActividadDetalle");
-   var TipoActividad = viewModel.get("Parametros.TipoActividadId.TipoActividadId");
-   var Proveedor = viewModel.get("Parametros.ProveedorId.ProveedorId");
-   var FechaDesde = viewModel.get("Parametros.FechaDesde");
-   var FechaHasta = viewModel.get("Parametros.FechaHasta");
-
-   if (FechaDesde != null && FechaHasta!= null) {
-       if (FechaHasta < FechaDesde) {
-           MensErr("La fecha hasta no puede ser menor que la fecha desde");
-           return false;
-       }         
-   } 
+    if (FechaDesde != null && FechaHasta != null) {
+        if (FechaHasta < FechaDesde) {
+            MensErr("La fecha hasta no puede ser menor que la fecha desde");
+            return false;
+        }
+    }
 
     var oParam = {
         "ActividadDetalle": detalle,
@@ -350,20 +327,18 @@ function Exportar() {
         "FechaDesde": FechaDesde,
         "FechaHasta": FechaHasta,
         "ActiveDirectoryId": "0",
-    }        
+    }
 
     var result = MSExecuteOnServer('/Agenda/ExportarAgenda', oParam);
 
     if (result != null) {
         if (result.DownloadKey.length > 0) {
-                        var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
-                        window.location = url;
+            var url = MSGetUrl('/DownLoad/Reporte?key=' + result.DownloadKey);
+            window.location = url;
         }
         else {
             MensErr("No existen datos con ese filtro para este Comercial, por favor ajuste los filtros");
             return false;
         }
     }
-    
-
 }

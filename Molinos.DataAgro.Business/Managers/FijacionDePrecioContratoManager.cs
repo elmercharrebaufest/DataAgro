@@ -60,22 +60,6 @@ namespace Molinos.DataAgro.Business.Managers
             };
         }
 
-
-        public ResultIniFijacionDePrecioContrato TraerTodoFijacionDePrecio()
-        {
-            return new ResultIniFijacionDePrecioContrato
-            {
-                FijacionDePrecioContrato = BasicoFijacionPrecioContratoTraerPorFiltro(0)
-            };
-        }
-        public ResultIniFijacionDePrecioContrato TraerFijacionDePrecioContrato(int contratoId)
-        {
-            return new ResultIniFijacionDePrecioContrato
-            {
-                FijacionDePrecioContrato = BasicoFijacionPrecioContratoTraerPorFiltro(contratoId)
-            };
-        }
-
         private List<FijacionDePrecioContratoIni> BasicoFijacionPrecioContratoTraerPorFiltro(int contratoId)
         {
             return repositorio.Listar<FijacionDePrecioContrato, FijacionDePrecioContratoIni>(
@@ -123,11 +107,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages) {
 
-            if (oParam.Proveedor == null)
+            if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
             }
-            if (oParam.Material == null)
+            if (oParam.MaterialId == 0)
             {
                 oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
             }
@@ -140,11 +124,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            if (oParam.Moneda == null)
+            if (oParam.MonedaId == null)
             {
                 oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
-            if (oParam.Comercial == null)
+            if (oParam.ComercialId == 0)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
@@ -209,8 +193,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
             {
-                oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
-                oFijacionDePrecioSave.Ampliaciones = 0;
+                if (oFijacionDePrecioSave.Ampliaciones != null)
+                {
+                    oFijacionDePrecioSave.Cantidad += oFijacionDePrecioSave.Ampliaciones.Value;
+                    oFijacionDePrecioSave.Ampliaciones = 0;
+                }
 
                 oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
 
@@ -268,23 +255,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oEntityErrors.Error("", "La Fijación debe ser Confirmada");
                 }
-            }
-            return oEntityErrors;
-        }
-
-        public Resultado EliminarFijacionDePrecio(int intFijacionId)
-        {
-            var oEntityErrors = new Resultado();
-
-            repositorio.Remover<FijacionDePrecioContrato>(intFijacionId);
-            try
-            {
-                repositorio.GuardarCambios();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw;
             }
             return oEntityErrors;
         }

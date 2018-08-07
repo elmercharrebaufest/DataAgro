@@ -7,17 +7,11 @@ namespace Molinos.DataAgro.Interfaces
     {
         DatosIniAbmFijacionDePrecioContrato TraerDatosIniciales();
 
-        ResultIniFijacionDePrecioContrato TraerTodoFijacionDePrecio();
-
         GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion);
-
-        ResultIniFijacionDePrecioContrato TraerFijacionDePrecioContrato(int ContratoId);
 
         GrabarFijacionResult GrabarFijacionDePrecio(FijacionDePrecioContrato oFijacionDePrecio);
 
         GrabarFijacionResult ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio);
-
-        Resultado EliminarFijacionDePrecio(int intFijacionId);
 
         GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato);
 

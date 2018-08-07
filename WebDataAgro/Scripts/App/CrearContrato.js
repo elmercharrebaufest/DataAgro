@@ -2,7 +2,6 @@
 var datosIniCrearContrato;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -13,9 +12,7 @@ $(document).ready(function () {
     InicializarDatos();
 });
 
-
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $(".datos-adicionales").hide();
@@ -25,7 +22,7 @@ function InicializarElementos() {
     $(".datos-pago").hide();
     $(".datos-calidades").hide();
     $(".datos-descuentos").hide();
-    
+
     $("#proveedorId").kendoDropDownList({
         optionLabel: "SELECCIONE UN PROVEEDOR...",
         dataTextField: "Descripcion",
@@ -38,7 +35,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    
+
     $("#buscadorProveedor").click(function () {
         $("#buscadorProveedor").val("");
     });
@@ -354,7 +351,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    
+
     $("#standardCalidadId").kendoDropDownList({
         optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
         dataTextField: "Descripcion",
@@ -367,7 +364,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    
+
     $("#calidadesEspecialesId").kendoDropDownList({
         optionLabel: "SELECCIONE CALIDAD",
         dataTextField: "Descripcion",
@@ -379,7 +376,7 @@ function InicializarElementos() {
             var dropdownlist = $("#calidadesEspecialesId").data("kendoDropDownList");
             dropdownlist.text("");
         }
-    });    
+    });
 
     $("#cantidadId").kendoNumericTextBox({
         culture: "es-AR",
@@ -421,7 +418,7 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-    
+
     $("#valorEspecialesId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
@@ -491,14 +488,14 @@ function InicializarElementos() {
             CerrarDatosPendientes();
             document.querySelector(".datos-adicionales").style.display = "block";
         } else {
-            document.querySelector(".datos-adicionales").style.display = "none";           
+            document.querySelector(".datos-adicionales").style.display = "none";
         }
     });
 
     $("#DatosTopesPlazos").click(function () {
         if (document.querySelector(".datos-topesplazos").style.display == "none") {
             CerrarDatosPendientes();
-            document.querySelector(".datos-topesplazos").style.display = "block";            
+            document.querySelector(".datos-topesplazos").style.display = "block";
         } else {
             document.querySelector(".datos-topesplazos").style.display = "none";
         }
@@ -512,7 +509,7 @@ function InicializarElementos() {
             document.querySelector(".datos-boleto").style.display = "none";
         }
     });
-    
+
     $("#DatosPago").click(function () {
         if (document.querySelector(".datos-pago").style.display == "none") {
             CerrarDatosPendientes();
@@ -560,7 +557,6 @@ function InicializarElementos() {
     });
 
     $("#tipoId").on("change", function () {
-
         if ($("#tipoId").val() == 3) {
             $("#fechasDiv").hide();
             $("#fechaDesdeDiv").hide();
@@ -575,6 +571,7 @@ function InicializarElementos() {
             $("#DatosTopesPlazos").hide();
             $("#DatosPago").hide();
             $("#DatosEstablecimiento").hide();
+            $("#DatosDescuentos").hide();
             $("#baseDiv").hide();
             $("#DatosAdicionales").hide();
             $(".datos-adicionales").hide();
@@ -606,6 +603,7 @@ function InicializarElementos() {
             $("#DatosPago").show();
             $("#DatosEstablecimiento").show();
             $("#DatosCalidades").show();
+            $("#DatosDescuentos").show();
             $("#baseDiv").show();
             $("#DatosAdicionales").show();
             $("#ContratoDiv").hide();
@@ -647,7 +645,7 @@ function InicializarElementos() {
             $("#BolsaConfirmaDiv").hide();
             $("#bolsaConfirmaId").data("kendoDropDownList").value("");
         }
-    });    
+    });
 
     $("#boletoFisicoId").click(function () {
         if ($(this).is(':checked')) {
@@ -675,18 +673,18 @@ function InicializarElementos() {
     });
 
     $("#CDId").click(function () {
-            $("#WarrantId").prop("checked", false);
-            $("#pagoDirectoId").prop("checked", false);
+        $("#WarrantId").prop("checked", false);
+        $("#pagoDirectoId").prop("checked", false);
     });
-    
+
     $("#WarrantId").click(function () {
-            $("#CDId").prop("checked", false);
-            $("#pagoDirectoId").prop("checked", false);
+        $("#CDId").prop("checked", false);
+        $("#pagoDirectoId").prop("checked", false);
     });
 
     $("#pagoDirectoId").click(function () {
-            $("#CDId").prop("checked", false);
-            $("#WarrantId").prop("checked", false);
+        $("#CDId").prop("checked", false);
+        $("#WarrantId").prop("checked", false);
     });
 
     $('select[id="material"]').change(function () {
@@ -695,7 +693,7 @@ function InicializarElementos() {
             CargarCalidadPorMaterial($(this).val())
         }
     });
-    
+
     $('select[id="provinciaId"]').change(function () {
         if ($(this).val() != "") CargarLocalidadPorProvincia($(this).val());
     });
@@ -788,7 +786,7 @@ function InicializarElementos() {
         min: 0
     });
 
-  $('select[id="tipoPeriodoDBId"]').change(function () {
+    $('select[id="tipoPeriodoDBId"]').change(function () {
         if ($(this).val() == 1) {
             $(".fecha-descuento").hide();
             $(".fecha-descuento-pendiente").hide();
@@ -806,13 +804,11 @@ function InicializarElementos() {
 }
 
 function CargarCampaniaPorMaterial(value) {
-
     var resultGrano = MSExecuteOnServer('/CompraNet/TraerCampanaPorMaterial', { MaterialId: value });
 
     var campanaActualId = MSExecuteOnServer('/CompraNet/TraerCampanaActualMaterial', { MaterialId: value });
 
     viewModel.set("CampanaCombo", resultGrano);
-
 
     $("#campanaId").data("kendoDropDownList").value(campanaActualId);
 }
@@ -831,100 +827,98 @@ function CargarCalidadPorMaterial(value) {
 }
 
 function CargarLocalidadPorProvincia(value) {
-
     var resultLocalidad = MSExecuteOnServer('/CompraNet/TraerLocalidadPorProvincia', { ProvinciaId: value });
 
     viewModel.set("LocalidadCombo", resultLocalidad.Localidad);
-    viewModel.set("LocalidadComboModalPendiente", resultLocalidad.Localidad);    
+    viewModel.set("LocalidadComboModalPendiente", resultLocalidad.Localidad);
 }
 
 function CrearViewModel() {
     var param = {
-            "proveedorId": null,
-            "material": null,
-            "materialDesc": null,
-            "cantidadId": null,
-            "precioId": null,
-            "campanaId": null,
-            "campanaDesc": null,
-            "provinciaId": null,
-            "provinciaIdDesc": null,
-            "LocalidadId": null,
-            "LocalidadIdDesc": null,
-            "baseId": null,
-            "sustentableId": null,
-            "sustentablePrecioId": null,
-            "dolarizadoId": null,
-            "dolarizadoFechaId": null,
-            "pesificadoId": null,
-            "pesificadoDiasId":null,
-            "noInformaSioId": null,
-            "trigoEspecialId": null,
-            "statusId": null,
-            "observacionId": null,
-            "clasificacionId": null,
-            "cantidadCamionesId": null,
-            "condicionFijacionId":null,
-            "destinoId": null,
-            "planCanjeId": null,
-            "consignatarioId": null,
-            "cdId": null,
-            "warrantId": null,
-            "pagoDirectoId": null,
-            "standardCalidadId": null,
-            "calidadesEspecialesId": null,
-            "tipoPeriodoDBId": null,
-          
-            "proveedorIdModal": null,
-            "comercialIdModal": null,
-            "comercialDescModal": null,
-            "materialModal": null,
-            "materialDescModal": null,
-            "cantidadIdModal": null,
-            "tipoIdModal": null,
-            "tipoDescModal": null,
-            "precioIdModal": null,
-            "precioMonedaIdModal": null,
-            "precioMonedaDescModal": null,
-            "campanaIdModal": null,
-            "campanaDescModal": null,
-            "fechaDesdeIdModal": null,
-            "fechaHastaIdModal": null,
-            "fechaEntregaIdModal": null,
-            "provinciaModalPendienteId": null,
-            "provinciaIdDescModal": null,
-            "LocalidadIdModal": null,
-            "LocalidadIdDescModal": null,
-            "baseIdModal": null,
-            "sustentableIdModal": null,
-            "sustentablePrecioIdModal": null,
-            "sustentableMonedaIdModal": null,
-            "sustentableMonedaDescModal": null,
-            "dolarizadoIdModal": null,
-            "dolarizadoFechaIdModal": null,
-            "pesificadoIdModal": null,
-            "pesificadoDiasIdModal": null,
-            "noInformaSioIdModal": null,
-            "trigoEspecialIdModal": null,
-            "observacionIdModal": null,
-            "clasificacionIdModal": null,
-            "cantidadCamionesIdModal": null,
-            "condicionFijacionIdModal":null,
-            "destinoIdModal": null,
-            "planCanjeIdModal": null,
-            "consignatarioIdModal": null,
-            "cDIdModal": null,
-            "warrantIdModal": null,
-            "pagoDirectoIdModal": null,
-            "standardCalidadIdModal": null,
-            "calidadesEspecialesIdModal": null,
-            "tipoPeriodoDBIdModal": null,
-            "Descuentos": null,
-            "fechaDesdeTopeIdModalPendiente":null,
-            "fechaHastaTopeIdModalPendiente":null
+        "proveedorId": null,
+        "material": null,
+        "materialDesc": null,
+        "cantidadId": null,
+        "precioId": null,
+        "campanaId": null,
+        "campanaDesc": null,
+        "provinciaId": null,
+        "provinciaIdDesc": null,
+        "LocalidadId": null,
+        "LocalidadIdDesc": null,
+        "baseId": null,
+        "sustentableId": null,
+        "sustentablePrecioId": null,
+        "dolarizadoId": null,
+        "dolarizadoFechaId": null,
+        "pesificadoId": null,
+        "pesificadoDiasId": null,
+        "noInformaSioId": null,
+        "trigoEspecialId": null,
+        "statusId": null,
+        "observacionId": null,
+        "clasificacionId": null,
+        "cantidadCamionesId": null,
+        "condicionFijacionId": null,
+        "destinoId": null,
+        "planCanjeId": null,
+        "consignatarioId": null,
+        "cdId": null,
+        "warrantId": null,
+        "pagoDirectoId": null,
+        "standardCalidadId": null,
+        "calidadesEspecialesId": null,
+        "tipoPeriodoDBId": null,
+
+        "proveedorIdModal": null,
+        "comercialIdModal": null,
+        "comercialDescModal": null,
+        "materialModal": null,
+        "materialDescModal": null,
+        "cantidadIdModal": null,
+        "tipoIdModal": null,
+        "tipoDescModal": null,
+        "precioIdModal": null,
+        "precioMonedaIdModal": null,
+        "precioMonedaDescModal": null,
+        "campanaIdModal": null,
+        "campanaDescModal": null,
+        "fechaDesdeIdModal": null,
+        "fechaHastaIdModal": null,
+        "fechaEntregaIdModal": null,
+        "provinciaModalPendienteId": null,
+        "provinciaIdDescModal": null,
+        "LocalidadIdModal": null,
+        "LocalidadIdDescModal": null,
+        "baseIdModal": null,
+        "sustentableIdModal": null,
+        "sustentablePrecioIdModal": null,
+        "sustentableMonedaIdModal": null,
+        "sustentableMonedaDescModal": null,
+        "dolarizadoIdModal": null,
+        "dolarizadoFechaIdModal": null,
+        "pesificadoIdModal": null,
+        "pesificadoDiasIdModal": null,
+        "noInformaSioIdModal": null,
+        "trigoEspecialIdModal": null,
+        "observacionIdModal": null,
+        "clasificacionIdModal": null,
+        "cantidadCamionesIdModal": null,
+        "condicionFijacionIdModal": null,
+        "destinoIdModal": null,
+        "planCanjeIdModal": null,
+        "consignatarioIdModal": null,
+        "cDIdModal": null,
+        "warrantIdModal": null,
+        "pagoDirectoIdModal": null,
+        "standardCalidadIdModal": null,
+        "calidadesEspecialesIdModal": null,
+        "tipoPeriodoDBIdModal": null,
+        "Descuentos": null,
+        "fechaDesdeTopeIdModalPendiente": null,
+        "fechaHastaTopeIdModalPendiente": null
     };
     viewModel = kendo.observable({
-
         Parametros: param,
 
         ProveedorCombo: [],
@@ -940,7 +934,7 @@ function CrearViewModel() {
         CondicionFijacionCombo: [],
         StandardCombo: [],
         EspecialesCombo: [],
-        TipoPeriodoDBCombo:[],
+        TipoPeriodoDBCombo: [],
         TipoDBCombo: [],
 
         ComercialComboModalPendiente: [],
@@ -951,15 +945,14 @@ function CrearViewModel() {
         ProvinciaComboModalPendiente: [],
         LocalidadComboModalPendiente: [],
         SustentableMonedaComboModalPendiente: [],
-        Clasificacion: [],        
-        CondicionFijacionComboModalPendiente:[],
+        Clasificacion: [],
+        CondicionFijacionComboModalPendiente: [],
         Destino: [],
         StandardComboModalPendiente: [],
-        EspecialesComboModalPendiente:[],
+        EspecialesComboModalPendiente: [],
         isControlDisabled: true,
         Descuentos: [],
-        DescuentosVisualizar:[]
-
+        DescuentosVisualizar: []
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -967,14 +960,10 @@ function CrearViewModel() {
     kendo.bind($("#modalPendienteDiv"), viewModel);
     kendo.bind($("#tabla-descuentos"), viewModel);
     kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
-
-
-    }
+}
 
 function InicializarDatos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -987,8 +976,7 @@ function InicializarDatos() {
     MSExecuteURLOnServerAsync('/CompraNet/InicializarContrato', funcReturn, '');
 }
 
-function AsignarDatos()
-{
+function AsignarDatos() {
     viewModel.set("ProveedorCombo", datosIniCrearContrato.Datos.proveedor);
     viewModel.set("ComercialCombo", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialCombo", datosIniCrearContrato.Datos.material);
@@ -1004,10 +992,10 @@ function AsignarDatos()
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionCombo", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardCombo", datosIniCrearContrato.Datos.Standard);
-    
+
     viewModel.set("TipoPeriodoDBCombo", datosIniCrearContrato.Datos.TipoPeriodoDB);
-    viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB );
-    viewModel.set("DescuentoMonedaCombo", datosIniCrearContrato.Datos.MonedaDescuento );
+    viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB);
+    viewModel.set("DescuentoMonedaCombo", datosIniCrearContrato.Datos.MonedaDescuento);
 
     viewModel.set("ComercialComboModalPendiente", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialComboModalPendiente", datosIniCrearContrato.Datos.material);
@@ -1039,7 +1027,6 @@ function AsignarDatos()
 }
 
 function LimpiarValidaciones() {
-
     $("#errproveedorId").css("display", "none");
     $("#errcomercialId").css("display", "none");
     $("#errmaterial").css("display", "none");
@@ -1095,8 +1082,7 @@ function LimpiarValidaciones() {
 }
 
 function ObtenerDatos() {
-
-    var obj = {}; 
+    var obj = {};
 
     var fecha = new Date();
     var fechaHoy = new Date(
@@ -1106,12 +1092,12 @@ function ObtenerDatos() {
         fecha.getHours(),
         fecha.getMinutes(),
         fecha.getSeconds()
-        );
+    );
     var proveedorId;
 
     obj.MaterialId = $("#material").val();
     obj.TipoNegocioId = $("#tipoId").val();
-    obj.Cantidad =$("#cantidadId").val();
+    obj.Cantidad = $("#cantidadId").val();
     obj.Precio = $("#precioId").val();
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
@@ -1129,7 +1115,7 @@ function ObtenerDatos() {
     obj.DiasPesificado = $("#pesificadoDiasId").val();
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.TrigoEspecial = $("#trigoEspecialId").is(":checked") ? true : false;
-    obj.Estado = $("#baseId").is(":checked") ? "3" : "1";
+    obj.EstadoId = $("#baseId").is(":checked") ? "3" : "1";
     obj.ContratoId = $("#contratoId").val();
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
@@ -1148,29 +1134,24 @@ function ObtenerDatos() {
     obj.CalidadEspecialId = $("#calidadesEspecialesId").val();
     obj.ValorCalidadEspecial = $("#valorEspecialesId").val();
 
-    if ($("#boletoConfirmaId").is(':checked'))
-    {
+    if ($("#boletoConfirmaId").is(':checked')) {
         obj.BoletoId = 1;
         obj.BolsaId = $("#bolsaConfirmaId").val();
     }
-    else if ($("#boletoFisicoId").is(':checked'))
-    {
+    else if ($("#boletoFisicoId").is(':checked')) {
         obj.BoletoId = 2;
         obj.BolsaId = $("#bolsaFisicoId").val();
     }
-    else
-    {
+    else {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
     }
 
     if ($("#buscadorProveedor").val() != "") {
-
         cuitAux = $("#buscadorProveedor").val().split('(');
         cuit = cuitAux[1].split(')');
 
         proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0] });
-
     }
 
     obj.ProveedorId = proveedorId;
@@ -1179,21 +1160,18 @@ function ObtenerDatos() {
 
     GrabarContrato(obj);
 }
- 
+
 function GrabarContrato(nuevoContrato) {
     var result;
 
     if (nuevoContrato.TipoNegocioId != 3) {
-
         result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
     }
     else {
-
         result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     }
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
         }
@@ -1208,93 +1186,87 @@ function armarBusquedaResultProveedor() {
     if ($("#buscadorProveedor").val().length >= 3) {
         $("#buscadorResult").empty();
 
-            //aca tiene que ir a buscar
-            var txt = $("#buscadorProveedor").val().toUpperCase();
+        //aca tiene que ir a buscar
+        var txt = $("#buscadorProveedor").val().toUpperCase();
 
-            var result = MSExecuteOnServer('/Proveedor/BuscarProveedores', { filtro: txt });
+        var result = MSExecuteOnServer('/Proveedor/BuscarProveedores', { filtro: txt });
 
-            var html = "";
-            for (var i = 0; i < result.length; i++) {
+        var html = "";
+        for (var i = 0; i < result.length; i++) {
+            var valor = "";
 
-                var valor = "";
+            valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
 
+            valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
 
-                valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
-        
-                valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
+            var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
 
-                var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
-        
-                html += '<div class="buscar-result-linea" onclick="seleccionarProveedor(this)" >'
-                      + '<img class="buscar-cont" src="..' + url + '" /> '
-                      + '<p class="buscar-nomb">' + valor + '</p>'
-                      + '</div>';
-            }
-
-            if (!result.length) {
-                html += '<div class="buscar-result-linea">'
-                      + '<p class="buscar-nomb">No se encontraron resultados</p>'
-                      + '</div>';
-            }
-
-            $("#buscadorResult").append(html);
-            console.log($("#buscadorProveedor").is(":focus"));
-            $("#buscadorResult").show();
-        } else {
-            $("#buscadorResult").empty();
-            $("#buscadorResult").hide();
+            html += '<div class="buscar-result-linea" onclick="seleccionarProveedor(this)" >'
+                + '<img class="buscar-cont" src="..' + url + '" /> '
+                + '<p class="buscar-nomb">' + valor + '</p>'
+                + '</div>';
         }
+
+        if (!result.length) {
+            html += '<div class="buscar-result-linea">'
+                + '<p class="buscar-nomb">No se encontraron resultados</p>'
+                + '</div>';
+        }
+
+        $("#buscadorResult").append(html);
+        console.log($("#buscadorProveedor").is(":focus"));
+        $("#buscadorResult").show();
+    } else {
+        $("#buscadorResult").empty();
+        $("#buscadorResult").hide();
+    }
 }
 
 function armarBusquedaResultProveedorModalPendiente() {
-if ($("#buscadorProveedorModalPendiente").val().length >= 3) {
-    $("#buscadorResultModalPendiente").empty();
+    if ($("#buscadorProveedorModalPendiente").val().length >= 3) {
+        $("#buscadorResultModalPendiente").empty();
 
-            //aca tiene que ir a buscar
-             var txt = $("#buscadorProveedorModalPendiente").val().toUpperCase();
+        //aca tiene que ir a buscar
+        var txt = $("#buscadorProveedorModalPendiente").val().toUpperCase();
 
+        var result = MSExecuteOnServer('/Proveedor/BuscarProveedores', { filtro: txt });
 
-            var result = MSExecuteOnServer('/Proveedor/BuscarProveedores', { filtro: txt });
+        var html = "";
+        for (var i = 0; i < result.length; i++) {
+            var valor = "";
 
+            valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
 
-            var html = "";
-            for (var i = 0; i < result.length; i++) {
+            valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
 
-                var valor = "";
+            var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
 
-
-                valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
-        
-                valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
-
-                var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
-        
-                html += '<div class="buscar-result-linea" onclick="seleccionarProveedorModalPendiente(this)" >'
-                      + '<img class="buscar-cont" src="..' + url + '" /> '
-                      + '<p class="buscar-nomb">' + valor + '</p>'
-                      + '</div>';
-            }
-
-            if (!result.length) {
-                html += '<div class="buscar-result-linea">'
-                      + '<p class="buscar-nomb">No se encontraron resultados</p>'
-                      + '</div>';
-            }
-
-            $("#buscadorResultModalPendiente").append(html);
-            console.log($("#buscadorProveedorModalPendiente").is(":focus"));
-            $("#buscadorResultModalPendiente").show();
-        } else {
-            $("#buscadorResultModalPendiente").empty();
-            $("#buscadorResultModalPendiente").hide();
+            html += '<div class="buscar-result-linea" onclick="seleccionarProveedorModalPendiente(this)" >'
+                + '<img class="buscar-cont" src="..' + url + '" /> '
+                + '<p class="buscar-nomb">' + valor + '</p>'
+                + '</div>';
         }
+
+        if (!result.length) {
+            html += '<div class="buscar-result-linea">'
+                + '<p class="buscar-nomb">No se encontraron resultados</p>'
+                + '</div>';
+        }
+
+        $("#buscadorResultModalPendiente").append(html);
+        console.log($("#buscadorProveedorModalPendiente").is(":focus"));
+        $("#buscadorResultModalPendiente").show();
+    } else {
+        $("#buscadorResultModalPendiente").empty();
+        $("#buscadorResultModalPendiente").hide();
+    }
 }
 
 function seleccionarProveedor(opciones) {
     $("#buscadorProveedor").val(opciones.innerText);
     $("#buscadorResult").hide();
 
-    obtenerLocalidadProvincia();        
+    obtenerLocalidadProvincia();
 }
 
 function seleccionarProveedorModalPendiente(opciones) {
@@ -1305,14 +1277,11 @@ function seleccionarProveedorModalPendiente(opciones) {
 }
 
 function obtenerLocalidadProvincia() {
-
     if ($("#buscadorProveedor").val() != "") {
         let cuitProvAux = $("#buscadorProveedor").val().split('(');
         let cuitProv = cuitProvAux[1].split(')');
 
-
         if (cuitProv[0] != null && $("#material").val() != "" && $("#campanaId").val() != "") {
-
             let localidadProvincia = MSExecuteOnServer('/CompraNet/ObtenerProvinciaLocalidadProv', {
                 CUIT: cuitProv[0],
                 MaterialId: $("#material").val(),
@@ -1327,7 +1296,7 @@ function obtenerLocalidadProvincia() {
                 } else {
                     $("#provinciaId").data("kendoDropDownList").value("");
                     $("#LocalidadId").data("kendoDropDownList").value("");
-                }                
+                }
             }
             $("#clasificacion").data("kendoDropDownList").value(localidadProvincia.ClasificacionId);
             if (localidadProvincia.BoletoId == 1) {
@@ -1356,7 +1325,6 @@ function limpiarBoleto() {
 }
 
 function AgregarDescuentos() {
-
     var descuento = {
         Id: 0,
         TipoPeriodoDBDesc: $("#tipoPeriodoDBId").data("kendoDropDownList").text(),
@@ -1382,7 +1350,7 @@ function AgregarDescuentos() {
 
     var err = validarDescuento(descuento)
     if (ExistsErrorMessages(err)) {
-            MensErr(err[0]);
+        MensErr(err[0]);
     }
     else {
         viewModel.Descuentos.push(descuento);
@@ -1398,9 +1366,9 @@ function validarDescuento(descuento) {
     if (descuento.TipoDBId === 0 || descuento.TipoDBId === null || descuento.TipoDBId === "") {
         errores.push("El campo Tipo no puede estar vacio")
     }
-    if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == "Undefined" || descuento.FechaHasta == "" || descuento.FechaHasta == "Undefined"  )) {
-        errores.push("La fecha no puede estar vacia")        
-    }    
+    if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == "Undefined" || descuento.FechaHasta == "" || descuento.FechaHasta == "Undefined")) {
+        errores.push("La fecha no puede estar vacia")
+    }
     var fechaD = kendo.parseDate(descuento.FechaDesde, "dd-MM-yyyy");
     var fechaH = kendo.parseDate(descuento.FechaHasta, "dd-MM-yyyy");
     if (descuento.TipoPeriodoDBId != 1 && (!fechaD || !fechaH)) {
@@ -1409,7 +1377,7 @@ function validarDescuento(descuento) {
     if (descuento.Importe === "" || descuento.Importe === null) {
         errores.push("El campo Importe no puede estar vacio")
     }
-    if (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId ==="Undefined") {
+    if (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId === "Undefined") {
         errores.push("El campo Moneda no puede estar vacio")
     }
     if (descuento.Porcentaje === "" || descuento.Porcentaje === null || descuento.Porcentaje === "undefined") {

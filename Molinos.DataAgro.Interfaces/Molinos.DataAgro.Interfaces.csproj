@@ -114,18 +114,14 @@
   <ItemGroup>
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />
-    <Compile Include="Managers\ICampañaActualManager.cs" />
     <Compile Include="Managers\ICampañaManager.cs" />
-    <Compile Include="Managers\ICampañaMaterial.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
     <Compile Include="Managers\IComercialManager.cs" />
     <Compile Include="Managers\ICentroManager.cs" />
     <Compile Include="Managers\ICompraNetManager.cs" />
-    <Compile Include="Managers\IComprasManager.cs" />
     <Compile Include="Managers\ICondicionManager.cs" />
     <Compile Include="Managers\IContratoManager.cs" />
     <Compile Include="Managers\ICubProveedoresManager.cs" />
-    <Compile Include="Managers\IEstadoProveedorManager.cs" />
     <Compile Include="Managers\IFijacionDePrecioContratoManager.cs" />
     <Compile Include="Managers\IFijacionDePrecioManager.cs" />
     <Compile Include="Managers\IInformeComercialManager.cs" />
@@ -136,7 +132,6 @@
     <Compile Include="Managers\IMaterialManager.cs" />
     <Compile Include="Managers\IProvinciaManager.cs" />
     <Compile Include="Managers\IReportesManager.cs" />
-    <Compile Include="Managers\IRiesgoComercialManager.cs" />
     <Compile Include="Managers\ITipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

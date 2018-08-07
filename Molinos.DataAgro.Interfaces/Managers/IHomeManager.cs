@@ -19,8 +19,6 @@ namespace Molinos.DataAgro.Interfaces
 
         List<BusquedaHome> BusquedaHome(string filtro, int ComercialId);
 
-        //Task<List<BusquedaHome>> BusquedaHome(string filtro);
-
         List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId);
 
         List<ContactoIni> ExportarContactos(List<int> Ids, string idActiveDirectory);

@@ -138,19 +138,15 @@
   <ItemGroup>
     <Compile Include="Managers\AgendaManager.cs" />
     <Compile Include="Managers\AreaInfluenciaManager.cs" />
-    <Compile Include="Managers\CampañaActualManager.cs" />
     <Compile Include="Managers\CampañaManager.cs" />
-    <Compile Include="Managers\CampañaMaterialManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\ComercialManager.cs" />
     <Compile Include="Managers\CentroManager.cs" />
     <Compile Include="Managers\CompraNetManager.cs" />
-    <Compile Include="Managers\ComprasManager.cs" />
     <Compile Include="Managers\CondicionManager.cs" />
     <Compile Include="Managers\ContratoManager.cs" />
     <Compile Include="Managers\CubProveedoresManager.cs" />
     <Compile Include="Managers\DestinatarioManager.cs" />
-    <Compile Include="Managers\EstadoProveedorManager.cs" />
     <Compile Include="Managers\FijacionDePrecioContratoManager.cs" />
     <Compile Include="Managers\FijacionDePrecioManager.cs" />
     <Compile Include="Managers\Helper.cs" />
@@ -161,7 +157,6 @@
     <Compile Include="Managers\ProveedorManager.cs" />
     <Compile Include="Managers\ProvinciaManager.cs" />
     <Compile Include="Managers\ReportesManager.cs" />
-    <Compile Include="Managers\RiesgoComercialManager.cs" />
     <Compile Include="Managers\TipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\CombosQueries.cs" />

@@ -14,13 +14,11 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private ICampañaManager mobCampaña;
-        private IEstadoProveedorManager mobEstado;
         private ILogger logger;
 
-        public HomeManager(ILogger logger, IRepositorio repositorio, IEstadoProveedorManager mobEstado, ICampañaManager campañaManager)
+        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager)
         {
             this.logger = logger;
-            this.mobEstado = mobEstado;
             this.mobCampaña = campañaManager;
             this.repositorio = repositorio;
         }

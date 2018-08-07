@@ -1,7 +1,4 @@
-﻿
-
-
-var cantGrano = 0;
+﻿var cantGrano = 0;
 var capProdCant = 0;
 var produccionCampoGuardar = [];
 var resultDatos = {};
@@ -22,9 +19,7 @@ $(document).ready(function () {
     });
     $("#ExportarPdf").click(function () {
         ExportarPdf();
-    }); 
-    
-
+    });
 });
 
 function createChart(val) {
@@ -41,7 +36,6 @@ function createChart(val) {
         obj[$("#campaña").val()] = val;
         val = obj;
     }
-
 
     for (var ii in val) {
         (function (i) {
@@ -91,14 +85,13 @@ function createChart(val) {
             for (var jj in val[i].Campañas) {
                 (function (j) {
                     if (valoresaux[i].filter(function (x) { return x.año == val[i].Campañas[j].Año && x.mes == val[i].Campañas[j].Mes; }).length > 0) {
-
                         var index = -1;
                         for (var r = 0; r < valoresaux[i].length; ++r) {
                             if (valoresaux[i][r].año == val[i].Campañas[j].Año && valoresaux[i][r].mes == val[i].Campañas[j].Mes) {
-                            index = r;
-                            break;
+                                index = r;
+                                break;
+                            }
                         }
-                    }
 
                         valoresaux[i][/*valoresaux[i].findIndex(function (x) { return x.año == val[i].Campañas[j].Año && x.mes == val[i].Campañas[j].Mes; })*/index].total = val[i].Campañas[j].Total;//ToneladasAux;
                     }
@@ -166,27 +159,20 @@ function createChart(val) {
                                 axis.push(valoresaux[i][j].año.toString().substring(2, 4) + " - dic");
                             break;
                     }
-
-
-
-                    
                 })(jj);
             }
             obj.data = vals.concat();
             series.push(obj);
-            
         })(ii);
     }
-
 
     var minindex = -1;
 
     for (var ii in series) {
         (function (i) {
-            
             var minindexaux;
             for (var r = 0; r < series[i].data.length; ++r) {
-                if (series[i].data[r] > 0 ) {
+                if (series[i].data[r] > 0) {
                     minindexaux = r;
                     break;
                 }
@@ -196,13 +182,10 @@ function createChart(val) {
                 minindex = minindexaux;
                 //minindex = series[i].data.findIndex(function(x){return x > 0});
             } else if (minindex > minindexaux) {
-                
                 minindex = minindexaux;//series[i].data.findIndex(function(x){return x > 0});
             }
         })(ii);
     }
-
-    
 
     for (var ii in series) {
         (function (i) {
@@ -216,16 +199,15 @@ function createChart(val) {
         axis.splice(0, 1);
     }
 
-
     var maxindex = -1;
-    
+
     for (var ii in series) {
         (function (i) {
             var aux = series[i].data.concat().reverse().concat();
 
             var maxindexaux;
             for (var r = 0; r < aux.length; ++r) {
-                if (aux[r] > 0 ) {
+                if (aux[r] > 0) {
                     maxindexaux = r;
                     break;
                 }
@@ -233,12 +215,11 @@ function createChart(val) {
 
             if (maxindex == -1) {
                 maxindex = maxindexaux;//aux.findIndex(function (x) { return x > 0 });
-            } else if (maxindex > maxindexaux){//aux.findIndex(function (x) { return x > 0 })) {
+            } else if (maxindex > maxindexaux) {//aux.findIndex(function (x) { return x > 0 })) {
                 maxindex = maxindexaux;//aux.findIndex(function (x) { return x > 0 });
             }
         })(ii);
     }
-
 
     for (var ii in series) {
         (function (i) {
@@ -256,12 +237,6 @@ function createChart(val) {
     }
     axis.reverse();
 
-
-
-
-        
-
-
     $("#chart").kendoChart({
         legend: {
             position: "bottom"
@@ -274,7 +249,7 @@ function createChart(val) {
             type: "line",
             style: "smooth"
         },
-        seriesColors :["orange","green","skyblue","red","black","gray"],
+        seriesColors: ["orange", "green", "skyblue", "red", "black", "gray"],
         series: series,
         valueAxis: {
             labels: {
@@ -300,35 +275,28 @@ function createChart(val) {
             template: "#= series.name #: #= value #"
         }
     });
-
 }
 
-
 function inicializarGrafico(val, campaña) {
-    
     if (val && val !== null && val !== undefined) {
-
         $(".contenedor-grafico-sin-resultados").remove();
         $(".contenedor-principal-campanas-grupo").empty();
 
         var campa = $("#campaña").val();
         if (campa == -1)
             campa = "0";
-        
-        if (campa != "0"){
-            var campfiltr = resultDatos.Historial.camp.filter(function(x){ return x.Nombre == campa });
+
+        if (campa != "0") {
+            var campfiltr = resultDatos.Historial.camp.filter(function (x) { return x.Nombre == campa });
 
             var htmlg = "";
-        
-            if (campfiltr && campfiltr[0]){
 
+            if (campfiltr && campfiltr[0]) {
                 htmlg += '<div class="contenedor-principal-campanas-titulo contenedor-principal-campanas-grano">'
-                        + "Campaña " + campfiltr[0].Nombre;
+                    + "Campaña " + campfiltr[0].Nombre;
 
-                for (var ii in campfiltr[0].grano){
+                for (var ii in campfiltr[0].grano) {
                     (function (i) {
-
-
                         var ToneladasAux = campfiltr[0].grano[i].Total.toString().split(".");
                         if (ToneladasAux.length > 1) {
                             ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -340,21 +308,17 @@ function inicializarGrafico(val, campaña) {
                             ToneladasAux = ToneladasAux.join("");
                         }
 
-
-
-                        
-                        htmlg +='<div class="contenedor-principal-campanas-detalle">' +
-                        '<div class="contenedor-principal-campanas-grano">' +
+                        htmlg += '<div class="contenedor-principal-campanas-detalle">' +
+                            '<div class="contenedor-principal-campanas-grano">' +
                             campfiltr[0].grano[i].Grano +
-                        '</div>' +
-                        '<div class="contenedor-principal-campanas-cantidad">' +
-                             ToneladasAux +
-                        '</div>' +
-                        '</div>';
-                        
+                            '</div>' +
+                            '<div class="contenedor-principal-campanas-cantidad">' +
+                            ToneladasAux +
+                            '</div>' +
+                            '</div>';
                     })(ii);
                 }
-                htmlg +='</div>';
+                htmlg += '</div>';
             }
         } else {
             var campfiltr = resultDatos.Historial.camp.filter(function (x) { return x.Nombre != campa });
@@ -364,10 +328,8 @@ function inicializarGrafico(val, campaña) {
             if (campfiltr && campfiltr[0]) {
                 for (var ii in campfiltr) {
                     (function (i) {
-
-                        
                         htmlg += '<div class="contenedor-principal-campanas-titulo contenedor-principal-campanas-grano">'
-                                + "Campaña " + campfiltr[i].Nombre;
+                            + "Campaña " + campfiltr[i].Nombre;
 
                         for (var rr in campfiltr[i].grano) {
                             (function (r) {
@@ -382,41 +344,32 @@ function inicializarGrafico(val, campaña) {
                                     ToneladasAux = ToneladasAux.join("");
                                 }
 
-
-
                                 htmlg += '<div class="contenedor-principal-campanas-detalle">' +
-                                '<div class="contenedor-principal-campanas-grano">' +
+                                    '<div class="contenedor-principal-campanas-grano">' +
                                     campfiltr[i].grano[r].Grano +
-                                '</div>' +
-                                '<div class="contenedor-principal-campanas-cantidad">' +
-                                     ToneladasAux +
-                                '</div>' +
-                                '</div>';
+                                    '</div>' +
+                                    '<div class="contenedor-principal-campanas-cantidad">' +
+                                    ToneladasAux +
+                                    '</div>' +
+                                    '</div>';
                             })(rr);
                         }
 
                         htmlg += "</div>";
-
                     })(ii);
                 }
             }
         }
-        
-        $(".contenedor-principal-campanas-grupo").append(htmlg);
-        
-                    
-                
 
+        $(".contenedor-principal-campanas-grupo").append(htmlg);
 
         createChart(val);
         $(document).bind("kendo:skinChange", createChart);
-
-
     } else {
         var html = "";
         html += '<div class="contenedor-grafico-sin-resultados">' +
-                'No hay compras para el contacto' +
-                '</div>';
+            'No hay compras para el contacto' +
+            '</div>';
         $(".campañagrafico").append(html);
     }
 }
@@ -457,7 +410,7 @@ function armarContacto() {
     var campoacopio = result.CampoProduccionAcopioPorProveedores;
     var comerciales = result.ContactosComercialesTraerPorProveedores;
     var acopio = result.Acopio;
-    var historial = result.Historial ?result.Historial.HistorialGrano : result.Historial;
+    var historial = result.Historial ? result.Historial.HistorialGrano : result.Historial;
     var objetivos = result.ObjetivosTraerPorProveedorId;
     var acopiomaterial = result.AcopioMaterialPorProveedores;
     armarSelectHeader(historial);
@@ -480,16 +433,16 @@ function armarContacto() {
     $(".contacto-detalle-basico-contenedor-datos-tipo").html(basico[0].Segmentacion ? "Seg: " + basico[0].Segmentacion : "Seg: No Posee");
     var basicoEmails = "Emails: <br>";
     if (basico[0].Email1) {
-        basicoEmails += '<span><a target="_blank" href="mailto:' + basico[0].Email1 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' +  basico[0].Email1 + '</i></a></span>';
+        basicoEmails += '<span><a target="_blank" href="mailto:' + basico[0].Email1 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email1 + '</i></a></span>';
     }
     if (basico[0].Email2) {
-        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email2 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + basico[0].Email2 + '</i></a></span>';
+        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email2 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email2 + '</i></a></span>';
     }
     if (basico[0].Email3) {
-        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email3 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + basico[0].Email3 + '</i></a></span>';
+        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email3 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email3 + '</i></a></span>';
     }
     if (basico[0].Email4) {
-        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email4 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + basico[0].Email4 + '</i></a></span>';
+        basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email4 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email4 + '</i></a></span>';
     }
     if (basicoEmails === "Emails: <br>") {
         basicoEmails = "Emails: No Posee";
@@ -498,16 +451,16 @@ function armarContacto() {
 
     var basicoTelefonos = "Tels: <br>";
     if (basico[0].Telefono1) {
-        basicoTelefonos += '<span><a target="_blank" href="tel:' + basico[0].Telefono1 + '">' + '<i class="fa fa-skype" aria-hidden="true">  '  + basico[0].Telefono1 + '</i></a></span>';
+        basicoTelefonos += '<span><a target="_blank" href="tel:' + basico[0].Telefono1 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + basico[0].Telefono1 + '</i></a></span>';
     }
     if (basico[0].Telefono2) {
-        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono2 + '">' + '<i class="fa fa-skype" aria-hidden="true">  '  + basico[0].Telefono2 + '</i></a></span>';
+        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono2 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + basico[0].Telefono2 + '</i></a></span>';
     }
     if (basico[0].Telefono3) {
-        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono3 + '">' + '<i class="fa fa-skype" aria-hidden="true">  '  + basico[0].Telefono3 + '</i></a></span>';
+        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono3 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + basico[0].Telefono3 + '</i></a></span>';
     }
     if (basico[0].Telefono4) {
-        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono4 + '">' + '<i class="fa fa-skype" aria-hidden="true">  '  + basico[0].Telefono4 + '</i></a></span>';
+        basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono4 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + basico[0].Telefono4 + '</i></a></span>';
     }
     if (basicoTelefonos === "Tels: <br>") {
         basicoTelefonos = "Tels: No Posee";
@@ -517,7 +470,7 @@ function armarContacto() {
     $(".contacto-detalle-basico-contenedor-datos-comentarios").html(basico[0].Observaciones ? "Obs: " + basico[0].Observaciones : "Sin Observaciones");
 
     var contactocomercialprincipal = comerciales.filter(function (x) { return x.EsPrincipal });
-    if (contactocomercialprincipal.length > 0){
+    if (contactocomercialprincipal.length > 0) {
         $(".contacto-comercial-principal-nombre").html((contactocomercialprincipal[0].Nombres ? contactocomercialprincipal[0].Nombres + " " : "") + (contactocomercialprincipal[0].Apellido ? contactocomercialprincipal[0].Apellido : ""))
         $(".contacto-principal-cargo").html((contactocomercialprincipal[0].Cargo ? contactocomercialprincipal[0].Cargo + " - " : ""));
         $(".contacto-principal-puesto").html((contactocomercialprincipal[0].Puesto ? contactocomercialprincipal[0].Puesto : ""));
@@ -539,15 +492,15 @@ function armarContacto() {
 
         var comercialEmails = "";
         if (contactocomercialprincipal[0].Email1) {
-            comercialEmails += '<span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email1 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + contactocomercialprincipal[0].Email1 + '</i></a></span>';
+            comercialEmails += '<span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email1 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + contactocomercialprincipal[0].Email1 + '</i></a></span>';
         }
         if (contactocomercialprincipal[0].Email2) {
-            comercialEmails += ',<br><span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email2 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + contactocomercialprincipal[0].Email2 + '</i></a></span>';
+            comercialEmails += ',<br><span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email2 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + contactocomercialprincipal[0].Email2 + '</i></a></span>';
         }
         if (contactocomercialprincipal[0].Email3) {
-            comercialEmails += ',<br><span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email3 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  '  + contactocomercialprincipal[0].Email3 + '</i></a></span>';
+            comercialEmails += ',<br><span><a target="_blank" href="mailto:' + contactocomercialprincipal[0].Email3 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + contactocomercialprincipal[0].Email3 + '</i></a></span>';
         }
-        
+
         if (comercialEmails === "") {
             comercialEmails = "Emails: No Posee";
         }
@@ -556,18 +509,13 @@ function armarContacto() {
         $(".contacto-principal-fechanacimiento").html((contactocomercialprincipal[0].FechaNacimiento ? kendo.toString(kendo.parseDate(contactocomercialprincipal[0].FechaNacimiento), "dd/MM/yy") : "No especifica"))
 
         $(".contacto-principal-intereses").html((contactocomercialprincipal[0].Interes ? contactocomercialprincipal[0].Interes.split(",").join("<br>") + "<br>" : "") + (contactocomercialprincipal[0].OtrosIntereses ? contactocomercialprincipal[0].OtrosIntereses : "No especifica"));
-
-
     }
-    else{
+    else {
         $(".contacto-comercial-principal").hide();
     }
 
-
-
-
     $(".contacto-detalle-moa-ultimo-contacto-span").html(basico[0].FechaUltimoContacto ? kendo.toString(kendo.parseDate(basico[0].FechaUltimoContacto), "m") : "-");
-    $(".cliente-moa-val").html("<b>"+ (basico[0].ClienteMOA ? "Si" : "No" )+"</b>");
+    $(".cliente-moa-val").html("<b>" + (basico[0].ClienteMOA ? "Si" : "No") + "</b>");
     $(".comecial-a-cargo").html((basico[0].Nombres !== "" ? basico[0].Nombres + ' ' : '') + (basico[0].Apellido !== "" ? basico[0].Apellido : ''));
     $(".grupo-de-compras").html(basico[0].GrupoDeCompras ? basico[0].GrupoDeCompras : "No posee");
 
@@ -584,7 +532,6 @@ function armarContacto() {
         if (basico[0].Provincia) {
             domActividad.push(basico[0].Provincia);
         }
-        
     }
 
     $("#daco-domact").html(domActividad.join(", "));
@@ -596,7 +543,7 @@ function armarContacto() {
         })(ii);
     }
     $("#daco-caope").html((canope.length > 0 ? canope.join("<br>") : "No posee"));
-    
+
     var enta = [];
     for (var ii in resultDatos.ProveedorDestinatario) {
         (function (i) {
@@ -621,17 +568,14 @@ function armarContacto() {
     $("#daco-clascomnet").html(basico[0].ClasificacionCompraNet == null ? "No posee" : basico[0].ClasificacionCompraNet);
     $("#daco-bolecomnet").html(basico[0].BoletoCompraNet == null ? "No posee" : basico[0].BoletoCompraNet);
     $("#daco-bolscomnet").html(basico[0].BolsaCompraNet == null ? "No posee" : basico[0].BolsaCompraNet);
-    $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet=="" ) ? "No posee" : basico[0].ProvinciaCompraNet);
+    $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].ProvinciaCompraNet);
     $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].LocalidadCompraNet);
 
-
     if (comerciales.length == 0) {
-
     } else {
         var htmlComerciales = '';
         for (var ii in comerciales) {
             (function (i) {
-
                 var telComerciales = [];
                 if (comerciales[i].Telefono1) {
                     telComerciales.push('<a href="tel: ' + comerciales[i].Telefono1 + '" target: "_blank"><i class="fa fa-skype" aria-hidden="true"> ' + comerciales[i].Telefono1 + '</i></a>');
@@ -645,7 +589,7 @@ function armarContacto() {
 
                 var emailComerciales = [];
                 if (comerciales[i].Email1) {
-                    emailComerciales.push('<a href="mailto: ' +comerciales[i].Email1 + '" target: "_blank"><i class="fa fa-envelope-o" aria-hidden="true"> ' + comerciales[i].Email1 + '</i></a>');
+                    emailComerciales.push('<a href="mailto: ' + comerciales[i].Email1 + '" target: "_blank"><i class="fa fa-envelope-o" aria-hidden="true"> ' + comerciales[i].Email1 + '</i></a>');
                 }
                 if (comerciales[i].Email2) {
                     emailComerciales.push('<a href="mailto: ' + comerciales[i].Email2 + '" target: "_blank"><i class="fa fa-envelope-o" aria-hidden="true"> ' + comerciales[i].Email2 + '</i></a>');
@@ -679,7 +623,7 @@ function armarContacto() {
                     (telComerciales.length > 0 ? telComerciales.join(" - ") : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-mails">' +
-                    (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ")  : "")  +
+                    (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ") : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-extras">' +
                     '<div class="row">' +
@@ -722,8 +666,6 @@ function armarContacto() {
     $("#15-16").html("");
     $("#14-15").html("");
 
-
-    
     if (campoacopio.length > 0) {
         //var grupocampoacopio = {};
         for (var ii in campoacopio) {
@@ -764,7 +706,6 @@ function armarContacto() {
         var cont = 0;
         for (var ii in grupocampoacopio[0]) {
             (function (i) {
-                
                 switch (cont) {
                     case 0:
                         armarCampañaProduccion($("#16-17"), i, grupocampoacopio, $("#campana16-17"));
@@ -783,7 +724,6 @@ function armarContacto() {
             })(ii);
         }
 
-
         campañaLength = Object.keys(grupocampoacopio[0]).length;
         if (campañaLength == 0) {
             $("#16-17").remove();
@@ -801,18 +741,14 @@ function armarContacto() {
             $("#14-15").remove();
             $("#campana14-15").remove();
         }
-
     } else {
         var html = "";
         var html = "";
         html += '<div class="contenedor-produccion-sin-resultados">' +
-                'No se encontraron resultados de Producción' +
-                '</div>';
+            'No se encontraron resultados de Producción' +
+            '</div>';
         $("#datos-produccion").append(html);
-
     }
-
-    
 
     $("#a16-17").html("");
     $("#a15-16").html("");
@@ -832,7 +768,7 @@ function armarContacto() {
 
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].KMZnombre = acopio[i].KMZnombre;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].KMZfile = acopio[i].KMZfile;
-                
+
                 //grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].AlmacCapacidadPropia = acopio[i].AlmacCapacidadPropia;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].AlmacHabilitadoSojaSust = acopio[i].AlmacHabilitadoSojaSust;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].AlmacHectSojaSust = acopio[i].AlmacHectSojaSust;
@@ -874,10 +810,7 @@ function armarContacto() {
             })(ii);
         }
 
-
         grupoacopio = [grupoacopio];
-
-
 
         var acont = 0;
         for (var ii in grupoacopio[0]) {
@@ -902,9 +835,6 @@ function armarContacto() {
             })(ii);
         }
 
-
-
-
         acampañaLength = Object.keys(grupoacopio[0]).length;
         if (acampañaLength == 0) {
             $("#a16-17").remove();
@@ -926,15 +856,10 @@ function armarContacto() {
         var html = "";
         var html = "";
         html += '<div class="contenedor-produccion-sin-resultados">' +
-                'No se encontraron resultados de Almacenamiento' +
-                '</div>';
+            'No se encontraron resultados de Almacenamiento' +
+            '</div>';
         $("#datos-almacenamiento").append(html);
-
     }
-
-
-
-
 
     var contAct = 0;
     var htmlProxAct = "";
@@ -950,13 +875,12 @@ function armarContacto() {
     }
     if (!actividadhistoria.length) {
         htmlHist = "<div class='nohayrecordatorios'>No hay actividades registradas.</div>";
-    }else{
+    } else {
         armarActividad(actividadhistoria, function (fhtmlHist, fhtmlProxAct) {
             //htmlProxAct = fhtmlProxAct;
             htmlHist = fhtmlHist;
         });
     }
-
 
     $(".proximas-actividades-contenedor").append(htmlProxAct);
     $(".actividad-ultimo-contacto").html(basico[0].FechaUltimoContacto ? kendo.toString(kendo.parseDate(basico[0].FechaUltimoContacto), "dd/MM") : "-");
@@ -964,57 +888,51 @@ function armarContacto() {
 
     if (objetivos && objetivos.length) {
         var htmlCamp = '<div class="datos-contacto-titular">' +
-                            '<span>Objetivos</span>' +
-                        '</div>' +
-                        '<div class="datos-produccion-cap-prod-editor-contenedor">' +
-                            '<div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">' +
-                                '<div class="datos-produccion-cap-prod-editor-granos-titulos">' +
-                                    '<div class="produccion-titulo-grano">Campaña</div>' +
-                                    '<div class="produccion-titulo-grano">Grano</div>' +
-                                    '<div class="produccion-titulo-grano">Objetivo</div>' +
-                                '</div>' +
-                                '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
-                                    '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
+            '<span>Objetivos</span>' +
+            '</div>' +
+            '<div class="datos-produccion-cap-prod-editor-contenedor">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-titulos">' +
+            '<div class="produccion-titulo-grano">Campaña</div>' +
+            '<div class="produccion-titulo-grano">Grano</div>' +
+            '<div class="produccion-titulo-grano">Objetivo</div>' +
+            '</div>' +
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
 
         for (var ii in objetivos) {
             (function (i) {
                 htmlCamp += '           <div class="lineaObjetivos campo-granos-objetivo">' +
-                                            '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Campaña + '</span></div>' +
-                                            '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Material + '</span></div>' +
-                                            '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + (objetivos[i].ToneladasObjetivos ? objetivos[i].ToneladasObjetivos : "0") + ' TNs</span></div>' +
-                                        '</div>';
+                    '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Campaña + '</span></div>' +
+                    '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Material + '</span></div>' +
+                    '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + (objetivos[i].ToneladasObjetivos ? objetivos[i].ToneladasObjetivos : "0") + ' TNs</span></div>' +
+                    '</div>';
             })(ii);
         }
     } else {
         var htmlCamp = '<div class="datos-contacto-titular">' +
-                            '<span>Objetivos</span>' +
-                        '</div>' +
-                        '<div class="datos-produccion-cap-prod-editor-contenedor">' +
-                            '<div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">' +
-                                '<div class="datos-produccion-cap-prod-editor-granos-titulos">' +
-                                    '<div class="produccion-titulo-grano" style="width:100%!important;">No hay Objetivos cargados</div>'
-                                '</div>' +
-                                '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
-                                    '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
+            '<span>Objetivos</span>' +
+            '</div>' +
+            '<div class="datos-produccion-cap-prod-editor-contenedor">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-titulos">' +
+            '<div class="produccion-titulo-grano" style="width:100%!important;">No hay Objetivos cargados</div>'
+        '</div>' +
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
     }
-                                            
+
     htmlCamp += '</div>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>';
+        '</div>' +
+        '</div>' +
+        '</div>';
     $("#datos-contacto .wd65p").append(htmlCamp);
 
-
-
-    
     if (MostrarAgenda) {
-        setTimeout(function(){
+        setTimeout(function () {
             $("#agenda").trigger("click");
-        },300);
+        }, 300);
     }
-
-
-
 }
 
 function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
@@ -1040,34 +958,30 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
     var hasArrendadas = 0;
     for (var jj in grupocampoacopio[0][i]) {
         (function (j) {
-                    
             htmlCamp += '<div class="value-contacto ' + j + '">' +
-                            '<div class="contenedor-campo-grupo">' +
-                                '<div class="row">';
+                '<div class="contenedor-campo-grupo">' +
+                '<div class="row">';
             if (grupocampoacopio[0][i][j].Provincia && grupocampoacopio[0][i][j].Provincia != null) {
-                htmlCamp +=  '<div class="contenedor-campo-grupo-ubicacion">' +
+                htmlCamp += '<div class="contenedor-campo-grupo-ubicacion">' +
                     grupocampoacopio[0][i][j].Provincia + ", " + grupocampoacopio[0][i][j].Localidad +
-                '</div>';
+                    '</div>';
             }
             if (grupocampoacopio[0][i][j].KMZfile && grupocampoacopio[0][i][j].KMZfile != null) {
-
-                var aux = grupocampoacopio[0][i][j].KMZnombre.split("\\").length-1;
+                var aux = grupocampoacopio[0][i][j].KMZnombre.split("\\").length - 1;
                 var nomb = grupocampoacopio[0][i][j].KMZnombre.split("\\")[aux];
 
                 htmlCamp += '<div class="contenedor-campo-grupo-kmz"><span onclick="descargarKMZ(this)" id="id_' + grupocampoacopio[0][i][j].Id + '_' + i + '">' +
                     nomb +
-                '</span></div>';
+                    '</span></div>';
             }
             htmlCamp += '</div>' +
                 '<div class="contenedor-campo-grupo-hectareas">' +
-                    ' ​​​​​​(Has ' + (grupocampoacopio[0][i][j].ArrendadoPropio ? "Propias" : "Arrendadas") + ')' +
+                ' ​​​​​​(Has ' + (grupocampoacopio[0][i][j].ArrendadoPropio ? "Propias" : "Arrendadas") + ')' +
                 '</div>';
 
-                    
             htmlCamp += '<div class="contenedor-campo-grupo-granos-contenedor">';
             for (var ll in grupocampoacopio[0][i][j].Granos) {
                 (function (l) {
-
                     hasCampo += grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje;
                     if (grupocampoacopio[0][i][j].ArrendadoPropio) {
                         hasPropias += grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje;
@@ -1076,25 +990,24 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
                     }
 
                     htmlCamp += '<div class="contenedor-campo-grupo-granos-titulo">' +
-                                    (grupocampoacopio[0][i][j].Granos[l].Material ? grupocampoacopio[0][i][j].Granos[l].Material : "No especifica material") +
-                                '</div>' +
-                                '<div class="contenedor-campo-grupo-granos-hastns">' +
-                                    '<span>' + (grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje ? grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje : "No especifica ") + ' Has</span> <span>-</span> <span>' + (grupocampoacopio[0][i][j].Granos[l].Toneladas ? grupocampoacopio[0][i][j].Granos[l].Toneladas : "No especifica") + ' TNs</span>' +
-                                '</div>';
+                        (grupocampoacopio[0][i][j].Granos[l].Material ? grupocampoacopio[0][i][j].Granos[l].Material : "No especifica material") +
+                        '</div>' +
+                        '<div class="contenedor-campo-grupo-granos-hastns">' +
+                        '<span>' + (grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje ? grupocampoacopio[0][i][j].Granos[l].HectareasPorcentaje : "No especifica ") + ' Has</span> <span>-</span> <span>' + (grupocampoacopio[0][i][j].Granos[l].Toneladas ? grupocampoacopio[0][i][j].Granos[l].Toneladas : "No especifica") + ' TNs</span>' +
+                        '</div>';
                 })(ll);
             }
-            htmlCamp +=         '</div>'+
-                            '</div>' +
-                        '</div>';
-                        
+            htmlCamp += '</div>' +
+                '</div>' +
+                '</div>';
         })(jj);
     }
-    
+
     htmlCamp += '</div>' +
         '</div>' +
         '</div>' +
         '</div>' +
-        
+
         '<div class="row">' +
         '<div class="col-lg-5">' +
         '<div class="label-contacto">' +
@@ -1175,7 +1088,6 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
 }
 
 function descargarKMZ(elem) {
-    
     var id = $(elem).prop("id").split("_")[1];
     var campaña = $(elem).prop("id").split("_")[2];
     var val = grupocampoacopio[0][campaña]["Campo" + id];
@@ -1186,7 +1098,6 @@ function descargarKMZ(elem) {
     var aux = val.KMZnombre.split("\\").length - 1;
     var nomb = val.KMZnombre.split("\\")[aux];
     download(nomb, file);
-    
 }
 
 function download(name, uri) {
@@ -1200,8 +1111,6 @@ function download(name, uri) {
 }
 
 function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
-
-
     elem.html("Campaña " + (i != "null" ? i : "sin especificar"));
     var htmlCamp = "";
     htmlCamp += '<div class="datos-contacto-titular">' +
@@ -1244,27 +1153,24 @@ function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
         '</div>' +
         '<div class="col-lg-7">';
 
-
     for (var jj in grupoacopio[0][i]) {
         (function (j) {
-
             htmlCamp += '<div class="value-contacto ' + j + '">' +
                 '<div class="contenedor-campo-grupo">' +
                 '<div class="row">';
             if (grupoacopio[0][i][j].Provincia && grupoacopio[0][i][j].Provincia != null) {
                 htmlCamp += '<div class="contenedor-campo-grupo-ubicacion">' +
-                grupoacopio[0][i][j].Provincia + ", " + grupoacopio[0][i][j].Localidad +
-                '</div>';
+                    grupoacopio[0][i][j].Provincia + ", " + grupoacopio[0][i][j].Localidad +
+                    '</div>';
             }
 
             if (grupoacopio[0][i][j].KMZfile && grupoacopio[0][i][j].KMZfile != null) {
-
                 var aux = grupoacopio[0][i][j].KMZnombre.split("\\").length - 1;
                 var nomb = grupoacopio[0][i][j].KMZnombre.split("\\")[aux];
 
                 htmlCamp += '<div class="contenedor-campo-grupo-kmz"><span onclick="descargarKMZ(this)" id="id_' + grupoacopio[0][i][j].Id + '_' + i + '">' +
                     nomb +
-                '</span></div>';
+                    '</span></div>';
             }
 
             htmlCamp += '<div class="contenedor-campo-grupo-abm">' +
@@ -1283,31 +1189,29 @@ function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
                         htmlCamp += /*'<div class="contenedor-campo-grupo-granos-titulo">' +
                      grupoacopio[0][i][j].Granos[l].Material +
                      '</div>' +*/
-                         '<div class="contenedor-campo-grupo-granos-hastns">' +
-                         '<span>' + grupoacopio[0][i][j].Granos[l].Toneladas + ' TNs - </span>' + (grupoacopio[0][i][j].Granos[l].HasArrendadas == 1 ? "Alquiladas" : "Propias") + '<span>' +
-                         '</div>';
+                            '<div class="contenedor-campo-grupo-granos-hastns">' +
+                            '<span>' + grupoacopio[0][i][j].Granos[l].Toneladas + ' TNs - </span>' + (grupoacopio[0][i][j].Granos[l].HasArrendadas == 1 ? "Alquiladas" : "Propias") + '<span>' +
+                            '</div>';
                     }
                 })(ll);
             }
 
             for (var ll in grupoacopio[0][i][j].GranosAlmacenamiento) {
                 (function (l) {
-
                     htmlCamp += '<div class="granos-contenedor-grupo">'
-                            + '<div class="granos-contenedor-titulo">'
-                            + 'Campaña ' + (grupoacopio[0][i][j].GranosAlmacenamiento[l].campañaId != "null" ? grupoacopio[0][i][j].GranosAlmacenamiento[l].campaña : "no especifica") + ": " //+ obj.GranosAlmacenamiento[l].granoAlmacenamiento
-                            + '</div>'
-                            + '<div class="granos-contenedor-has-tns">'
-                            + '<b>' + (grupoacopio[0][i][j].GranosAlmacenamiento[l].granoId ? grupoacopio[0][i][j].GranosAlmacenamiento[l].grano + " - " : "No especifica material - ") + (grupoacopio[0][i][j].GranosAlmacenamiento[l].toneladasAlmacenamiento ? grupoacopio[0][i][j].GranosAlmacenamiento[l].toneladasAlmacenamiento : "No especifica ") + "</b> Tns"
-                            + '</div>'
-                            + '</div>'
+                        + '<div class="granos-contenedor-titulo">'
+                        + 'Campaña ' + (grupoacopio[0][i][j].GranosAlmacenamiento[l].campañaId != "null" ? grupoacopio[0][i][j].GranosAlmacenamiento[l].campaña : "no especifica") + ": " //+ obj.GranosAlmacenamiento[l].granoAlmacenamiento
+                        + '</div>'
+                        + '<div class="granos-contenedor-has-tns">'
+                        + '<b>' + (grupoacopio[0][i][j].GranosAlmacenamiento[l].granoId ? grupoacopio[0][i][j].GranosAlmacenamiento[l].grano + " - " : "No especifica material - ") + (grupoacopio[0][i][j].GranosAlmacenamiento[l].toneladasAlmacenamiento ? grupoacopio[0][i][j].GranosAlmacenamiento[l].toneladasAlmacenamiento : "No especifica ") + "</b> Tns"
+                        + '</div>'
+                        + '</div>'
                 })(ll);
             }
 
             htmlCamp += '</div>' +
-                                    '</div>' +
-                                '</div>';
-
+                '</div>' +
+                '</div>';
         })(jj);
     }
     htmlCamp += '</div>' +
@@ -1315,11 +1219,9 @@ function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
         '</div>' +
         '</div>';
     elem2.append(htmlCamp);
-
 }
 
 function armarEstilosyFuncionesDetalle() {
-
     $('textarea').each(function () {
         $(this).val($(this).val().trim());
     }
@@ -1348,8 +1250,6 @@ function armarEstilosyFuncionesDetalle() {
         $(".lista-contacto-no-operable-tooltip").show();
         $(".lista-contacto-no-operable-tooltip-arrow").show();
     })
-    
-
 
     $(".contacto-detalle-basico-editar").mouseover(function () {
         $(".contacto-detalle-basico-editar span").css({
@@ -1363,8 +1263,6 @@ function armarEstilosyFuncionesDetalle() {
         { ProveedorId: ProveedorId }
         editarProveedor(ProveedorId);
     });
-
-    
 
     $(".editar-contacto-dc").mouseover(function () {
         $(".editar-contacto-dc").css({
@@ -1563,7 +1461,6 @@ function armarEstilosyFuncionesDetalle() {
                     min: new Date(),
                     max: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59),
                     format: 'HH:mm'
-
                 });
             } else {
                 $("#timepicker").data("kendoTimePicker").setOptions({
@@ -1590,7 +1487,6 @@ function armarEstilosyFuncionesDetalle() {
                     min: new Date(),
                     max: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59),
                     format: 'HH:mm'
-
                 });
             } else {
                 $("#timepicker-hasta").data("kendoTimePicker").setOptions({
@@ -1602,12 +1498,7 @@ function armarEstilosyFuncionesDetalle() {
         }*/
     });
 
-
-
-
-
-
-    $(".agenda-contenedor-recordatorio-span").click(function(){
+    $(".agenda-contenedor-recordatorio-span").click(function () {
         $(".agenda-contenedor-recordatorio-span-cancelar").show();
         $(".agenda-contenedor-recordatorio-fechayhora").show();
     });
@@ -1616,7 +1507,6 @@ function armarEstilosyFuncionesDetalle() {
         //$(".agenda-contenedor-recordatorio-fechayhora").hide();
     });
 
-    
     $("label[for='kmz']").hover(function () {
         $("label[for='kmz']").css({
             'background-color': 'white',
@@ -1626,8 +1516,6 @@ function armarEstilosyFuncionesDetalle() {
         $("label[for='kmz'] .campo-span").css({
             color: '#017940'
         })
-        
-
     }, function () {
         $("label[for='kmz']").css({
             'background-color': '#017940'
@@ -1659,8 +1547,6 @@ function armarEstilosyFuncionesDetalle() {
     $("#palabra-clave").change(function () {
         updateFiltro();
     });
-
-
 }
 
 function armarEstilosyFuncionesEditable() {
@@ -1802,10 +1688,7 @@ function armarEstilosyFuncionesEditable() {
         multiple: false
     });
 
-    
-
     $(".agregargrano").click(function () {
-
         if (!$("#grano" + cantGrano).val()) {
             MensErr("El grano debe estar seleccionado");
             return false;
@@ -1815,33 +1698,30 @@ function armarEstilosyFuncionesEditable() {
         } else if (!$("#toneladas" + cantGrano).val()) {
             MensErr("Las toneladas deben estar cargadas");
             return false;
-        } 
-        
-
-        
+        }
 
         cantGrano++;
         var html = "";
         html += '<div class="linea' + cantGrano + '">'
-              + '<select class="campo-input-select campo-sin-span grano" id="grano' + cantGrano + '">'
-              + '<option disabled selected value="">Seleccionar...</option>'
-              + '<option value="1">Cebada</option>'
-              + '<option value="2">Girasol</option>'
-              + '<option value="3">Maiz</option>'
-              + '<option value="4">Soja</option>'
-              + '<option value="5">Trigo</option>'
-              + '<option value="6">Otros</option>'
-              + '</select>'
-              + '<input type="text" class="campo-input-text hectareas" style="margin-left: 24px;margin-right: 4px;" id="hectareas' + cantGrano + '" />'
-              + '<input type="text" class="campo-input-text toneladas" id="toneladas' + cantGrano + '" />'
-              + '</div>';
+            + '<select class="campo-input-select campo-sin-span grano" id="grano' + cantGrano + '">'
+            + '<option disabled selected value="">Seleccionar...</option>'
+            + '<option value="1">Cebada</option>'
+            + '<option value="2">Girasol</option>'
+            + '<option value="3">Maiz</option>'
+            + '<option value="4">Soja</option>'
+            + '<option value="5">Trigo</option>'
+            + '<option value="6">Otros</option>'
+            + '</select>'
+            + '<input type="text" class="campo-input-text hectareas" style="margin-left: 24px;margin-right: 4px;" id="hectareas' + cantGrano + '" />'
+            + '<input type="text" class="campo-input-text toneladas" id="toneladas' + cantGrano + '" />'
+            + '</div>';
         $(".linea" + (cantGrano - 1)).prepend(html);
 
         if (cantGrano > 0)
-        for (var i = 0; i < cantGrano; i++) {
-            var val = $("#grano" + i).val();
-            $("#grano"+cantGrano+" option[value="+val+"]").remove();
-        }
+            for (var i = 0; i < cantGrano; i++) {
+                var val = $("#grano" + i).val();
+                $("#grano" + cantGrano + " option[value=" + val + "]").remove();
+            }
 
         $("#eliminarGrano").show();
     });
@@ -1881,7 +1761,7 @@ function armarEstilosyFuncionesEditable() {
 
         obj.granos = [];
 
-        for (var i = 0; i < (cantGrano + 1) ; i++) {
+        for (var i = 0; i < (cantGrano + 1); i++) {
             obj.granos.push({
                 granoId: $("#grano" + i).val(),
                 grano: $("#grano" + i).find('option:selected').text(),
@@ -1890,44 +1770,40 @@ function armarEstilosyFuncionesEditable() {
             });
         }
 
-
         var html = "";
-        html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor'+ capProdCant +'">'
-                + '<div>'
-                    + '<div class="datos-produccion-cap-prod-guardados-zona">'
-                        + obj.provinciaNom + ", " + obj.localidadNom
-                    + '</div>'
-                    /*+ '<div class="editar-produccion" id="editarProd' + capProdCant + '">'
-                        + '<img src="../Content/Images/contacto-edit.png" /> Editar'
-                    + '</div>'
-                    + '<div class="eliminar-produccion"  onclick="eliminarCampoProduccion(this)" id="eliminarProd' + capProdCant + '">'
-                        + 'x Eliminar'
-                    + '</div>'*/
-                + '</div>'
-                + '<div>'
-                + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                + '(Has ' + obj.hectareasNom + ')'
-                + '</div>'
-                + '<div class="granos-contenedor">';
+        html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor' + capProdCant + '">'
+            + '<div>'
+            + '<div class="datos-produccion-cap-prod-guardados-zona">'
+            + obj.provinciaNom + ", " + obj.localidadNom
+            + '</div>'
+            /*+ '<div class="editar-produccion" id="editarProd' + capProdCant + '">'
+                + '<img src="../Content/Images/contacto-edit.png" /> Editar'
+            + '</div>'
+            + '<div class="eliminar-produccion"  onclick="eliminarCampoProduccion(this)" id="eliminarProd' + capProdCant + '">'
+                + 'x Eliminar'
+            + '</div>'*/
+            + '</div>'
+            + '<div>'
+            + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+            + '(Has ' + obj.hectareasNom + ')'
+            + '</div>'
+            + '<div class="granos-contenedor">';
 
         for (var jj in obj.granos) {
             (function (j) {
                 html += '<div class="granos-contenedor-grupo">'
-                      + '<div class="granos-contenedor-titulo">'
-                      + obj.granos[j].grano
-                      + '</div>'
-                      + '<div class="granos-contenedor-has-tns">'
-                      + '<b>' + obj.granos[j].hectareas + "</b> Has - <b>" + obj.granos[j].toneladas + "</b> TNs"
-                      + '</div>'
-                      + '</div>'
+                    + '<div class="granos-contenedor-titulo">'
+                    + obj.granos[j].grano
+                    + '</div>'
+                    + '<div class="granos-contenedor-has-tns">'
+                    + '<b>' + obj.granos[j].hectareas + "</b> Has - <b>" + obj.granos[j].toneladas + "</b> TNs"
+                    + '</div>'
+                    + '</div>'
             })(jj);
         }
 
-        
-
         html += '</div>'
-              + '</div>';
-
+            + '</div>';
 
         $(".datos-produccion-cap-prod-guardados").append(html);
         $(".datos-produccion-cap-prod-guardados").show();
@@ -1935,11 +1811,9 @@ function armarEstilosyFuncionesEditable() {
 
         capProdCant++;
     });
-
 }
 
 function eliminarCampoProduccion(val) {
-    
     var item = $(val).attr("id").split("eliminarProd")[1];
     $("#granocontenedor" + item).remove();
     produccionCampoGuardar = produccionCampoGuardar.filter(function (el) {
@@ -1966,7 +1840,7 @@ function armarEditable() {
     $("#CUIT").val(basico[0].CUIT);
     $("#RazonSocial").val(basico[0].RazonSocial);
     var idSegmentacion = $('#segmentacion option').filter(function () { return $(this).html() == basico[0].Segmentacion; }).val();
-    
+
     $("#segmentacion").val([idSegmentacion]);
     $("#segmentacion").multiselect("refresh");
     $("#Email1").val(basico[0].Email1); //recorrer Emails
@@ -1982,7 +1856,7 @@ function armarEditable() {
     //$("#concom-puesto").val(comerciales[0].Puesto);
     //$("#concom-intereses").val(comerciales[0].Interes);
     //$("#concom-otrosintereses").val(comerciales[0].OtrosIntereses);
-    
+
     $("#datcon-direccion").val(basico[0].Direccion);
     $("#datcon-codigopostal").val(basico[0].CodigoPostal);
     $("#datcon-canaloperacion").val(basico[0].CanalOperacion);
@@ -1990,20 +1864,13 @@ function armarEditable() {
     $("#Condicion").val(basico[0].Destinatario);
     $("#datcon-intermediario").val(basico[0].Intermediario);
     $("#datcon-comentarios").val(basico[0].Intermediario);
-    
-
 }
 
 function InicializarDatos() {
-    
-
     var resultDatos = MSExecuteOnServer('/Proveedor/Iniciliazar', { ProveedorId: ProveedorId });
 
     if (resultDatos != null) {
-
-        
         armarSelectsCombos(resultDatos);
-        
     }
 }
 
@@ -2026,7 +1893,6 @@ function buscarLocalidad(val) {
         multiple: false,
         selectedList: 1
     })
-
 }
 
 function armarSelectsCombos(resultDatos) {
@@ -2038,7 +1904,6 @@ function armarSelectsCombos(resultDatos) {
                 SegmentacionId: resultDatos.segm[j].SegmentacionId,
                 Descripcion: resultDatos.segm[j].Descripcion
             });
-
         })(jj);
     }
 
@@ -2046,7 +1911,7 @@ function armarSelectsCombos(resultDatos) {
     htmlSegmentacion += '<select class="col-lg-7 segmentacioncombo campo-segmentacion" id="segmentacion">';
     var nulo = grupos[null];
     htmlSegmentacion += '<option value="null">Seleccione...</option>';
-  //  htmlSegmentacion += '<option value="' + nulo[0].SegmentacionId + '">' + nulo[0].Descripcion + '</option>';
+    //  htmlSegmentacion += '<option value="' + nulo[0].SegmentacionId + '">' + nulo[0].Descripcion + '</option>';
     for (var ii in grupos) {
         (function (i) {
             if (i != "null") {
@@ -2073,8 +1938,8 @@ function armarSelectsCombos(resultDatos) {
         })(ii);
     }
     htmlTipoTelefono += '<input type="text" placeholder="Telefono" class="campo-input-text" id="Telefono1" />'
-                      + '<img src="../Content/Images/agregar-tel-mail.png" id="agregarTelefono" />'
-                      + '</select>';
+        + '<img src="../Content/Images/agregar-tel-mail.png" id="agregarTelefono" />'
+        + '</select>';
     $(".telefonoinput").append(htmlTipoTelefono);
 
     var htmlProvincia = "";
@@ -2095,7 +1960,7 @@ function armarSelectsCombos(resultDatos) {
     }
     htmlProvincia += '</select>';
     htmlProvincia += '<input type="text" placeholder="direccion" id="datcon-direccion" />'
-                  +  '<input type="text" placeholder="cod. postal" id="datcon-codigopostal" />';
+        + '<input type="text" placeholder="cod. postal" id="datcon-codigopostal" />';
     $(".campoprovincialocalidad").append(htmlProvincia);
 
     var htmlCanalOperacion = "";
@@ -2140,8 +2005,8 @@ function armarSelectsCombos(resultDatos) {
         })(ii);
     }
     htmlTipoTelefono += '<input type="text" placeholder="Telefono" class="campo-input-text" id="Telefono1" />'
-                      + '<img src="../Content/Images/agregar-tel-mail.png" id="agregarTelefono" />'
-                      + '</select>';
+        + '<img src="../Content/Images/agregar-tel-mail.png" id="agregarTelefono" />'
+        + '</select>';
     $(".concom-campo-telefono").append(htmlTipoTelefono);
 
     var htmlInteres = "";
@@ -2167,7 +2032,6 @@ function armarSelectsCombos(resultDatos) {
     $(".campo-tipoactividad").append(htmlTipoActividad);
 
     $("#tipo-actividad").change(function () {
-        
         $(".titulo-recordatorio").hide();
         $(".campoasunto").hide();
         $(".campofechadesde").hide();
@@ -2187,8 +2051,7 @@ function armarSelectsCombos(resultDatos) {
         }
     });
 
-
-    var htmlContactoComercial= "";
+    var htmlContactoComercial = "";
     htmlContactoComercial += '<select class"campo-tipoactividad" id="contacto-actividad">';
     htmlContactoComercial += '<option value = "null">Seleccione...</option>';
     for (var ii in resultDatos.concom) {
@@ -2198,8 +2061,7 @@ function armarSelectsCombos(resultDatos) {
     }
     htmlContactoComercial += '</select>';
     $(".campo-contactocomercial").append(htmlContactoComercial);
-    
-    
+
     $("#segmentacion").multiselect({
         header: false,
         multiple: false,
@@ -2245,12 +2107,12 @@ function guardarProveedor() {
     var obj = {};
 
     if ($("#CUIT").val()) {
-        obj.cuitBasico= $("#CUIT").val();
+        obj.cuitBasico = $("#CUIT").val();
         obj.cuitNom = $("#CUIT option:selected").text();
     }
 
     if ($("#RazonSocial").val()) {
-        obj.razonSocialBasico= $("#RazonSocial").val();
+        obj.razonSocialBasico = $("#RazonSocial").val();
         obj.razonSocialNom = $("#RazonSocial option:selected").text();
     }
 
@@ -2284,10 +2146,7 @@ function guardarProveedor() {
         obj.calificacionNom = $("#calificacion option:selected").text();
     }
 
-
     aGuardarBasico.push(obj);
-    
-
 }
 
 function editarActividad(elem) {
@@ -2298,7 +2157,7 @@ function editarActividad(elem) {
     } else {
         return false;
     }
-    
+
     $("#actividadId").val(obj.ActividadId);
     $("#fechaHoraActividad").val(obj.FechaHoraActividad);
     $("#tipo-actividad").val($('#tipo-actividad option').filter(function () { return $(this).html() == obj.TipoActividad; }).val());
@@ -2309,7 +2168,6 @@ function editarActividad(elem) {
         $("#contacto-actividad").val(obj.ContactoComercialId);
     else
         $("#contacto-actividad").val("null");
-
 
     if (obj.TipoActividad == "Agenda") {
         $(".titulo-recordatorio").show();
@@ -2329,8 +2187,6 @@ function editarActividad(elem) {
         $("#datepicker-hasta").data("kendoDatePicker").value(obj.FechaHoraRecordatorioFin);
         $("#timepicker-hasta").data("kendoTimePicker").value(obj.FechaHoraRecordatorioFin.getHours() + ":" + obj.FechaHoraRecordatorioFin.getMinutes());
     }
-    
-
 }
 
 function eliminarActividad(elem) {
@@ -2340,45 +2196,44 @@ function eliminarActividad(elem) {
     $(elem).parent().parent().remove();
 }
 
-function armarActividad(actividad,ret) {
-    var contAct = 0;    
+function armarActividad(actividad, ret) {
+    var contAct = 0;
     var htmlHist = "";
     var htmlProxAct = "";
     for (var ii in actividad) {
         (function (i) {
-            
             htmlHist += '<div class="historial-actividad-grupo-detalle">' +
                 '<div class="historial-actividad-grupo-detalle-titulo">' +
                 actividad[i].TipoActividad +
                 '</div>';
-            
+
             htmlHist += '<div class="historial-actividad-grupo-detalle-abm">' +
-                    '<img src="../Content/Images/eliminar-agenda.png" onclick="eliminarActividad(this)" id="eliminar' + actividad[i].ActividadId + '" />' +
-                    '<img src="../Content/Images/contacto-edit.png" onclick="editarActividad(this)" id="editar' + actividad[i].ActividadId + '" />' +
-                    '</div>';
+                '<img src="../Content/Images/eliminar-agenda.png" onclick="eliminarActividad(this)" id="eliminar' + actividad[i].ActividadId + '" />' +
+                '<img src="../Content/Images/contacto-edit.png" onclick="editarActividad(this)" id="editar' + actividad[i].ActividadId + '" />' +
+                '</div>';
 
             if (actividad[i].ContactoComercial) {
                 htmlHist += '<div class="historial-contactocomercial">' +
-                actividad[i].ContactoComercial +
-                '</div>';
+                    actividad[i].ContactoComercial +
+                    '</div>';
             }
 
             htmlHist += '<div class="historial-actividad-grupo-detalle-comentario">' +
-                    '<img src="../Content/Images/mensaje-agenda.png" /> <span>' + actividad[i].Detalle + '</span>' +
-                    '</div>' +
-                    '<div class="historial-actividad-grupo-detalle-fecha">' +
-                    kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "MMMM HH:mm") +
+                '<img src="../Content/Images/mensaje-agenda.png" /> <span>' + actividad[i].Detalle + '</span>' +
+                '</div>' +
+                '<div class="historial-actividad-grupo-detalle-fecha">' +
+                kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "MMMM HH:mm") +
+                '</div>';
+            if (actividad[i].FechaHoraRecordatorio) {
+                htmlHist += '<div class="historial-actividad-grupo-detalle-recordatorio">' +
+                    '<img src="../Content/Images/notificaciones-reloj.png" /><span>Recordatorio: ' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "MMMM HH:mm") + '</span>' +
                     '</div>';
-                if (actividad[i].FechaHoraRecordatorio) {
-                    htmlHist += '<div class="historial-actividad-grupo-detalle-recordatorio">' +
-                        '<img src="../Content/Images/notificaciones-reloj.png" /><span>Recordatorio: ' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "MMMM HH:mm") + '</span>' +
-                        '</div>';
-                }
-                htmlHist += '</div>';
+            }
+            htmlHist += '</div>';
             contAct++;
         })(ii);
     }
-    
+
     ret(htmlHist, htmlProxAct);
 }
 
@@ -2390,20 +2245,20 @@ function armarProxActividad(actividad, ret) {
         (function (i) {
             actividad[i].FechaHoraActividad = new Date(new Date(kendo.parseDate(actividad[i].FechaHoraActividad)).setMonth(new Date(kendo.parseDate(actividad[i].FechaHoraActividad)).getMonth()));
             htmlProxAct += '<div class="proximas-actividades-detalle">' +
-                   '<div class="proximas-actividades-detalle-horario">' +
-                   '<img src="../Content/Images/notificaciones-reloj.png" />' +
-                   '<span class="proximas-actividades-horario">' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "MMMM HH:mm") + '</span>' +
-                   '</div>' +
-                   '<div class="proximas-actividades-titulo">' +
-                   actividad[i].TipoActividad +
-                   '</div>' +
-                   '<div class="proximas-contactocomercial">' +
-                    actividad[i].ContactoComercial +
-                    '</div>' +
-                   '<div class="proximas-actividades-observacion">' +
-                   actividad[i].Detalle +
-                   '</div>' +
-                   '</div>';
+                '<div class="proximas-actividades-detalle-horario">' +
+                '<img src="../Content/Images/notificaciones-reloj.png" />' +
+                '<span class="proximas-actividades-horario">' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "MMMM HH:mm") + '</span>' +
+                '</div>' +
+                '<div class="proximas-actividades-titulo">' +
+                actividad[i].TipoActividad +
+                '</div>' +
+                '<div class="proximas-contactocomercial">' +
+                actividad[i].ContactoComercial +
+                '</div>' +
+                '<div class="proximas-actividades-observacion">' +
+                actividad[i].Detalle +
+                '</div>' +
+                '</div>';
             if (actividad[i].FechaHoraRecordatorio) {
                 htmlProxAct += '<div class="historial-actividad-grupo-detalle-recordatorio">' +
                     '<img src="../Content/Images/notificaciones-reloj.png" /><span>Recordatorio: ' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "MMMM HH:mm") + '</span>' +
@@ -2414,11 +2269,9 @@ function armarProxActividad(actividad, ret) {
         })(ii);
     }
     ret(htmlHist, htmlProxAct);
-   
 }
 
 function guardarActividad() {
-
     var obj = {};
     if ((!$("#contacto-actividad").val() || $("#contacto-actividad").val() === "null")) {
         MensErr("La actividad debe tener un contacto");
@@ -2428,11 +2281,9 @@ function guardarActividad() {
     obj.ActividadId = $("#actividadId").val();
     obj.fechaActividad = $("#fechaHoraActividad").val();
 
-    
-
     obj.tipoactividad = $("#tipo-actividad").val();
     obj.detalle = $("#detalle-actividad").val().trim();
-    obj.contacto = $("#contacto-actividad").val();  
+    obj.contacto = $("#contacto-actividad").val();
     obj.enviar = $("#enviarActividad").is(":checked") ? 1 : 0;
     obj.ProveedorId = ProveedorId;
     //if ($(".agenda-contenedor-recordatorio-fechayhora").is(":visible")) {
@@ -2446,7 +2297,7 @@ function guardarActividad() {
         else
             obj.fechaYHoraRecordatorio = null;
     }
-        else {
+    else {
         obj.fecha = null;
         obj.hora = null;
         obj.fechaYHoraRecordatorio = null;
@@ -2479,17 +2330,15 @@ function guardarActividad() {
 
     var resultActividad = MSExecuteOnServer('/Proveedor/CrearActividad', obj);
 
-
     $("#actividadId").val(null);
     $("#fechaHoraActividad").val(null);
     $("#tipo-actividad").val(null);
-    $("#detalle-actividad").val("");  
+    $("#detalle-actividad").val("");
     $("#contacto-actividad").val("");
     $("#enviarActividad").prop('checked', false);
     //$(".agenda-contenedor-recordatorio-fechayhora").hide();
     $(".agenda-contenedor-recordatorio-span-cancelar").hide();
     $("#agendaAsunto").val("")
-
 
     $("#timepicker").kendoTimePicker({
         dateInput: true,
@@ -2506,7 +2355,6 @@ function guardarActividad() {
                     min: new Date(),
                     max: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59),
                     format: 'HH:mm'
-
                 });
             } else {
                 $("#timepicker").data("kendoTimePicker").setOptions({
@@ -2533,7 +2381,6 @@ function guardarActividad() {
                     min: new Date(),
                     max: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59),
                     format: 'HH:mm'
-
                 });
             } else {
                 $("#timepicker-hasta").data("kendoTimePicker").setOptions({
@@ -2544,8 +2391,6 @@ function guardarActividad() {
             }
         }*/
     });
-
-
 
     var result = MSExecuteOnServer('/Proveedor/TraerProveedor', { ProveedorId: ProveedorId });
     var actividad = result.ActividadTraerPorProveedores;
@@ -2584,7 +2429,7 @@ function guardarActividad() {
 
 function setChangeChecks() {
     $('form :input').change(function () {
-        updateFiltro();  
+        updateFiltro();
     });
     $("#tipo-act-Reunion-personal").change(function () {
         updateFiltro();
@@ -2612,11 +2457,8 @@ function setChangeChecks() {
     });
 }
 
-
 function updateFiltro() {
     filtro = {};
-
-    
 
     if ($("#palabra-clave").val() && $("#palabra-clave").val() != "null")
         filtro.detalle = $("#palabra-clave").val();
@@ -2634,7 +2476,6 @@ function updateFiltro() {
         $("#tipo-act-Cupones").is(":checked") ||
         $("#tipo-act-Notas").is(":checked")
     ) {
-
         if ($("#tipo-act-Todas").is(":checked")) {
             $("#tipo-act-Llamada").prop("checked", false);
             $("#tipo-act-Reunion-personal").prop("checked", false);
@@ -2659,10 +2500,8 @@ function updateFiltro() {
             filtro.TipoActividadId = null;
     }
 
-    
     filtro.ProveedorId = ProveedorId;
     var result = resultDatos = MSExecuteOnServer('/Proveedor/TraerFiltros', filtro);
-    
 
     $(".historial-actividad-grupo-contenedor").empty();
     var htmlHist = "";
@@ -2673,82 +2512,67 @@ function updateFiltro() {
     $(".historial-actividad-grupo-contenedor").append(htmlHist);
 }
 
-
-
-
 function editarProveedor(ProveedorId) {
     window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + ProveedorId;
 }
 
 function armarSelectHeader(granos) {
+    var aux = {};
+    for (var ii in granos) {
+        (function (i) {
+            aux[granos[i].Nombre] = aux[granos[i].Nombre] || {};
+            for (var jj in granos[i].campañas) {
+                (function (j) {
+                    aux[granos[i].Nombre][granos[i].campañas[j].Nombre] = aux[granos[i].Nombre][granos[i].campañas[j].Nombre] || {};
+                    aux[granos[i].Nombre][granos[i].campañas[j].Nombre].Campañas = granos[i].campañas[j].Campañas;
+                })(jj);
+            }
+        })(ii);
+    }
 
+    var granosArr = Object.keys(aux);
 
-    
-    
-        var aux = {};
-        for (var ii in granos) {
+    if (granos && granos.length > 0) {
+        var htmlGranos = "";
+        htmlGranos += '<select id="grano" class="detalle-contacto-header-campana-filtro-select">';
+        //htmlGranos += '<option value="null">- Elegir Grano</option>';
+        for (var ii in granosArr) {
             (function (i) {
-                aux[granos[i].Nombre] = aux[granos[i].Nombre] || {};
-                for (var jj in granos[i].campañas) {
-                    (function (j) {
-                        aux[granos[i].Nombre][granos[i].campañas[j].Nombre] = aux[granos[i].Nombre][granos[i].campañas[j].Nombre] || {};
-                        aux[granos[i].Nombre][granos[i].campañas[j].Nombre].Campañas = granos[i].campañas[j].Campañas;
-                    })(jj);
-                }
+                htmlGranos += '<option value="' + granosArr[i] + '">' + granosArr[i] + '</option>';
             })(ii);
         }
+        htmlGranos += "</select>";
+        htmlGranos += '<select id="campaña" class="detalle-contacto-header-campana-filtro-select">' +
+            //'<option value="null">- Elegir Campaña</option>' +
+            '</select>'
 
-        var granosArr = Object.keys(aux);
+        $(".detalle-contacto-header-campana-filtro").append(htmlGranos);
+        $("#grano").change(function () {
+            actualizarCampaña(aux[$("#grano").val()]);
+        });
 
-        if (granos && granos.length > 0) {
+        $("#grano").trigger("change");
+    } else {
+        var htmlGranos = "";
+        htmlGranos += '<select id="grano" class="detalle-contacto-header-campana-filtro-select">';
+        htmlGranos += '<option value="null">- Elegir Grano</option>';
+        htmlGranos += "</select>";
+        htmlGranos += '<select id="campaña" class="detalle-contacto-header-campana-filtro-select">' +
+            '<option value="null">- Elegir Campaña</option>' +
+            '</select>'
 
-            var htmlGranos = "";
-            htmlGranos += '<select id="grano" class="detalle-contacto-header-campana-filtro-select">';
-            //htmlGranos += '<option value="null">- Elegir Grano</option>';
-            for (var ii in granosArr) {
-                (function (i) {
-                    htmlGranos += '<option value="' + granosArr[i] + '">' + granosArr[i] + '</option>';
-                })(ii);
-            }
-            htmlGranos += "</select>";
-            htmlGranos += '<select id="campaña" class="detalle-contacto-header-campana-filtro-select">' +
-                          //'<option value="null">- Elegir Campaña</option>' +
-                          '</select>'
+        $(".detalle-contacto-header-campana-filtro").append(htmlGranos);
 
-            $(".detalle-contacto-header-campana-filtro").append(htmlGranos);
-            $("#grano").change(function () {
-                actualizarCampaña(aux[$("#grano").val()]);
-            });
-
-            $("#grano").trigger("change");
-
-        } else {
-
-            var htmlGranos = "";
-            htmlGranos += '<select id="grano" class="detalle-contacto-header-campana-filtro-select">';
-            htmlGranos += '<option value="null">- Elegir Grano</option>';
-            htmlGranos += "</select>";
-            htmlGranos += '<select id="campaña" class="detalle-contacto-header-campana-filtro-select">' +
-                          '<option value="null">- Elegir Campaña</option>' +
-                          '</select>'
-
-            $(".detalle-contacto-header-campana-filtro").append(htmlGranos);
-
-
-
-            var html = "";
-            html += '<div class="contenedor-grafico-sin-resultados">' +
-                    'No hay compras para el contacto' +
-                    '</div>';
-            $(".campañagrafico").append(html);
-        }
-
+        var html = "";
+        html += '<div class="contenedor-grafico-sin-resultados">' +
+            'No hay compras para el contacto' +
+            '</div>';
+        $(".campañagrafico").append(html);
+    }
 }
 
 function actualizarCampaña(val) {
-    
     if (val && val !== "null" && val !== null && val !== undefined) {
-        
         $("#campaña").find('option').remove();
         /*$('#campaña').append($('<option>', {
             value: "null",
@@ -2774,11 +2598,9 @@ function actualizarCampaña(val) {
                     inicializarGrafico(val);
                 }
             }
-            
         });
 
         $("#campaña").trigger("change");
-
     } else {
         $("#campaña").find('option').remove();
         $('#campaña').append($('<option>', {

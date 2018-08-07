@@ -158,6 +158,29 @@
 .bor { /*icons*/
     color: #848484;
 }
+#border-orange {
+    border-bottom: 5px solid #ffc100;
+}
+
+#border-green {
+    border-bottom: 5px solid #179e2b;
+}
+
+#border-blue {
+    border-bottom: 5px solid #00adf5;
+}
+
+#border-red {
+    border-bottom: 5px solid #d00707;
+}
+
+#border-black {
+    border-bottom: 5px solid #000000;
+}
+
+#border-grey {
+    border-bottom: 5px solid #848484;
+}
 
 .divtop {
     /*position: relative;
@@ -491,8 +514,37 @@ body.modal-open {
     .k-header[data-field*="Comercial"] {
         display: none;
     }
-}
 
-#tabla-descuentos-visualizar .campo span {
-    float: none;
+    .mobile {
+        display: none;
+    }
+    #border-orange {
+        border-top: 5px solid #ffc100;
+        border-bottom: none;
+    }
+
+    #border-green {
+        border-top: 5px solid #179e2b;
+        border-bottom: none;
+    }
+
+    #border-blue {
+        border-top: 5px solid #00adf5;
+        border-bottom: none;
+    }
+
+    #border-red {
+        border-top: 5px solid #d00707;
+        border-bottom: none;
+    }
+
+    #border-black {
+        border-top: 5px solid #000000;
+        border-bottom: none;
+    }
+
+    #border-grey {
+        border-top: 5px solid #848484;
+        border-bottom: none;
+    }
 }

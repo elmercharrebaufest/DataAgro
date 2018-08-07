@@ -268,12 +268,12 @@ namespace Molinos.DataAgro.Business.Managers
                         repositorio.Remover(descExistente);
                     }
                 }
-            }
-
-            foreach (var descuento in oContrato.Descuentos.Where(x => x.Id == 0))
-            {
-                descuento.Contrato = oContratoSave;
-                repositorio.Agregar(descuento);
+                
+                foreach (var descuento in oContrato.Descuentos.Where(x => x.Id == 0))
+                {
+                    descuento.Contrato = oContratoSave;
+                    repositorio.Agregar(descuento);
+                }
             }
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
             {

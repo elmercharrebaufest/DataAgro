@@ -4,7 +4,6 @@ var htmlaux = "";
 
 var filtro = {};
 
-
 var mostrarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
@@ -16,15 +15,13 @@ var ocultarTooltip = function (el) {
 
 var mostrarTooltipClick = function (el) {
     if ($(el).parent().find($(".lista-contacto-no-operable-tooltip")).is(":visible")) {
-
     } else {
         $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
         $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
     }
-    
 }
 
-var checkear = function (el,nam) {
+var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
     var elem = $(str + " input[name='" + nam + "']");
     elem.prop("checked", !elem.is(":checked"));
@@ -42,12 +39,12 @@ $(document).ready(function () {
     armarCarouselHome();
 });
 
-function armarCarouselHome(){
+function armarCarouselHome() {
     $(".contenedor-principal-widget").empty();
     var htmlCarouselHome = "";
     htmlCarouselHome += '<div class="contenedor-principal-miscontactos-titulo">Próximas Actividades</div>' +
-                        '<div id="carouselHome" class="carousel slide" data-ride="carousel">' +
-                        '<div class="carousel-inner">';
+        '<div id="carouselHome" class="carousel slide" data-ride="carousel">' +
+        '<div class="carousel-inner">';
     var activo = false;
 
     var notificacionesAux = {};
@@ -65,96 +62,91 @@ function armarCarouselHome(){
             (function (i) {
                 if (!activo) {
                     htmlCarouselHome += '<div class="item active">' +
-                                            '<div class="carouselHome-contenedor">' +
-                                                '<div class="carouselHome-fecha">' +
-                                                    '<span>' + i + '</span>' +
-                                                '</div>' +
-                                                '<div class="carouselHome-contacto-contenedor">';
-                    for (var jj in notificacionesAux[i]) {
-                        (function (j) {
-                                htmlCarouselHome +=
-                                    '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '&Agenda=true">' +
-                                        '<div class="linea-carouselHome">' +
-                                            '<div class="carouselHome-hora">' +
-                                                '<span>' + notificacionesAux[i][j].Hora + '</span>' +
-                                            '</div>' +
-                                            '<div class="carouselHome-contacto">' +
-                                            '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
-                                            '</div>' +
-                                            '<div class="carouselHome-descripcion">' +
-                                                '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                            '</div>' +
-                                        '</div>' +
-                                    '</a>';
-                        })(jj);
-                    }
-                    htmlCarouselHome += '</div>' +
-                                        '</div>' +
-                                        '</div>';
-                    activo = true;
-                } else {
-                    htmlCarouselHome += '<div class="item">' +
-                                            '<div class="carouselHome-contenedor">' +
-                                                '<div class="carouselHome-fecha">' +
-                                                    '<span>' + i + '</span>' +
-                                                '</div>' +
-                                                '<div class="carouselHome-contacto-contenedor">';
+                        '<div class="carouselHome-contenedor">' +
+                        '<div class="carouselHome-fecha">' +
+                        '<span>' + i + '</span>' +
+                        '</div>' +
+                        '<div class="carouselHome-contacto-contenedor">';
                     for (var jj in notificacionesAux[i]) {
                         (function (j) {
                             htmlCarouselHome +=
-                                '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '">' +
-                                    '<div class="linea-carouselHome">' +
-                                        '<div class="carouselHome-hora">' +
-                                            '<span>' + notificacionesAux[i][j].Hora + '</span>' +
-                                        '</div>' +
-                                        '<div class="carouselHome-contacto">' +
-                                        '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
-                                        '</div>' +
-                                        '<div class="carouselHome-descripcion">' +
-                                            '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                        '</div>' +
-                                    '</div>' +
+                                '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '&Agenda=true">' +
+                                '<div class="linea-carouselHome">' +
+                                '<div class="carouselHome-hora">' +
+                                '<span>' + notificacionesAux[i][j].Hora + '</span>' +
+                                '</div>' +
+                                '<div class="carouselHome-contacto">' +
+                                '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
+                                '</div>' +
+                                '<div class="carouselHome-descripcion">' +
+                                '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                '</div>' +
+                                '</div>' +
                                 '</a>';
                         })(jj);
                     }
                     htmlCarouselHome += '</div>' +
-                                        '</div>' +
-                                        '</div>';
+                        '</div>' +
+                        '</div>';
+                    activo = true;
+                } else {
+                    htmlCarouselHome += '<div class="item">' +
+                        '<div class="carouselHome-contenedor">' +
+                        '<div class="carouselHome-fecha">' +
+                        '<span>' + i + '</span>' +
+                        '</div>' +
+                        '<div class="carouselHome-contacto-contenedor">';
+                    for (var jj in notificacionesAux[i]) {
+                        (function (j) {
+                            htmlCarouselHome +=
+                                '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '">' +
+                                '<div class="linea-carouselHome">' +
+                                '<div class="carouselHome-hora">' +
+                                '<span>' + notificacionesAux[i][j].Hora + '</span>' +
+                                '</div>' +
+                                '<div class="carouselHome-contacto">' +
+                                '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
+                                '</div>' +
+                                '<div class="carouselHome-descripcion">' +
+                                '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</a>';
+                        })(jj);
+                    }
+                    htmlCarouselHome += '</div>' +
+                        '</div>' +
+                        '</div>';
                 }
             })(ii);
         }
     } else {
         htmlCarouselHome += '<div class="item active">' +
-                                '<div class="carouselHome-contenedor">' +
-                                    '<div class="carouselHome-fecha">' +
-                                        '<span>' + kendo.toString(new Date(), "dd/MM/yyyy hh:mm") + '</span>' +
-                                    '</div>' +
-                                    '<div class="carouselHome-contacto-contenedor">' +
-                                        '<div class="carouselHome-sin-act">' +
-                                            'No hay próximas actividades' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</div>';
+            '<div class="carouselHome-contenedor">' +
+            '<div class="carouselHome-fecha">' +
+            '<span>' + kendo.toString(new Date(), "dd/MM/yyyy hh:mm") + '</span>' +
+            '</div>' +
+            '<div class="carouselHome-contacto-contenedor">' +
+            '<div class="carouselHome-sin-act">' +
+            'No hay próximas actividades' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
     }
 
+    htmlCarouselHome += '<a class="left carousel-control" href="#carouselHome" data-slide="prev">' +
+        '<span class="glyphicon glyphicon-chevron-left"></span>' +
+        '<span class="sr-only">Previous</span>' +
+        '</a>' +
+        '<a class="right carousel-control" href="#carouselHome" data-slide="next">' +
+        '<span class="glyphicon glyphicon-chevron-right"></span>' +
+        '<span class="sr-only">Next</span>' +
+        '</a>' +
+        '</div>';
 
-        htmlCarouselHome += '<a class="left carousel-control" href="#carouselHome" data-slide="prev">' +
-                            '<span class="glyphicon glyphicon-chevron-left"></span>' +
-                            '<span class="sr-only">Previous</span>' +
-                            '</a>' +
-                            '<a class="right carousel-control" href="#carouselHome" data-slide="next">' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span>' +
-                            '<span class="sr-only">Next</span>' +
-                            '</a>' +
-                            '</div>';
-
-
-        $(".contenedor-principal-widget").append(htmlCarouselHome);
-        $("#carouselHome").carousel({ interval: false });
-    
-
-
+    $(".contenedor-principal-widget").append(htmlCarouselHome);
+    $("#carouselHome").carousel({ interval: false });
 }
 
 function updateFiltro() {
@@ -180,10 +172,6 @@ function updateFiltro() {
         }
     }
 
-
-    
-
-    
     if ($("#tipo-actividad") && $("#tipo-actividad").val() && $("#tipo-actividad").val().length > 0) {
         if ($.inArray("null", $("#tipo-actividad").val()) === -1) {
             filtro.Actividad = $("#tipo-actividad").val().join("|");
@@ -191,25 +179,21 @@ function updateFiltro() {
             filtro.Actividad = null;
         }
     }
-        
-    
+
     if ($("#material-granos").val() && $("#material-granos").val() != "null") {
         filtro.Material = $("#material-granos").val();
     }
-     
-    
+
     if ($("#has-Indistinto").is(":checked") ||
         $("#has-unoados").is(":checked") ||
         $("#has-dosacinco").is(":checked") ||
         $("#has-masdecinco").is(":checked")
     ) {
-
         if ($("#has-Indistinto").is(":checked")) {
             $("#has-unoados").prop("checked", false);
             $("#has-dosacinco").prop("checked", false);
             $("#has-masdecinco").prop("checked", false);
         }
-
 
         filtro.Hectareas = [];
         $("#has-Indistinto").is(":checked") && filtro.Hectareas.push($("#has-Indistinto").prop("value"));
@@ -226,13 +210,11 @@ function updateFiltro() {
         $("#tns-dosacinco").is(":checked") ||
         $("#tns-masdecinco").is(":checked")
     ) {
-
         if ($("#tns-Indistinto").is(":checked")) {
             $("#tns-unoados").prop("checked", false);
             $("#tns-dosacinco").prop("checked", false);
             $("#tns-masdecinco").prop("checked", false);
         }
-
 
         filtro.Toneladas = [];
         $("#tns-Indistinto").is(":checked") && filtro.Toneladas.push($("#tns-Indistinto").prop("value"));
@@ -244,8 +226,6 @@ function updateFiltro() {
             filtro.Toneladas = null;
     }
 
-
-
     if ($("#cal-Indistinto").is(":checked") ||
         $("#cal-cinco").is(":checked") ||
         $("#cal-cuatro").is(":checked") ||
@@ -253,15 +233,13 @@ function updateFiltro() {
         $("#cal-dos").is(":checked") ||
         $("#cal-uno").is(":checked")
     ) {
-        
-        if ($("#cal-Indistinto").is(":checked")){
+        if ($("#cal-Indistinto").is(":checked")) {
             $("#cal-cinco").prop("checked", false);
             $("#cal-cuatro").prop("checked", false);
             $("#cal-tres").prop("checked", false);
             $("#cal-dos").prop("checked", false);
             $("#cal-uno").prop("checked", false);
         }
-
 
         filtro.Calificacion = [];
         $("#cal-Indistinto").is(":checked") && filtro.Calificacion.push($("#cal-Indistinto").prop("value"));
@@ -278,7 +256,6 @@ function updateFiltro() {
     var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -288,19 +265,15 @@ function updateFiltro() {
             ArmarContactos(conts);
         }
     }
-
 }
 
-
 function actualizarContactos() {
-
     $(".cont-agend").html(conts.length);
     $(".cont-alta").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "cliente potencial" }).length);
     $(".cont-no-clie").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "sin interés de operar" }).length);
     $(".cont-op").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "operando" }).length);
     $(".cont-no-op").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "no operando" }).length);
     $(".cont-baj").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "baja" }).length);
-
 
     $(".cont-agend-det").click(function () {
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
@@ -316,7 +289,6 @@ function actualizarContactos() {
     });
 
     $(".cont-alta-det").click(function () {
-
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
@@ -381,35 +353,31 @@ function actualizarContactos() {
         htmlaux = "";
         ArmarContactos(arrAux);
     });
-
-
 }
 
 function ArmarContactos(contactos) {
     $(".lista-contactos-general").empty();
-    htmlaux= "";
+    htmlaux = "";
     for (var ii in contactos) {
         (function (i) {
-
             //htmlaux = "";
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
             htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor">'
-                    + '<div class="lista-contactos-estado">'
-                    + '<span class="lista-contactos-estado-titulo">Estado:</span>'
-                    + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
-                    //+ (contactos[i].Operando == true ? '<span class="lista-contactos-estado-guion"> - </span> <span class="lista-contactos-estado-operando">Operando</span>' : '')
-                    + '<span class="lista-contactos-estado-estrellas">';
+                + '<div class="lista-contactos-estado">'
+                + '<span class="lista-contactos-estado-titulo">Estado:</span>'
+                + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
+                //+ (contactos[i].Operando == true ? '<span class="lista-contactos-estado-guion"> - </span> <span class="lista-contactos-estado-operando">Operando</span>' : '')
+                + '<span class="lista-contactos-estado-estrellas">';
             for (var j = 0; j < contactos[i].Calificacion; j++) {
                 var url = MSGetUrl("/Content/Images/estrellacalificacion.png");
-                htmlaux += '<img src="..'+url+'" />';
+                htmlaux += '<img src="..' + url + '" />';
             }
 
             var url2 = MSGetUrl("/Content/Images/listcont.png");
-            
+
             var telefonos = (contactos[i].Telefono ? contactos[i].Telefono : "Ninguno");
             var telaux = [];
-            if (telefonos !== "Ninguno")
-            {
+            if (telefonos !== "Ninguno") {
                 telefonos = telefonos.split(";");
                 for (var x in telefonos) {
                     if (telefonos[x] != "")
@@ -433,73 +401,60 @@ function ArmarContactos(contactos) {
                 mailaux = "Ninguno";
             }
 
-
-
             htmlaux += "</span>"
-                    + '</div>'
-                    + '<div class="lista-contactos-datos">'
-                    + '<div>'
-                    + '<img class="img-contactos-datos" src="..'+url2+'" />'
-                    + '<span class="lista-contactos-datos-razonsocial"><b>' + contactos[i].RazonSocial + '</b> (CUIT ' + contactos[i].Cuit + ')</span>'
-                    + '</div>'
-                    + '<div class="lista-contactos-datos-emailtelefono">'
-                    + mailaux
-                    + '</div>'
-                    + '<div class="lista-contactos-datos-emailtelefono">'
-                    + telaux 
-                    + '</div>'
-                    + '</div>'
-                    + '<div class="lista-contacto-footer">'
-                    + '<div class="lista-contacto-footer-comacargo">'
-                    + "Comercial a cargo: " + contactos[i].ComercialCargo
-                    + '</div>'
-                    + '<div class="lista-contacto-footer-ulcontacto">'
-                    + '<span><em><b>Último Contacto</b> ' + contactos[i].UltimoContacto + '</em></span>'
-                    + '</div>'
+                + '</div>'
+                + '<div class="lista-contactos-datos">'
+                + '<div>'
+                + '<img class="img-contactos-datos" src="..' + url2 + '" />'
+                + '<span class="lista-contactos-datos-razonsocial"><b>' + contactos[i].RazonSocial + '</b> (CUIT ' + contactos[i].Cuit + ')</span>'
+                + '</div>'
+                + '<div class="lista-contactos-datos-emailtelefono">'
+                + mailaux
+                + '</div>'
+                + '<div class="lista-contactos-datos-emailtelefono">'
+                + telaux
+                + '</div>'
+                + '</div>'
+                + '<div class="lista-contacto-footer">'
+                + '<div class="lista-contacto-footer-comacargo">'
+                + "Comercial a cargo: " + contactos[i].ComercialCargo
+                + '</div>'
+                + '<div class="lista-contacto-footer-ulcontacto">'
+                + '<span><em><b>Último Contacto</b> ' + contactos[i].UltimoContacto + '</em></span>'
+                + '</div>'
                 + '</div>';
             if (contactos[i].NoOperable) {
                 var url3 = MSGetUrl("/Content/Images/no-operable.png");
                 htmlaux += '<div class="lista-contacto-no-operable" onmouseclick="mostrarTooltipClick(this)" onclick="mostrarTooltipClick(this)" onmouseover="mostrarTooltip(this)" onmouseout="ocultarTooltip(this)">'
-                + '<img class="img-contacto-no-operable" src="..'+url3+'" />'
-                + '<span class="span-contacto-no-operable">No operable</span>'
-                + '</div>'
-                + '<div class="lista-contacto-no-operable-tooltip">'
-                + '<span class="span-contacto-no-operable-tooltip">' + contactos[i].TooltipNoOperable + '</span>'
-                + '</div>'
-                + '<div class="lista-contacto-no-operable-tooltip-arrow"></div>'
+                    + '<img class="img-contacto-no-operable" src="..' + url3 + '" />'
+                    + '<span class="span-contacto-no-operable">No operable</span>'
+                    + '</div>'
+                    + '<div class="lista-contacto-no-operable-tooltip">'
+                    + '<span class="span-contacto-no-operable-tooltip">' + contactos[i].TooltipNoOperable + '</span>'
+                    + '</div>'
+                    + '<div class="lista-contacto-no-operable-tooltip-arrow"></div>'
             }
             htmlaux += '</div></a>';
-
-
-            
-
         })(ii);
     }
     $(".lista-contactos-general").append(htmlaux);
     //setTimeout(function () {
-        
     //}, 100);
 }
 function setChangeChecks() {
-
     $('div :input').change(function () {
         updateFiltro();
     });
-
-    
-
 }
 
 function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            
             conts = result.Contactos.concat();
             armarSelects(result.Datos);
             actualizarContactos();
@@ -514,7 +469,6 @@ function ArmarCamapaña(campañas) {
     var html = "";
     for (var ii in campañas.Materiales) {
         (function (i) {
-
             var ToneladasAux = campañas.Materiales[i].Toneladas.toString().split(".");
             if (ToneladasAux.length > 1) {
                 ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -527,15 +481,15 @@ function ArmarCamapaña(campañas) {
             }
             //ToneladasAux.join(",");
 
-            html+='<div class="contenedor-principal-campanas-detalle">'
+            html += '<div class="contenedor-principal-campanas-detalle">'
                 + '<div class="contenedor-principal-campanas-grano">'
-                   + campañas.Materiales[i].Nombre
-                +'</div>'
-                + '<div class="contenedor-principal-campanas-cantidad">'
-                    + ToneladasAux
+                + campañas.Materiales[i].Nombre
                 + '</div>'
-                 + '<div class="contenedor-principal-campanas-grano">'
-                    + campañas.Materiales[i].Campaña
+                + '<div class="contenedor-principal-campanas-cantidad">'
+                + ToneladasAux
+                + '</div>'
+                + '<div class="contenedor-principal-campanas-grano">'
+                + campañas.Materiales[i].Campaña
                 + '</div>'
                 + '</div>'
         })(ii);
@@ -544,9 +498,8 @@ function ArmarCamapaña(campañas) {
 }
 
 function armarSelectCampañas() {
-
     $("#per-tie-sel").multiselect({
-        header: false, 
+        header: false,
         multiple: false,
         selectedList: 1,
         noneSelectedText: "Elegir",
@@ -559,7 +512,7 @@ function armarSelectTipoActividad() {
     $("#tipo-actividad").multiselect({
         selectedList: 1,
         noneSelectedText: "Elegir",
-        header:false
+        header: false
     });
 }
 
@@ -623,7 +576,7 @@ function armarSelects(result) {
         $(".filtro-comercial").parent().hide();
     }
 
-    if (result.zona.length > 1){
+    if (result.zona.length > 1) {
         var htmlZona = "";
         htmlZona += '<select id="filtro-zonaselect">';
         htmlZona += '<option value="null">Todas las zonas</option>';
@@ -651,17 +604,16 @@ function armarSelects(result) {
 
     var grupos = {};
     for (var jj in result.segm) {
-        (function(j){
+        (function (j) {
             grupos[result.segm[j].Grupo] = grupos[result.segm[j].Grupo] || [];
             grupos[result.segm[j].Grupo].push({
                 SegmentacionId: result.segm[j].SegmentacionId,
                 Descripcion: result.segm[j].Descripcion
             });
-            
         })(jj);
     }
     console.log("asdas", grupos)
-    
+
     var htmlSegmentacion = "";
     htmlSegmentacion += '<select id="segmentacion-sel">';
     htmlSegmentacion += '<option value="null">Todos</option>';
@@ -689,7 +641,6 @@ function armarSelects(result) {
     htmlSegmentacion += '</select>';
 
     $(".campo-segmentacion").append(htmlSegmentacion);
-
 
     /*var htmlTipoActividad = "";
     htmlTipoActividad += '<select multiple class"campo-tipoactividad" id="tipo-actividad">';
@@ -723,14 +674,13 @@ function armarSelects(result) {
     }
     htmlCondicion += '</select>';
     $(".campo-condicion").append(htmlCondicion);
-    
+
     armarSelectCampañas();
     armarSelectSegmentacion();
     armarSelectGranos();
     armarSelectTipoActividad();
     armarSelectEstadoContacto();
     armarSelectCondicionPreferente();
-
 }
 
 function armarFunciones() {
@@ -750,7 +700,6 @@ function armarFunciones() {
             $(".lista-contacto-no-operable-tooltip-arrow").hide();
         }
     });
-
 }
 
 function exportar(value) {
@@ -806,7 +755,6 @@ function exportar(value) {
 
     var param = {
         "Ids": arrayIds.join(","),
-
     };
 
     if (value == 0) {
@@ -815,19 +763,15 @@ function exportar(value) {
     else if (value == 1) {
         DescargarExcel(param);
     }
-    else{
+    else {
         DescargarExportAll(param);
     }
 }
 
-
 function DescargarPDF(param) {
-
     var funcReturn = function (data) {
-
         if (data != null) {
-
-           if (data.DownloadKey.length > 0) {
+            if (data.DownloadKey.length > 0) {
                 var url = MSGetUrl('/DownLoad/Reporte?key=' + data.DownloadKey);
                 window.location = url;
             }
@@ -836,14 +780,9 @@ function DescargarPDF(param) {
     MSExecuteOnServerAsync('/Home/ExportarContactosPDF', param, funcReturn, true);
 }
 
-
-
 function DescargarExcel(param) {
-
     var funcReturn = function (data) {
-
         if (data != null) {
-
             if (data.DownloadKey.length > 0) {
                 var url = MSGetUrl('/DownLoad/Excel?key=' + data.DownloadKey);
                 window.location = url;
@@ -855,11 +794,8 @@ function DescargarExcel(param) {
 }
 
 function DescargarExportAll(param) {
-
     var funcReturn = function (data) {
-
         if (data != null) {
-
             if (data.DownloadKey.length > 0) {
                 var url = MSGetUrl('/DownLoad/Excel?key=' + data.DownloadKey);
                 window.location = url;
@@ -870,11 +806,11 @@ function DescargarExportAll(param) {
     MSExecuteOnServerAsync('/Home/ExportarAll', param, funcReturn, true);
 }
 
-function armarFuncionalidadesHome(){
+function armarFuncionalidadesHome() {
     $(".sap").hover(function () {
         console.log("hover sap");
         $(".sap .link-externos img").css({
-            opacity:1
+            opacity: 1
         });
     }, function () {
         $(".sap .link-externos img").css({
@@ -903,7 +839,6 @@ function armarFuncionalidadesHome(){
             opacity: 0.8
         });
     });
-    
 
     $(".lista-contacto-no-operable").click(function (e) {
         e.stopPropagation();
@@ -919,6 +854,4 @@ function armarFuncionalidadesHome(){
             $(".mostrar-filtro span").html("Ocultar filtro -");
         }
     });
-
-
 }

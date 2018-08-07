@@ -2,7 +2,6 @@
 var datosIniCubProveedores;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -21,7 +20,6 @@ $(document).ready(function () {
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#proveedorId").kendoDropDownList({
@@ -36,7 +34,6 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-
 
     $("#provinciaId").kendoDropDownList({
         optionLabel: "SELECCIONE UNA PROVINCIA...",
@@ -102,7 +99,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    
+
     $("#butAceptar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Aceptar.png")
     });
@@ -126,11 +123,9 @@ function InicializarElementos() {
     $("#butExcelExport").click(function () {
         ExportarAExcel();
     });
-
 }
 
 function CrearPivotGridDataSource(datos) {
-
     var dataSource = new kendo.data.PivotDataSource({
         data: datos,
         schema: {
@@ -210,17 +205,15 @@ function CrearPivotGridDataSource(datos) {
                             }
                         }
                     },
-
-
                 }
             }
         },
 
-        columns: [{ name: "MaterialCampaña", expand: true },{ name: "Campaña", expand: true }],
+        columns: [{ name: "MaterialCampaña", expand: true }, { name: "Campaña", expand: true }],
 
         rows: [{ name: "CUIT", expand: true },
-               { name: "RazonSocial", expand: false },
-               { name: "Estado", expand: false }],
+        { name: "RazonSocial", expand: false },
+        { name: "Estado", expand: false }],
 
         //measures: ["Hectareas Campo", "Toneladas Campo", "Toneladas Compradas", "Toneladas Objetivo", "% Cumplimiento"]
 
@@ -231,7 +224,6 @@ function CrearPivotGridDataSource(datos) {
 }
 
 function CrearPivotGrid() {
-
     var ds = CrearPivotGridDataSource([]);
 
     $("#pivotgrid").kendoPivotGrid({
@@ -249,70 +241,70 @@ function CrearPivotGrid() {
             var fields = this.columnFields.add(this.rowFields).add(this.measureFields);
 
             fields.find(".k-button")
-              .each(function (_, item) {
-                  item = $(item);
-                  var text = item.data("name");
+                .each(function (_, item) {
+                    item = $(item);
+                    var text = item.data("name");
 
-                  if (text == "RazonSocial") {
-                      text = "Razón Social"
-                  }
-                  else if (text == "Sergmentacion") {
-                      text = "Sergmentación"
-                  }
-                  else if (text == "ContactoApellido") {
-                      text = "Contacto"
-                  }
-                  else if (text == "AreaDeInfluencia") {
-                      text = "Area de Influencia"
-                  }
-                  else if (text == "MaterialCampaña") {
-                      text = "Material Campaña"
-                  }
-                  else if (text == "Campaña") {
-                      text = "Campaña"
-                  }
-                  else if (text == "ToneladasCompradas") {
-                      text = "Tn Compradas"
-                  }
-                  else if (text == "ToneladasObjetivo") {
-                      text = "Tn Objetivo"
-                  }
-                  else if (text == "Campaña Campo") {
-                      text = "Campaña Campo"
-                  }
-                  else if (text == "MaterialCampo") {
-                      text = "Material Campo"
-                  }
-                  else if (text == "HectCampo") {
-                      text = "Hectareas Campo"
-                  }
-                  else if (text == "TonCampo") {
-                      text = "Toneladas Campo"
-                  }
-                  else if (text == "Localidad Campo") {
-                      text = "Localidad Campo"
-                  }
-                  else if (text == "ProvinciaCampo") {
-                      text = "Provincia Campo"
-                  }
-                  else if (text == "CampañaAcopio") {
-                      text = "Campaña Acopio"
-                  }
-                  else if (text == "PorcentajeAcopio") {
-                      text = "% Acopio"
-                  }
-                  else if (text == "TonAcopio") {
-                      text = "Toneladas Acopio"
-                  }
-                  else if (text == "LocalidadAcopio") {
-                      text = "Localidad Acopio"
-                  }
-                  else if (text == "ProvinciaAcopio") {
-                      text = "Provincia Acopio"
-                  }
-                                    
-                  item.contents().eq(0).replaceWith(text);
-              });
+                    if (text == "RazonSocial") {
+                        text = "Razón Social"
+                    }
+                    else if (text == "Sergmentacion") {
+                        text = "Sergmentación"
+                    }
+                    else if (text == "ContactoApellido") {
+                        text = "Contacto"
+                    }
+                    else if (text == "AreaDeInfluencia") {
+                        text = "Area de Influencia"
+                    }
+                    else if (text == "MaterialCampaña") {
+                        text = "Material Campaña"
+                    }
+                    else if (text == "Campaña") {
+                        text = "Campaña"
+                    }
+                    else if (text == "ToneladasCompradas") {
+                        text = "Tn Compradas"
+                    }
+                    else if (text == "ToneladasObjetivo") {
+                        text = "Tn Objetivo"
+                    }
+                    else if (text == "Campaña Campo") {
+                        text = "Campaña Campo"
+                    }
+                    else if (text == "MaterialCampo") {
+                        text = "Material Campo"
+                    }
+                    else if (text == "HectCampo") {
+                        text = "Hectareas Campo"
+                    }
+                    else if (text == "TonCampo") {
+                        text = "Toneladas Campo"
+                    }
+                    else if (text == "Localidad Campo") {
+                        text = "Localidad Campo"
+                    }
+                    else if (text == "ProvinciaCampo") {
+                        text = "Provincia Campo"
+                    }
+                    else if (text == "CampañaAcopio") {
+                        text = "Campaña Acopio"
+                    }
+                    else if (text == "PorcentajeAcopio") {
+                        text = "% Acopio"
+                    }
+                    else if (text == "TonAcopio") {
+                        text = "Toneladas Acopio"
+                    }
+                    else if (text == "LocalidadAcopio") {
+                        text = "Localidad Acopio"
+                    }
+                    else if (text == "ProvinciaAcopio") {
+                        text = "Provincia Acopio"
+                    }
+
+                    item.contents().eq(0).replaceWith(text);
+                });
         },
 
         messages: {
@@ -341,11 +333,9 @@ function CrearPivotGrid() {
             }
         },
     });
-
 }
 
 function CrearConfigurator() {
-
     var ds = CrearPivotGridDataSource([]);
 
     var configurator = $("#configurator").kendoPivotConfigurator({
@@ -392,9 +382,7 @@ function CrearConfigurator() {
 }
 
 function AssignTabEvents() {
-
     $('.nav-tabs a').on('shown.bs.tab', function (event) {
-
         var titulo = $(event.target).text();
 
         if (titulo == "Reporte Dinámico") {
@@ -404,12 +392,10 @@ function AssignTabEvents() {
         if (titulo == "Configuración") {
             $("#configurator").data("kendoPivotConfigurator").refresh();
         }
-
     });
 }
 
 function CrearViewModel() {
-
     var param = {
         "proveedorId": null,
         "provinciaId": null,
@@ -421,11 +407,10 @@ function CrearViewModel() {
         "SegmentacionId": null,
         "SegmentacionIdDesc": null,
         "material": null,
-        "materialDesc": null,    
+        "materialDesc": null,
     };
 
     viewModel = kendo.observable({
-
         Parametros: param,
 
         ProveedorCombo: [],
@@ -437,16 +422,13 @@ function CrearViewModel() {
         ComercialCombo: [],
 
         isControlDisabled: true,
-
     });
 
     kendo.bind($("#CubProveedores"), viewModel);
 }
 
 function InicializarDatos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -461,7 +443,6 @@ function InicializarDatos() {
 }
 
 function AsignarDatos() {
-
     viewModel.set("Parametros", datosIniCubProveedores.Param);
     viewModel.set("Parametros", datosIniCubProveedores.Param);
     viewModel.set("ProveedorCombo", datosIniCubProveedores.Datos.Proveedor);
@@ -476,7 +457,6 @@ function AsignarDatos() {
 }
 
 function RefrescarWidgets() {
-
     viewModel.Parametros.proveedorId = $("#proveedorId").data("kendoDropDownList").dataItem();
     viewModel.Parametros.provinciaId = $("#provinciaId").data("kendoDropDownList").dataItem();
     viewModel.Parametros.LocalidadId = $("#LocalidadId").data("kendoDropDownList").dataItem();
@@ -486,7 +466,6 @@ function RefrescarWidgets() {
 }
 
 function LimpiarValidaciones() {
-
     $("#errproveedorId").css("display", "none");
     $("#errprovinciaId").css("display", "none");
     $("#errLocalidadId").css("display", "none");
@@ -496,7 +475,6 @@ function LimpiarValidaciones() {
 }
 
 function ReporteListar() {
-
     LimpiarValidaciones();
 
     var param = {
@@ -517,7 +495,6 @@ function ReporteListar() {
     var result = MSExecuteOnServer('/CubProveedores/Validar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -528,16 +505,12 @@ function ReporteListar() {
 }
 
 function EmitirReporte(param) {
-
     var funcReturn = function (data) {
-
         if (data != null) {
-
             if (ExistsErrorMessages(data.Errores)) {
                 ShowTooltipMessages("err", data.Errores);
             }
             else {
-
                 var ds = CrearPivotGridDataSource(data.Proveedores);
 
                 var pivotgrid = $("#pivotgrid").data("kendoPivotGrid");
@@ -561,14 +534,11 @@ function EmitirReporte(param) {
 }
 
 function Cancelar() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
 
 function ExportarAExcel() {
-
     var pivotgrid = $("#pivotgrid").data("kendoPivotGrid");
 
     pivotgrid.saveAsExcel();
 }
-

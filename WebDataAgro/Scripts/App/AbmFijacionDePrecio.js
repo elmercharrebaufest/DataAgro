@@ -3,7 +3,6 @@
 var datosIniAbmFijacionDePrecio;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -22,7 +21,6 @@ $(document).ready(function () {
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#MaterialId").kendoDropDownList({
@@ -46,7 +44,6 @@ function InicializarElementos() {
         format: "0"
     });
 
-
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
     });
@@ -66,11 +63,9 @@ function InicializarElementos() {
     $("#butCancelar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
     });
-
 }
 
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
@@ -89,17 +84,14 @@ function CrearResultadosDataSource(datos) {
     return ds;
 }
 
-
-
 function CreateGridFijacionDePrecio() {
-
     $("#gridIniFijacionDePrecio").kendoGrid({
         columns: [
             { field: "MatDescripcion", title: "Material", width: 120 },
             { field: "Precio", title: "Precio", width: "120px", format: "{0:n2}", attributes: { style: "text-align: right;" } },
             { field: "Fecha", title: "Fecha", width: "130px", format: "{0:dd/MM/yyyy HH:mm}" },
             { field: "ProveedorId", title: "Proveedor", width: "90px", format: "{0:n0}", attributes: { style: "text-align: right;" } },
-			
+
         ],
 
         sortable: true,
@@ -118,36 +110,35 @@ function CreateGridFijacionDePrecio() {
                 or: "O"
             },
             operators: {
-               string: {
+                string: {
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
                     endswith: "Finaliza con"
-               },
-               date: {
+                },
+                date: {
                     eq: "Igual",
                     neq: "Distinto",
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
                     lt: "Antes",
-              },
-               number: {
+                },
+                number: {
                     eq: "Igual a",
                     neq: "Distinto a",
                     gte: "Mayor que o igual a",
                     gt: "Mayor que",
                     lte: "Menor que o igual a",
                     lt: "Menor que"
-              }
-           }
+                }
+            }
         }
     });
 }
 
 function onChangeGridInicial() {
-
     var row = this.select();
 
     var data = this.dataItem(row);
@@ -161,11 +152,9 @@ function onChangeGridInicial() {
 }
 
 function CrearViewModel() {
-
     var ResultadosDataSource = CrearResultadosDataSource([]);
 
     viewModel = kendo.observable({
-
         Resultados: ResultadosDataSource,
 
         isReadOnly: true,
@@ -178,16 +167,13 @@ function CrearViewModel() {
         MaterialCombo: [],
 
         FijacionDePrecio: null,
-
     });
 
     kendo.bind($("#Abm"), viewModel);
 }
 
 function InicializarCombos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -202,14 +188,11 @@ function InicializarCombos() {
 }
 
 function AsignarCombos() {
-
     viewModel.set("MaterialCombo", datosIniAbmFijacionDePrecio.Datos.Material);
 }
 
 function InicializarBusquedaInicial() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -223,7 +206,6 @@ function InicializarBusquedaInicial() {
 }
 
 function AsignarBotones() {
-
     $("#butAgregar").click(function () {
         Agregar();
     });
@@ -250,7 +232,6 @@ function AsignarBotones() {
 }
 
 function UpdateViewModel(model) {
-
     if (model.FijacionDePrecio.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
     }
@@ -273,7 +254,6 @@ function UpdateViewModel(model) {
 }
 
 function LimpiarValidaciones() {
-
     $("#errMaterialId").css("display", "none");
     $("#errPrecio").css("display", "none");
     $("#errFecha").css("display", "none");
@@ -281,12 +261,10 @@ function LimpiarValidaciones() {
 }
 
 function HabilitarInicio() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
 
 function HabilitarAgregar() {
-
     var grid = $("#gridIniFijacionDePrecio").data("kendoGrid");
 
     grid.clearSelection();
@@ -295,7 +273,6 @@ function HabilitarAgregar() {
 }
 
 function HabilitarEdicion() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab2');
 }
 
@@ -306,7 +283,6 @@ function HabilitarCancelar() {
 }
 
 function Agregar() {
-
     var result = MSExecuteURLOnServer('/FijacionDePrecio/Cancelar');
 
     if (result != null) {
@@ -318,7 +294,6 @@ function Agregar() {
 }
 
 function Modificar() {
-
     var grid = $("#gridIniFijacionDePrecio").data("kendoGrid");
 
     var row = grid.select();
@@ -326,7 +301,7 @@ function Modificar() {
     var data = grid.dataItem(row);
 
     if (data == null) {
-       return;
+        return;
     }
 
     var param = {
@@ -336,7 +311,6 @@ function Modificar() {
     var result = MSExecuteOnServer('/FijacionDePrecio/Aplicar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -350,16 +324,14 @@ function Modificar() {
 }
 
 function Eliminar() {
-
     Confirma('¿ Confirma la eliminación de este registro ?',
-               function (dialogItself) {
-                   EjecutarEliminar();
-                   dialogItself.close();
-               });
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
 }
 
 function EjecutarEliminar() {
-
     var grid = $("#gridIniFijacionDePrecio").data("kendoGrid");
 
     var row = grid.select();
@@ -373,7 +345,6 @@ function EjecutarEliminar() {
     var result = MSExecuteOnServer('/FijacionDePrecio/Eliminar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -387,7 +358,6 @@ function EjecutarEliminar() {
 }
 
 function Grabar() {
-
     var grid = $("#gridIniFijacionDePrecio").data("kendoGrid");
 
     var row = grid.select();
@@ -412,7 +382,6 @@ function Grabar() {
         return;
     }
 
-
     var datos = {
         "ObjectState": objectstate,
         "FijacionId": viewModel.get("FijacionDePrecio.FijacionId"),
@@ -425,7 +394,6 @@ function Grabar() {
     var result = MSExecuteOnServer('/FijacionDePrecio/Grabar', datos);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -439,7 +407,5 @@ function Grabar() {
 }
 
 function Cancelar() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
-

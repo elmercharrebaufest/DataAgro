@@ -3,7 +3,6 @@
 var datosIniAbmLocalidad;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -20,7 +19,6 @@ $(document).ready(function () {
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#ParamProvinciaId").kendoDropDownList({
@@ -46,7 +44,6 @@ function InicializarElementos() {
         }
     });
 
-
     $("#butFiltrar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Find.png")
     });
@@ -70,11 +67,9 @@ function InicializarElementos() {
     $("#butCancelar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
     });
-
 }
 
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
@@ -88,23 +83,21 @@ function CrearResultadosDataSource(datos) {
             }
         },
         change: function (e) {
-
-            var mens = "";            var tot = this.data().length;
+            var mens = ""; var tot = this.data().length;
             var cant = this.view().length;
 
             viewModel.set("recordMessage", "");
 
             if (tot >= 500) {
-               mens = "Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.";
+                mens = "Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.";
             }
 
             if (tot > 0) {
-
                 if (cant == 1) {
                     viewModel.set("recordMessage", cant.toString() + " Registro. " + mens);
                 }
                 else {
-                    viewModel.set("recordMessage", cant.toString() + " Registros. "+ mens);
+                    viewModel.set("recordMessage", cant.toString() + " Registros. " + mens);
                 }
             }
         }
@@ -114,7 +107,6 @@ function CrearResultadosDataSource(datos) {
 }
 
 function CreateGridLocalidad() {
-
     $("#gridIniLocalidad").kendoGrid({
         columns: [
             { field: "CodLocalidad", title: "Código", width: "150px" },
@@ -138,36 +130,35 @@ function CreateGridLocalidad() {
                 or: "O"
             },
             operators: {
-               string: {
+                string: {
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
                     endswith: "Finaliza con"
-               },
-               date: {
+                },
+                date: {
                     eq: "Igual",
                     neq: "Distinto",
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
                     lt: "Antes",
-              },
-               number: {
+                },
+                number: {
                     eq: "Igual a",
                     neq: "Distinto a",
                     gte: "Mayor que o igual a",
                     gt: "Mayor que",
                     lte: "Menor que o igual a",
                     lt: "Menor que"
-              }
-           }
+                }
+            }
         }
     });
 }
 
 function onChangeGridInicial() {
-
     var row = this.select();
 
     var data = this.dataItem(row);
@@ -181,7 +172,6 @@ function onChangeGridInicial() {
 }
 
 function CrearViewModel() {
-
     var param = {
         "Nombre": "",
         "ProvinciaId": null,
@@ -190,7 +180,6 @@ function CrearViewModel() {
     var ResultadosDataSource = CrearResultadosDataSource([]);
 
     viewModel = kendo.observable({
-
         Parametros: param,
 
         Resultados: ResultadosDataSource,
@@ -207,16 +196,13 @@ function CrearViewModel() {
         ProvinciaCombo: [],
 
         Localidad: null,
-
     });
 
     kendo.bind($("#Abm"), viewModel);
 }
 
 function InicializarCombos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -231,12 +217,10 @@ function InicializarCombos() {
 }
 
 function AsignarCombos() {
-
     viewModel.set("ProvinciaCombo", datosIniAbmLocalidad.Datos.Provincia);
 }
 
 function AsignarBotones() {
-
     $("#butFiltrar").click(function () {
         LlenarGrilla(true);
     });
@@ -267,19 +251,16 @@ function AsignarBotones() {
 }
 
 function LimpiarValidacionesParam() {
-
     $("#errParamNombre").css("display", "none");
     $("#errParamProvinciaId").css("display", "none");
 }
 
 function LlenarGrilla(showMessage) {
-
     LimpiarValidacionesParam();
 
     viewModel.set("recordMessage", "");
 
     var errores = [];
-
 
     if (errores.length > 0) {
         AddIncorectMessage(errores);
@@ -295,13 +276,11 @@ function LlenarGrilla(showMessage) {
     var result = MSExecuteOnServer('/Localidad/Filtrar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             viewModel.set("Resultados", CrearResultadosDataSource([]));
             ShowTooltipMessages("errParam", result.Errores);
         }
         else if (result.Datos.length > 0) {
-
             viewModel.set("Resultados", CrearResultadosDataSource(result.Datos));
 
             if (result.Datos.length >= 500) {
@@ -328,7 +307,6 @@ function LlenarGrilla(showMessage) {
 }
 
 function UpdateViewModel(model) {
-
     if (model.Localidad.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
     }
@@ -349,19 +327,16 @@ function UpdateViewModel(model) {
 }
 
 function LimpiarValidaciones() {
-
     $("#errCodLocalidad").css("display", "none");
     $("#errNombre").css("display", "none");
     $("#errProvinciaId").css("display", "none");
 }
 
 function HabilitarInicio() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
 
 function HabilitarAgregar() {
-
     var grid = $("#gridIniLocalidad").data("kendoGrid");
 
     grid.clearSelection();
@@ -370,7 +345,6 @@ function HabilitarAgregar() {
 }
 
 function HabilitarEdicion() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab2');
 }
 
@@ -381,7 +355,6 @@ function HabilitarCancelar() {
 }
 
 function Agregar() {
-
     var result = MSExecuteURLOnServer('/Localidad/Cancelar');
 
     if (result != null) {
@@ -393,7 +366,6 @@ function Agregar() {
 }
 
 function Modificar() {
-
     var grid = $("#gridIniLocalidad").data("kendoGrid");
 
     var row = grid.select();
@@ -401,7 +373,7 @@ function Modificar() {
     var data = grid.dataItem(row);
 
     if (data == null) {
-       return;
+        return;
     }
 
     var param = {
@@ -411,7 +383,6 @@ function Modificar() {
     var result = MSExecuteOnServer('/Localidad/Aplicar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -425,16 +396,14 @@ function Modificar() {
 }
 
 function Eliminar() {
-
     Confirma('¿ Confirma la eliminación de este registro ?',
-               function (dialogItself) {
-                   EjecutarEliminar();
-                   dialogItself.close();
-               });
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
 }
 
 function EjecutarEliminar() {
-
     var grid = $("#gridIniLocalidad").data("kendoGrid");
 
     var row = grid.select();
@@ -448,7 +417,6 @@ function EjecutarEliminar() {
     var result = MSExecuteOnServer('/Localidad/Eliminar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -462,7 +430,6 @@ function EjecutarEliminar() {
 }
 
 function Grabar() {
-
     var grid = $("#gridIniLocalidad").data("kendoGrid");
 
     var row = grid.select();
@@ -477,7 +444,6 @@ function Grabar() {
 
     LimpiarValidaciones();
 
-
     var datos = {
         "ObjectState": objectstate,
         "LocalidadId": viewModel.get("Localidad.LocalidadId"),
@@ -489,7 +455,6 @@ function Grabar() {
     var result = MSExecuteOnServer('/Localidad/Grabar', datos);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -503,7 +468,5 @@ function Grabar() {
 }
 
 function Cancelar() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
-

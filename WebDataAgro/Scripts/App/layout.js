@@ -5,16 +5,13 @@ var strFiltro = "";
 var notificaciones = [];
 
 function ArmarNotificaciones() {
-
     var result = MSExecuteOnServer('/Home/TraerActividadesPorComercialId');
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-
             $(".notificaciones-contenedor").empty();
 
             notificaciones = result.Actividades;
@@ -25,32 +22,31 @@ function ArmarNotificaciones() {
                 (function (i) {
                     var url = MSGetUrl("/Content/Images/notificaciones-reloj.png");
                     htmlnotifaux += '<div class="notificacion-detalle">'
-                    + '<div class="notificacion-detalle-horario">'
-                    + '<img class="notificacion-reloj" src="..' + url + '" />'
-                    + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + " " + notificaciones[i].Hora + '</span>'
-                    + '</div>'
-                    + '<div class="notificacion-detalle-contacto">'
-                    + notificaciones[i].Contacto
-                    + '</div>'
-                    + '<div class="notificacion-detalle-titulo">'
-                    + notificaciones[i].Tema
-                    + '</div>'
-                    + '<div class="notificacion-detalle-descripcion">'
-                    + notificaciones[i].Comentarios
-                    + '</div>'
-                    + '</div>';
+                        + '<div class="notificacion-detalle-horario">'
+                        + '<img class="notificacion-reloj" src="..' + url + '" />'
+                        + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + " " + notificaciones[i].Hora + '</span>'
+                        + '</div>'
+                        + '<div class="notificacion-detalle-contacto">'
+                        + notificaciones[i].Contacto
+                        + '</div>'
+                        + '<div class="notificacion-detalle-titulo">'
+                        + notificaciones[i].Tema
+                        + '</div>'
+                        + '<div class="notificacion-detalle-descripcion">'
+                        + notificaciones[i].Comentarios
+                        + '</div>'
+                        + '</div>';
                 })(ii);
             }
 
-            if (notif > 0){
-            setTimeout(function () {
-                $(".notificaciones-contenedor").append(htmlnotifaux);
-            }, 300);
+            if (notif > 0) {
+                setTimeout(function () {
+                    $(".notificaciones-contenedor").append(htmlnotifaux);
+                }, 300);
             } else {
                 $(".notificaciones-contenedor").remove();
             }
-
-      }
+        }
     }
 }
 
@@ -61,10 +57,8 @@ function mobile() {
         $(".buscador-nav-li").hide();
         $(".li-contacto").attr("display", "inline-block");
         $(".li-contacto").removeClass("float-right");
-        
     }
     else {
-
         $(".li-contacto").addClass("float-right");
         $(".buscador-nav-li").show();
     }
@@ -85,20 +79,14 @@ function mobile() {
         $(".nav-text3").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#tablas");
         $("#tablas").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
 
-       
         $("#segundo").appendTo(".navbar-header");
         $("#segundo").addClass("floatito");
-       
+
         $(".icons").addClass("float-left");
         $(".imgs").removeClass("padding");
         //$("#segundo").addClass("padding-top");
-        
-       
+
         //$("#segundo").removeClass(".no-margin-top");
-        
-
-        
-
     }
 
     else {
@@ -116,25 +104,19 @@ function mobile() {
         $(".nav-text3").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
         $("#tablas").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
 
-        $("#segundo").appendTo("#myNavbar"); 
+        $("#segundo").appendTo("#myNavbar");
         $("#segundo").removeClass("floatito");
         $(".icons").removeClass("float-left");
 
         $(".imgs").addClass("padding");
         //$("#segundo").removeClass("padding-top");
-      
-        
-       
-
-       }
+    }
 }
 
 $(document).ready(function () {
-    
     mobile();
-    
 
-    $(".miscontactos-nav").parent().attr("href",window.location.origin);
+    $(".miscontactos-nav").parent().attr("href", window.location.origin);
 
     ArmarNotificaciones();
     $("#notificaciones-a").hover(function () {
@@ -148,7 +130,7 @@ $(document).ready(function () {
     }, function () {
         $(".notificaciones-contenedor").hide();
     });
-    
+
     $(".notificaciones-contenedor").hover(function () {
         var alt = 60 + $(document).scrollTop();
         $(".notificaciones-contenedor").show().css({
@@ -162,15 +144,12 @@ $(document).ready(function () {
     });
 
     //if (notif > 0) {
-        $(".cant-notif-span").html(notif);
+    $(".cant-notif-span").html(notif);
     /*} else {
         $(".cant-notif-span").parent().remove();
     }*/
 
-
-
     /*Reportes */
-
 
     $("#reportes-a").hover(function () {
         var alt = 60 + $(document).scrollTop();
@@ -183,7 +162,7 @@ $(document).ready(function () {
     }, function () {
         $(".reporte-detalle").hide();
     });
-    
+
     $(".reporte-detalle").hover(function () {
         var alt = 60 + $(document).scrollTop();
         $(".reporte-detalle").show().css({
@@ -215,7 +194,6 @@ $(document).ready(function () {
                     'max-height': '280px'
                 });
             }
-
         }, function () {
             $(".tablas-detalle").hide();
         });
@@ -238,13 +216,12 @@ $(document).ready(function () {
                     'max-height': '280px'
                 });
             }
-
         }, function () {
             $(".tablas-detalle").hide();
         });
     }
 
-	$("#informes-a").hover(function () {
+    $("#informes-a").hover(function () {
         var alt = 60 + $(document).scrollTop();
         $(".informe-detalle").show().css({
             left: $(this).offset().left,
@@ -255,7 +232,7 @@ $(document).ready(function () {
     }, function () {
         $(".informe-detalle").hide();
     });
-    
+
     $(".informe-detalle").hover(function () {
         var alt = 60 + $(document).scrollTop();
         $(".informe-detalle").show().css({
@@ -267,11 +244,6 @@ $(document).ready(function () {
     }, function () {
         $(".informe-detalle").hide();
     });
-	
-	
-	
-	
-	
 
     $(".buscador-nav-input").keyup(function (e) {
         armarBusquedaResult(e);
@@ -287,9 +259,7 @@ $(document).ready(function () {
         armarBusquedaResult();
     })
 
-
-    $(".agregar-contacto-mobile").click(function()
-    {
+    $(".agregar-contacto-mobile").click(function () {
         window.location.href = window.location.origin + "/Proveedor/Agregar";
     });
 
@@ -297,32 +267,22 @@ $(document).ready(function () {
         $(".nav-bar-segundo").attr("style", "display:block!important;");
     });
 
-
-
     inicializarLayout();
-    
 
-    $(".mis-postit").click(function (e) { 
+    $(".mis-postit").click(function (e) {
         e.stopPropagation();
         e.preventDefault();
-        
+
         InicializarPost();
     });
-    
 
-
-    $("#guardar-postit").click(function (){
+    $("#guardar-postit").click(function () {
         guardarPost();
     });
 
     $(".salir-postit").click(function () {
         $("#modalPostit").modal('hide');
     });
-
-
-    
-
-
 });
 
 function InicializarPost() {
@@ -331,7 +291,6 @@ function InicializarPost() {
         $("#texto-postit").val(result.Texto);
         $("#modalPostit").modal();
     }
-
 }
 
 function guardarPost() {
@@ -344,8 +303,6 @@ function guardarPost() {
     if (result) {
         $("#modalPostit").modal('hide');
     }
-
-
 }
 
 function armarBusquedaResult(value) {
@@ -355,41 +312,37 @@ function armarBusquedaResult(value) {
         //aca tiene que ir a buscar
         var txt = $(".buscador-nav-input").val().toUpperCase();
 
-
         var result = MSExecuteOnServer('/Home/BusquedaHome', { filtro: txt });
-
 
         var html = "";
         for (var i = 0; i < result.length; i++) {
-
             var valor = "";
 
-
             valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
-            
+
             valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
 
             var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
-            
+
             html += '<a href=' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id) + '>'
-                  +'<div class="buscar-result-linea">'
-                  + '<img class="buscar-cont" src="..' + url + '" /> '
-                  + '<p class="buscar-nomb">' + valor + '</p>'
-                  + '</div>'
-                  + '</a>';
+                + '<div class="buscar-result-linea">'
+                + '<img class="buscar-cont" src="..' + url + '" /> '
+                + '<p class="buscar-nomb">' + valor + '</p>'
+                + '</div>'
+                + '</a>';
         }
 
         if (result.length == 1) {
             if (value && (value.keyCode || value.which) == 13) {
-                var htmlurl = MSGetUrl ("/proveedor/Detalle?ProveedorId=" + result[0].Id);
+                var htmlurl = MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[0].Id);
                 window.location.href = window.location.origin + htmlurl;
             }
         }
 
         if (!result.length) {
             html += '<div class="buscar-result-linea">'
-                  + '<p class="buscar-nomb">No se encontraron resultados</p>'
-                  + '</div>';
+                + '<p class="buscar-nomb">No se encontraron resultados</p>'
+                + '</div>';
         }
 
         $(".buscar-result").append(html);
@@ -422,23 +375,19 @@ $(window).scroll(function (event) {
     });
 
     if ($("#tablas-a").length) {
-
         $(".tablas-detalle").css({
             left: $("#tablas-a").offset().left,
             top: alt
         });
     }
-
 });
-
 
 function inicializarLayout() {
     var result = MSExecuteOnServer('/Home/ValidarComercial');
     if (result == 0) {
-		$("#tablas-a").remove();
+        $("#tablas-a").remove();
         $(".tablas-detalle").remove();
-    }   
+    }
 }
 
 $(window).resize(mobile);
-

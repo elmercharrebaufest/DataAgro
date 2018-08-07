@@ -1,5 +1,4 @@
-﻿
-function validar() {
+﻿function validar() {
     if (!$("#cuit").val()) {
         MensErr("El CUIT debe estar cargado.");
         return false;
@@ -14,12 +13,10 @@ function validar() {
     }*/
 
     if ($("#campañaObjetivo" + cantGranoObjetivo).val() != "null" || ($("#granoObjetivo" + cantGranoObjetivo).val() != "null"
-        || $("#toneladasObjetivo" + cantGranoObjetivo).val().trim().length > 0))
-    {
+        || $("#toneladasObjetivo" + cantGranoObjetivo).val().trim().length > 0)) {
         var id = $(".ObjetivoGranos:last-of-type").attr("class").split(" ")[0].split("lineaObjetivos")[1];
         if (!ValidarGranoObjetivo(id))
             return false;
-    
     }
 
     if ($("#volumen-anual-total-tns").val()) {
@@ -49,16 +46,11 @@ function validar() {
             return false;
         }
     }
-    
-    
+
     return true;
 }
 
-
-
-
-function ValidarGranoProduccion(cantGrano)
-{
+function ValidarGranoProduccion(cantGrano) {
     if ($("#campaña" + cantGrano).val() && $("#campaña" + cantGrano).val() != "null") {
         if (!$("#grano" + cantGrano).val() || $("#grano" + cantGrano).val() == "null") {
             MensErr("Debe ingresar un grano");
@@ -83,25 +75,19 @@ function ValidarGranoProduccion(cantGrano)
         MensErr("El formato de las Toneladas es invalido");
         return false;
     }
-    
 
     return true;
-
 }
 
-
 function ValidarGranoAlmacenamiento(cantGranoAlmacenamiento) {
-
     if ($("#toneladasAlmacenamiento" + cantGranoAlmacenamiento).val() && isNaN($("#toneladasAlmacenamiento" + cantGranoAlmacenamiento).val().trim().split(",").join("."))) {
         MensErr("El formato de las Toneladas es invalido");
         return false;
     }
     return true;
-
 }
 
 function ValidarGranoObjetivo(cantGranoObjetivo) {
-
     if (!$("#campañaObjetivo" + cantGranoObjetivo).val() || $("#campañaObjetivo" + cantGranoObjetivo).val() == "null") {
         MensErr("Debe ingresar una campaña");
         return false;
@@ -121,12 +107,9 @@ function ValidarGranoObjetivo(cantGranoObjetivo) {
     }
 
     return true;
-
 }
 
-function ValidarContactoComercial()
-{
-
+function ValidarContactoComercial() {
     if (!$("#concom-nombre").val() || $("#concom-nombre").val() === "") {
         MensErr("Se debe ingresar el Nombre de Contacto Comercial");
         return false;
@@ -149,49 +132,49 @@ function ValidarContactoComercial()
         MensErr("La fecha tiene formato incorrecto.");
         return false;
     }
-    
-        /*
-    if (!$("#concom-email1").val() || $("#concom-email1").val() === "") {
-        MensErr("El contacto comercial debe tener al menos un Email");
-        return false;
-    } else if (!validateEmail($("#concom-email1").val())) {
-        MensErr("El primer Email no es válido");
-        return false;
-    }
 
-    if (!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null"){
-        MensErr("El contacto comercial debe tener al menos un Tipo de Telefono");
+    /*
+if (!$("#concom-email1").val() || $("#concom-email1").val() === "") {
+    MensErr("El contacto comercial debe tener al menos un Email");
+    return false;
+} else if (!validateEmail($("#concom-email1").val())) {
+    MensErr("El primer Email no es válido");
+    return false;
+}
+
+if (!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null"){
+    MensErr("El contacto comercial debe tener al menos un Tipo de Telefono");
+    return false;
+}
+if (!$("#concom-Telefono1").val() || $("#concom-Telefono1").val() === "") {
+    MensErr("El contacto comercial debe tener al menos un Telefono");
+    return false;
+}
+
+if ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) {
+    if (!validateEmail($("#concom-email2").val())) {
+        MensErr("El segundo Email no es válido");
         return false;
     }
-    if (!$("#concom-Telefono1").val() || $("#concom-Telefono1").val() === "") {
-        MensErr("El contacto comercial debe tener al menos un Telefono");
+}
+
+if ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val()) {
+    if (!validateEmail($("#concom-email3").val())) {
+        MensErr("El tercer Email no es válido");
         return false;
     }
+}
 
-    if ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) {
-        if (!validateEmail($("#concom-email2").val())) {
-            MensErr("El segundo Email no es válido");
-            return false;
-        }
-    }
+if (!$("#concom-cargo").val() || $("#concom-cargo").val() === "") {
+    MensErr("Se debe ingresar el Cargo de Contacto Comercial");
+    return false;
+}
 
-    if ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val()) {
-        if (!validateEmail($("#concom-email3").val())) {
-            MensErr("El tercer Email no es válido");
-            return false;
-        }
-    }
-
-    if (!$("#concom-cargo").val() || $("#concom-cargo").val() === "") {
-        MensErr("Se debe ingresar el Cargo de Contacto Comercial");
-        return false;
-    }
-
-    if (!$("#concom-puesto").val() || $("#concom-puesto").val() === "") {
-        MensErr("Se debe ingresar el Puesto de Contacto Comercial");
-        return false;
-    }
-    */
+if (!$("#concom-puesto").val() || $("#concom-puesto").val() === "") {
+    MensErr("Se debe ingresar el Puesto de Contacto Comercial");
+    return false;
+}
+*/
 
     return true;
 }

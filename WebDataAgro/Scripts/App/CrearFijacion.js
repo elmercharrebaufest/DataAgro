@@ -2,7 +2,6 @@
 var datosIniCrearFijacion;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -10,12 +9,11 @@ $(document).ready(function () {
     InicializarElementos();
 
     InicializarDatos();
- 
+
     CrearViewModel();
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#proveedorId").kendoDropDownList({
@@ -45,7 +43,6 @@ function InicializarElementos() {
         // armarBusquedaResultProveedor();
     });
 
-
     $("#comercialId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataValueField: "ComercialId",
@@ -58,8 +55,6 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    
-
 
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
@@ -98,11 +93,9 @@ function InicializarElementos() {
     $(".formulario-footer-cancelar").click(function () {
         window.location.href = window.location.origin + "/CompraNet";
     });
-
 }
 
 function CrearViewModel() {
-
     var param = {
         "proveedorId": null,
         "comercialId": null,
@@ -113,11 +106,9 @@ function CrearViewModel() {
         "precioId": null,
         "precioMonedaId": null,
         "precioMonedaDesc": null
-
     };
 
     viewModel = kendo.observable({
-
         Parametros: param,
 
         ProveedorCombo: [],
@@ -126,16 +117,13 @@ function CrearViewModel() {
         PrecioMonedaCombo: [],
 
         isControlDisabled: true,
-
     });
 
     kendo.bind($("#CrearFijacion"), viewModel);
 }
 
 function InicializarDatos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -150,7 +138,6 @@ function InicializarDatos() {
 }
 
 function AsignarDatos() {
-
     /*
     viewModel.set("Parametros", datosIniCrearFijacion.Param);
     viewModel.set("Parametros", datosIniCrearFijacion.Param);
@@ -166,7 +153,6 @@ function AsignarDatos() {
 }
 
 function RefrescarWidgets() {
-
     //viewModel.Parametros.proveedorId = $("#proveedorId").data("kendoDropDownList").dataItem();
     //viewModel.Parametros.comercialId = $("#comercialId").data("kendoDropDownList").dataItem();
     //viewModel.Parametros.material = $("#material").data("kendoDropDownList").dataItem();
@@ -174,7 +160,6 @@ function RefrescarWidgets() {
 }
 
 function LimpiarValidaciones() {
-
     $("#errproveedorId").css("display", "none");
     $("#errcomercialId").css("display", "none");
     $("#errmaterial").css("display", "none");
@@ -184,7 +169,6 @@ function LimpiarValidaciones() {
 }
 
 function ObtenerDatos() {
-
     var obj = {};
     var fecha = new Date();
     var fechaHoy = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
@@ -204,14 +188,11 @@ function ObtenerDatos() {
 }
 
 function GrabarFijacion(nuevaFijacion) {
-
-    
     //if (ProveedorId)
-      //  nuevoProveedor.ProveedorId = ProveedorId;
-    
+    //  nuevoProveedor.ProveedorId = ProveedorId;
+
     var result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevaFijacion);
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores.ListaErrores)) {
             MensErr(result.Errores.ListaErrores[0].Message);
         }
@@ -222,7 +203,6 @@ function GrabarFijacion(nuevaFijacion) {
     }
 }
 
-
 function armarBusquedaResultProveedor() {
     if ($("#buscadorProveedor").val().length >= 3) {
         $("#buscadorResult").empty();
@@ -230,15 +210,11 @@ function armarBusquedaResultProveedor() {
         //aca tiene que ir a buscar
         var txt = $("#buscadorProveedor").val().toUpperCase();
 
-
         var result = MSExecuteOnServer('/Home/BusquedaHome', { filtro: txt });
-
 
         var html = "";
         for (var i = 0; i < result.length; i++) {
-
             var valor = "";
-
 
             valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
 
@@ -247,15 +223,15 @@ function armarBusquedaResultProveedor() {
             var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
 
             html += '<div class="buscar-result-linea" onclick="seleccionarProveedor(this)" >'
-                  + '<img class="buscar-cont" src="..' + url + '" /> '
-                  + '<p class="buscar-nomb">' + valor + '</p>'
-                  + '</div>';
+                + '<img class="buscar-cont" src="..' + url + '" /> '
+                + '<p class="buscar-nomb">' + valor + '</p>'
+                + '</div>';
         }
 
         if (!result.length) {
             html += '<div class="buscar-result-linea">'
-                  + '<p class="buscar-nomb">No se encontraron resultados</p>'
-                  + '</div>';
+                + '<p class="buscar-nomb">No se encontraron resultados</p>'
+                + '</div>';
         }
 
         $("#buscadorResult").append(html);
@@ -270,6 +246,4 @@ function armarBusquedaResultProveedor() {
 function seleccionarProveedor(opciones) {
     $("#buscadorProveedor").val(opciones.innerText);
     $("#buscadorResult").hide();
-
-
 }

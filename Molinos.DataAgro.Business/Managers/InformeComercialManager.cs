@@ -374,46 +374,6 @@ namespace Molinos.DataAgro.Business.Managers
             return val.FirstOrDefault().Res;
         }
 
-        public Resultado RespuestaDeSapCapacidadProductiva(string cuit, string Material, string Respuesta)
-        {
-            var error = new Resultado();
-
-            try
-            {
-                var oInformeComercialProduccionSave = repositorio.Obtener<InformeComercialProduccion>(
-                    x => x.InformeComercial.EstadoId == (int)EnumEstadoInforme.Enviado &&
-                    x.InformeComercial.Proveedor.CUIT == cuit &&
-                    x.InformeComercial.Campaña.CampañaId == x.Material.Campaña.CampañaId && x.Material.Codigo == Material);
-
-                if (Respuesta.Length > 0)
-                {
-                    oInformeComercialProduccionSave.RtaOkSap = false;
-                    oInformeComercialProduccionSave.MensajeSap = Respuesta;
-                }
-                else
-                {
-                    oInformeComercialProduccionSave.RtaOkSap = true;
-                    oInformeComercialProduccionSave.MensajeSap = string.Empty;
-                }
-
-                var existe = repositorio.Existe<InformeComercialProduccion>(x => x.InformeComercial.InformeComercialId == oInformeComercialProduccionSave.InformeComercial.InformeComercialId && (x.RtaOkSap == null || x.RtaOkSap == false));
-
-                if (!existe)
-                {
-                    var oInformeComercialSave = oInformeComercialProduccionSave.InformeComercial;
-                    oInformeComercialSave.EstadoId = (int)EnumEstadoInforme.Confirmado;
-                }
-
-                repositorio.GuardarCambios();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
-
-            return error;
-        }
-
         public Resultado EliminarInformes(int InformeId)
         {
             var error = new Resultado();

@@ -93,10 +93,7 @@ namespace Molinos.DataAgro.Repository
 
         public List<TEntidad> Listar<TEntidad>(Expression<Func<TEntidad, bool>> filtro = null, int maxResultados = 0, string orden = null, DirOrden direccionOrden = DirOrden.Asc) where TEntidad : class
         {
-            IQueryable<TEntidad> resultado = Set<TEntidad>();
-            ListarQueryable(resultado, filtro, orden, direccionOrden, maxResultados);
-
-            return resultado.ToList();
+            return ListarQueryable(Set<TEntidad>(), filtro, orden, direccionOrden, maxResultados).ToList();
         }
 
         public List<TEntidad> Listar<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, bool>> filtro, int maxResultados = 0, string orden = null, DirOrden direccionOrden = DirOrden.Asc) where TEntidad : class
@@ -106,9 +103,8 @@ namespace Molinos.DataAgro.Repository
             {
                 resultado = resultado.Include(i);
             }
-
-            ListarQueryable(resultado, filtro, orden, direccionOrden, maxResultados);
-            return resultado.ToList();
+            
+            return ListarQueryable(resultado, filtro, orden, direccionOrden, maxResultados).ToList();
         }
 
         public List<TProyeccion> Listar<TEntidad, TProyeccion>(Expression<Func<TEntidad, TProyeccion>> proyeccion, Expression<Func<TEntidad, bool>> filtro = null, int maxResultados = 0, string orden = null, DirOrden direccionOrden = DirOrden.Asc) where TEntidad : class

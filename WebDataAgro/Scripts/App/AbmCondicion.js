@@ -3,7 +3,6 @@
 var datosIniAbmCondicion;
 
 $(document).ready(function () {
-
     InicializarElementos();
 
     CreateGridCondicion();
@@ -18,9 +17,7 @@ $(document).ready(function () {
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
-
 
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
@@ -39,11 +36,9 @@ function InicializarElementos() {
     });
 
     $("#Inhabilitado").prop("checked", true);
-
 }
 
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
@@ -61,7 +56,6 @@ function CrearResultadosDataSource(datos) {
 }
 
 function CreateGridCondicion() {
-
     $("#gridIniCondicion").kendoGrid({
         columns: [
             { field: "Descripcion", title: "Descripción" }/*,
@@ -84,42 +78,41 @@ function CreateGridCondicion() {
                 or: "O"
             },
             operators: {
-               string: {
+                string: {
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
                     endswith: "Finaliza con"
-               },
-               date: {
+                },
+                date: {
                     eq: "Igual",
                     neq: "Distinto",
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
                     lt: "Antes",
-              },
-               number: {
+                },
+                number: {
                     eq: "Igual a",
                     neq: "Distinto a",
                     gte: "Mayor que o igual a",
                     gt: "Mayor que",
                     lte: "Menor que o igual a",
                     lt: "Menor que"
-              }
-           }
+                }
+            }
         }
     });
 }
 
 function onChangeGridInicial() {
-
     var row = this.select();
 
     var data = this.dataItem(row);
 
     if (data == null) {
-       return;
+        return;
     }
 
     var param = {
@@ -129,7 +122,6 @@ function onChangeGridInicial() {
     var result = MSExecuteOnServer('/Condicion/Aplicar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -143,11 +135,9 @@ function onChangeGridInicial() {
 }
 
 function CrearViewModel() {
-
     var ResultadosDataSource = CrearResultadosDataSource([]);
 
     viewModel = kendo.observable({
-
         Resultados: ResultadosDataSource,
 
         isReadOnly: true,
@@ -156,18 +146,14 @@ function CrearViewModel() {
         isControlDisabled: true,
         isDeleteDisabled: true,
 
-
         Condicion: null,
-
     });
 
     kendo.bind($("#Abm"), viewModel);
 }
 
 function InicializarBusquedaInicial() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -181,7 +167,6 @@ function InicializarBusquedaInicial() {
 }
 
 function AsignarBotones() {
-
     $("#butAgregar").click(function () {
         Agregar();
     });
@@ -200,7 +185,6 @@ function AsignarBotones() {
 }
 
 function UpdateViewModel(model) {
-
     if (model.Condicion.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
     }
@@ -215,18 +199,15 @@ function UpdateViewModel(model) {
     };
 
     viewModel.set("Condicion", condicion);
-
 }
 
 function HabilitarInicio() {
-
     viewModel.set("isControlDisabled", true);
     viewModel.set("isAddDisabled", true);
     viewModel.set("isDeleteDisabled", true);
 }
 
 function HabilitarCancelar() {
-
     viewModel.set("isFilterDisabled", false);
     viewModel.set("isControlDisabled", true);
     viewModel.set("isAddDisabled", false);
@@ -238,14 +219,12 @@ function HabilitarCancelar() {
 }
 
 function HabilitarEdicion() {
-
     viewModel.set("isControlDisabled", false);
     viewModel.set("isAddDisabled", false);
     viewModel.set("isDeleteDisabled", false);
 }
 
 function HabilitarAgregar() {
-
     viewModel.set("isControlDisabled", false);
     viewModel.set("isAddDisabled", true);
     viewModel.set("isDeleteDisabled", true);
@@ -259,7 +238,6 @@ function HabilitarAgregar() {
 }
 
 function Agregar() {
-
     var result = MSExecuteURLOnServer('/Condicion/Cancelar');
 
     if (result != null) {
@@ -271,12 +249,10 @@ function Agregar() {
 }
 
 function LimpiarValidaciones() {
-
     $("#errDescripcion").css("display", "none");
 }
 
 function Grabar() {
-
     var grid = $("#gridIniCondicion").data("kendoGrid");
 
     var row = grid.select();
@@ -291,7 +267,6 @@ function Grabar() {
 
     LimpiarValidaciones();
 
-
     var datos = {
         "ObjectState": objectstate,
         "CondicionId": viewModel.get("Condicion.CondicionId"),
@@ -302,7 +277,6 @@ function Grabar() {
     var result = MSExecuteOnServer('/Condicion/Grabar', datos);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -316,16 +290,14 @@ function Grabar() {
 }
 
 function Eliminar() {
-
     Confirma('¿ Confirma la eliminación de este registro ?',
-               function (dialogItself) {
-                   EjecutarEliminar();
-                   dialogItself.close();
-               });
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
 }
 
 function EjecutarEliminar() {
-
     var grid = $("#gridIniCondicion").data("kendoGrid");
 
     var row = grid.select();
@@ -339,7 +311,6 @@ function EjecutarEliminar() {
     var result = MSExecuteOnServer('/Condicion/Eliminar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -353,7 +324,6 @@ function EjecutarEliminar() {
 }
 
 function Cancelar() {
-
     var result = MSExecuteURLOnServer('/Condicion/Cancelar');
 
     if (result != null) {
@@ -361,6 +331,4 @@ function Cancelar() {
         LimpiarValidaciones();
         HabilitarCancelar();
     }
-
 }
-

@@ -19,8 +19,6 @@ namespace Molinos.DataAgro.Interfaces
 
         int GrabarCapacidadProductiva(string informes);
 
-        Resultado RespuestaDeSapCapacidadProductiva(string cuit, string Material, string Respuesta);
-
         ParamInformeComercial ReimprimirInformeComercial(int InformeId);
 
         List<InformeGeneradoList> TraerInformeComercialGenerado(int ProveedorId);

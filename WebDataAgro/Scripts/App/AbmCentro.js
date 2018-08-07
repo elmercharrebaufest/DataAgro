@@ -3,7 +3,6 @@
 var datosIniAbmCentro;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -18,18 +17,16 @@ $(document).ready(function () {
 
     InicializarBusquedaInicial();
 
-	var idPerfil = $("#PerfilId").val();
-	
-	if(idPerfil ==  4 || idPerfil == 5)
-	{               
-	   //var EsAdmin = $("#Administrador");
-	   $("#Administrador").prop("checked", false);
-	   $("#Administrador").prop("disabled", true);
-	}
+    var idPerfil = $("#PerfilId").val();
+
+    if (idPerfil == 4 || idPerfil == 5) {
+        //var EsAdmin = $("#Administrador");
+        $("#Administrador").prop("checked", false);
+        $("#Administrador").prop("disabled", true);
+    }
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#butAgregar").kendoButton({
@@ -54,15 +51,14 @@ function InicializarElementos() {
 }
 
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
             model: {
                 fields: {
-                    Id: { type: "number", editable: false},
-                    Descripcion: { type: "string", editable: false},
-                    CodigoSap: { type: "string", editable: false},
+                    Id: { type: "number", editable: false },
+                    Descripcion: { type: "string", editable: false },
+                    CodigoSap: { type: "string", editable: false },
                 }
             }
         },
@@ -72,7 +68,6 @@ function CrearResultadosDataSource(datos) {
 }
 
 function CreateGridCentro() {
-
     $("#gridIni").kendoGrid({
         columns: [
             { field: "Descripcion", title: "Centro", filterable: false },
@@ -95,36 +90,35 @@ function CreateGridCentro() {
                 or: "O"
             },
             operators: {
-               string: {
+                string: {
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
                     endswith: "Finaliza con"
-               },
-               date: {
+                },
+                date: {
                     eq: "Igual",
                     neq: "Distinto",
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
                     lt: "Antes",
-              },
-               number: {
+                },
+                number: {
                     eq: "Igual a",
                     neq: "Distinto a",
                     gte: "Mayor que o igual a",
                     gt: "Mayor que",
                     lte: "Menor que o igual a",
                     lt: "Menor que"
-              }
-           }
+                }
+            }
         }
     });
 }
 
 function onChangeGridInicial() {
-
     var row = this.select();
 
     var data = this.dataItem(row);
@@ -138,11 +132,9 @@ function onChangeGridInicial() {
 }
 
 function CrearViewModel() {
-
     var ResultadosDataSource = CrearResultadosDataSource([]);
 
     viewModel = kendo.observable({
-
         Resultados: ResultadosDataSource,
 
         isReadOnly: true,
@@ -159,9 +151,7 @@ function CrearViewModel() {
 }
 
 function InicializarBusquedaInicial() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -175,7 +165,6 @@ function InicializarBusquedaInicial() {
 }
 
 function AsignarBotones() {
-
     $("#butAgregar").click(function () {
         Agregar();
     });
@@ -202,7 +191,6 @@ function AsignarBotones() {
 }
 
 function UpdateViewModel(model) {
-
     if (model.Centro.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
     }
@@ -226,12 +214,10 @@ function LimpiarValidaciones() {
 }
 
 function HabilitarInicio() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
 
 function HabilitarAgregar() {
-
     var grid = $("#gridIni").data("kendoGrid");
 
     grid.clearSelection();
@@ -240,7 +226,6 @@ function HabilitarAgregar() {
 }
 
 function HabilitarEdicion() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab2');
 }
 
@@ -251,7 +236,6 @@ function HabilitarCancelar() {
 }
 
 function Agregar() {
-
     var result = MSExecuteURLOnServer('/Centro/Cancelar');
 
     if (result != null) {
@@ -263,7 +247,6 @@ function Agregar() {
 }
 
 function Modificar() {
-
     var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
@@ -271,19 +254,17 @@ function Modificar() {
     var data = grid.dataItem(row);
 
     if (data == null) {
-       return;
+        return;
     }
 
     var param = {
         "Id": data.Id,
     };
-    
-    if (data.Id > 0)
-    {
+
+    if (data.Id > 0) {
         var datosCentro = MSExecuteOnServer('/Centro/CentroCombo', param);
 
         if (datosCentro != null) {
-
             if (ExistsErrorMessages(datosCentro.Errores)) {
                 ShowTooltipMessages("err", datosCentro.Errores);
             }
@@ -296,7 +277,6 @@ function Modificar() {
     var result = MSExecuteOnServer('/Centro/Aplicar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -310,16 +290,14 @@ function Modificar() {
 }
 
 function Eliminar() {
-
     Confirma('¿ Confirma la eliminación de este registro ?',
-               function (dialogItself) {
-                   EjecutarEliminar();
-                   dialogItself.close();
-               });
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
 }
 
 function EjecutarEliminar() {
-
     var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
@@ -333,7 +311,6 @@ function EjecutarEliminar() {
     var result = MSExecuteOnServer('/Centro/Eliminar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -347,7 +324,6 @@ function EjecutarEliminar() {
 }
 
 function Grabar() {
-
     var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
@@ -362,7 +338,6 @@ function Grabar() {
 
     LimpiarValidaciones();
 
-
     var datos = {
         "ObjectState": objectstate,
         "Id": viewModel.get("Centro.Id"),
@@ -373,7 +348,6 @@ function Grabar() {
     var result = MSExecuteOnServer('/Centro/Grabar', datos);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -387,7 +361,5 @@ function Grabar() {
 }
 
 function Cancelar() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
-

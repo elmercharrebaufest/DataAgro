@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Business
         private readonly IRepositorio repositorio;
         private ILogger logger;
 
-        public ProvinciaManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, ICampañaMaterial oCampañaMaterial)
+        public ProvinciaManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;

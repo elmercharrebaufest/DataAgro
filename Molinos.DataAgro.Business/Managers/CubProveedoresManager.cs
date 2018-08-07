@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using System.Collections.Generic;
 
@@ -11,14 +10,12 @@ namespace Molinos.DataAgro.Business
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        private IComprasManager comprasManager;
 
 
-        public CubProveedoresManager(ILogger logger, IRepositorio repositorio, IComprasManager comprasManager)
+        public CubProveedoresManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.comprasManager = comprasManager;
         }
 
         //--------------------------------------------------

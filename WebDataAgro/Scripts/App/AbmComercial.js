@@ -3,7 +3,6 @@
 var datosIniAbmCentro;
 
 $(document).ready(function () {
-
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -17,47 +16,43 @@ $(document).ready(function () {
     AsignarBotones();
 
     InicializarCombos();
-	
-	var idPerfil = $("#PerfilId").val();
-	
-	if(idPerfil ==  4 || idPerfil == 5)
-	{               
-	   //var EsAdmin = $("#Administrador");
-	   $("#Administrador").prop("checked", false);
-	   $("#Administrador").prop("disabled", true);
-	}
+
+    var idPerfil = $("#PerfilId").val();
+
+    if (idPerfil == 4 || idPerfil == 5) {
+        //var EsAdmin = $("#Administrador");
+        $("#Administrador").prop("checked", false);
+        $("#Administrador").prop("disabled", true);
+    }
 });
 
 function InicializarElementos() {
-
     kendo.culture("es-AR");
 
     $("#PerfilId").kendoDropDownList({
         dataTextField: "Descripcion",
         dataValueField: "PerfilId",
-        change: function(e) {            
+        change: function (e) {
             var idPerfil = this.dataItem().PerfilId;
             var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
 
-            if(idPerfil ==  4 || idPerfil == 5)
-            {               
-			   //var EsAdmin = $("#Administrador");
-			   $("#Administrador").prop("checked", false);
-			   $("#Administrador").prop("disabled", true);
-			   viewModel.set("Comercial.Administrador", false);
-               $("#EmpleadorACargo").data("kendoDropDownList").text("");
-               //$("#EmpleadorACargo").data("kendoDropDownList").value(null);                                       
-               empleadoACargoDDList.enable(false); 
-               viewModel.Comercial.EmpleadorACargo = null;              
-               //console.log(GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"));
+            if (idPerfil == 4 || idPerfil == 5) {
+                //var EsAdmin = $("#Administrador");
+                $("#Administrador").prop("checked", false);
+                $("#Administrador").prop("disabled", true);
+                viewModel.set("Comercial.Administrador", false);
+                $("#EmpleadorACargo").data("kendoDropDownList").text("");
+                //$("#EmpleadorACargo").data("kendoDropDownList").value(null);
+                empleadoACargoDDList.enable(false);
+                viewModel.Comercial.EmpleadorACargo = null;
+                //console.log(GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"));
             }
-            else 
-            {
-               empleadoACargoDDList.enable(true);    
-			   $("#Administrador").prop("disabled", false);			   
+            else {
+                empleadoACargoDDList.enable(true);
+                $("#Administrador").prop("disabled", false);
             }
             //alert();
-        // Use the value of the widget
+            // Use the value of the widget
         }
     });
 
@@ -67,22 +62,21 @@ function InicializarElementos() {
         }
     });
 
-
     $("#EmpleadorACargo").kendoDropDownList({
         //dataTextField: "Apellido" + " " + "Nombre",
-        dataTextField:  "Apellido",
+        dataTextField: "Apellido",
         dataValueField: "ComercialId",
         //template: "#=Apellido # #=Nombres #",
-       // dataSource: {                
-                /*
-                schema: {                
-                         parse: function(response) {
-                         $.each(response, function(idx, elem) {
-                             elem.prueba = elem.Apellido + " " + elem.Nombres;
-                         });
-                             return response;
-                        }
-                    }*/
+        // dataSource: {
+        /*
+        schema: {
+                 parse: function(response) {
+                 $.each(response, function(idx, elem) {
+                     elem.prueba = elem.Apellido + " " + elem.Nombres;
+                 });
+                     return response;
+                }
+            }*/
         //}
     });
 
@@ -103,7 +97,6 @@ function InicializarElementos() {
         }
     });*/
 
-
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
     });
@@ -123,11 +116,9 @@ function InicializarElementos() {
     $("#butCancelar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
     });
-
 }
 
 function CrearResultadosDataSource(datos) {
-
     var ds = new kendo.data.DataSource({
         data: datos,
         schema: {
@@ -138,7 +129,6 @@ function CrearResultadosDataSource(datos) {
                     Nombres: { type: "string", editable: false },
                     PerDescripcion: { type: "string", editable: false },
                 }
-            
             }
         },
     });
@@ -147,7 +137,6 @@ function CrearResultadosDataSource(datos) {
 }
 
 function CreateGridCentro() {
-
     $("#gridIniComercial").kendoGrid({
         columns: [
             { field: "Apellido", title: "Apellido" },
@@ -171,36 +160,35 @@ function CreateGridCentro() {
                 or: "O"
             },
             operators: {
-               string: {
+                string: {
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
                     contains: "Contiene",
                     endswith: "Finaliza con"
-               },
-               date: {
+                },
+                date: {
                     eq: "Igual",
                     neq: "Distinto",
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
                     lt: "Antes",
-              },
-               number: {
+                },
+                number: {
                     eq: "Igual a",
                     neq: "Distinto a",
                     gte: "Mayor que o igual a",
                     gt: "Mayor que",
                     lte: "Menor que o igual a",
                     lt: "Menor que"
-              }
-           }
+                }
+            }
         }
     });
 }
 
 function onChangeGridInicial() {
-
     var row = this.select();
 
     var data = this.dataItem(row);
@@ -214,11 +202,9 @@ function onChangeGridInicial() {
 }
 
 function CrearViewModel() {
-
     var ResultadosDataSource = CrearResultadosDataSource([]);
 
     viewModel = kendo.observable({
-
         Resultados: ResultadosDataSource,
 
         isReadOnly: true,
@@ -233,16 +219,13 @@ function CrearViewModel() {
         //GrupoDeComprasCombo: [],
 
         Comercial: null,
-
     });
 
     kendo.bind($("#Abm"), viewModel);
 }
 
 function InicializarCombos() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -257,16 +240,13 @@ function InicializarCombos() {
 }
 
 function AsignarCombos() {
-
     viewModel.set("PerfilCombo", datosIniAbmCentro.Datos.Perfil);
     viewModel.set("ComercialCombo", datosIniAbmCentro.Datos.Comercial);
     //viewModel.set("GrupoDeComprasCombo", datosIniAbmComercial.Datos.GrupoDeCompras);
 }
 
 function InicializarBusquedaInicial() {
-
     var funcReturn = function (data) {
-
         if (ExistsErrorMessages(data.Errores)) {
             ShowErrorMessages(data.Errores);
         }
@@ -280,7 +260,6 @@ function InicializarBusquedaInicial() {
 }
 
 function AsignarBotones() {
-
     $("#butAgregar").click(function () {
         Agregar();
     });
@@ -307,7 +286,6 @@ function AsignarBotones() {
 }
 
 function UpdateViewModel(model) {
-
     if (model.Comercial.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
     }
@@ -334,7 +312,6 @@ function UpdateViewModel(model) {
 }
 
 function LimpiarValidaciones() {
-
     $("#errApellido").css("display", "none");
     $("#errNombres").css("display", "none");
     $("#errPerfilId").css("display", "none");
@@ -345,12 +322,10 @@ function LimpiarValidaciones() {
 }
 
 function HabilitarInicio() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
 
 function HabilitarAgregar() {
-
     var grid = $("#gridIniComercial").data("kendoGrid");
 
     grid.clearSelection();
@@ -359,7 +334,6 @@ function HabilitarAgregar() {
 }
 
 function HabilitarEdicion() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab2');
 }
 
@@ -370,7 +344,6 @@ function HabilitarCancelar() {
 }
 
 function Agregar() {
-
     var result = MSExecuteURLOnServer('/Comercial/Cancelar');
 
     if (result != null) {
@@ -382,7 +355,6 @@ function Agregar() {
 }
 
 function Modificar() {
-
     var grid = $("#gridIniComercial").data("kendoGrid");
 
     var row = grid.select();
@@ -390,20 +362,17 @@ function Modificar() {
     var data = grid.dataItem(row);
 
     if (data == null) {
-       return;
+        return;
     }
 
     var param = {
         "ComercialId": data.ComercialId,
     };
 
-
-    if (data.ComercialId > 0)
-    {
+    if (data.ComercialId > 0) {
         var datosComerciales = MSExecuteOnServer('/Comercial/ComercialCombo', param);
 
         if (datosComerciales != null) {
-
             if (ExistsErrorMessages(datosComerciales.Errores)) {
                 ShowTooltipMessages("err", datosComerciales.Errores);
             }
@@ -413,11 +382,9 @@ function Modificar() {
         }
     }
 
-
     var result = MSExecuteOnServer('/Comercial/Aplicar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -426,45 +393,40 @@ function Modificar() {
             HabilitarEdicion();
             LimpiarValidaciones();
             UpdateViewModel(result);
-			
-			var idPerfil = $("#PerfilId").val();
-	
-			if(idPerfil ==  4 || idPerfil == 5)
-			{               
-			   //var EsAdmin = $("#Administrador");
-			   $("#Administrador").prop("checked", false);
-			   $("#Administrador").prop("disabled", true);
-			   viewModel.set("Comercial.Administrador", false);
 
-			   $("#EmpleadorACargo").data("kendoDropDownList").text("");
-			   //$("#EmpleadorACargo").attr("disabled", true);
-			   var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
-			   empleadoACargoDDList.enable(false); 
-			   //$("#EmpleadorACargo").enable(false); 
-               viewModel.Comercial.EmpleadorACargo = null;     
-			}
-			else
-			{
-				var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
-				empleadoACargoDDList.enable(true);
-				$("#Administrador").prop("disabled", false);				
-			}
-			
+            var idPerfil = $("#PerfilId").val();
+
+            if (idPerfil == 4 || idPerfil == 5) {
+                //var EsAdmin = $("#Administrador");
+                $("#Administrador").prop("checked", false);
+                $("#Administrador").prop("disabled", true);
+                viewModel.set("Comercial.Administrador", false);
+
+                $("#EmpleadorACargo").data("kendoDropDownList").text("");
+                //$("#EmpleadorACargo").attr("disabled", true);
+                var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
+                empleadoACargoDDList.enable(false);
+                //$("#EmpleadorACargo").enable(false);
+                viewModel.Comercial.EmpleadorACargo = null;
+            }
+            else {
+                var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
+                empleadoACargoDDList.enable(true);
+                $("#Administrador").prop("disabled", false);
+            }
         }
     }
 }
 
 function Eliminar() {
-
     Confirma('¿ Confirma la eliminación de este registro ?',
-               function (dialogItself) {
-                   EjecutarEliminar();
-                   dialogItself.close();
-               });
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
 }
 
 function EjecutarEliminar() {
-
     var grid = $("#gridIniComercial").data("kendoGrid");
 
     var row = grid.select();
@@ -478,7 +440,6 @@ function EjecutarEliminar() {
     var result = MSExecuteOnServer('/Comercial/Eliminar', param);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -492,7 +453,6 @@ function EjecutarEliminar() {
 }
 
 function Grabar() {
-
     var grid = $("#gridIniComercial").data("kendoGrid");
 
     var row = grid.select();
@@ -506,7 +466,6 @@ function Grabar() {
     }
 
     LimpiarValidaciones();
-
 
     var datos = {
         "ObjectState": objectstate,
@@ -523,7 +482,6 @@ function Grabar() {
     var result = MSExecuteOnServer('/Comercial/Grabar', datos);
 
     if (result != null) {
-
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
@@ -537,7 +495,5 @@ function Grabar() {
 }
 
 function Cancelar() {
-
     $('#rootwizard').bootstrapWizard('show', 'tab1');
 }
-
