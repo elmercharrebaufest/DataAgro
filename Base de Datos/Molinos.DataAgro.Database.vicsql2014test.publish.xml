@@ -4,7 +4,7 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseName>DATAAGROQA_LAST</TargetDatabaseName>
     <DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
-    <TargetConnectionString>Data Source=vicsql2014test;Integrated Security=True;Pooling=False</TargetConnectionString>
+    <TargetConnectionString>Data Source=VICSQL2014test;Persist Security Info=False;User ID=dataagrot;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</TargetConnectionString>
     <ProfileVersionNumber>1</ProfileVersionNumber>
     <ScriptDatabaseOptions>True</ScriptDatabaseOptions>
     <BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
