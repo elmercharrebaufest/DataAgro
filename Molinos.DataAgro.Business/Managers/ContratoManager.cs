@@ -112,7 +112,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
             }
-
             if (oParam.Cantidad == 0)
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
@@ -121,11 +120,19 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
+            if (oParam.ClasificacionId == 0)
+            {
+                oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
+            }
+            if (oParam.DestinoId == 0 || oParam.DestinoId == null)
+            {
+                oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
+            }
             if (oParam.LocalidadId == 0 && oParam.TipoNegocioId == 1 || oParam.LocalidadId == 0 && oParam.TipoNegocioId == 2)
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
             }
-            if (oParam.ProvinciaId == 0 && oParam.TipoNegocioId == 1 || oParam.ProvinciaId == 0 && oParam.TipoNegocioId == 2)
+            if (oParam.ProvinciaId == null && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacio");
             }
@@ -167,7 +174,15 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
             {
-                oErrorMessages.Error("EstablecimientoPropio", "El 'Plazos y Topes de Fijación' no debe estar vacio cuando el contrato es 'A FIJAR'");
+                oErrorMessages.Error("EstablecimientoPropio", "'Plazos y Topes de Fijación' no debe estar vacio cuando el contrato es 'A FIJAR'");
+            }
+            if (oParam.BoletoId == 0 || oParam.BoletoId == null)
+            {
+                oErrorMessages.Error("BoletoId", "Boleto no debe estar vacio");
+            }
+            if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 ) && ( oParam.BolsaId==0 || oParam == null))
+            {
+                oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacio cuando existe Boleto");
             }
             return oErrorMessages;
         }

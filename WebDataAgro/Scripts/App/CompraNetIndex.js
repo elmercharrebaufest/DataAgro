@@ -1033,7 +1033,7 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
         $("#calidadesEspecialesIdModalPendiente").data("kendoDropDownList").value(calidadEspecial);
         $("#valorEspecialesIdModalPendiente").val(valorCalidadEspecial);
     }
-    establecimientoPropio == "true" ? $("#establecimientoIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoIdModalPendiente").prop("checked", true) : false;
+    establecimientoPropio == "true" ? $("#establecimientoPropioIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoArrendadoIdModalPendiente").prop("checked", true) : false;
 
     var iteraciones = viewModel.Descuentos.length;
     for (var i = 0; i < iteraciones; i++) {
@@ -1110,7 +1110,7 @@ function ObtenerDatosModalPendiente() {
     objPendiente.CantidadCamiones = $("#cantidadCamionesModalPendienteId").val();
     objPendiente.PlanCanje = $("#planCanjeModalPendienteId").is(":checked") ? true : false;
     objPendiente.Consignatario = $("#consignatarioModalPendienteId").is(":checked") ? true : false;
-    objPendiente.EstablecimientoPropio = ($("input[name='establecimiento']:checked").val() == "Propio") ? true : ($("input[name='establecimiento']:checked").val() == "Arrendado") ? false : null;
+    objPendiente.EstablecimientoPropio = ($("#establecimientoPropioIdModalPendiente").is(":checked")) ? true : ($("#establecimientoArrendadoIdModalPendiente").is(":checked")) ? false : null; 
     objPendiente.DesdeFijacion = $("#fechaDesdeTopeIdModalPendiente").val();
     objPendiente.HastaFijacion = $("#fechaHastaTopeIdModalPendiente").val();
     objPendiente.CondicionFijacionId = $("#condicionFijacionIdModalPendiente").val();

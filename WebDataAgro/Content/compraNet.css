@@ -455,10 +455,13 @@ body.modal-open {
 .checks-adicionales{
     display:contents;
 }
+.row-checks{
+    width:130px;
+    display:inline-block;
+}
 
 .calidad {
-    display: flex;
-
+    display: inherit;
 }
 #descuento-datos{
     display:flex;
@@ -548,3 +551,14 @@ body.modal-open {
         border-bottom: none;
     }
 }
+
+
+@media (max-width: 370px) {
+    #valorespecialDiv{
+        display:flex;
+    }
+}
+
+    .col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
+        display: flex;
+    }

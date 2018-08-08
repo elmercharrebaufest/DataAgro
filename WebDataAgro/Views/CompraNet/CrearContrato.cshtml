@@ -47,7 +47,7 @@
             <div class="col-md-2">
                 <label>Cantidad (Kg.)</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10" style="display:flex">
                 <input id="cantidadId" style="width:550px" />
                 <img id="errcantidadId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -57,15 +57,21 @@
             <div class="col-md-2">
                 <label>Precio</label>
             </div>
-            <div class="col-md-10">
-                <input id="precioId" style="width:380px" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
-                <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
-                <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-                <span id="baseDiv">
-                    <label>Base</label>
-                    <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
-                </span>
+            <div class="col-md-7">
+                <div class="col-xs-8 col-md-5" style="margin-left:-15px;display: flex;">
+                    <input id="precioId" style="width:350px; " />
+                    <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-xs-5 col-md-3" style="margin-left:-15px;display: flex;">
+                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:-webkit-fill-available"></select>
+                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-xs-12 col-md-2" style="margin-left:-15px;float: left;">
+                    <span id="baseDiv">
+                        <label style="margin-right:10px">Base</label>
+                        <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -73,7 +79,7 @@
             <div class="col-md-2">
                 <label>Clasificación</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10" style="display:flex">
                 <select id="clasificacion" data-bind="source: ClasificacionCombo, value: Parametros.Clasificacion, disabled: isControlDisabled" style="max-width:550px"></select>
                 <img id="errclasificacion" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -114,25 +120,17 @@
         </div>
 
         <div class="row">
-            <div id="planCanjeConsignatarioIdDiv"style="display:flex">
-                <div class="col-md-2">
-                    <label style="padding-top: 0px;">Plan canje</label>
-                </div>
-                <div class="col-md-2 checks-adicionales">
-                    <input id="planCanjeId" class="campo-input-input" type="checkbox" />
-                    <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-
-                <div class="col-md-2">
-                    <label style="padding-top: 0px;">Consignatario</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
-                    <input id="consignatarioId" class="campo-input-input" type="checkbox" />
-                    <img id="errConsignatarioId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
+            <div class="col-xs-12 col-md-3">
+                <label style="width:150px">Plan canje</label>
+                <input id="planCanjeId" class="campo-input-input" type="checkbox" />
+                <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+            <div class="col-xs-12 col-md-3">
+                <label style="width:150px;">Consignatario</label>
+                <input id="consignatarioId" class="campo-input-input" type="checkbox" />
+                <img id="errConsignatarioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-
         <div id="fechasDiv" class="row">
             <div>
                 <div class="col-md-2">
@@ -166,7 +164,7 @@
             <div class="col-md-2">
                 <label>Cantidad de Camiones</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10" style="display:flex">
                 <input id="cantidadCamionesId" style="width:550px" />
                 <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -185,7 +183,7 @@
             <div class="col-md-2">
                 <label>Observaci&oacute;n</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10" style="display:flex">
                 <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100" style="max-width:550px"></textarea>
                 <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -198,59 +196,56 @@
             <br />
             <div class="row">
                 <div class="col-md-2">
-                    <label>Sustentable</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Sustentable</label>
                     <input id="sustentableId" class="campo-input-input" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
-                    <span id="sustentableDiv" hidden>
-                        <input id="sustentablePrecioId" placeholder="Importe" style="width:380px" />
+                </div>
+                <div class="col-md-10" id="sustentableDiv" hidden>
+                    <div style="display:flex">
+                        <input id="sustentablePrecioId" placeholder="Importe" style="width:398px" />
                         <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
                         <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="max-width:150px"></select>
                         <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
-                    </span>
+
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Doralizado</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Doralizado</label>
                     <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
-                    <span id="dolarizadoDiv" hidden>
-                        <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="max-width: 550px" />
+                </div>
+                <div class="col-md-10" id="dolarizadoDiv" hidden>
+                    <div style="display:flex">
+                        <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 275px" />
                         <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
-                    </span>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Pesificado</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Pesificado</label>
                     <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
-                    <span id="pesificadoDiv" hidden>
-                        <input id="pesificadoDiasId" placeholder="Días" style="width:500px" />
+                </div>
+                <div class="col-md-10" id="pesificadoDiv" hidden>
+                    <div style="display:flex;">
+                        <input id="pesificadoDiasId" placeholder="Días" style="width:550px" />
                         <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
-                    </span>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>No Informa SIO</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">No Informa SIO</label>
                     <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errnoInformaSioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Trigo Especial</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Trigo Especial</label>
                     <input id="trigoEspecialId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errtrigoEspecialId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
@@ -264,11 +259,11 @@
             <br />
             <div class="row">
                 <div class="col-md-2">
-                    <label>Confirma</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Confirma</label>
                     <input id="boletoConfirmaId" class="campo-input-input" data-bind="checked:Parametros.boletoConfirmaId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errBoletoConfirmaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-10">
                     <span id="BolsaConfirmaDiv" hidden>
                         <select id="bolsaConfirmaId" data-bind="source: BolsaCombo, value: Parametros.bolsaConfirmaId, disabled: isControlDisabled" style="max-width:550px"></select>
                         <img id="errBolsaConfirmaId" src="~/Content/Images/error.png" style="display:none" />
@@ -277,11 +272,11 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Físico</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Físico</label>
                     <input id="boletoFisicoId" class="campo-input-input" data-bind="checked:Parametros.boletoFisicoId  , disabled: isControlDisabled" type="checkbox" />
                     <img id="errBoletoFisicoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-10">
                     <span id="BolsaFisicoDiv" hidden>
                         <select id="bolsaFisicoId" data-bind="source: BolsaCombo, value: Parametros.bolsaFisicoId, disabled: isControlDisabled" style="max-width:550px"></select>
                         <img id="errbolsaFisicoId" src="~/Content/Images/error.png" style="display:none" />
@@ -290,9 +285,7 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Ninguno</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                    <label style="width:120px">Ninguno</label>
                     <input id="boletoNingunoId" class="campo-input-input" data-bind="checked:Parametros.boletoNingunoId  , disabled: isControlDisabled" type="checkbox" />
                     <img id="errBoletoNingunoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
@@ -336,28 +329,22 @@
         <div class="datos-pago" display="block">
             <br />
             <div class="row">
-                <div class="col-md-2">
-                    <label>CD</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                <div class="col-md-6">
+                    <label style="width:175px">CD</label>
                     <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
                     <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
-                    <label>Warrant</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                <div class="col-md-6">
+                    <label style="width:175px">Warrant</label>
                     <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
                     <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
-                    <label>Pago directo al vendedor</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
+                <div class="col-md-6">
+                    <label style="width:175px">Pago directo al vendedor</label>
                     <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                     <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
@@ -371,18 +358,23 @@
         <div class="datos-descuentos" display="block" style="max-width: 785px">
             <br />
             <div id="descuento-datos">
-
-                <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
-                <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
-                <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled" style="max-width:200px"></select>
-                <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
+                <div>
+                    <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled" style="width:200px; margin-right:10px;"></select>
+                    <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div>
+                    <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled" style="width:200px; margin-right:10px"></select>
+                    <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
                 <div class="fecha-descuento">
                     <span id="fechaDesdeDiv">
-                        <input id="fechaDesdeDescuentoId" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" style="width: 150px" />
+                        <input id="fechaDesdeDescuentoId" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" style="width:150px; margin-right:10px" />
                         <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
+                </div>
+                <div class="fecha-descuento">
                     <span id="fechaHastaDiv">
-                        <input id="fechaHastaDescuentoId" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" style="width: 150px" />
+                        <input id="fechaHastaDescuentoId" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" style="width:150px; margin-right:10px" />
                         <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
@@ -443,12 +435,11 @@
                 <div class="col-md-10 calidad">
                     <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled" style="max-width:200px"></select>
                     <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
-                    <span id="pesificadoDiv">
+                    <span id="valorespecialDiv">
                         <input id="valorEspecialesId" placeholder="VALOR DE CALIDAD" style="width:347px" />
                         <img id="errvalorEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
-
             </div>
         </div>
 
@@ -458,20 +449,16 @@
         <div class="datos-establecimiento" display="block">
             <br />
             <div class="row">
-                <div class="col-md-2">
-                    <label>Propio</label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
-                    <input id="establecimientoId" name="establecimiento" value="Propio" type="radio" />
+                <div class="col-md-6">
+                    <label style="width:150px">Propio</label>
+                    <input id="establecimientoPropioId" class="campo-input-input" data-bind="checked:Parametros.EstablecimientoPropio, disabled: isControlDisabled" type="checkbox" />
                     <img id="errEstablecimientoPropioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
-                    <label>Arrendado </label>
-                </div>
-                <div class="col-md-4 checks-adicionales">
-                    <input id="establecimientoId" name="establecimiento" value="Arrendado" type="radio" />
+                <div class="col-md-6">
+                    <label style="width:150px">Arrendado </label>
+                    <input id="establecimientoArrendadoId" class="campo-input-input" data-bind="checked:Parametros.Establecimiento, disabled: isControlDisabled" type="checkbox" />
                     <img id="errEstablecimientoPropioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
@@ -488,4 +475,4 @@
                 </span>
             </div>
         </div>
-</div>
+    </div>

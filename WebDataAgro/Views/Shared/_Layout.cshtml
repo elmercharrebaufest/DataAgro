@@ -26,12 +26,12 @@
 
     @{
         Random rand = new Random();
-        string jsLayout =  rand.Next().ToString();
+        string jsLayout = rand.Next().ToString();
     }
 
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/SiteResponsive.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/jquery.multiselect.css" rel="stylesheet"  type="text/css" />
+    <link href="~/Content/jquery.multiselect.css" rel="stylesheet" type="text/css" />
     <link href="~/Scripts/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
@@ -59,12 +59,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="~/Home"  id="logo">
+                <a href="~/Home" id="logo">
                     <span class="logoheader-nav ">dataAgro</span>
                 </a>
 
             </div>
-            
+
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav left">
                     <li class="mis-contactos-li">
@@ -82,13 +82,13 @@
                             </li>
 
                             @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-        {
-                    <li>
-                        <a href="/Agenda" class="nav-link misreporteslink">
-                            <i class="icon-bar-chart font-color"></i> Reporte de Agenda
-                        </a>
-                    </li>
-}
+                            {
+                                <li>
+                                    <a href="/Agenda" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart font-color"></i> Reporte de Agenda
+                                    </a>
+                                </li>
+                            }
                             <li>
                                 <a href="/Proveedor/ReporteProveedor" class="nav-link misreporteslink">
                                     <i class="icon-bar-chart"></i> Reporte de Proveedor
@@ -114,30 +114,30 @@
                     <li class="buscar-mobile">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </li>
-                    <li class="mis-postit postit-mobile">
+                    @*<li class="mis-postit postit-mobile">
                         <img src="~/Content/Images/postit.png" style="width:16px;" />
-                    </li>
+                    </li>*@
 
                     <li class="dropdown ">
                         <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="informes">
 
                             @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-        {
-                    <li>
-                        <a href="/InformeComercial/Index" class="nav-link misreporteslink">
-                            <i class="icon-bar-chart"></i> Informe Comercial
-                        </a>
-                    </li>
-}
+                            {
+                                <li>
+                                    <a href="/InformeComercial/Index" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Informe Comercial
+                                    </a>
+                                </li>
+                            }
                             @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Administrativo)
-        {
-                    <li>
-                        <a href="/InformeComercial/InformeAdministrativo" class="nav-link misreporteslink">
-                            <i class="icon-bar-chart"></i> Informe Administrativo
-                        </a>
-                    </li>
-}
+                            {
+                                <li>
+                                    <a href="/InformeComercial/InformeAdministrativo" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Informe Administrativo
+                                    </a>
+                                </li>
+                            }
                             <li>
                                 <a href="/InformeComercial/Reporte" class="nav-link misreporteslink">
                                     <i class="icon-bar-chart"></i> Reporte Comercial
@@ -147,56 +147,56 @@
                     </li>
 
                     @if (global_asax.GlobalVariables.EsAdministrador)
-            {
-                    <li class="dropdown ">
-                        <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">Mis Tablas <span class="caret"></span></a>
-                        <ul class="dropdown-menu" id="tablas">
+                    {
+                        <li class="dropdown ">
+                            <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">Mis Tablas <span class="caret"></span></a>
+                            <ul class="dropdown-menu" id="tablas">
 
 
 
-                            <li>
-                                <a href="~/CanalOperacion" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Canal de Operación
-                                </a>
-                            </li>
-                            <li>
-                                <a href="~/Destinatario" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Entrega A
-                                </a>
-                            </li>
-                            <li>
-                                <a href="~/Condicion" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Condición Preferente
-                                </a>
-                            </li>
-                            <li>
-                                <a href="~/Comercial" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> ABM Usuarios
-                                </a>
-                            </li>
-                            <li>
-                                <a href="~/Centro" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> ABM Centros
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                                <li>
+                                    <a href="~/CanalOperacion" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Canal de Operación
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="~/Destinatario" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Entrega A
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="~/Condicion" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Condición Preferente
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="~/Comercial" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> ABM Usuarios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="~/Centro" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> ABM Centros
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
 
-    }
+                    }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-            {
-                <li class="mis-contactos-li">
-                    <a href="/CompraNet" class="nav-no-padding">
+                    {
+                        <li class="mis-contactos-li">
+                            <a href="/CompraNet" class="nav-no-padding">
 
-                        <span> CompraNet</span>
-                    </a>
-                </li>
-    }
+                                <span> CompraNet</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
 
                 <ul id="segundo" class="nav navbar-nav navbar-right">
-                    <li class="dropdown icons mis-postit" id="notas"> 
+                    <li class="dropdown icons mis-postit" id="notas">
                         <a @*class="mis-postit imgs"*@>
                             <img class="usuario-nav" src="~/Content/Images/postit.png" />
                         </a>
@@ -213,13 +213,13 @@
                                 <img class="usuario-nav" src="~/Content/Images/user.png" />
                             </div>
                             @*<div class="usuario-nav-logeado">
-                                <div>
-                                    <span class="usuario-nav-nombre">@WebDataAgro.Core.Util.GetUsuario()</span>
-                                </div>
-                            </div>*@
+                                    <div>
+                                        <span class="usuario-nav-nombre">@WebDataAgro.Core.Util.GetUsuario()</span>
+                                    </div>
+                                </div>*@
                         </a>
                     </li>
-                    
+
                 </ul>
             </div>
         </div>

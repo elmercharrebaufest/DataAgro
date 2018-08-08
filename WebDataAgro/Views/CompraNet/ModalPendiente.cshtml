@@ -544,21 +544,17 @@
                     <div class="datos-establecimiento" display="block">
                         <br />
                         <div class="row">
-                            <div class="col-md-2">
-                                <label>Propio</label>
-                            </div>
-                            <div class="col-md-4 checks-adicionales">
-                                <input id="establecimientoIdModalPendiente" name="establecimiento" value="Propio" type="radio" />
-                                <img id="errEstablecimientoPropioIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                            <div class="col-md-6">
+                                <label style="width:150px">Propio</label>
+                                <input id="establecimientoPropioIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.EstablecimientoPropio, disabled: isControlDisabled" type="checkbox" />
+                                <img id="errEstablecimientoPropioId" src="~/Content/Images/error.png" style="display:none" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-2">
-                                <label>Arrendado </label>
-                            </div>
-                            <div class="col-md-4 checks-adicionales">
-                                <input id="establecimientoIdModalPendiente" name="establecimiento" value="Arrendado" type="radio" />
-                                <img id="errEstablecimientoPropioIdModalPendiente" src="~/Content/Images/error.png" style="display:none" />
+                            <div class="col-md-6">
+                                <label style="width:150px">Arrendado </label>
+                                <input id="establecimientoArrendadoIdModalPendiente" class="campo-input-input" data-bind="checked:Parametros.Establecimiento, disabled: isControlDisabled" type="checkbox" />
+                                <img id="errEstablecimientoPropioId" src="~/Content/Images/error.png" style="display:none" />
                             </div>
                         </div>
                     </div>

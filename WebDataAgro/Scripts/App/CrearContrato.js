@@ -687,6 +687,13 @@ function InicializarElementos() {
         $("#WarrantId").prop("checked", false);
     });
 
+    $("#establecimientoPropioId").click(function () {
+        $("#establecimientoArrendadoId").prop("checked", false);        
+    });
+    $("#establecimientoArrendadoId").click(function () {
+        $("#establecimientoPropioId").prop("checked", false);       
+    });
+
     $('select[id="material"]').change(function () {
         if ($(this).val() != "") {
             CargarCampaniaPorMaterial($(this).val());
@@ -1120,7 +1127,7 @@ function ObtenerDatos() {
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
-    obj.EstablecimientoPropio = ($("input[name='establecimiento']:checked").val() == "Propio") ? true : ($("input[name='establecimiento']:checked").val() == "Arrendado") ? false : null;
+    obj.EstablecimientoPropio = ($("establecimientoPropioId").is(":checked")) ? true : ($("establecimientoArrendadoId").is(":checked")) ? false : null; 
     obj.DesdeFijacion = $("#fechaDesdeTopeId").val();
     obj.HastaFijacion = $("#fechaHastaTopeId").val();
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
@@ -1142,7 +1149,7 @@ function ObtenerDatos() {
         obj.BoletoId = 2;
         obj.BolsaId = $("#bolsaFisicoId").val();
     }
-    else {
+    else if ($("#boletoNingunoId").is(':checked')) {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
     }
@@ -1340,20 +1347,20 @@ function AgregarDescuentos() {
             viewModel.Descuentos.remove(this);
         }
     };
-    $("#tipoPeriodoDBId").data("kendoDropDownList").value("");
-    $("#TipoDBId").data("kendoDropDownList").value("");
-    $("#fechaDesdeDescuentoId").val("");
-    $("#fechaHastaDescuentoId").val("");
-    $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
-    $("#descuentoMonedaId").data("kendoDropDownList").text("");
-    $("#PorcentajeDescuentoId").data("kendoNumericTextBox").value("");
-
+    
     var err = validarDescuento(descuento)
     if (ExistsErrorMessages(err)) {
         MensErr(err[0]);
     }
     else {
         viewModel.Descuentos.push(descuento);
+        $("#tipoPeriodoDBId").data("kendoDropDownList").value("");
+        $("#TipoDBId").data("kendoDropDownList").value("");
+        $("#fechaDesdeDescuentoId").val("");
+        $("#fechaHastaDescuentoId").val("");
+        $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+        $("#descuentoMonedaId").data("kendoDropDownList").text("");
+        $("#PorcentajeDescuentoId").data("kendoNumericTextBox").value("");
     }
 }
 
