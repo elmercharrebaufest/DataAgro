@@ -559,6 +559,26 @@ body.modal-open {
     }
 }
 
-    .col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
-        display: flex;
+.col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
+    display: flex;
+}
+
+@media (max-width: 425px) {
+    #modalPendienteDiv {
+        padding: 10px 5px 15px 5px;
     }
+    #modalPendienteDiv .modal-body {
+        padding: 0 5px 0px 5px;        
+    }
+    #modalPendienteDiv .modal-body h5 {
+        font-size: 11px;
+    }
+    #tabla-descuentos{
+        width:max-content;
+    }
+}
+@media (max-width: 991px) {
+    .descuento-fecha {
+        width: -webkit-fill-available;
+    }
+}

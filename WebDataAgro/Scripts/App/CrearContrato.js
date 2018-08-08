@@ -391,13 +391,6 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-    $("#cantidadCamionesModalPendienteId").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "n0",
-        spinners: false,
-        min: 0
-    });
-
     $("#precioId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
@@ -768,12 +761,12 @@ function InicializarElementos() {
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
-    $("#ImporteDescuentoId").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "n2",
-        spinners: false,
-        min: null,
-    });
+    //$("#ImporteDescuentoId").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "n2",
+    //    spinners: false,
+    //    min: null,
+    //});
     $("#descuentoMonedaId").kendoDropDownList({
         optionLabel: "Moneda",
         dataTextField: "Descripcion",
@@ -786,12 +779,12 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#PorcentajeDescuentoId").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "n2",
-        spinners: false,
-        min: 0
-    });
+    //$("#PorcentajeDescuentoId").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "n2",
+    //    spinners: false,
+    //    min: 0
+    //});
 
     $('select[id="tipoPeriodoDBId"]').change(function () {
         if ($(this).val() == 1) {
@@ -1117,7 +1110,7 @@ function ObtenerDatos() {
     obj.LocalidadId = $("#LocalidadId").val();
     obj.Base = $("#baseId").is(":checked") ? true : false;
     obj.ImporteSustentable = $("#sustentablePrecioId").val();
-    obj.MonedaIdSustentable = $("#sustentableMonedaId").val();
+    obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.DiasPesificado = $("#pesificadoDiasId").val();
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;

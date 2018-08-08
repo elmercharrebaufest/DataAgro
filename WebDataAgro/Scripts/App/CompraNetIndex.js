@@ -848,7 +848,16 @@ function InicializarElementosModalPendiente() {
             $("#bolsaFisicoIdModalPendiente").data("kendoDropDownList").value("");
         }
     });
-
+    $("#standardCalidadIdModalPendiente").change(function () {
+        if ($("#standardCalidadIdModalPendiente").data("kendoDropDownList").value() == 2) {
+            $("#especialesIdModalPendiente").show();
+        } else {
+            $("#especialesIdModalPendiente").hide();
+            $("#calidadesEspecialesIdModalPendiente").data("kendoDropDownList").value("");
+            $("#valorEspecialesIdModalPendiente").val("");
+        }
+    })
+    
     $("#boletoNingunoIdModalPendiente").click(function () {
         if ($(this).is(':checked')) {
             $("#BolsaConfirmaDivModalPendiente").hide();
@@ -873,6 +882,13 @@ function InicializarElementosModalPendiente() {
         $("#CDIdModalPendiente").prop("checked", false);
         $("#WarrantIdModalPendiente").prop("checked", false);
     });
+
+    $("#establecimientoPropioIdModalPendiente").click(function () {
+        $("#establecimientoArrendadoIdModalPendiente").prop("checked", false);
+    });
+    $("#establecimientoArrendadoIdModalPendiente").click(function () {
+        $("#establecimientoPropioIdModalPendiente").prop("checked", false);
+    });
 }
 
 function cargarPorMaterial(material) {
@@ -892,30 +908,6 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
         $("#modalPendiente .noFijacion").show();
     }
 
-    $("#cantidadModalPendienteId").kendoNumericTextBox({
-        value: cantidad,
-        culture: "es-AR",
-        format: "n0",
-        spinners: false,
-        min: 0
-    });
-
-    precio = precio.replace(".", ",");
-    $("#precioModalPendienteId").kendoNumericTextBox({
-        value: precio,
-        culture: "es-AR",
-        format: "n2",
-        spinners: false,
-        min: 0
-    });
-
-    $("#cantidadCamionesModalPendienteId").kendoNumericTextBox({
-        value: cantidad,
-        culture: "es-AR",
-        format: "n0",
-        spinners: false,
-        min: 0
-    });
     $(".modal-title-pendiente").empty();
     $(".modal-title-pendiente").append("Contrato Nro Sap: " + nroSAP);
 
@@ -1099,7 +1091,7 @@ function ObtenerDatosModalPendiente() {
     objPendiente.LocalidadId = $("#LocalidadId").val();
     objPendiente.Base = $("#baseModalPendienteId").is(":checked") ? true : false;
     objPendiente.ImporteSustentable = $("#sustentablePrecioModalPendienteId").val();
-    objPendiente.MonedaIdSustentable = $("#sustentableMonedaModalPendienteId").val();
+    objPendiente.MonedaSustentableId = $("#sustentableMonedaModalPendienteId").val();
     objPendiente.FechaDolarizado = $("#dolarizadoFechaModalPendienteId").val();
     objPendiente.DiasPesificado = $("#pesificadoDiasModalPendienteId").val();
     objPendiente.NoInformaSio = $("#noInformaSioModalPendienteId").is(":checked") ? true : false;
@@ -1460,7 +1452,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
 
     visualizacionRowDoble(pesificadoDias, "pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", informaSIO, "informaSIODivVisualizar", "visualizar_informaSIO");
-    visualizacionRowDoble(sustentablePrecio, "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+    visualizacionRowDoble(sustentablePrecio + " " + sustentableMonedaId, "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
     visualizacionPagoYTrigo(trigoEspecial, "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", cd, warrant, pagoDirectoVendedor, "pagoDivVisualizar", "visualizar_pago");
     visualizacionBoleto(boletoDescripcion, "boletoDivVisualizar", "visualizar_boleto", bolsaDescripcion, "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
@@ -1518,8 +1510,11 @@ function visualizacionRowDoble(param1, id1, idText1, param2, id2, idText2) {
             $("#" + idText1).text("n/a");
             $("#" + idText2).text(param2);
         }
-        else {
+        else if (param2 === "undefined" || param2 === "null" || param2 === "false") {
             $("#" + idText2).text("n/a");
+            $("#" + idText1).text(param1);
+        } else {
+            $("#" + idText2).text(param2);
             $("#" + idText1).text(param1);
         }
         $("#" + id1).show();

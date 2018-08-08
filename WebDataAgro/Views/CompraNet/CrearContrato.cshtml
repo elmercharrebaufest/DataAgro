@@ -357,37 +357,46 @@
 
         <div class="datos-descuentos" display="block" style="max-width: 785px">
             <br />
-            <div id="descuento-datos">
-                <div>
-                    <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled" style="width:200px; margin-right:10px;"></select>
+            <div>
+                <div class="col-md-3">
+                    <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled"></select>
                     <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-                <div>
-                    <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled" style="width:200px; margin-right:10px"></select>
+                <div class="col-md-3">
+                    <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled"></select>
                     <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-                <div class="fecha-descuento">
+                <div class="col-xs-6  col-md-3 fecha-descuento">
                     <span id="fechaDesdeDiv">
-                        <input id="fechaDesdeDescuentoId" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" style="width:150px; margin-right:10px" />
+                        <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" data-bind="value: Parametros.fechaDesdeDescuentoId" />
                         <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
-                <div class="fecha-descuento">
+                <div class="col-xs-6 col-md-3 fecha-descuento">
                     <span id="fechaHastaDiv">
-                        <input id="fechaHastaDescuentoId" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" style="width:150px; margin-right:10px" />
+                        <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" data-bind="value: Parametros.fechaHastaDescuentoId" />
                         <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
             </div>
             <div>
-                <input id="ImporteDescuentoId" type="text" placeholder="IMPORTE" style="width:200px" />
-                <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-                <select id="descuentoMonedaId" data-bind="source: DescuentoMonedaCombo, value: Parametros.descuentoMonedaId, disabled: isControlDisabled" style="max-width:100px"></select>
-                <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
-                <input id="PorcentajeDescuentoId" type="text" placeholder="PORCENTAJE" style="width:200px" />
-                <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                <div class="col-sm-3">
+                    <input type="text" id="ImporteDescuentoId" class="campo-input-text k-textbox" placeholder="IMPORTE" />
+                    <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-sm-3">
+                    <select id="descuentoMonedaId" data-bind="source: DescuentoMonedaCombo, value: Parametros.descuentoMonedaId, disabled: isControlDisabled"></select>
+                    <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="PORCENTAJE" />
+                    <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
+            <div class="col-sm-3">
                 <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
-            </div><br />
+            </div>
+            <br />
             <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
                 <span></span>
                 <span></span>
