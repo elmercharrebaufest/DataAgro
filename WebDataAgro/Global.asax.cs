@@ -52,7 +52,7 @@ namespace WebDataAgro
         {
             var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
         
-            GlobalVariables.Perfil = (EnumPerfil)comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
             GlobalVariables.Equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);   
         }

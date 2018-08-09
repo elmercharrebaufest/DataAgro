@@ -39,6 +39,18 @@ $(document).ready(function () {
     armarCarouselHome();
 });
 
+$(window).resize(mobile);
+
+function mobile() {
+    var ww = document.body.clientWidth;
+
+    if (ww < 1200) {
+        $(".contenedor-principal-widget").hide();
+    } else {
+        $(".contenedor-principal-widget").show();
+    }
+}
+
 function armarCarouselHome() {
     $(".contenedor-principal-widget").empty();
     var htmlCarouselHome = "";

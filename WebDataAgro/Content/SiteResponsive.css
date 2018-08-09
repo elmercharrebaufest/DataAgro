@@ -26,7 +26,7 @@
 }
    
 
-    @media (max-width: 1030px) {
+    @media (max-width: 1022px) {
         .nav-bar-segundo .navbar-collapse ul:first-of-type {
         display: none !important;
     }

@@ -51,7 +51,7 @@
     {
         @Html.AntiForgeryToken()
     }
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse" id="navbarPrincipal">
         <div class="container-fluid">
             <div class="navbar-header ">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -115,8 +115,8 @@
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </li>
                     @*<li class="mis-postit postit-mobile">
-                        <img src="~/Content/Images/postit.png" style="width:16px;" />
-                    </li>*@
+                <img src="~/Content/Images/postit.png" style="width:16px;" />
+            </li>*@
 
                     <li class="dropdown ">
                         <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
@@ -208,19 +208,14 @@
                         </a>
                     </li>
                     <li class="dropdown icons">
-                        <a id="user-logueado" @*class="imgs"*@>
+                        <a id="buscar-proveedor" @*class="imgs"*@>
                             <div style="display:inline-block;">
-                                <img class="usuario-nav" src="~/Content/Images/user.png" />
+                                <img class="usuario-nav" src="~/Content/Images/buscar-proveedor.png" />
                             </div>
-                            @*<div class="usuario-nav-logeado">
-                                    <div>
-                                        <span class="usuario-nav-nombre">@WebDataAgro.Core.Util.GetUsuario()</span>
-                                    </div>
-                                </div>*@
                         </a>
                     </li>
-
                 </ul>
+                
             </div>
         </div>
     </div>

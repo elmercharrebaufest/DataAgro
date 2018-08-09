@@ -214,7 +214,7 @@ namespace Molinos.DataAgro.Repository
             return code;
         }
 
-        public List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class
+        public List<TEntidad> SelStorePaginado<TEntidad>(string store, int maxResultados, int pagina, params object[] parameters) where TEntidad : class
         {
             var parametros = context.Database.SqlQuery<string>($"select PARAMETER_NAME from information_schema.parameters where specific_name = '{store}'").ToList();
 
@@ -237,11 +237,21 @@ namespace Molinos.DataAgro.Repository
 
             var resultado = context.Database
                 .SqlQuery<TEntidad>(("exec " + store + " " + parametrosStr).Trim(), parametrosSql.ToArray());
-            if(maxResultados > 0)
+
+            if(pagina > 0)
+            {
+                resultado.Skip((pagina - 1) * pagina);
+            }
+            if (maxResultados > 0)
             {
                 resultado.Take(maxResultados);
             }
             return resultado.ToList();
+        }
+
+        public List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class
+        {
+            return SelStorePaginado<TEntidad>(store, maxResultados, 0, parameters);
         }
 
         private static IQueryable<TProyeccion> ListarProyeccionQueryable<TProyeccion>(IQueryable<TProyeccion> resultadoFinal, string orden, DirOrden direccionOrden, int maxResultados)

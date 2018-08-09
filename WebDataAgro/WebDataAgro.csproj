@@ -278,6 +278,7 @@
     <Content Include="Content\Images\agro.png" />
     <Content Include="Content\Images\bolsacereales.png" />
     <Content Include="Content\Images\bolsarosario.png" />
+    <Content Include="Content\Images\buscar-proveedor.png" />
     <Content Include="Content\Images\calendario.png" />
     <Content Include="Content\Images\cme.png" />
     <Content Include="Content\Images\cuadriculado.png" />

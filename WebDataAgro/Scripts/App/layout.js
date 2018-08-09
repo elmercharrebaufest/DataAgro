@@ -54,13 +54,11 @@ function mobile() {
     var ww = document.body.clientWidth;
 
     if (ww < 578) {
-        $(".buscador-nav-li").hide();
         $(".li-contacto").attr("display", "inline-block");
         $(".li-contacto").removeClass("float-right");
     }
     else {
         $(".li-contacto").addClass("float-right");
-        $(".buscador-nav-li").show();
     }
 
     if (ww < 750) {        
@@ -113,9 +111,9 @@ $(document).ready(function () {
 
     ArmarNotificaciones();
     $("#notificaciones-a").hover(function () {
-        var alt = 60 + $(document).scrollTop();
+        var alt = 70 + $(document).scrollTop();
         $(".notificaciones-contenedor").show().css({
-            left: $(this).offset().left,
+            left: $("#notificaciones-a").offset().left-117,
             top: alt,
             overflow: 'auto',
             'max-height': '280px'
@@ -238,14 +236,19 @@ $(document).ready(function () {
         $(".informe-detalle").hide();
     });
 
+    $("#buscar-proveedor").click(function () {
+        var menu = $('#menuproveedor');
+        if (menu.is(':visible')) {
+            menu.hide();
+        } else {
+            menu.show();
+        }
+    });
+
     $(".buscador-nav-input").keyup(function (e) {
         armarBusquedaResult(e);
     });
 
-    $(".buscador-nav-input").blur(function () {
-        //$(".buscar-result").empty();
-        //$(".buscar-result").hide();
-    });
     $(".buscador-nav-input").focus(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -275,7 +278,7 @@ $(document).ready(function () {
 
     $(".salir-postit").click(function () {
         $("#modalPostit").modal('hide');
-    });
+    });    
 });
 
 function InicializarPost() {
@@ -357,9 +360,9 @@ $(window).click(function (e) {
 })
 
 $(window).scroll(function (event) {
-    var alt = 60 + $(document).scrollTop();
+    var alt = 70 + $(document).scrollTop();
     $(".notificaciones-contenedor").css({
-        left: $("#notificaciones-a").offset().left,
+        right: $("#notificaciones-a").offset().right,
         top: alt
     });
     $(".reporte-detalle").css({

@@ -75,7 +75,7 @@ namespace WebDataAgro.Controllers
 
             int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
 
-            var result = mobjHomeManager.TraerTodoContacto(idComercial);
+            var result = mobjHomeManager.TraerTodoContacto(idComercial, 1);
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(idComercial, GlobalVariables.Equipo);
 
@@ -91,7 +91,17 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
+        }
 
+        public ActionResult TraerContactos(int pagina)
+        {
+            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
+
+            return new JsonResult()
+            {
+                Data = mobjHomeManager.TraerTodoContacto(idComercial, pagina),
+                MaxJsonLength = Int32.MaxValue
+            };
         }
 
         public ActionResult BusquedaHome(string filtro)

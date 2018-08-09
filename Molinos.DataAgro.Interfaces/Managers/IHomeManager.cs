@@ -1,13 +1,12 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
     public interface IHomeManager
     {
-        ResultIniContacto TraerTodoContacto(int idComercial);
+        ResultIniContacto TraerTodoContacto(int idComercial, int pagina = 0);
 
         ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam);
 

@@ -11,7 +11,7 @@
     @RenderSection("scripts", required: false)
 }
 @section LinksContacto {
-    <div class="navbar navbar-inverse navbar-fixed-top nav-bar-segundo">
+    <div class="navbar navbar-inverse nav-bar-segundo" id="menuproveedor">
         <div class="container" id="search-bar">
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav links">
@@ -52,25 +52,21 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="buscador-nav-li">
+                    <li>
                         <div class="buscador-nav">
                             <input class="buscador-nav-input" type="text" placeholder="Buscar por CUIT, razón social" />
                             <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
-                            <div class="buscar-result">
-
-                            </div>
+                            <div class="buscar-result"></div>
                         </div>
                     </li>
                     @if (ViewBag.edita != false)
                     {
-                        <li class="li-contacto float-right">
-                            <div class="agregarcontacto-nav">
-                                <a href="/Proveedor/Agregar">
-                                    <div id="AgregarContacto" class="btnagregar">
-                                        + Agregar Nuevo Contacto
-                                    </div>
-                                </a>
-                            </div>
+                        <li class="">
+                            <a class="agregarcontacto-nav" href="/Proveedor/Agregar">
+                                <div id="AgregarContacto" class="btnagregar">
+                                    + Agregar Nuevo Contacto
+                                </div>
+                            </a>
                         </li>
                     }
                 </ul>

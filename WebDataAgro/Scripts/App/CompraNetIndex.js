@@ -1450,30 +1450,33 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_destino").text(destinoDescripcion);
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
-
-    visualizacionRowDoble(pesificadoDias, "pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", informaSIO, "informaSIODivVisualizar", "visualizar_informaSIO");
-
-    if (sustentablePrecio !== null && sustentableMonedaId !== null) {
-        var sustentable = sustentablePrecio + " " + sustentableMonedaId
-    }else {
-        sustentable = null;
-    }
-    visualizacionRowDoble(sustentable , "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
-    visualizacionPagoYTrigo(trigoEspecial, "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", cd, warrant, pagoDirectoVendedor, "pagoDivVisualizar", "visualizar_pago");
-    visualizacionBoleto(boletoDescripcion, "boletoDivVisualizar", "visualizar_boleto", bolsaDescripcion, "bolsaDivVisualizar", "visualizar_bolsa");
+    (sustentablePrecio !== "null" && sustentableMonedaId !== "null") ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
+    (dolarizadoFecha !== null) ? $("#visualizar_dolarizadoFecha").text(dolarizadoFecha) : $("#visualizar_dolarizadoFecha").text("");
+    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+    (pesificadoDias !== null) ? $("#visualizar_pesificadoDias").text(pesificadoDias) : $("#visualizar_pesificadoDias").text("null");
+    (informaSIO === "true") ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
+    visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
+    (trigoEspecial === "true") ? $("#visualizar_trigoEspecial").text("Si") : $("#visualizar_trigoEspecial").text("null");
+    (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (warrant === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null")
+    visualizacionRowDoble( "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
+    (boletoDescripcion === "Ninguno" || boletoDescripcion === "null") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
+    visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
+    (standardDeCalidadId !== null) ? $("#visualizar_standard").text(standardDeCalidadId) : $("#visualizar_standard").text(""); 
+    //(calidadEspecialId !== null) ? $("#visualizar_dolarizadoFecha").text(calidadEspecialId +"    " + valorCalidadEspecial) : $("#visualizar_dolarizadoFecha").text("");
+    //visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
     visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
+    
 
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
     }
-
-    textoBooleano(informaSIO, "visualizar_informaSIO");
     textoBooleano(planCanje, "visualizar_planCanje");
     textoBooleano(consignatario, "visualizar_consignatario");
     textoCantCamiones(cantidadCamiones, "visualizar_cantidadDeCamiones");
     textoEstablecimiento(establecimientoPropio, "visualizar_establecimiento");
+    
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
@@ -1505,26 +1508,27 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     });
 }
 
-function visualizacionRowDoble(param1, id1, idText1, param2, id2, idText2) {
-    if ((param1 === "undefined" || param1 === "null" || param1 === "false") &&
-        (param2 === "undefined" || param2 === "null" || param2 === "false")) {
-        $("#" + id1).hide();
-        $("#" + id2).hide();
-    }
-    else {
-        if (param1 === "undefined" || param1 === "null" || param1 === "false") {
-            $("#" + idText1).text("n/a");
-            $("#" + idText2).text(param2);
-        }
-        else if (param2 === "undefined" || param2 === "null" || param2 === "false") {
-            $("#" + idText2).text("n/a");
-            $("#" + idText1).text(param1);
-        } else {
-            $("#" + idText2).text(param2);
-            $("#" + idText1).text(param1);
-        }
-        $("#" + id1).show();
-        $("#" + id2).show();
+function visualizacionRowDoble(div1, span1, div2, span2) {
+    if ($("#"+ span1).text() === "null" && $("#"+ span2).text() === "null") {
+        $("#"+div1).hide();
+        $("#"+div2).hide();
+    } else if ($("#" + span1).text() === "null") {
+        $("#"+div1).hide();
+        $("#" + div2).show();
+        $("#"+ div2).removeClass("col-sm-6");
+        $("#" + div2).addClass("col-sm-12");
+    } else if ($("#"+ span2).text() === "null") {
+        $("#"+div2).hide();
+        $("#"+div1).show();
+        $("#"+div1).addClass("col-sm-12");
+        $("#"+div1).removeClass("col-sm-6");
+    } else {
+        $("#"+div1).show();
+        $("#"+div1).removeClass("col-sm-12");
+        $("#"+div1).addClass("col-sm-6");
+        $("#" + div2).show();
+        $("#" + div2).removeClass("col-sm-12");
+        $("#" + div2).addClass("col-sm-6");
     }
 }
 
@@ -1547,30 +1551,6 @@ function textoBooleano(parametro, id) {
     }
 }
 
-function mostrarPago(cd, warrant, pagoDirectoVendedor, id) {
-    if (cd === "true") {
-        $("#" + id).text("CD");
-    }
-    else if (warrant === "true") {
-        $("#" + id).text("Warrant");
-    }
-    else if (pagoDirectoVendedor === "true") {
-        $("#" + id).text("Pago directo al vendedor");
-    }
-    else {
-        $("#" + id).text("N/A");
-    }
-}
-
-function textoEstablecimiento(parametro, id) {
-    if (parametro === "1") {
-        $("#" + id).text("Propio");
-    }
-    else {
-        $("#" + id).text("Arrendado");
-    }
-}
-
 function textoCantCamiones(parametro, id) {
     if (parametro === "undefined" || parametro === "null" || parametro === "false") {
         $("#" + id).text("n/a");
@@ -1579,57 +1559,14 @@ function textoCantCamiones(parametro, id) {
         $("#" + id).text(parametro);
     }
 }
-
-function visualizacionBoleto(boletoDescripcion, idDivBoleto, idTextBoleto, bolsaDescripcion, idDivBolsa, idTextBolsa) {
-    if ((boletoDescripcion === "undefined" || boletoDescripcion === "null") && (bolsaDescripcion === "undefined" || bolsaDescripcion === "null")) {
-        $("#" + idDivBoleto).hide();
-        $("#" + idDivBolsa).hide();
+function textoEstablecimiento(parametro, id) {
+    if (parametro === "true") {
+        $("#" + id).text("Propio");
     }
     else {
-        if (boletoDescripcion === "Ninguno") {
-            $("#" + idTextBoleto).text(boletoDescripcion);
-            $("#" + idTextBolsa).text("n/a");
-        }
-        else {
-            $("#" + idTextBoleto).text(boletoDescripcion);
-            $("#" + idTextBolsa).text(bolsaDescripcion);
-        }
-
-        $("#" + idDivBoleto).show();
-        $("#" + idDivBolsa).show();
+        $("#" + id).text("Arrendado");
     }
 }
-
-function visualizacionPagoYTrigo(trigo, idTrigoDiv, idTrigo, cd, warrant, pagoDirectoVendedor, idPagoDiv, idPago) {
-    if ((trigo === "undefined" || trigo === "null" || trigo === "false") &&
-        (cd === "undefined" || cd === "null" || cd === "false") &&
-        (warrant === "undefined" || warrant === "null" || warrant === "false") &&
-        (pagoDirectoVendedor === "undefined" || pagoDirectoVendedor === "null" || pagoDirectoVendedor === "false")) {
-        $("#" + idTrigoDiv).hide();
-        $("#" + idPagoDiv).hide();
-    }
-    else {
-        if (trigo === "true") {
-            $("#" + idTrigo).text("Si");
-        }
-        else {
-            $("#" + idTrigo).text("No");
-        }
-        if (cd === "true") {
-            $("#" + idPago).text("CD");
-        }
-        else if (warrant === "true") {
-            $("#" + idPago).text("Warrant");
-        }
-        else {
-            $("#" + idPago).text("Pago directo al vendedor");
-        }
-
-        $("#" + idTrigoDiv).show();
-        $("#" + idPagoDiv).show();
-    }
-}
-
 function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
     $("#proveedor_a_borrar").text(proveedor);
 

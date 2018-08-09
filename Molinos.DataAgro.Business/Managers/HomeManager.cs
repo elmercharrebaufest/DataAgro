@@ -27,9 +27,10 @@ namespace Molinos.DataAgro.Business.Managers
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public ResultIniContacto TraerTodoContacto(int idComercial)
+        public ResultIniContacto TraerTodoContacto(int idComercial, int pagina = 0)
         {
-            var query = repositorio.SelStore<Contactos>("DataAgro_TraerContactos", 0, idComercial);
+            var query = repositorio.SelStore<Contactos>("DataAgro_TraerContactos", 50, pagina, idComercial);
+
 
             return new ResultIniContacto
             {
@@ -218,9 +219,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId)
         {
             var list = new List<ActividadRecordatorio>();
-            ActividadRecordatorio act = null;
-
-
+            
             var result = repositorio.Listar<Actividad, ActividadRecordatorioGrid>(x => new ActividadRecordatorioGrid
             {
                 ActividadId = x.ActividadId,
@@ -239,7 +238,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Comentarios = item.Comentarios,
                     Contacto = item.Contacto,
                     Tema = item.Tema,
-                    Dia = item.FechaRecordatorio.Date == DateTime.Now.Date ? act.Dia = "Hoy " : act.Dia = item.FechaRecordatorio.ToString("dd/MM/yyyy") + " ",
+                    Dia = (item.FechaRecordatorio.Date == DateTime.Now.Date) ? "Hoy " : item.FechaRecordatorio.ToString("dd/MM/yyyy") + " ",
                     Hora = item.FechaRecordatorio.ToString("HH:mm"),
                     ProveedorId = item.ProveedorId
                 });
