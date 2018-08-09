@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="C:\Users\consultor\Desktop\SI_ZMPWS_DATAAGRO_PRE_SLIPService.wsdl" Protocol="file" SourceId="1" />
+    <MetadataSource Address="http://gvicpiqa01.ar.molinos.local:50000/dir/wsdl?p=ic/e06cea3261623171b75dad1882f7302c" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_PRE_SLIP.wsdl" MetadataType="Wsdl" ID="e4d71f67-3666-45fb-8c3f-7a274e1d8d3e" SourceId="1" SourceUrl="file:///C:/Users/consultor/Desktop/SI_ZMPWS_DATAAGRO_PRE_SLIPService.wsdl" />
+    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_PRE_SLIP1.wsdl" MetadataType="Wsdl" ID="38e2e6ac-7367-46aa-8e56-8c6f059a5cdd" SourceId="1" SourceUrl="http://gvicpiqa01.ar.molinos.local:50000/dir/wsdl?p=ic/e06cea3261623171b75dad1882f7302c" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

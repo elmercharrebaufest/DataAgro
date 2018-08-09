@@ -35,32 +35,46 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string localidadString = rellenarEspaciosSAP(localidadCod, 5);
 
                 var rq = new Z_MPRFC_PRE_SLIP() {
-                    IM_CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
-                    IM_CONTRATO_DATAAGRO = contrato.ContratoId.ToString(),
-                    IM_COSECHA = campaniaDescripcion,
-                    IM_DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.Value.ToString() : "0",
-                    IM_FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
-                    IM_FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
-                    IM_FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
-                    IM_FECHA_LIMITE = fechaDolarizadoString,
-                    IM_GRUPO_COMPRAS = "",
-                    IM_IMPORTE_DB = contrato.ImporteSustentable != null ? contrato.ImporteSustentable.Value : 0,
-                    IM_LOCALIDAD = localidadString,
-                    IM_MATERIAL = materialCodigo,
-                    IM_MONEDA = contrato.Moneda.MonedaId,
-                    IM_NO_INFORMAR_SIO = noInformaSioString,
-                    IM_PAGO_DIFERIDO = pagoDiferidoString,
-                    IM_PAGO_DIF_ARP = pagoDifArpString,
-                    IM_PRECIO = contrato.Precio,
-                    IM_PRECIOSpecified = true,
-                    IM_PROVEEDOR = proveedorCUIT,
-                    IM_PROVINCIA = provinciaId,
-                    IM_SUSTENTABLE = sustentableString,
+                    IM_CONTRATO = new ZMPES5270
+                    {
+                        CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
+                        CONTR_DATAAGRO = contrato.ContratoId.ToString(),
+                        COSECHA = campaniaDescripcion,
+                        DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.Value.ToString() : "0",
+                        FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
+                        FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
+                        FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
+                        FECHA_LIMITE = fechaDolarizadoString,
+                        GRUPO_COMPRAS = "",
+                        MONEDA = contrato.Moneda.MonedaId,
+                        NO_INFORMAR_SIO = noInformaSioString,
+                        PAGO_DIFERIDO = pagoDiferidoString,
+                        MATERIAL = materialCodigo,
+                        PAGO_DIF_ARP = pagoDifArpString,
+                        PRECIO = contrato.Precio,
+                        PROVEEDOR = proveedorCUIT,
+                        PROVINCIA = provinciaId,
+                        SUSTENTABLE = sustentableString,
+                        TRIGO_ESPECIAL = trigoEspecialString,
+                        FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
+                        USUARIO = UsuarioComercial,
+                        HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
+                        PROCEDENCIA = localidadString
+                    },
+                    IM_TOPES_FIJ = new ZMPES5280
+                    {
+                        
+                    },
+                    IM_DESC_BONIF = new ZMPES5290 [] 
+                    {
+                        new ZMPES5290
+                        {
+                            IMPORTE_DB = contrato.ImporteSustentable != null ? contrato.ImporteSustentable.Value : 0,
+                            
+                        }
+                    },
+                    IM_CALIDAD = new ZMPES5300[] {},
                     IM_TIPO_NEGOCIO = tiponegocioDescripcion,
-                    IM_TRIGO_ESPECIAL = trigoEspecialString,
-                    IM_USUARIO = UsuarioComercial,
-                    IM_FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
-                    IM_HORA = contrato.Fecha.ToString("HH:mm:ss")
                 };
 
                 logger.Debug(rq.ToXml());

@@ -135,7 +135,7 @@
     <None Include="Service References\FinalizarContrato\Molinos.DataAgro.Agent.FinalizarContrato.Z_MPRFC_PRE_SLIPResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP.wsdl" />
+    <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP1.wsdl" />
     <None Include="Service References\RiesgoComercial\Molinos.DataAgro.Agent.RiesgoComercial.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
