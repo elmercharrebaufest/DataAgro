@@ -497,6 +497,11 @@ body.modal-open {
     box-shadow: none !important;
     color: #787878;
 }
+@media (max-width: 1216px) {
+    #gridInformeCompraNet {
+        display: inline-block
+    }
+}
 @media only screen and (max-width: 768px) {
     #descuento-datos {
         display:inherit;
@@ -550,6 +555,9 @@ body.modal-open {
         border-top: 5px solid #848484;
         border-bottom: none;
     }
+    #gridInformeCompraNet {
+        display: inherit;
+    }
 }
 
 
@@ -580,5 +588,16 @@ body.modal-open {
 @media (max-width: 991px) {
     .descuento-fecha {
         width: -webkit-fill-available;
+    }
+}
+
+
+@media (max-width: 1216px) {
+    .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers {        
+        display: none;
     }
 }
