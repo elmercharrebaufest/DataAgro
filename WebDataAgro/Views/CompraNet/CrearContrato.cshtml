@@ -113,20 +113,18 @@
             <div class="col-md-2">
                 <label>Campaña</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-2">
                 <select id="campanaId" data-bind="source: CampanaCombo, value: Parametros.campanaId, disabled: isControlDisabled" style="max-width:550px"></select>
                 <img id="errcampanaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-md-3">
-                <label style="width:150px">Plan canje</label>
+        
+            <div class="col-xs-12 col-md-2">
+                <label style="width:90px">Plan canje</label>
                 <input id="planCanjeId" class="campo-input-input" type="checkbox" />
                 <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-xs-12 col-md-3">
-                <label style="width:150px;">Consignatario</label>
+            <div class="col-xs-12 col-md-2">
+                <label style="width:90px;">Consignatario</label>
                 <input id="consignatarioId" class="campo-input-input" type="checkbox" />
                 <img id="errConsignatarioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -357,7 +355,7 @@
 
         <div class="datos-descuentos" display="block" style="max-width: 785px">
             <br />
-            <div>
+            <div class="row">
                 <div class="col-md-3">
                     <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled"></select>
                     <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
@@ -379,7 +377,8 @@
                     </span>
                 </div>
             </div>
-            <div>
+
+            <div class="row">
                 <div class="col-sm-3">
                     <input type="text" id="ImporteDescuentoId" class="campo-input-text k-textbox" placeholder="IMPORTE" />
                     <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
@@ -392,10 +391,11 @@
                     <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="PORCENTAJE" />
                     <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
+                <div class="col-sm-3">
+                    <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
-            </div>
+            
             <br />
             <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
                 <span></span>
@@ -411,13 +411,15 @@
             <script id="div-template" type="text/x-kendo-template">
                 <div>
                     <span id="eliminar-descuento" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                    <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span><br />
-                    <span>#: TipoDBDesc#</span>
-                    <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
-                    <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
-                    <span>Importe #:Importe#</span>
-                    <span>#:MonedaId#</span>
-                    <span>Porc #:Porcentaje#</span>
+                    <div style="display:inline-block">
+                        <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span><br />
+                        <span>#: TipoDBDesc#</span>
+                        <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
+                        <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
+                        <span>Importe #:Importe#</span>
+                        <span>#:MonedaId#</span>
+                        <span>Porc #:Porcentaje#</span>
+                    </div>
                     <br /><br />
                 </div>
             </script>

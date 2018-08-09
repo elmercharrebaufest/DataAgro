@@ -1351,9 +1351,9 @@ function AgregarDescuentos() {
         $("#TipoDBId").data("kendoDropDownList").value("");
         $("#fechaDesdeDescuentoId").val("");
         $("#fechaHastaDescuentoId").val("");
-        $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
-        $("#descuentoMonedaId").data("kendoDropDownList").text("");
-        $("#PorcentajeDescuentoId").data("kendoNumericTextBox").value("");
+        $("#ImporteDescuentoId").val("");
+        $("#descuentoMonedaId").data("kendoDropDownList").value("");
+        $("#PorcentajeDescuentoId").val("");
     }
 }
 

@@ -481,7 +481,7 @@ body.modal-open {
     margin-right:auto;
 }
 
-#tabla-descuentos div {
+#tabla-descuentos div div {
     border-bottom: 1px solid #bdbcbc
 }
 
