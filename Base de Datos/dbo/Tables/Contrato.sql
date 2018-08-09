@@ -41,7 +41,7 @@
 	CalidadEspecialId INT NULL,
 	ValorCalidadEspecial DECIMAL(11, 2) NULL,
 	EstablecimientoPropio BIT NULL,
-	[BoletoId] INT DEFAULT 1 NOT NULL,  
+	[BoletoId] INT DEFAULT 3 NOT NULL,  
 	[BolsaId] INT NULL,
 	[DesdeFijacion] DATETIME NULL,
 	[HastaFijacion] DATETIME NULL

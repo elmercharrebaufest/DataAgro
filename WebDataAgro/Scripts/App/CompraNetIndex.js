@@ -1452,7 +1452,13 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
 
     visualizacionRowDoble(pesificadoDias, "pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", informaSIO, "informaSIODivVisualizar", "visualizar_informaSIO");
-    visualizacionRowDoble(sustentablePrecio + " " + sustentableMonedaId, "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+
+    if (sustentablePrecio !== null && sustentableMonedaId !== null) {
+        var sustentable = sustentablePrecio + " " + sustentableMonedaId
+    }else {
+        sustentable = null;
+    }
+    visualizacionRowDoble(sustentable , "sustentableDivVisualizar", "visualizar_sustentablePrecio", dolarizadoFecha, "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
     visualizacionPagoYTrigo(trigoEspecial, "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", cd, warrant, pagoDirectoVendedor, "pagoDivVisualizar", "visualizar_pago");
     visualizacionBoleto(boletoDescripcion, "boletoDivVisualizar", "visualizar_boleto", bolsaDescripcion, "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");

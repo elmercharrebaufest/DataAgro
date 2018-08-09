@@ -77,12 +77,7 @@ function mobile() {
         $(".nav-text3").removeClass("dropdown-toggle");
         $(".nav-text3").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#tablas");
         $("#tablas").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
-
-    }
-
-    else {
-        
-
+    } else {
         $(".nav-text1").addClass("dropdown-toggle");
         $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
         $("#informes").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
@@ -96,7 +91,7 @@ function mobile() {
         $("#tablas").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
 
     }
-    if (ww < 767) {
+    if (ww < 768) {
         $("#segundo").addClass("left");
         $("#segundo").appendTo(".navbar-header");
         $("#segundo").addClass("floatito");
