@@ -1120,7 +1120,7 @@ function ObtenerDatos() {
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
-    obj.EstablecimientoPropio = ($("establecimientoPropioId").is(":checked")) ? true : ($("establecimientoArrendadoId").is(":checked")) ? false : null; 
+    obj.EstablecimientoPropio = ($("#establecimientoPropioId").is(":checked")) ? true : ($("#establecimientoArrendadoId").is(":checked")) ? false : null; 
     obj.DesdeFijacion = $("#fechaDesdeTopeId").val();
     obj.HastaFijacion = $("#fechaHastaTopeId").val();
     obj.CondicionFijacionId = $("#condicionFijacionId").val();

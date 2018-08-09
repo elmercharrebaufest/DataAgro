@@ -110,7 +110,17 @@ namespace Molinos.DataAgro.Business.Managers
 
         public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(string CUIT)
         {
-            return repositorio.SelStore<DatosLocalidadProvincia>("DataAgro_BasicoProveedorTraerPorCuit", 0, CUIT).SingleOrDefault();
+            return repositorio.Obtener<Proveedor, DatosLocalidadProvincia>(x => x.CUIT == CUIT && x.Localidad != null && x.Provincia != null,
+                x => new DatosLocalidadProvincia
+            {
+                ProveedorId = x.ProveedorId,
+                CUIT = x.CUIT,
+                RazonSocial = x.RazonSocial,
+                LocalidadId = x.LocalidadId.Value,
+                ProvinciaId = x.ProvinciaId.Value,
+                Localidad = x.Localidad.Nombre,
+                Provincia = x.Provincia.Nombre
+            });
         }
         
         public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)

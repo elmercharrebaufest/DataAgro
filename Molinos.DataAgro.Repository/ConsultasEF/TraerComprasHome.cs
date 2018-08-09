@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Campaña = g.Key.Campania
                 };
 
-            return resultado.OrderBy(x => x.Nombre).ToList();
+            return resultado.OrderByDescending(x => x.Toneladas).ToList();
         }
 
         public virtual List<MaterialCampaña> Ejecutar(DbContext contexto)
