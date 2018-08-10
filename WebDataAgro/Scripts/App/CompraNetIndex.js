@@ -170,7 +170,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ClasificacionId + "'" + ',' +
         "'" + dataItem.ClasificacionDescripcion + "'" + ',' +
         "'" + dataItem.StandardDeCalidadDescripcion + "'" + ',' +
-        "'" + dataItem.CalidadEspecialDescripcion + "'" + 
+        "'" + dataItem.CalidadEspecialDescripcion + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -258,9 +258,9 @@ function CreateGridInformeCompraNet() {
         columns: [
             {
                 field: "Proveedor", type: "string", width: 150, attributes: {
-                "id": "line"
-            },                 
-                 template: function (dataItem) {
+                    "id": "line"
+                },
+                template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 2) {
@@ -277,8 +277,11 @@ function CreateGridInformeCompraNet() {
                 },
                 filterable: { ui: createMultiSelectProveedor }
             },
-            { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: {
-       "class": "mobile" }},
+            {
+                field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: {
+                    "class": "mobile"
+                }
+            },
             {
                 field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45, attributes: {
                     "class": "mobile"
@@ -295,7 +298,8 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile"
-                } },
+                }
+            },
             {
                 field: "Material", type: "string", filterable: {
                     multi: true, dataSource: [{
@@ -311,15 +315,16 @@ function CreateGridInformeCompraNet() {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>"
                 }, template: "#=Material#"
             },
-        {
-            field: "Cantidad", type: "number", width: 70, format: "{0:n0}", attributes: {
-                "class": "mobile"
-            } },
-        {
-            field: "Ampliaciones", type: "number", width: 60, attributes: {
-                "class": "mobile"
-            }, template: function (dataItem) {
-                if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
+            {
+                field: "Cantidad", type: "number", width: 70, format: "{0:n0}", attributes: {
+                    "class": "mobile"
+                }
+            },
+            {
+                field: "Ampliaciones", type: "number", width: 60, attributes: {
+                    "class": "mobile"
+                }, template: function (dataItem) {
+                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3) {
@@ -334,7 +339,7 @@ function CreateGridInformeCompraNet() {
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile" } },
             { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "mobile" } },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile" }               
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile" }
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
@@ -652,18 +657,6 @@ function InicializarElementosModalPendiente() {
         }
     });
 
-    $("#condicionFijacionIdModalPendiente").kendoDropDownList({
-        optionLabel: "SELECCIONE CONDICIÓN...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#condicionFijacionIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#condicionFijacionIdModalPendiente").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
     $("#standardCalidadIdModalPendiente").kendoDropDownList({
         optionLabel: "STANDARD",
         dataTextField: "Descripcion",
@@ -859,7 +852,7 @@ function InicializarElementosModalPendiente() {
             $("#valorEspecialesIdModalPendiente").val("");
         }
     })
-    
+
     $("#boletoNingunoIdModalPendiente").click(function () {
         if ($(this).is(':checked')) {
             $("#BolsaConfirmaDivModalPendiente").hide();
@@ -1013,8 +1006,16 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
         $("#boletoNingunoIdModalPendiente").prop("checked", true);
     }
 
-    $("#fechaDesdeTopeIdModalPendiente").val(desdeFijacion);
-    $("#fechaHastaTopeIdModalPendiente").val(hastaFijacion);
+    if (!(desdeFijacion == "null" || desdeFijacion == "undefined" || desdeFijacion == "")) {
+        $("#fechaDesdeTopeIdModalPendiente").val(desdeFijacion);
+    } else {
+        $("#fechaDesdeTopeIdModalPendiente").val("");
+    }
+    if (!(hastaFijacion == "null" || hastaFijacion == "undefined" || hastaFijacion == "")) {
+        $("#fechaHastaTopeIdModalPendiente").val(desdeFijacion);
+    } else {
+        $("#fechaDesdeTopeIdModalPendiente").val("");
+    }
     $("#condicionFijacionIdModalPendiente").data("kendoDropDownList").value(condicion);
     $("#modalPendiente").modal('show');
     cd == "true" ? $("#CDIdModalPendiente").prop("checked", true) : $("#CDIdModalPendiente").prop("checked", false);
@@ -1104,7 +1105,7 @@ function ObtenerDatosModalPendiente() {
     objPendiente.CantidadCamiones = $("#cantidadCamionesModalPendienteId").val();
     objPendiente.PlanCanje = $("#planCanjeModalPendienteId").is(":checked") ? true : false;
     objPendiente.Consignatario = $("#consignatarioModalPendienteId").is(":checked") ? true : false;
-    objPendiente.EstablecimientoPropio = ($("#establecimientoPropioIdModalPendiente").is(":checked")) ? true : ($("#establecimientoArrendadoIdModalPendiente").is(":checked")) ? false : null; 
+    objPendiente.EstablecimientoPropio = ($("#establecimientoPropioIdModalPendiente").is(":checked")) ? true : ($("#establecimientoArrendadoIdModalPendiente").is(":checked")) ? false : null;
     objPendiente.DesdeFijacion = $("#fechaDesdeTopeIdModalPendiente").val();
     objPendiente.HastaFijacion = $("#fechaHastaTopeIdModalPendiente").val();
     objPendiente.CondicionFijacionId = $("#condicionFijacionIdModalPendiente").val();
@@ -1186,6 +1187,8 @@ function LimpiarPendiente() {
     $("#boletoNingunoIdModalPendiente").prop('checked', false);
     $("#BolsaFisicoDivModalPendiente").hide();
     $("BolsaConfirmaDivModalPendiente").hide();
+    $("#fechaDesdeTopeIdModalPendiente").val("");
+    $("#fechaHastaTopeIdModalPendiente").val("");
 }
 
 function ModalFinalizado(contratoId, tipoId, fijacionDePrecioContratoId) {
@@ -1460,15 +1463,15 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     (trigoEspecial === "true") ? $("#visualizar_trigoEspecial").text("Si") : $("#visualizar_trigoEspecial").text("null");
     (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (warrant === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null")
-    visualizacionRowDoble( "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
+    visualizacionRowDoble("trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
     (boletoDescripcion === "Ninguno" || boletoDescripcion === "null") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
-    $("#visualizar_standard").text(standardDeCalidadDescripcion); 
-    (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion +"    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
+    $("#visualizar_standard").text(standardDeCalidadDescripcion);
+    (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion + "    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
     visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
     visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
-    
+
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
@@ -1477,7 +1480,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     textoBooleano(consignatario, "visualizar_consignatario");
     textoCantCamiones(cantidadCamiones, "visualizar_cantidadDeCamiones");
     textoEstablecimiento(establecimientoPropio, "visualizar_establecimiento");
-    
+
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
@@ -1510,23 +1513,23 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
 }
 
 function visualizacionRowDoble(div1, span1, div2, span2) {
-    if ($("#"+ span1).text() === "null" && $("#"+ span2).text() === "null") {
-        $("#"+div1).hide();
-        $("#"+div2).hide();
+    if ($("#" + span1).text() === "null" && $("#" + span2).text() === "null") {
+        $("#" + div1).hide();
+        $("#" + div2).hide();
     } else if ($("#" + span1).text() === "null") {
-        $("#"+div1).hide();
+        $("#" + div1).hide();
         $("#" + div2).show();
-        $("#"+ div2).removeClass("col-sm-6");
+        $("#" + div2).removeClass("col-sm-6");
         $("#" + div2).addClass("col-sm-12");
-    } else if ($("#"+ span2).text() === "null") {
-        $("#"+div2).hide();
-        $("#"+div1).show();
-        $("#"+div1).addClass("col-sm-12");
-        $("#"+div1).removeClass("col-sm-6");
+    } else if ($("#" + span2).text() === "null") {
+        $("#" + div2).hide();
+        $("#" + div1).show();
+        $("#" + div1).addClass("col-sm-12");
+        $("#" + div1).removeClass("col-sm-6");
     } else {
-        $("#"+div1).show();
-        $("#"+div1).removeClass("col-sm-12");
-        $("#"+div1).addClass("col-sm-6");
+        $("#" + div1).show();
+        $("#" + div1).removeClass("col-sm-12");
+        $("#" + div1).addClass("col-sm-6");
         $("#" + div2).show();
         $("#" + div2).removeClass("col-sm-12");
         $("#" + div2).addClass("col-sm-6");

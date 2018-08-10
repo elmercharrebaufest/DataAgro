@@ -352,6 +352,18 @@ function InicializarElementos() {
         }
     });
 
+    $("#condicionFijacionIdModalPendiente").kendoDropDownList({
+        optionLabel: "SELECCIONE CONDICIÓN...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+    });
+
+    $("#condicionFijacionIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#condicionFijacionIdModalPendiente").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
     $("#standardCalidadId").kendoDropDownList({
         optionLabel: "SELECCIONE STANDARD DE CALIDAD...",
         dataTextField: "Descripcion",
@@ -914,9 +926,7 @@ function CrearViewModel() {
         "standardCalidadIdModal": null,
         "calidadesEspecialesIdModal": null,
         "tipoPeriodoDBIdModal": null,
-        "Descuentos": null,
-        "fechaDesdeTopeIdModalPendiente": null,
-        "fechaHastaTopeIdModalPendiente": null
+        "Descuentos": null
     };
     viewModel = kendo.observable({
         Parametros: param,
