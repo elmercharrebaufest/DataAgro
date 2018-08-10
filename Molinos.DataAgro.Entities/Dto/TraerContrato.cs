@@ -93,7 +93,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Warrant { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
         public int? StandardDeCalidad { get; set; }
+        public string StandardDeCalidadDescripcion { get; set; }
         public int? CalidadEspecial { get; set; }
+        public string CalidadEspecialDescripcion { get; set; }
         public decimal? ValorCalidadEspecial { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
@@ -109,7 +111,6 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class StoredPorContratoResult
     {
-
         public List<BasicoContrato> BasicoContratoTraerPorFltro { get; set; }
 
         public List<BasicoContrato> ReporteContratoContratoTraerPorFltro { get; set; }

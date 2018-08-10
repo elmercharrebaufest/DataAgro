@@ -168,7 +168,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + formatearFecha(dataItem.DesdeFijacion) + ' - ' + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
         "'" + dataItem.CondicionFijacionDescripcion + "'" + ',' +
         "'" + dataItem.ClasificacionId + "'" + ',' +
-        "'" + dataItem.ClasificacionDescripcion + "'" +
+        "'" + dataItem.ClasificacionDescripcion + "'" + ',' +
+        "'" + dataItem.StandardDeCalidadDescripcion + "'" + ',' +
+        "'" + dataItem.CalidadEspecialDescripcion + "'" + 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1398,7 +1400,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion) {
+function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion) {
     switch (status) {
         case "1": //pendiente
             $("#modalVisualizar .modal-header > div.status").hide();
@@ -1451,9 +1453,9 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     (sustentablePrecio !== "null" && sustentableMonedaId !== "null") ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
-    (dolarizadoFecha !== null) ? $("#visualizar_dolarizadoFecha").text(dolarizadoFecha) : $("#visualizar_dolarizadoFecha").text("");
+    $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
     visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
-    (pesificadoDias !== null) ? $("#visualizar_pesificadoDias").text(pesificadoDias) : $("#visualizar_pesificadoDias").text("null");
+    $("#visualizar_pesificadoDias").text(pesificadoDias);
     (informaSIO === "true") ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     (trigoEspecial === "true") ? $("#visualizar_trigoEspecial").text("Si") : $("#visualizar_trigoEspecial").text("null");
@@ -1461,13 +1463,12 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     visualizacionRowDoble( "trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
     (boletoDescripcion === "Ninguno" || boletoDescripcion === "null") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
-    (standardDeCalidadId !== null) ? $("#visualizar_standard").text(standardDeCalidadId) : $("#visualizar_standard").text(""); 
-    //(calidadEspecialId !== null) ? $("#visualizar_dolarizadoFecha").text(calidadEspecialId +"    " + valorCalidadEspecial) : $("#visualizar_dolarizadoFecha").text("");
-    //visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
+    $("#visualizar_standard").text(standardDeCalidadDescripcion); 
+    (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion +"    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
+    visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
     visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
     
-
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();

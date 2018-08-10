@@ -81,6 +81,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Centro Destino { get; set; }
         [ForeignKey("CondicionFijacionId")]
         public virtual CondicionFijacion CondicionFijacion { get; set; }
+        [ForeignKey("StandardDeCalidadId")]
+        public virtual StandardDeCalidad StandardDeCalidad { get; set; }
         [ForeignKey("CalidadEspecialId")]
         public virtual CalidadEspecial CalidadEspecial { get; set; }
         [ForeignKey("BoletoId")]
