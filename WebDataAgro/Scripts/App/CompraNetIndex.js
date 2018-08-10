@@ -948,7 +948,9 @@ function modalPendiente(observacion, estado, contratoId, proveedor, fechaDesde, 
     $("#provinciaId").data("kendoDropDownList").value(provincia);
     $("#clasificacionModalPendienteId").data("kendoDropDownList").value(clasificacion);
     $("#destinoModalPendienteId").data("kendoDropDownList").value(destino);
-    $("#cantidadCamionesModalPendienteId").val(cantidadCamiones);
+    if (cantidadCamiones !== "null" && cantidadCamiones !== "undefined" && cantidadCamiones !== 0) {
+        $("#cantidadCamionesModalPendienteId").val(cantidadCamiones);
+    }
     (planCanje == "true") ? $("#planCanjeModalPendienteId").prop("checked", true) : $("#planCanjeModalPendienteId").prop("checked", false);
     (consignatario == "true") ? $("#consignatarioModalPendienteId").prop("checked", true) : $("#consignatarioModalPendienteId").prop("checked", false);
     CargarLocalidadPorProvincia(provincia);
@@ -1189,6 +1191,7 @@ function LimpiarPendiente() {
     $("BolsaConfirmaDivModalPendiente").hide();
     $("#fechaDesdeTopeIdModalPendiente").val("");
     $("#fechaHastaTopeIdModalPendiente").val("");
+    $("#cantidadCamionesModalPendienteId").val("");
 }
 
 function ModalFinalizado(contratoId, tipoId, fijacionDePrecioContratoId) {
@@ -1478,9 +1481,11 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     }
     textoBooleano(planCanje, "visualizar_planCanje");
     textoBooleano(consignatario, "visualizar_consignatario");
-    textoCantCamiones(cantidadCamiones, "visualizar_cantidadDeCamiones");
-    textoEstablecimiento(establecimientoPropio, "visualizar_establecimiento");
 
+    $("#visualizar_cantidadDeCamiones").text(cantidadCamiones);
+    (establecimientoPropio === "true") ? $("#visualizar_establecimiento").text("Propio") : (establecimientoPropio === "false") ? $("#visualizar_establecimiento").text("Arrendado"): $("#visualizar_establecimiento").text("null");
+   
+    visualizacionRowDoble("cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones", "establecimientoDivVisualizar", "visualizar_establecimiento");
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
