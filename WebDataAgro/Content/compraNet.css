@@ -384,7 +384,6 @@
 
 .panelflotante {
     z-index: 1000;
-    position: fixed;
     top: 62px;
     right: 0;
     left: 0;
@@ -392,10 +391,6 @@
     border-width: 0 0 1px 0;
     background-color: #fff;
     padding: 10px 40px 10px 40px;
-}
-
-.page-container {
-    margin-top: 50px;
 }
 
 span.k-widget.k-dropdown.k-header {
@@ -497,6 +492,15 @@ body.modal-open {
     box-shadow: none !important;
     color: #787878;
 }
+
+.page-container {
+    padding:0!important;
+}
+
+.page-content-wrapper .page-content {
+    padding: 0 !important;
+}
+
 @media (max-width: 1216px) {
     #gridInformeCompraNet {
         display: inline-block
