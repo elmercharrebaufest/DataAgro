@@ -2299,7 +2299,7 @@ function ObtenerDatos() {
 
     obj.basicos.ClasificacionCompraNet = $("#clasificacion-compranet").val();
     obj.basicos.BoletoCompraNet = $("#boleto-compranet").val();
-    obj.basicos.BolsaCompraNet = $("#boleto-compranet").val();
+    obj.basicos.BolsaCompraNet = $("#bolsa-compranet").val();
     obj.basicos.ProvinciaCompraNet = $("#provincia-compranet").val();
     obj.basicos.LocalidadCompraNet = $("#localidad-compranet").val();
 
