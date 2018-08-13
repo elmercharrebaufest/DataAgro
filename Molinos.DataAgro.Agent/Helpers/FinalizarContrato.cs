@@ -1,8 +1,11 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.FinalizarContrato;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -16,7 +19,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Finalizar(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string UsuarioComercial)
+        public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion)
         {
             try
             {
@@ -25,6 +28,26 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
 
+                var listaDescuentos = new List<ZMPES5290>();
+                foreach (var descBon in descuentoBonificacion)
+                {
+                    if (descBon.TipoPeriodoDBId != 1)
+                    {
+                        listaDescuentos.Add(new ZMPES5290
+                        {
+                            TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
+                            TIPO_DB = descBon.TipoDB.CodigoSap,
+                            FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : "",
+                            FEHASTA = descBon.FechaHasta != null ? descBon.FechaHasta.Value.ToString("yyyy-MM-dd") : "",
+                            IMPORTE_DB = descBon.Importe,
+                            MONEDA_DB = descBon.Moneda.MonedaId,
+                            PORC_DB = descBon.Porcentaje
+                        }
+                        );
+                    };
+                }
+                var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x=> x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string pagoDifArpString = contrato.DiasPesificado != null && contrato.DiasPesificado.Value != 0 ? "X" : "";
@@ -32,49 +55,68 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string trigoEspecialString = contrato.TrigoEspecial != null && contrato.TrigoEspecial.Value ? "X" : "";
 
-                string localidadString = rellenarEspaciosSAP(localidadCod, 5);
+                string localidadString = rellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
+                decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones);
 
                 var rq = new Z_MPRFC_PRE_SLIP() {
                     IM_CONTRATO = new ZMPES5270
                     {
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
                         CONTR_DATAAGRO = contrato.ContratoId.ToString(),
-                        COSECHA = campaniaDescripcion,
+                        COSECHA = contrato.Campana.Descripcion,
                         DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.Value.ToString() : "0",
                         FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
                         FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
                         FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                         FECHA_LIMITE = fechaDolarizadoString,
-                        GRUPO_COMPRAS = "",
+                        GRUPO_COMPRAS = contrato.Comercial.GrupoDeComprasId.HasValue ? contrato.Comercial.GrupoDeCompras.Descripcion : "",
                         MONEDA = contrato.Moneda.MonedaId,
                         NO_INFORMAR_SIO = noInformaSioString,
                         PAGO_DIFERIDO = pagoDiferidoString,
-                        MATERIAL = materialCodigo,
+                        MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = pagoDifArpString,
                         PRECIO = contrato.Precio,
-                        PROVEEDOR = proveedorCUIT,
-                        PROVINCIA = provinciaId,
+                        PROVEEDOR = contrato.Proveedor.CUIT,
+                        PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
                         TRIGO_ESPECIAL = trigoEspecialString,
                         FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
-                        USUARIO = UsuarioComercial,
+                        USUARIO = contrato.Comercial.IdActiveDirectory,
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
-                        PROCEDENCIA = localidadString
+                        PROCEDENCIA = localidadString,
+                        CENTRO = contrato.Destino.CodigoSap,
+                        CLASIFICACION = contrato.Clasificacion.Descripcion,
+                        IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
+                        CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
+                        COND_FIJACION = contrato.CondicionFijacion.CodigoSap,
+                        CAMIONES = cantidadCamiones,
+                        CONFIRMA = contrato.BoletoId == 1 ? contrato.Boleto.Descripcion : "",
+                        BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 ? contrato.Bolsa.CodigoSap : "",
+                        BOL_FISICO = contrato.BoletoId == 2 ? contrato.Boleto.Descripcion : "",
+                        NINGUNO = contrato.BoletoId == 3 ? contrato.Boleto.Descripcion : "",
+                        AUT_CG = contrato.Warrant == true?"X":"",
+                        AUR_CD = contrato.CD == true ? "X" : "",
+                        PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",
+                        ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "",
+                        ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "",
+                        IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe:0,
+                        MONEDA_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId:"",
+                        PORC_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
+                        IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
+                        MONEDA_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : "",
+                        PORC_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
+                        FE_DESDE= contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd"):"",
+                        FE_HASTA= contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
                         
                     },
-                    IM_DESC_BONIF = new ZMPES5290 [] 
-                    {
-                        new ZMPES5290
-                        {
-                            IMPORTE_DB = contrato.ImporteSustentable != null ? contrato.ImporteSustentable.Value : 0,
-                            
-                        }
+                    IM_DESC_BONIF = listaDescuentos.ToArray(),
+                    IM_CALIDAD = new ZMPES5300[] 
+                    {                        
                     },
-                    IM_CALIDAD = new ZMPES5300[] {},
-                    IM_TIPO_NEGOCIO = tiponegocioDescripcion,
+                    IM_TIPO_NEGOCIO = contrato.TipoNegocio.Descripcion,
                 };
 
                 logger.Debug(rq.ToXml());
@@ -105,7 +147,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
-
 
     }
 }

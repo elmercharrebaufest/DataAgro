@@ -46,9 +46,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? CD { get; set; }
         public bool? Warrant { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
-        public int? StandardDeCalidadId { get; set; }
-        public int? CalidadEspecialId { get; set; }
-        public decimal? ValorCalidadEspecial { get; set; }
+        public int? StandardDeCalidadId { get; set; }        
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
@@ -82,9 +80,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("CondicionFijacionId")]
         public virtual CondicionFijacion CondicionFijacion { get; set; }
         [ForeignKey("StandardDeCalidadId")]
-        public virtual StandardDeCalidad StandardDeCalidad { get; set; }
-        [ForeignKey("CalidadEspecialId")]
-        public virtual CalidadEspecial CalidadEspecial { get; set; }
+        public virtual StandardDeCalidad StandardDeCalidad { get; set; }        
         [ForeignKey("BoletoId")]
         public virtual BoletoCompraNet Boleto { get; set; }
         [ForeignKey("BolsaId")]

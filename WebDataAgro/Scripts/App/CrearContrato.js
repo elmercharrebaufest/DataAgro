@@ -1140,10 +1140,7 @@ function ObtenerDatos() {
     obj.CD = $("#CDId").is(":checked") ? true : false;
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
-    obj.StandardDeCalidadId = $("#standardCalidadId").val();
-    obj.CalidadEspecialId = $("#calidadesEspecialesId").val();
-    obj.ValorCalidadEspecial = $("#valorEspecialesId").val();
-
+    
     if ($("#boletoConfirmaId").is(':checked')) {
         obj.BoletoId = 1;
         obj.BolsaId = $("#bolsaConfirmaId").val();

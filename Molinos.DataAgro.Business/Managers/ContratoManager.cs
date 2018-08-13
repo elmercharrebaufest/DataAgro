@@ -264,9 +264,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Warrant = oContrato.Warrant;
             oContratoSave.PagoDirectoVendedor = oContrato.PagoDirectoVendedor;
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
-            oContratoSave.CalidadEspecialId = oContrato.CalidadEspecialId;
-            oContratoSave.ValorCalidadEspecial = oContrato.ValorCalidadEspecial;
-            oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio;
+            
+            oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio != null ? oContrato.EstablecimientoPropio : null;
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;
             oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
             oContratoSave.BoletoId = oContrato.BoletoId;
@@ -352,15 +351,8 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
                 try
                 {
-                    var objCampania = mobjCampaniaManager.TraerCampania(oContratoSave.CampanaId);
-                    var objMaterial = mobjMaterialManager.TraerMaterial(oContratoSave.MaterialId);
-                    var objProvincia = mobjProvinciaManager.TraerProvincia(oContratoSave.ProvinciaId != null ? oContratoSave.ProvinciaId.Value : 0);
-                    var objTiponegocio = mobjTipoNegocioManager.TraerTipoNegociod(oContratoSave.TipoNegocioId);
-                    var objLocalidad = mobjLocalidadManager.TraerLocalidad(oContratoSave.LocalidadId != null ? oContratoSave.LocalidadId.Value : 0);
-                    var objProveedor = mobjProveedorManager.TraerProveedor(oContratoSave.ProveedorId);
-                    var objComercial = mobjComercialManager.TraerComercial(oContratoSave.ComercialId != null ? oContratoSave.ComercialId.Value : 0);
-
-                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objCampania.Descripcion, objMaterial.Codigo, objProvincia.ProvinciaId.ToString(), objTiponegocio.Descripcion, objLocalidad.CodLocalidad, objProveedor.CUIT, objComercial != null ? objComercial.IdActiveDirectory : "");
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x=>x.ContratoId == oContratoSave.ContratoId);
+                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento);
 
                     oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
@@ -435,10 +427,10 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x=> x.ComercialId);
         }
 
-        public string SAPFinalizarContrato(Contrato contrato, string campaniaDescripcion, string materialCodigo, string provinciaId, string tiponegocioDescripcion, string localidadCod, string proveedorCUIT, string comercial)
+        private string SAPFinalizarContrato(Contrato contrato,List<DescuentoBonificacion> descuentoBonificacion)
         {
             var SapFinalizarContrato = new FinalizarContratoAgent(logger);
-            return SapFinalizarContrato.Finalizar(contrato, campaniaDescripcion, materialCodigo, provinciaId, tiponegocioDescripcion, localidadCod, proveedorCUIT, comercial);
+            return SapFinalizarContrato.Finalizar(contrato, descuentoBonificacion);
         }
 
         public List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId)

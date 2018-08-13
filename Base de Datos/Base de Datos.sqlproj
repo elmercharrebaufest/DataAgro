@@ -223,6 +223,7 @@
     <Build Include="dbo\Tables\DescuentoBonificacion.sql" />
     <Build Include="dbo\Tables\TipoDB.sql" />
     <Build Include="dbo\Tables\TipoPeriodoDB.sql" />
+    <Build Include="dbo\Tables\Calidad.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

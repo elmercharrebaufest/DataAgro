@@ -95,6 +95,7 @@
     <Compile Include="Dto\ReportesDto.cs" />
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
+    <Compile Include="Entities\Calidad.cs" />
     <Compile Include="Entities\DescuentoBonificacion.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
