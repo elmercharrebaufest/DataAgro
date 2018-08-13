@@ -228,7 +228,6 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
             }
-
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
@@ -264,7 +263,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Warrant = oContrato.Warrant;
             oContratoSave.PagoDirectoVendedor = oContrato.PagoDirectoVendedor;
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
-            
             oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio != null ? oContrato.EstablecimientoPropio : null;
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;
             oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
@@ -312,7 +310,6 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, listComercialesId));
         }
 
-
         public GrabarContratoResult ConfirmarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -352,7 +349,8 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x=>x.ContratoId == oContratoSave.ContratoId);
-                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento);
+                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
 
@@ -427,10 +425,10 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x=> x.ComercialId);
         }
 
-        private string SAPFinalizarContrato(Contrato contrato,List<DescuentoBonificacion> descuentoBonificacion)
+        private string SAPFinalizarContrato(Contrato contrato,List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
             var SapFinalizarContrato = new FinalizarContratoAgent(logger);
-            return SapFinalizarContrato.Finalizar(contrato, descuentoBonificacion);
+            return SapFinalizarContrato.Finalizar(contrato, descuentoBonificacion, calidad);
         }
 
         public List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId)

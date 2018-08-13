@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion)
+        public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
             try
             {
@@ -45,6 +45,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                         );
                     };
+                }
+                var listaCalidades = new List<ZMPES5300>();
+                foreach (var cal in calidad)
+                {
+                    if (cal.StandardDeCalidadId == 2)
+                    {
+                        listaCalidades.Add(new ZMPES5300
+                        {
+                            CODIGO = cal.CalidadEspecial.CodigoSap,
+                            VALOR = cal.Valor
+                        }
+                        );
+                    }
                 }
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x=> x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
@@ -104,18 +117,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
                         IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
                         MONEDA_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : "",
-                        PORC_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
+                        PORC_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0                        
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
                         FE_DESDE= contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd"):"",
-                        FE_HASTA= contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
-                        
+                        FE_HASTA= contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : ""
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
-                    IM_CALIDAD = new ZMPES5300[] 
-                    {                        
-                    },
+                    IM_CALIDAD = listaCalidades.ToArray(),
                     IM_TIPO_NEGOCIO = contrato.TipoNegocio.Descripcion,
                 };
 
