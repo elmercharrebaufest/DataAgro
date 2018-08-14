@@ -370,7 +370,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string nO_INFORMAR_SIOField;
         
-        private string tRIGO_ESPECIALField;
+        private string eSPECIALField;
         
         private string cONTR_DATAAGROField;
         
@@ -660,13 +660,13 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=20)]
-        public string TRIGO_ESPECIAL {
+        public string ESPECIAL {
             get {
-                return this.tRIGO_ESPECIALField;
+                return this.eSPECIALField;
             }
             set {
-                this.tRIGO_ESPECIALField = value;
-                this.RaisePropertyChanged("TRIGO_ESPECIAL");
+                this.eSPECIALField = value;
+                this.RaisePropertyChanged("ESPECIAL");
             }
         }
         

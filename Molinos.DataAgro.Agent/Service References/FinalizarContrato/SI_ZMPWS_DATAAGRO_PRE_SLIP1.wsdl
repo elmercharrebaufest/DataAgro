@@ -158,7 +158,7 @@
           <xsd:element name="PAGO_DIF_ARP" type="rfc:char1" />
           <xsd:element name="DIAS_DIFERIM" type="rfc:numeric3" />
           <xsd:element name="NO_INFORMAR_SIO" type="rfc:char1" />
-          <xsd:element name="TRIGO_ESPECIAL" type="rfc:char1" />
+          <xsd:element name="ESPECIAL" type="rfc:char1" />
           <xsd:element name="CONTR_DATAAGRO" type="rfc:char10" />
           <xsd:element name="FECHA" type="rfc:date" />
           <xsd:element name="HORAACT" type="rfc:time" />

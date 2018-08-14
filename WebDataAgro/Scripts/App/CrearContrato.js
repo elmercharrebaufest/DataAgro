@@ -715,7 +715,11 @@ function InicializarElementos() {
     $('select[id="material"]').change(function () {
         if ($(this).val() != "") {
             CargarCampaniaPorMaterial($(this).val());
-            CargarCalidadPorMaterial($(this).val())
+            CargarCalidadPorMaterial($(this).val());
+            var iteraciones = viewModel.Calidades.length;
+            for (var i = 0; i < iteraciones; i++) {
+                viewModel.Calidades.pop();
+            }
         }
     });
 
@@ -824,6 +828,7 @@ function InicializarElementos() {
         }
     });
     $("#IngresarDescuento").click(AgregarDescuentos);
+    $("#IngresarCalidad").click(AgregarCalidades);
 }
 
 function CargarCampaniaPorMaterial(value) {
@@ -970,6 +975,7 @@ function CrearViewModel() {
         EspecialesComboModalPendiente: [],
         isControlDisabled: true,
         Descuentos: [],
+        Calidades:[],
         DescuentosVisualizar: []
     });
 
@@ -978,6 +984,7 @@ function CrearViewModel() {
     kendo.bind($("#modalPendienteDiv"), viewModel);
     kendo.bind($("#tabla-descuentos"), viewModel);
     kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
+    kendo.bind($("#tabla-calidades"), viewModel);
 }
 
 function InicializarDatos() {
@@ -1172,7 +1179,7 @@ function ObtenerDatos() {
     obj.ProveedorId = proveedorId;
 
     obj.Descuentos = viewModel.Descuentos;
-
+    obj.Calidad = viewModel.Calidades;
     GrabarContrato(obj);
 }
 
@@ -1365,7 +1372,8 @@ function AgregarDescuentos() {
     }
     else {
         viewModel.Descuentos.push(descuento);
-        $("#ImporteDescuentoId").val("");
+        $("#ImporteDescuentoId").data("kendoDropDownList").value("");
+        $("#descuentoMonedaId").data("kendoDropDownList").value("")
         $("#PorcentajeDescuentoId").val(1);
     }
 }
@@ -1396,6 +1404,40 @@ function validarDescuento(descuento) {
     if (descuento.Porcentaje === "" || descuento.Porcentaje === null || descuento.Porcentaje === "undefined") {
         errores.push("El campo Porcentaje no puede estar vacio")
     }
-
     return errores
 }
+
+function AgregarCalidades() {
+    var calidades = {
+        Id: 0,
+        CalidadEspecialDesc: $("#calidadesEspecialesId").data("kendoDropDownList").text(),
+        CalidadEspecialId: $("#calidadesEspecialesId").data("kendoDropDownList").value(),        
+        Valor: $("#valorEspecialesId").val(), 
+        StandardDeCalidadId: 2,
+        Borrar: function () {
+            viewModel.Calidades.remove(this);
+        }
+    };
+
+    var err = validarCalidad(calidades)
+    if (ExistsErrorMessages(err)) {
+        MensErr(err[0]);
+    }
+    else {
+        viewModel.Calidades.push(calidades);
+        $("#calidadesEspecialesId").val("");
+        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+    }
+}
+function validarCalidad(calidad) {
+    var errores = [];
+
+    if (calidad.CalidadEspecialId === 0 || calidad.CalidadEspecialId === "" || calidad.CalidadEspecialId === null) {
+        errores.push("El campo Calidades Especiales no puede estar vacio")
+    }
+    if (calidad.Valor === "" || calidad.Valor === null || calidad.Valor === "undefined") {
+        errores.push("El campo Valor no puede estar vacio")
+    }
+    return errores
+}
+

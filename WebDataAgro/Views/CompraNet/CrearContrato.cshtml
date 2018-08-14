@@ -407,11 +407,11 @@
                     <div style="display:inline-block">
                         <span><strong> Descuentos #: TipoPeriodoDBDesc#</strong></span><br />
                         <span>#: TipoDBDesc#</span>
-                        <span data-bind="visible: TipoPeriodoDBId!=1"><br />Desde #: FechaDesde#  </span>
-                        <span data-bind="visible: TipoPeriodoDBId!=1">Hasta #:FechaHasta#</span><br />
-                        <span>Importe #:Importe#</span>
+                        <span data-bind="visible: TipoPeriodoDBId!=1"><br /><strong>Desde:</strong> #: FechaDesde#  </span>
+                        <span data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta:</strong> #:FechaHasta#</span><br />
+                        <span><strong>Importe:</strong> #:Importe#</span>
                         <span>#:MonedaId#</span>
-                        <span>Porc #:Porcentaje#</span>
+                        <span><strong>Porc:</strong> #:Porcentaje#%</span>
                     </div>
                     <br /><br />
                 </div>
@@ -424,16 +424,7 @@
             </div>
         </div>
         <div class="datos-calidades" display="block">
-            <div class="row">
-                <div class="col-md-2">
-                    <label>Standard de calidad</label>
-                </div>
-                <div class="col-md-6">
-                    <select id="standardCalidadId" data-bind="source: StandardCombo, value: Parametros.standardCalidadId, disabled: isControlDisabled"></select>
-                    <img id="errstandardCalidadId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-            <div id="especialesId" class="row" hidden>
+            <div id="especialesId" class="row">
                 <div class="col-md-2">
                     <label>Calidades Especiales </label>
                 </div>
@@ -442,16 +433,33 @@
                         <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled"></select>
                         <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <span id="valorespecialDiv">
                             <input id="valorEspecialesId" placeholder="VALOR DE CALIDAD" style="width:100%" />
                             <img id="errvalorEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                         </span>
                     </div>
-
-
+                </div>
+                <div class="col-sm-3 col-md-1">
+                    <span id="IngresarCalidad" class="k-button k-button-icontext" type="button">Ingresar</span>
                 </div>
             </div>
+            <div id="tabla-calidades" data-template="div-calidades-template" data-bind="source:Calidades">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <script id="div-calidades-template" type="text/x-kendo-template">
+                <div>
+                    <div>
+                        <div class="col-xs-2 col-md-1" id="eliminar-calidad" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></div>
+                        <div class="col-xs-5 col-md-2" style="margin-top:8px"><strong> #: CalidadEspecialDesc#</strong></div>
+                        <div class="col-xs-5 col-md-2" style="margin-top:8px"><strong>Valor: </strong>#: Valor#</div>
+                    </div>
+                    <br /><br />
+                </div>
+            </script>
         </div>
         <br />
         <div class="row">

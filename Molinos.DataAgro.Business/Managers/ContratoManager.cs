@@ -262,7 +262,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.CD = oContrato.CD;
             oContratoSave.Warrant = oContrato.Warrant;
             oContratoSave.PagoDirectoVendedor = oContrato.PagoDirectoVendedor;
-            oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
             oContratoSave.EstablecimientoPropio = oContrato.EstablecimientoPropio != null ? oContrato.EstablecimientoPropio : null;
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;
             oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
@@ -285,6 +284,21 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     descuento.Contrato = oContratoSave;
                     repositorio.Agregar(descuento);
+                }
+            }
+            if (oContratoSave.Calidad != null)
+            {
+                foreach (var calidadExistente in oContratoSave.Calidad)
+                {
+                    if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calidadExistente.Id))
+                    {
+                        repositorio.Remover(calidadExistente);
+                    }
+                }
+                foreach (var calidad in oContrato.Calidad.Where(x => x.Id == 0))
+                {
+                    calidad.Contrato = oContratoSave;
+                    repositorio.Agregar(calidad);
                 }
             }
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)

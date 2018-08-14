@@ -46,6 +46,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                         );
                     };
                 }
+                if (contrato.ImporteSustentable!= null || contrato.ImporteSustentable != 0)
+                {
+                    listaDescuentos.Add(new ZMPES5290
+                    {
+                        TIPO_PERIODO = "I",
+                        TIPO_DB = "B",
+                        FEDESDE = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : "",
+                        FEHASTA = contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : "",
+                        IMPORTE_DB = contrato.ImporteSustentable??0,
+                        MONEDA_DB = contrato.MonedaSustentableId,
+                        PORC_DB = 0
+                    });
+                }
                 var listaCalidades = new List<ZMPES5300>();
                 foreach (var cal in calidad)
                 {
@@ -68,7 +81,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string trigoEspecialString = contrato.TrigoEspecial != null && contrato.TrigoEspecial.Value ? "X" : "";
 
-                string localidadString = rellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
+                string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones);
 
                 var rq = new Z_MPRFC_PRE_SLIP() {
@@ -92,7 +105,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PROVEEDOR = contrato.Proveedor.CUIT,
                         PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
-                        TRIGO_ESPECIAL = trigoEspecialString,
+                        ESPECIAL = trigoEspecialString,
                         FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
                         USUARIO = contrato.Comercial.IdActiveDirectory,
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
@@ -147,7 +160,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         }
 
-        private string rellenarEspaciosSAP(string value, int stringLength)
+        private string RellenarEspaciosSAP(string value, int stringLength)
         {
             if (value != null) {
                 int cantCeros = stringLength - value.Length;
