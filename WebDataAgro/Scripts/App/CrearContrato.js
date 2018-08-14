@@ -169,11 +169,23 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-
+    $("#establecimientoDiv").hide();
     $("#provinciaId").kendoDropDownList({
         optionLabel: "SELECCIONE UNA PROVINCIA...",
         dataTextField: "Nombre",
         dataValueField: "Provinciaid",
+        change: function () {
+            
+            if (this.value() != "") {
+                CargarLocalidadPorProvincia(this.value());
+            }
+
+            if (this.value() == 1) {
+                $("#establecimientoDiv").show();
+            } else {
+                $("#establecimientoDiv").hide();
+            }
+        }
     });
 
     $("#provinciaId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -704,18 +716,6 @@ function InicializarElementos() {
         if ($(this).val() != "") {
             CargarCampaniaPorMaterial($(this).val());
             CargarCalidadPorMaterial($(this).val())
-        }
-    });
-
-    $("#establecimientoDiv").hide();
-    $('select[id="provinciaId"]').change(function () {
-        if ($(this).val() != "") {
-            CargarLocalidadPorProvincia($(this).val());
-            if ($(this).val() == 1) {
-                $("#establecimientoDiv").show();
-            } else {
-                $("#establecimientoDiv").hide();
-            }
         }
     });
 
@@ -1307,10 +1307,11 @@ function obtenerLocalidadProvincia() {
                 if (localidadProvincia.LocalidadId != "") {
                     if (localidadProvincia.CUIT != "") {
                         $("#provinciaId").data("kendoDropDownList").value(localidadProvincia.ProvinciaId);
-                        CargarLocalidadPorProvincia(localidadProvincia.ProvinciaId);
+                        $("#provinciaId").data("kendoDropDownList").trigger("change");
                         $("#LocalidadId").data("kendoDropDownList").value(localidadProvincia.LocalidadId);
                     } else {
                         $("#provinciaId").data("kendoDropDownList").value("");
+                        $("#provinciaId").data("kendoDropDownList").trigger("change");
                         $("#LocalidadId").data("kendoDropDownList").value("");
                     }
                 }
