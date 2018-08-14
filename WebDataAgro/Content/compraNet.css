@@ -434,8 +434,8 @@ textarea.k-textbox {
 }
 
 body.modal-open {
-    overflow: hidden;
-    position: fixed;
+    position: relative;
+    overflow-y: hidden !important;
 }
 
 .modal-dialog.pendienteM{
@@ -445,6 +445,10 @@ body.modal-open {
 
 .k-filter-menu .k-button {
     width: auto !important;
+}
+
+body { 
+    height: 100%;
 }
 
 .checks-adicionales{
@@ -471,8 +475,6 @@ body.modal-open {
 }
 #tabla-descuentos{
     overflow:auto;
-    width:500px;
-    margin-left:auto;
     margin-right:auto;
 }
 

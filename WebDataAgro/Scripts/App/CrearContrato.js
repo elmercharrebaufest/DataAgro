@@ -12,6 +12,31 @@ $(document).ready(function () {
     InicializarDatos();
 });
 
+function ObtenerFechaDesde(fechaBase) {
+    var hoy = fechaBase != undefined ? fechaBase : new Date();
+    var anio = hoy.getFullYear();
+    var mes = hoy.getMonth() + 1;
+    var dia = hoy.getDate();
+    if (mes < 10) {
+        mes = "0" + mes.toString();
+    }
+    if (dia < 10) {
+        dia = "0" + dia.toString();
+    }
+    return dia + '-' + mes + '-' + anio;
+}
+
+function ObtenerFechaHasta(fechaBase) {
+    var hoy = fechaBase != undefined ? fechaBase : new Date();
+    var anio = hoy.getFullYear();
+    var mesPost = hoy.getMonth() + 2;
+    var dia = hoy.getDate();
+    if (mesPost < 10) {
+        mesPost = "0" + mesPost.toString();
+    }
+    return  dia + '-' + mesPost + '-' + anio;
+}
+
 function InicializarElementos() {
     kendo.culture("es-AR");
 
@@ -431,44 +456,31 @@ function InicializarElementos() {
         min: 0
     });
 
-    var hoy = new Date();
-    var anio = hoy.getFullYear();
-    var mes = hoy.getMonth() + 1;
-    var dia = hoy.getDate();
-    if (mes < 10) {
-        mes = "0" + mes.toString();
-    }
-
-    var mesPost = hoy.getMonth() + 2;
-    if (mesPost < 10) {
-        mesPost = "0" + mesPost.toString();
-    }
-
-    if (dia < 10) {
-        dia = "0" + dia.toString();
-    }
-
-    var date = dia + '-' + mes + '-' + anio; //new Date(anio, mes, dia);
-    var datehasta = dia + '-' + mesPost + '-' + anio; //new Date(anio, mesPost, dia);
+    var date = ObtenerFechaDesde();
+    var datehasta = ObtenerFechaHasta();
 
     $("#fechaDesdeId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaHastaId").val(ObtenerFechaHasta(this.value()))},
     });
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaDesdeId").val(ObtenerFechaDesde(this.value())) }
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())) },
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaHastaTopeId").val(ObtenerFechaDesde(this.value())) },
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({
@@ -494,15 +506,6 @@ function InicializarElementos() {
             document.querySelector(".datos-adicionales").style.display = "block";
         } else {
             document.querySelector(".datos-adicionales").style.display = "none";
-        }
-    });
-
-    $("#DatosTopesPlazos").click(function () {
-        if (document.querySelector(".datos-topesplazos").style.display == "none") {
-            CerrarDatosPendientes();
-            document.querySelector(".datos-topesplazos").style.display = "block";
-        } else {
-            document.querySelector(".datos-topesplazos").style.display = "none";
         }
     });
 
@@ -542,15 +545,6 @@ function InicializarElementos() {
         }
     });
 
-    $("#DatosEstablecimiento").click(function () {
-        if (document.querySelector(".datos-establecimiento").style.display == "none") {
-            CerrarDatosPendientes();
-            document.querySelector(".datos-establecimiento").style.display = "block";
-        } else {
-            document.querySelector(".datos-establecimiento").style.display = "none";
-        }
-    });
-
     $("#sustentableId").click(function () {
         if ($(this).is(':checked')) {
             $("#sustentableDiv").show();
@@ -573,7 +567,6 @@ function InicializarElementos() {
             $("#CantidadCamionesDiv").hide();
             $("#planCanjeConsignatarioIdDiv").hide();
             $("#DatosBoleto").hide();
-            $("#DatosTopesPlazos").hide();
             $("#DatosPago").hide();
             $("#DatosEstablecimiento").hide();
             $("#DatosDescuentos").hide();
@@ -604,7 +597,6 @@ function InicializarElementos() {
             $("#CantidadCamionesDiv").show();
             $("#planCanjeConsignatarioIdDiv").show();
             $("#DatosBoleto").show();
-            $("#DatosTopesPlazos").show();
             $("#DatosPago").show();
             $("#DatosEstablecimiento").show();
             $("#DatosCalidades").show();
@@ -740,9 +732,11 @@ function InicializarElementos() {
         }
     });
     $("#tipoPeriodoDBId").kendoDropDownList({
-        optionLabel: "DESCUENTOS",
         dataTextField: "Descripcion",
-        dataValueField: "Id"
+        dataValueField: "Id",
+        dataBound: function () {
+            this.select(0);
+        }
     });
 
     $("#tipoPeriodoDBId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -752,9 +746,11 @@ function InicializarElementos() {
         }
     });
     $("#TipoDBId").kendoDropDownList({
-        optionLabel: "TIPO",
         dataTextField: "Descripcion",
-        dataValueField: "Id"
+        dataValueField: "Id",
+        dataBound: function () {
+            this.select(0);
+        }
     });
 
     $("#TipoDBId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -766,19 +762,16 @@ function InicializarElementos() {
     $("#fechaDesdeDescuentoId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaHastaDescuentoId").val(ObtenerFechaHasta(this.value())) }
     });
     $("#fechaHastaDescuentoId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () { $("#fechaDesdeDescuentoId").val(ObtenerFechaDesde(this.value())) }
     });
-    //$("#ImporteDescuentoId").kendoNumericTextBox({
-    //    culture: "es-AR",
-    //    format: "n2",
-    //    spinners: false,
-    //    min: null,
-    //});
+
     $("#descuentoMonedaId").kendoDropDownList({
         optionLabel: "Moneda",
         dataTextField: "Descripcion",
@@ -797,7 +790,7 @@ function InicializarElementos() {
     //    spinners: false,
     //    min: 0
     //});
-
+    $("#PorcentajeDescuentoId").val(1);
     $('select[id="tipoPeriodoDBId"]').change(function () {
         if ($(this).val() == 1) {
             $(".fecha-descuento").hide();
@@ -826,12 +819,10 @@ function CargarCampaniaPorMaterial(value) {
 }
 function CerrarDatosPendientes() {
     document.querySelector(".datos-adicionales").style.display = "none";
-    document.querySelector(".datos-topesplazos").style.display = "none";
     document.querySelector(".datos-boleto").style.display = "none";
     document.querySelector(".datos-pago").style.display = "none";
     document.querySelector(".datos-descuentos").style.display = "none";
     document.querySelector(".datos-calidades").style.display = "none";
-    document.querySelector(".datos-establecimiento").style.display = "none";
 }
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
@@ -1354,13 +1345,8 @@ function AgregarDescuentos() {
     }
     else {
         viewModel.Descuentos.push(descuento);
-        $("#tipoPeriodoDBId").data("kendoDropDownList").value("");
-        $("#TipoDBId").data("kendoDropDownList").value("");
-        $("#fechaDesdeDescuentoId").val("");
-        $("#fechaHastaDescuentoId").val("");
         $("#ImporteDescuentoId").val("");
-        $("#descuentoMonedaId").data("kendoDropDownList").value("");
-        $("#PorcentajeDescuentoId").val("");
+        $("#PorcentajeDescuentoId").val(1);
     }
 }
 
