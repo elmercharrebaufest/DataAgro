@@ -512,69 +512,65 @@ body {
     padding: 0 !important;
 }
 
-@media (max-width: 1216px) {
-    #gridInformeCompraNet {
-        display: inline-block
-    }
-}
+
 @media only screen and (max-width: 768px) {
     #descuento-datos {
         display:inherit;
     }
 }
-
-@media (max-width: 767px) {
+@media (max-width: 1220px) {
+    .k-header[data-field*="Campania"],
+    .k-header[data-field*="ContratoSAP"],
+    .k-header[data-field*="Comercial"],
+    .mobile-md {
+        display: none;
+    }
+}
+@media (max-width: 1023px) {
+    .k-header[data-field*="Ampliaciones"],
     .k-header[data-field*="FechaDesde"],
     .k-header[data-field*="FechaHasta"],
     .k-header[data-field*="TipoNegocio"],
-    .k-header[data-field*="Material"],
-    .k-header[data-field*="Cantidad"],
-    .k-header[data-field*="Ampliaciones"],
-    .k-header[data-field*="Precio"],
-    .k-header[data-field*="Campania"],
-    .k-header[data-field*="ContratoSAP"],
-    .k-header[data-field*="Fecha"],
-    .k-header[data-field*="Comercial"] {
+    .mobile-sm {
         display: none;
     }
 
-    .mobile {
-        display: none;
-    }
     #border-orange {
-        border-top: 5px solid #ffc100;
         border-bottom: none;
     }
 
     #border-green {
-        border-top: 5px solid #179e2b;
         border-bottom: none;
     }
 
     #border-blue {
-        border-top: 5px solid #00adf5;
         border-bottom: none;
     }
 
     #border-red {
-        border-top: 5px solid #d00707;
         border-bottom: none;
     }
 
     #border-black {
-        border-top: 5px solid #000000;
         border-bottom: none;
     }
 
     #border-grey {
-        border-top: 5px solid #848484;
         border-bottom: none;
     }
     #gridInformeCompraNet {
         display: inherit;
     }
 }
-
+@media(max-width: 500px) {
+    .k-header[data-field*="Material"],
+    .k-header[data-field*="Cantidad"],
+    .k-header[data-field*="Fecha"],
+    .k-header[data-field*="Precio"],
+    .mobile-xs {
+        display: none;
+    }
+}
 
 @media (max-width: 370px) {
     #valorespecialDiv{
@@ -605,7 +601,6 @@ body {
         width: -webkit-fill-available;
     }
 }
-
 
 @media (max-width: 1216px) {
     .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,

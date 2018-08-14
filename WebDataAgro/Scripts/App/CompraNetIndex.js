@@ -253,7 +253,10 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").attr('id', 'border-red');
             $("td:has(div.statusfinalizado)").attr('id', 'border-black');
             $("td:has(div.statusborrado)").attr('id', 'border-grey');
-            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True")) { $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial"); }
+            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True"))
+            {
+                $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
+            }
         },
         columns: [
             {
@@ -279,12 +282,12 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: {
-                    "class": "mobile"
+                    "class": "mobile-sm"
                 }
             },
             {
                 field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45, attributes: {
-                    "class": "mobile"
+                    "class": "mobile-sm"
                 }
             },
             {
@@ -297,7 +300,7 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "FIJACION",
                     }]
                 }, title: "Tipo", width: 70, attributes: {
-                    "class": "mobile"
+                    "class": "mobile-sm"
                 }
             },
             {
@@ -310,19 +313,19 @@ function CreateGridInformeCompraNet() {
                         Material: "Semilla de Soja",
                     }]
                 }, width: 95, attributes: {
-                    "class": "mobile"
+                    "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>"
                 }, template: "#=Material#"
             },
             {
                 field: "Cantidad", type: "number", width: 70, format: "{0:n0}", attributes: {
-                    "class": "mobile"
+                    "class": "mobile-xs"
                 }
             },
             {
                 field: "Ampliaciones", type: "number", width: 60, attributes: {
-                    "class": "mobile"
+                    "class": "mobile-sm"
                 }, template: function (dataItem) {
                     if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
@@ -334,12 +337,12 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile" } },
-            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "mobile" } },
-            { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile" } },
-            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "mobile" } },
+            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs" } },
+            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile" }
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-md" }
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
