@@ -42,36 +42,57 @@
                 </div>
             </div>
         </div>
-
-        @*ocultar este div cuando no sea tipo "a fijar"*@
-        <div class="row">
-            <div class="col-sm-2">
-                <label>Fijación Desde-Hasta</label>
-            </div>
-            <div class="col-sm-5 col-md-3">
-                <span id="fechaDesdeTopeDiv">
-                    <input id="fechaDesdeTopeId" type="date" style="width: 100%" />
-                    <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
-            </div>
-
-            <div class="col-sm-5 col-md-3">
-                <span id="fechaHastaTopeDiv">
-                    <input id="fechaHastaTopeId" type="date" style="width: 100%" />
-                    <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2">
-                <label>Condición fijación</label>
-            </div>
-            <div class="col-sm-10 col-md-6">
-                <select id="condicionFijacionId" data-bind="source:CondicionFijacionCombo, value: Parametros.CondicionFijacionId, disabled: isControlDisabled"></select>
-                <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
+        <div id="pagosDiv">
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>Pago</label>
+                </div>
+                <div class="col-sm-5 col-md-3">
+                    <label style="width:80px">CD</label>
+                    <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
+                    <div style="float:right; width:110px">
+                        <label style="width:80px">Warrant </label>
+                        <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-5 col-md-3">
+                    <label style="width:180px">Pago directo al vendedor</label>
+                    <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
         </div>
+        <div id="plazosYTopesFijacion">
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>Fijación Desde-Hasta</label>
+                </div>
+                <div class="col-sm-5 col-md-3">
+                    <span id="fechaDesdeTopeDiv">
+                        <input id="fechaDesdeTopeId" type="date" style="width: 100%" />
+                        <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
 
+                <div class="col-sm-5 col-md-3">
+                    <span id="fechaHastaTopeDiv">
+                        <input id="fechaHastaTopeId" type="date" style="width: 100%" />
+                        <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>Condición fijación</label>
+                </div>
+                <div class="col-sm-10 col-md-6">
+                    <select id="condicionFijacionId" data-bind="source:CondicionFijacionCombo, value: Parametros.CondicionFijacionId, disabled: isControlDisabled"></select>
+                    <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-2">
                 <label>Material</label>
@@ -141,7 +162,7 @@
                 <label style="width:80px">Plan canje</label>
                 <input id="planCanjeId" class="campo-input-input" type="checkbox" />
                 <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
-                <div style="float:right; width:110px">
+                <div style="float:right; width:110px" id="consignatarioDiv">
                     <label>Consignatario</label>
                     <input id="consignatarioId" class="campo-input-input" type="checkbox" />
                     <img id="errConsignatarioId" src="~/Content/Images/error.png" style="display:none" />
@@ -162,8 +183,7 @@
                 <img id="errLocalidadId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div class="row">
-            @*ocultar este div cuando no sea provincia bs as*@
+        <div class="row" id="establecimientoDiv">            
             <div class="col-sm-5 col-md-3 col-sm-offset-2">
                 <label style="width:80px">Propio</label>
                 <input id="establecimientoPropioId" class="campo-input-input" data-bind="checked:Parametros.EstablecimientoPropio, disabled: isControlDisabled" type="checkbox" />
@@ -267,7 +287,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <label style="width:120px">Trigo Especial</label>
+                    <label style="width:120px">Calidad Especial</label>
                     <input id="trigoEspecialId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errtrigoEspecialId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
@@ -320,35 +340,6 @@
                     <label style="width:120px">Ninguno</label>
                     <input id="boletoNingunoId" class="campo-input-input" data-bind="checked:Parametros.boletoNingunoId  , disabled: isControlDisabled" type="checkbox" />
                     <img id="errBoletoNingunoId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div id="DatosPago" class="btnagregar btnDestacado btnAzul col-md-8" type="button">
-                <i class="fa fa-plus"></i> Pago
-            </div>
-        </div>
-        <div class="datos-pago" display="block">
-            <div class="row">
-                <div class="col-md-6">
-                    <label style="width:175px">CD</label>
-                    <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label style="width:175px">Warrant</label>
-                    <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label style="width:175px">Pago directo al vendedor</label>
-                    <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
         </div>

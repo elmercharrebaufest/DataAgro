@@ -31,8 +31,16 @@ function ObtenerFechaHasta(fechaBase) {
     var anio = hoy.getFullYear();
     var mesPost = hoy.getMonth() + 2;
     var dia = hoy.getDate();
+    
+    if (dia == 1) {
+        dia = new Date(anio, hoy.getMonth() + 1, 0).getDate();
+        mesPost = hoy.getMonth() + 1;
+    }
     if (mesPost < 10) {
         mesPost = "0" + mesPost.toString();
+    }
+    if (dia < 10) {
+        dia = "0" + dia.toString();
     }
     return  dia + '-' + mesPost + '-' + anio;
 }
@@ -44,7 +52,6 @@ function InicializarElementos() {
     $(".datos-boleto").hide();
     $(".datos-establecimiento").hide();
     $(".datos-topesplazos").hide();
-    $(".datos-pago").hide();
     $(".datos-calidades").hide();
     $(".datos-descuentos").hide();
 
@@ -267,10 +274,12 @@ function InicializarElementos() {
         }
     });
 
+    $("#consignatarioDiv").hide();
     $("#clasificacion").kendoDropDownList({
         optionLabel: "SELECCIONE LA CLASIFICACIÓN...",
         dataTextField: "Descripcion",
-        dataValueField: "Id"
+        dataValueField: "Id",
+        change: function () { this.value() == 2 ? $("#consignatarioDiv").show() : $("#consignatarioDiv").hide(); }
     });
 
     $("#clasificacion").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -419,7 +428,10 @@ function InicializarElementos() {
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min: 0
+        min: 0,
+        change: function () {
+            $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
+        }
     });
 
     $("#cantidadCamionesId").kendoNumericTextBox({
@@ -468,8 +480,7 @@ function InicializarElementos() {
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () { $("#fechaDesdeId").val(ObtenerFechaDesde(this.value())) }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#fechaDesdeTopeId").kendoDatePicker({
@@ -479,8 +490,7 @@ function InicializarElementos() {
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () { $("#fechaHastaTopeId").val(ObtenerFechaDesde(this.value())) },
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#dolarizadoFechaId").kendoDatePicker({
@@ -517,16 +527,7 @@ function InicializarElementos() {
             document.querySelector(".datos-boleto").style.display = "none";
         }
     });
-
-    $("#DatosPago").click(function () {
-        if (document.querySelector(".datos-pago").style.display == "none") {
-            CerrarDatosPendientes();
-            document.querySelector(".datos-pago").style.display = "block";
-        } else {
-            document.querySelector(".datos-pago").style.display = "none";
-        }
-    });
-
+    
     $("#DatosDescuentos").click(function () {
         if (document.querySelector(".datos-descuentos").style.display == "none") {
             CerrarDatosPendientes();
@@ -555,7 +556,10 @@ function InicializarElementos() {
         }
     });
 
+    $("#plazosYTopesFijacion").hide();
     $("#tipoId").on("change", function () {
+        $("#plazosYTopesFijacion").hide();
+        $("#pagosDiv").hide();
         if ($("#tipoId").val() == 3) {
             $("#fechasDiv").hide();
             $("#fechaDesdeDiv").hide();
@@ -577,14 +581,13 @@ function InicializarElementos() {
             $(".datos-calidades").hide();
             $(".datos-boleto").hide();
             $(".datos-topesplazos").hide();
-            $(".datos-pago").hide();
             $(".datos-establecimiento").hide();
             $("#ContratoDiv").show();
             $("#guardarBtn").empty();
             $("#DatosBoleto").hide();
             $("#DatosPago").hide();
             $("#guardarBtn").append("Guardar Fijacion");
-        }
+        } 
         else {
             $("#fechasDiv").show();
             $("#fechaDesdeDiv").show();
@@ -607,6 +610,12 @@ function InicializarElementos() {
             $("#guardarBtn").empty();
             $("#DatosBoleto").show();
             $("#guardarBtn").append("Generar Negocio");
+            if ($("#tipoId").val() == 1) {
+                $("#plazosYTopesFijacion").show();
+            }
+            if ($("#tipoId").val() == 2) {
+                $("#pagosDiv").show();
+            }
         }
     });
 
@@ -698,8 +707,16 @@ function InicializarElementos() {
         }
     });
 
+    $("#establecimientoDiv").hide();
     $('select[id="provinciaId"]').change(function () {
-        if ($(this).val() != "") CargarLocalidadPorProvincia($(this).val());
+        if ($(this).val() != "") {
+            CargarLocalidadPorProvincia($(this).val());
+            if ($(this).val() == 1) {
+                $("#establecimientoDiv").show();
+            } else {
+                $("#establecimientoDiv").hide();
+            }
+        }
     });
 
     $('#material').change(function () {
@@ -709,6 +726,7 @@ function InicializarElementos() {
     $('#campanaId').change(function () {
         obtenerLocalidadProvincia();
     });
+
     $('#tipoId').change(function () {
         if ($('#tipoId').val() == 1) {
             $("#condicionFijacionId").data("kendoDropDownList").value("7");
@@ -768,8 +786,7 @@ function InicializarElementos() {
     $("#fechaHastaDescuentoId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () { $("#fechaDesdeDescuentoId").val(ObtenerFechaDesde(this.value())) }
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
     $("#descuentoMonedaId").kendoDropDownList({
@@ -791,6 +808,7 @@ function InicializarElementos() {
     //    min: 0
     //});
     $("#PorcentajeDescuentoId").val(1);
+
     $('select[id="tipoPeriodoDBId"]').change(function () {
         if ($(this).val() == 1) {
             $(".fecha-descuento").hide();
@@ -820,7 +838,6 @@ function CargarCampaniaPorMaterial(value) {
 function CerrarDatosPendientes() {
     document.querySelector(".datos-adicionales").style.display = "none";
     document.querySelector(".datos-boleto").style.display = "none";
-    document.querySelector(".datos-pago").style.display = "none";
     document.querySelector(".datos-descuentos").style.display = "none";
     document.querySelector(".datos-calidades").style.display = "none";
 }
@@ -1286,27 +1303,29 @@ function obtenerLocalidadProvincia() {
                 CampanaId: $("#campanaId").val()
             });
             limpiarBoleto();
-            if (localidadProvincia.LocalidadId != "") {
-                if (localidadProvincia.CUIT != "") {
-                    $("#provinciaId").data("kendoDropDownList").value(localidadProvincia.ProvinciaId);
-                    CargarLocalidadPorProvincia(localidadProvincia.ProvinciaId);
-                    $("#LocalidadId").data("kendoDropDownList").value(localidadProvincia.LocalidadId);
-                } else {
-                    $("#provinciaId").data("kendoDropDownList").value("");
-                    $("#LocalidadId").data("kendoDropDownList").value("");
+            if (localidadProvincia != null) {
+                if (localidadProvincia.LocalidadId != "") {
+                    if (localidadProvincia.CUIT != "") {
+                        $("#provinciaId").data("kendoDropDownList").value(localidadProvincia.ProvinciaId);
+                        CargarLocalidadPorProvincia(localidadProvincia.ProvinciaId);
+                        $("#LocalidadId").data("kendoDropDownList").value(localidadProvincia.LocalidadId);
+                    } else {
+                        $("#provinciaId").data("kendoDropDownList").value("");
+                        $("#LocalidadId").data("kendoDropDownList").value("");
+                    }
                 }
-            }
-            $("#clasificacion").data("kendoDropDownList").value(localidadProvincia.ClasificacionId);
-            if (localidadProvincia.BoletoId == 1) {
-                $("#boletoConfirmaId").prop("checked", true);
-                $("#BolsaConfirmaDiv").show();
-                $("#bolsaConfirmaId").data("kendoDropDownList").value(localidadProvincia.BolsaId);
-            } else if (localidadProvincia.BoletoId == 2) {
-                $("#boletoFisicoId").prop("checked", true);
-                $("#BolsaFisicoDiv").show();
-                $("#bolsaFisicoId").data("kendoDropDownList").value(localidadProvincia.BolsaId);
-            } else {
-                $("#boletoNingunoId").prop("checked", true);
+                $("#clasificacion").data("kendoDropDownList").value(localidadProvincia.ClasificacionId);
+                if (localidadProvincia.BoletoId == 1) {
+                    $("#boletoConfirmaId").prop("checked", true);
+                    $("#BolsaConfirmaDiv").show();
+                    $("#bolsaConfirmaId").data("kendoDropDownList").value(localidadProvincia.BolsaId);
+                } else if (localidadProvincia.BoletoId == 2) {
+                    $("#boletoFisicoId").prop("checked", true);
+                    $("#BolsaFisicoDiv").show();
+                    $("#bolsaFisicoId").data("kendoDropDownList").value(localidadProvincia.BolsaId);
+                } else {
+                    $("#boletoNingunoId").prop("checked", true);
+                }
             }
         }
     }

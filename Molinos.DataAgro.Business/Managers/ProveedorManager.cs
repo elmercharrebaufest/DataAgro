@@ -136,55 +136,35 @@ namespace Molinos.DataAgro.Business.Managers
                     valor = repositorio.Obtener<Localidad, DatosLocalidadProvincia>(x => x.LocalidadId == oProveedor.LocalidadCompraNet.LocalidadId,
                         x => new DatosLocalidadProvincia
                         {
-                            CUIT = oProveedor.CUIT,
                             Localidad = x.Nombre,
                             LocalidadId = x.LocalidadId,
                             Provincia = x.Provincia.Nombre,
                             ProvinciaId = x.Provincia.ProvinciaId,
-                            ProveedorId = oProveedor.ProveedorId,
-                            RazonSocial = oProveedor.RazonSocial,
-                            ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0,
-                            BoletoId = oProveedor.BoletoCompraNetId ?? 0,
-                            BolsaId = oProveedor.BolsaCompraNetId ?? 0
                         });
                 }
                 else
                 {
                     valor = repositorio.Obtener<CampoMaterial, DatosLocalidadProvincia>(x => x.Campo.Proveedor.ProveedorId == oProveedor.ProveedorId && x.CampañaId == oDatosLocalidadProvinciaFiltro.CampanaId && x.MaterialId == oDatosLocalidadProvinciaFiltro.MaterialId, x => new DatosLocalidadProvincia
                     {
-                        CUIT = oProveedor.CUIT,
                         Localidad = x.Campo.Localidad.Nombre,
                         LocalidadId = x.Campo.Localidad.LocalidadId,
                         Provincia = x.Campo.Localidad.Provincia.Nombre,
                         ProvinciaId = x.Campo.Localidad.Provincia.ProvinciaId,
-                        ProveedorId = oProveedor.ProveedorId,
-                        RazonSocial = oProveedor.RazonSocial,
-                        ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0,
-                        BoletoId = oProveedor.BoletoCompraNetId ?? 0,
-                        BolsaId = oProveedor.BolsaCompraNetId ?? 0
                     });
-
-                    //var oProveedor = mobjUnitOfWork.Repository<Proveedor>().Queryable().FirstOrDefault(x => x.CUIT == oDatosLocalidadProvinciaFiltro.CUIT);
-
-                    //var oCampoIdAx = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => x.ProveedorId == oProveedor.ProveedorId).Select(z => z.CampoId);
-
-                    //var oCampoMaterial = mobjUnitOfWork.Repository<CampoMaterial>().Queryable().AsNoTracking().Where(x => oCampoIdAx.Contains(x.CampoId) && x.MaterialId == oDatosLocalidadProvinciaFiltro.MaterialId && x.CampañaId == oDatosLocalidadProvinciaFiltro.CampanaId).Select(z => z.CampoId);
-
-                    //int? localidadId = mobjUnitOfWork.Repository<Campo>().Queryable().AsNoTracking().Where(x => oCampoMaterial.Contains(x.CampoId)).Select(z => z.LocalidadId).FirstOrDefault();
-
-                    //if (localidadId != null)
-                    //{
-                    //    valor = mobjUnitOfWork.Repository<Localidad>().Queryable().AsNoTracking()
-                    //        .Where(x => x.LocalidadId == localidadId)
-                    //        .Join(mobjUnitOfWork.Repository<Provincia>().Queryable().AsNoTracking(), a => a.ProvinciaId, b => b.ProvinciaId, (a, b) => new DatosLocalidadProvincia { CUIT = oProveedor.CUIT, Localidad = a.Nombre, LocalidadId = a.LocalidadId, Provincia = b.Nombre, ProvinciaId = b.ProvinciaId, ProveedorId = oProveedor.ProveedorId, RazonSocial = oProveedor.RazonSocial }).FirstOrDefault();
-                    //}
                 }
+
+                valor = valor ?? new DatosLocalidadProvincia();
+                valor.CUIT = oProveedor.CUIT;
+                valor.ProveedorId = oProveedor.ProveedorId;
+                valor.RazonSocial = oProveedor.RazonSocial;
+                valor.ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0;
+                valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
+                valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
             }
             catch (Exception e)
             {
                 logger.Error(e);
             }
-
             return valor;
         }
 
