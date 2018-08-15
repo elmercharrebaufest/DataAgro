@@ -11,10 +11,10 @@ $(document).ready(function () {
     InicializarElementos();
     InicializarDatos();
     if (contratoId !== undefined && contratoId) {
-        setTimeout(InicializarContratoEdit, 200);
+        setTimeout(InicializarContratoEdit, 300);
     }
     if (fijacionId !== undefined && fijacionId) {
-        setTimeout(InicializarFijacionEdit, 200);
+        setTimeout(InicializarFijacionEdit, 300);
     }
 });
 
@@ -123,11 +123,78 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-
+    $("#plazosYTopesFijacion").hide();
     $("#tipoId").kendoDropDownList({
         optionLabel: "SELECCIONE UN TIPO DE NEGOCIO...",
         dataTextField: "Descripcion",
-        dataValueField: "TipoNegocioId"
+        dataValueField: "TipoNegocioId",
+        change: function () {
+            $("#plazosYTopesFijacion").hide();
+            $("#pagosDiv").hide();
+            if (this.value() == 3) {
+                $("#fechasDiv").hide();
+                $("#fechaDesdeDiv").hide();
+                $("#fechaHastaDiv").hide();
+                $("#operacionDiv").hide();
+                $("#campanaDiv").hide();
+                $("#procedenciaDiv").hide();
+                $("#clasificacionDiv").hide();
+                $("#destinoDiv").hide();
+                $("#CantidadCamionesDiv").hide();
+                $("#planCanjeConsignatarioIdDiv").hide();
+                $("#DatosBoleto").hide();
+                $("#DatosPago").hide();
+                $("#DatosEstablecimiento").hide();
+                $("#DatosDescuentos").hide();
+                $("#baseDiv").hide();
+                $("#DatosAdicionales").hide();
+                $(".datos-adicionales").hide();
+                $("#DatosCalidades").hide();
+                $(".datos-calidades").hide();
+                $(".datos-boleto").hide();
+                $(".datos-topesplazos").hide();
+                $(".datos-establecimiento").hide();
+                $("#ContratoDiv").show();
+                $("#guardarBtn").empty();
+                $("#DatosBoleto").hide();
+                $("#DatosPago").hide();
+                $("#observacionDiv").removeClass("col-md-3");
+                $("#observacionDiv").addClass("col-md-6");
+                $("#guardarBtn").append("Guardar Fijacion");
+            }
+            else {
+                $("#fechasDiv").show();
+                $("#fechaDesdeDiv").show();
+                $("#fechaHastaDiv").show();
+                $("#fechaHastaContratoDiv").show();
+                $("#operacionDiv").show();
+                $("#campanaDiv").show();
+                $("#procedenciaDiv").show();
+                $("#clasificacionDiv").show();
+                $("#destinoDiv").show();
+                $("#CantidadCamionesDiv").show();
+                $("#planCanjeConsignatarioIdDiv").show();
+                $("#DatosBoleto").show();
+                $("#DatosPago").show();
+                $("#DatosEstablecimiento").show();
+                $("#DatosCalidades").show();
+                $("#DatosDescuentos").show();
+                $("#baseDiv").show();
+                $("#DatosAdicionales").show();
+                $("#ContratoDiv").hide();
+                $("#guardarBtn").empty();
+                $("#DatosBoleto").show();
+                $("#observacionDiv").removeClass("col-md-6");
+                $("#observacionDiv").addClass("col-md-3");
+                $("#guardarBtn").append("Generar Negocio");
+                if (this.value() == 1) {
+                    $("#plazosYTopesFijacion").show();
+                }
+                if (this.value() == 2) {
+                    $("#pagosDiv").show();
+                }
+            }
+        }
     });
 
     $("#tipoId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -580,76 +647,7 @@ function InicializarElementos() {
             $("#sustentablePrecioId").val("");
         }
     });
-
-    $("#plazosYTopesFijacion").hide();
-    $("#tipoId").on("change", function () {
-        $("#plazosYTopesFijacion").hide();
-        $("#pagosDiv").hide();
-        if ($("#tipoId").val() == 3) {
-            $("#fechasDiv").hide();
-            $("#fechaDesdeDiv").hide();
-            $("#fechaHastaDiv").hide();
-            $("#operacionDiv").hide();
-            $("#campanaDiv").hide();
-            $("#procedenciaDiv").hide();
-            $("#clasificacionDiv").hide();
-            $("#destinoDiv").hide();
-            $("#CantidadCamionesDiv").hide();
-            $("#planCanjeConsignatarioIdDiv").hide();
-            $("#DatosBoleto").hide();
-            $("#DatosPago").hide();
-            $("#DatosEstablecimiento").hide();
-            $("#DatosDescuentos").hide();
-            $("#baseDiv").hide();
-            $("#DatosAdicionales").hide();
-            $(".datos-adicionales").hide();
-            $("#DatosCalidades").hide();
-            $(".datos-calidades").hide();
-            $(".datos-boleto").hide();
-            $(".datos-topesplazos").hide();
-            $(".datos-establecimiento").hide();
-            $("#ContratoDiv").show();
-            $("#guardarBtn").empty();
-            $("#DatosBoleto").hide();
-            $("#DatosPago").hide();
-            $("#observacionDiv").removeClass("col-md-3");
-            $("#observacionDiv").addClass("col-md-6");
-            $("#guardarBtn").append("Guardar Fijacion");
-        } 
-        else {
-            $("#fechasDiv").show();
-            $("#fechaDesdeDiv").show();
-            $("#fechaHastaDiv").show();
-            $("#fechaHastaContratoDiv").show();
-            $("#operacionDiv").show();
-            $("#campanaDiv").show();
-            $("#procedenciaDiv").show();
-            $("#clasificacionDiv").show();
-            $("#destinoDiv").show();
-            $("#CantidadCamionesDiv").show();
-            $("#planCanjeConsignatarioIdDiv").show();
-            $("#DatosBoleto").show();
-            $("#DatosPago").show();
-            $("#DatosEstablecimiento").show();
-            $("#DatosCalidades").show();
-            $("#DatosDescuentos").show();
-            $("#baseDiv").show();
-            $("#DatosAdicionales").show();
-            $("#ContratoDiv").hide();
-            $("#guardarBtn").empty();
-            $("#DatosBoleto").show();
-            $("#observacionDiv").removeClass("col-md-6");
-            $("#observacionDiv").addClass("col-md-3");
-            $("#guardarBtn").append("Generar Negocio");
-            if ($("#tipoId").val() == 1) {
-                $("#plazosYTopesFijacion").show();
-            }
-            if ($("#tipoId").val() == 2) {
-                $("#pagosDiv").show();
-            }
-        }
-    });
-
+    
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
@@ -997,7 +995,8 @@ function CrearViewModel() {
         isControlDisabled: true,
         Descuentos: [],
         Calidades:[],
-        DescuentosVisualizar: []
+        DescuentosVisualizar: [],
+        CalidadesVisualizar: []
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -1006,6 +1005,7 @@ function CrearViewModel() {
     kendo.bind($("#tabla-descuentos"), viewModel);
     kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
     kendo.bind($("#tabla-calidades"), viewModel);
+    kendo.bind($("#tabla-calidades-visualizar"), viewModel);
 }
 
 function InicializarDatos() {
@@ -1130,8 +1130,9 @@ function LimpiarValidaciones() {
 function ObtenerDatos() {
     var obj = {};
 
-    var proveedorId;
+    var proveedorId;  
     obj.ContratoId = contratoId == undefined ? 0 : contratoId;
+    obj.FijacionDePrecioContratoId = fijacionId == undefined ? 0 : fijacionId;
     obj.MaterialId = $("#material").val();
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Cantidad = $("#cantidadId").val();
@@ -1153,7 +1154,6 @@ function ObtenerDatos() {
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.TrigoEspecial = $("#trigoEspecialId").is(":checked") ? true : false;
     obj.EstadoId = $("#baseId").is(":checked") ? "3" : "1";
-    obj.ContratoId = $("#contratoId").val();
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
@@ -1475,20 +1475,28 @@ function CargarDatosEditar(contrato) {
     $("#fechaDesdeId").val(formatearFecha(contrato.FechaDesdeFormateado));
     $("#fechaHastaId").val(formatearFecha(contrato.FechaHastaFormateado));
     $("#fechaOperacionId").val(formatearFecha(contrato.FechaFormateado));
+
     $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
     $("#tipoId").data("kendoDropDownList").trigger("change");
+
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
+
     $("#observacionId").val(contrato.Observacion);
     $("#cantidadId").data("kendoNumericTextBox").value(contrato.Cantidad);
     $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
+
     $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
     $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+
     $("#provinciaId").data("kendoDropDownList").value(contrato.ProvinciaId);
     $("#provinciaId").data("kendoDropDownList").trigger("change");
+
     $("#clasificacion").data("kendoDropDownList").value(contrato.ClasificacionId);
     $("#clasificacion").data("kendoDropDownList").trigger("change");
+
     $("#destinoId").data("kendoDropDownList").value(contrato.DestinoId);
+    $("#destinoId").data("kendoDropDownList").trigger("change");
     if (contrato.CantidadCamiones !== "null" && contrato.CantidadCamiones !== "undefined" && contrato.CantidadCamiones !== 0) {
         $("#cantidadCamionesId").data("kendoNumericTextBox").value(contrato.CantidadCamiones);
     }

@@ -24,8 +24,8 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
-        [ForeignKey("ContratoId")]
-        public virtual Contrato Contrato { get; set; }
+        //[ForeignKey("ContratoId")]
+        //public virtual Contrato Contrato { get; set; }
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
         [ForeignKey("MaterialId")]

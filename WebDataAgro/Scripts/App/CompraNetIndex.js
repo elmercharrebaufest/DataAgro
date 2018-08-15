@@ -1446,15 +1446,16 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
 
     (planCanje === "true") ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");
     (consignatario === "true") ? $("#visualizar_consignatario").text("Si") : $("#visualizar_consignatario").text("null");
-    (cantidadCamiones !== 0 && cantidadCamiones !== "null") ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : $("#visualizar_cantidadDeCamiones").text("N/A");
-    (establecimientoPropio === "true") ? $("#visualizar_establecimiento").text("Propio") : (establecimientoPropio === "false") ? $("#visualizar_establecimiento").text("Arrendado") : $("#visualizar_establecimiento").text("N/A");   
+    (cantidadCamiones !== 0 && cantidadCamiones !== "null") ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : $("#visualizar_cantidadDeCamiones").text("null");
+    (establecimientoPropio === "true") ? $("#visualizar_establecimiento").text("Propio") : (establecimientoPropio === "false") ? $("#visualizar_establecimiento").text("Arrendado") : $("#visualizar_establecimiento").text("null");   
     (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion + "    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
 
+    visualizacionRowDoble("cantidadDivVisualizar", "visualizar_cantidad", "cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones");
+    visualizacionRowDoble("tipoDivVisualizar", "visualizar_tipo", "establecimientoDivVisualizar", "visualizar_establecimiento");
     visualizacionRowDoble("trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
-    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
-    visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
+    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");    
     visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "consignatarioDivVisualizar", "visualizar_consignatario");
 
     visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
@@ -1470,8 +1471,9 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     }
 
     $("#modalVisualizar").modal('show');
-    var iteraciones = viewModel.DescuentosVisualizar.length;
-    for (var i = 0; i < iteraciones; i++) {
+
+    var iteracionesDescuentos = viewModel.DescuentosVisualizar.length;
+    for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
     }
 
@@ -1492,6 +1494,22 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
             ContratoId: descuento.contratoId,
         };
         viewModel.DescuentosVisualizar.push(descuentoKendo);
+    });
+
+    var iteracionesCalidades = viewModel.CalidadesVisualizar.length;
+    for (var i = 0; i < iteracionesCalidades; i++) {
+        viewModel.CalidadesVisualizar.pop();
+    } 
+    var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
+
+    $.each(calidadesDto, function (key, calidad) {
+        var calidadKendo = {
+            Id: calidad.Id,
+            CalidadEspecialDesc: calidad.CalidadEspecialDesc,
+            Valor: calidad.Valor,
+            StandardDeCalidadId: 2,            
+        };
+        viewModel.CalidadesVisualizar.push(calidadKendo);
     });
 }
 

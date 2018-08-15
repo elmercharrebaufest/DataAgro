@@ -162,7 +162,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
                 oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
-                oFijacionDePrecioSave.Estado = oFijacionDePrecio.Estado;
+                oFijacionDePrecioSave.EstadoId = oFijacionDePrecio.EstadoId;
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
                 oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
                 oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
