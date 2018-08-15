@@ -1467,7 +1467,7 @@ function CargarDatosEditar(contrato) {
     $("#precioModalPendienteId").val(contrato.Precio);
     $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
     $("#provinciaId").data("kendoDropDownList").value(contrato.ProvinciaId);
-    $("#Clasificación").data("kendoDropDownList").value(contrato.ClasificacionId);
+    $("#clasificacion").data("kendoDropDownList").value(contrato.ClasificacionId);
     $("#destinoId").data("kendoDropDownList").value(contrato.DestinoId);
     if (contrato.CantidadCamiones !== "null" && contrato.CantidadCamiones !== "undefined" && contrato.CantidadCamiones !== 0) {
         $("#cantidadCamionesId").val(contrato.CantidadCamiones);
@@ -1517,49 +1517,46 @@ function CargarDatosEditar(contrato) {
     } else {
         $("#trigoEspecialId").prop("checked", false);
     }
-    if (boleto == 1) {
-        $("#boletoConfirmaIdModalPendiente").prop("checked", true);
-        $("#BolsaConfirmaDivModalPendiente").show();
-        $("#bolsaConfirmaIdModalPendiente").data("kendoDropDownList").value(bolsa);
-    } else if (boleto == 2) {
-        $("#boletoFisicoIdModalPendiente").prop("checked", true);
-        $("#BolsaFisicoDivModalPendiente").show();
-        $("#bolsaFisicoIdModalPendiente").data("kendoDropDownList").value(bolsa);
-    } else if (boleto == 3) {
-        $("#boletoNingunoIdModalPendiente").prop("checked", true);
+    if (contrato.BoletoId == 1) {
+        $("#boletoConfirmaId").prop("checked", true);
+        $("#BolsaConfirmaDiv").show();
+        $("#bolsaConfirmaId").data("kendoDropDownList").value(contrato.BolsaId);
+    } else if (contrato.BoletoId == 2) {
+        $("#boletoFisicoId").prop("checked", true);
+        $("#BolsaFisicoDiv").show();
+        $("#bolsaFisicoId").data("kendoDropDownList").value(contrato.BolsaId);
+    } else if (contrato.BoletoId == 3) {
+        $("#boletoNingunoId").prop("checked", true);
     }
 
-    if (!(desdeFijacion == "null" || desdeFijacion == "undefined" || desdeFijacion == "")) {
-        $("#fechaDesdeTopeIdModalPendiente").val(desdeFijacion);
+    if (!(contrato.DesdeFijacionFormateado == "null" || contrato.DesdeFijacionFormateado == "undefined" || contrato.DesdeFijacionFormateado == "")) {
+        $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
     } else {
-        $("#fechaDesdeTopeIdModalPendiente").val("");
+        $("#fechaDesdeTopeId").val("");
     }
-    if (!(hastaFijacion == "null" || hastaFijacion == "undefined" || hastaFijacion == "")) {
-        $("#fechaHastaTopeIdModalPendiente").val(desdeFijacion);
+    if (!(contrato.HastaFijacionFormateado == "null" || contrato.HastaFijacionFormateado == "undefined" || contrato.HastaFijacionFormateado == "")) {
+        $("#fechaHastaTopeIde").val(contrato.HastaFijacionFormateado);
     } else {
-        $("#fechaDesdeTopeIdModalPendiente").val("");
+        $("#fechaDesdeTopeId").val("");
     }
-    $("#condicionFijacionIdModalPendiente").data("kendoDropDownList").value(condicion);
-    $("#modalPendiente").modal('show');
-    cd == "true" ? $("#CDIdModalPendiente").prop("checked", true) : $("#CDIdModalPendiente").prop("checked", false);
-    warrant == "true" ? $("#WarrantIdModalPendiente").prop("checked", true) : $("#WarrantIdModalPendiente").prop("checked", false);
-    pagoDirectoVendedor == "true" ? $("#pagoDirectoIdModalPendiente").prop("checked", true) : $("#pagoDirectoIdModalPendiente").prop("checked", false);
+    $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
+    contrato.CD == "true" ? $("#CDId").prop("checked", true) : $("#CDId").prop("checked", false);
+    contrato.Warrant == "true" ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
+    contrato.PagoDirectoVendedor == "true" ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
 
-    $("#standardCalidadIdModalPendiente").data("kendoDropDownList").value(standardDeCalidad);
-    if (standardDeCalidad == 2) {
-        $("#especialesIdModalPendiente").show();
-        $("#calidadesEspecialesIdModalPendiente").data("kendoDropDownList").value(calidadEspecial);
-        $("#valorEspecialesIdModalPendiente").val(valorCalidadEspecial);
-    }
-    establecimientoPropio == "true" ? $("#establecimientoPropioIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoArrendadoIdModalPendiente").prop("checked", true) : false;
+    contrato.EstablecimientoPropio == "true" ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == "false" ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
-    var iteraciones = viewModel.Descuentos.length;
-    for (var i = 0; i < iteraciones; i++) {
+    var iteracionesDescuentos = viewModel.Descuentos.length;
+    for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.Descuentos.pop();
     }
+    var iteracionesCalidades = viewModel.Calidades.length;
+    for (var i = 0; i < iteracionesCalidades; i++) {
+        viewModel.Calidades.pop();
+    }
 
-    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contratoId });
-
+    var descuentosDto = contrato.Descuentos;
+    
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
             Id: descuento.Id,
@@ -1579,5 +1576,18 @@ function CargarDatosEditar(contrato) {
         };
         viewModel.Descuentos.push(descuentoKendo);
     });
-
+    var calidadesDto = contrato.Calidades;
+    $.each(calidadesDto, function (key, calidad) {
+        var calidadKendo = {
+            Id: calidad.Id,
+            CalidadEspecialId: calidad.CalidadEspecialId,
+            CalidadEspecialDesc: calidad.CalidadEspecialDesc,
+            Valor: calidad.Valor,
+            ContratoId: calidad.ContratoId,
+            Borrar: function () {
+                viewModel.Calidades.remove(this);
+            }
+        };
+        viewModel.Calidades.push(calidadKendo);
+    });
 }

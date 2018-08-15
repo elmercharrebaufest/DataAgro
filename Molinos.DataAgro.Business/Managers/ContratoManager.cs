@@ -485,14 +485,14 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoId == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.ContratoId,
-                ProveedorId=x.ProveedorId,
-                ComercialId=x.ComercialId,
+                ProveedorId = x.ProveedorId,
+                ComercialId = x.ComercialId,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
                 FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.FechaHasta), 
+                                           SqlFunctions.DateName("year", x.FechaHasta),
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
@@ -505,24 +505,25 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaId = x.CampanaId,
                 ProvinciaId = x.ProvinciaId,
                 LocalidadId = x.LocalidadId,
-                ContratoSAP= x.ContratoSAP,
-                Base =x.Base,
+                ContratoSAP = x.ContratoSAP,
+                Base = x.Base,
                 Observacion = x.Observacion,
                 Estado = x.EstadoId,
-                Importe_Sustentable=x.ImporteSustentable,
-                Moneda_Sustentable=x.MonedaSustentableId,
-                Fecha_DolarizadoFormateado=x.FechaDolarizado!=null? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
+                Importe_Sustentable = x.ImporteSustentable,
+                Moneda_Sustentable = x.MonedaSustentableId,
+                Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.FechaDolarizado):"",
-                Dias_Pesificado=x.DiasPesificado,
-                NoInformaSIO =x.NoInformaSio,
-                TrigoEspecial=x.TrigoEspecial,
-                ClasificacionId=x.ClasificacionId,
-                DestinoId=x.DestinoId,
-                PlanCanje=x.PlanCanje,
-                Consignatario=x.Consignatario,
-                CantidadCamiones=x.CantidadCamiones,
-                BoletoId=x.BoletoId,
+                                           SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                Dias_Pesificado = x.DiasPesificado,
+                NoInformaSIO = x.NoInformaSio,
+                TrigoEspecial = x.TrigoEspecial,
+                ClasificacionId = x.ClasificacionId,
+                DestinoId = x.DestinoId,
+                PlanCanje = x.PlanCanje,
+                Consignatario = x.Consignatario,
+                CantidadCamiones = x.CantidadCamiones,
+                BoletoId = x.BoletoId,
+                BolsaId = x.BolsaId,            
                 DesdeFijacionFormateado=x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.DesdeFijacion) : "",                
