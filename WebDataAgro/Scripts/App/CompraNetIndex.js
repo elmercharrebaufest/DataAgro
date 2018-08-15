@@ -9,7 +9,6 @@ $(document).ready(function () {
     InicializarElementosModalPendiente();
 
     AutoRecargar();
-    CrearViewModel()
 
     //mobile();
 
@@ -57,7 +56,9 @@ function formatearFecha(fecha) {
 
 function botonPendiente(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +        
-        "'" + dataItem.ContratoId + "'" +
+        "'" + dataItem.ContratoId + "'" + ',' +
+        "'" + dataItem.TipoNegocioId + "'" + ',' +
+        "'" + dataItem.FijacionDePrecioContratoId + "'"  + 
         ')"><i class="fa ' + icono + '"></i></button>';
 }
 
@@ -519,8 +520,12 @@ function CreateGridInformeCompraNet() {
     };
 }
 
-function editarContrato(contratoId) {
-    window.location.href = window.location.origin + "/CompraNet/CrearContrato?ContratoId=" + contratoId;
+function editarContrato(contratoId, tipoId, fijacionDePrecioContratoId) {
+    if (tipoId === "3") {
+        window.location.href = window.location.origin + "/CompraNet/CrearFijacion?id=" + fijacionDePrecioContratoId;
+    } else {
+        window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + contratoId;
+    }
 }
 
 function InicializarElementosModalPendiente() {

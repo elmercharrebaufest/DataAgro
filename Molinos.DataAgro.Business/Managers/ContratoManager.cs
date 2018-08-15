@@ -485,8 +485,9 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoId == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.ContratoId,
-                ProveedorId = x.ProveedorId,
-                ComercialId = x.ComercialId,
+                ProveedorId=x.ProveedorId,
+                Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
+                ComercialId =x.ComercialId,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),

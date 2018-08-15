@@ -70,15 +70,16 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        public ActionResult CrearContrato(int? contratoId)
+        public ActionResult CrearContrato(int? id)
         {
-            ViewBag.ContratoId = contratoId;
+            ViewBag.ContratoId = id;
             return View();
         }
 
-        public ActionResult CrearFijacion()
+        public ActionResult CrearFijacion(int? id)
         {
-            return View();
+            ViewBag.FijacionId = id;
+            return View("CrearContrato");
         }
 
         public ActionResult Inicializar()
@@ -358,11 +359,20 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult  TraerContratoCompleto(int contratoId)
+        public ActionResult  TraerContratoCompleto(int id)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.TraerContrato(contratoId),
+                Data = mobjContratoManager.TraerContrato(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerFijacionCompleto(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.TraerFijacion(id),
                 MaxJsonLength = Int32.MaxValue
             };
         }

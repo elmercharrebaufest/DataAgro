@@ -6,6 +6,8 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -283,6 +285,56 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "La Fijación no se puede rechazar");
             }
             return oEntityErrors;
+        }
+
+        public BasicoContrato TraerFijacion(int id)
+        {
+            var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
+            {
+                Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
+                ContratoId = fijac.ContratoId,
+                ProveedorId = fijac.ProveedorId,
+                ComercialId = fijac.ComercialId,
+                MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
+                TipoNegocioId = 3,
+                Cantidad = fijac.Cantidad,
+                Precio = fijac.Precio,
+                MonedaId = fijac.MonedaId,
+                Moneda = fijac.Moneda == null ? "" : fijac.Moneda.Descripcion,
+                FechaFormateado = SqlFunctions.DateName("day", fijac.Fecha).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.Fecha.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.Fecha),
+                Fecha_Order = fijac.Fecha,
+                GrupoCompra = 0,
+                MonedaId_Sustentable = "",
+                Moneda_Sustentable = "",
+                Estado = fijac.EstadoId,
+                Estado_Contrato = fijac.Estado.Descripcion,
+                Estado_Order = fijac.Estado.Orden,
+                UsuarioId = "",
+                Ampliaciones = fijac.Ampliaciones,
+                Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
+                Comercial = fijac.Comercial == null ? "" : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido,
+                Material = fijac.Material == null ? "" : fijac.Material.Descripcion,
+                Campania = "",
+                Provincia = "",
+                TipoNegocio = "FIJACION",
+                Localidad = "",
+                Observacion = fijac.Observacion != null ? fijac.Observacion : "",
+                FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
+                Sustentable = false,
+                Dolarizado = false,
+                Pesificado = false,
+                DestinoDescripcion = "",
+                Consignatario = false,
+                PlanCanje = false,
+                EstablecimientoPropio = false,
+                BoletoDescripcion = "",
+                BolsaDescripcion = "",
+                CondicionFijacionDescripcion = "",
+                ClasificacionDescripcion = ""
+            });
+            return contrato;
         }
     }
 }

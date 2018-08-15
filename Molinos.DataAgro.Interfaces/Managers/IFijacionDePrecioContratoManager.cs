@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato);
 
         GrabarFijacionResult FinalizarFijacion(FijacionDePrecioContrato oParam, string activeDiretoryId);
+
+        BasicoContrato TraerFijacion(int id);
     }
 }
 

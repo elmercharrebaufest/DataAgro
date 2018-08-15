@@ -847,7 +847,6 @@
     <Content Include="Scripts\App\agregarproveedoredit.js" />
     <Content Include="Scripts\App\CompraNetIndex.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
-    <Content Include="Scripts\App\CrearFijacion.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
@@ -2301,7 +2300,6 @@
     <Content Include="Views\FijacionDePrecio\Index.cshtml" />
     <Content Include="Views\CompraNet\Index.cshtml" />
     <Content Include="Views\CompraNet\CrearContrato.cshtml" />
-    <Content Include="Views\CompraNet\CrearFijacion.cshtml" />
     <Content Include="Views\CompraNet\ModalBorrar.cshtml" />
     <Content Include="Views\CompraNet\ModalVisualizar.cshtml" />
     <Content Include="Views\CompraNet\ModalAmpliaciones.cshtml" />
