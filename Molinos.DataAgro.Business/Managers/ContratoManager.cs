@@ -468,7 +468,77 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.ContratoId == contratoId);
         }
-
+        public List<CalidadDto> TraerCalidadesPorContrato(int contratoId)
+        {
+            return repositorio.Listar<Calidad, CalidadDto>(cal => new CalidadDto()
+            {
+                ContratoId = cal.ContratoId,
+                Id = cal.Id,
+                CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
+                CalidadEspecialId = cal.CalidadEspecialId,
+                Valor= cal.Valor
+            },
+            x => x.ContratoId == contratoId);
+        }
+        public BasicoContrato TraerContrato(int contratoId)
+        {
+            var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoId == contratoId, x => new BasicoContrato
+            {
+                ContratoId = x.ContratoId,
+                ProveedorId=x.ProveedorId,
+                ComercialId=x.ComercialId,
+                FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHasta), 
+                FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.Fecha),
+                TipoNegocioId = x.TipoNegocioId,
+                MaterialId = x.MaterialId,
+                Cantidad = x.Cantidad,
+                Ampliaciones = x.Ampliaciones,
+                Precio = x.Precio,
+                MonedaId = x.MonedaId,
+                CampanaId = x.CampanaId,
+                ProvinciaId = x.ProvinciaId,
+                LocalidadId = x.LocalidadId,
+                ContratoSAP= x.ContratoSAP,
+                Base =x.Base,
+                Observacion = x.Observacion,
+                Estado = x.EstadoId,
+                Importe_Sustentable=x.ImporteSustentable,
+                Moneda_Sustentable=x.MonedaSustentableId,
+                Fecha_DolarizadoFormateado=x.FechaDolarizado!=null? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDolarizado):"",
+                Dias_Pesificado=x.DiasPesificado,
+                NoInformaSIO =x.NoInformaSio,
+                TrigoEspecial=x.TrigoEspecial,
+                ClasificacionId=x.ClasificacionId,
+                DestinoId=x.DestinoId,
+                PlanCanje=x.PlanCanje,
+                Consignatario=x.Consignatario,
+                CantidadCamiones=x.CantidadCamiones,
+                BoletoId=x.BoletoId,
+                DesdeFijacionFormateado=x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",                
+                HastaFijacionFormateado=x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                CondicionFijacion= x.CondicionFijacionId,
+                CD=x.CD,
+                Warrant=x.Warrant,
+                PagoDirectoVendedor=x.PagoDirectoVendedor,
+                EstablecimientoPropio=x.EstablecimientoPropio
+            });
+            contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
+            contrato.Calidades = TraerCalidadesPorContrato(contratoId);
+            return contrato;
+        }
 
     }
 

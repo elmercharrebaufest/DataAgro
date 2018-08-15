@@ -30,8 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0)
                 select new BasicoContrato()
                 {
-                    ContratoId = SqlFunctions.StringConvert((double)contrato.ContratoId).Trim(),
-
+                    ContratoId = contrato.ContratoId,
                     ProveedorId = contrato.ProveedorId,
                     ComercialId = contrato.ComercialId,
                     MaterialId = contrato.MaterialId,
@@ -104,7 +103,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where equipo.Contains(fijac.ComercialId)
                 select new BasicoContrato()
                 {
-                    ContratoId = SqlFunctions.StringConvert((double)fijac.ContratoId).Trim(),
+                    ContratoId = fijac.ContratoId,
                     ProveedorId = fijac.ProveedorId,
                     ComercialId = fijac.ComercialId,
                     MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,

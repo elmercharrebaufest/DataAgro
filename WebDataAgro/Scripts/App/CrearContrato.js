@@ -1,15 +1,16 @@
 ﻿var viewModel;
 var datosIniCrearContrato;
-
+var contratoEdit
 $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
-
     CrearViewModel();
-
     InicializarElementos();
     InicializarDatos();
+    if (contratoId) {
+        InicializarContratoEdit();
+    }
 });
 
 function ObtenerFechaDesde(fechaBase) {
@@ -495,6 +496,12 @@ function InicializarElementos() {
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
+    $("#fechaOperacionId").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
@@ -513,6 +520,7 @@ function InicializarElementos() {
 
     $("#fechaDesdeId").val(date);
     $("#fechaHastaId").val(datehasta);
+    $("#fechaOperacionId").val(date);
 
     $(".formulario-footer-guardar-contrato").click(function () {
         ObtenerDatos();
@@ -840,12 +848,14 @@ function CargarCampaniaPorMaterial(value) {
 
     $("#campanaId").data("kendoDropDownList").value(campanaActualId);
 }
+
 function CerrarDatosPendientes() {
     document.querySelector(".datos-adicionales").style.display = "none";
     document.querySelector(".datos-boleto").style.display = "none";
     document.querySelector(".datos-descuentos").style.display = "none";
     document.querySelector(".datos-calidades").style.display = "none";
 }
+
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     viewModel.set("EspecialesCombo", calidadGrano);
@@ -1109,15 +1119,6 @@ function LimpiarValidaciones() {
 function ObtenerDatos() {
     var obj = {};
 
-    var fecha = new Date();
-    var fechaHoy = new Date(
-        fecha.getFullYear(),
-        fecha.getMonth(),
-        fecha.getDate(),
-        fecha.getHours(),
-        fecha.getMinutes(),
-        fecha.getSeconds()
-    );
     var proveedorId;
 
     obj.MaterialId = $("#material").val();
@@ -1129,7 +1130,7 @@ function ObtenerDatos() {
     obj.FechaDesde = $("#fechaDesdeId").val();
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
-    obj.Fecha = fechaHoy;
+    obj.Fecha = $("#fechaOperacionId").val();
     obj.ComercialId = $("#comercialId").val();
     obj.ProvinciaId = $("#provinciaId").val();
     obj.LocalidadId = $("#LocalidadId").val();
@@ -1429,6 +1430,7 @@ function AgregarCalidades() {
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
     }
 }
+
 function validarCalidad(calidad) {
     var errores = [];
 
@@ -1441,3 +1443,141 @@ function validarCalidad(calidad) {
     return errores
 }
 
+function InicializarContratoEdit() {
+    var datos = { ContratoId: contratoId }
+    contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos);
+    CargarDatosEditar(contratoEdit);
+}
+
+function formatearFecha(fecha) {
+    var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
+    return fechaFormateada;
+};
+
+function CargarDatosEditar(contrato) {
+    var oProveedor = MSExecuteOnServer('/CompraNet/BuscarCuitPorId', { ProveedorId: contrato.ProveedorId });
+    $("#buscadorProveedor").val(oProveedor.RazonSocial + ' ' + '(' + oProveedor.CUIT + ')');
+    $("#fechaDesdeId").val(formatearFecha(contrato.FechaDesdeFormateado));
+    $("#fechaHastaId").val(formatearFecha(contrato.FechaHastaFormateado));
+    $("#fechaOperacionId").val(formatearFecha(contrato.FechaFormateado));
+    $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
+    $("#material").data("kendoDropDownList").value(contrato.MaterialId);
+    $("#observacionId").val(contrato.Observacion);
+    $("#cantidadId").val(contrato.Cantidad);
+    $("#precioModalPendienteId").val(contrato.Precio);
+    $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
+    $("#provinciaId").data("kendoDropDownList").value(contrato.ProvinciaId);
+    $("#Clasificación").data("kendoDropDownList").value(contrato.ClasificacionId);
+    $("#destinoId").data("kendoDropDownList").value(contrato.DestinoId);
+    if (contrato.CantidadCamiones !== "null" && contrato.CantidadCamiones !== "undefined" && contrato.CantidadCamiones !== 0) {
+        $("#cantidadCamionesId").val(contrato.CantidadCamiones);
+    }
+
+    (contrato.PlanCanje == "true") ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
+    (contrato.Consignatario == "true") ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
+    CargarLocalidadPorProvincia(contrato.ProvinciaId);
+    if (!(contrato.LocalidadId == "null" || contrato.LocalidadId == "undefined")) $("#LocalidadId").data("kendoDropDownList").value(contrato.LocalidadId);
+    if (!(contrato.ComercialId == "null" || contrato.ComercialId == "undefined")) $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
+
+    $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
+
+    if (contrato.Base == "true") {
+        $("#baseId").prop("checked", true);
+    } else {
+        $("#baseId").prop("checked", false);
+    }
+
+    if (!(contrato.Importe_Sustentable == "null" || contrato.Importe_Sustentable == "undefined" || contrato.Importe_Sustentable == 0)) {
+        $("#sustentablePrecioId").val(contrato.Importe_Sustentable);
+        $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
+        $("#sustentableId").prop("checked", true);
+        $("#sustentableDiv").show();
+    }
+
+    if (!(contrato.Fecha_DolarizadoFormateado == "null" || contrato.Fecha_DolarizadoFormateado == "undefined" || contrato.Fecha_DolarizadoFormateado == "")) {
+        $("#dolarizadoId").prop("checked", true);
+        $("#dolarizadoDiv").show();
+        $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
+    }
+
+    if (!(contrato.Dias_Pesificado == "null" || contrato.Dias_Pesificado == "undefined" || contrato.Dias_Pesificado == "")) {
+        $("#pesificadoId").prop("checked", true);
+        $("#pesificadoDiv").show();
+        $("#pesificadoDiasId").val(contrato.Dias_Pesificado);
+    }
+
+    if (contrato.NoInformaSIO == "true") {
+        $("#noInformaSioId").prop("checked", true);
+    } else {
+        $("#noInformaSioId").prop("checked", false);
+    }
+
+    if (contrato.TrigoEspecial == "true") {
+        $("#trigoEspecialId").prop("checked", true);
+    } else {
+        $("#trigoEspecialId").prop("checked", false);
+    }
+    if (boleto == 1) {
+        $("#boletoConfirmaIdModalPendiente").prop("checked", true);
+        $("#BolsaConfirmaDivModalPendiente").show();
+        $("#bolsaConfirmaIdModalPendiente").data("kendoDropDownList").value(bolsa);
+    } else if (boleto == 2) {
+        $("#boletoFisicoIdModalPendiente").prop("checked", true);
+        $("#BolsaFisicoDivModalPendiente").show();
+        $("#bolsaFisicoIdModalPendiente").data("kendoDropDownList").value(bolsa);
+    } else if (boleto == 3) {
+        $("#boletoNingunoIdModalPendiente").prop("checked", true);
+    }
+
+    if (!(desdeFijacion == "null" || desdeFijacion == "undefined" || desdeFijacion == "")) {
+        $("#fechaDesdeTopeIdModalPendiente").val(desdeFijacion);
+    } else {
+        $("#fechaDesdeTopeIdModalPendiente").val("");
+    }
+    if (!(hastaFijacion == "null" || hastaFijacion == "undefined" || hastaFijacion == "")) {
+        $("#fechaHastaTopeIdModalPendiente").val(desdeFijacion);
+    } else {
+        $("#fechaDesdeTopeIdModalPendiente").val("");
+    }
+    $("#condicionFijacionIdModalPendiente").data("kendoDropDownList").value(condicion);
+    $("#modalPendiente").modal('show');
+    cd == "true" ? $("#CDIdModalPendiente").prop("checked", true) : $("#CDIdModalPendiente").prop("checked", false);
+    warrant == "true" ? $("#WarrantIdModalPendiente").prop("checked", true) : $("#WarrantIdModalPendiente").prop("checked", false);
+    pagoDirectoVendedor == "true" ? $("#pagoDirectoIdModalPendiente").prop("checked", true) : $("#pagoDirectoIdModalPendiente").prop("checked", false);
+
+    $("#standardCalidadIdModalPendiente").data("kendoDropDownList").value(standardDeCalidad);
+    if (standardDeCalidad == 2) {
+        $("#especialesIdModalPendiente").show();
+        $("#calidadesEspecialesIdModalPendiente").data("kendoDropDownList").value(calidadEspecial);
+        $("#valorEspecialesIdModalPendiente").val(valorCalidadEspecial);
+    }
+    establecimientoPropio == "true" ? $("#establecimientoPropioIdModalPendiente").prop("checked", true) : establecimientoPropio == "false" ? $("#establecimientoArrendadoIdModalPendiente").prop("checked", true) : false;
+
+    var iteraciones = viewModel.Descuentos.length;
+    for (var i = 0; i < iteraciones; i++) {
+        viewModel.Descuentos.pop();
+    }
+
+    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contratoId });
+
+    $.each(descuentosDto, function (key, descuento) {
+        var descuentoKendo = {
+            Id: descuento.Id,
+            TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
+            TipoPeriodoDBId: descuento.TipoPeriodoDBId,
+            TipoDBDesc: descuento.TipoDBDesc,
+            TipoDBId: descuento.TipoDBId,
+            FechaDesde: descuento.FechaDesde,
+            FechaHasta: descuento.FechaHasta,
+            Importe: descuento.Importe,
+            MonedaId: descuento.MonedaId,
+            Porcentaje: descuento.Porcentaje,
+            ContratoId: descuento.ContratoId,
+            Borrar: function () {
+                viewModel.Descuentos.remove(this);
+            }
+        };
+        viewModel.Descuentos.push(descuentoKendo);
+    });
+
+}

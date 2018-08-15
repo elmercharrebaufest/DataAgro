@@ -4,7 +4,7 @@
     [ContratoId]			INT NOT NULL,
 	[StandardDeCalidadId]	INT NOT NULL,
 	[CalidadEspecialId]		INT NULL,	
-	[Valor]					INT NULL
+	[Valor]					DECIMAL(18,2) NULL
 		
 
     CONSTRAINT [PK_Calidad] PRIMARY KEY CLUSTERED ([Id] ASC),

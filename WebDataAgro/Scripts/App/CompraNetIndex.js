@@ -56,50 +56,8 @@ function formatearFecha(fecha) {
 };
 
 function botonPendiente(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Editar" onclick="modalPendiente(' +
-        "'" + htmlEncode(dataItem.Observacion) + "'" + ',' +
-        "'" + dataItem.Estado + "'" + ',' +
-        "'" + dataItem.ContratoId + "'" + ',' +
-        "'" + dataItem.ProveedorId + "'" + ',' +
-        "'" + formatearFecha(dataItem.FechaDesde) + "'" + ',' +
-        "'" + formatearFecha(dataItem.FechaHasta) + "'" + ',' +
-        "'" + formatearFecha(dataItem.Fecha) + "'" + ',' +
-        "'" + dataItem.TipoNegocioId + "'" + ',' +
-        "'" + dataItem.MaterialId + "'" + ',' +
-        "'" + dataItem.Cantidad + "'" + ',' +
-        "'" + dataItem.Ampliaciones + "'" + ',' +
-        "'" + dataItem.Precio + "'" + ',' +
-        "'" + dataItem.MonedaId + "'" + ',' +
-        "'" + dataItem.CampanaId + "'" + ',' +
-        "'" + dataItem.ProvinciaId + "'" + ',' +
-        "'" + dataItem.LocalidadId + "'" + ',' +
-        "'" + dataItem.ComercialId + "'" + ',' +
-        "'" + dataItem.ContratoSAP + "'" + ',' +
-        "'" + dataItem.Base + "'" + ',' +
-        "'" + dataItem.Importe_Sustentable + "'" + ',' +
-        "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
-        "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
-        "'" + dataItem.Dias_Pesificado + "'" + ',' +
-        "'" + dataItem.NoInformaSIO + "'" + ',' +
-        "'" + dataItem.TrigoEspecial + "'" + ',' +
-        "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-        "'" + dataItem.ClasificacionId + "'" + ',' +
-        "'" + dataItem.DestinoId + "'" + ',' +
-        "'" + dataItem.PlanCanje + "'" + ',' +
-        "'" + dataItem.Consignatario + "'" + ',' +
-        "'" + dataItem.CantidadCamiones + "'" + ',' +
-        "'" + dataItem.BoletoId + "'" + ',' +
-        "'" + dataItem.BolsaId + "'" + ',' +
-        "'" + formatearFecha(dataItem.DesdeFijacion) + "'" + ',' +
-        "'" + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
-        "'" + dataItem.CondicionFijacion + "'" + ',' +
-        "'" + dataItem.CD + "'" + ',' +
-        "'" + dataItem.Warrant + "'" + ',' +
-        "'" + dataItem.PagoDirectoVendedor + "'" + ',' +
-        "'" + dataItem.StandardDeCalidad + "'" + ',' +
-        "'" + dataItem.CalidadEspecial + "'" + ',' +
-        "'" + dataItem.ValorCalidadEspecial + "'" + ',' +
-        "'" + dataItem.EstablecimientoPropio + "'" +
+    return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +        
+        "'" + dataItem.ContratoId + "'" +
         ')"><i class="fa ' + icono + '"></i></button>';
 }
 
@@ -559,6 +517,10 @@ function CreateGridInformeCompraNet() {
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
     };
+}
+
+function editarContrato(contratoId) {
+    window.location.href = window.location.origin + "/CompraNet/CrearContrato?ContratoId=" + contratoId;
 }
 
 function InicializarElementosModalPendiente() {
@@ -1575,4 +1537,3 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
 
     $("#modalBorrar").modal('show');
 }
-//$(window).resize(mobile);

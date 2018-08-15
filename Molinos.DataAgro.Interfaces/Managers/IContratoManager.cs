@@ -26,5 +26,6 @@ namespace Molinos.DataAgro.Interfaces
         int ObtenerComercialId(string idActiveDirectory);
 
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
+        BasicoContrato TraerContrato(int contratoId);
     }
 }

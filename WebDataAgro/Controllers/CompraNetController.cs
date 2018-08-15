@@ -68,18 +68,16 @@ namespace WebDataAgro.Controllers
             ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             return View();
-
         }
 
-        public ActionResult CrearContrato()
+        public ActionResult CrearContrato(int? contratoId)
         {
-
+            ViewBag.ContratoId = contratoId;
             return View();
         }
 
         public ActionResult CrearFijacion()
         {
-
             return View();
         }
 
@@ -357,6 +355,14 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult  TraerContratoCompleto(int contratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.TraerContrato(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
