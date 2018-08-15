@@ -668,3 +668,11 @@ li.mis-postit.postit-mobile {
         padding: 10px;
     }
 }
+
+
+.alertBox {
+    border: none !important;
+    background-color: #017940 !important;
+    color: #fff !important;
+    cursor: default !important;
+}

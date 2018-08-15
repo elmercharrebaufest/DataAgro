@@ -3,6 +3,13 @@
     ViewBag.Title = "CompraNet";
 }
 
+<script>
+        contratoId = '@ViewBag.ContratoId';
+        fijacionId = '@ViewBag.FijacionId';
+        comercialId = '@ViewBag.ComercialId';
+        $.blockUI({ blockMsgClass: 'alertBox',message: '<h3>Cargando...</h3>' });
+</script>
+
 @section Scripts {
     @Scripts.Render("~/bundles/CompraNetContrato")
 }
@@ -10,10 +17,7 @@
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
-    <script>
-        contratoId = '@ViewBag.ContratoId';
-        fijacionId = '@ViewBag.FijacionId';
-    </script>
+    
     
     <div id="CrearContrato" class="container">
         <br />

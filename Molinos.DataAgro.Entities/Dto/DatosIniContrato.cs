@@ -35,7 +35,6 @@ namespace Molinos.DataAgro.Entities.Dto
             loc = new List<LocalidadQry>();
             comercial = new List<ComercialQry>();
             campaña = new List<CampañaQry>();
-            proveedor = new List<ProveedorQry>();
             monedaSustentable = new List<MonedaQry>();
             estadoContrato = new List<EstadosContratos>();
             Clasificacion = new List<ClasificacionCompraNetQry>();

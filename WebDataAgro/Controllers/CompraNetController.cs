@@ -72,12 +72,14 @@ namespace WebDataAgro.Controllers
 
         public ActionResult CrearContrato(int? id)
         {
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.ContratoId = id;
             return View();
         }
 
         public ActionResult CrearFijacion(int? id)
         {
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.FijacionId = id;
             return View("CrearContrato");
         }
@@ -297,16 +299,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-        public ActionResult ObtenerComercialId()
-        {
-            return new JsonResult()
-            {
-                Data = mobjContratoManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory),
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
+        
         public int ObtenerProveedorId(string Cuit)
         {
             return mobjProveedorManager.TraerProveedorPorCuit(Cuit).ProveedorId;

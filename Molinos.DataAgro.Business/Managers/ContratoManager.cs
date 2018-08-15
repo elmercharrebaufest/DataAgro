@@ -67,8 +67,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.proveedor = repositorio.Listar<Proveedor, ProveedorQry>(x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
-
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
 
             datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -433,12 +431,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
-        public int ObtenerComercialId(string idActiveDirectory)
-        {
-            return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x=> x.ComercialId);
-        }
-
+        
         private string SAPFinalizarContrato(Contrato contrato,List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
             var SapFinalizarContrato = new FinalizarContratoAgent(logger);

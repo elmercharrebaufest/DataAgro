@@ -262,9 +262,7 @@ $(document).ready(function () {
     $(".buscar-mobile").click(function () {
         $(".nav-bar-segundo").attr("style", "display:block!important;");
     });
-
-    inicializarLayout();
-
+    
     $(".mis-postit").click(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -377,13 +375,5 @@ $(window).scroll(function (event) {
         });
     }
 });
-
-function inicializarLayout() {
-    var result = MSExecuteOnServer('/Home/ValidarComercial');
-    if (result == 0) {
-        $("#tablas-a").remove();
-        $(".tablas-detalle").remove();
-    }
-}
 
 $(window).resize(mobile);

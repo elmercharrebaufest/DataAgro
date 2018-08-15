@@ -22,9 +22,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult FinalizarContrato(Contrato oContrato, string idActiveDirectory);
 
         GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
-
-        int ObtenerComercialId(string idActiveDirectory);
-
+        
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
         List<CalidadDto> TraerCalidadesPorContrato(int contratoId);
         BasicoContrato TraerContrato(int contratoId);

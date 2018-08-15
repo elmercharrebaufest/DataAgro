@@ -44,7 +44,7 @@ function MSHideLoading(htmlloading) {
 }
 
 
-function MSExecuteOnServer(url, datos) {
+function MSExecuteOnServer(url, datos, onCallBack) {
     
     var respuesta = null;
 
@@ -62,6 +62,11 @@ function MSExecuteOnServer(url, datos) {
         },
         error: function (error) {
             MensErr("No se pudieron enviar los datos al servidor");
+        },
+        complete: function () {
+            if (onCallBack) {
+                onCallBack();
+            }
         }
     });
 

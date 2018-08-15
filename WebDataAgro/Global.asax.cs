@@ -54,7 +54,8 @@ namespace WebDataAgro
         
             GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.Equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);   
+            GlobalVariables.Equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
         }
 
 
@@ -95,6 +96,18 @@ namespace WebDataAgro
                 set
                 {
                     HttpContext.Current.Session["esAdministrador"] = value;
+                }
+            }
+
+            public static int ComercialId
+            {
+                get
+                {
+                    return (int)HttpContext.Current.Session["comercialId"];
+                }
+                set
+                {
+                    HttpContext.Current.Session["comercialId"] = value;
                 }
             }
 

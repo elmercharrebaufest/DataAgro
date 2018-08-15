@@ -30,6 +30,8 @@ namespace Molinos.DataAgro.Interfaces
         bool EsAdministrador(string activeDirectoryId);
 
         List<int> ListarEquipo(string idActiveDirectory);
+
+        int ObtenerComercialId(string idActiveDirectory);
     }
 }
 

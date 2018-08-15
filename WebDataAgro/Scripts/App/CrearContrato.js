@@ -12,9 +12,10 @@ $(document).ready(function () {
     InicializarDatos();
     if (contratoId !== undefined && contratoId) {
         setTimeout(InicializarContratoEdit, 300);
-    }
-    if (fijacionId !== undefined && fijacionId) {
+    } else if (fijacionId !== undefined && fijacionId) {
         setTimeout(InicializarFijacionEdit, 300);
+    } else {
+        $.unblockUI();
     }
 });
 
@@ -962,8 +963,7 @@ function CrearViewModel() {
     };
     viewModel = kendo.observable({
         Parametros: param,
-
-        ProveedorCombo: [],
+        
         ComercialCombo: [],
         MaterialCombo: [],
         TipoCombo: [],
@@ -1023,7 +1023,6 @@ function InicializarDatos() {
 }
 
 function AsignarDatos() {
-    viewModel.set("ProveedorCombo", datosIniCrearContrato.Datos.proveedor);
     viewModel.set("ComercialCombo", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialCombo", datosIniCrearContrato.Datos.material);
     viewModel.set("TipoCombo", datosIniCrearContrato.Datos.tiponegocio);
@@ -1058,8 +1057,7 @@ function AsignarDatos() {
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
 
     viewModel.set("isControlDisabled", false);
-
-    var comercialId = MSExecuteOnServer('/CompraNet/ObtenerComercialId');
+    
     if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("2");
     if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
@@ -1455,13 +1453,13 @@ function validarCalidad(calidad) {
 
 function InicializarContratoEdit() {
     var datos = { id: contratoId }
-    contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos);
+    contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
 }
 
 function InicializarFijacionEdit() {
     var datos = { id: fijacionId }
-    contratoEdit = MSExecuteOnServer('/CompraNet/TraerFijacionCompleto', datos);
+    contratoEdit = MSExecuteOnServer('/CompraNet/TraerFijacionCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
 }
 
@@ -1503,7 +1501,6 @@ function CargarDatosEditar(contrato) {
 
     (contrato.PlanCanje == true) ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
     (contrato.Consignatario == true) ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
-    CargarLocalidadPorProvincia(contrato.ProvinciaId);
     if (contrato.LocalidadId !== "null" && contrato.LocalidadId !== "undefined") $("#LocalidadId").data("kendoDropDownList").value(contrato.LocalidadId);
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
 

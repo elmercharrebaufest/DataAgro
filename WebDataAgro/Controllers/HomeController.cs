@@ -219,19 +219,6 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
-
-        public ActionResult ValidarComercial()
-        {
-            int puedeVer = 1;
-
-            return new JsonResult()
-            {
-                Data = puedeVer,
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
         public ActionResult Error()
         {
             return View();

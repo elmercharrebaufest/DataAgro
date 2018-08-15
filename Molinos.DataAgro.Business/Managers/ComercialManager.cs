@@ -260,6 +260,11 @@ namespace Molinos.DataAgro.Business
             }
             return resultado;
         }
+
+        public int ObtenerComercialId(string idActiveDirectory)
+        {
+            return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
+        }
     }
 }
     
