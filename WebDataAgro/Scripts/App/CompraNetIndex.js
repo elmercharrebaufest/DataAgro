@@ -170,7 +170,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ClasificacionId + "'" + ',' +
         "'" + dataItem.ClasificacionDescripcion + "'" + ',' +
         "'" + dataItem.StandardDeCalidadDescripcion + "'" + ',' +
-        "'" + dataItem.CalidadEspecialDescripcion + "'" +
+        "'" + dataItem.CalidadEspecialDescripcion + "'" + ',' +
+        "'" + formatearFecha(dataItem.DesdeFijacion) + "'" + ',' +
+        "'" + formatearFecha(dataItem.HastaFijacion) + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1409,7 +1411,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion) {
+function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion) {
     switch (status) {
         case "1": //pendiente
             $("#modalVisualizar .modal-header > div.status").hide();
@@ -1463,20 +1465,12 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     (sustentablePrecio !== "null" && sustentableMonedaId !== "null") ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
-    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     (informaSIO === "true") ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
-    visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     (trigoEspecial === "true") ? $("#visualizar_trigoEspecial").text("Si") : $("#visualizar_trigoEspecial").text("null");
-    (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null")
-    visualizacionRowDoble("trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
+    (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     (boletoDescripcion === "Ninguno" || boletoDescripcion === "null") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
-    visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     $("#visualizar_standard").text(standardDeCalidadDescripcion);
-    (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion + "    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
-    visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
-    visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
-    visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
 
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
@@ -1485,11 +1479,24 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
 
     (planCanje === "true") ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");
     (consignatario === "true") ? $("#visualizar_consignatario").text("Si") : $("#visualizar_consignatario").text("null");
+    (cantidadCamiones !== 0 && cantidadCamiones !== "null") ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : $("#visualizar_cantidadDeCamiones").text("N/A");
+    (establecimientoPropio === "true") ? $("#visualizar_establecimiento").text("Propio") : (establecimientoPropio === "false") ? $("#visualizar_establecimiento").text("Arrendado") : $("#visualizar_establecimiento").text("N/A");   
+    (calidadEspecialId !== "null") ? $("#visualizar_calidades").text(calidadEspecialDescripcion + "    " + valorCalidadEspecial) : $("#visualizar_calidades").text("null");
+
+    visualizacionRowDoble("trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
+    visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
+    visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
+    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+    visualizacionRowDoble("standardDivVisualizar", "visualizar_standard", "calidadesDivVisualizar", "visualizar_calidades");
     visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "consignatarioDivVisualizar", "visualizar_consignatario");
 
-    (cantidadCamiones !== 0 || cantidadCamiones !== null) ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : "null";
-    (establecimientoPropio === "true") ? $("#visualizar_establecimiento").text("Propio") : (establecimientoPropio === "false") ? $("#visualizar_establecimiento").text("Arrendado"): $("#visualizar_establecimiento").text("null");   
-    visualizacionRowDoble("cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones", "establecimientoDivVisualizar", "visualizar_establecimiento");
+    visualizacionRowSimple(condicionFijacionDescripcion, "condicionFijacionDivVisualisar", "visualizar_condicionFijacion");
+
+    if (desdeFijacion !== "undefined" && desdeFijacion !== "null") {
+        visualizacionRowSimple(desdeHastaFijacion, "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
+    } else {
+        visualizacionRowSimple("null", "desdeHastaFijacionDivVisualizar", "visualizar_desdeHastaFijacion");
+    }
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
@@ -1545,13 +1552,13 @@ function visualizacionRowDoble(div1, span1, div2, span2) {
     }
 }
 
-function visualizacionRowSimple(parametro, idDiv, idText) {
-    if (parametro === "undefined" || parametro === "null" || parametro === "false") {
+function visualizacionRowSimple(dato, idDiv, idText) {
+    if (dato === "undefined" || dato === "null" || dato === "false" || dato === "") {
         $("#" + idDiv).hide();
     }
     else {
         $("#" + idDiv).show();
-        $("#" + idText).text(parametro);
+        $("#" + idText).text(dato);
     }
 }
 

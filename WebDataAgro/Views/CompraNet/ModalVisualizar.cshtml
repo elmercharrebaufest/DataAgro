@@ -44,8 +44,10 @@
                             <span id="visualizar_material"></span>
                         </div>
                         <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Tipo:</strong>
-                            <span id="visualizar_tipo"></span>
+                            <div id="campanaDivVisualizar">
+                                <strong style="float:left">Campaña:</strong>
+                                <span id="visualizar_campana"></span>
+                            </div>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -55,18 +57,16 @@
                                 <span id="visualizar_cantidad"></span>
                             </div>
                         </div>
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <div id="precioDivVisualizar">
-                                <strong style="float:left">Precio:</strong>
-                                <span id="visualizar_precio"></span>
-                            </div>
+                        <div id="cantidadDeCamionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Cantidad de Camiones:</strong>
+                            <span id="visualizar_cantidadDeCamiones"></span>
                         </div>
                     </div>
                     <div class="row marginCero clearfix">
                         <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <div id="campanaDivVisualizar">
-                                <strong style="float:left">Campaña:</strong>
-                                <span id="visualizar_campana"></span>
+                            <div id="precioDivVisualizar">
+                                <strong style="float:left">Precio:</strong>
+                                <span id="visualizar_precio"></span>
                             </div>
                         </div>
                         <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
@@ -77,9 +77,9 @@
                         </div>
                     </div>
                     <div class="row marginCero">
-                        <div id="cantidadDeCamionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Cantidad de Camiones:</strong>
-                            <span id="visualizar_cantidadDeCamiones"></span>
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Tipo:</strong>
+                            <span id="visualizar_tipo"></span>
                         </div>
                         <div id="establecimientoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Establecimiento:</strong>
@@ -87,22 +87,18 @@
                         </div>
                     </div>
                     <div class="row marginCero">
-                            <div id="planCanjeDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                                <strong style="float:left">Plan Canje:</strong>
-                                <span id="visualizar_planCanje"></span>
-                            </div>
+                        <div id="planCanjeDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Plan Canje:</strong>
+                            <span id="visualizar_planCanje"></span>
                         </div>
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <div id="consignatarioDivVisualizar">
-                                <strong style="float:left">Consignatario:</strong>
-                                <span id="visualizar_consignatario"></span>
-                            </div>
+                        <div id="consignatarioDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Consignatario:</strong>
+                            <span id="visualizar_consignatario"></span>
                         </div>
                     </div>
-                        <div id="procedenciaDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding">
-                            <strong style="float:left">Procedencia:</strong>
-                            <span id="visualizar_procedencia"></span>
-                        </div>
+                    <div id="procedenciaDivVisualizar" class="row campo marginCero clearfix noPadding">
+                        <strong style="float:left">Procedencia:</strong>
+                        <span id="visualizar_procedencia"></span>
                     </div>
                     <div class="row marginCero clearfix campo col-xs-12 noPadding">
                         <div id="destinoDivVisualizar">
@@ -132,7 +128,7 @@
                     </div>
                     <div class="row marginCero">
                         <div id="trigoEspecialDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Trigo Especial:</strong>
+                            <strong style="float:left">Calidad Especial:</strong>
                             <span id="visualizar_trigoEspecial"></span>
                         </div>
                         <div id="pagoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
@@ -194,11 +190,6 @@
                         <strong style="float:left">Observaci&oacute;n: </strong>
                         <p id="visualizar_observacion"></p>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer clearfix ">
-                <div class="noPadding">
-                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
