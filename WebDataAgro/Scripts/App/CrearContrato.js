@@ -1,6 +1,8 @@
 ﻿var viewModel;
 var datosIniCrearContrato;
-var contratoEdit
+var contratoEdit;
+var contratoId;
+var fijacionId;
 $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
@@ -8,11 +10,11 @@ $(document).ready(function () {
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
-    if (contratoId) {
+    if (contratoId !== undefined && contratoId) {
         setTimeout(InicializarContratoEdit, 200);
     }
-    if (fijacionId) {
-        InicializarFijacionEdit();
+    if (fijacionId !== undefined && fijacionId) {
+        setTimeout(InicializarFijacionEdit, 200);
     }
 });
 
@@ -1494,8 +1496,8 @@ function CargarDatosEditar(contrato) {
     (contrato.PlanCanje == true) ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
     (contrato.Consignatario == true) ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
     CargarLocalidadPorProvincia(contrato.ProvinciaId);
-    if (contrato.LocalidadId !== "null" || contrato.LocalidadId !== "undefined") $("#LocalidadId").data("kendoDropDownList").value(contrato.LocalidadId);
-    if (contrato.ComercialId !== "null" || contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
+    if (contrato.LocalidadId !== "null" && contrato.LocalidadId !== "undefined") $("#LocalidadId").data("kendoDropDownList").value(contrato.LocalidadId);
+    if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
 
     $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
 
@@ -1562,7 +1564,7 @@ function CargarDatosEditar(contrato) {
     contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
 
-    contrato.EstablecimientoPropio == "true" ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == "false" ? $("#establecimientoArrendadoId").prop("checked", true) : false;
+    contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
     var iteracionesDescuentos = viewModel.Descuentos.length;
     for (var i = 0; i < iteracionesDescuentos; i++) {
