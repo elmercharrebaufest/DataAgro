@@ -133,6 +133,7 @@ namespace Molinos.DataAgro.Repository
         /// <returns>Cantidad de entidades agregadas/actualizadas</returns>
         int GuardarCambios();
 
+        List<TEntidad> SelStorePaginado<TEntidad>(string store, int maxResultados, int pagina, params object[] parameters) where TEntidad : class;
         List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class;
     }
 }

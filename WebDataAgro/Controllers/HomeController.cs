@@ -72,12 +72,10 @@ namespace WebDataAgro.Controllers
         public ActionResult Inicializar()
         {
             var model = new ResultIniContactoModel();
+            
+            var result = mobjHomeManager.TraerTodoContacto(GlobalVariables.ComercialId, 1);
 
-            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-
-            var result = mobjHomeManager.TraerTodoContacto(idComercial, 1);
-
-            model.Campaña = mobjHomeManager.TraerInfoCampaña(idComercial, GlobalVariables.Equipo);
+            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.Equipo);
 
             model.Datos = mobjHomeManager.TraerInfoIniciales(GlobalVariables.Equipo);
 

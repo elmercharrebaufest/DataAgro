@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public ResultIniContacto TraerTodoContacto(int idComercial, int pagina = 0)
         {
-            var query = repositorio.SelStore<Contactos>("DataAgro_TraerContactos", 50, pagina, idComercial);
+            var query = repositorio.SelStorePaginado<Contactos>("DataAgro_TraerContactos", 50, pagina, idComercial);
 
 
             return new ResultIniContacto
