@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var res = new ResultIniContacto();
 
-            var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 20, pagina, oParam.Campaña,
+            var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 50, pagina, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
                 oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).OrderBy(x=>x.RazonSocial);
 

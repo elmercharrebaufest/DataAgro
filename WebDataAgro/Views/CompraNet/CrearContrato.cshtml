@@ -207,7 +207,7 @@
         <div id="fechasDiv" class="row">
             <div>
                 <div class="col-sm-2">
-                    <label>Desde-Hasta</label>
+                    <label>Entrega Desde-Hasta</label>
                 </div>
                 <div class="col-sm-5 col-md-3">
                     <span id="fechaDesdeDiv">
@@ -241,7 +241,7 @@
                 <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>
                 <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div id="operacionDiv">
+            <div id="operacionDiv" style="display:none">
                 <div class="col-sm-1">
                     <label>Operación</label>
                 </div>
@@ -300,13 +300,6 @@
                     <label style="width:120px">No Informa SIO</label>
                     <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errnoInformaSioId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <label style="width:120px">Calidad Especial</label>
-                    <input id="trigoEspecialId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialId, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errtrigoEspecialId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div id="ContratoDiv" class="row">
@@ -390,7 +383,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-3 col-md-2">
-                    <input type="text" id="ImporteDescuentoId" class="campo-input-text k-textbox" placeholder="IMPORTE" />
+                    <input type="text" id="ImporteDescuentoId" class="campo-input-text k-textbox" placeholder="(importe)" />
                     <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
                 <div class="col-sm-3 col-md-2">
@@ -398,7 +391,7 @@
                     <img id="errdescuentoMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
                 <div class="col-sm-3 col-md-2">
-                    <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="PORCENTAJE" />
+                    <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="(porcentaje)" style="width: 90%" />%
                     <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
                 <div class="col-sm-3 col-md-1">
@@ -441,6 +434,13 @@
             </div>
         </div>
         <div class="datos-calidades" display="block">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label style="width:120px">Calidad Especial</label>
+                    <input id="trigoEspecialId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialId, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errtrigoEspecialId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
             <div id="especialesId" class="row">
                 <div class="col-md-2">
                     <label>Calidades Especiales </label>

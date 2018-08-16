@@ -550,7 +550,7 @@ function armarContacto() {
             enta.push(resultDatos.ProveedorDestinatario[i].Descripcion);
         })(ii);
     }
-    $("#daco-enta").html((enta.length > 0 ? enta.join("<br>") : "No posee"));
+    $("#daco-enta").html((enta.length > 0 ? enta.join(", ") : "No posee"));
 
     var condpre = [];
     for (var ii in resultDatos.ProveedorCondicion) {

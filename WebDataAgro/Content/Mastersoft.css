@@ -105,6 +105,9 @@ span.k-widget.k-dropdown.k-header {
     background-color:#017940;
 }
 
+.bootstrap-dialog.error-dialog.type-primary .modal-header {
+    background-color: #a94442;
+}
 
 .bootstrap-dialog.type-warning .modal-header {
     background-color: #017940;

@@ -160,6 +160,7 @@ function MensErr(mensaje) {
 
     BootstrapDialog.show({
         title: 'Error !!!',
+        cssClass: 'error-dialog',
         message: mensaje,
         draggable: true,
         buttons: [{
