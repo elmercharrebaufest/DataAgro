@@ -365,6 +365,7 @@ function ArmarCabeceraContactos() {
 function ArmarContactos(contactos) {
     htmlaux = "";
     for (var ii in contactos) {
+        $("#verMasContactos").show();
         (function (i) {
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
             htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor">'
