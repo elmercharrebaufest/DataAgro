@@ -400,6 +400,11 @@
 .lista-contactos-general{
     margin-left:25%;
 }
+#verMasContactos {
+    margin-top: 15px;
+    margin-left: 50%;
+    width: 150px;
+}
 .r-relative{
     position:relative;
     min-height: 1210px;

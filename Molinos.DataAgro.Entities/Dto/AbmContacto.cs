@@ -33,7 +33,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public class ResultIniContacto
         {
             public List<ContactoIni> Contactos { get; set; }
-        }
+        public int TotalContactos { get; set; }
+        public int TotalPotencialContactos { get; set; }
+        public int TotalOperandoContactos { get; set; }
+        public int TotalNoOperandoContactos { get; set; }
+        public int TotalBajaContactos { get; set; }
+        public int TotalSinInteresContactos { get; set; }
+    }
 
 
         public class ContactoIni

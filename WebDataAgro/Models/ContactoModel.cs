@@ -1,18 +1,17 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
-using System.Collections.Generic;
 
 namespace WebDataAgro.Models
 {
 
     public class ResultIniContactoModel : Resultado
     {
-        public List<ContactoIni> Contactos { get; set; }
+        public ResultIniContacto Contactos { get; set; }
         public CampañaHome Campaña { get; set; }
         public DatosIniciales Datos { get; set; }
 
         public ResultIniContactoModel()
         {
-            this.Contactos = new List<ContactoIni>();
+            this.Contactos = new ResultIniContacto();
             this.Datos = new DatosIniciales();
         }
     }

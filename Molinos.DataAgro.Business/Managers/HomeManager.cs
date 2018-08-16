@@ -26,28 +26,22 @@ namespace Molinos.DataAgro.Business.Managers
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
-
-        public ResultIniContacto TraerTodoContacto(int idComercial, int pagina = 0)
-        {
-            var query = repositorio.SelStorePaginado<Contactos>("DataAgro_TraerContactos", 50, pagina, idComercial);
-
-
-            return new ResultIniContacto
-            {
-                Contactos = DevolverContactosIni(query)
-            };
-        }
-
-        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam)
+        
+        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina)
         {
             var res = new ResultIniContacto();
 
-            var query = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
+            var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 20, pagina, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Comercial, oParam.Zona);
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).OrderBy(x=>x.RazonSocial);
 
             res.Contactos = DevolverContactosIni(query.ToList());
-
+            res.TotalContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId));
+            res.TotalPotencialContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 1);
+            res.TotalOperandoContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 2);
+            res.TotalNoOperandoContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 3);
+            res.TotalBajaContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 4);
+            res.TotalSinInteresContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 5);
             return res;
         }
 

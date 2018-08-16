@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Entities.Dto
         //Este es la propiedad del filtro
         public string Comercial { get; set; }
         public string Zona { get; set; }
+        public List<int> Equipo { get; set; }
     }
 
     public class DatosIniciales

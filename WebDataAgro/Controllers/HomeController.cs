@@ -72,8 +72,11 @@ namespace WebDataAgro.Controllers
         public ActionResult Inicializar()
         {
             var model = new ResultIniContactoModel();
-            
-            var result = mobjHomeManager.TraerTodoContacto(GlobalVariables.ComercialId, 1);
+            var filtro = new oParamBusqueda {
+                ComercialId = GlobalVariables.ComercialId,
+                Equipo = GlobalVariables.Equipo
+            };
+            var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1);
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.Equipo);
 
@@ -81,7 +84,7 @@ namespace WebDataAgro.Controllers
 
             if (result != null)
             {
-                model.Contactos = result.Contactos;
+                model.Contactos = result;
             }
 
             return new JsonResult()
@@ -91,40 +94,28 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerContactos(int pagina)
-        {
-            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-
-            return new JsonResult()
-            {
-                Data = mobjHomeManager.TraerTodoContacto(idComercial, pagina),
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
         public ActionResult BusquedaHome(string filtro)
-        {
-            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-            
+        {            
             return new JsonResult()
             {
-                Data = mobjHomeManager.BusquedaHome(filtro, idComercial),
+                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
 
         }
 
-        public ActionResult TraerBusquedaContacto(oParamBusqueda filtro)
+        public ActionResult TraerBusquedaContacto(oParamBusqueda filtro, int pagina)
         {
             var model = new ResultIniContactoModel();
 
-            filtro.ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
+            filtro.ComercialId = GlobalVariables.ComercialId;
+            filtro.Equipo = GlobalVariables.Equipo;
 
-            var result = mobjHomeManager.TraerBusquedaContacto(filtro);
+            var result = mobjHomeManager.TraerBusquedaContacto(filtro, pagina);
 
             if (result != null)
             {
-                model.Contactos = result.Contactos;
+                model.Contactos = result;
             }
 
             return new JsonResult()
@@ -138,10 +129,8 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerActividadesPorComercialId()
         {
             var model = new ResultActividadesModel();
-
-            var comercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-
-            var result = mobjHomeManager.TraerActividadesPorComercialId(comercialId);
+            
+            var result = mobjHomeManager.TraerActividadesPorComercialId(GlobalVariables.ComercialId);
 
             if (result != null)
             {
@@ -225,10 +214,8 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerPostIt()
         {
             var model = new ResultIniPostItModel();
-
-            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-
-            var result = mobjHomeManager.TraerTexto(idComercial);
+            
+            var result = mobjHomeManager.TraerTexto(GlobalVariables.ComercialId);
 
             if (result != null)
             {
@@ -246,10 +233,8 @@ namespace WebDataAgro.Controllers
         public ActionResult GuardarPostIt(PostIt post)
         {
             var model = new GrabarPostItResult();
-
-            int idComercial = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
-
-            post.ComercialId = idComercial;
+            
+            post.ComercialId = GlobalVariables.ComercialId;
 
             if (post.ComercialId != 0)
             {

@@ -3,6 +3,7 @@
 var htmlaux = "";
 
 var filtro = {};
+var pagina = 1;
 
 var mostrarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
@@ -34,10 +35,31 @@ $(document).ready(function () {
     armarFuncionalidadesHome();
     $(".atras-nav").hide();
     $(".navbarsegundo-bread").html("Inicio");
-    //$("#AgregarContacto").show();
     $("#GuardarCambios").hide();
     armarCarouselHome();
 });
+
+function InicializarDatos() {
+    var result = MSExecuteOnServer('/Home/Inicializar');
+
+
+    pagina = 1;
+    $(".lista-contactos-general").empty();
+
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowTooltipMessages("err", result.Errores);
+        }
+        else {
+            conts = result.Contactos.Contactos;
+            armarSelects(result.Datos);
+            actualizarContactos(result.Contactos);
+            ArmarCabeceraContactos();
+            ArmarContactos(conts);
+            ArmarCamapaña(result.Campaña);
+        }
+    }
+}
 
 $(window).resize(mobile);
 
@@ -161,7 +183,9 @@ function armarCarouselHome() {
     $("#carouselHome").carousel({ interval: false });
 }
 
-function updateFiltro() {
+function updateFiltro(estado) {
+
+    $(".lista-contactos-general").empty();
     filtro = {};
 
     if ($("#filtro-zonaselect").val() && $("#filtro-zonaselect").val() != "null")
@@ -264,7 +288,9 @@ function updateFiltro() {
         if (filtro.Calificacion === "null")
             filtro.Calificacion = null;
     }
-
+    filtro.pagina = 1;
+    filtro.Estado = estado;
+    pagina = 1;
     var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro);
 
     if (result != null) {
@@ -272,113 +298,79 @@ function updateFiltro() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            conts = result.Contactos;
-            actualizarContactos();
+            conts = result.Contactos.Contactos;
+            actualizarContactos(result.Contactos);
             ArmarContactos(conts);
         }
     }
 }
 
-function actualizarContactos() {
-    $(".cont-agend").html(conts.length);
-    $(".cont-alta").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "cliente potencial" }).length);
-    $(".cont-no-clie").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "sin interés de operar" }).length);
-    $(".cont-op").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "operando" }).length);
-    $(".cont-no-op").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "no operando" }).length);
-    $(".cont-baj").html(conts.filter(function (x) { return x.Estado.toLowerCase() == "baja" }).length);
+function actualizarContactos(contactos) {
+    $(".cont-agend").html(contactos.TotalContactos);
+    $(".cont-alta").html(contactos.TotalPotencialContactos);
+    $(".cont-no-clie").html(contactos.TotalSinInteresContactos);
+    $(".cont-op").html(contactos.TotalOperandoContactos);
+    $(".cont-no-op").html(contactos.TotalNoOperandoContactos);
+    $(".cont-baj").html(contactos.TotalBajaContactos);
+}
 
+function ArmarCabeceraContactos() {
     $(".cont-agend-det").click(function () {
-        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        LimpiarClase();
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-        var arrAux = conts.concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
+        updateFiltro(null);
     });
 
     $(".cont-alta-det").click(function () {
-        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        LimpiarClase();
         $(".cont-alta-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "cliente potencial" }).concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
+        updateFiltro(1);
     });
 
     $(".cont-op-det").click(function (e) {
-        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        LimpiarClase();
         $(".cont-op-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "operando" }).concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
+        updateFiltro(2);
     });
 
     $(".cont-no-op-det").click(function () {
-        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        LimpiarClase();
         $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "no operando" }).concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
+        updateFiltro(3);
     });
 
     $(".cont-baj-det").click(function () {
-        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        LimpiarClase();
         $(".cont-baj-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "baja" }).concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
+        updateFiltro(4);
     });
 
     $(".cont-alta-no-clie").click(function () {
+        LimpiarClase();
+        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
+        updateFiltro(5);
+    });
+
+    function LimpiarClase() {
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
-        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "sin interés de operar" }).concat();
-        htmlaux = "";
-        ArmarContactos(arrAux);
-    });
+        $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+    }
 }
 
 function ArmarContactos(contactos) {
-    $(".lista-contactos-general").empty();
     htmlaux = "";
     for (var ii in contactos) {
         (function (i) {
-            //htmlaux = "";
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
             htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor">'
                 + '<div class="lista-contactos-estado">'
                 + '<span class="lista-contactos-estado-titulo">Estado:</span>'
                 + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
-                //+ (contactos[i].Operando == true ? '<span class="lista-contactos-estado-guion"> - </span> <span class="lista-contactos-estado-operando">Operando</span>' : '')
                 + '<span class="lista-contactos-estado-estrellas">';
             for (var j = 0; j < contactos[i].Calificacion; j++) {
                 var url = MSGetUrl("/Content/Images/estrellacalificacion.png");
@@ -450,28 +442,26 @@ function ArmarContactos(contactos) {
         })(ii);
     }
     $(".lista-contactos-general").append(htmlaux);
-    //setTimeout(function () {
-    //}, 100);
 }
+
 function setChangeChecks() {
     $('div :input').change(function () {
         updateFiltro();
     });
 }
 
-function InicializarDatos() {
-    var result = MSExecuteOnServer('/Home/Inicializar');
+function TraerSiguiente() {
+    pagina += 1;
+    filtro.pagina = pagina
+    var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro );
 
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            conts = result.Contactos.concat();
-            armarSelects(result.Datos);
-            actualizarContactos();
+            conts = result.Contactos.Contactos;
             ArmarContactos(conts);
-            ArmarCamapaña(result.Campaña);
         }
     }
 }
@@ -866,4 +856,6 @@ function armarFuncionalidadesHome() {
             $(".mostrar-filtro span").html("Ocultar filtro -");
         }
     });
+
+
 }

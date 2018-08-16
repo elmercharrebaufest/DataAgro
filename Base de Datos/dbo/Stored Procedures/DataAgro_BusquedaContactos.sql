@@ -10,6 +10,7 @@ CREATE procedure [dbo].[DataAgro_BusquedaContactos]
 @Tonelada varchar(max) = null,
 @comercialId int,
 @Condicion varchar(max) = null,
+@EstadoDelContacto varchar(max) = null,
 @ComercialFiltro int,
 @Zona int
 
@@ -28,7 +29,7 @@ AS
 
 declare @PeriodoDeTiempoSecuencia TABLE (Item INT)        
 declare @SegmentacionSecuencia TABLE (Item INT)        
---declare @EstadoDelContactoSecuencia TABLE (Item INT)        
+declare @EstadoDelContactoSecuencia TABLE (Item INT)        
 declare @ActividadesSecuencia TABLE (Item INT)        
 declare @MaterialesSecuencia TABLE (Item INT)        
 declare @CalificacionSecuencia TABLE (Item INT)        
@@ -40,7 +41,7 @@ declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres 
                   
 insert into @PeriodoDeTiempoSecuencia (Item) select Item  from dbo.Split (@PeriodoDeTiempo,'|')        
 insert into @SegmentacionSecuencia (Item) select Item  from dbo.Split (@Segmentacion,'|')        
---insert into @EstadoDelContactoSecuencia (Item) select Item  from dbo.Split (@EstadoDelContacto,'|')        
+insert into @EstadoDelContactoSecuencia (Item) select Item  from dbo.Split (@EstadoDelContacto,'|')        
 insert into @ActividadesSecuencia (Item) select Item  from dbo.Split (@Actividades,'|')      
 insert into @MaterialesSecuencia (Item) select Item  from dbo.Split (@Materiales,'|')      
 insert into @CalificacionSecuencia (Item) select Item  from dbo.Split (@Calificacion,'|');   
@@ -74,8 +75,8 @@ and (( @PeriodoDeTiempo is null) or (@PeriodoDeTiempo= '0' and cam.CampañaId is
 and (( @Segmentacion is null) or (@Segmentacion= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
-/*and (( @EstadoDelContacto is null) or (@EstadoDelContacto= '0' and p.EstadoId is not null) 
-	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = p.EstadoId)))*/
+and (( @EstadoDelContacto is null) or (@EstadoDelContacto= '0' and p.EstadoId is not null) 
+	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = p.EstadoId)))
 
 and (( @Condicion is null) or (@Condicion= '0' and pcc.CondicionId is not null) 
 	or (exists ( select 1 from @CondicionSecuencia where Item = pcc.CondicionId)))

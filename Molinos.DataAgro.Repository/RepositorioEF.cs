@@ -237,16 +237,16 @@ namespace Molinos.DataAgro.Repository
 
             var resultado = context.Database
                 .SqlQuery<TEntidad>(("exec " + store + " " + parametrosStr).Trim(), parametrosSql.ToArray());
-
-            if(pagina > 0)
+            var resultadoPaginado = resultado.Select(x => x);
+            if (pagina > 0)
             {
-                resultado.Skip((pagina - 1) * pagina);
+                resultadoPaginado = resultadoPaginado.Skip((pagina - 1) * maxResultados);
             }
             if (maxResultados > 0)
             {
-                resultado.Take(maxResultados);
+                resultadoPaginado = resultadoPaginado.Take(maxResultados);
             }
-            return resultado.ToList();
+            return resultadoPaginado.ToList();
         }
 
         public List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class
