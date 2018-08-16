@@ -10,13 +10,6 @@ $(document).ready(function () {
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
-    if (contratoId !== undefined && contratoId) {
-        setTimeout(InicializarContratoEdit, 300);
-    } else if (fijacionId !== undefined && fijacionId) {
-        setTimeout(InicializarFijacionEdit, 300);
-    } else {
-        $.unblockUI();
-    }
 });
 
 function ObtenerFechaDesde(fechaBase) {
@@ -1031,6 +1024,14 @@ function InicializarDatos() {
         else {
             datosIniCrearContrato = data;
             AsignarDatos();
+        }
+
+        if (contratoId !== undefined && contratoId) {
+            setTimeout(InicializarContratoEdit, 300);
+        } else if (fijacionId !== undefined && fijacionId) {
+            setTimeout(InicializarFijacionEdit, 300);
+        } else {
+            $.unblockUI();
         }
     }
 

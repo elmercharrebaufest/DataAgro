@@ -40,6 +40,17 @@
                            /@value" />
   </parameter>
 
+  <parameter name="SinConexionSap Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='SinConexionSap']
+                           /@value" />
+  </parameter>
+
+  <parameter name="ValorPruebaSap Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='ValorPruebaSap']
+                           /@value" />
+  </parameter>
 
   <parameter name="HTTP_Port Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
