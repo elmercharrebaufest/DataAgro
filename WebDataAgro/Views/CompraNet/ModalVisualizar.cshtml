@@ -28,23 +28,23 @@
                         <strong style="float:left">Fecha de Operación:</strong>
                         <span id="fechacontrato"></span>
                     </div>
-                    <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero clearfix">
+                    <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero clearfix noFijacion">
                         <strong style="float:left">Fecha Desde - Fecha Hasta (Entrega):</strong>
                         <span id="visualizar_desdeHasta"></span>
                     </div>
-                    <div class="row campo marginCero clearfix">
+                    <div class="row campo marginCero clearfix noFijacion">
                         <div id="clasificacionDivVisualizar">
                             <strong style="float:left">Clasificación:</strong>
                             <span id="visualizar_clasificacion"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                        <div id="materialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Material:</strong>
                             <span id="visualizar_material"></span>
                         </div>
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <div id="campanaDivVisualizar">
+                        <div id="campanaDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <div>
                                 <strong style="float:left">Campaña:</strong>
                                 <span id="visualizar_campana"></span>
                             </div>
@@ -94,11 +94,11 @@
                             <span id="visualizar_consignatario"></span>
                         </div>
                     </div>
-                    <div id="procedenciaDivVisualizar" class="row campo marginCero clearfix noPadding">
+                    <div id="procedenciaDivVisualizar" class="row campo marginCero clearfix noPadding noFijacion">
                         <strong style="float:left">Procedencia:</strong>
                         <span id="visualizar_procedencia"></span>
                     </div>
-                    <div class="row marginCero clearfix campo col-xs-12 noPadding">
+                    <div class="row marginCero clearfix campo col-xs-12 noPadding noFijacion">
                         <div id="destinoDivVisualizar">
                             <strong style="float:left">Destino:</strong>
                             <span id="visualizar_destino"></span>
@@ -144,7 +144,7 @@
                             <span id="visualizar_bolsa"></span>
                         </div>
                     </div>
-                    <div class="row marginCero clearfix col-xs-12 noPadding">
+                    <div class="row marginCero clearfix col-xs-12 noPadding noFijacion">
                         <div id="descuentosDivVisualizar">
                             <div id="tabla-descuentos-visualizar" data-template="div-template-visualizar" data-bind="source:DescuentosVisualizar">
                                 <span></span>
@@ -166,16 +166,16 @@
                             </script>
                         </div>
                     </div>
-                    <div id="desdeHastaFijacionDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales">
+                    <div id="desdeHastaFijacionDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFijacion">
                         <strong style="float:left">Fecha Desde - Fecha Hasta (Fijacion):</strong>
                         <span id="visualizar_desdeHastaFijacion" class="centrar"></span>
                     </div>
-                    <div id="condicionFijacionDivVisualisar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales">
+                    <div id="condicionFijacionDivVisualisar" class="row marginCero clearfix  col-xs-12 noPadding campo campoAdicionales noFijacion">
                         <strong style="float:left">Condición Fijacion:</strong>
                         <span id="visualizar_condicionFijacion" class="centrar"></span>
                     </div>
-                    <div id="calidadesDivVisualizar" class="row marginCero clearfix col-xs-12 noPadding">
-                        <div class="col-xs-6 col-md-4" style="float:left;position:fixed"><strong>Calidad </strong></div>
+                    <div id="calidadesDivVisualizar" class="row marginCero clearfix col-xs-12 campo campoAdicionales noPadding noFijacion">
+                        <div style="float:left;position:fixed"><strong>Calidad </strong></div>
                         <div id="tabla-calidades-visualizar" data-template="div-calidades-visualizar-template" data-bind="source:CalidadesVisualizar">
                             <div></div>
                             <div></div>

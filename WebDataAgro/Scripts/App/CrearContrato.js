@@ -190,9 +190,15 @@ function InicializarElementos() {
                 $("#guardarBtn").append("Generar Negocio");
                 if (this.value() == 1) {
                     $("#plazosYTopesFijacion").show();
+                    $("#CDId").prop("checked", false);
+                    $("#WarrantId").prop("checked", false);
+                    $("#pagoDirectoId").prop("checked", false);
                 }
                 if (this.value() == 2) {
                     $("#pagosDiv").show();
+                    $("#fechaDesdeTopeId").val("");
+                    $("#fechaHastaTopeId").val("");
+                    $("#condicionFijacionId").data("kendoDropDownList").value("");
                 }
             }
         }
@@ -249,7 +255,7 @@ function InicializarElementos() {
         dataTextField: "Nombre",
         dataValueField: "Provinciaid",
         change: function () {
-            
+
             if (this.value() != "") {
                 CargarLocalidadPorProvincia(this.value());
             }
@@ -258,6 +264,8 @@ function InicializarElementos() {
                 $("#establecimientoDiv").show();
             } else {
                 $("#establecimientoDiv").hide();
+                $("#establecimientoPropioId").prop("checked", false);
+                $("#establecimientoArrendadoId").prop("checked", false);
             }
         }
     });
@@ -365,7 +373,14 @@ function InicializarElementos() {
         optionLabel: "SELECCIONE LA CLASIFICACIÓN...",
         dataTextField: "Descripcion",
         dataValueField: "Id",
-        change: function () { this.value() == 2 ? $("#consignatarioDiv").show() : $("#consignatarioDiv").hide(); }
+        change: function () {
+            if (this.value() == 2) {
+                $("#consignatarioDiv").show()
+            } else {
+                $("#consignatarioDiv").hide();
+                $("#consignatarioId").prop("checked", false); 
+            }
+        }
     });
 
     $("#clasificacion").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -645,7 +660,7 @@ function InicializarElementos() {
         }
         else {
             $("#sustentableDiv").hide();
-            $("#sustentablePrecioId").val("");
+            $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         }
     });
     
@@ -665,7 +680,7 @@ function InicializarElementos() {
         }
         else {
             $("#pesificadoDiv").hide();
-            $("#pesificadoDiasId").val("");
+            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");;
         }
     });
 
@@ -1560,7 +1575,7 @@ function CargarDatosEditar(contrato) {
         $("#fechaDesdeTopeId").val("");
     }
     if (!(contrato.HastaFijacionFormateado == "null" || contrato.HastaFijacionFormateado == "undefined" || contrato.HastaFijacionFormateado == "")) {
-        $("#fechaHastaTopeIde").val(contrato.HastaFijacionFormateado);
+        $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
     } else {
         $("#fechaDesdeTopeId").val("");
     }

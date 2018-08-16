@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CD = null,
                     Warrant = null,
                     PagoDirectoVendedor = null,                    
-                    EstablecimientoPropio = false,
+                    EstablecimientoPropio = null,
                     BoletoId = null,
                     BolsaId = null,
                     BoletoDescripcion = "",

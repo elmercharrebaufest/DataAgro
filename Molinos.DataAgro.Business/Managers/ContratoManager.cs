@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
             }
-            if (oParam.LocalidadId == 0 && oParam.TipoNegocioId == 1 || oParam.LocalidadId == 0 && oParam.TipoNegocioId == 2)
+            if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
             }

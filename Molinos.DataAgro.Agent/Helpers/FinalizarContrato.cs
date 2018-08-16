@@ -125,12 +125,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",
                         ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "",
                         ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "",
-                        IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe:0,
-                        MONEDA_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId:"",
-                        PORC_S_PRECIO = descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
-                        IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
-                        MONEDA_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : "",
-                        PORC_A_PRECIO = descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0                        
+                        IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe:0,
+                        MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId:"",
+                        PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
+                        IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
+                        MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : "",
+                        PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0                        
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
