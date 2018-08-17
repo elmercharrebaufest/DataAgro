@@ -232,22 +232,19 @@ namespace Molinos.DataAgro.Business
             return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Administrador.HasValue ? x.Administrador.Value : false);
         }
 
-        public List<int> ListarEquipo(string idActiveDirectory)
+        public EquipoDto ListarEquipo(string idActiveDirectory)
         {
+            
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
 
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+            var resultado = new EquipoDto
+            {
+                EquipoReal = ListarEquipo(comercial.ComercialId, comerciales)
+            };
+            resultado.Equipo = comercial.PerfilId == (int)EnumPerfil.Mesa ? comerciales.Select(x => x.ComercialId).ToList() : resultado.EquipoReal;
 
-            List<int> listComercialesId;
-            if (comercial.PerfilId == (int)EnumPerfil.Mesa)
-            {
-                listComercialesId = comerciales.Select(x => x.ComercialId).ToList();
-            }
-            else
-            {
-                listComercialesId = ListarEquipo(comercial.ComercialId, comerciales);
-            }
-            return listComercialesId;
+            return resultado;
         }
 
         private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)

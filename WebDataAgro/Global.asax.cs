@@ -51,10 +51,11 @@ namespace WebDataAgro
         public void Session_OnStart()
         {
             var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
-        
+            var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
             GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.Equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.Equipo = equipo.Equipo;
+            GlobalVariables.EquipoReal = equipo.EquipoReal;
             GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
         }
 
@@ -128,6 +129,18 @@ namespace WebDataAgro
                 set
                 {
                     HttpContext.Current.Session["equipo"] = value;
+                }
+            }
+
+            public static List<int> EquipoReal
+            {
+                get
+                {
+                    return (List<int>)HttpContext.Current.Session["equipoReal"];
+                }
+                set
+                {
+                    HttpContext.Current.Session["equipoReal"] = value;
                 }
             }
 

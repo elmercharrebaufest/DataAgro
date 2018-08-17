@@ -74,13 +74,13 @@ namespace WebDataAgro.Controllers
             var model = new ResultIniContactoModel();
             var filtro = new oParamBusqueda {
                 ComercialId = GlobalVariables.ComercialId,
-                Equipo = GlobalVariables.Equipo
+                Equipo = GlobalVariables.EquipoReal
             };
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1);
 
-            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.Equipo);
+            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
 
-            model.Datos = mobjHomeManager.TraerInfoIniciales(GlobalVariables.Equipo);
+            model.Datos = mobjHomeManager.TraerInfoIniciales(GlobalVariables.EquipoReal);
 
             if (result != null)
             {
@@ -109,7 +109,7 @@ namespace WebDataAgro.Controllers
             var model = new ResultIniContactoModel();
 
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo = GlobalVariables.Equipo;
+            filtro.Equipo = GlobalVariables.EquipoReal;
 
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, pagina);
 

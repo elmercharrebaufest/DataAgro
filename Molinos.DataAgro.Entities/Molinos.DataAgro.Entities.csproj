@@ -82,6 +82,7 @@
     <Compile Include="Dto\CalidadDto.cs" />
     <Compile Include="Dto\DescuentoBonificacionDto.cs" />
     <Compile Include="Dto\DestinatarioDto.cs" />
+    <Compile Include="Dto\EquipoDto.cs" />
     <Compile Include="Dto\ErrorMessage.cs" />
     <Compile Include="Dto\FijacionDePrecioDto.cs" />
     <Compile Include="Dto\FijacionDePrecioContratoDto.cs" />
