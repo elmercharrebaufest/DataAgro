@@ -94,7 +94,9 @@ function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
             if (owait != null) {
                 owait.modal('hide');
             }
-            fncallback(data);
+            if (fncallback) {
+                fncallback(data);
+            }
         },
         error: function (error) {
             var owait = $('#myPleaseWait');

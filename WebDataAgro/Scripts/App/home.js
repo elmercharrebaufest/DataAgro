@@ -454,17 +454,21 @@ function setChangeChecks() {
 function TraerSiguiente() {
     pagina += 1;
     filtro.pagina = pagina
-    var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro );
 
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowTooltipMessages("err", result.Errores);
-        }
-        else {
-            conts = result.Contactos.Contactos;
-            ArmarContactos(conts);
+    function callback (result) {
+        if (result != null) {
+            if (ExistsErrorMessages(result.Errores)) {
+                ShowTooltipMessages("err", result.Errores);
+            }
+            else {
+                conts = result.Contactos.Contactos;
+                ArmarContactos(conts);
+            }
         }
     }
+    var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
+
+    
 }
 
 function ArmarCamapaña(campañas) {
