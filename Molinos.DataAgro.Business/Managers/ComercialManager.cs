@@ -238,6 +238,7 @@ namespace Molinos.DataAgro.Business
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
 
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+            
             var resultado = new EquipoDto
             {
                 EquipoReal = ListarEquipo(comercial.ComercialId, comerciales)
@@ -252,7 +253,6 @@ namespace Molinos.DataAgro.Business
             var resultado = new List<int> { comercialId };
             foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
             {
-                comerciales.Remove(comercial);
                 resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
             }
             return resultado;

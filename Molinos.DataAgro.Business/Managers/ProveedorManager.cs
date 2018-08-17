@@ -1004,6 +1004,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var oProveedorSave = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
 
+                var clasificacion = oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any() ? 1 : oParam.almacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento.Any() ? 2 : (int?)null;
                 oProveedorSave.AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null;
                 oProveedorSave.AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns;
                 oProveedorSave.AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust;
@@ -1017,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.LocalidadId = oParam.contacto.localidad;
                 oProveedorSave.ProvinciaId = oParam.contacto.provincia;
                 oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? Convert.ToInt32(oParam.contacto.areaDeInfluencia) : (int?)null;
-                oProveedorSave.ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet;
+                oProveedorSave.ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet == 3 ? 3 : clasificacion;
                 oProveedorSave.BoletoCompraNetId = oParam.basicos.BoletoCompraNet;
                 oProveedorSave.BolsaCompraNetId = oParam.basicos.BolsaCompraNet;
                 oProveedorSave.LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet;
@@ -1545,7 +1546,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                             }
                         }
-                    }
+                    }                    
                 }
                 #endregion
 
@@ -1644,6 +1645,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var oAcopioSave = repositorio.Listar<Acopio>(x => x.ProveedorId == oParam.ProveedorId);
+                
                 #region Eliminar Almacenamiento
 
                 foreach (var cam in oAcopioSave)
@@ -1708,7 +1710,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                         }
                     }
-                }
+                }                
                 #endregion
 
                 #region Modificar Almacenamiento
