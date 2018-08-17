@@ -4,7 +4,7 @@
 	[FechaDesde]		DATETIME		NULL,
 	[FechaHasta]		DATETIME		NULL,
 	[Importe]			DECIMAL(11, 2)	NOT NULL,
-	[MonedaId]			CHAR(5)			NOT NULL, 
+	[MonedaId]			CHAR(5)			NULL, 
 	[Porcentaje]		DECIMAL(11, 2)	NOT NULL,
 	[TipoDBId]			INT				NOT NULL, 
 	[TipoPeriodoDBId]	INT				NOT NULL,

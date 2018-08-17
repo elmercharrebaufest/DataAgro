@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
                             FEHASTA = descBon.FechaHasta != null ? descBon.FechaHasta.Value.ToString("yyyy-MM-dd") : null,
                             IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = descBon.Moneda.MonedaId,
+                            MONEDA_DB = descBon.Moneda.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         }
                         );

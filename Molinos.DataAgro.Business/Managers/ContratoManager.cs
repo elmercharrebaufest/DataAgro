@@ -216,10 +216,15 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var oContratoSave = oContrato;
+            List<DescuentoBonificacion> descuentosExistentes = null;
+            List<Calidad> calidadesExistentes = null;
 
             if (oContrato.ContratoId != 0)
             {
                 oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+                descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.ContratoId);
+                calidadesExistentes = repositorio.Listar<Calidad>(x => x.ContratoId == oContrato.ContratoId);
+
                 if (oContratoSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
@@ -268,31 +273,36 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
 
-            if (oContratoSave.Descuentos != null)
+            if (descuentosExistentes != null)
             {
-                foreach (var descExistente in oContratoSave.Descuentos)
+                foreach (var descExistente in descuentosExistentes)
                 {
                     if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == descExistente.Id))
                     {
                         repositorio.Remover(descExistente);
                     }
                 }
-                
+            }
+            if (oContrato.Descuentos != null)
+            {
                 foreach (var descuento in oContrato.Descuentos.Where(x => x.Id == 0))
                 {
                     descuento.Contrato = oContratoSave;
                     repositorio.Agregar(descuento);
                 }
             }
-            if (oContratoSave.Calidad != null)
+            if (calidadesExistentes != null)
             {
-                foreach (var calidadExistente in oContratoSave.Calidad)
+                foreach (var calidadExistente in calidadesExistentes)
                 {
                     if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calidadExistente.Id))
                     {
                         repositorio.Remover(calidadExistente);
                     }
                 }
+            }
+            if (oContrato.Calidad != null)
+            {
                 foreach (var calidad in oContrato.Calidad.Where(x => x.Id == 0))
                 {
                     calidad.Contrato = oContratoSave;

@@ -4,10 +4,10 @@
 }
 
 <script>
-        contratoId = '@ViewBag.ContratoId';
-        fijacionId = '@ViewBag.FijacionId';
-        comercialId = '@ViewBag.ComercialId';
-        $.blockUI({ blockMsgClass: 'alertBox',message: '<h3>Cargando...</h3>' });
+    contratoId = '@ViewBag.ContratoId';
+    fijacionId = '@ViewBag.FijacionId';
+    comercialId = '@ViewBag.ComercialId';
+    BlockUi("Cargando...");
 </script>
 
 @section Scripts {
@@ -395,7 +395,7 @@
                     <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
                 <div class="col-sm-3 col-md-1">
-                    <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Ingresar</span>
+                    <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Agregar</span>
                 </div>
             </div>
 
@@ -419,8 +419,8 @@
                         <span>#: TipoDBDesc#</span>
                         <span data-bind="visible: TipoPeriodoDBId!=1"><br /><strong>Desde:</strong> #: FechaDesde#  </span>
                         <span data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta:</strong> #:FechaHasta#</span><br />
-                        <span><strong>Importe:</strong> #:Importe#</span>
-                        <span>#:MonedaId#</span>
+                        <span data-bind="visible: Importe!=0"><strong>Importe:</strong> #:Importe#</span>
+                        <span data-bind="visible: Importe!=0">#:MonedaId#</span>
                         <span><strong>Porc:</strong> #:Porcentaje#%</span>
                     </div>
                     <br /><br />
@@ -458,7 +458,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3 col-md-1">
-                    <span id="IngresarCalidad" class="k-button k-button-icontext" type="button">Ingresar</span>
+                    <span id="IngresarCalidad" class="k-button k-button-icontext" type="button">Agregar</span>
                 </div>
             </div>
             <div id="tabla-calidades" data-template="div-calidades-template" data-bind="source:Calidades">
@@ -482,7 +482,7 @@
         <div class="row">
             <div class="col-md-offset-2 col-md-4">
                 <span id="guardarBtn" class="formulario-footer-guardar-contrato k-button k-button-icontext" type="button">
-                    Generar Negocio
+                    Guardar Negocio
                 </span>
                 <span class="formulario-footer-cancelar k-button k-button-icontext" type="button">
                     Volver

@@ -550,3 +550,7 @@ function AddIncorectMessage(errores) {
     errores.push({ Message: "Datos incorrectos, verifique el mensaje de error en cada campo", Source: "" });
 
 }
+
+function BlockUi(mensaje) {
+    $.blockUI({ blockMsgClass: 'alertBox', message: '<h3>' + mensaje +'</h3>' });
+}

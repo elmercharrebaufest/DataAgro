@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.DirectoryServices;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -360,7 +361,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
                     
-                    oMensaje.AlternateViews.Add(GetEmbeddedImageContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, emailComercial));
+                    oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, emailComercial));
 
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
 
@@ -418,7 +419,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
 
-                    oMensaje.AlternateViews.Add(GetEmbeddedImageFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
+                    oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
 
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
                     
@@ -454,25 +455,27 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private AlternateView GetEmbeddedImageContrato(String filePath, Contrato oContrato, string emailComercial)
+        private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, string emailComercial)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
             htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
-            htmlBody += oContrato.Fecha.ToShortDateString() + ", ";
-            htmlBody += oContrato.Material.Descripcion + ", ";
+            htmlBody += oContrato.Fecha.ToShortDateString() + " - ";
+            htmlBody += oContrato.Material.Descripcion + " - ";
             htmlBody += "Contrato Nro: " + oContrato.ContratoSAP + "<br /> ";
-            htmlBody += "Vendedor: " + oContrato.Proveedor.RazonSocial + " (" + oContrato.Proveedor.CUIT + ") " + ", ";
+            htmlBody += oContrato.Proveedor.CUIT+ " - " + oContrato.Proveedor.RazonSocial + " - ";
             if (oContrato.ClasificacionId != null) htmlBody += oContrato.Clasificacion.Descripcion + "<br />";
-            if (oContrato.DestinoId != null) htmlBody += "Destino: " + oContrato.Destino.Descripcion + ", ";
-            htmlBody += "Kg: " + oContrato.Cantidad + " <br />  ";
-            if (oContrato.TipoNegocioId == 2) htmlBody += "Precio:" + oContrato.Precio + " " + oContrato.Moneda.Descripcion + "<br /> ";
-            if (oContrato.TipoNegocioId == 1) htmlBody += "A fijar " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
-            htmlBody += "Procedencia: " + oContrato.Localidad.Nombre + ", " + oContrato.Provincia.Nombre + "<br />  ";
-            htmlBody += "Fecha Desde: " + oContrato.FechaDesde.ToShortDateString() + ", Fecha Hasta: " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
-            htmlBody += "Cosecha: " + oContrato.Campana.Descripcion + ", ";
-            if (oContrato.BoletoId != null) htmlBody += "Boleto " + oContrato.Boleto.Descripcion + ", ";
+            if (oContrato.DestinoId != null) htmlBody += oContrato.Destino.Descripcion + " - ";
+            htmlBody += oContrato.Cantidad.ToString("N0",CultureInfo.CreateSpecificCulture("es-AR")) 
+                + " Kg." + " <br />  ";
+            if (oContrato.TipoNegocioId == 2) htmlBody += oContrato.Precio.ToString("N2",CultureInfo.CreateSpecificCulture("es-AR")) 
+                + " " + oContrato.Moneda.Descripcion + "<br /> ";
+            if (oContrato.TipoNegocioId == 1) htmlBody += "A fijar - " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
+            htmlBody += oContrato.Localidad.Nombre + " - " + oContrato.Provincia.Nombre + "<br />  ";
+            htmlBody += "Entrega Desde " + oContrato.FechaDesde.ToShortDateString() + " - Hasta " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
+            htmlBody += oContrato.Campana.Descripcion + " - ";
+            if (oContrato.BoletoId != null) htmlBody += "Boleto " + oContrato.Boleto.Descripcion + "  ";
             if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "<br />  ";
             if (oContrato.Observacion != null) htmlBody += oContrato.Observacion + "<br />  ";
 
@@ -485,20 +488,20 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
-        private AlternateView GetEmbeddedImageFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
+        private AlternateView CuerpoMailFijacion(String filePath, FijacionDePrecioContrato oFijacionDePrecioContrato, string emailComercial)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "";
-            htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
-            htmlBody +="Fecha: " + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "<br /> ";
-            htmlBody += "Material: " + oFijacionDePrecioContrato.Material.Descripcion + "<br /> ";
-            htmlBody += "Contrato Nro: " + oFijacionDePrecioContrato.ContratoId + " <br />";
-            htmlBody += "Vendedor: " + oFijacionDePrecioContrato.Proveedor.RazonSocial +"(" + oFijacionDePrecioContrato.Proveedor.CUIT + ") <br /> ";
-            if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null) htmlBody += "Clasificacion: " + oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + " <br />";
-            htmlBody += "Kg: " + oFijacionDePrecioContrato.Cantidad + " <br />";
-            htmlBody += "Precio: " + oFijacionDePrecioContrato.Precio + " " + oFijacionDePrecioContrato.Moneda.Descripcion + " <br /> <br />";
-            htmlBody += "Cosecha: " + oFijacionDePrecioContrato.Material.Campaña.Descripcion + " ";
+            htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
+            htmlBody += oFijacionDePrecioContrato.Fecha.ToShortDateString() + "<br />";
+            htmlBody += oFijacionDePrecioContrato.Material.Descripcion + "<br />";
+            htmlBody += oFijacionDePrecioContrato.ContratoId + "<br />";
+            htmlBody += oFijacionDePrecioContrato.Proveedor.CUIT + " - " + oFijacionDePrecioContrato.Proveedor.RazonSocial + "<br />";
+            if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null) htmlBody += oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + " <br />";
+            htmlBody += oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
+            htmlBody += oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + oFijacionDePrecioContrato.Moneda.Descripcion + "<br />";
+            htmlBody += oFijacionDePrecioContrato.Material.Campaña.Descripcion + " ";
 
             htmlBody += "<br />  Por consultas, contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
