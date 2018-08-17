@@ -143,7 +143,7 @@
         
     </div>
     <div class="row r-relative">
-        <div class="col-lg-3 absoluto-mt20">
+        <div class="col-md-3 absoluto-mt20">
             <div class="col-lg-2 mostrar-filtro">
                 <span class="">Mostrar filtro +</span>
             </div>
@@ -242,10 +242,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-9 lista-contactos-general">
-        </div>
-        <div>
-            <span id="verMasContactos" onclick="TraerSiguiente()" class="k-button k-button-icontext" type="button" style="display:none">Ver Más</span>
+        <div class="col-md-7">
+            <div class="lista-contactos-general"></div>
+            <div class="text-center">
+                <button id="verMasContactos" onclick="TraerSiguiente()" class="k-button k-button-icontext" type="button" style="display:none">Ver Más </button>
+                <div id="cargandoContactos" class="lds-roller" style="display:none"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
         </div>
     </div>
 </div>

@@ -454,7 +454,8 @@ function setChangeChecks() {
 function TraerSiguiente() {
     pagina += 1;
     filtro.pagina = pagina
-
+    $("#verMasContactos").hide();
+    $("#cargandoContactos").show();
     function callback (result) {
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
@@ -465,6 +466,8 @@ function TraerSiguiente() {
                 ArmarContactos(conts);
             }
         }
+        $("#cargandoContactos").hide();
+        $("#verMasContactos").show();
     }
     var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
 
