@@ -1212,13 +1212,13 @@ function GrabarContrato(nuevoContrato) {
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
-            $.blockUI();
+            $.unblockUI();
         }
         else {
             window.location.href = window.location.origin + "/CompraNet";
         }
     }
-    $.blockUI();
+    $.unblockUI();
 }
 
 function armarBusquedaResultProveedor() {
