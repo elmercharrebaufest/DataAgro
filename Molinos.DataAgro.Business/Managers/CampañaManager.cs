@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Business
 
         public List<CampañaDto> TraerCampañaPorMaterial(int materialId)
         {
-            return repositorio.Listar<Material, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
+            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)
