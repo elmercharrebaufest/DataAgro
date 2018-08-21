@@ -18,9 +18,9 @@ namespace Molinos.DataAgro.Interfaces
 
         List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId);
 
-        List<ContactoIni> ExportarContactos(List<int> Ids, string idActiveDirectory);
+        List<ContactoIni> ExportarContactos(oParamBusqueda oParam, string idActiveDirectory);
 
-        ExportAll ExportarAll(List<int> Ids, string idActiveDirectory);
+        ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory);
 
         PostItDto TraerTexto(int idComercial);
 

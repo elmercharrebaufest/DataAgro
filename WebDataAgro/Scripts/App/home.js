@@ -183,9 +183,7 @@ function armarCarouselHome() {
     $("#carouselHome").carousel({ interval: false });
 }
 
-function updateFiltro(estado) {
-
-    $(".lista-contactos-general").empty();
+function generarFiltro(estado) {
     filtro = {};
 
     if ($("#filtro-zonaselect").val() && $("#filtro-zonaselect").val() != "null")
@@ -290,6 +288,13 @@ function updateFiltro(estado) {
     }
     filtro.pagina = 1;
     filtro.Estado = estado;
+    return filtro;
+}
+
+function updateFiltro(estado) {
+
+    $(".lista-contactos-general").empty();
+    var filtro = generarFiltro(estado);
     pagina = 1;
     var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro);
 
@@ -312,6 +317,15 @@ function actualizarContactos(contactos) {
     $(".cont-op").html(contactos.TotalOperandoContactos);
     $(".cont-no-op").html(contactos.TotalNoOperandoContactos);
     $(".cont-baj").html(contactos.TotalBajaContactos);
+}
+
+function ObtenerEstadoActual() {
+    return $(".cont-agend-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? null :
+        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 : 
+            $(".cont-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 2 :
+                $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 : 
+                    $(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 4 : 
+                        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 5 : null
 }
 
 function ArmarCabeceraContactos() {
@@ -447,7 +461,7 @@ function ArmarContactos(contactos) {
 
 function setChangeChecks() {
     $('div :input').change(function () {
-        updateFiltro();
+        updateFiltro(ObtenerEstadoActual());
     });
 }
 
@@ -713,68 +727,17 @@ function armarFunciones() {
 }
 
 function exportar(value) {
-    var arrayIds = [];
-    if ($(".cont-agend-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        for (var ii in conts) {
-            (function (i) {
-                arrayIds.push(conts[i].ProveedorId);
-            })(ii);
-        }
-    } else if ($(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "cliente potencial" }).concat();
-        for (var ii in arrAux) {
-            (function (i) {
-                arrayIds.push(arrAux[i].ProveedorId);
-            })(ii);
-        }
-    } else if ($(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "sin interés de operar" }).concat();
-        for (var ii in arrAux) {
-            (function (i) {
-                arrayIds.push(arrAux[i].ProveedorId);
-            })(ii);
-        }
-    } else if ($(".cont-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "operando" }).concat();
-        for (var ii in arrAux) {
-            (function (i) {
-                arrayIds.push(arrAux[i].ProveedorId);
-            })(ii);
-        }
-    } else if ($(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "no operando" }).concat();
-        for (var ii in arrAux) {
-            (function (i) {
-                arrayIds.push(arrAux[i].ProveedorId);
-            })(ii);
-        }
-    } else if ($(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected")) {
-        var arrAux = conts.filter(function (x) { return x.Estado.toLowerCase() == "baja" }).concat();
-        for (var ii in arrAux) {
-            (function (i) {
-                arrayIds.push(arrAux[i].ProveedorId);
-            })(ii);
-        }
-    } else {
-        for (var ii in conts) {
-            (function (i) {
-                arrayIds.push(conts[i].ProveedorId);
-            })(ii);
-        }
-    }
 
-    var param = {
-        "Ids": arrayIds.join(","),
-    };
+    var filtro = generarFiltro(ObtenerEstadoActual());
 
     if (value == 0) {
-        DescargarPDF(param);
+        DescargarPDF(filtro);
     }
     else if (value == 1) {
-        DescargarExcel(param);
+        DescargarExcel(filtro);
     }
     else {
-        DescargarExportAll(param);
+        DescargarExportAll(filtro);
     }
 }
 

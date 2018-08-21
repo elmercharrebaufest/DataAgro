@@ -463,7 +463,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody = "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             htmlBody += oContrato.Fecha.ToShortDateString() + " - ";
             htmlBody += oContrato.Material.Descripcion + " - ";
-            htmlBody += "Contrato Nro: " + oContrato.ContratoSAP + "<br /> ";
+            htmlBody += "Contrato Nro " + oContrato.ContratoSAP + "<br /> ";
             htmlBody += oContrato.Proveedor.CUIT+ " - " + oContrato.Proveedor.RazonSocial + " - ";
             if (oContrato.ClasificacionId != null) htmlBody += oContrato.Clasificacion.Descripcion + "<br />";
             if (oContrato.DestinoId != null) htmlBody += oContrato.Destino.Descripcion + " - ";
@@ -476,7 +476,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "Entrega Desde " + oContrato.FechaDesde.ToShortDateString() + " - Hasta " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
             htmlBody += oContrato.Campana.Descripcion + " - ";
             if (oContrato.BoletoId != null) htmlBody += "Boleto " + oContrato.Boleto.Descripcion + "  ";
-            if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "<br />  ";
+            if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "<br /> <br /> ";
             if (oContrato.Observacion != null) htmlBody += oContrato.Observacion + "<br />  ";
 
             htmlBody += "<br /><br />  Por consultas, contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
@@ -1004,7 +1004,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var oProveedorSave = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
 
-                var clasificacion = oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any() ? 1 : oParam.almacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento.Any() ? 2 : (int?)null;
+                var clasificacion = oParam.basicos.ClasificacionCompraNet != null? oParam.basicos.ClasificacionCompraNet : (oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any()) ? 1 : (oParam.almacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento.Any()) ? 2 : oProveedorSave.ClasificacionCompraNetId;
                 oProveedorSave.AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null;
                 oProveedorSave.AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns;
                 oProveedorSave.AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust;
@@ -1018,7 +1018,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.LocalidadId = oParam.contacto.localidad;
                 oProveedorSave.ProvinciaId = oParam.contacto.provincia;
                 oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? Convert.ToInt32(oParam.contacto.areaDeInfluencia) : (int?)null;
-                oProveedorSave.ClasificacionCompraNetId = oParam.basicos.ClasificacionCompraNet == 3 ? 3 : clasificacion;
+                oProveedorSave.ClasificacionCompraNetId = clasificacion;
                 oProveedorSave.BoletoCompraNetId = oParam.basicos.BoletoCompraNet;
                 oProveedorSave.BolsaCompraNetId = oParam.basicos.BolsaCompraNet;
                 oProveedorSave.LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet;
@@ -1493,22 +1493,19 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var cam in oCampoSave)
                 {
-                    if ((oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion != null) || oParam.produccion.CamposProduccion == null)
+                    if ((oParam.produccion.CamposProduccion != null && !oParam.produccion.CamposProduccion.Any(x => x.CampoId == cam.CampoId)) || oParam.produccion.CamposProduccion == null)                        
                     {
-                        if (!oParam.produccion.CamposProduccion.Any(x => x.CampoId == cam.CampoId))
-                        {
-                            var oCampoEliminar = repositorio.Listar<CampoMaterial>(x => x.CampoId == oParam.produccion.CampoId);
-
-                            foreach (var campmat in oCampoEliminar)
-                            {
-                                if (!oParam.produccion.objetivos.Any(x => x.campañaId == campmat.CampañaId && x.granoId == campmat.MaterialId))
-                                {
-                                    repositorio.Remover(campmat);
-                                }
-                            }
-                            repositorio.Remover(cam);
-                        }
-                    }
+                           var oCampoEliminar = repositorio.Listar<CampoMaterial>(x => x.CampoId == oParam.produccion.CampoId);
+                           foreach (var campmat in oCampoEliminar)
+                           {
+                               if (!oParam.produccion.objetivos.Any(x => x.campañaId == campmat.CampañaId && x.granoId == campmat.MaterialId))
+                               {
+                                   repositorio.Remover(campmat);
+                               }
+                           }
+                           repositorio.Remover(cam);
+                        
+                    }                   
                 }
                 #endregion
 

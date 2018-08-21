@@ -241,14 +241,18 @@ namespace Molinos.DataAgro.Business.Managers
             return list;
         }
 
-        public List<ContactoIni> ExportarContactos(List<int> Ids, string idActiveDirectory)
+        public List<ContactoIni> ExportarContactos(oParamBusqueda oParam, string idActiveDirectory)
         {
 
             var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
 
             if (oComerciales != null)
             {
-                var Contactos = repositorio.SelStore<Contactos>("DataAgro_Contactos_Exportar", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
+                var ids = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
+                oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId).ToList(); ;
+
+                var Contactos = repositorio.SelStore<Contactos>("DataAgro_Contactos_Exportar", 0, string.Join(",", ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
 
                 var aux = DevolverContactosIni(Contactos);
 
@@ -269,7 +273,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return new List<ContactoIni>();
         }
 
-        public ExportAll ExportarAll(List<int> Ids, string idActiveDirectory)
+        public ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory)
         {
             ExportAll exp = new ExportAll();
 
@@ -277,19 +281,24 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oComerciales != null)
             {
-                exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
+                var ids = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
+                oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId.ToString()).ToArray(); ;
+                var idsStr = string.Join(",", ids);
 
-                exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, oComerciales.ComercialId);
 
-                exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);
 
-                exp.produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, idsStr);
 
-                exp.almacenamiento = repositorio.SelStore<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, idsStr);
 
-                exp.agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.almacenamiento = repositorio.SelStore<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", 0, idsStr);
 
-                exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, string.Join(",", Ids.Select(n => n.ToString()).ToArray()));
+                exp.agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, idsStr);
+
+                exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
 
                 return exp;
             }

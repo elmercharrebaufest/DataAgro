@@ -145,16 +145,13 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public ActionResult ExportarContactosPDF(string Ids)
+        public ActionResult ExportarContactosPDF(oParamBusqueda filtro)
         {
-
-            List<int> ides = new List<int>();
-
-            Ids.Split(',').ToList().ForEach(x => ides.Add((Convert.ToInt32(x))));
-
             var model = new ReportesModel();
+            filtro.ComercialId = GlobalVariables.ComercialId;
+            filtro.Equipo = GlobalVariables.EquipoReal;
 
-            var datos = mobjHomeManager.ExportarContactos(ides, GlobalVariables.IdActiveDirectory);
+            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory);
 
             var oLstContacto = new LstContacto(reportesManager);
 
@@ -166,16 +163,12 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public ActionResult ExportarContactosExcel(string Ids)
+        public ActionResult ExportarContactosExcel(oParamBusqueda filtro)
         {
-
-            List<int> ides = new List<int>();
-
-            Ids.Split(',').ToList().ForEach(x => ides.Add((Convert.ToInt32(x))));
-
             var model = new ReportesModel();
-
-            var datos = mobjHomeManager.ExportarContactos(ides, GlobalVariables.IdActiveDirectory);
+            filtro.ComercialId = GlobalVariables.ComercialId;
+            filtro.Equipo = GlobalVariables.EquipoReal;
+            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory);
 
             var oLstContacto = new LstContacto(reportesManager);
 
@@ -186,16 +179,12 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
-        public ActionResult ExportarAll(string Ids)
+        public ActionResult ExportarAll(oParamBusqueda filtro)
         {
-
-            List<int> ides = new List<int>();
-
-            Ids.Split(',').ToList().ForEach(x => ides.Add((Convert.ToInt32(x))));
-
             var model = new ReportesModel();
-
-            var datos = mobjHomeManager.ExportarAll(ides, GlobalVariables.IdActiveDirectory);
+            filtro.ComercialId = GlobalVariables.ComercialId;
+            filtro.Equipo = GlobalVariables.EquipoReal;
+            var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory);
 
             var oLstContacto = new LstContacto(reportesManager);
 
