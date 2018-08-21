@@ -476,8 +476,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "Entrega Desde " + oContrato.FechaDesde.ToShortDateString() + " - Hasta " + oContrato.FechaHasta.ToShortDateString() + "<br />  ";
             htmlBody += oContrato.Campana.Descripcion + " - ";
             if (oContrato.BoletoId != null) htmlBody += "Boleto " + oContrato.Boleto.Descripcion + "  ";
-            if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "<br /> <br /> ";
-            if (oContrato.Observacion != null) htmlBody += oContrato.Observacion + "<br />  ";
+            if (oContrato.BoletoId != 3) htmlBody += oContrato.Bolsa.Descripcion + "  <br />  ";
+            if (oContrato.Observacion != null) htmlBody += oContrato.Observacion + "  <br />  ";
 
             htmlBody += "<br /><br />  Por consultas, contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +

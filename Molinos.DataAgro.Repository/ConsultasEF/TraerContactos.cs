@@ -9,18 +9,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerContactos : IConsulta<Contactos>
     {
-        private readonly List<int> equipo;
+        private readonly oParamBusqueda oParam;
 
-        public TraerContactos(List<int> equipo)
+        public TraerContactos(oParamBusqueda oParam)
         {
-            this.equipo = equipo;
+            this.oParam = oParam;
         }
 
-        private static List<Contactos> Query(DbContext contexto, List<int> equipo)
+        private static List<Contactos> Query(DbContext contexto, oParamBusqueda oParam)
         {
+            var campanias = string.IsNullOrEmpty(oParam.Campaña) ? oParam.Campaña.Split('|') : null;
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            var proveedorEstados = contexto.Set<ProveedorEstado>().Where(x => equipo.Contains(x.Comercial.ComercialId)).GroupBy(x => x.Proveedor)
+            var proveedorEstados = contexto.Set<ProveedorEstado>().Where(x => oParam.Equipo.Contains(x.Comercial.ComercialId)).GroupBy(x => x.Proveedor)
                 .Select(x => x.FirstOrDefault(r => r.Estado.EstadoId == 4) ?? x.FirstOrDefault(r => r.Estado.EstadoId == 5) ?? x.FirstOrDefault(r => r.Estado.EstadoId == 1) ?? x.FirstOrDefault(r => r.Estado.EstadoId == 2) ?? x.FirstOrDefault(r => r.Estado.EstadoId == 3) ?? new ProveedorEstado { Proveedor = x.Key, Estado = contexto.Set<Estado>().FirstOrDefault(r => r.EstadoId == 1) });
 
             var resultado =
@@ -61,7 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, equipo);
+                return Query(contexto, oParam);
             }
         }
     }

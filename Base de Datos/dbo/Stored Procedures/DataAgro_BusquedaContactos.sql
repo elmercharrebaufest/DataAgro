@@ -75,9 +75,6 @@ and (( @PeriodoDeTiempo is null) or (@PeriodoDeTiempo= '0' and cam.CampañaId is
 and (( @Segmentacion is null) or (@Segmentacion= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
 
-and (( @EstadoDelContacto is null) or (@EstadoDelContacto= '0' and p.EstadoId is not null) 
-	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = p.EstadoId)))
-
 and (( @Condicion is null) or (@Condicion= '0' and pcc.CondicionId is not null) 
 	or (exists ( select 1 from @CondicionSecuencia where Item = pcc.CondicionId)))
 
@@ -191,4 +188,5 @@ left join FACACOP fc on p.CUIT = fc.CUIT
 /*left join RG2300 rg on p.CUIT = rg.CUIT*/
 LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId AND CC.EsPrincipal = 1
 where exists (select 1 from @Proveedores where Item= p.ProveedorId)
-
+and (( @EstadoDelContacto is null)
+	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = pee.EstadoId)))

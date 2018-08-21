@@ -33,15 +33,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 50, pagina, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).OrderBy(x=>x.RazonSocial);
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
 
-            res.Contactos = DevolverContactosIni(query.ToList());
-            res.TotalContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId));
-            res.TotalPotencialContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 1);
-            res.TotalOperandoContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 2);
-            res.TotalNoOperandoContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 3);
-            res.TotalBajaContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 4);
-            res.TotalSinInteresContactos = repositorio.Contar<ProveedorComercial>(x => oParam.Equipo.Contains(x.ComercialId) && x.Proveedor.Estado.EstadoId == 5);
+            res.Contactos = DevolverContactosIni(query);
+
+            oParam.Estado = null;
+            var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
+                oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
+                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
+
+            res.TotalContactos = queryPorEstado.Count();
+            res.TotalPotencialContactos = queryPorEstado.Count(x => x.Estado == "Cliente Potencial");
+            res.TotalOperandoContactos = queryPorEstado.Count(x => x.Estado == "Operando");
+            res.TotalNoOperandoContactos = queryPorEstado.Count(x => x.Estado == "No operando");
+            res.TotalBajaContactos = queryPorEstado.Count(x => x.Estado == "Baja");
+            res.TotalSinInteresContactos = queryPorEstado.Count(x => x.Estado == "Sin interés de operar");
+            
             return res;
         }
 

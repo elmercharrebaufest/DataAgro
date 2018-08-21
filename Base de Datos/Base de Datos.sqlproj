@@ -152,7 +152,6 @@
     <Build Include="dbo\Stored Procedures\DataAgro_ObjetivosTraerPorProveedorId.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_AcopioMaterialPorProveedorId.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaHome.sql" />
-    <Build Include="dbo\Stored Procedures\DataAgro_TraerContactos.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaContactos.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ReporteProveedor.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_ContactosComercialesTraerPorProveedorId.sql" />
