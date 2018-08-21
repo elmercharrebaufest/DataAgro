@@ -253,7 +253,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
             oContratoSave.TrigoEspecial = oContrato.TrigoEspecial;
-            oContratoSave.Estado = oContrato.Estado;
+            oContratoSave.EstadoId = oContrato.EstadoId;
             oContratoSave.UsuarioId = oContrato.UsuarioId;
             oContratoSave.Ampliaciones = oContrato.Ampliaciones;
             oContratoSave.Observacion = oContrato.Observacion;

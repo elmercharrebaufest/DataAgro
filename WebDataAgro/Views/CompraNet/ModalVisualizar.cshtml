@@ -156,12 +156,12 @@
                             </div>
                             <script id="div-template-visualizar" type="text/x-kendo-template">
                                 <div class="row marginCero campo campoAdicionales">
-                                    <span style="float:left;"><strong> Descuentos #: TipoPeriodoDBDesc#:</strong></span>
+                                    <span style="float:left;"><strong> Descuentos y Bonificaciones #: TipoPeriodoDBDesc#:</strong></span>
                                     <span style="float:right; margin-left:10px;">#: TipoDBDesc#</span><br />
                                     <span style="float:left;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Desde:</strong> #: FechaDesde#&nbsp; </span>
                                     <span style="float:left; margin-right:10px;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta:</strong> #:FechaHasta#</span>
-                                    <span style="float:none;display:inline-block; margin-left:30px;"><strong>Importe: </strong>#:Importe# #:MonedaId#</span>
-                                    <span style="float:none;display:inline-block; margin-left:10px;"><strong>Porc:</strong> #:Porcentaje#%</span>
+                                    <span style="float:none;display:inline-block; margin-left:30px;"data-bind="visible: Importe!=0"><strong>Importe: </strong>#:Importe# #:MonedaId#</span>
+                                    <span style="float:none;display:inline-block; margin-left:10px;" data-bind="visible: Porcentaje!=0"><strong>Porc:</strong> #:Porcentaje#%</span>
                                 </div>
                             </script>
                         </div>
@@ -175,7 +175,7 @@
                         <span id="visualizar_condicionFijacion" class="centrar"></span>
                     </div>
                     <div id="calidadesDivVisualizar" class="row marginCero clearfix col-xs-12 campo campoAdicionales noPadding noFijacion">
-                        <div style="float:left;position:fixed"><strong>Calidad </strong></div>
+                        <div style="float:left;position:fixed"><strong>Calidad &nbsp;<span id="TipoCalidad"> </span></strong></div>
                         <div id="tabla-calidades-visualizar" data-template="div-calidades-visualizar-template" data-bind="source:CalidadesVisualizar">
                             <div></div>
                             <div></div>

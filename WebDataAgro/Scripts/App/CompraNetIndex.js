@@ -139,7 +139,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
         "'" + dataItem.Dias_Pesificado + "'" + ',' +
         "'" + dataItem.NoInformaSIO + "'" + ',' +
-        "'" + dataItem.TrigoEspecial + "'" + ',' +
+        "'" + dataItem.CalidadDescripcion + "'" + ',' +
         "'" + dataItem.Estado + "'" + ',' +
         "'" + htmlEncode(dataItem.Observacion) + "'" + ',' +
         "'" + dataItem.Moneda + "'" + ',' +
@@ -153,9 +153,6 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CD + "'" + ',' +
         "'" + dataItem.Warrant + "'" + ',' +
         "'" + dataItem.PagoDirectoVendedor + "'" + ',' +
-        "'" + dataItem.StandardDeCalidad + "'" + ',' +
-        "'" + dataItem.CalidadEspecial + "'" + ',' +
-        "'" + dataItem.ValorCalidadEspecial + "'" + ',' +
         "'" + dataItem.EstablecimientoPropio + "'" + ',' +
         "'" + dataItem.BoletoId + "'" + ',' +
         "'" + dataItem.BolsaId + "'" + ',' +
@@ -770,7 +767,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, standardDeCalidadId, calidadEspecialId, valorCalidadEspecial, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion) {
+function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion) {
     $("#modalVisualizar").modal('show');
     if (tipo === "FIJACION") {
         $(".noFijacion").hide();
@@ -834,7 +831,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     (informaSIO === "true") ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
-    (trigoEspecial === "true") ? $("#visualizar_trigoEspecial").text("Si") : $("#visualizar_trigoEspecial").text("null");
+    $("#visualizar_trigoEspecial").text("null");
     (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     (boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
     
@@ -842,8 +839,8 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
     } else {
-        $("#visualizar_desdeHastaFijacion").val(desdeHastaFijacion);
-        $("#visualizar_condicionFijacion").val(condicionFijacionDescripcion);
+        $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
+        $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
     }
 
     (planCanje === "true") ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");
@@ -890,7 +887,8 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     var iteracionesCalidades = viewModel.CalidadesVisualizar.length;
     for (var i = 0; i < iteracionesCalidades; i++) {
         viewModel.CalidadesVisualizar.pop();
-    } 
+    }
+    $("#TipoCalidad").text(trigoEspecial)
     var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
 
     $.each(calidadesDto, function (key, calidad) {

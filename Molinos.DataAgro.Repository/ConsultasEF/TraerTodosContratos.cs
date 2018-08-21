@@ -54,8 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Moneda_Sustentable = contrato.MonedaSustentable == null ? "" : contrato.MonedaSustentable.Descripcion,
                     Fecha_Dolarizado = DbFunctions.TruncateTime(contrato.FechaDolarizado),
                     Dias_Pesificado = contrato.DiasPesificado,
-                    NoInformaSIO = contrato.NoInformaSio,
-                    TrigoEspecial = contrato.TrigoEspecial,
+                    NoInformaSIO = contrato.NoInformaSio,                    
                     Estado = contrato.EstadoId,
                     Estado_Contrato = contrato.Estado.Descripcion,
                     Estado_Order = contrato.Estado.Orden,
@@ -96,6 +95,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CondicionFijacionDescripcion = contrato.CondicionFijacion.Descripcion,
                     ClasificacionId = contrato.ClasificacionId,
                     ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
+                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara"
                 };
 
             var queryFijacion =
@@ -128,7 +128,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Fecha_Dolarizado = null,
                     Dias_Pesificado = null,
                     NoInformaSIO = null,
-                    TrigoEspecial = null,
                     Estado = fijac.EstadoId,
                     Estado_Contrato = fijac.Estado.Descripcion,
                     Estado_Order = fijac.Estado.Orden,
@@ -167,7 +166,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CondicionFijacion = null,
                     CondicionFijacionDescripcion = "",
                     ClasificacionId = null,
-                    ClasificacionDescripcion = ""
+                    ClasificacionDescripcion = "",
+                    CalidadDescripcion =""
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);

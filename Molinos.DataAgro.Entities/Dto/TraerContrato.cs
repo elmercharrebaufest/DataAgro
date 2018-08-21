@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CD { get; set; }
         public bool? Warrant { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
-        public decimal? ValorCalidadEspecial { get; set; }
+        public string CalidadDescripcion { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }

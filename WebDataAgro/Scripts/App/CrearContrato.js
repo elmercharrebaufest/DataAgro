@@ -153,7 +153,7 @@ function InicializarElementos() {
                 $("#fechaHastaContratoDiv").show();
                 $("#campanaDiv").show();
                 $("#procedenciaDiv").show();
-                $("#provinciaId").data("kendoDropDownList").trigger("change");
+                obtenerLocalidadProvincia();
                 $("#clasificacionDiv").show();
                 $("#destinoDiv").show();
                 $("#CantidadCamionesDiv").show();
@@ -571,7 +571,6 @@ function InicializarElementos() {
     });
 
     $("#fechaOperacionId").kendoDatePicker({
-        value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
@@ -594,7 +593,7 @@ function InicializarElementos() {
 
     $("#fechaDesdeId").val(date);
     $("#fechaHastaId").val(datehasta);
-    $("#fechaOperacionId").val(date);
+    $("#fechaOperacionId").val();
 
     $(".formulario-footer-guardar-contrato").click(function () {
         ObtenerDatos();
@@ -1132,6 +1131,13 @@ function ObtenerDatos() {
     BlockUi("Guardando...");
     var obj = {};
 
+    var hoy = new Date();
+    var anio = hoy.getFullYear();
+    var mes = hoy.getMonth();
+    var dia = hoy.getDate();
+    var hora = hoy.getHours();
+    var minuto = hoy.getMinutes();
+    
     var proveedorId;  
     obj.ContratoId = contratoId == undefined ? 0 : contratoId;
     obj.FijacionDePrecioContratoId = fijacionId == undefined ? 0 : fijacionId;
@@ -1144,7 +1150,7 @@ function ObtenerDatos() {
     obj.FechaDesde = $("#fechaDesdeId").val();
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
-    obj.Fecha = $("#fechaOperacionId").val();
+    obj.Fecha = $("#fechaOperacionId").val() == "" ? hoy : $("#fechaOperacionId").val();
     obj.ComercialId = $("#comercialId").val();
     obj.ProvinciaId = $("#provinciaId").val();
     obj.LocalidadId = $("#LocalidadId").val();
@@ -1361,7 +1367,7 @@ function validarDescuento(descuento) {
     if (descuento.TipoDBId === 0 || descuento.TipoDBId === null || descuento.TipoDBId === "") {
         errores.push("El campo Tipo no puede estar vacíos");
     }
-    if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == "Undefined" || descuento.FechaHasta == "" || descuento.FechaHasta == "Undefined")) {
+    if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == undefined || descuento.FechaHasta == "" || descuento.FechaHasta == undefined)) {
         errores.push("La fecha no puede estar vacía");
     }
     var fechaD = kendo.parseDate(descuento.FechaDesde, "dd-MM-yyyy");
@@ -1372,7 +1378,7 @@ function validarDescuento(descuento) {
     if (descuento.Importe == 0 && descuento.Porcentaje == 0) {
         errores.push("El campo Importe y Porcentaje no pueden estar vacíos");
     }
-    if ((descuento.Importe !== 0 ) && (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId === "Undefined")) {
+    if (descuento.Importe !== 0 && (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId === undefined || descuento.MonedaId === "")) {
         errores.push("El campo Moneda no puede estar vacío");
     }
     return errores
