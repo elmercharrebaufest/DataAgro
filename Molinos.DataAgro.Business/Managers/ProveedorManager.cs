@@ -687,17 +687,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEstados = repositorio.Listar<Estado>();
             if (ConfigurationManager.AppSettings["SinConexionSap"].ToString() != "1")
             {
-                var listaDeCuit = repositorio.SelStore<Datos>("DataAgro_ActualizarComercialHome", 0, comercial.ComercialId).Where(x => x.CUIT == oParam.basicos.cuit).ToList();
-
-                if (listaDeCuit.Any() && ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && idActiveDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
-                {
-                    foreach(var x in listaDeCuit)
-                    {
-                        x.UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
-                    }
-                }
-
-                var list = new DatosProveedor(logger).ObtenerDatosDeProveedor(listaDeCuit);
+                var list = new DatosProveedor(logger).ObtenerDatosDeProveedor(new List<Datos> { new Datos { CUIT = oParam.basicos.cuit, UsuarioDirectory = idActiveDirectory } });
 
                 if (list.Count > 0)
                 {
