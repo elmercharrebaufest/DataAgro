@@ -2381,7 +2381,7 @@ function GrabarProveedor(nuevoProveedor) {
     var result = MSExecuteOnServer('/Proveedor/GrabarProveedor', nuevoProveedor);
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
-            MensErr(result.Errores.ListaErrores[0].Message);
+            MensErr(result.Errores[0].Message);
         }
         else {
             MensInfo("Se ha realizado la operacion con exito");

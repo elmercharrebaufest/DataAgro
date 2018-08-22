@@ -1134,22 +1134,28 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var ErrorCanal = UpdateCanalOperacion(oParam);
-                if (ErrorCanal != null)
+                if (ErrorCanal.HayErrores)
+                {
                     return ErrorCanal;
-
+                }
 
                 var ErrorDestinatario = UpdateDestinatario(oParam);
-                if (ErrorDestinatario != null)
+                if (ErrorDestinatario.HayErrores)
+                {
                     return ErrorDestinatario;
-
+                }
 
                 var ErrorCondicion = UpdateCondicion(oParam);
-                if (ErrorCondicion != null)
+                if (ErrorCondicion.HayErrores)
+                {
                     return ErrorCondicion;
+                }
 
                 var ErrorObjetivos = UpdateObjetivos(oParam);
-                if (ErrorObjetivos != null)
+                if (ErrorObjetivos.HayErrores)
+                {
                     return ErrorObjetivos;
+                }
             }
             catch (Exception ex)
             {
@@ -1184,7 +1190,8 @@ namespace Molinos.DataAgro.Business.Managers
                         repositorio.Agregar(new ProveedorCanalOperacion()
                         {
                             NroItem = "1",
-                            ProveedorId = (int)oParam.ProveedorId
+                            ProveedorId = (int)oParam.ProveedorId,
+                            CanalOperacionId = can
                         });
                     }
                 }
@@ -1201,9 +1208,8 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new GrabarProveedorResult();
             try
             {
-                var oDestinatarioSave = repositorio.Listar<ProveedorDestinatario>();
-
-
+                var oDestinatarioSave = repositorio.Listar<ProveedorDestinatario>(x => x.ProveedorId == oParam.ProveedorId);
+                
                 #region Eliminar
 
                 foreach (var dest in oDestinatarioSave)
@@ -1222,7 +1228,8 @@ namespace Molinos.DataAgro.Business.Managers
                         repositorio.Agregar(new ProveedorDestinatario()
                         {
                             NroItem = 1,
-                            ProveedorId = (int)oParam.ProveedorId
+                            ProveedorId = (int)oParam.ProveedorId,
+                            DestinatarioId = can
                         });
                     }
                 }
@@ -1273,7 +1280,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 resultado.Error("", ex.Message);
             }
-            return null;
+            return resultado;
         }
 
         public GrabarProveedorResult UpdateObjetivos(NuevoProveedor oParam)
@@ -1327,9 +1334,9 @@ namespace Molinos.DataAgro.Business.Managers
                     camp.ToneladasObjetivos = Convert.ToDouble(mod.toneladasObjetivo);
                 }
             }
-            
+
             #endregion
-            return null;
+            return new GrabarProveedorResult();
 
         }
 
@@ -1339,7 +1346,6 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var oContactoSave = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId);
-                var proveedor = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
                 #region Eliminar
 
                 foreach (var can in oContactoSave)
@@ -1367,7 +1373,6 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var contacto = new ContactoComercial()
                             {
-                                Proveedor = proveedor,
                                 Nombres = can.nombre,
                                 Apellido = can.apellido,
                                 Cargo = can.cargo,
@@ -1383,7 +1388,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoTelefono3Id = can.telefonos[2].tipoTelefono,
                                 Email1 = can.emails[0],
                                 Email2 = can.emails[1],
-                                Email3 = can.emails[2]
+                                Email3 = can.emails[2],
+                                ProveedorId = (int)oParam.ProveedorId
                             };
                             repositorio.Agregar(contacto);
 
@@ -1413,7 +1419,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var mod = oParam.contactocomercial.Where(x => x.contactoComercialId == con.ContactoComercialId).First();
                         con.Apellido = mod.apellido;
                         con.Nombres = mod.nombre;
-                        con.Proveedor = proveedor;
+                        con.ProveedorId = (int)oParam.ProveedorId;
                         con.OtrosIntereses = mod.otrosIntereses;
                         con.Puesto = mod.puesto;
                         con.Telefono1 = mod.telefonos[0].telefono;
