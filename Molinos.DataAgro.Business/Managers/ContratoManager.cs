@@ -366,17 +366,15 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
-                repositorio.GuardarCambios();
                 try
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x=>x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
-                    oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
-
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                    repositorio.GuardarCambios();
+
                     try
                     {
                         oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
@@ -390,17 +388,18 @@ namespace Molinos.DataAgro.Business.Managers
                     try
                     {
                         //Envio de mail
-                        mobjProveedorManager.EnviarEmail(oContratoSave, idActiveDirectory);
+                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
                     }
                     catch (Exception e)
                     {
                         logger.Error(e);
                     }
 
-                    repositorio.GuardarCambios();
                 }
                 catch (Exception e)
                 {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                    repositorio.GuardarCambios();
                     logger.Error(e);
                     oEntityErrors.Error("", e.Message);
                 }

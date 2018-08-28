@@ -43,6 +43,6 @@ namespace Molinos.DataAgro.Interfaces
 
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
 
-        void EnviarEmail(Contrato oContrato, string idActiveDirectory);
+        void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory);
     }
 }
