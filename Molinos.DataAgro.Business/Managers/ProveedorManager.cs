@@ -548,7 +548,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach(var desc in objDescuento)
                 {
-                    htmlBody += "<tr>" + th + "DESCUENTO BONIFICACION " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "</th>" + td;
+                    htmlBody += "<tr>" + th + "DESCUENTO BONIFICACION " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "</th>" + td + desc.TipoDB.Descripcion + "<br />";
                     if (desc.Importe != 0)
                     {
                         htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
@@ -599,7 +599,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + td + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
             htmlBody += "<tr>" + th + "PRECIO</th>" + td + oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + oFijacionDePrecioContrato.Moneda.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CAMPAÑA</th>" + td + oFijacionDePrecioContrato.Material.Campaña.Descripcion + "</td></tr></table>";
+            htmlBody += "<tr>" + th + "CAMPAÑA</th>" + td + oFijacionDePrecioContrato.Material.Campaña.Descripcion + "</td></tr>";
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + td + oFijacionDePrecioContrato.Observacion + "</td></tr></table>";
             htmlBody += "<br />  Por consultas, contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
