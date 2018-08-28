@@ -464,8 +464,7 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + th + "FECHA</th>" + td + oContrato.Fecha.ToShortDateString() + "</td></tr>";
-            htmlBody += "<tr>" + th + "ENTREGA</th>" + td + oContrato.FechaEntrega.ToShortDateString() + "</td></tr>";
+            htmlBody += "<tr>" + th + "FECHA</th>" + td + oContrato.Fecha.ToShortDateString() + "</td></tr>";            
             htmlBody += "<tr>" + th + "GRANO</th>" + td + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + td + oContrato.ContratoSAP + "</td></tr>";
             htmlBody += "<tr>" + th + "NOMBRE</th>" + td + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
@@ -502,7 +501,8 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CONDICION FIJACIÓN</th>" + td + oContrato.CondicionFijacion.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + td + oContrato.Localidad.Nombre.ToUpper() + " - " + oContrato.Provincia.Nombre.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "ENTREGA DESDE</th>" + td + oContrato.FechaDesde.ToShortDateString() + "</td></tr>";
+            htmlBody += "<tr>" + th + "ENTREGA DESDE</th>" + td + oContrato.FechaDesde.ToShortDateString() + "</td></tr>";            
+            htmlBody += "<tr>" + th + "ENTREGA HASTA</th>" + td + oContrato.FechaHasta.ToShortDateString() + "</td></tr>";
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "<tr>" + th + "ESTABLECIMIENTO</th>" + td + "PROPIO</td></tr>";
@@ -511,7 +511,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "ESTABLECIMIENTO</th>" + td + "ARRENDADO</td></tr>";
             }
-            htmlBody += "<tr>" + th + "ENTREGA HASTA</th>" + td + oContrato.FechaHasta.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "CAMPAÑA</th>" + td + oContrato.Campana.Descripcion.ToUpper() + "</td></tr>";
             if (oContrato.ImporteSustentable != null)
             {
