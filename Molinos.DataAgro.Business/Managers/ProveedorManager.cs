@@ -529,7 +529,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "DÍAS PESIFICADO</th>" + td + "Si </td></tr>";
             }
-            if (oContrato.BoletoId != null)
+            if (oContrato.BoletoId != null && oContrato.BoletoId != 3)
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + td + oContrato.Boleto.Descripcion.ToUpper() + " " + oContrato.Bolsa.Descripcion.ToUpper() + "</td></tr>";
             }
