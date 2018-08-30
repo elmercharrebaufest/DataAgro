@@ -1511,6 +1511,7 @@ function CargarDatosEditar(contrato) {
     } else {
         $("#trigoEspecialId").prop("checked", false);
     }
+    limpiarBoleto();
     if (contrato.BoletoId == 1) {
         $("#boletoConfirmaId").prop("checked", true);
         $("#BolsaConfirmaDiv").show();
