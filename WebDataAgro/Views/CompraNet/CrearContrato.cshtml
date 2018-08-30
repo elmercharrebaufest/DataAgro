@@ -237,16 +237,13 @@
             <div class="col-sm-2">
                 <label>Observaci&oacute;n</label>
             </div>
-            <div id="observacionDiv" class="col-sm-10 col-md-3">
+            <div id="observacionDiv" class="col-sm-10 col-md-6">
                 <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>
                 <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div id="operacionDiv" style="display:none">
-                <div class="col-sm-1">
-                    <label>Operación</label>
-                </div>
-                <div class="col-sm-4 col-md-2">
-                    <input id="fechaOperacionId" placeholder="0" type="date" data-bind="value: Parametros.fechaOperacionId" style="width:100%" />
+                <div >
+                    <input id="fechaOperacionId" placeholder="0" type="date" data-bind="value: Parametros.fechaOperacionId" hidden />
                     <img id="errfechaHoyId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>

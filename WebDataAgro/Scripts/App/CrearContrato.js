@@ -118,7 +118,6 @@ function InicializarElementos() {
                 $("#fechasDiv").hide();
                 $("#fechaDesdeDiv").hide();
                 $("#fechaHastaDiv").hide();
-                $("#operacionDiv").hide();
                 $("#campanaDiv").hide();
                 $("#procedenciaDiv").hide();
                 $("#clasificacionDiv").hide();
@@ -142,8 +141,6 @@ function InicializarElementos() {
                 $("#DatosBoleto").hide();
                 $("#DatosPago").hide();
                 $("#establecimientoDiv").hide();
-                $("#observacionDiv").removeClass("col-md-3");
-                $("#observacionDiv").addClass("col-md-6");
                 $("#guardarBtn").append("Guardar Fijacion");
             }
             else {
@@ -168,9 +165,8 @@ function InicializarElementos() {
                 $("#ContratoDiv").hide();
                 $("#guardarBtn").empty();
                 $("#DatosBoleto").show();
-                $("#observacionDiv").removeClass("col-md-6");
-                $("#observacionDiv").addClass("col-md-3");
-                $("#guardarBtn").append("Generar Negocio");
+                $("#guardarBtn").append("Guardar Negocio");
+                $("#pagoDirectoDiv").show();
                 if (this.value() == 1) {
                     $("#plazosYTopesFijacion").show();
                     $("#CDId").prop("checked", false);
@@ -182,9 +178,6 @@ function InicializarElementos() {
                     $("#fechaDesdeTopeId").val("");
                     $("#fechaHastaTopeId").val("");
                     $("#condicionFijacionId").data("kendoDropDownList").value("");
-                }
-                if (contratoId !== undefined && contratoId) {
-                    $("#operacionDiv").show();
                 }
             }
         }
@@ -593,7 +586,6 @@ function InicializarElementos() {
 
     $("#fechaDesdeId").val(date);
     $("#fechaHastaId").val(datehasta);
-    $("#fechaOperacionId").val();
 
     $(".formulario-footer-guardar-contrato").click(function () {
         ObtenerDatos();
@@ -1423,7 +1415,6 @@ function InicializarContratoEdit() {
     var datos = { id: contratoId }
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
-    $("#operacionDiv").show();
 }
 
 function InicializarFijacionEdit() {
