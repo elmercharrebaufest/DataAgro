@@ -15,7 +15,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 
-namespace Molinos.DataAgro.Business.Managers
+namespace Molinos.DataAgro.Business.Managers 
 {
 
 
