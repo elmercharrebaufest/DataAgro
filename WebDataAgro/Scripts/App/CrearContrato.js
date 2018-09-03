@@ -31,10 +31,14 @@ function ObtenerFechaHasta(fechaBase) {
     var anio = hoy.getFullYear();
     var mesPost = hoy.getMonth() + 2;
     var dia = hoy.getDate();
-    
-    if (dia == 1) {
+    var ultimoDia = new Date(anio, hoy.getMonth(), 0).getDate();
+
+    if (dia == 1){
         dia = new Date(anio, hoy.getMonth() + 1, 0).getDate();
         mesPost = hoy.getMonth() + 1;
+    }
+    if (dia == ultimoDia) {
+        dia = new Date(anio, mesPost, 0).getDate();        
     }
     if (mesPost < 10) {
         mesPost = "0" + mesPost.toString();
