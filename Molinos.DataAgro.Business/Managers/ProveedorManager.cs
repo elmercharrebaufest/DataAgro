@@ -527,10 +527,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (oContrato.DiasPesificado != null)
             {
                 htmlBody += "DÍAS PESIFICADO " + oContrato.DiasPesificado + "<br />";
-            }
-            if (oContrato.TrigoEspecial != false)
-            {
-                htmlBody += "TRIGO ESPECIAL <br />";
             }            
             if (oContrato.CD == true)
             {
