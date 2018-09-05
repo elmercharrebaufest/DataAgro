@@ -29,9 +29,9 @@ namespace Molinos.DataAgro.Entities.Entities
                 oErrorMessages.Error("Nombres", "El campo 'Nombres' no debe estar vacio");
             }
 
-            if (this.Perfil == null)
+            if (this.PerfilId == 0)
             {
-                oErrorMessages.Error("PerfilId", "El campo 'PerfilId' no debe estar vacio");
+                oErrorMessages.Error("PerfilId", "El campo 'Perfil' no debe estar vacio");
             }
 
             return !oErrorMessages.HayErrores;

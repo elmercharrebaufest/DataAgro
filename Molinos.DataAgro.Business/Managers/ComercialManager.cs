@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Business
                 oEntityErrors.Error("Usuario", "El usuario de Active Directory Ya ha sido usado por otro comercial");
                 return oEntityErrors;
             }
-            if (oComercial.Perfil.PerfilId == (int)EnumPerfil.Director && repositorio.Existe<Comercial>(x => x.Perfil.PerfilId == (int)EnumPerfil.Director && x.ComercialId != oComercial.ComercialId))
+            if (oComercial.PerfilId == (int)EnumPerfil.Director && repositorio.Existe<Comercial>(x => x.PerfilId == (int)EnumPerfil.Director && x.ComercialId != oComercial.ComercialId))
             {
                 oEntityErrors.Error("Perfil", "Ya existe un Director");
                 return oEntityErrors;
