@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -46,7 +47,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string ClienteMoa { get; set; }
         public string Zona { get; set; }
-        public string FechaAlta { get; set; }
+        public DateTime FechaAlta { get; set; }
     }
 
     public class ObjetivoAll

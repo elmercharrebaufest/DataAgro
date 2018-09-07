@@ -21,7 +21,7 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
 Segmentacion  varchar(255),Domicilio  varchar(255),Localidad varchar(255),Provincia varchar(255),CodPostal varchar(255),
 CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),Intermediario varchar(255),
 AreaDeInfluencia varchar(10),Comentario varchar(MAX),Comercial varchar(255),ClienteMoa varchar(255), 
-Zona varchar(255), FechaAlta varchar(255) )
+Zona varchar(255), FechaAlta DATETIME null )
 
 
  insert into @table 
