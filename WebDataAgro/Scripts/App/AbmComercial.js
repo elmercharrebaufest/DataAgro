@@ -298,7 +298,7 @@ function UpdateViewModel(model) {
         "Apellido": model.Comercial.Apellido,
         "Nombres": model.Comercial.Nombres,
         "PerfilId": model.Comercial.PerfilId,
-        "EmpleadorACargo": model.Comercial.EmpleadorACargo,
+        "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         //"GrupoDeCompras": model.Comercial.GrupoDeCompras,
         "Administrador": model.Comercial.Administrador,

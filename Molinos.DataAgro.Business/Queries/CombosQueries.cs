@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Business
                 {
                     ComercialId = x.ComercialId,
                     Apellido = x.Apellido + " " + x.Nombres
-                }, c => c.Perfil.PerfilId != (int)EnumPerfil.Visualizador || c.Perfil.PerfilId != (int)EnumPerfil.Administrativo, 0, "Apellido");
+                }, c => c.Perfil.PerfilId != (int)EnumPerfil.Visualizador && c.Perfil.PerfilId != (int)EnumPerfil.Administrativo, 0, "Apellido");
             }
             catch (Exception ex)
             {

@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Interfaces
 
         ComercialDto TraerComercial(int intComercialId);
 
-        List<ComercialCombo> ObtenerComerciales(List<int> equipo);
+        List<ComercialCombo> ObtenerComerciales(List<int> equipo, int comercialId);
 
         Resultado GrabarComercial(Comercial oComercial);
 

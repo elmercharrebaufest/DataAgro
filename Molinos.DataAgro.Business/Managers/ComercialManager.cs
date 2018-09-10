@@ -38,20 +38,20 @@ namespace Molinos.DataAgro.Business
 
             return new DatosIniAbmComercial()
             {
-                Comercial = ObtenerComerciales(new List<int>()),
+                Comercial = ObtenerComerciales(new List<int>(), 0),
                 Perfil = qry.GetPerfilCombo(),
                 GrupoDeCompras = qry.GetGrupoDeComprasCombo()
             };
         }
 
 
-        public List<ComercialCombo> ObtenerComerciales(List<int> equipo)
+        public List<ComercialCombo> ObtenerComerciales(List<int> equipo, int comercialId)
         {
             var qry = new CombosQueries(logger, repositorio);
-
+            var empleadorId = repositorio.Obtener<Comercial, int?>(x => x.ComercialId == comercialId, x => x.EmpleadorACargoId) ?? 0;
             var list = qry.GetAbmComercialCombo();
 
-            list.RemoveAll(x => equipo.Any(z => z == x.ComercialId));
+            list.RemoveAll(x => !equipo.Any(z => z == x.ComercialId) && x.ComercialId != empleadorId);
 
             return list;
         }

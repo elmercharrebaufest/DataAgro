@@ -79,7 +79,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new DataAbmComercial
                 {
-                    Comercial = mobjComercialManager.ObtenerComerciales(GlobalVariables.Equipo)
+                    Comercial = mobjComercialManager.ObtenerComerciales(GlobalVariables.Equipo, oParam.ComercialId)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
