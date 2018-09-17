@@ -320,11 +320,14 @@ namespace Molinos.DataAgro.Business.Managers
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
                 }
 
-                oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                {
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                         ConfigurationManager.AppSettings["CredentialPassword"]);
-
+                }
+                
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Send(oMensaje);
 
             }
@@ -381,10 +384,15 @@ namespace Molinos.DataAgro.Business.Managers
                         oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
                     }
 
-                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";                    
-                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                    if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                    {
+                        oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                        oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                             ConfigurationManager.AppSettings["CredentialPassword"]);
+                    }
+
+                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+
                     oCliente.Send(oMensaje);
                 }
             }
@@ -441,11 +449,14 @@ namespace Molinos.DataAgro.Business.Managers
                         oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
                     }
 
-                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                    if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                    {
+                        oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                        oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
                             ConfigurationManager.AppSettings["CredentialPassword"]);
+                    }
 
+                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                     oCliente.Send(oMensaje);
                 }
             }

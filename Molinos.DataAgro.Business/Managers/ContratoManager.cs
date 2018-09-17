@@ -178,7 +178,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("BoletoId", "Boleto no debe estar vacio");
             }
-            if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 ) && ( oParam.BolsaId==0 || oParam == null))
+            if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 || oParam.BoletoId == 4 ) && ( oParam.BolsaId==0 || oParam.BolsaId == null))
             {
                 oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacio cuando existe Boleto");
             }
