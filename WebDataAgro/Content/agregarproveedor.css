@@ -1199,6 +1199,12 @@ button span img.multSelktrImg{
     top: 4px;
 }
 
+.check-compranet {
+    height: 19px !important;
+    position: relative;
+    right: 126px;
+    top: 4px;
+}
 .almacenamiento-hectareas-linea{
     display: inline-block;
     max-width: 230px;

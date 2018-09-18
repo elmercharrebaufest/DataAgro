@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ClasificacionCompraNet { get; set; }
         public int? BoletoCompraNet { get; set; }
         public int? BolsaCompraNet { get; set; }
+        public bool? Consignatario { get; set; }
     }
 
     public class Telefono

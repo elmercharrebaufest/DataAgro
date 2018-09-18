@@ -579,6 +579,11 @@ function armarSelects(result) {
     htmlBolsaCompraNet += '</select>';
     $(".campo-bolsa-compranet").append(htmlBolsaCompraNet);
 
+    var htmlConsignatarioCompraNet = "";
+    htmlConsignatarioCompraNet += '<input class="campo-input-text check-compranet" type="checkbox" id="consignatario-compranet">';
+    $(".campo-consignatario-compranet").append(htmlConsignatarioCompraNet);
+    //se oculta/muestra el consignatario
+    $("#clasificacion-compranet").change(function () { mostrarConsignatario() })
     $("#agregarTelefono").click(function () {
         if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
             if (!validateNumber($("#Telefono1").val())) {
@@ -2302,6 +2307,7 @@ function ObtenerDatos() {
     obj.basicos.BolsaCompraNet = $("#bolsa-compranet").val();
     obj.basicos.ProvinciaCompraNet = $("#provincia-compranet").val();
     obj.basicos.LocalidadCompraNet = $("#localidad-compranet").val();
+    obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
 
     obj.basicos.comentario = $("#comentario").val();
 
@@ -2680,4 +2686,12 @@ function eliminarError(elem, clase) {
     $(elem).removeClass("input-error");
     $(".tooltip-error.error-" + clase).remove();
     $(".triangulo-error.triangulo-" + clase).remove();
+}
+function mostrarConsignatario() {
+    if ($("#clasificacion-compranet").val() != 2) {
+        $("#consignatarioCompraNet").hide();
+    }
+    else {
+        $("#consignatarioCompraNet").show();
+    }
 }
