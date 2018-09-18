@@ -39,6 +39,7 @@
 	[ClasificacionCompraNetId]INT			NULL,
 	[BoletoCompraNetId]		  INT			NULL,
 	[BolsaCompraNetId]	      INT			NULL,
+	[Consignatario]			  BIT			NULL,
     CONSTRAINT [PK_Contacto] PRIMARY KEY CLUSTERED ([ProveedorId] ASC),
     CONSTRAINT [FK_Contacto_AreaInfluencia] FOREIGN KEY ([AreaInfluenciaId]) REFERENCES [dbo].[AreaInfluencia] ([AreaInfluenciaId]),
     CONSTRAINT [FK_Contacto_Estado] FOREIGN KEY ([EstadoId]) REFERENCES [dbo].[Estado] ([EstadoId]),
