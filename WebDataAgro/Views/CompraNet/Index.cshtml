@@ -32,14 +32,29 @@
             <div class="autoRecarga" style="float:right">
                 Autorecargar: <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>
             </div>
+            <div class="autoRecarga" style="float:right">
+                Notificaciones: <input type="checkbox" id="suscribirNotificacion" name="suscribirNotificacion" value="suscribirNotificacion" >
+            </div>
         </div>
     </div>
     <div>
         <div>
             <div id="CompraNet">
                 <br />
-                <br />
-                <br />
+                <div class="row no-margin">
+                    <div id="confirmarVariosDiv" class="col-xs-2 col-md-offset-8">
+                        <span>Confirmar</span>
+                        <span class="botonVarios" data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoVarios()">
+                            <i class="fa fa-check varios" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="col-xs-2" style="float:right">
+                        <span>Finalizar </span>
+                        <span class="botonVarios m-grid-col-xs-offset-1" data-toggle="tooltip" title="Finalizar" onclick="ModalFinalizarVarios()">
+                            <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
                 <div class="row" id="nuevotab">
                     <div class="col-xs-12">
                         <div id="gridInformeCompraNet"></div>
@@ -72,4 +87,10 @@
 
     <!-- Modal Borrar-->
     @Html.Partial("ModalBorrar")
+
+    <!-- Modal Confirmar Varios-->
+    @Html.Partial("_ModalConfirmarVarios")
+
+    <!-- Modal Finalizar Varios-->
+    @Html.Partial("_ModalFinalizarVarios")
 }

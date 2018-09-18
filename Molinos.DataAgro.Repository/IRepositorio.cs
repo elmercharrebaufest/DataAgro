@@ -102,6 +102,7 @@ namespace Molinos.DataAgro.Repository
         /// <param name="entidad">Entidad a agregar</param>
         /// <returns>Entidad agregada</returns>
         TEntidad Agregar<TEntidad>(TEntidad entidad) where TEntidad : class;
+        void AgregarTodos<TEntidad>(IEnumerable<TEntidad> entidades, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
 
         /// <summary>
         /// Remueve una entidad del repositorio
@@ -120,7 +121,7 @@ namespace Molinos.DataAgro.Repository
         TEntidad Remover<TEntidad>(object id) where TEntidad : class;
 
         void RemoverTodos<TEntidad>(IEnumerable<TEntidad> entidades) where TEntidad : class;
-
+        void RemoverTodos<TEntidad>(Expression<Func<TEntidad, bool>> filter) where TEntidad : class;
         /// <summary>
         /// Ejecuta un comando insert/update en la base
         /// </summary>
@@ -137,5 +138,7 @@ namespace Molinos.DataAgro.Repository
 
 
         List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class;
+
+        
     }
 }

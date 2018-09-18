@@ -5,5 +5,6 @@
         public int Id { get; set; }
         public string RazonSocial { get; set; }
         public string Cuit { get; set; }
+        public string Filtro { get; set; }
     }
 }

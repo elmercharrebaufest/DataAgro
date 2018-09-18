@@ -52,6 +52,31 @@
                            /@value" />
   </parameter>
 
+  <parameter name="Rg2300 Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='Rg2300']
+                           /@value" />
+  </parameter>
+
+  <parameter name="Facacop Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='Facacop']
+                           /@value" />
+  </parameter>
+
+  <parameter name="EmailAgenda Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='EmailAgenda']
+                           /@value" />
+  </parameter>
+
+  <parameter name="SmtpAnonimo Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='SmtpAnonimo']
+                           /@value" />
+  </parameter>
+  
+  
   <parameter name="HTTP_Port Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/system.serviceModel/client

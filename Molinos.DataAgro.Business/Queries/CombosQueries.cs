@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Business
 
         public List<Provincia> GetProvinciaCombo()
         {
-            return repositorio.Listar<Provincia>().OrderBy(x => x.Nombre).ToList(); ;
+            return repositorio.Listar<Provincia>().OrderBy(x => x.Orden).ToList(); 
         }
 
         public List<LocalidadCombo> GetLocalidadCombo()
@@ -109,6 +109,25 @@ namespace Molinos.DataAgro.Business
                     CodigoSap = x.CodigoSap,
                     Descripcion = x.Descripcion
                 }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
+
+        public List<RangoCombo> GetAbmRangoCombo()
+        {
+            try
+            {
+                return repositorio.Listar<RangoPrecio, RangoCombo>(x => new RangoCombo()
+                {
+                    PrecioMinimo = x.PrecioMinimo,
+                    PrecioMaximo = x.PrecioMaximo,
+                    Material = x.Material.Descripcion,
+                    MonedaId = x.MonedaId
+                }, null, 0,"Material");
             }
             catch (Exception ex)
             {

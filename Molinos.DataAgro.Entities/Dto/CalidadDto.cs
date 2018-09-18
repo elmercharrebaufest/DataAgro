@@ -14,6 +14,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CalidadEspecialDesc { get; set; }
         public decimal Valor { get; set; }
         public int ContratoId { get; set; }
+        public decimal? PorcentajeDesde { get; set; }
+        public decimal? PorcentajeHasta { get; set; }
 
     }
 }

@@ -676,3 +676,20 @@ li.mis-postit.postit-mobile {
     color: #fff !important;
     cursor: default !important;
 }
+
+@media (max-width: 460px) {
+    .modal-footer {
+        padding: 19px 20px 20px;
+        margin-top: 15px;
+        text-align: center;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    #modalPostit .modal-guardar-contacto,
+    #modalPostit .modal-cancelar {
+        margin:5px;
+    }
+    #texto-postit {
+        min-height: 200px;
+    }
+}

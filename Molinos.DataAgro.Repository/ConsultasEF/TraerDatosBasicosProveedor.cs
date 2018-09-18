@@ -90,7 +90,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     LocalidadCompraNet = prove.LocalidadCompraNet.Nombre ?? "",
                     ClasificacionCompraNet = prove.ClasificacionCompraNet.Descripcion,
                     BoletoCompraNet = prove.BoletoCompraNet.Descripcion,
-                    BolsaCompraNet = prove.BolsaCompraNet.Descripcion
+                    BolsaCompraNet = prove.BolsaCompraNet.Descripcion,
+                    Consignatario = prove.Consignatario
 
                 };
 

@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? BolsaId { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
+        public bool? MercsDeposito { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }

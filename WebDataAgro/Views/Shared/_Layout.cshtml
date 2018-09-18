@@ -48,6 +48,22 @@
         gtag('config', 'UA-125418413-1');
     </script>
 
+    <!--Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/firebase.js"></script>*@
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAoYLUaU77nDrO17zgt1pR_eeAitk_4md0",
+            authDomain: "dataagro-786eb.firebaseapp.com",
+            databaseURL: "https://dataagro-786eb.firebaseio.com",
+            projectId: "dataagro-786eb",
+            storageBucket: "dataagro-786eb.appspot.com",
+            messagingSenderId: "93653202795"
+        };
+        firebase.initializeApp(config);
+    </script>
+
 </head>
 
 <body id="theBody">
@@ -64,9 +80,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="~/Home" id="logo">
-                    <span class="logoheader-nav ">dataAgro</span>
+                    <span class="logoheader-nav "><img src="~/Content/Images/agro2.png" alt="DataAgro" style="height:50px" /></span>
                 </a>
-
             </div>
 
             <div class="collapse navbar-collapse" id="myNavbar">
@@ -84,7 +99,6 @@
                                     <i class="icon-bar-chart font-color"></i> Reporte Dinámico
                                 </a>
                             </li>
-
                             @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                             {
                                 <li>
@@ -111,7 +125,6 @@
                         </ul>
                     </li>
 
-
                     <li class="agregar-contacto-mobile">
                         <img src="~/Content/Images/Users-Add-user.png" style="width:16px;" />
                     </li>
@@ -121,7 +134,6 @@
                     @*<li class="mis-postit postit-mobile">
                 <img src="~/Content/Images/postit.png" style="width:16px;" />
             </li>*@
-
                     <li class="dropdown ">
                         <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="informes">
@@ -183,6 +195,11 @@
                                         <i class="icon-bar-chart"></i> ABM Centros
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="~/RangoPrecio" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Rango Precio
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -198,20 +215,19 @@
                         </li>
                     }
                 </ul>
-
-                <ul id="segundo" class="nav navbar-nav navbar-right">
-                    <li class="dropdown icons mis-postit" id="notas">
+                <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">
+                    <li class="float-left dropdown icons mis-postit" id="notas">
                         <a @*class="mis-postit imgs"*@>
                             <img class="usuario-nav" src="~/Content/Images/postit.png" />
                         </a>
                     </li>
-                    <li class="dropdown icons">
+                    <li class="float-left dropdown icons">
                         <a id="notificaciones-a" @*class="imgs"*@>
                             <img class="notificaciones-nav" src="~/Content/Images/menu-notificaciones.png" />
                             <div class="cant-notif"><span class="cant-notif-span"> </span></div>
                         </a>
                     </li>
-                    <li class="dropdown icons">
+                    <li class="float-left dropdown icons">
                         <a id="buscar-proveedor" @*class="imgs"*@>
                             <div style="display:inline-block;">
                                 <img class="usuario-nav" src="~/Content/Images/buscar-proveedor.png" />
@@ -219,8 +235,8 @@
                         </a>
                     </li>
                 </ul>
-                
             </div>
+            
         </div>
     </div>
 

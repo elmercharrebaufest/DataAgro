@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Interfaces
         EquipoDto ListarEquipo(string idActiveDirectory);
 
         int ObtenerComercialId(string idActiveDirectory);
+        List<int> CadenaComerciales(int comercialId);
     }
 }
 

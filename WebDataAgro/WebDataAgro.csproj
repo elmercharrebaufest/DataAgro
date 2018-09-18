@@ -167,6 +167,7 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\RangoPrecioController.cs" />
     <Compile Include="Controllers\CentroController.cs" />
     <Compile Include="Controllers\ComercialController.cs" />
     <Compile Include="Controllers\CompraNetController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\ProvinciaController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Core\Atributes.cs" />
     <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
@@ -195,6 +197,7 @@
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
+    <Compile Include="Models\RangoModel.cs" />
     <Compile Include="Models\CentroModel.cs" />
     <Compile Include="Models\ComercialModel.cs" />
     <Compile Include="Models\CompraNetModel.cs" />
@@ -276,6 +279,7 @@
     <Content Include="Content\Images\5estr.png" />
     <Content Include="Content\Images\adjuntar.png" />
     <Content Include="Content\Images\agro.png" />
+    <Content Include="Content\Images\agro2.png" />
     <Content Include="Content\Images\bolsacereales.png" />
     <Content Include="Content\Images\bolsarosario.png" />
     <Content Include="Content\Images\buscar-proveedor.png" />
@@ -834,6 +838,7 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AbmRangoPrecio.js" />
     <Content Include="Scripts\App\AbmCentro.js" />
     <Content Include="Scripts\App\AbmComercial.js" />
     <Content Include="Scripts\App\AbmCondicion.js" />
@@ -848,6 +853,7 @@
     <Content Include="Scripts\App\CompraNetIndex.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
+    <Content Include="Scripts\App\firebase-suscribir.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
     <Content Include="Scripts\App\PCFToken.js" />
@@ -1001,6 +1007,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <Content Include="firebase-messaging-sw.js" />
+    <Content Include="Scripts\firebase-debug.js" />
+    <Content Include="Scripts\firebase.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\package.json" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\AUTHORS.txt" />
@@ -2311,9 +2320,13 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Contrato\Index.cshtml" />
     <Content Include="Views\Centro\Index.cshtml" />
+    <Content Include="Views\RangoPrecio\Index.cshtml" />
+    <Content Include="Views\CompraNet\_ModalConfirmarVarios.cshtml" />
+    <Content Include="Views\CompraNet\_ModalFinalizarVarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\SincronizarMaestros\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

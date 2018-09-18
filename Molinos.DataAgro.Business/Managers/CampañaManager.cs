@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Business
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)
         {
-            return repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto {Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.MaterialId == materialId);
+            return repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto {Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId, PermiteRango = x.PermiteRango }, x => x.MaterialId == materialId);
         }
     }
     

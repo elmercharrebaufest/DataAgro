@@ -38,9 +38,7 @@
     padding: 8px;
     border-radius: 5px!important;
 }
-/*#finalizarBorrar {
-    background-color: blue;
-}*/
+
 .btnVerde:hover {
     background-color: #046135;
     cursor: pointer
@@ -50,6 +48,9 @@
     line-height: 1.6;
 }
 
+label{
+    margin-bottom:12px;
+}
 
 #pivotgrid {
     display: inline-block;
@@ -71,6 +72,19 @@
     background-color: #017940;
     color: #fff;
 }
+.required-border-proveedor:invalid {
+    border: 1px solid red;
+    border-right: 3px solid red;
+}
+.required-border {
+    border: 1px solid red !important;
+    border-right: 2px solid red !important;
+}
+
+.no-border {
+    background-color:#d3d3d3 !important;
+    border:none !important;
+}
 
 #buscadorResult, #buscadorResultModalPendiente {
     padding: 5px 10px;
@@ -86,7 +100,7 @@
     z-index: 1000;
 }
 
-#buscadorResult p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
+ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -266,8 +280,7 @@
 }
 
 #modalVisualizar .campo span {
-    float: right;
-    margin: 0;
+    margin: 0 10px;
 }
 
 #modalVisualizar .campo:last-child {
@@ -431,6 +444,10 @@ textarea.k-textbox {
 .linea-pendiente {
     margin-top:3px;
     margin-bottom: 2px
+}
+
+div.col-md-6.col-sm-10 .k-icon.k-i-close {
+    display: none !important;
 }
 
 body.modal-open {
@@ -610,4 +627,46 @@ body {
     .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers {        
         display: none;
     }
+}
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #017940;
+    border-radius: 50% !important;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.botonVarios {
+    margin: 10px;
+    cursor: pointer;
+    font-size: 25px;
+}
+.varios {
+    color: #017940;
+}
+
+.k-radio, input.k-checkbox{
+    display:inherit;
+}
+.k-checkbox-label, .k-radio-label{
+    display:inherit;
+}
+.k-filter-row > th:first-child, .k-grid tbody td:first-child, .k-grid tfoot td:first-child, .k-grid-header th.k-header:first-child {
+    padding-left: 14px;
+}
+
+#modalVisualizar .campo {
+    text-align: left;
 }

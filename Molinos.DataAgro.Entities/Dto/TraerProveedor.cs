@@ -87,6 +87,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClasificacionCompraNet { get; set; }
         public string BoletoCompraNet { get; set; }
         public string BolsaCompraNet { get; set; }
+        public bool? Consignatario { get; set; }
 
     }
 
@@ -346,6 +347,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int LocalidadId { get; set; }
         public int ProvinciaId { get; set; }
         public string CUIT { get; set; }
+        public bool Consignatario { get; set; }
     }
 
     public class DatosLocalidadProvinciaFiltro {
@@ -371,6 +373,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Localidad { get; set; }
         public string Provincia { get; set; }
         public int ClasificacionId { get; set; }
+        public bool Consignatario { get; set; }
         public int BoletoId { get; set; }
         public int BolsaId { get; set; }
         public DatosLocalidadProvincia() {
@@ -382,6 +385,7 @@ namespace Molinos.DataAgro.Entities.Dto
             this.Localidad = "";
             this.Provincia = "";
             this.ClasificacionId = 0;
+            this.Consignatario = false;
             this.BoletoId = 0;
             this.BolsaId = 0;
         }       

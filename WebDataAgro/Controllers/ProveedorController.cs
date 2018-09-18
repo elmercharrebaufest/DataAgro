@@ -324,13 +324,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult BuscarProveedores(string filtro)
+        public JsonResult BuscarProveedores(string filtro)
         {
-            return new JsonResult()
-            {
-                Data = mobjProveedorManager.DevolverProveedores(filtro),
-                MaxJsonLength = Int32.MaxValue
-            };
+            return Json(mobjProveedorManager.DevolverProveedores(filtro), JsonRequestBehavior.AllowGet);
         }
 
     }

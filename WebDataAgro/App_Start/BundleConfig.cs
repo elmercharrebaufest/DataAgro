@@ -42,7 +42,8 @@ namespace WebDataAgro
             // -------------------------------------------------
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery.min.js"));
+                        "~/Scripts/jquery.min.js",
+                        "~/Scripts/App/firebase-messaging-sw.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -111,6 +112,9 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/AbmCentro").Include(
                                        "~/Scripts/App/AbmCentro.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/AbmRangoPrecio").Include(
+                                       "~/Scripts/App/AbmRangoPrecio.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/InformeComercial").Include(
                                       "~/Scripts/App/InformeComercial.js"));
 
@@ -122,8 +126,8 @@ namespace WebDataAgro
             
             bundles.Add(new ScriptBundle("~/bundles/CompraNetIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
-                                         "~/Scripts/App/CompraNetIndex.js"));
-
+                                         "~/Scripts/App/firebase-suscribir.js",
+                                         "~/Scripts/App/CompraNetIndex.js")); 
             bundles.Add(new ScriptBundle("~/bundles/ContratoIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/ReporteContrato.js"));

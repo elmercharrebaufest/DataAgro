@@ -134,7 +134,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
-          
+
+            var rangosPrecio = repositorio.Listar<RangoPrecio>();
+            if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
+            {
+                oErrorMessages.Error("Precio", "Precio fuera de Rango");
+            }
             return oErrorMessages;
         }
 
@@ -188,10 +193,10 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public GrabarFijacionResult ConfirmarFijacion(FijacionDePrecioContrato oFijacionDePrecio)
+        public GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
+            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
             {
@@ -221,10 +226,10 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public GrabarFijacionResult FinalizarFijacion(FijacionDePrecioContrato oFijacionDePrecio, string idActiveDirectory)
+        public GrabarFijacionResult FinalizarFijacion(int fijacionDePrecioContratoId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarFijacionResult();
-            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
+            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
             {
@@ -245,7 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado)
+                if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
                 {
                     oEntityErrors.Error("", "La Fijación ya se encuentra Finalizada");
                 }

@@ -104,6 +104,10 @@ function armarBasico(basico) {
     if (basico.BolsaCompraNet) {
         $("#bolsa-compranet").val($("#bolsa-compranet option").filter(function () { return $(this).html() == basico.BolsaCompraNet; }).val());
     } $("#bolsa-compranet").trigger("change");
+
+    if (basico.Consignatario) {
+        $("#consignatario-compranet").prop("checked", true);
+    }
 }
 
 function armarComercial(comerciales) {

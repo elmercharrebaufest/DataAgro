@@ -5,9 +5,9 @@ $(document).ready(function () {
     kendo.culture("es-AR");
 
     CreateGridInformeCompraNet();
-    
-    AutoRecargar();
 
+    AutoRecargar();
+     
     //mobile();
 
     //+ datos modal//
@@ -79,7 +79,16 @@ $(document).ready(function () {
         } else {
             MensInfo("No posee permisos para la carga de contratos");
         }
-    });
+    });   
+    
+});
+
+$("#confirmarVariosDiv").ready(function () {
+    if ($("#perfil").val() == "Mesa") {
+        $("#confirmarVariosDiv").show();
+    } else {
+        $("#confirmarVariosDiv").hide();
+    }
 });
 
 function htmlEncode(value) {
@@ -165,7 +174,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.StandardDeCalidadDescripcion + "'" + ',' +
         "'" + dataItem.CalidadEspecialDescripcion + "'" + ',' +
         "'" + formatearFecha(dataItem.DesdeFijacion) + "'" + ',' +
-        "'" + formatearFecha(dataItem.HastaFijacion) + "'" +
+        "'" + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
+        "'" + dataItem.MercsDeposito + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -253,9 +263,9 @@ function CreateGridInformeCompraNet() {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
             }
         },
-        columns: [
-            {
-                field: "Proveedor", type: "string", width: 150, attributes: {
+        columns: [            
+            { selectable: true, width: "50px" },
+            { field: "Proveedor", type: "string", width: 150, attributes: {
                     "id": "line"
                 },
                 template: function (dataItem) {
@@ -440,7 +450,8 @@ function CreateGridInformeCompraNet() {
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
+        ////selectable: "multiple, row",
+
 
         filterable: {
             checkAll: false,
@@ -554,6 +565,22 @@ function CreateGridInformeCompraNet() {
     };
 }
 
+function SeleccionarElementos() {
+    var grid = $("#gridInformeCompraNet").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {        
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.TipoNegocioId == 3) {
+            obj.push(selectedItem)
+        } else {
+            obj.push(selectedItem)
+        }
+    });
+    return(obj); 
+}
+
 function editarContrato(contratoId, tipoId, fijacionDePrecioContratoId) {
     if (tipoId === "3") {
         window.location.href = window.location.origin + "/CompraNet/CrearFijacion?id=" + fijacionDePrecioContratoId;
@@ -620,18 +647,108 @@ function ReenviarMails(reenviarMail) {
     }
 }
 
-function ModalConfirmado(contratoId, proveedor, fechaDesdeHasta, tipo, material, cantidad, precio, campana, provincia, localidad, nroSAP, sustentablePrecio, sustentableMoneda, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial) {
-    $(".modal-title-confirmado").empty();
-    $(".modal-title-confirmado").append("Contrato DataAgro: " + contratoId);
-    $("#contratoModalConfirmado").val(contratoId);
-    $("#modalConfirmado").modal('show');
+function ModalConfirmadoVarios( ) {
+    $("#negocioConfirmado-modal").empty();
+    $("#confirmarVarios").show();
+    $("#cancelarVarios").show();
+    $("#cerrarVarios").hide();
+
+    var negocios = SeleccionarElementos();
+    for (var i in negocios) {
+        var loader = '<div class="row"><div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div>';
+        if (negocios[i].TipoNegocioId == 3) {
+            $("#negocioConfirmado-modal").append(loader + '<div class="col-xs-11 float-right" style="float:right;">Fijaci&oacute;n DataAgro: ' + negocios[i].FijacionDePrecioContratoId + "</div></div>");
+        } else {
+            $("#negocioConfirmado-modal").append(loader + '<div class="col-xs-11 float-right" style="float:right;">Contrato DataAgro: ' + negocios[i].ContratoId + "</div></div>");
+        }
+    }
+    $("#ModalConfirmarVarios").modal('show');
+}
+
+function ConfirmarVariosContratos() {
+    $("#confirmarVarios").hide();
+    $("#cancelarVarios").hide();
+    $("#cerrarVarios").show();
+
+    var negocios = SeleccionarElementos();
+    $(".loader").show();
+    for (var i in negocios) {
+        var objConfirmado = {};
+        $("#estado" + i).empty();
+        var result=null;
+        if (negocios[i].TipoNegocioId == 3) {
+            objConfirmado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
+            result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', objConfirmado);
+        } else {
+            objConfirmado.contratoId = negocios[i].ContratoId;
+            result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', objConfirmado);
+        }
+        finalizacionCallBack(i, result);                
+    }
+    $("#cerrarVarios").click(function () {
+        $(".modal").modal('hide');
+        recargarGrilla();
+    })
+}
+function finalizacionCallBack(i, result) {
+    if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
+        $("#estado" + i).removeClass("loader");
+        $("#estado" + i).append('<img src="/Content/Images/Cancelar.png" alt="error" title="' + result.Errores[0].Message + '" />');
+    } else {
+        $("#estado" + i).removeClass("loader");
+        $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+    }
+}
+
+function ModalFinalizarVarios() {
+    $("#negocioFinalizado-modal").empty();
+    $("#finalizarVarios").show();
+    $("#cancelarVariosFinalizado").show();
+    $("#cerrarVariosFinalizado").hide();
+
+    var negocios = SeleccionarElementos();
+    for (var i in negocios) {
+        var loader = '<div class="row"><div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div>';
+        if (negocios[i].TipoNegocioId == 3) {
+            $("#negocioFinalizado-modal").append(loader + '<div class="col-xs-11 float-right" style="float:right;">Fijaci&oacute;n DataAgro: ' + negocios[i].FijacionDePrecioContratoId + "</div></div>");
+        } else {
+            $("#negocioFinalizado-modal").append(loader + '<div class="col-xs-11 float-right" style="float:right;">Contrato DataAgro: ' + negocios[i].ContratoId + "</div></div>");
+        }
+    }
+    $("#ModalFinalizarVarios").modal('show');
+}
+
+function FinalizarVariosContratos() {
+    $("#finalizarVarios").hide();
+    $("#cancelarVariosFinalizado").hide();
+    $("#cerrarVariosFinalizado").show();
+
+    var negocios = SeleccionarElementos();
+    $(".loader").show();
+    for (var i in negocios) {
+        var objFinalizado = {};
+        $("#estado" + i).empty();
+        var result = null;
+        if (negocios[i].TipoNegocioId == 3) {
+            objFinalizado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
+            result = MSExecuteOnServer('/CompraNet/FinalizarFijacion', objFinalizado);
+        } else {
+            objFinalizado.contratoId = negocios[i].ContratoId;
+            result = MSExecuteOnServer('/CompraNet/FinalizarContrato', objFinalizado);
+        }   
+        finalizacionCallBack(i, result);
+    }
+    $("#cerrarVariosFinalizado").click(function () {
+        $(".modal").modal('hide');
+        recargarGrilla();
+    })
 }
 
 function ObtenerDatosModalConfirmado() {
     var objConfirmado = {};
 
     if ($("#tipoNegocioModalConTilde").val() === '3') {
-        objConfirmado.FijacionDePrecioContratoId = $("#contratoModalConTilde").val();
+        objConfirmado.fijacionDePrecioContratoId = $("#contratoModalConTilde").val();
     } else {
         objConfirmado.contratoId = $("#contratoModalConTilde").val();
     }
@@ -639,7 +756,7 @@ function ObtenerDatosModalConfirmado() {
 }
 
 function Confirmar(confirmarContratoFijacion) {
-    if ($("#tipoNegocioModalConTilde").val() === '3') {
+    if ($("#tipoNegocioModalConTilde").val() === '3') {        
         var result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
     } else {
         var result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
@@ -767,7 +884,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion) {
+function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion) {
     $("#modalVisualizar").modal('show');
     if (tipo === "FIJACION") {
         $(".noFijacion").hide();
@@ -807,7 +924,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_comercial").text(comercial);
     $("#visualizar_material").text(material);
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
-    $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda);
+    (precio != 0)? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
 
@@ -831,7 +948,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     (informaSIO === "true") ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
-    $("#visualizar_trigoEspecial").text("null");
+    (mercsFijacion == "true") ? $("#visualizar_mercsDeposito").text("Si") : $("#visualizar_mercsDeposito").text("null");
     (cd === "true") ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     (boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined") ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
     
@@ -850,7 +967,7 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     
     visualizacionRowDoble("cantidadDivVisualizar", "visualizar_cantidad", "cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones");
     visualizacionRowDoble("tipoDivVisualizar", "visualizar_tipo", "establecimientoDivVisualizar", "visualizar_establecimiento");
-    visualizacionRowDoble("trigoEspecialDivVisualizar", "visualizar_trigoEspecial", "pagoDivVisualizar", "visualizar_pago");
+    visualizacionRowDoble("mercsDepositoDivVisualizar", "visualizar_mercsDeposito", "pagoDivVisualizar", "visualizar_pago");
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");    
@@ -894,9 +1011,13 @@ function ModalVisualizar(contrato, proveedor, fecha, desdeHasta, tipo, material,
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
             Id: calidad.Id,
+            CalidadEspecialId: calidad.CalidadEspecialId,
             CalidadEspecialDesc: calidad.CalidadEspecialDesc,
             Valor: calidad.Valor,
-            StandardDeCalidadId: 2,            
+            ContratoId: calidad.ContratoId,
+            PorcentajeDesde: calidad.PorcentajeDesde,
+            PorcentajeHasta: calidad.PorcentajeHasta,
+            StandardDeCalidadId: 2,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });

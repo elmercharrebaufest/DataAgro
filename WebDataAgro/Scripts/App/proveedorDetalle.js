@@ -570,6 +570,12 @@ function armarContacto() {
     $("#daco-bolscomnet").html(basico[0].BolsaCompraNet == null ? "No posee" : basico[0].BolsaCompraNet);
     $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].ProvinciaCompraNet);
     $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].LocalidadCompraNet);
+    $("#daco-consigcomnet").html((basico[0].Consignatario == 1) ? "Si" : "No");
+
+    if ($("#daco-clascomnet").html() != 'Acopiador') {
+        $("#rowConsignatario").hide();
+    }
+
 
     if (comerciales.length == 0) {
     } else {

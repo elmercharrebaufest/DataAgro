@@ -143,20 +143,20 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult FinalizarContrato(Contrato oParam)
+        public ActionResult FinalizarContrato(int contratoId)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.FinalizarContrato(oParam, GlobalVariables.IdActiveDirectory),
+                Data = mobjContratoManager.FinalizarContrato(contratoId, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public ActionResult ConfirmarContrato(Contrato oParam)
+        public ActionResult ConfirmarContrato(int contratoId)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.ConfirmarContrato(oParam),
+                Data = mobjContratoManager.ConfirmarContrato(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -181,20 +181,20 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public ActionResult ConfirmarFijacion(FijacionDePrecioContrato oParam)
+        public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.ConfirmarFijacion(oParam),
+                Data = mobjFijacionDePrecioContratoManager.ConfirmarFijacion(fijacionDePrecioContratoId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public ActionResult FinalizarFijacion(FijacionDePrecioContrato oParam)
+        public ActionResult FinalizarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.FinalizarFijacion(oParam, GlobalVariables.IdActiveDirectory),
+                Data = mobjFijacionDePrecioContratoManager.FinalizarFijacion(fijacionDePrecioContratoId, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -376,6 +376,26 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.TraerFijacion(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult SuscripcionNotificaciones(string key)
+        {
+            var comercialId = GlobalVariables.ComercialId;
+            return new JsonResult()
+            {
+                Data = mobjCompraNetManager.GrabarSuscripcion(key, comercialId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult UsuarioSuscripto()
+        {
+            var comercialId = GlobalVariables.ComercialId;
+            return new JsonResult()
+            {
+                Data = mobjCompraNetManager.UsuarioSuscripto(comercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

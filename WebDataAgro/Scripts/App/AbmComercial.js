@@ -20,7 +20,6 @@ $(document).ready(function () {
     var idPerfil = $("#PerfilId").val();
 
     if (idPerfil == 4 || idPerfil == 5) {
-        //var EsAdmin = $("#Administrador");
         $("#Administrador").prop("checked", false);
         $("#Administrador").prop("disabled", true);
     }
@@ -37,22 +36,17 @@ function InicializarElementos() {
             var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
 
             if (idPerfil == 4 || idPerfil == 5) {
-                //var EsAdmin = $("#Administrador");
                 $("#Administrador").prop("checked", false);
                 $("#Administrador").prop("disabled", true);
                 viewModel.set("Comercial.Administrador", false);
                 $("#EmpleadorACargo").data("kendoDropDownList").text("");
-                //$("#EmpleadorACargo").data("kendoDropDownList").value(null);
                 empleadoACargoDDList.enable(false);
                 viewModel.Comercial.EmpleadorACargo = null;
-                //console.log(GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"));
             }
             else {
                 empleadoACargoDDList.enable(true);
                 $("#Administrador").prop("disabled", false);
             }
-            //alert();
-            // Use the value of the widget
         }
     });
 
@@ -63,21 +57,8 @@ function InicializarElementos() {
     });
 
     $("#EmpleadorACargo").kendoDropDownList({
-        //dataTextField: "Apellido" + " " + "Nombre",
         dataTextField: "Apellido",
         dataValueField: "ComercialId",
-        //template: "#=Apellido # #=Nombres #",
-        // dataSource: {
-        /*
-        schema: {
-                 parse: function(response) {
-                 $.each(response, function(idx, elem) {
-                     elem.prueba = elem.Apellido + " " + elem.Nombres;
-                 });
-                     return response;
-                }
-            }*/
-        //}
     });
 
     $("#EmpleadorACargo").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -85,17 +66,6 @@ function InicializarElementos() {
             $("#EmpleadorACargo").data("kendoDropDownList").text("");
         }
     });
-
-    /*$("#GrupoDeCompras").kendoDropDownList({
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#GrupoDeCompras").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            $("#GrupoDeCompras").data("kendoDropDownList").text("");
-        }
-    });*/
 
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
@@ -216,8 +186,6 @@ function CrearViewModel() {
 
         PerfilCombo: [],
         ComercialCombo: [],
-        //GrupoDeComprasCombo: [],
-
         Comercial: null,
     });
 
@@ -242,7 +210,6 @@ function InicializarCombos() {
 function AsignarCombos() {
     viewModel.set("PerfilCombo", datosIniAbmCentro.Datos.Perfil);
     viewModel.set("ComercialCombo", datosIniAbmCentro.Datos.Comercial);
-    //viewModel.set("GrupoDeComprasCombo", datosIniAbmComercial.Datos.GrupoDeCompras);
 }
 
 function InicializarBusquedaInicial() {
@@ -300,7 +267,6 @@ function UpdateViewModel(model) {
         "PerfilId": model.Comercial.PerfilId,
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
-        //"GrupoDeCompras": model.Comercial.GrupoDeCompras,
         "Administrador": model.Comercial.Administrador,
     };
 
@@ -308,7 +274,6 @@ function UpdateViewModel(model) {
 
     viewModel.Comercial.PerfilId = $("#PerfilId").data("kendoDropDownList").dataItem();
     viewModel.Comercial.EmpleadorACargo = $("#EmpleadorACargo").data("kendoDropDownList").dataItem();
-    //viewModel.Comercial.GrupoDeCompras = $("#GrupoDeCompras").data("kendoDropDownList").dataItem();
 }
 
 function LimpiarValidaciones() {
@@ -317,7 +282,6 @@ function LimpiarValidaciones() {
     $("#errPerfilId").css("display", "none");
     $("#errEmpleadorACargo").css("display", "none");
     $("#errIdActiveDirectory").css("display", "none");
-    //$("#errGrupoDeCompras").css("display", "none");
     $("#errAdministrador").css("display", "none");
 }
 
@@ -356,22 +320,17 @@ function Agregar() {
 
 function Modificar() {
     var grid = $("#gridIniComercial").data("kendoGrid");
-
     var row = grid.select();
-
     var data = grid.dataItem(row);
-
     if (data == null) {
         return;
     }
-
     var param = {
         "ComercialId": data.ComercialId,
     };
 
     if (data.ComercialId > 0) {
         var datosComerciales = MSExecuteOnServer('/Comercial/ComercialCombo', param);
-
         if (datosComerciales != null) {
             if (ExistsErrorMessages(datosComerciales.Errores)) {
                 ShowTooltipMessages("err", datosComerciales.Errores);
@@ -397,16 +356,13 @@ function Modificar() {
             var idPerfil = $("#PerfilId").val();
 
             if (idPerfil == 4 || idPerfil == 5) {
-                //var EsAdmin = $("#Administrador");
                 $("#Administrador").prop("checked", false);
                 $("#Administrador").prop("disabled", true);
                 viewModel.set("Comercial.Administrador", false);
 
                 $("#EmpleadorACargo").data("kendoDropDownList").text("");
-                //$("#EmpleadorACargo").attr("disabled", true);
                 var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
                 empleadoACargoDDList.enable(false);
-                //$("#EmpleadorACargo").enable(false);
                 viewModel.Comercial.EmpleadorACargo = null;
             }
             else {
@@ -428,17 +384,13 @@ function Eliminar() {
 
 function EjecutarEliminar() {
     var grid = $("#gridIniComercial").data("kendoGrid");
-
     var row = grid.select();
-
     var data = grid.dataItem(row);
-
     var param = {
         "ComercialId": data.ComercialId,
     };
 
     var result = MSExecuteOnServer('/Comercial/Eliminar', param);
-
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
@@ -475,7 +427,6 @@ function Grabar() {
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargo": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
-        //"GrupoDeCompras": GetDropDownValue(viewModel, "Comercial.GrupoDeCompras.Id"),
         "Administrador": viewModel.get("Comercial.Administrador"),
     };
 

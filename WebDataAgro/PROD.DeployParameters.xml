@@ -9,10 +9,14 @@
     <setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />
     <setParameter name="CredentialPassword Key" value="D4taAgr017" />
     <setParameter name="EmailAgenda Key" value="0" />
+  <setParameter name="EmailAgenda Key" value="S" />
     <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
     <setParameter name="SapPass Key" value="Data2015" />
     <setParameter name="SinConexionSap Key" value="0" />
     <setParameter name="ValorPruebaSap Key" value="0" />
+
+  <setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG2300.LST" />
+  <setParameter name="Facacop Key" value="\\sapprgap\ftproot\transf\matprim\facacop.txt" />
 
     <setParameter name="HTTP_Port Service Endpoint Address"  value="http://gvicpiprod01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
     <setParameter name="HTTP_Port1 Service Endpoint Address" value="http://gvicpiprod01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />

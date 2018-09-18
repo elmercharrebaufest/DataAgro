@@ -86,7 +86,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     EstablecimientoPropio = contrato.EstablecimientoPropio,
                     BoletoId = contrato.BoletoId,
                     BolsaId = contrato.BolsaId,
-
                     BoletoDescripcion = contrato.Boleto.Descripcion,
                     BolsaDescripcion = contrato.Bolsa.Descripcion,
                     DesdeFijacion = DbFunctions.TruncateTime(contrato.DesdeFijacion),
@@ -95,7 +94,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CondicionFijacionDescripcion = contrato.CondicionFijacion.Descripcion,
                     ClasificacionId = contrato.ClasificacionId,
                     ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
-                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara"
+                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara",
+                    MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false
                 };
 
             var queryFijacion =
@@ -167,7 +167,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CondicionFijacionDescripcion = "",
                     ClasificacionId = null,
                     ClasificacionDescripcion = "",
-                    CalidadDescripcion =""
+                    CalidadDescripcion = "",
+                    MercsDeposito = null
+
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);

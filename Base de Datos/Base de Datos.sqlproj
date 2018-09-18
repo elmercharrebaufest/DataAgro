@@ -223,11 +223,15 @@
     <Build Include="dbo\Tables\TipoDB.sql" />
     <Build Include="dbo\Tables\TipoPeriodoDB.sql" />
     <Build Include="dbo\Tables\Calidad.sql" />
+    <Build Include="dbo\Tables\RangoPrecio.sql" />
+    <Build Include="dbo\Tables\SuscripcionComercial.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
     <None Include="Molinos.DataAgro.Database.bfdev226.publish.xml" />
     <None Include="Molinos.DataAgro.Database.vicsql2014test.publish.xml" />
+    <None Include="dbo\Stored Procedures\DataAgro_CampañaMaterialPorMes_Actualizar.sql" />
+    <None Include="dbo\Stored Procedures\DataAgro_CampañaMaterialPorMes_ToneladasActualizar.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />

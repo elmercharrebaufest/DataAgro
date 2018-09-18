@@ -11,6 +11,7 @@ IF NOT EXISTS (select 1 from BolsaCompraNet where Descripcion = 'Bahía Blanca')
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Confirma') BEGIN insert into BoletoCompraNet (Descripcion) values ('Confirma'); END
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Físico') BEGIN insert into BoletoCompraNet (Descripcion) values ('Físico'); END
 IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Ninguno') BEGIN insert into BoletoCompraNet (Descripcion) values ('Ninguno'); END
+IF NOT EXISTS (select 1 from BoletoCompraNet where Descripcion = 'Carta Oferta') BEGIN insert into BoletoCompraNet (Descripcion) values ('Carta Oferta'); END
 
 --ClasificacionCompraNet
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Productor') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Productor'); END

@@ -4,8 +4,9 @@
     [ContratoId]			INT NOT NULL,
 	[StandardDeCalidadId]	INT NOT NULL,
 	[CalidadEspecialId]		INT NULL,	
-	[Valor]					DECIMAL(18,2) NULL
-		
+	[Valor]					DECIMAL(18,2) NULL,
+	[PorcentajeDesde]			DECIMAL(18,2) NULL,
+	[PorcentajeHasta]			DECIMAL(18,2) NULL		
 
     CONSTRAINT [PK_Calidad] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Calidad_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [dbo].[Contrato] ([ContratoId]) ON DELETE CASCADE,

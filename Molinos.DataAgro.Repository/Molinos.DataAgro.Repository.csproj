@@ -94,7 +94,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\TraerAgenda.cs" />
     <Compile Include="ConsultasEF\TraerComprasHome.cs" />
@@ -105,6 +104,9 @@
     <Compile Include="ConsultasEF\TraerTodosContratos.cs" />
     <Compile Include="DataAgroDbContext.cs" />
     <Compile Include="EntidadReferenciadaException.cs" />
+    <Compile Include="Extensions\DataTableExtension.cs" />
+    <Compile Include="Extensions\SqlBulkExtension.cs" />
+    <Compile Include="ForeignKeyNamingConvention.cs" />
     <Compile Include="IComando.cs" />
     <Compile Include="IConsulta.cs" />
     <Compile Include="IConsultaEscalar.cs" />

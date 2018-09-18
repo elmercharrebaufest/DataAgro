@@ -47,6 +47,7 @@
     {
         public int Provinciaid;
         public string Nombre;
+        public int Orden { get; set; }
     }
     public class MonedaQry
     {
@@ -191,6 +192,15 @@
         public int Id;
         public string Descripcion;
         public string CodigoSap;
+    }
+
+    public class RangoCombo
+    {
+        public int Id { get; set; }
+        public decimal PrecioMinimo { get; set; }
+        public decimal PrecioMaximo { get; set; }
+        public string Material { get; set; }
+        public string MonedaId { get; set; }
     }
 }
 

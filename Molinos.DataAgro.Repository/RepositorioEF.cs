@@ -3,9 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Transactions;
 
 namespace Molinos.DataAgro.Repository
 {
@@ -161,6 +164,16 @@ namespace Molinos.DataAgro.Repository
             return Set<TEntidad>().Add(entidad);
         }
 
+        public virtual void AgregarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null) where TEntidad : class
+        {
+            var enumerable = items as IList<TEntidad> ?? items.ToList();
+            if (enumerable.Any())
+            {
+                var dataTable = enumerable.ToDataTable(true, properties);
+                context.SqlBulkInsert(dataTable, dataTable.TableName);
+            }
+        }
+        
         public TEntidad Remover<TEntidad>(object id) where TEntidad : class
         {
             return Remover(Obtener<TEntidad>(id));
@@ -178,7 +191,21 @@ namespace Molinos.DataAgro.Repository
                 Set<TEntidad>().Remove(entidad);
             }
         }
-        
+
+        public void RemoverTodos<TEntidad>(Expression<Func<TEntidad, bool>> filter) where TEntidad : class
+        {
+            var query = context.Set<TEntidad>().Where(filter);
+
+            string selectSql = query.ToString();
+            string deleteSql = "DELETE [Extent1] " + selectSql.Substring(selectSql.IndexOf("FROM"));
+
+            var internalQuery = query.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(field => field.Name == "_internalQuery").Select(field => field.GetValue(query)).First();
+            var objectQuery = internalQuery.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(field => field.Name == "_objectQuery").Select(field => field.GetValue(internalQuery)).First() as ObjectQuery;
+            var parameters = objectQuery.Parameters.Select(p => new SqlParameter(p.Name, p.Value)).ToArray();
+
+            context.Database.ExecuteSqlCommand(deleteSql, parameters);
+        }
+
         public TResultado EjecutarComando<TResultado>(IComando<TResultado> comando)
         {
             return comando.Ejecutar(context);

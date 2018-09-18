@@ -107,6 +107,21 @@ function mobile() {
 $(document).ready(function () {
     mobile();
 
+    var ww = document.body.clientWidth;
+    if (ww < 768) {
+        $("#segundo").addClass("left");
+        $("#segundo").appendTo(".navbar-header");
+        $("#segundo").addClass("floatito");
+        $(".icons").addClass("float-left");
+        $(".imgs").removeClass("padding");
+    } else {
+        $("#segundo").removeClass("left");
+        $("#segundo").removeClass("floatito");
+        $("#segundo").appendTo("#myNavbar");
+        $(".icons").removeClass("float-left");
+        $(".imgs").addClass("padding");
+    }
+
     $(".miscontactos-nav").parent().attr("href", window.location.origin);
 
     ArmarNotificaciones();
@@ -377,3 +392,41 @@ $(window).scroll(function (event) {
 });
 
 $(window).resize(mobile);
+
+$(document).ready(function () {
+    var messaging = firebase.messaging();
+    messaging.onMessage(function (payload) {
+        var dataFromServer = JSON.parse(payload.data.notification);
+        //var myMessageBar = new MessageBar();
+        //myMessageBar.setMessage(dataFromServer.title + " : " + dataFromServer.body);
+        notifyMe(dataFromServer);
+    });
+});
+
+function notifyMe(dataFromServer) {
+    if (!("Notification" in window)) {
+        alert("Este navegador no soporta notificaciones");
+    }
+    else if (Notification.permission === "granted") {
+        notify();
+    }
+    else if (Notification.permission !== 'denied') {
+        Notification.requestPermission(function (permission) {
+            if (permission === "granted") {
+                notify();
+            }
+        });
+    }
+
+    function notify() {
+        var notification = new Notification(dataFromServer.title, {
+            icon: dataFromServer.icon,
+            body: dataFromServer.body,
+        });
+
+        notification.onclick = function () {
+            window.open(dataFromServer.url);
+        };
+        setTimeout(notification.close.bind(notification), 7000);
+    }
+}

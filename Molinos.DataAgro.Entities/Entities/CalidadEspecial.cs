@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Descripcion { get; set; }
         public string CodigoSap { get; set; }
         public int MaterialId { get; set; }
+        public bool? PermiteRango { get; set; }
 
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }

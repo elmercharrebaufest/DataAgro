@@ -15,11 +15,11 @@ namespace Molinos.DataAgro.Interfaces
         
         GrabarContratoResult GrabarContrato(Contrato oContrato);
 
-        GrabarContratoResult ConfirmarContrato(Contrato oContrato);
+        GrabarContratoResult ConfirmarContrato(int contratoId);
 
         GrabarContratoResult BorrarContrato(Contrato oContrato);
 
-        GrabarContratoResult FinalizarContrato(Contrato oContrato, string idActiveDirectory);
+        GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory);
 
         GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
         

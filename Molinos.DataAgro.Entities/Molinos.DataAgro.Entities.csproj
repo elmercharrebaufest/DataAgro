@@ -62,6 +62,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
+    <Compile Include="Dto\AbmRango.cs" />
     <Compile Include="Dto\AbmCentro.cs" />
     <Compile Include="Dto\AbmComercial.cs" />
     <Compile Include="Dto\AbmCondicion.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Dto\FijacionDePrecioDto.cs" />
     <Compile Include="Dto\FijacionDePrecioContratoDto.cs" />
     <Compile Include="Dto\GrabarContratoPrueba.cs" />
+    <Compile Include="Dto\GrabarSuscripcionResult.cs" />
     <Compile Include="Dto\GrabarDescuentoResult.cs" />
     <Compile Include="Dto\LocalidadDto.cs" />
     <Compile Include="Dto\MaterialDto.cs" />
@@ -94,9 +96,12 @@
     <Compile Include="Dto\PostItDto.cs" />
     <Compile Include="Dto\ProveedorDto.cs" />
     <Compile Include="Dto\ProvinciaDto.cs" />
+    <Compile Include="Dto\RangoPrecioDto.cs" />
     <Compile Include="Dto\ReportesDto.cs" />
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
+    <Compile Include="Entities\SuscripcionComercial.cs" />
+    <Compile Include="Entities\RangoPrecio.cs" />
     <Compile Include="Entities\Calidad.cs" />
     <Compile Include="Entities\DescuentoBonificacion.cs" />
     <Compile Include="Helpers\AES.cs" />

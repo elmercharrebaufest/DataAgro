@@ -257,7 +257,23 @@ namespace Molinos.DataAgro.Business
             }
             return resultado;
         }
-
+        public List<int> CadenaComerciales(int comercialId)
+        {           
+            var listaSuperiores = new List<int>();
+            ObtenerCadenaUsuarios(comercialId, listaSuperiores);
+            
+            return listaSuperiores;
+        }
+        private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
+        {
+            var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId);
+            listaSuperiores.Add(comercial.ComercialId);
+            if (comercial.EmpleadorACargo != null)
+            {
+                ObtenerCadenaUsuarios(comercial.EmpleadorACargo.ComercialId, listaSuperiores);
+            }
+            return listaSuperiores;
+        }
         public int ObtenerComercialId(string idActiveDirectory)
         {
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);

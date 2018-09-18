@@ -61,21 +61,16 @@ namespace Molinos.DataAgro.Agent
 
         public List<ZMPES5140> ObtenerDatosDeProveedorEstado(List<String> CUIT, List<String> usuarios)
         {
-            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {
-                //datos.ForEach(x => x.UsuarioDirectory = ConfigurationManager.AppSettings["SapPruebaUser"]);
-            }
-
             try
             {
-                //var CUIT = new List<String>();
-                List<ZMPES5150> valor = new List<ZMPES5150>();
+                var valor = new List<ZMPES5150>();
 
                 foreach (var item in usuarios)
                 {
-                    ZMPES5150 us = new ZMPES5150();
-                    us.USUARIO = item;
-                    valor.Add(us);
+                    valor.Add(new ZMPES5150
+                    {
+                        USUARIO = item
+                    });
                 }
 
                 SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();

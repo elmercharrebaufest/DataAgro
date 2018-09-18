@@ -159,6 +159,7 @@ namespace Molinos.DataAgro.Business.Managers
                 valor.ProveedorId = oProveedor.ProveedorId;
                 valor.RazonSocial = oProveedor.RazonSocial;
                 valor.ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0;
+                valor.Consignatario = (bool)oProveedor.Consignatario;
                 valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
                 valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
             }
@@ -344,16 +345,13 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oContrato.ProveedorId);
                 
                 string emailComercial = "";
-                string emailJefe = "";
 
                 if (oContrato.Comercial != null)
                 {
                     try { emailComercial = GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
-
-                    try { emailJefe = GetEmailUserActiveDirectory(oContrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
                 }
 
-                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
+                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailComercial != null && emailComercial == ""))
                 {
                     var oMensaje = new MailMessage
                     {
@@ -361,7 +359,6 @@ namespace Molinos.DataAgro.Business.Managers
                     };
 
                     oMensaje.To.Add(proveedorContacto.Email1);
-                    if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
                     
                     oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
@@ -409,22 +406,19 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
                 
                 string emailComercial = "";
-                string emailJefe = "";
 
                 if (oFijacionDePrecioContrato.Comercial != null)
                 {
                     try { emailComercial = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
-                    try { emailJefe = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.EmpleadorACargo.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
-                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailJefe != null && emailJefe != "") || (emailComercial != null && emailComercial == ""))
+                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailComercial != null && emailComercial == ""))
                 {
                     MailMessage oMensaje = new MailMessage();
 
                     oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
 
                     oMensaje.To.Add(proveedorContacto.Email1);
-                    if (emailJefe != "" && emailJefe != null) oMensaje.CC.Add(emailJefe);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
 
                     oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
@@ -490,9 +484,14 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += " CONSIG";
             }
             htmlBody += "</td></tr>";
-                      
+
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))
-                + " Kg." + "</td></tr>";
+                + " Kg.";
+            if (oContrato.CantidadCamiones != null)
+            {
+                htmlBody += " (" + oContrato.CantidadCamiones + " camiones)<br />";
+            }
+            htmlBody+= "</td></tr>";
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 2)
             {
@@ -522,11 +521,7 @@ namespace Molinos.DataAgro.Business.Managers
             else if (oContrato.EstablecimientoPropio == false)
             {
                 htmlBody += "ESTABLECIMIENTO ARRENDADO<br />";
-            }
-            if (oContrato.CantidadCamiones != null)
-            {
-                htmlBody += "CANTIDAD CAMIONES " + oContrato.CantidadCamiones + "<br />";
-            }
+            }            
             if (oContrato.ImporteSustentable != null)
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
@@ -578,12 +573,20 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var cal in objCalidad)
                 {
                     htmlBody +=  cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor + "<br />";
+                    if (cal.PorcentajeDesde!= null && cal.PorcentajeHasta != null)
+                    {
+                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    }
                 }
             }
             if (oContrato.PlanCanje == true)
             {
                 htmlBody += "PLAN CANJE" + "<br />";
-            }            
+            }
+            if (oContrato.Observacion != null)
+            {
+                htmlBody += oContrato.Observacion + "<br />";
+            }
             htmlBody += "</td></tr>";            
             htmlBody += "</table>";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
@@ -827,7 +830,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Intermediario = oParam.contacto.intermediario,
                 LocalidadId = oParam.contacto.localidad,
                 EstadoId = 1,
-                FechaAlta = DateTime.Now
+                FechaAlta = DateTime.Now,
+                Consignatario = oParam.basicos.Consignatario
             };
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             var oEstados = repositorio.Listar<Estado>();
@@ -1159,6 +1163,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.BolsaCompraNetId = oParam.basicos.BolsaCompraNet;
                 oProveedorSave.LocalidadCompraNetId = oParam.basicos.LocalidadCompraNet;
                 oProveedorSave.ProvinciaCompraNetId = oParam.basicos.ProvinciaCompraNet;
+                oProveedorSave.Consignatario = oParam.basicos.Consignatario;
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
@@ -2103,7 +2108,12 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<BusquedaHome> DevolverProveedores(string filtro)
         {
-            return repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", 15, filtro);
+            var resultado = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", 15, filtro);
+            foreach(var r in resultado)
+            {
+                r.Filtro = filtro + "|" + r.RazonSocial + " ("+ r.Cuit + ")";
+            }
+            return resultado;
         }
 
         public List<ProveedorDto> ListarProveedor(string proveedor)

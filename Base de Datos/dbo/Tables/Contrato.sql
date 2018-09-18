@@ -10,7 +10,7 @@
     [FechaDesde] DATETIME NOT NULL, 
     [FechaHasta] DATETIME NOT NULL, 
     [ProveedorId] INT NOT NULL, 
-    [MonedaId] CHAR(5) NOT NULL, 
+    [MonedaId] CHAR(5) NULL, 
     [Fecha] DATETIME NOT NULL, 
     [GrupoCompra] INT NOT NULL, 
     [ComercialId] INT NULL, 
@@ -41,7 +41,8 @@
 	[BoletoId] INT DEFAULT 3 NOT NULL,  
 	[BolsaId] INT NULL,
 	[DesdeFijacion] DATETIME NULL,
-	[HastaFijacion] DATETIME NULL
+	[HastaFijacion] DATETIME NULL,
+	[MercsDeposito] BIT NULL
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
