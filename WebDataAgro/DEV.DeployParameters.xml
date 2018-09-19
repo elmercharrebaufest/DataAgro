@@ -9,7 +9,7 @@
     <setParameter name="CredentialUserName Key" value="dataagro.baufest@gmail.com" />
     <setParameter name="CredentialPassword Key" value="Hola1234" />
     <setParameter name="EmailAgenda Key" value="1" />
-  <setParameter name="EmailAgenda Key" value="N" />
+  <setParameter name="SmtpAnonimo Key" value="N" />
     <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
     <setParameter name="SapPass Key" value="Dataagro2017" />
     <setParameter name="SinConexionSap Key" value="1" />

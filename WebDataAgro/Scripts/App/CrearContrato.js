@@ -197,6 +197,7 @@ function InicializarElementos() {
                 $(".datos-topesplazos").hide();
                 $(".datos-establecimiento").hide();
                 $("#ContratoDiv").show();
+                $("#ComercialDiv").show();
                 $("#guardarBtn").empty();
                 $("#DatosBoleto").hide();
                 $("#DatosPago").hide();
@@ -228,6 +229,7 @@ function InicializarElementos() {
                 $("#baseDiv").show();
                 $("#DatosAdicionales").show();
                 $("#ContratoDiv").hide();
+                $("#ComercialDiv").hide();
                 $("#guardarBtn").empty();
                 $("#DatosBoleto").show();
                 $("#guardarBtn").append("Guardar Negocio");
@@ -1269,6 +1271,11 @@ function ObtenerDatos() {
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
     obj.Fecha = $("#fechaOperacionId").val() == "" ? hoy : $("#fechaOperacionId").val();
+    if (TipoNegocioId == "3") {
+        obj.ComercialId = $("#comercialFijacionId").val();
+    } else {
+        obj.ComercialId = $("#comercialId").val();
+    }
     obj.ComercialId = $("#comercialId").val();
     obj.ProvinciaId = $("#provinciaId").val();
     obj.LocalidadId = $("#LocalidadId").val();

@@ -9,7 +9,7 @@
     <setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />
     <setParameter name="CredentialPassword Key" value="D4taAgr017" />
     <setParameter name="EmailAgenda Key" value="0" />
-    <setParameter name="EmailAgenda Key" value="S" />
+    <setParameter name="SmtpAnonimo Key" value="S" />
     <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
     <setParameter name="SapPass Key" value="Dataagro2017" />
     <setParameter name="SinConexionSap Key" value="0" />
