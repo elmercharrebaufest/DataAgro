@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;
+            logger.Debug("ProcessComprasAyer - Proveedores a actualziar: " + oProveedor.Count);
             if (oProveedor.Count > 0)
             {
                 foreach (var comercial in oComercial)

@@ -32,8 +32,8 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"ProcessComprasAyer - Iniciando");
             comprasManager.ActualizarComprasAyer();
-            logger.Info($"ProcessComprasAyer - Iniciando");
-            return View();
+            logger.Info($"ProcessComprasAyer - Fin");
+            return Content("ok");
         }
 
         public ActionResult ProcessRg2300()
@@ -94,7 +94,7 @@ namespace WebDataAgro.Controllers
                 throw;
             }
             logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
-            return View();
+            return Content("ok");
         }
 
         public ActionResult ProcessFacacop()
@@ -148,7 +148,7 @@ namespace WebDataAgro.Controllers
                 throw;
             }
             logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
-            return View();
+            return Content("ok");
         }
 
         public ActionResult ProcessEstado()
@@ -156,7 +156,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"ProcessEstado - Iniciando");
             estadoProveedorManager.ActualizarProveedores();
             logger.Info($"ProcessEstado - Finalizado");
-            return View();
+            return Content("ok");
         }
 
         public ActionResult ProcessCompras()
@@ -164,7 +164,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"ProcessCompras - Iniciando");
             comprasManager.ActualizarCompras();
             logger.Info($"ProcessCompras - Finalizado");
-            return View();
+            return Content("ok");
         }
     }
 }

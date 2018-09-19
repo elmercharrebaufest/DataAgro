@@ -36,9 +36,9 @@ namespace Molinos.DataAgro.Business.Managers
                     usuario.Add(aux);
                 }
 
-                var CUIT = repositorio.Listar<Proveedor, string>(x => x.CUIT, x => true);
+                var CUIT = repositorio.Listar<Proveedor, string>(x => x.CUIT);
                 var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(CUIT, usuario);
-                
+                logger.Debug("ActualizarProveedores - Proveedores a actualziar: " + list.Count);
                 if (list.Count > 0)
                 {
 
