@@ -159,7 +159,7 @@ namespace Molinos.DataAgro.Business.Managers
                 valor.ProveedorId = oProveedor.ProveedorId;
                 valor.RazonSocial = oProveedor.RazonSocial;
                 valor.ClasificacionId = oProveedor.ClasificacionCompraNetId ?? 0;
-                valor.Consignatario = (bool)oProveedor.Consignatario;
+                valor.Consignatario = (bool)(oProveedor.Consignatario ?? false);
                 valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
                 valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
             }
