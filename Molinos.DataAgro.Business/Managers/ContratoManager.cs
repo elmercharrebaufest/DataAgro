@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
-                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial), 0, "Comercial");
+                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial || x.Perfil.PerfilId == (int)EnumPerfil.Jefe || x.Perfil.PerfilId == (int)EnumPerfil.Mesa), 0, "Comercial");
 
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
