@@ -351,47 +351,56 @@ namespace Molinos.DataAgro.Business.Managers
                     try { emailComercial = GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory); } catch (Exception e){ logger.Error(e); }
                 }
 
-                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailComercial != null && emailComercial == ""))
+                var oMensaje = new MailMessage
                 {
-                    var oMensaje = new MailMessage
-                    {
-                        From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
-                    };
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
 
+                if(proveedorContacto != null && !string.IsNullOrEmpty(proveedorContacto.Email1))
+                {
                     oMensaje.To.Add(proveedorContacto.Email1);
-                    if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
-                    
-                    oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
-
-                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
-
-                    oMensaje.BodyEncoding = Encoding.UTF8;
-
-                    oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
-
-                    SmtpClient oCliente = default(SmtpClient);
-
-                    int Condicion = 0;
-                    if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
-                    {
-                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
-                    }
-                    else
-                    {
-                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
-                    }
-
-                    if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
-                    {
-                        oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                        oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
-                            ConfigurationManager.AppSettings["CredentialPassword"]);
-                    }
-
-                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-
-                    oCliente.Send(oMensaje);
+                    if (!string.IsNullOrEmpty(emailComercial)) oMensaje.CC.Add(emailComercial);
                 }
+                else if(!string.IsNullOrEmpty(emailComercial))
+                {
+                    oMensaje.To.Add(emailComercial);
+                }
+                else
+                {
+                    logger.Debug($"El contrato {oContrato.ContratoId} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
+                    return;
+                }
+                
+                oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
+
+                oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+
+                oMensaje.BodyEncoding = Encoding.UTF8;
+
+                oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
+
+                SmtpClient oCliente = default(SmtpClient);
+
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
+                else
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
+
+                if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                {
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                        ConfigurationManager.AppSettings["CredentialPassword"]);
+                }
+
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+
+                oCliente.Send(oMensaje);
             }
             catch (Exception ex)
             {

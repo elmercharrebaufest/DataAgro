@@ -154,6 +154,19 @@ function InicializarElementos() {
         }
     });
 
+    $("#comercialFijacionId").kendoDropDownList({
+        optionLabel: "SELECCIONE UN COMERCIAL...",
+        dataTextField: "Comercial",
+        dataValueField: "ComercialId",
+    });
+
+    $("#comercialFijacionId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#comercialFijacionId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+
     $("#comercialModalPendienteId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
@@ -1271,7 +1284,7 @@ function ObtenerDatos() {
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
     obj.Fecha = $("#fechaOperacionId").val() == "" ? hoy : $("#fechaOperacionId").val();
-    if (TipoNegocioId == "3") {
+    if (obj.TipoNegocioId == "3") {
         obj.ComercialId = $("#comercialFijacionId").val();
     } else {
         obj.ComercialId = $("#comercialId").val();
