@@ -124,6 +124,10 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string cODIGOField;
         
+        private decimal pORC_DESDEField;
+        
+        private decimal pORC_HASTAField;
+        
         private decimal vALORField;
         
         /// <remarks/>
@@ -140,6 +144,30 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public decimal PORC_DESDE {
+            get {
+                return this.pORC_DESDEField;
+            }
+            set {
+                this.pORC_DESDEField = value;
+                this.RaisePropertyChanged("PORC_DESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal PORC_HASTA {
+            get {
+                return this.pORC_HASTAField;
+            }
+            set {
+                this.pORC_HASTAField = value;
+                this.RaisePropertyChanged("PORC_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public decimal VALOR {
             get {
                 return this.vALORField;
@@ -417,6 +445,10 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         private string eSTAB_PROPIOField;
         
         private string eSTAB_ARRENDADOField;
+        
+        private string mERC_DESCARGADAField;
+        
+        private string oBSERVACION_CAL1Field;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -943,6 +975,30 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.eSTAB_ARRENDADOField = value;
                 this.RaisePropertyChanged("ESTAB_ARRENDADO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=44)]
+        public string MERC_DESCARGADA {
+            get {
+                return this.mERC_DESCARGADAField;
+            }
+            set {
+                this.mERC_DESCARGADAField = value;
+                this.RaisePropertyChanged("MERC_DESCARGADA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=45)]
+        public string OBSERVACION_CAL1 {
+            get {
+                return this.oBSERVACION_CAL1Field;
+            }
+            set {
+                this.oBSERVACION_CAL1Field = value;
+                this.RaisePropertyChanged("OBSERVACION_CAL1");
             }
         }
         

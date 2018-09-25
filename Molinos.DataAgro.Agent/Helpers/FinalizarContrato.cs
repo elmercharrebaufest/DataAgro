@@ -67,7 +67,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         listaCalidades.Add(new ZMPES5300
                         {
                             CODIGO = cal.CalidadEspecial.CodigoSap,
-                            VALOR = cal.Valor
+                            VALOR = cal.Valor,
+                            PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                            PORC_HASTA = cal.PorcentajeHasta ?? 0
                         }
                         );
                     }
@@ -130,7 +132,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
                         IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
                         MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null,
-                        PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0                        
+                        PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
+                        MERC_DESCARGADA = contrato.MercsDeposito ==true ? "X" : "",
+                        OBSERVACION_CAL1 = contrato.Observacion
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

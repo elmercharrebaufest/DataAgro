@@ -15,13 +15,17 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private IProveedorManager mobjProveedorManager;
+        private IComercialManager mobjComercialManager;
+        private readonly IPushNotificationManager mobjNotification;
         private ILogger logger;
 
-        public FijacionDePrecioContratoManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager)
+        public FijacionDePrecioContratoManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager, IComercialManager oMSComercialManager, IPushNotificationManager oMSNotification)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
+            mobjComercialManager = oMSComercialManager;
+            mobjNotification = oMSNotification;
         }
 
         //--------------------------------------------------
@@ -211,6 +215,11 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oFijacionDePrecioSave);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -241,6 +250,11 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oFijacionDePrecioSave);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -278,6 +292,11 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oContratoSave);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -290,6 +309,34 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "La Fijación no se puede rechazar");
             }
             return oEntityErrors;
+        }
+
+        private void EnviarNotificacion(int comercialId, FijacionDePrecioContrato fijacion)
+        {
+            var tokens = repositorio.Listar<SuscripcionComercial>(x => x.ComercialId == comercialId);
+            var title = "";
+            var message = "";
+            var hora = DateTime.Now.ToString("hh:mm");
+            if (fijacion.EstadoId == 2)
+            {
+                title = "Contrato Confirmado";
+                message = "La fijación del contrato " + fijacion.ContratoId + " ha sido confirmado a las " + hora;
+            }
+            else if (fijacion.EstadoId == 5)
+            {
+                title = "Contrato Finalizado";
+                message = "La fijación del contrato  " + fijacion.ContratoId + " ha sido finalizado a las " + hora + " por " + fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido;
+            }
+            else if (fijacion.EstadoId == 6)
+            {
+                title = "Contrato Rechazado";
+                message = "La fijación del contrato  " + fijacion.ContratoId + " ha sido rechazado a las " + hora;
+            }
+            var url = "/CompraNet";
+            foreach (var to in tokens)
+            {
+                mobjNotification.QueueMessage(to.Key, title, message, url);
+            }
         }
 
         public BasicoContrato TraerFijacion(int id)

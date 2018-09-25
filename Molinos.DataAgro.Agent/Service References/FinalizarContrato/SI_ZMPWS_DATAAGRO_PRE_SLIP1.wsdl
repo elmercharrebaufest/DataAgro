@@ -126,6 +126,11 @@
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char120">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="120" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:complexType name="ZMPTT7820">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5300" />
@@ -182,6 +187,8 @@
           <xsd:element name="PORC_A_PRECIO" type="rfc:decimal5.2" />
           <xsd:element name="ESTAB_PROPIO" type="rfc:char1" />
           <xsd:element name="ESTAB_ARRENDADO" type="rfc:char1" />
+          <xsd:element name="MERC_DESCARGADA" type="rfc:char1" />
+          <xsd:element name="OBSERVACION_CAL1" type="rfc:char120" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">
@@ -204,6 +211,8 @@
       <xsd:complexType name="ZMPES5300">
         <xsd:sequence>
           <xsd:element name="CODIGO" type="rfc:char8" />
+          <xsd:element name="PORC_DESDE" type="rfc:decimal5.2" />
+          <xsd:element name="PORC_HASTA" type="rfc:decimal5.2" />
           <xsd:element name="VALOR" type="rfc:decimal5.2" />
         </xsd:sequence>
       </xsd:complexType>
