@@ -51,6 +51,10 @@ namespace Molinos.DataAgro.Interfaces
         
         List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes);
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes);
-                
+        List<ToneladasGranoTipoDto> TraerToneladasGranoTipo();
+        ReporteSojaSustDto TraerToneladasSojaSust();
+        List<PosicionComprasDto> TraerPosicionCompras();
+        List<PrecioCantidadDto> TraerMonedaCantidad();
+        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, bool? calidad);
     }
 }

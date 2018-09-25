@@ -1,5 +1,11 @@
 ﻿$(document).ready(function () {
-    initialiseUI();
+    try {
+        initialiseUI();
+    }
+    catch (error) {
+        console.error(error);
+    }
+    
 });
 function initialiseUI() {
     var result = MSExecuteOnServer('/CompraNet/UsuarioSuscripto');

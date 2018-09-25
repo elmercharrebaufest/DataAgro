@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;

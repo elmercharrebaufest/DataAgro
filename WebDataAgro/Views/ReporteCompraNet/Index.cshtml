@@ -1,0 +1,273 @@
+﻿@using Molinos.DataAgro.Entities.Common.Enums
+@model WebDataAgro.Models.ReporteCompraNetModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Reporte CompraNet";
+}
+
+@section Styles {
+    <link href="~/Content/ReporteCompraNet.css" rel="stylesheet" />
+}
+
+<div class="Titulo">
+    <h5> Reporte de Negocios CompraNet </h5>
+
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="table-responsive col-md-8">
+                <table class="table-condensed" id="ComprasToneladasTipo">
+                    <tbody>
+                        <tr class="titulos">
+                            <td id=""></td>
+                            <th id="disponible" colspan="3">DISPONIBLE</th>
+                            <th id="forward" colspan="3">FORWARD</th>
+                            <th id="newCrop" colspan="3">NEW CROP</th>
+                            <td></td>
+                        </tr>
+                        <tr class="titulos">
+                            <th>PRODUCTO</th>
+                            <th>A FIJAR</th>
+                            <th>A PECIO</th>
+                            <th>FIJACIÓN</th>
+                            <th>A FIJAR</th>
+                            <th>A PECIO</th>
+                            <th>FIJACIÓN</th>
+                            <th>A FIJAR</th>
+                            <th>A PECIO</th>
+                            <th>FIJACIÓN</th>
+                            <th>TOTAL</th>
+                        </tr>
+                        @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
+                        {
+                            <tr>
+                                <th>@toneladaPrecio.Material</th>
+                                <td>@toneladaPrecio.DispAFijar</td>
+                                <td>@toneladaPrecio.DispAPrecio</td>
+                                <td>@toneladaPrecio.DispFijac</td>
+                                <td>@toneladaPrecio.FrwAFijar</td>
+                                <td>@toneladaPrecio.FrwAPrecio</td>
+                                <td>@toneladaPrecio.FrwFijac</td>
+                                <td>@toneladaPrecio.NewAFijar</td>
+                                <td>@toneladaPrecio.NewAPrecio</td>
+                                <td>@toneladaPrecio.NewFijac</td>
+                                <td>@toneladaPrecio.Total</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <table class="table-condensed" id="SojaSustentable">
+                    <tbody>
+                        <tr>
+                            <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
+                        </tr>
+                        <tr>
+                            <th>A PRECIO</th>
+                            <th>A FIJAR</th>
+                            <th>TOTAL</th>
+                        </tr>
+                        <tr>
+                            <td>@Model.SojaSustentable.Precio</td>
+                            <td>@Model.SojaSustentable.Fijar</td>
+                            <td>@Model.SojaSustentable.Total</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var material in Model.PosicionCompras)
+            {
+                <div class="col-xs-6 col-md-2">
+                    <table id="@material.Material" class="table-condensed">
+                        <tbody>
+
+                            @if (material.Material == "Soja" || material.Material == "Maíz")
+                            {
+                                <tr class="titulos"><th colspan="3">@material.Material</th></tr>
+                                <tr>
+                                    <th>POSICIÓN</th>
+                                    <th>KG</th>
+                                    <th></th>
+                                </tr>
+
+                                foreach (var mes in (EnumMeses[])Enum.GetValues(typeof(EnumMeses)))
+                                {
+                                    int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.ToString()));
+                                    if (material.PosicionKilos.Count > 0)
+                                    {
+                                        foreach (var kilos in material.PosicionKilos)
+                                        {
+                                            <tr>
+                                                <td> @mes </td>
+                                                @if (kilos.Mes == mes)
+                                                {
+                                                    <td> @kilos.Kilos </td>
+                                                }
+                                                else
+                                                {
+                                                    <td> 0 </td>
+                                                }
+                                                <td>
+                                                    @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId,mes = mesActual }, new { @class = "Descarga" })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td> @mes </td>
+                                            <td> 0 </td>
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId,mes = mesActual }, new { @class = "Descarga" })
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                <tr class="total">
+                                    <th>Total</th>
+                                    <td>@material.Total</td>
+                                    <td></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                var calidad = false;
+                                if (material.Material == "Trigo Calidad")
+                                {
+                                    calidad = true;
+                                }
+                                <tr class="titulos"><th colspan="3">@material.Material</th></tr>
+                                <tr>
+                                    <th>POSICIÓN</th>
+                                    <th>KG</th>
+                                    <th></th>
+                                </tr>
+                                if (material.PosicionKilos.Count > 0)
+                                {
+                                    foreach (var kilos in material.PosicionKilos)
+                                    {
+                                        <tr>
+                                            <td>Noviembre</td>
+                                            @if (kilos.Mes == EnumMeses.Noviembre)
+                                            {
+                                                <td>@kilos.Kilos</td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                            }
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 11, calidad }, new { @class = "Descarga" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diciembre</td>
+                                            @if (kilos.Mes == EnumMeses.Diciembre)
+                                            {
+                                                <td>@kilos.Kilos</td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                            }
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 12, calidad }, new { @class = "Descarga" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Enero</td>
+                                            @if (kilos.Mes == EnumMeses.Enero)
+                                            {
+                                                <td>@kilos.Kilos</td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                            }
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 1, calidad }, new { @class = "Descarga" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Febrero</td>
+                                            @if (kilos.Mes == EnumMeses.Febrero)
+                                            {
+                                                <td>@kilos.Kilos</td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                            }
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, calidad }, new { @class = "Descarga" })
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>Noviembre</td>
+                                        <td>0</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 11, calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Diciembre</td>
+                                        <td>0</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 12, calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Enero</td>
+                                        <td>0</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 1, calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Febrero</td>
+                                        <td>0</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                }
+                                <tr class="total">
+                                    <th>Total</th>
+                                    <td>@material.Total</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="col-md-1"></div>
+            <div>
+                <table class=" col-md-2" id="MonedaKilo">
+                    <tbody>
+                        @foreach (var moneda in Model.PrecioCantidad)
+                        {
+                            <tr class="total">
+                                <th>@moneda.Moneda</th>
+                                <td>@moneda.Cantidad</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

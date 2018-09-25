@@ -1,10 +1,14 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Resources;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -190,8 +194,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         #endregion 
         #endregion
-
-
+        
         #region Objetivos
         public List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes)
         {
@@ -225,10 +228,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             return datosGrilla;
         }
-
-
+        
         //BASEDEDATOS
-
         public List<ResulIndicadores> TraerBasedeDatos(ParamReportes oParamReportes)
         {
             return new List<ResulIndicadores>();
@@ -342,6 +343,78 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             return oParamReportes;         
-        }     
+        }
+
+        public List<ToneladasGranoTipoDto> TraerToneladasGranoTipo()
+        {
+            var sojaToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(3));
+            sojaToneladas.Material = "Soja";
+            var maizToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1));
+            maizToneladas.Material = "Maiz";
+            var trigoCamaraToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, false));
+            trigoCamaraToneladas.Material = "Trigo Cámara";
+            var trigoCalidadToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, true));
+            trigoCalidadToneladas.Material = "Trigo Calidad";
+
+            return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, trigoCalidadToneladas };
+
+        }
+        public ReporteSojaSustDto TraerToneladasSojaSust()
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerToneladasSojaSustentable());
+        }
+        public List<PosicionComprasDto> TraerPosicionCompras()
+        {
+            var kilosPosicionSoja = repositorio.ListarConsulta(new TraerPosicionMaterial(3));
+            var posicionSoja = new PosicionComprasDto
+            {
+                Material = "Soja",
+                MaterialId = 3,
+                PosicionKilos = kilosPosicionSoja,
+                Total = kilosPosicionSoja.Sum(x=>x.Kilos)
+            };
+            var kilosPosicionMaiz = repositorio.ListarConsulta(new TraerPosicionMaterial(1));
+            var posicionMaiz = new PosicionComprasDto
+            {
+                Material = "Maíz",
+                MaterialId = 1,
+                PosicionKilos = kilosPosicionMaiz,
+                Total = kilosPosicionMaiz.Sum(x => x.Kilos)
+            };
+            var kilosPosicionTrigoCamara = repositorio.ListarConsulta(new TraerPosicionMaterial(2, false));
+            var posicionTrigoCamara = new PosicionComprasDto
+            {
+                Material = "Trigo Cámara",
+                MaterialId = 2,
+                PosicionKilos = kilosPosicionTrigoCamara,
+                Total = kilosPosicionTrigoCamara.Sum(x => x.Kilos)
+            };
+            var kilosPosicionTrigoCalidad = repositorio.ListarConsulta(new TraerPosicionMaterial(2, true));
+            var posicionTrigoCalidad = new PosicionComprasDto
+            {
+                Material = "Trigo Calidad",
+                MaterialId = 2,
+                PosicionKilos = kilosPosicionTrigoCamara,
+                Total = kilosPosicionTrigoCamara.Sum(x => x.Kilos)
+            };
+            return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, posicionTrigoCalidad };
+        }
+        public List<PrecioCantidadDto> TraerMonedaCantidad()
+        {
+            var moneda = repositorio.ListarConsulta(new TraerMonedaKilo());
+
+            return new List<PrecioCantidadDto>() { new PrecioCantidadDto {Moneda = "Pesos" , Cantidad= moneda.Exists(x=>x.Moneda == "ARP  ")?moneda.Where(x=>x.Moneda== "ARP  ").Select(x=>x.Cantidad).First():0},
+                new PrecioCantidadDto {Moneda = "Dólares" , Cantidad=moneda.Exists(x=>x.Moneda == "USDM ")? moneda.Where(x=>x.Moneda== "USDM ").Select(x=>x.Cantidad).First():0}};            
+        }
+
+        public ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, bool? calidad)
+        {
+            var excel = new ExcelDetallePosicionDto();
+            excel.Headers = typeof(DetalleContratoDto).GetProperties().Select(p =>Text.ResourceManager.GetString(p.Name)).ToArray();
+            excel.Data = repositorio.ListarConsulta(new TraerDetallePosicion(materialId, mes, calidad));
+            excel.Name = "Detalle Posición de Negocios de " + (EnumMeses)Enum.ToObject(typeof(EnumMeses), mes)+".xlsx";
+            excel.SheetName = "Posición";
+            return excel;
+        }
     }
 }

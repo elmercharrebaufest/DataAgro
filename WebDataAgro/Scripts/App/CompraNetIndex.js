@@ -1,5 +1,6 @@
 var viewModel;
 var datosIniCrearContrato;
+var filasSeleccionadas = {};
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -188,16 +189,19 @@ function botonBorrar(dataItem, icono) {
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 
+
 function AutoRecargar() {
     setInterval(function () {
         if (document.getElementById('checkRecarga').checked == true) {
+            filasSeleccionadas = SeleccionarElementos();
             recargarGrilla();
         }
-    }, 60000);
+    }, 30000);
 };
 
 function recargarGrilla() {
     $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
+            
 }
 
 function CreateGridInformeCompraNet() {
@@ -262,6 +266,19 @@ function CreateGridInformeCompraNet() {
             {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
             }
+            var grid = $("#gridInformeCompraNet").data("kendoGrid");
+            var view = grid.dataSource.view();
+            for (var i = 0; i < view.length; i++) {
+                for (var j = 0; j < filasSeleccionadas.length; j++) {
+                    if (filasSeleccionadas[j].ContratoId == view[i].ContratoId && filasSeleccionadas[j].FijacionDePrecioContratoId == view[i].FijacionDePrecioContratoId) {
+                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                            .addClass("k-state-selected")
+                            .find(".k-checkbox")
+                            .prop('checked', true);
+                    }
+                }
+            }
+            filasSeleccionadas = {};
         },
         columns: [            
             { selectable: true, width: "50px" },
@@ -652,6 +669,8 @@ function ModalConfirmadoVarios( ) {
     $("#confirmarVarios").show();
     $("#cancelarVarios").show();
     $("#cerrarVarios").hide();
+    $("#negocioFinalizado-modal").html('');
+    $("#negocioConfirmado-modal").html('');
 
     var negocios = SeleccionarElementos();
     for (var i in negocios) {
@@ -705,6 +724,9 @@ function ModalFinalizarVarios() {
     $("#finalizarVarios").show();
     $("#cancelarVariosFinalizado").show();
     $("#cerrarVariosFinalizado").hide();
+
+    $("#negocioFinalizado-modal").html('');
+    $("#negocioConfirmado-modal").html('');
 
     var negocios = SeleccionarElementos();
     for (var i in negocios) {

@@ -10,6 +10,7 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 
@@ -107,6 +108,30 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
+            }
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
+            if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap))
+            {
+                if (proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");                    
+                }                
+            }
+            var rg = repositorio.Obtener<RG2300>(x => x.CUIT == proveedor.CUIT);
+            if(rg!=null)
+            {
+                if ((rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"])
+                     || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
+                         || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por situación de" + rg.Situacion);
+                }
+
+            }
+            var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
+            if (facacop != null)
+            {
+                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo");
             }
             if (oParam.MaterialId == 0)
             {

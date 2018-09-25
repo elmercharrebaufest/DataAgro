@@ -394,13 +394,29 @@ $(window).scroll(function (event) {
 $(window).resize(mobile);
 
 $(document).ready(function () {
-    var messaging = firebase.messaging();
-    messaging.onMessage(function (payload) {
-        var dataFromServer = JSON.parse(payload.data.notification);
-        //var myMessageBar = new MessageBar();
-        //myMessageBar.setMessage(dataFromServer.title + " : " + dataFromServer.body);
-        notifyMe(dataFromServer);
-    });
+    try {
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAoYLUaU77nDrO17zgt1pR_eeAitk_4md0",
+            authDomain: "dataagro-786eb.firebaseapp.com",
+            databaseURL: "https://dataagro-786eb.firebaseio.com",
+            projectId: "dataagro-786eb",
+            storageBucket: "dataagro-786eb.appspot.com",
+            messagingSenderId: "93653202795"
+        };
+        firebase.initializeApp(config);
+
+        var messaging = firebase.messaging();
+        messaging.onMessage(function (payload) {
+            var dataFromServer = JSON.parse(payload.data.notification);
+            //var myMessageBar = new MessageBar();
+            //myMessageBar.setMessage(dataFromServer.title + " : " + dataFromServer.body);
+            notifyMe(dataFromServer);
+        });
+    }
+    catch (error) {
+        console.error(error);
+    }
 });
 
 function notifyMe(dataFromServer) {

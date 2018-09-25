@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
+    <Compile Include="Common\Enums\EnumMeses.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Dto\ComercialDto.cs" />
     <Compile Include="Dto\CondicionDto.cs" />
     <Compile Include="Dto\ContactoComercialDto.cs" />
+    <Compile Include="Dto\ExcelDetallePosicionDto.cs" />
+    <Compile Include="Dto\DetalleContratoDto.cs" />
     <Compile Include="Dto\ContratoDto.cs" />
     <Compile Include="Dto\CalidadDto.cs" />
     <Compile Include="Dto\DescuentoBonificacionDto.cs" />
@@ -93,19 +96,28 @@
     <Compile Include="Dto\LocalidadDto.cs" />
     <Compile Include="Dto\MaterialDto.cs" />
     <Compile Include="Dto\MonedaDto.cs" />
+    <Compile Include="Dto\PosicionComprasDto.cs" />
     <Compile Include="Dto\PostItDto.cs" />
+    <Compile Include="Dto\PrecioCantidadDto.cs" />
     <Compile Include="Dto\ProveedorDto.cs" />
     <Compile Include="Dto\ProvinciaDto.cs" />
     <Compile Include="Dto\RangoPrecioDto.cs" />
     <Compile Include="Dto\ReportesDto.cs" />
+    <Compile Include="Dto\ReporteSojaSustDto.cs" />
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
+    <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\SuscripcionComercial.cs" />
     <Compile Include="Entities\RangoPrecio.cs" />
     <Compile Include="Entities\Calidad.cs" />
     <Compile Include="Entities\DescuentoBonificacion.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
+    <Compile Include="Resources\Text.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Text.resx</DependentUpon>
+    </Compile>
     <Compile Include="Validations\EntityValid.cs" />
     <Compile Include="Validations\IEntityKeyValid.cs" />
     <Compile Include="Validations\FijacionDePrecioContrato.cs" />
@@ -213,7 +225,12 @@
     <Compile Include="Helpers\ValidacionMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Text.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Text.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
