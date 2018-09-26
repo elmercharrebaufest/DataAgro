@@ -225,6 +225,7 @@
     <Build Include="dbo\Tables\Calidad.sql" />
     <Build Include="dbo\Tables\RangoPrecio.sql" />
     <Build Include="dbo\Tables\SuscripcionComercial.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ActualizarEstadoProveedor.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

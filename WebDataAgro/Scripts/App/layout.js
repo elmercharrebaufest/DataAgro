@@ -89,7 +89,7 @@ function mobile() {
         $("#tablas").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
 
     }
-    if (ww < 768) {
+    if (window.innerWidth < 768) {
         $("#segundo").addClass("left");
         $("#segundo").appendTo(".navbar-header");
         $("#segundo").addClass("floatito");
@@ -107,20 +107,7 @@ function mobile() {
 $(document).ready(function () {
     mobile();
 
-    var ww = document.body.clientWidth;
-    if (ww < 768) {
-        $("#segundo").addClass("left");
-        $("#segundo").appendTo(".navbar-header");
-        $("#segundo").addClass("floatito");
-        $(".icons").addClass("float-left");
-        $(".imgs").removeClass("padding");
-    } else {
-        $("#segundo").removeClass("left");
-        $("#segundo").removeClass("floatito");
-        $("#segundo").appendTo("#myNavbar");
-        $(".icons").removeClass("float-left");
-        $(".imgs").addClass("padding");
-    }
+    var ww = document.body.clientWidth;    
 
     $(".miscontactos-nav").parent().attr("href", window.location.origin);
 

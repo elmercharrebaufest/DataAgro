@@ -134,6 +134,7 @@
                 </div>
                 <div class="col-sm-4 col-md-2">
                     <input id="cantidadCamionesId" style="width:100%" />
+                    <input type="checkbox" id="cargarCantidadCamiones" style="position:absolute; right:20px;top:6px">
                     <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
@@ -144,10 +145,14 @@
                 <label>Precio</label>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-3 required-box-parent">
-                <input id="precioId" class="required-box gris" style="width:50%" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
-                <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:46%;margin-right:0; margin-left:0"></select>
-                <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                <div class="col-md-6 noPadding" style="margin-right:21px">
+                    <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
+                    <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-5 noPadding" style="height:120%">
+                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%; margin-right:0; margin-left:0"></select>
+                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-3">
                 <span id="baseDiv">
@@ -155,7 +160,6 @@
                     <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
                 </span>
                 <div id="pagoDirectoDiv" style="float:right;">
-
                     <label>Pago dir. Vend.</label>
                     <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                     <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
@@ -174,9 +178,11 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-3">
-                <label style="width:80px">Plan canje</label>
-                <input id="planCanjeId" class="campo-input-input" type="checkbox" />
-                <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
+                <span id="planCanjeDiv">
+                    <label style="width:76px">Plan canje</label>
+                    <input id="planCanjeId" class="campo-input-input" type="checkbox" />
+                    <img id="errplanCanjeId" src="~/Content/Images/error.png" style="display:none" />
+                </span>
                 <div style="float:right;" id="consignatarioDiv">
                     <label>Consignatario</label>
                     <input id="consignatarioId" class="campo-input-input" type="checkbox" />

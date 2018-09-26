@@ -96,7 +96,8 @@ function InicializarElementos() {
     $(".datos-descuentos").hide();
 
     $("#buscadorProveedor").click(function () {
-        $("#buscadorProveedor").val("");
+        $("#buscadorProveedor").data("kendoAutoComplete").value("");
+        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
     });
 
     $("#buscadorProveedor").kendoAutoComplete({
@@ -442,6 +443,14 @@ function InicializarElementos() {
                 $("#consignatarioDiv").hide();
                 $("#consignatarioId").prop("checked", false);
             }
+            if (this.value() != 2 && this.value() != 3) {
+                $("#planCanjeDiv").hide();
+                $("#planCanjeId").prop("checked", false);
+            } else {
+                $("#planCanjeDiv").show()
+                
+            }
+
             $("#clasificacion").trigger('change')
         }
     });
@@ -604,9 +613,20 @@ function InicializarElementos() {
         format: "n0",
         spinners: false,
         min: 0,
-        //change: function () {
-        //    $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
-        //}
+        change: function () {
+            if ($("#cargarCantidadCamiones").is(':checked')) {
+                $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
+            }
+        }
+    });
+
+    $("#cargarCantidadCamiones").change(function () {
+        if($("#cargarCantidadCamiones").is(':checked')) {
+            $("#cantidadId").data("kendoNumericTextBox").trigger("change");
+        }
+        else {
+            $("#cantidadCamionesId").data("kendoNumericTextBox").value('');
+        }
     });
 
     $("#cantidadCamionesId").kendoNumericTextBox({
@@ -1195,6 +1215,7 @@ function AsignarDatos() {
     if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");
+    if ($("#sustentableMonedaId").data("kendoDropDownList")) $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
     if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
     if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1")
@@ -1571,6 +1592,7 @@ function CargarDatosEditar(contrato) {
     $("#destinoId").data("kendoDropDownList").trigger("change");
     if (contrato.CantidadCamiones !== "null" && contrato.CantidadCamiones !== undefined && contrato.CantidadCamiones !== 0) {
         $("#cantidadCamionesId").data("kendoNumericTextBox").value(contrato.CantidadCamiones);
+        $("#cargarCantidadCamiones").prop("checked", true);
     }
 
     (contrato.PlanCanje == true) ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);

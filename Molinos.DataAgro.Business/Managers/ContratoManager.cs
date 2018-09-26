@@ -232,10 +232,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("FechaCampana", "Fecha fuera del rango de Campaña");
             }
 
-            var rangosPrecio = repositorio.Listar<RangoPrecio>();
-            if (rangosPrecio.Exists(x=> x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo<oParam.Precio || x.PrecioMinimo > oParam.Precio)) && oParam.TipoNegocioId==2 )
+            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x=>x.MaterialId == oParam.MaterialId && x.MonedaId== oParam.MonedaId);
+            if (rangosPrecio != null && oParam.TipoNegocioId == 2 )
             {
-                oErrorMessages.Error("Precio", "Precio fuera de Rango");
+                oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
             return oErrorMessages;
         }
