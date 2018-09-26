@@ -649,7 +649,6 @@ body {
 }
 
 .botonVarios {
-    margin: 10px;
     cursor: pointer;
     font-size: 25px;
 }
@@ -670,3 +669,23 @@ body {
 #modalVisualizar .campo {
     text-align: left;
 }
+
+#variosDiv {    
+    float: right;
+}
+#confirmarVariosDiv, #finalizarVariosDiv {
+    border: 1px solid #848484;
+    border-radius: 5px !important;
+    background: white;
+    text-align: center;
+    margin: 10px;
+    cursor: pointer;
+}
+#confirmarVariosDiv>span, #finalizarVariosDiv>span {
+    vertical-align: middle;
+}
+
+    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover {
+        background: #ccc;
+        border: 1px solid #017940;
+    }

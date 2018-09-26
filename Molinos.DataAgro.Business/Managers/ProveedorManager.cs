@@ -869,7 +869,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Proveedor = proveedor
                             });
                         }
-                        proveedor.ClienteMOA = (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false);
+                        proveedor.ClienteMOA = !string.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false;
                     }
                 }
                 else
