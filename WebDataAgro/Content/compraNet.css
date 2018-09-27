@@ -329,10 +329,6 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     padding: 3px;
     font-weight: 700;
 }
-.centrar {
-    position: relative;
-    bottom: -6px;
-}
 
 .mover-izquierda {
     right:14px;
@@ -689,3 +685,22 @@ body {
         background: #ccc;
         border: 1px solid #017940;
     }
+
+.myBtn-disabled {
+    width: 100%;
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400 !important;
+    background-color: #fff;
+}
+

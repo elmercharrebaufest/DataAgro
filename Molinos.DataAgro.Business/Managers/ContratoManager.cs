@@ -233,7 +233,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var rangosPrecio = repositorio.Obtener<RangoPrecio>(x=>x.MaterialId == oParam.MaterialId && x.MonedaId== oParam.MonedaId);
-            if (rangosPrecio != null && oParam.TipoNegocioId == 2 )
+            if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio<rangosPrecio.PrecioMinimo||oParam.Precio>rangosPrecio.PrecioMaximo))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
