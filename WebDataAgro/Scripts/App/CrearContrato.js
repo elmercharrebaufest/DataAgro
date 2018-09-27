@@ -946,8 +946,8 @@ function InicializarElementos() {
         else {
             $(".fecha-descuento").show();
             $(".fecha-descuento-pendiente").show();
-            $("#fechaDesdeDescuentoId").val(date)
-            $("#fechaHastaDescuentoId").val(datehasta)
+            $("#fechaDesdeDescuentoId").val(date);
+            $("#fechaHastaDescuentoId").val(datehasta);
         }
     });
     $("#trigoEspecialId").click(function () {
@@ -1158,9 +1158,9 @@ function InicializarDatos() {
             AsignarDatos();
         }
 
-        if (contratoId !== undefined && contratoId) {
+        if (contratoId != undefined && contratoId) {
             setTimeout(InicializarContratoEdit, 300);
-        } else if (fijacionId !== undefined && fijacionId) {
+        } else if (fijacionId != undefined && fijacionId) {
             setTimeout(InicializarFijacionEdit, 300);
         } else {
             $.unblockUI();
@@ -1476,10 +1476,10 @@ function AgregarDescuentos() {
 function validarDescuento(descuento) {
     var errores = [];
 
-    if (descuento.TipoPeriodoDBId === 0 || descuento.TipoPeriodoDBId === "" || descuento.TipoPeriodoDBId === null) {
+    if (descuento.TipoPeriodoDBId == 0 || descuento.TipoPeriodoDBId == "" || descuento.TipoPeriodoDBId == null) {
         errores.push("El campo Descuento no puede estar vacíos");
     }
-    if (descuento.TipoDBId === 0 || descuento.TipoDBId === null || descuento.TipoDBId === "") {
+    if (descuento.TipoDBId == 0 || descuento.TipoDBId == null || descuento.TipoDBId == "") {
         errores.push("El campo Tipo no puede estar vacíos");
     }
     if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == undefined || descuento.FechaHasta == "" || descuento.FechaHasta == undefined)) {
@@ -1493,7 +1493,7 @@ function validarDescuento(descuento) {
     if (descuento.Importe == 0 && descuento.Porcentaje == 0) {
         errores.push("El campo Importe y Porcentaje no pueden estar vacíos");
     }
-    if (descuento.Importe !== 0 && (descuento.MonedaId === "Moneda" || descuento.MonedaId === null || descuento.MonedaId === undefined || descuento.MonedaId === "")) {
+    if (descuento.Importe !== 0 && (descuento.MonedaId == "Moneda" || descuento.MonedaId == null || descuento.MonedaId == undefined || descuento.MonedaId == "")) {
         errores.push("El campo Moneda no puede estar vacío");
     }
     return errores
@@ -1505,8 +1505,8 @@ function AgregarCalidades() {
         CalidadEspecialDesc: $("#calidadesEspecialesId").data("kendoDropDownList").text(),
         CalidadEspecialId: $("#calidadesEspecialesId").data("kendoDropDownList").value(),
         Valor: $("#valorEspecialesId").val(),
-        PorcentajeDesde: $("#porcentajeDesdeId").val() !== "" ? $("#porcentajeDesdeId").val() : null,
-        PorcentajeHasta: $("#porcentajeHastaId").val() !== "" ? $("#porcentajeHastaId").val() : null,
+        PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
+        PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
         StandardDeCalidadId: 2,
         Borrar: function () {
             viewModel.Calidades.remove(this);
@@ -1528,12 +1528,32 @@ function AgregarCalidades() {
 
 function validarCalidad(calidad) {
     var errores = [];
-
+    var cantidadCalidades = viewModel.Calidades.length;
+    var porcDesde = calidad.PorcentajeDesde.replace(',', '.');
+    
     if (calidad.CalidadEspecialId === 0 || calidad.CalidadEspecialId === "" || calidad.CalidadEspecialId === null) {
         errores.push("El campo Calidades Especiales no puede estar vacio");
     }
     if (calidad.Valor === "" || calidad.Valor === null || calidad.Valor === "undefined") {
         errores.push("El campo Valor no puede estar vacio");
+    }
+    if (calidad.PorcentajeDesde > calidad.PorcentajeHasta) {
+        errores.push("El Porcentaje Desde no puede ser mayor que el Porcentaje Hasta");
+    }
+    if (cantidadCalidades == 0 && calidad.PorcentajeDesde > 0) {
+        errores.push("El Porcentaje Desde no puede ser mayor a 0");
+    }
+    if (cantidadCalidades > 0 && viewModel.Calidades[cantidadCalidades - 1].PorcentajeHasta + ".1" != porcDesde) {
+        errores.push("El Porcentaje Desde debe ser el último Porcentaje Hasta más 0,10");
+    }
+    if (calidad.PorcentajeHasta - Math.floor(calidad.PorcentajeHasta) != 0) {
+        errores.push('El Porcentaje Hasta debe ser Entero');
+    }
+    if (calidad.PorcentajeHasta > 51 && calidad.CalidadEspecialId == 1) {
+        errores.push('El Porcentaje Hasta no debe ser mayor a 51% para "Dañados"');
+    }
+    if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 2) {
+        errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Granos verdes"');
     }
     return errores;
 }
@@ -1573,6 +1593,8 @@ function CargarDatosEditar(contrato) {
 
     $("#observacionId").val(contrato.Observacion);
     $("#cantidadId").data("kendoNumericTextBox").value(contrato.Cantidad);
+    $("#cantidadId").trigger("change");
+
     $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
     $("#precioId").trigger("change");
     $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
@@ -1586,7 +1608,7 @@ function CargarDatosEditar(contrato) {
 
     $("#destinoId").data("kendoDropDownList").value(contrato.DestinoId);
     $("#destinoId").data("kendoDropDownList").trigger("change");
-    if (contrato.CantidadCamiones !== "null" && contrato.CantidadCamiones !== undefined && contrato.CantidadCamiones !== 0) {
+    if (contrato.CantidadCamiones != "null" && contrato.CantidadCamiones != undefined && contrato.CantidadCamiones != 0) {
         $("#cantidadCamionesId").data("kendoNumericTextBox").value(contrato.CantidadCamiones);
         $("#cargarCantidadCamiones").prop("checked", true);
     }
@@ -1669,7 +1691,7 @@ function CargarDatosEditar(contrato) {
 
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
     if (contrato.TipoNegocioId == 3) {
-        $("#contratoId").val(contrato.ContratoId)
+        $("#contratoId").val(contrato.ContratoId);
     }
 
     var iteracionesDescuentos = viewModel.Descuentos.length;

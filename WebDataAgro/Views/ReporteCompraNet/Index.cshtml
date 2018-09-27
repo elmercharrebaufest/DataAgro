@@ -9,8 +9,19 @@
 @section Styles {
     <link href="~/Content/ReporteCompraNet.css" rel="stylesheet" />
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        setInterval(Refrescar, 300000);
+    });
 
-<div class="Titulo">
+    function Refrescar() {
+        $.get("@Url.Action("Index")", function (data) {
+            $("#ReportesCompraNet").html(data);
+        });
+    };
+</script>
+
+<div id="ReportesCompraNet" class="Titulo">
     <h5> Reporte de Negocios CompraNet </h5>
 
     <br />
@@ -57,7 +68,7 @@
                         }
                     </tbody>
                 </table>
-            </div>            
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -105,10 +116,10 @@
                                         <th>POSICIÓN</th>
                                         <th>KG</th>
                                         <th></th>
-                                    </tr>                                    
+                                    </tr>
                                     <tr>
                                         <td>Noviembre</td>
-                                        <td>@material.PosicionKilos.Where(x=>x.Mes == EnumMeses.Noviembre).Select(x=>x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0")</td>                                            
+                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0")</td>
                                         <td>
                                             @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 11, calidad }, new { @class = "Descarga" })
                                         </td>
@@ -133,7 +144,7 @@
                                         <td>
                                             @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, calidad }, new { @class = "Descarga" })
                                         </td>
-                                    </tr>                                   
+                                    </tr>
                                     <tr class="total">
                                         <th>Total</th>
                                         <td>@material.Total.ToString("N0")</td>
@@ -144,40 +155,40 @@
                         </table>
                     </div>
                 }
-                </div>
-                <div>
-                    <div class="col-md-12">
-                        <table class="table-condensed col-xs-12 col-md-3 col-md-offset-2" id="SojaSustentable">
-                            <tbody>
-                                <tr>
-                                    <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
+            </div>
+            <div>
+                <div class="col-md-12">
+                    <table class="table-condensed col-xs-12 col-md-3 col-md-offset-2" id="SojaSustentable">
+                        <tbody>
+                            <tr>
+                                <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
+                            </tr>
+                            <tr>
+                                <th>A PRECIO</th>
+                                <th>A FIJAR</th>
+                                <th>TOTAL</th>
+                            </tr>
+                            <tr>
+                                <td>@Model.SojaSustentable.Precio.ToString("N0")</td>
+                                <td>@Model.SojaSustentable.Fijar.ToString("N0")</td>
+                                <td>@Model.SojaSustentable.Total.ToString("N0")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table-condensed noSideMargin col-xs-12 col-md-3 col-md-offset-2" id="MonedaKilo">
+                        <tbody>
+                            @foreach (var moneda in Model.PrecioCantidad)
+                            {
+                                <tr class="total">
+                                    <th>@moneda.Moneda</th>
+                                    <td>@moneda.Cantidad.Value.ToString("N2")</td>
                                 </tr>
-                                <tr>
-                                    <th>A PRECIO</th>
-                                    <th>A FIJAR</th>
-                                    <th>TOTAL</th>
-                                </tr>
-                                <tr>
-                                    <td>@Model.SojaSustentable.Precio.ToString("N0")</td>
-                                    <td>@Model.SojaSustentable.Fijar.ToString("N0")</td>
-                                    <td>@Model.SojaSustentable.Total.ToString("N0")</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="table-condensed noSideMargin col-xs-12 col-md-3 col-md-offset-2" id="MonedaKilo">
-                            <tbody>
-                                @foreach (var moneda in Model.PrecioCantidad)
-                                {
-                                    <tr class="total">
-                                        <th>@moneda.Moneda</th>
-                                        <td>@moneda.Cantidad.Value.ToString("N2")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 
