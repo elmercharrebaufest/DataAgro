@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Business.Managers
             var a = new List<string>();
 
             var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT);
-            var oComercial = repositorio.Listar<Comercial>(x => x.ComercialId == 4);
+            var oComercial = repositorio.Listar<Comercial>();
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;

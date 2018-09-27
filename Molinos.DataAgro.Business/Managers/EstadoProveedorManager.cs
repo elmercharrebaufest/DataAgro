@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var listaDeCuit = new List<Datos>();
-                var usuario = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.ComercialId == 10);
+                var usuario = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory);
                 var comerciales = repositorio.Listar<Comercial>();
                 var estados = repositorio.Listar<Estado>();
                 if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1")
@@ -41,7 +41,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("ActualizarProveedores - Proveedores a actualziar: " + list.Count);
                 if (list.Count > 0)
                 {
-
                     Comercial comercial = null;
                     Estado Est = null;
 
