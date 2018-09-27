@@ -23,8 +23,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ReporteSojaSustDto()
                 {
-                    Precio = x.Where(y => y.TipoNegocioId == 1).Select(y => y.Cantidad).DefaultIfEmpty(0).Sum(),
-                    Fijar = x.Where(y => y.TipoNegocioId == 2).Select(y => y.Cantidad).DefaultIfEmpty(0).Sum(),
+                    Fijar = x.Where(y => y.TipoNegocioId == 1).Select(y => y.Cantidad).DefaultIfEmpty(0).Sum(),
+                    Precio = x.Where(y => y.TipoNegocioId == 2).Select(y => y.Cantidad).DefaultIfEmpty(0).Sum(),
                     Total = x.Select(y => y.Cantidad).DefaultIfEmpty(0).Sum(),
                 }).First();
         }

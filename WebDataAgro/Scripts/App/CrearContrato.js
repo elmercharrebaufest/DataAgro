@@ -126,7 +126,7 @@ function InicializarElementos() {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: "/Proveedor/BuscarProveedores",
+                    url: "/Proveedor/BuscarProveedores"
                 },
                 parameterMap: function (data, type) {
                     return { filtro: $('#buscadorProveedor').val() };
@@ -277,7 +277,19 @@ function InicializarElementos() {
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
         dataTextField: "Descripcion",
-        dataValueField: "MaterialId"
+        dataValueField: "MaterialId",
+        change: function () {
+            obtenerLocalidadProvincia();
+            CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+            if ($("#material").val() !== "") {
+                CargarCampaniaPorMaterial($("#material").val());
+                CargarCalidadPorMaterial($("#material").val());
+                var iteraciones = viewModel.Calidades.length;
+                for (var i = 0; i < iteraciones; i++) {
+                    viewModel.Calidades.pop();
+                }
+            }
+        }
     });
 
     $("#material").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -438,7 +450,7 @@ function InicializarElementos() {
         dataValueField: "Id",
         change: function () {
             if (this.value() == 2) {
-                $("#consignatarioDiv").show()
+                $("#consignatarioDiv").show();
             } else {
                 $("#consignatarioDiv").hide();
                 $("#consignatarioId").prop("checked", false);
@@ -684,7 +696,7 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () { $("#fechaHastaId").val(ObtenerFechaHasta(this.value())) },
+        change: function () { $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));}
     });
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
@@ -700,7 +712,7 @@ function InicializarElementos() {
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value())) },
+        change: function () { $("#fechaHastaTopeId").val(ObtenerFechaHasta(this.value()));}
     });
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
@@ -786,7 +798,7 @@ function InicializarElementos() {
         }
         else {
             $("#pesificadoDiv").hide();
-            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");;
+            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         }
     });
 
@@ -853,23 +865,7 @@ function InicializarElementos() {
     $("#establecimientoArrendadoId").click(function () {
         $("#establecimientoPropioId").prop("checked", false);
     });
-
-    $('select[id="material"]').change(function () {
-        if ($(this).val() != "") {
-            CargarCampaniaPorMaterial($(this).val());
-            CargarCalidadPorMaterial($(this).val());
-            var iteraciones = viewModel.Calidades.length;
-            for (var i = 0; i < iteraciones; i++) {
-                viewModel.Calidades.pop();
-            }
-        }
-    });
-
-    $('#material').change(function () {
-        obtenerLocalidadProvincia();
-        CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value())
-    });
-        
+               
     $('#campanaId').change(function () {
         obtenerLocalidadProvincia();
     });
@@ -1170,7 +1166,7 @@ function InicializarDatos() {
             $.unblockUI();
             InicializarBordesRojos();
         }
-    }
+    };
 
     MSExecuteURLOnServerAsync('/CompraNet/InicializarContrato', funcReturn, '');
 }
@@ -1218,7 +1214,7 @@ function AsignarDatos() {
     if ($("#sustentableMonedaId").data("kendoDropDownList")) $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
     if ($("#campanaId").data("kendoDropDownList")) CargarCampaniaPorMaterial("3");
     if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
-    if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1")
+    if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1");
     var materialId = $('select[id="material"]').val();
     CargarCalidadPorMaterial(materialId);
 }
@@ -1324,7 +1320,7 @@ function ObtenerDatos() {
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
-    obj.EstablecimientoPropio = ($("#establecimientoPropioId").is(":checked")) ? true : ($("#establecimientoArrendadoId").is(":checked")) ? false : null;
+    obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
     obj.DesdeFijacion = $("#fechaDesdeTopeId").val();
     obj.HastaFijacion = $("#fechaHastaTopeId").val();
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
@@ -1465,14 +1461,14 @@ function AgregarDescuentos() {
         }
     };
 
-    var err = validarDescuento(descuento)
+    var err = validarDescuento(descuento);
     if (ExistsErrorMessages(err)) {
         MensErr(err[0]);
     }
     else {
         viewModel.Descuentos.push(descuento);
         $("#ImporteDescuentoId").val("");
-        $("#descuentoMonedaId").data("kendoDropDownList").value("")
+        $("#descuentoMonedaId").data("kendoDropDownList").value("");
         $("#PorcentajeDescuentoId").val("");
     }
 }
@@ -1509,15 +1505,15 @@ function AgregarCalidades() {
         CalidadEspecialDesc: $("#calidadesEspecialesId").data("kendoDropDownList").text(),
         CalidadEspecialId: $("#calidadesEspecialesId").data("kendoDropDownList").value(),
         Valor: $("#valorEspecialesId").val(),
-        PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
-        PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
+        PorcentajeDesde: $("#porcentajeDesdeId").val() !== "" ? $("#porcentajeDesdeId").val() : null,
+        PorcentajeHasta: $("#porcentajeHastaId").val() !== "" ? $("#porcentajeHastaId").val() : null,
         StandardDeCalidadId: 2,
         Borrar: function () {
             viewModel.Calidades.remove(this);
         }
     };
 
-    var err = validarCalidad(calidades)
+    var err = validarCalidad(calidades);
     if (ExistsErrorMessages(err)) {
         MensErr(err[0]);
     }
@@ -1534,23 +1530,23 @@ function validarCalidad(calidad) {
     var errores = [];
 
     if (calidad.CalidadEspecialId === 0 || calidad.CalidadEspecialId === "" || calidad.CalidadEspecialId === null) {
-        errores.push("El campo Calidades Especiales no puede estar vacio")
+        errores.push("El campo Calidades Especiales no puede estar vacio");
     }
     if (calidad.Valor === "" || calidad.Valor === null || calidad.Valor === "undefined") {
-        errores.push("El campo Valor no puede estar vacio")
+        errores.push("El campo Valor no puede estar vacio");
     }
-    return errores
+    return errores;
 }
 
 function InicializarContratoEdit() {
-    var datos = { id: contratoId }
+    var datos = { id: contratoId };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);    
     CargarCalidadesViewModel();
 }
 
 function InicializarFijacionEdit() {
-    var datos = { id: fijacionId }
+    var datos = { id: fijacionId };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerFijacionCompleto', datos, function () { $.unblockUI();  });
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();

@@ -394,7 +394,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Material = "Trigo Calidad",
                 MaterialId = 2,
-                PosicionKilos = kilosPosicionTrigoCamara,
+                PosicionKilos = kilosPosicionTrigoCalidad,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.Kilos)
             };
             return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, posicionTrigoCalidad };

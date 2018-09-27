@@ -4,7 +4,7 @@ var filasSeleccionadas = {};
 
 $(document).ready(function () {
     kendo.culture("es-AR");
-
+    $('#menuproveedor').hide();
     CreateGridInformeCompraNet();
 
     AutoRecargar();
