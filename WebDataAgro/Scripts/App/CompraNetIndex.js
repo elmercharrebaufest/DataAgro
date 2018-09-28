@@ -685,22 +685,13 @@ function ModalConfirmadoVarios( ) {
     var negocios = SeleccionarElementos();
     if (negocios.length > 0) {
         for (var i in negocios) {
-            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
-            var errorDiv = '<div class="col-xs-1"><img src="/Content/Images/Cancelar.png" alt="error" title= "Solo se pueden Confirmar Negocios Pendientes" /></div> <div class="errorVarios col-xs-8">Solo se pueden Confirmar Negocios Pendientes </div>';
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';            
             if (negocios[i].Estado === 1 || negocios[i].Estado === 3) {
                 if (negocios[i].TipoNegocioId === 3) {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>'+ loader + '</div>');
                 } else {                                                     
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>' );
                 }
-            } else {
-                if (negocios[i].TipoNegocioId === 3) {
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + errorDiv + '</div>' );
-                } else {                                                     
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class= "col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + errorDiv + '</div>');
-                }
-                $("#confirmarVarios").prop("disabled", true);
-                $("#confirmarVarios").removeClass('myBtn').addClass('myBtn-disabled');
             }
         }
     } else {
@@ -749,22 +740,13 @@ function ModalFinalizarVarios() {
     var negocios = SeleccionarElementos();
     if (negocios.length > 0) {
         for (var i in negocios) {
-            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
-            var errorDiv = '<div class="col-xs-1"><img src="/Content/Images/Cancelar.png" alt="error" title= "Solo se pueden Finalizar Negocios Confirmados" /></div> <div class="errorVarios col-xs-8">Solo se pueden Finalizar Negocios Confirmados</div>';
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';            
             if (negocios[i].Estado === 2 || negocios[i].Estado === 4) {
                 if (negocios[i].TipoNegocioId === 3) {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId +'</div>' + loader + '</div>');
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
-            } else {
-                if (negocios[i].TipoNegocioId === 3) {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + errorDiv + '</div>');
-                } else {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class= "col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + errorDiv + '</div>');
-                }
-                $("#finalizarVarios").prop("disabled", true);
-                $("#finalizarVarios").removeClass('myBtn').addClass('myBtn-disabled');            
             }
         }
     } else {

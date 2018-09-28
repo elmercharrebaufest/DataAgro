@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad= x.Sum(y => (double)y.Precio)
+                    Cantidad= x.Sum(y => (double)y.Precio * y.Cantidad/1000)
                 }).ToList();
         }
     }

@@ -215,7 +215,6 @@ function InicializarElementos() {
                 $("#guardarBtn").empty();
                 $("#DatosBoleto").hide();
                 $("#DatosPago").hide();
-                $("#pagoDirectoDiv").hide();
                 $("#establecimientoDiv").hide();
                 $("#mercsDepositoDiv").hide();
                 $("#guardarBtn").append("Guardar Fijacion");
@@ -247,7 +246,7 @@ function InicializarElementos() {
                 $("#guardarBtn").empty();
                 $("#DatosBoleto").show();
                 $("#guardarBtn").append("Guardar Negocio");
-                $("#pagoDirectoDiv").show();
+               
                 $("#mercsDepositoDiv").show();
                 RemoverFondosGrises();
                 if (this.value() == 1) {

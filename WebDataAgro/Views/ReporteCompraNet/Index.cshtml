@@ -22,7 +22,7 @@
 </script>
 
 <div id="ReportesCompraNet" class="Titulo">
-    <h5> Reporte de Negocios CompraNet </h5>
+    <h5> Compras Del Día </h5>
 
     <br />
     <div class="container">
@@ -31,38 +31,38 @@
                 <table class="table-condensed noSideMargin" id="ComprasToneladasTipo">
                     <tbody>
                         <tr class="titulos">
-                            <td id=""></td>
-                            <th id="disponible" colspan="3">DISPONIBLE</th>
-                            <th id="forward" colspan="3">FORWARD</th>
-                            <th id="newCrop" colspan="3">NEW CROP</th>
+                            <td id="" class="borde-derecho"></td>
+                            <th id="disponible" class="borde-derecho" colspan="3">DISPONIBLE</th>
+                            <th id="forward" class="borde-derecho" colspan="3">FORWARD</th>
+                            <th id="newCrop" class="borde-derecho" colspan="3">NEW CROP</th>
                             <td></td>
                         </tr>
                         <tr class="titulos">
-                            <th>PRODUCTO</th>
+                            <th class="producto borde-derecho">PRODUCTO</th>
                             <th class="valores">A FIJAR</th>
                             <th class="valores">A PRECIO</th>
-                            <th class="valores">FIJACIÓN</th>
+                            <th class="valores borde-derecho">FIJACIÓN</th>
                             <th class="valores">A FIJAR</th>
                             <th class="valores">A PRECIO</th>
-                            <th class="valores">FIJACIÓN</th>
+                            <th class="valores borde-derecho">FIJACIÓN</th>
                             <th class="valores">A FIJAR</th>
                             <th class="valores">A PRECIO</th>
-                            <th class="valores">FIJACIÓN</th>
+                            <th class="valores borde-derecho">FIJACIÓN</th>
                             <th class="valores">TOTAL</th>
                         </tr>
                         @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
                         {
                             <tr>
-                                <th class="producto">@toneladaPrecio.Material</th>
+                                <th class="borde-derecho">@toneladaPrecio.Material</th>
                                 <td>@toneladaPrecio.DispAFijar.ToString("N0")</td>
                                 <td>@toneladaPrecio.DispAPrecio.ToString("N0")</td>
-                                <td>@toneladaPrecio.DispFijac.ToString("N0")</td>
+                                <td class="borde-derecho">@toneladaPrecio.DispFijac.ToString("N0")</td>
                                 <td>@toneladaPrecio.FrwAFijar.ToString("N0")</td>
                                 <td>@toneladaPrecio.FrwAPrecio.ToString("N0")</td>
-                                <td>@toneladaPrecio.FrwFijac.ToString("N0")</td>
+                                <td class="borde-derecho">@toneladaPrecio.FrwFijac.ToString("N0")</td>
                                 <td>@toneladaPrecio.NewAFijar.ToString("N0")</td>
                                 <td>@toneladaPrecio.NewAPrecio.ToString("N0")</td>
-                                <td>@toneladaPrecio.NewFijac.ToString("N0")</td>
+                                <td class="borde-derecho">@toneladaPrecio.NewFijac.ToString("N0")</td>
                                 <td>@toneladaPrecio.Total.ToString("N0")</td>
                             </tr>
                         }
