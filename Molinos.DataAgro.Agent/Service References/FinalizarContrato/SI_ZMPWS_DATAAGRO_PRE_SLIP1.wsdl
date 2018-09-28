@@ -189,6 +189,7 @@
           <xsd:element name="ESTAB_ARRENDADO" type="rfc:char1" />
           <xsd:element name="MERC_DESCARGADA" type="rfc:char1" />
           <xsd:element name="OBSERVACION_CAL1" type="rfc:char120" />
+          <xsd:element name="CARTA_OFERTA" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

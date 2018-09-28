@@ -108,6 +108,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
+                return oErrorMessages;
             }
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
             if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap))

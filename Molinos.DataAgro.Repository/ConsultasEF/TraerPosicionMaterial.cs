@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                        .Select(x => new PosicionKilos()
                        {
                            Mes = x.Key != 0 ? (EnumMeses)x.Key : (EnumMeses)11,
-                           Kilos = x.Select(y => y.Cantidad).DefaultIfEmpty(0).Sum()
+                           Kilos = x.Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum()
                        }
                        ).ToList();
         }

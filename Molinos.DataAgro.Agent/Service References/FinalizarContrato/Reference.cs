@@ -450,6 +450,8 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string oBSERVACION_CAL1Field;
         
+        private string cARTA_OFERTAField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -999,6 +1001,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.oBSERVACION_CAL1Field = value;
                 this.RaisePropertyChanged("OBSERVACION_CAL1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=46)]
+        public string CARTA_OFERTA {
+            get {
+                return this.cARTA_OFERTAField;
+            }
+            set {
+                this.cARTA_OFERTAField = value;
+                this.RaisePropertyChanged("CARTA_OFERTA");
             }
         }
         

@@ -728,7 +728,9 @@ function InicializarElementos() {
     $("#fechaHastaId").val(datehasta);
 
     $(".formulario-footer-guardar-contrato").click(function () {
-        ObtenerDatos();
+        BlockUi('Guardando...');
+
+        setTimeout(ObtenerDatos, 250);
     });
 
     $(".formulario-footer-cancelar").click(function () {
@@ -1277,7 +1279,6 @@ function LimpiarValidaciones() {
 }
 
 function ObtenerDatos() {
-    BlockUi("Guardando...");
     var obj = {};
 
     var hoy = new Date();
@@ -1528,7 +1529,8 @@ function AgregarCalidades() {
 function validarCalidad(calidad) {
     var errores = [];
     var cantidadCalidades = viewModel.Calidades.length;
-    var porcDesde = calidad.PorcentajeDesde.replace(',', '.');
+    var porcDesde = parseFloat(calidad.PorcentajeDesde);
+    var porcHasta = parseFloat(calidad.PorcentajeHasta);
     
     if (calidad.CalidadEspecialId === 0 || calidad.CalidadEspecialId === "" || calidad.CalidadEspecialId === null) {
         errores.push("El campo Calidades Especiales no puede estar vacio");
@@ -1536,13 +1538,13 @@ function validarCalidad(calidad) {
     if (calidad.Valor === "" || calidad.Valor === null || calidad.Valor === "undefined") {
         errores.push("El campo Valor no puede estar vacio");
     }
-    if (calidad.PorcentajeDesde > calidad.PorcentajeHasta) {
+    if (porcDesde > porcHasta) {
         errores.push("El Porcentaje Desde no puede ser mayor que el Porcentaje Hasta");
     }
-    if (cantidadCalidades == 0 && calidad.PorcentajeDesde > 0) {
+    if (cantidadCalidades == 0 && porcDesde > 0) {
         errores.push("El Porcentaje Desde no puede ser mayor a 0");
     }
-    if (cantidadCalidades > 0 && viewModel.Calidades[cantidadCalidades - 1].PorcentajeHasta + ".1" != porcDesde) {
+    if (cantidadCalidades > 0 && viewModel.Calidades[cantidadCalidades - 1].PorcentajeHasta + ",1" != calidad.PorcentajeDesde) {
         errores.push("El Porcentaje Desde debe ser el último Porcentaje Hasta más 0,10");
     }
     if (calidad.PorcentajeHasta - Math.floor(calidad.PorcentajeHasta) != 0) {

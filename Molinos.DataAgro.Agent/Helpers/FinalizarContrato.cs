@@ -121,6 +121,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
                         BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 ? contrato.Bolsa.CodigoSap : null,
                         BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
+                        CARTA_OFERTA = contrato.BoletoId == 4 ? "X":"",
                         NINGUNO = contrato.BoletoId == 3 ? "X" : "",
                         AUT_CG = contrato.Warrant == true?"X":"",
                         AUR_CD = contrato.CD == true ? "X" : "",

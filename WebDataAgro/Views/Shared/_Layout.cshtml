@@ -104,17 +104,20 @@
                                     <i class="icon-bar-chart"></i> Negocios CompraNet
                                 </a>
                             </li>
-                            <li>
-                                <a href="/ReporteCompraNet" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Compras Diarias
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/Reportes/Index" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Indicadores
-                                </a>
-                            </li>
-                        </ul>
+                            @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                            {
+                                <li>
+                                    <a href="/ReporteCompraNet" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Compras Diarias
+                                    </a>
+                                </li>
+                            }
+                                <li>
+                                    <a href="/Reportes/Index" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Indicadores
+                                    </a>
+                                </li>
+                            </ul>
                     </li>
 
                     <li class="agregar-contacto-mobile">
