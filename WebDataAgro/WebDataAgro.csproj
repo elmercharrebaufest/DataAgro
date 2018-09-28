@@ -2335,6 +2335,7 @@
     <Content Include="Views\CompraNet\_ModalConfirmarVarios.cshtml" />
     <Content Include="Views\CompraNet\_ModalFinalizarVarios.cshtml" />
     <Content Include="Views\ReporteCompraNet\Index.cshtml" />
+    <Content Include="Views\ReporteCompraNet\_ReporteCompraNet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

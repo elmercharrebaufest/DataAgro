@@ -31,7 +31,18 @@ namespace WebDataAgro.Controllers
 
             return View(model);
         }
+        public ActionResult _ReporteCompraNet()
+        {
+            var model = new ReporteCompraNetModel
+            {
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(),
+                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad()
+            };
+            return PartialView("_ReporteCompraNet", model);
 
+        }
         public ExcelResult DetalleExcel(int mes, int materialId, bool? clasificacion)
         {
             var detalle = mobjReportesManager.DetallePosicion(materialId, mes, clasificacion);
