@@ -4,6 +4,7 @@ var contratoEdit;
 var contratoId;
 var fijacionId;
 $(document).ready(function () {
+    $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });

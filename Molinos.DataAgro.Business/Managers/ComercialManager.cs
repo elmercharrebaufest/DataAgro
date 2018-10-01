@@ -260,6 +260,11 @@ namespace Molinos.DataAgro.Business
         public List<int> CadenaComerciales(int comercialId)
         {           
             var listaSuperiores = new List<int>();
+            var perfilComercial = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x=>x.PerfilId);
+            if (perfilComercial != 7)
+            {
+                listaSuperiores.Add(comercialId);
+            }
             ObtenerCadenaUsuarios(comercialId, listaSuperiores);
             
             return listaSuperiores;
@@ -267,7 +272,11 @@ namespace Molinos.DataAgro.Business
         private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
         {
             var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId);
+            if (comercial.PerfilId == 7)
+            {
             listaSuperiores.Add(comercial.ComercialId);
+            }
+
             if (comercial.EmpleadorACargo != null)
             {
                 ObtenerCadenaUsuarios(comercial.EmpleadorACargo.ComercialId, listaSuperiores);

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -226,8 +227,8 @@ namespace Molinos.DataAgro.Business.Managers
             var anios = campana.Descripcion.Split('-');
             Int32.TryParse(anios.First(), out int anioInicial);
             Int32.TryParse(anios.Last(), out int anioFin);
-            var fechaInicial = DateTime.Parse("01-01-" + (anioInicial+2000).ToString());
-            var fechaFin = DateTime.Parse("31-12-" + (anioFin+2000).ToString());
+            var fechaInicial = DateTime.ParseExact("01/01/" + (anioInicial+2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var fechaFin = DateTime.ParseExact("31/12/" + (anioFin+2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (oParam.FechaDesde< fechaInicial || oParam.FechaHasta>fechaFin)
             {
                 oErrorMessages.Error("FechaCampana", "Fecha fuera del rango de Campaña");
