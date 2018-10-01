@@ -119,7 +119,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         COND_FIJACION = contrato.CondicionFijacion != null ? contrato.CondicionFijacion.CodigoSap : null,
                         CAMIONES = cantidadCamiones,
                         CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
-                        BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 ? contrato.Bolsa.CodigoSap : null,
+                        BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
                         BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
                         CARTA_OFERTA = contrato.BoletoId == 4 ? "X":"",
                         NINGUNO = contrato.BoletoId == 3 ? "X" : "",

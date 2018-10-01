@@ -1531,7 +1531,8 @@ function validarCalidad(calidad) {
     var cantidadCalidades = viewModel.Calidades.length;
     var porcDesde = parseFloat(calidad.PorcentajeDesde);
     var porcHasta = parseFloat(calidad.PorcentajeHasta);
-    
+    var ultimaCalidad = ValorDeCalidad(calidad.CalidadEspecialId);
+
     if (calidad.CalidadEspecialId === 0 || calidad.CalidadEspecialId === "" || calidad.CalidadEspecialId === null) {
         errores.push("El campo Calidades Especiales no puede estar vacio");
     }
@@ -1541,22 +1542,34 @@ function validarCalidad(calidad) {
     if (porcDesde > porcHasta) {
         errores.push("El Porcentaje Desde no puede ser mayor que el Porcentaje Hasta");
     }
-    if (cantidadCalidades == 0 && porcDesde > 0) {
+    if (ultimaCalidad == undefined && porcDesde > 0) {
         errores.push("El Porcentaje Desde no puede ser mayor a 0");
-    }
-    if (cantidadCalidades > 0 && viewModel.Calidades[cantidadCalidades - 1].PorcentajeHasta + ",1" != calidad.PorcentajeDesde) {
-        errores.push("El Porcentaje Desde debe ser el último Porcentaje Hasta más 0,10");
-    }
-    if (calidad.PorcentajeHasta - Math.floor(calidad.PorcentajeHasta) != 0) {
-        errores.push('El Porcentaje Hasta debe ser Entero');
     }
     if (calidad.PorcentajeHasta > 51 && calidad.CalidadEspecialId == 1) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 51% para "Dañados"');
     }
     if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 2) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Granos verdes"');
+    }    
+    if (calidad.PorcentajeHasta - Math.floor(calidad.PorcentajeHasta) != 0) {
+        errores.push('El Porcentaje Hasta debe ser Entero');
+    } 
+    if (ultimaCalidad !== undefined && ultimaCalidad.PorcentajeHasta + ",1" != calidad.PorcentajeDesde) {
+        errores.push("El Porcentaje Desde debe ser el último Porcentaje Hasta más 0,10");
     }
+       
     return errores;
+}
+
+function ValorDeCalidad(calidadId) {
+    var calidadGrano = viewModel.Calidades;
+    var calidad;
+    for (var i in calidadGrano) {
+        if (calidadGrano[i].CalidadEspecialId == calidadId) {
+            calidad = calidadGrano[i];
+        }
+    }
+    return calidad;
 }
 
 function InicializarContratoEdit() {
