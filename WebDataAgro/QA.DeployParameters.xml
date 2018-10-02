@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
     <setParameter name="IIS Web Application Name" value="dataagro" />
-    <setParameter name="DataAgro-Web.config Connection String" value="Password=sqlagro17;Persist Security Info=True;User ID=dataagrot;Initial Catalog=DataAgroqa_last;Data Source=vicsql2014test.ar.molinos.local" />
+    <setParameter name="DataAgro-Web.config Connection String" value="Data Source=gvicsqltest2016.molinosagro.ad; Initial Catalog=Dataagro; Integrated Security=True " />
     <setParameter name="SmtpServer Key" value="smtpmol.molinos.com.ar" />
     <setParameter name="SmtpServerPort Key" value="26" />
     <setParameter name="EnableSSL Key" value="N" />

@@ -370,7 +370,8 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"El contrato {oContrato.ContratoId} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
                     return;
                 }
-                
+                oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+
                 oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
 
                 oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
@@ -424,11 +425,13 @@ namespace Molinos.DataAgro.Business.Managers
                 if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailComercial != null && emailComercial == ""))
                 {
                     MailMessage oMensaje = new MailMessage();
-
+                    
                     oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
 
                     oMensaje.To.Add(proveedorContacto.Email1);
                     if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
+                    oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+
 
                     oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
 
