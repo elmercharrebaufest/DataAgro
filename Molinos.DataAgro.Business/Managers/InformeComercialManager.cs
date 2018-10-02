@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Molinos.DataAgro.Business.Managers
+namespace Molinos.DataAgro.Business
 {
     public class InformeComercialManager : IInformeComercialManager
     {
@@ -393,6 +393,54 @@ namespace Molinos.DataAgro.Business.Managers
 
             return error;
         }
+
+
+        public Resultado RespuestaDeSapCapacidadProductiva(string cuit, string Material, string Respuesta)
+        {
+            var error = new Resultado();
+
+            try
+            {
+                var proveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == cuit, x => x.ProveedorId);
+
+                var Mat = repositorio.Obtener((Material x) => x.Codigo == Material, z => new { MateriaId = z.MaterialId, CampañaId = z.CampañaId });
+
+                var oInformeComercialProduccionSave = repositorio.Obtener<InformeComercialProduccion>(x => x.InformeComercial.EstadoId == (int)EnumEstadoInforme.Enviado && x.InformeComercial.ProveedorId == proveedorId
+                    && x.InformeComercial.CampañaId == Mat.CampañaId && x.MaterialId == Mat.MateriaId);
+                
+                if (oInformeComercialProduccionSave == null)
+                {
+                    error.Errores.Add(new ErrorMessage($"No se encontro un informe comercial produccion con proveedor {proveedorId}, estado {(int)EnumEstadoInforme.Enviado}, campania {Mat.CampañaId}, material {Mat.MateriaId}"));
+                    return error;
+                }
+                if (Respuesta.Length > 0)
+                {
+                    oInformeComercialProduccionSave.RtaOkSap = false;
+                    oInformeComercialProduccionSave.MensajeSap = Respuesta;
+                }
+                else
+                {
+                    oInformeComercialProduccionSave.RtaOkSap = true;
+                    oInformeComercialProduccionSave.MensajeSap = string.Empty;
+                }
+
+                var list = repositorio.Obtener<InformeComercialProduccion>(x => x.InformeComercialId == oInformeComercialProduccionSave.InformeComercialId && (x.RtaOkSap == null || x.RtaOkSap == false));
+
+                if (list == null)
+                {
+                    oInformeComercialProduccionSave.InformeComercial.EstadoId = (int)EnumEstadoInforme.Confirmado;
+                }
+                repositorio.GuardarCambios();
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+
+            return error;
+        }
+
     }
 
     public class Result

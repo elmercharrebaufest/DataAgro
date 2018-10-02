@@ -73,6 +73,7 @@
     <Compile Include="Dto\AbmMoneda.cs" />
     <Compile Include="Dto\AreaInfluenciaDto.cs" />
     <Compile Include="Dto\CalidadEspecialDto.cs" />
+    <Compile Include="Dto\CampaniaActual.cs" />
     <Compile Include="Dto\CampañaDto.cs" />
     <Compile Include="Dto\CampañaMaterialDto.cs" />
     <Compile Include="Dto\CanalOperacionDto.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="Dto\AbmTipoNegocio.cs" />
     <Compile Include="Dto\Actividades.cs" />
     <Compile Include="Dto\Agenda.cs" />
-    <Compile Include="Dto\CampañaActual.cs" />
     <Compile Include="Dto\CampañaMaterialSAPDTO.cs" />
     <Compile Include="Dto\CombosEntities.cs" />
     <Compile Include="Dto\CubProveedores.cs" />

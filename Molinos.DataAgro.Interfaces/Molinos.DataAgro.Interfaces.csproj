@@ -114,6 +114,8 @@
   <ItemGroup>
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />
+    <Compile Include="Managers\ICampaniaActualManager.cs" />
+    <Compile Include="Managers\ICampaniaMaterialManager.cs" />
     <Compile Include="Managers\ICampañaManager.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
     <Compile Include="Managers\IPushNotificationManager.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Managers\IMaterialManager.cs" />
     <Compile Include="Managers\IProvinciaManager.cs" />
     <Compile Include="Managers\IReportesManager.cs" />
+    <Compile Include="Managers\IRiesgoComercialManager.cs" />
     <Compile Include="Managers\ITipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

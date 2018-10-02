@@ -26,5 +26,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado EliminarInformes(int InformeId);
 
         List<MaterialesModificacionInforme> TraerInformeMateriales(int InformeId);
+
+        Resultado RespuestaDeSapCapacidadProductiva(string cuit, string material, string respuesta);
     }
 }

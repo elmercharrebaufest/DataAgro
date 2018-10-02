@@ -15,6 +15,8 @@ using WebDataAgro.Core;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Interfaces;
 using System.Data.Entity;
+using WebDataAgro.Services;
+using Autofac.Integration.Wcf;
 
 namespace WebDataAgro
 {
@@ -30,9 +32,9 @@ namespace WebDataAgro
 
             //Autofac Configuration
             var builder = new ContainerBuilder();
-
+            
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
-
+            
             builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerRequest();
             builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerRequest();
 
@@ -41,10 +43,11 @@ namespace WebDataAgro
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
             builder.RegisterModule<NLogModule>();
+            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerRequest();
             var container = builder.Build();
-            
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            AutofacHostFactory.Container = container;
         }
 
 
