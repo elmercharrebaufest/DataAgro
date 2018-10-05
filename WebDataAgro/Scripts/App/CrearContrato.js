@@ -1436,7 +1436,7 @@ function obtenerLocalidadProvincia() {
                         $("#BolsaCartaDiv").show();
                         $("#bolsaCartaId").data("kendoDropDownList").value(localidadProvincia.BolsaId);
                         $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                    } else {
+                    } else if (localidadProvincia.BoletoId == 3){
                         $("#boletoNingunoId").prop("checked", true);
                     }
                 }
