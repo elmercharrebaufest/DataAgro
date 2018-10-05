@@ -59,7 +59,7 @@ namespace Molinos.DataAgro.Agent
             }
         }
 
-        public List<ZMPES5140> ObtenerDatosDeProveedorEstado(List<String> CUIT, List<String> usuarios)
+        public List<ZMPES5140> ObtenerDatosDeProveedorEstado(List<string> CUIT, List<string> usuarios)
         {
             try
             {
@@ -87,6 +87,7 @@ namespace Molinos.DataAgro.Agent
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 throw;
             }
         }

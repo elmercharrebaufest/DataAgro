@@ -104,6 +104,8 @@ namespace Molinos.DataAgro.Repository
         TEntidad Agregar<TEntidad>(TEntidad entidad) where TEntidad : class;
         void AgregarTodos<TEntidad>(IEnumerable<TEntidad> entidades, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
 
+        void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
+
         /// <summary>
         /// Remueve una entidad del repositorio
         /// </summary>

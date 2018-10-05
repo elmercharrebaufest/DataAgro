@@ -173,7 +173,17 @@ namespace Molinos.DataAgro.Repository
                 context.SqlBulkInsert(dataTable, dataTable.TableName);
             }
         }
-        
+
+        public virtual void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null) where TEntidad : class
+        {
+            var enumerable = items as IList<TEntidad> ?? items.ToList();
+            if (enumerable.Any())
+            {
+                var dataTable = enumerable.ToDataTable(false, properties);
+                context.SqlBulkUpdate(dataTable, dataTable.TableName);
+            }
+        }
+
         public TEntidad Remover<TEntidad>(object id) where TEntidad : class
         {
             return Remover(Obtener<TEntidad>(id));

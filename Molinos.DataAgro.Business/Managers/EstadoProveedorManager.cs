@@ -1,12 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -25,58 +23,48 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarProveedores()
         {
             try
-            {
-                var listaDeCuit = new List<Datos>();
-                var usuario = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory);
-                var comerciales = repositorio.Listar<Comercial>();
-                var estados = repositorio.Listar<Estado>();
-                if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1")
-                {
-                    string aux = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
-                    usuario.Add(aux);
-                }
+            {                
+                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory);
+                var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
+                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT);
+                logger.Debug("Obteniendo datos de SAP");
+                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), comerciales.Keys.ToList());
+                var crearEstadoProvedor = new List<ProveedorEstado>();
 
-                var CUIT = repositorio.Listar<Proveedor, string>(x => x.CUIT);
-                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(CUIT, usuario);
-                logger.Debug("ActualizarProveedores - Proveedores a actualziar: " + list.Count);
-                if (list.Count > 0)
-                {
-                    Comercial comercial = null;
-                    Estado Est = null;
+                logger.Debug("Resultado: " + list.Count);
+                var proveedoresCuit = list.Select(x => x.CUIT).Distinct().ToList();
+                var comercialesAd = list.Select(x => x.USUARIO).Distinct().ToList();
+                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT) && comercialesAd.Contains(x.Comercial.IdActiveDirectory));
 
-                    foreach (var lista in list)
+                foreach (var estado in list)
+                {
+                    var proveedor = proveedores[estado.CUIT];
+                    var comercial = comerciales[estado.USUARIO.ToLower()];
+                    
+                    var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
+                    if(proveedorEstado != null)
                     {
-                        if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1")
-                        {
-                            string aux = ConfigurationManager.AppSettings["SapPruebaUser"].ToString();
-                            if (lista.USUARIO.ToLower() == aux.ToLower())
-                            {
-                                string auxNombreActual = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString();
-                                comercial = comerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == auxNombreActual.ToLower());
-                            }
-                            else
-                            {
-                                comercial = comerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == lista.USUARIO.ToLower());
-                            }
-                        }
-                        else
-                        {
-                            comercial = comerciales.FirstOrDefault(x => x.IdActiveDirectory.ToLower() == lista.USUARIO.ToLower());
-                        }
-
-
-                        if (comercial != null)
-                        {
-                            Est = estados.Where(x => x.Descripcion.ToLower() == lista.STATUS.ToLower()).FirstOrDefault();
-                            var EstadoId = Est != null ? Est.EstadoId : 1;
-
-                            var Actualizar = repositorio.SelStore<FakeClass>("DataAgro_ActualizarEstadoProveedor", 0, comercial.ComercialId, lista.CUIT,
-                                (!String.IsNullOrEmpty(lista.CLIENTE_MOA) ? true : false), EstadoId);
-
-                            var oResult = Actualizar.ToList();
-                        }
+                        proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
                     }
+                    else
+                    {
+                        crearEstadoProvedor.Add(new ProveedorEstado
+                        {
+                            ComercialId = comercial.ComercialId,
+                            EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
+                            ProveedorId = proveedor.ProveedorId
+                        });
+                    }
+                    proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                 }
+                logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
+                if (crearEstadoProvedor.Count > 0)
+                {
+                    repositorio.AgregarTodos(crearEstadoProvedor);
+                }
+                logger.Debug("Actualizar Clientes MOA:" + list.Count);
+                
+                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
@@ -90,10 +78,5 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<Proveedor>(x => x.CUIT == CUIT) ?? new Proveedor();
         }
 
-    }
-
-    public class FakeClass
-    {
-        public int id { get; set; }
     }
 }
