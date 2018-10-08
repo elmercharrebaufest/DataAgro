@@ -26,19 +26,19 @@ namespace Molinos.DataAgro.Business.Managers
             {                
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT);
+                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper());
                 logger.Debug("Obteniendo datos de SAP");
                 var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), comerciales.Keys.ToList());
                 var crearEstadoProvedor = new List<ProveedorEstado>();
 
                 logger.Debug("Resultado: " + list.Count);
-                var proveedoresCuit = list.Select(x => x.CUIT).Distinct().ToList();
-                var comercialesAd = list.Select(x => x.USUARIO).Distinct().ToList();
-                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT) && comercialesAd.Contains(x.Comercial.IdActiveDirectory));
+                var proveedoresCuit = list.Select(x => x.CUIT.ToUpper()).Distinct().ToList();
+                var comercialesAd = list.Select(x => x.USUARIO.ToUpper()).Distinct().ToList();
+                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper()));
 
                 foreach (var estado in list)
                 {
-                    var proveedor = proveedores[estado.CUIT];
+                    var proveedor = proveedores[estado.CUIT.ToUpper()];
                     var comercial = comerciales[estado.USUARIO.ToUpper()];
                     
                     var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);

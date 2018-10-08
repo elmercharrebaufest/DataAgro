@@ -66,7 +66,6 @@ namespace WebDataAgro
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError();
-            DependencyResolver.Current.GetService<ILogger>().Error("Application_Error: ", exception);
             Response.Clear();
 
             HttpException httpException = exception as HttpException;

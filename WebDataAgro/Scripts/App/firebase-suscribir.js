@@ -8,11 +8,15 @@
     
 });
 function initialiseUI() {
-    var result = MSExecuteOnServer('/CompraNet/UsuarioSuscripto');
-    if (result == true) {
-        $("#suscribirNotificacion").prop("checked", true);
-        subscribeUser();
-    }
+    MSExecuteOnServerAsync('/CompraNet/UsuarioSuscripto', null,
+        function (result) {
+            if (result == true) {
+                $("#suscribirNotificacion").prop("checked", true);
+                subscribeUser();
+            }
+        }, true
+    );
+    
 
     $("#suscribirNotificacion").on("click",
         function requestPushNotification() {
