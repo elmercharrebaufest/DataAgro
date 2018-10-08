@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {                
-                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToLower());
+                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT);
                 logger.Debug("Obteniendo datos de SAP");
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var estado in list)
                 {
                     var proveedor = proveedores[estado.CUIT];
-                    var comercial = comerciales[estado.USUARIO.ToLower()];
+                    var comercial = comerciales[estado.USUARIO.ToUpper()];
                     
                     var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
                     if(proveedorEstado != null)
