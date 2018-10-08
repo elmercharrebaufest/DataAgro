@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {                
-                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory);
+                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToLower());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT);
                 logger.Debug("Obteniendo datos de SAP");
