@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
+    [DataContract]
     public class ErrorMessage
     {
         private int mintItem;
@@ -21,6 +23,7 @@ namespace Molinos.DataAgro.Entities.Dto
         private string mstrFormat;
         private List<object> marrArgs;
 
+        [DataMember]
         public int Item
         {
             get
@@ -33,6 +36,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public int ErrorCode
         {
             get
@@ -45,6 +49,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public int LogId
         {
             get
@@ -57,6 +62,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public string Message
         {
             get
@@ -69,6 +75,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public string Source
         {
             get
@@ -81,6 +88,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public string LargeDescription
         {
             get
@@ -93,6 +101,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public bool Translate
         {
             get
@@ -105,6 +114,7 @@ namespace Molinos.DataAgro.Entities.Dto
             }
         }
 
+        [DataMember]
         public string Format
         {
             get

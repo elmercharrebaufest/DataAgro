@@ -24,20 +24,24 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {                
-                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper());
+                var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper());
+                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper().Trim());
                 logger.Debug("Obteniendo datos de SAP");
                 var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), comerciales.Keys.ToList());
                 var crearEstadoProvedor = new List<ProveedorEstado>();
 
                 logger.Debug("Resultado: " + list.Count);
-                var proveedoresCuit = list.Select(x => x.CUIT.ToUpper()).Distinct().ToList();
-                var comercialesAd = list.Select(x => x.USUARIO.ToUpper()).Distinct().ToList();
-                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper()));
+                var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
+                var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
+                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper().Trim()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper().Trim()));
 
                 foreach (var estado in list)
                 {
+                    if(!proveedores.ContainsKey(estado.CUIT.ToUpper()))
+                    {
+                        logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
+                    }
                     var proveedor = proveedores[estado.CUIT.ToUpper()];
                     var comercial = comerciales[estado.USUARIO.ToUpper()];
                     

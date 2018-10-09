@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace WebDataAgro.Services
 {
@@ -16,18 +17,20 @@ namespace WebDataAgro.Services
         private readonly ICampaniaMaterialManager campaniaMaterial;
         private readonly IInformeComercialManager informeComercial;
 
-        //public DataAgroServices(ILogger logger, 
-        //    IRiesgoComercialManager riesgoComercial,
-        //    ICampaniaActualManager campanaActual, 
-        //    ICampaniaMaterialManager campaniaMaterial, 
-        //    IInformeComercialManager informeComercial)
-        //{
-        //    this.logger = logger;
-        //    this.riesgoComercial = riesgoComercial;
-        //    this.campanaActual = campanaActual;
-        //    this.campaniaMaterial = campaniaMaterial;
-        //    this.informeComercial = informeComercial;
-        //}
+        public DataAgroServices(
+            //ILogger logger,
+            //IRiesgoComercialManager riesgoComercial,
+            //ICampaniaActualManager campanaActual,
+            //ICampaniaMaterialManager campaniaMaterial,
+            //IInformeComercialManager informeComercial
+            )
+        {
+            this.logger = DependencyResolver.Current.GetService<ILogger>();
+            this.riesgoComercial = DependencyResolver.Current.GetService<IRiesgoComercialManager>();
+            this.campanaActual = DependencyResolver.Current.GetService<ICampaniaActualManager>();
+            this.campaniaMaterial = DependencyResolver.Current.GetService<ICampaniaMaterialManager>();
+            this.informeComercial = DependencyResolver.Current.GetService<IInformeComercialManager>();
+        }
         #region Servicios de DataAgro
 
         public Resultado GrabarRiesgoComercial(RiesgoComercial oRiesgos)

@@ -1,13 +1,8 @@
-﻿using System;
+﻿using Molinos.DataAgro.Agent.Compras;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.Text;
-using System.Threading.Tasks;
-using Molinos.DataAgro.Agent.Compras;
-using Molinos.DataAgro.Entities;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -39,14 +34,14 @@ namespace Molinos.DataAgro.Agent
 
         }
 
-        public List<ZMPES5130> ComprarIniciales(List<String> CUIT, string UsuarioComercial)
+        public List<ZMPES5130> ComprarIniciales(List<string> CUIT, string UsuarioComercial)
         {
 
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 UsuarioComercial = ConfigurationManager.AppSettings["SapPruebaUser"];
             }
-            Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient agent = new Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient();
+            SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient agent = new SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient();
 
             agent.ClientCredentials.UserName.UserName = UserSap;
             agent.ClientCredentials.UserName.Password = PassSap;

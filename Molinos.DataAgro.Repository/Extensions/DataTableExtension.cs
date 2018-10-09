@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Repository
         public static DataTable ToDataTable<T>(this IEnumerable<T> entityList, bool sinId = false, List<KeyValuePair<string, string>> propertys = null) where T : class
         {
             var propertysInfo = typeof(T).GetProperties().Where(x =>
-                                 x.PropertyType.Namespace != typeof(IList<object>).Namespace &&
+                                 x.PropertyType.Namespace != typeof(IList<object>).Namespace && !x.EsEntidad() &&
                                  (!sinId || !Attribute.IsDefined(x, typeof(KeyAttribute)))
                              ).ToArray();
             propertys = propertys ?? propertysInfo.Select(x => new KeyValuePair<string, string>(x.Name, null)).ToList();
@@ -70,16 +70,7 @@ namespace Molinos.DataAgro.Repository
                 {
                     table.Columns.Add(property.Value ?? property.Key, typeof(string));
                 }
-                else if (propertyInfo.EsEntidad())
-                {
-                    var entityProperties = propertyInfo.PropertyType.GetProperties();
-                    var idProperty = entityProperties.FirstOrDefault(x => Attribute.IsDefined(x, typeof(KeyAttribute))) ?? entityProperties.First();
-                    if (idProperty != null)
-                    {
-                        table.Columns.Add(property.Value ?? (property.Key + "Id"), idProperty.PropertyType);
-                    }
-                }
-                else
+                else if (!propertyInfo.EsEntidad())
                 {
                     var type = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
                     table.Columns.Add(property.Value ?? property.Key, type);

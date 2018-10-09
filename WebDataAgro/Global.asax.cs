@@ -43,7 +43,7 @@ namespace WebDataAgro
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
             builder.RegisterModule<NLogModule>();
-            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerRequest();
+            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>();
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Business
                     {
                         body = message,
                         title = title,
-                        icon = "/Content/Images/MolinosAgro.png",
+                        icon = "/Content/Images/agro.png",
                         url = urlNotificationClick
                     }
                 },
