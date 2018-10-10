@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace WebDataAgro.Services
 
             try
             {
-                logger.Debug("CUIT: " + oRiesgos.CUIT + " / Material: " + oRiesgos.RiesgoComercialDesc);
+                logger.Debug("GrabarRiesgoComercial" + oRiesgos.ToXml());
                 var resultado = riesgoComercial.ActualizacionDeRiesgoComercial(oRiesgos);
             }
             catch (Exception ex)
@@ -57,7 +58,7 @@ namespace WebDataAgro.Services
         {
             try
             {
-                logger.Debug("Campaña: " + oCampania.Campania + " / Material: " + oCampania.Material);
+                logger.Debug("GrabarCampaniaActual " + oCampania.ToXml());
                 return campanaActual.ActualizacionCampaniaActual(oCampania);
             }
             catch (Exception ex)
@@ -77,6 +78,7 @@ namespace WebDataAgro.Services
 
             try
             {
+                logger.Debug("ActualizarCampaniaMaterial " + oCampaniaMaterialSAP.ToXml());
                 string aux = string.Empty;
 
                 foreach (var sap in oCampaniaMaterialSAP)
@@ -105,6 +107,8 @@ namespace WebDataAgro.Services
 
             try
             {
+                logger.Debug("ActualizarEstadoComercial " + LoInformeComercialSAP.ToXml());
+
                 string aux = string.Empty;
 
                 foreach (var oInformeComercialSAP in LoInformeComercialSAP)

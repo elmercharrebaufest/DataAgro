@@ -115,6 +115,7 @@
     <Compile Include="Entities\DescuentoBonificacion.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
+    <Compile Include="Helpers\ExtensionesSerializacion.cs" />
     <Compile Include="Resources\Text.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

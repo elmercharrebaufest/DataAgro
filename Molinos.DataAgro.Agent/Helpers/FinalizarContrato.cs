@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Agent.FinalizarContrato;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

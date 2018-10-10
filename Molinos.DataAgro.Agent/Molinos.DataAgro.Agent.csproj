@@ -70,7 +70,6 @@
     <Compile Include="Helpers\Compras.cs" />
     <Compile Include="Helpers\DatoDelComercial.cs" />
     <Compile Include="Helpers\DatosDelProveedor.cs" />
-    <Compile Include="Helpers\ExtensionesSerializacion.cs" />
     <Compile Include="Helpers\FinalizarContrato.cs" />
     <Compile Include="Helpers\RiesgoComercial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

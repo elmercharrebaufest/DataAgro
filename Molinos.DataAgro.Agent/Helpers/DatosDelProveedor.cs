@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Agent.DatosDelProveedor;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

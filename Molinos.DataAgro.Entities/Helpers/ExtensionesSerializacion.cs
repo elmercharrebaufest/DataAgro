@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Molinos.DataAgro.Agent.Helpers
+namespace Molinos.DataAgro.Entities.Helpers
 {
     public static class ExtensionesSerializacion
     {
