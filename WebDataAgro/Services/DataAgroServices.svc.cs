@@ -3,33 +3,33 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ServiceModel;
 using System.Web.Mvc;
 
 namespace WebDataAgro.Services
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "DataAgroServices" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select DataAgroServices.svc or DataAgroServices.svc.cs at the Solution Explorer and start debugging.
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
     public class DataAgroServices : IDataAgroServices
     {
-        private readonly ILogger logger;
-        private readonly IRiesgoComercialManager riesgoComercial;
-        private readonly ICampaniaActualManager campanaActual;
-        private readonly ICampaniaMaterialManager campaniaMaterial;
-        private readonly IInformeComercialManager informeComercial;
+        private ILogger logger;
+        private IRiesgoComercialManager riesgoComercial;
+        private ICampaniaActualManager campanaActual;
+        private ICampaniaMaterialManager campaniaMaterial;
+        private IInformeComercialManager informeComercial;
 
-        public DataAgroServices(
-            //ILogger logger,
-            //IRiesgoComercialManager riesgoComercial,
-            //ICampaniaActualManager campanaActual,
-            //ICampaniaMaterialManager campaniaMaterial,
-            //IInformeComercialManager informeComercial
-            )
+        public DataAgroServices(ILogger logger, 
+            IRiesgoComercialManager riesgoComercial,
+            ICampaniaActualManager campanaActual, 
+            ICampaniaMaterialManager campaniaMaterial, 
+            IInformeComercialManager informeComercial)
         {
-            this.logger = DependencyResolver.Current.GetService<ILogger>();
-            this.riesgoComercial = DependencyResolver.Current.GetService<IRiesgoComercialManager>();
-            this.campanaActual = DependencyResolver.Current.GetService<ICampaniaActualManager>();
-            this.campaniaMaterial = DependencyResolver.Current.GetService<ICampaniaMaterialManager>();
-            this.informeComercial = DependencyResolver.Current.GetService<IInformeComercialManager>();
+            this.logger = logger;
+            this.riesgoComercial = riesgoComercial;
+            this.campanaActual = campanaActual;
+            this.campaniaMaterial = campaniaMaterial;
+            this.informeComercial = informeComercial;
         }
         #region Servicios de DataAgro
 

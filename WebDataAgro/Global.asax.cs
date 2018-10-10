@@ -34,16 +34,16 @@ namespace WebDataAgro
             var builder = new ContainerBuilder();
             
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
-            
-            builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerRequest();
-            builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerRequest();
+            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
+
+            builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
                    .Where(t => t.Name.EndsWith("Manager"))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
             builder.RegisterModule<NLogModule>();
-            builder.RegisterType<DataAgroServices>().As<IDataAgroServices>();
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
