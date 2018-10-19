@@ -849,12 +849,18 @@ function InicializarElementos() {
             if ($('#tipoId').val() == 1) {
                 $("#plazosYTopesFijacion").show();
                 $("#pagosDiv").hide();
-            }
+            } else if ($('#tipoId').val() == 2) {
+                $("#plazosYTopesFijacion").hide();
+                $("#pagosDiv").show();
+            } 
         }
         else if ($("#boton-ampliar").text() == "- OCULTAR") {
             $("#boton-ampliar").text("+ AMPLIAR");
             $(".ampliar").hide();
-            $(".ampliar-adicionales").hide();            
+            $(".ampliar-adicionales").hide();
+            if ($('#tipoId').val() == 1) {
+                $("#plazosYTopesFijacion").hide();
+            }       
         }
     });
 
