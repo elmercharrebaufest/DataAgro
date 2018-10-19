@@ -11,6 +11,15 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         [DataMember]
         public List<ErrorMessage> Errores { get; set; } = new List<ErrorMessage>();
+        
+        [DataMember]
+        public List<ErrorMessage> ListaErrores { get { return Errores; } }
+
+        [DataMember]
+        public bool HayError
+        {
+            get { return Errores.Count != 0; }
+        }
 
         public bool HayErrores
         {
