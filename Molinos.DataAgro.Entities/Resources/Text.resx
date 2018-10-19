@@ -120,6 +120,12 @@
   <data name="Ampliaciones" xml:space="preserve">
     <value>Ampliaciones</value>
   </data>
+  <data name="April" xml:space="preserve">
+    <value>Abril</value>
+  </data>
+  <data name="August" xml:space="preserve">
+    <value>Agosto</value>
+  </data>
   <data name="Base" xml:space="preserve">
     <value>Base</value>
   </data>
@@ -156,6 +162,9 @@
   <data name="Cuit" xml:space="preserve">
     <value>CUIT</value>
   </data>
+  <data name="December" xml:space="preserve">
+    <value>Diciembre</value>
+  </data>
   <data name="DesdeFijacion" xml:space="preserve">
     <value>Desde Fijacion</value>
   </data>
@@ -167,6 +176,9 @@
   </data>
   <data name="EstablecimientoPropio" xml:space="preserve">
     <value>Establecimiento</value>
+  </data>
+  <data name="February" xml:space="preserve">
+    <value>Febrero</value>
   </data>
   <data name="Fecha" xml:space="preserve">
     <value>Fecha Operación</value>
@@ -186,11 +198,29 @@
   <data name="ImporteSustentable" xml:space="preserve">
     <value>Importe Sustentable</value>
   </data>
+  <data name="January" xml:space="preserve">
+    <value>Enero</value>
+  </data>
+  <data name="July" xml:space="preserve">
+    <value>Julio</value>
+  </data>
+  <data name="June" xml:space="preserve">
+    <value>Junio</value>
+  </data>
   <data name="Localidad" xml:space="preserve">
     <value>Localidad</value>
   </data>
+  <data name="March" xml:space="preserve">
+    <value>Marzo</value>
+  </data>
   <data name="Material" xml:space="preserve">
     <value>Material</value>
+  </data>
+  <data name="May" xml:space="preserve">
+    <value>Mayo</value>
+  </data>
+  <data name="Mes" xml:space="preserve">
+    <value>Mes</value>
   </data>
   <data name="Moneda" xml:space="preserve">
     <value>Moneda</value>
@@ -198,8 +228,14 @@
   <data name="NoInformaSio" xml:space="preserve">
     <value>No Informa Sio</value>
   </data>
+  <data name="November" xml:space="preserve">
+    <value>Noviembre</value>
+  </data>
   <data name="Observacion" xml:space="preserve">
     <value>Observación</value>
+  </data>
+  <data name="October" xml:space="preserve">
+    <value>Octubre</value>
   </data>
   <data name="Pago" xml:space="preserve">
     <value>Pago</value>
@@ -215,6 +251,9 @@
   </data>
   <data name="RazonSocial" xml:space="preserve">
     <value>Razon Social</value>
+  </data>
+  <data name="September" xml:space="preserve">
+    <value>Septiembre</value>
   </data>
   <data name="TipoNegocio" xml:space="preserve">
     <value>Tipo Negocio</value>
