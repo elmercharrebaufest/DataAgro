@@ -70,6 +70,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abril.
+        /// </summary>
+        public static string April {
+            get {
+                return ResourceManager.GetString("April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agosto.
+        /// </summary>
+        public static string August {
+            get {
+                return ResourceManager.GetString("August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Base.
         /// </summary>
         public static string Base {
@@ -178,6 +196,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Diciembre.
+        /// </summary>
+        public static string December {
+            get {
+                return ResourceManager.GetString("December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Desde Fijacion.
         /// </summary>
         public static string DesdeFijacion {
@@ -210,6 +237,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string EstablecimientoPropio {
             get {
                 return ResourceManager.GetString("EstablecimientoPropio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Febrero.
+        /// </summary>
+        public static string February {
+            get {
+                return ResourceManager.GetString("February", resourceCulture);
             }
         }
         
@@ -268,6 +304,33 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enero.
+        /// </summary>
+        public static string January {
+            get {
+                return ResourceManager.GetString("January", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Julio.
+        /// </summary>
+        public static string July {
+            get {
+                return ResourceManager.GetString("July", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Junio.
+        /// </summary>
+        public static string June {
+            get {
+                return ResourceManager.GetString("June", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Localidad.
         /// </summary>
         public static string Localidad {
@@ -277,11 +340,38 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Marzo.
+        /// </summary>
+        public static string March {
+            get {
+                return ResourceManager.GetString("March", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Material.
         /// </summary>
         public static string Material {
             get {
                 return ResourceManager.GetString("Material", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mayo.
+        /// </summary>
+        public static string May {
+            get {
+                return ResourceManager.GetString("May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mes.
+        /// </summary>
+        public static string Mes {
+            get {
+                return ResourceManager.GetString("Mes", resourceCulture);
             }
         }
         
@@ -304,11 +394,29 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Noviembre.
+        /// </summary>
+        public static string November {
+            get {
+                return ResourceManager.GetString("November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Observación.
         /// </summary>
         public static string Observacion {
             get {
                 return ResourceManager.GetString("Observacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Octubre.
+        /// </summary>
+        public static string October {
+            get {
+                return ResourceManager.GetString("October", resourceCulture);
             }
         }
         
@@ -354,6 +462,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string RazonSocial {
             get {
                 return ResourceManager.GetString("RazonSocial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Septiembre.
+        /// </summary>
+        public static string September {
+            get {
+                return ResourceManager.GetString("September", resourceCulture);
             }
         }
         

@@ -23,4 +23,4 @@ inner join InformeComercialEstado Est on est.EstadoInformeId = ic.EstadoId
 where ic.proveedorId= @ProveedorId
 and exists ( select 1 from InformeComercialProduccion ifp
 			inner Join Material m on ifp.MaterialId = m.MaterialId 
-			and ifp.InformeComercialId = ic.InformeComercialId and m.CampañaId = ic.CampañaId)
+			and ifp.InformeComercialId = ic.InformeComercialId)

@@ -214,6 +214,52 @@ $(document).ready(function () {
         });
     }
 
+    if ($("#compraNet-a").length > 0) {
+        $("#compraNet-a").hover(function () {
+            var alt = 60 + $(document).scrollTop();
+            $(".compraNet-detalle").show().css({
+                left: $(this).offset().left,
+                top: alt,
+                overflow: 'auto',
+                'max-height': '280px'
+            });
+
+            if (($(this).offset().left + $(".compraNet-detalle").width()) > $(window).width()) {
+                $(".compraNet-detalle").show().css({
+                    left: 'auto',
+                    right: $(window).width() - ($(".mis-tablas-li").offset().left + $(".mis-tablas-li").width()),
+                    top: alt,
+                    overflow: 'auto',
+                    'max-height': '280px'
+                });
+            }
+        }, function () {
+            $(".compraNet-detalle").hide();
+        });
+
+        $(".compraNet-detalle").hover(function () {
+            var alt = 60 + $(document).scrollTop();
+            $(".compraNet-detalle").show().css({
+                left: $(this).offset().left,
+                top: alt,
+                overflow: 'auto',
+                'max-height': '280px'
+            });
+
+            if (($(this).offset().left + $(".compraNet-detalle").width()) > $(window).width()) {
+                $(".compraNet-detalle").show().css({
+                    left: 'auto',
+                    right: $(window).width() - ($(".mis-tablas-li").offset().left + $(".mis-tablas-li").width()),
+                    top: alt,
+                    overflow: 'auto',
+                    'max-height': '280px'
+                });
+            }
+        }, function () {
+            $(".compraNet-detalle").hide();
+        });
+    }
+
     $("#informes-a").hover(function () {
         var alt = 60 + $(document).scrollTop();
         $(".informe-detalle").show().css({

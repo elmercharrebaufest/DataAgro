@@ -342,7 +342,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oContrato.ProveedorId);
+                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oContrato.ProveedorId && x.CompraNet == true);
                 
                 string emailComercial = "";
 
@@ -356,12 +356,18 @@ namespace Molinos.DataAgro.Business.Managers
                     From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
                 };
 
-                if(proveedorContacto != null && !string.IsNullOrEmpty(proveedorContacto.Email1))
+                if (proveedorContacto.Count > 0)
                 {
-                    oMensaje.To.Add(proveedorContacto.Email1);
+                    foreach (var contacto in proveedorContacto)
+                    {
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                        {
+                            oMensaje.To.Add(contacto.Email1);
+                        }
+                    }
                     if (!string.IsNullOrEmpty(emailComercial)) oMensaje.CC.Add(emailComercial);
                 }
-                else if(!string.IsNullOrEmpty(emailComercial))
+                else if (!string.IsNullOrEmpty(emailComercial))
                 {
                     oMensaje.To.Add(emailComercial);
                 }
@@ -413,8 +419,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var proveedorContacto = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId);
-                
+                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId && x.CompraNet == true);
+
                 string emailComercial = "";
 
                 if (oFijacionDePrecioContrato.Comercial != null)
@@ -422,49 +428,64 @@ namespace Molinos.DataAgro.Business.Managers
                     try { emailComercial = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
-                if ((proveedorContacto != null && proveedorContacto.Email1 != "" && proveedorContacto.Email1 != null) || (emailComercial != null && emailComercial == ""))
+                var oMensaje = new MailMessage
                 {
-                    MailMessage oMensaje = new MailMessage();
-                    
-                    oMensaje.From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]);
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
 
-                    oMensaje.To.Add(proveedorContacto.Email1);
-                    if (emailComercial != "" && emailComercial != null) oMensaje.CC.Add(emailComercial);
-                    oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
-
-
-                    oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
-
-                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
-                    
-                    var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
-                    
-                    oMensaje.BodyEncoding = Encoding.UTF8;
-
-                    oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
-
-                    SmtpClient oCliente = default(SmtpClient);
-
-                    int Condicion = 0;
-                    if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (proveedorContacto.Count > 0)
+                {
+                    foreach (var contacto in proveedorContacto)
                     {
-                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                        {
+                            oMensaje.To.Add(contacto.Email1);
+                        }
                     }
-                    else
-                    {
-                        oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
-                    }
-
-                    if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
-                    {
-                        oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                        oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
-                            ConfigurationManager.AppSettings["CredentialPassword"]);
-                    }
-
-                    oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                    oCliente.Send(oMensaje);
+                    if (!string.IsNullOrEmpty(emailComercial)) oMensaje.CC.Add(emailComercial);
                 }
+                else if (!string.IsNullOrEmpty(emailComercial))
+                {
+                    oMensaje.To.Add(emailComercial);
+                }
+                else
+                {
+                    logger.Debug($"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene ContactoComercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial");
+                    return;
+                }
+                oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+
+                oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
+
+                oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
+
+                var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
+
+                oMensaje.BodyEncoding = Encoding.UTF8;
+
+                oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
+
+                SmtpClient oCliente = default(SmtpClient);
+
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
+                else
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
+
+                if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                {
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                        ConfigurationManager.AppSettings["CredentialPassword"]);
+                }
+
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+                oCliente.Send(oMensaje);
             }
             catch (Exception ex)
             {
@@ -673,7 +694,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private string GetEmailUserActiveDirectory(string UserName)
+        public string GetEmailUserActiveDirectory(string UserName)
         {
             DirectoryEntry entry = new DirectoryEntry();
             string userName = UserName;
@@ -920,7 +941,8 @@ namespace Molinos.DataAgro.Business.Managers
                         Telefono3 = param.telefonos[2].telefono,
                         TipoTelefono1Id = (param.telefonos[0].tipoTelefono.HasValue ? (int?)param.telefonos[0].tipoTelefono.Value : null),
                         TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null),
-                        TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null)
+                        TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null),
+                        CompraNet = param.CompraNet
                     };
                     repositorio.Agregar(contactoComercial);
 
@@ -1552,7 +1574,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 Email1 = can.emails[0],
                                 Email2 = can.emails[1],
                                 Email3 = can.emails[2],
-                                ProveedorId = (int)oParam.ProveedorId
+                                ProveedorId = (int)oParam.ProveedorId,
+                                CompraNet = can.CompraNet
                             };
                             repositorio.Agregar(contacto);
 
@@ -1597,6 +1620,7 @@ namespace Molinos.DataAgro.Business.Managers
                         con.EsPrincipal = mod.principal;
                         con.FechaNacimiento = mod.fechaNacimiento;
                         con.Cargo = mod.cargo;
+                        con.CompraNet = mod.CompraNet;
 
                         #region Eliminar Intereses Contactos
                         var oContactosInteresesSave = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercial.ContactoComercialId == mod.contactoComercialId);

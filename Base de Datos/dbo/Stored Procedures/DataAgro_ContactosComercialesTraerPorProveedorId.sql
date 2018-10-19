@@ -38,6 +38,7 @@ BEGIN
 		cc.TipoTelefono3Id,
 		cc.ContactoComercialId,
 		cc.EsPrincipal,
+		CC.CompraNet,
 		cc.ContactoComercialId
 	FROM ContactoComercial CC
 	WHERE CC.ProveedorId = @ProveedorId

@@ -2080,6 +2080,7 @@ function armarFuncionalidades() {
 
         obj.otrosIntereses = $("#concom-otrosintereses").val();
         obj.principal = $("#concom-principal").is(":checked") ? 1 : 0;
+        obj.CompraNet = $("#concom-compranet").is(":checked") ? 1 : 0;
         obj.item = cantContactoComercial;
 
         if (obj.principal) {
@@ -2180,6 +2181,7 @@ function armarFuncionalidades() {
         $("#concom-otrosintereses").val("");
         $("#concom-id").val(0);
         $("#concom-principal").prop("checked", false);
+        $("#concom-compranet").prop("checked", false);
     });
 }
 
@@ -2213,7 +2215,11 @@ function editarContactoComercial(id) {
     } else {
         $("#concom-principal").prop("checked", false);
     }
-
+    if (obj.CompraNet == 1) {
+        $("#concom-compranet").prop("checked", true);
+    } else {
+        $("#concom-compranet").prop("checked", false);
+    }
     var cantEmails = obj.emails.length;
     $("#concom-email1").val(obj.emails[0]);
     for (var i = 2; i <= cantEmails; i++) {
@@ -2377,7 +2383,7 @@ function ObtenerDatos() {
     }
     obj.contactocomercial = aGuardarContactoComercial;
 
-    GrabarProveedor(obj)
+    GrabarProveedor(obj);
 }
 
 function GrabarProveedor(nuevoProveedor) {

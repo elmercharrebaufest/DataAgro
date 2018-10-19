@@ -150,6 +150,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? principal { get; set; }
         public string puesto { get; set; }
         public List<Telefono> telefonos { get; set; }
+        public bool CompraNet { get; set; }
     }
 
     public class Objetivos

@@ -175,6 +175,7 @@ function armarComercial(comerciales) {
             obj.interesesNombre = comerciales[i].Interes ? comerciales[i].Interes.split(", ") : "";
             obj.otrosIntereses = comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "";
             obj.principal = comerciales[i].EsPrincipal;
+            obj.CompraNet = comerciales[i].CompraNet;
             obj.item = cantContactoComercial;
             aGuardarContactoComercial.push(obj);
 

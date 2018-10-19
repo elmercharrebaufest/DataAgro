@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0)
+                where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)
                 select new BasicoContrato()
                 {
                     ContratoId = contrato.ContratoId,
@@ -37,6 +37,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocioId = contrato.TipoNegocioId,
                     Cantidad = contrato.Cantidad,
                     Precio = contrato.Precio,
+                    PrecioPlazo = contrato.TipoNegocioId == 1 ? SqlFunctions.DateName("day", contrato.FechaHasta) + "/" + SqlFunctions.DatePart("month", contrato.FechaHasta) + "/" + SqlFunctions.DateName("year", contrato.FechaHasta) : contrato.Precio.ToString(),
                     FechaEntrega = contrato.FechaEntrega,
                     CampanaId = contrato.CampanaId,
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
@@ -95,7 +96,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ClasificacionId = contrato.ClasificacionId,
                     ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
                     CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara",
-                    MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false
+                    MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false,
+                    ComercialCreadorId = contrato.ComercialCreadorId,
+                    ComercialCreador = contrato.ComercialCreador == null ? "" : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido
                 };
 
             var queryFijacion =
@@ -110,6 +113,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocioId = 3,
                     Cantidad = fijac.Cantidad,
                     Precio = fijac.Precio,
+                    PrecioPlazo = "",
                     FechaEntrega = null,
                     CampanaId = 0,
                     FechaDesde = null,
@@ -168,8 +172,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ClasificacionId = null,
                     ClasificacionDescripcion = "",
                     CalidadDescripcion = "",
-                    MercsDeposito = null
-
+                    MercsDeposito = null,
+                    ComercialCreadorId = fijac.ComercialCreadorId,
+                    ComercialCreador = ""
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);

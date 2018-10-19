@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? BolsaId { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
+        public int? ComercialCreadorId { get; set; }
     }
 }
 

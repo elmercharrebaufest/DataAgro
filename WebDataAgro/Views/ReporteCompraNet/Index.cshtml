@@ -5,18 +5,36 @@
 @section Styles {
     <link href="~/Content/ReporteCompraNet.css" rel="stylesheet" />
 }
-<script type="text/javascript">
-    $(document).ready(function () {
-        setInterval(Refrescar, 300000);
-    });
 
-    function Refrescar() {
-        $.get("@Url.Action("_ReporteCompraNet")", function (data) {
-            $("#ReportesCompraNet").html(data);
-        });
-    };
-</script>
-<div id="CuerpoCompraNet">
-       @Html.Action("_ReporteCompraNet")
+<script type="text/javascript" src="~/Scripts/App/ReporteCompranet.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+
+<div class="Titulo">
+    <h5> Compras Del Día </h5>
+
+    <br />
+    @using (Ajax.BeginForm("PartialReporteCompraNet", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "CuerpoCompraNet" }, null))
+    {
+        @Html.AntiForgeryToken();
+        <div class="container">
+            <div id="fecha-buscador-reporte" class="row">
+                <div class="col-sm-1">
+                    <label>Fecha</label>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <span id="fechaReporte">
+                        <input id="fecha" name="fechaString" type="date" style="width: 100%" />
+                    </span>
+                </div>
+                <button type="submit" id="buscar-reporte" class="k-button k-button-icontext">Buscar</button>
+                @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new {  }, new { @class = "k-button k-button-icontext", @id = "descargaReporte" } )
+            </div>
+
+        </div>
+    }
+    <div id="CuerpoCompraNet" class="container">
+        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString() })
+    </div>
 </div>
 

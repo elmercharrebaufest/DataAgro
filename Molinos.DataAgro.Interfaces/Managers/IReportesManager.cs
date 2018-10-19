@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -51,10 +52,11 @@ namespace Molinos.DataAgro.Interfaces
         
         List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes);
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes);
-        List<ToneladasGranoTipoDto> TraerToneladasGranoTipo();
-        ReporteSojaSustDto TraerToneladasSojaSust();
-        List<PosicionComprasDto> TraerPosicionCompras();
-        List<PrecioCantidadDto> TraerMonedaCantidad();
-        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, bool? calidad);
+        List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fecha);
+        ReporteSojaSustDto TraerToneladasSojaSust(DateTime fecha);
+        List<PosicionComprasDto> TraerPosicionCompras(DateTime fecha);
+        List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fecha);
+        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, DateTime fecha, bool? calidad);
+        List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fecha);
     }
 }

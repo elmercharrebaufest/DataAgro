@@ -429,8 +429,8 @@ function armarContacto() {
     } else {
         $(".contacto-detalle-basico-contenedor-operable").hide();
     }
-    $(".contacto-detalle-basico-contenedor-datos-nomref").html(basico[0].NombreReferente ? "Ref: " + basico[0].NombreReferente : "Ref: No Posee");
-    $(".contacto-detalle-basico-contenedor-datos-tipo").html(basico[0].Segmentacion ? "Seg: " + basico[0].Segmentacion : "Seg: No Posee");
+    $(".contacto-detalle-basico-contenedor-datos-nomref").html(basico[0].NombreReferente ? "Ref: " + basico[0].NombreReferente : "Ref: -");
+    $(".contacto-detalle-basico-contenedor-datos-tipo").html(basico[0].Segmentacion ? "Seg: " + basico[0].Segmentacion : "Seg: -");
     var basicoEmails = "Emails: <br>";
     if (basico[0].Email1) {
         basicoEmails += '<span><a target="_blank" href="mailto:' + basico[0].Email1 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email1 + '</i></a></span>';
@@ -445,7 +445,7 @@ function armarContacto() {
         basicoEmails += ',<br><span><a target="_blank" href="mailto:' + basico[0].Email4 + '">' + '<i class="fa fa-envelope-o" aria-hidden="true">  ' + basico[0].Email4 + '</i></a></span>';
     }
     if (basicoEmails === "Emails: <br>") {
-        basicoEmails = "Emails: No Posee";
+        basicoEmails = "Emails: -";
     }
     $(".contacto-detalle-basico-contenedor-datos-mail").html(basicoEmails);
 
@@ -463,7 +463,7 @@ function armarContacto() {
         basicoTelefonos += ',<br><span><a target="_blank" href="tel:' + basico[0].Telefono4 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + basico[0].Telefono4 + '</i></a></span>';
     }
     if (basicoTelefonos === "Tels: <br>") {
-        basicoTelefonos = "Tels: No Posee";
+        basicoTelefonos = "Tels: -";
     }
 
     $(".contacto-detalle-basico-contenedor-datos-telefono").html(basicoTelefonos);
@@ -485,7 +485,7 @@ function armarContacto() {
             comercialTelefonos += ',<br><span><a target="_blank" href="tel:' + contactocomercialprincipal[0].Telefono3 + '">' + '<i class="fa fa-skype" aria-hidden="true">  ' + contactocomercialprincipal[0].Telefono3 + '</i></a></span>';
         }
         if (comercialTelefonos === "") {
-            comercialTelefonos = "No Posee Telefonos";
+            comercialTelefonos = "- Telefonos";
         }
 
         $(".contacto-principal-telefonos").html(comercialTelefonos);
@@ -502,7 +502,7 @@ function armarContacto() {
         }
 
         if (comercialEmails === "") {
-            comercialEmails = "Emails: No Posee";
+            comercialEmails = "Emails: -";
         }
 
         $(".contacto-principal-mails").html(comercialEmails);
@@ -517,11 +517,11 @@ function armarContacto() {
     $(".contacto-detalle-moa-ultimo-contacto-span").html(basico[0].FechaUltimoContacto ? kendo.toString(kendo.parseDate(basico[0].FechaUltimoContacto), "m") : "-");
     $(".cliente-moa-val").html("<b>" + (basico[0].ClienteMOA ? "Si" : "No") + "</b>");
     $(".comecial-a-cargo").html((basico[0].Nombres !== "" ? basico[0].Nombres + ' ' : '') + (basico[0].Apellido !== "" ? basico[0].Apellido : ''));
-    $(".grupo-de-compras").html(basico[0].GrupoDeCompras ? basico[0].GrupoDeCompras : "No posee");
+    $(".grupo-de-compras").html(basico[0].GrupoDeCompras ? basico[0].GrupoDeCompras : "-");
 
     var domActividad = [];
     if (!basico[0].Direccion && !basico[0].CodigoPostal && !basico[0].Provincia && !basico[0].Localidad) {
-        domActividad.push("No posee");
+        domActividad.push("-");
     } else {
         if (basico[0].Direccion) {
             domActividad.push(basico[0].Direccion + (basico[0].CodigoPostal ? " (CP" + basico[0].CodigoPostal + ")" : ""));
@@ -542,7 +542,7 @@ function armarContacto() {
             canope.push(resultDatos.CanalesDeOperacion[i].Descripcion);
         })(ii);
     }
-    $("#daco-caope").html((canope.length > 0 ? canope.join("<br>") : "No posee"));
+    $("#daco-caope").html((canope.length > 0 ? canope.join("<br>") : "-"));
 
     var enta = [];
     for (var ii in resultDatos.ProveedorDestinatario) {
@@ -550,7 +550,7 @@ function armarContacto() {
             enta.push(resultDatos.ProveedorDestinatario[i].Descripcion);
         })(ii);
     }
-    $("#daco-enta").html((enta.length > 0 ? enta.join(", ") : "No posee"));
+    $("#daco-enta").html((enta.length > 0 ? enta.join(", ") : "-"));
 
     var condpre = [];
     for (var ii in resultDatos.ProveedorCondicion) {
@@ -559,17 +559,17 @@ function armarContacto() {
         })(ii);
     }
 
-    $("#daco-condpre").html(condpre.length > 0 ? condpre.join("<br>") : "No posee");
+    $("#daco-condpre").html(condpre.length > 0 ? condpre.join("<br>") : "-");
 
-    $("#daco-arin").html(basico[0].AreaInfluencia == null ? "No posee" : basico[0].AreaInfluencia);
-    $("#daco-inte").html(basico[0].Intermediario == null ? "No posee" : basico[0].Intermediario);
-    $("#daco-come").html(basico[0].Observaciones == null ? "No posee" : basico[0].Observaciones);
+    $("#daco-arin").html(basico[0].AreaInfluencia == null ? "-" : basico[0].AreaInfluencia);
+    $("#daco-inte").html(basico[0].Intermediario == null ? "-" : basico[0].Intermediario);
+    $("#daco-come").html(basico[0].Observaciones == null ? "-" : basico[0].Observaciones);
 
-    $("#daco-clascomnet").html(basico[0].ClasificacionCompraNet == null ? "No posee" : basico[0].ClasificacionCompraNet);
-    $("#daco-bolecomnet").html(basico[0].BoletoCompraNet == null ? "No posee" : basico[0].BoletoCompraNet);
-    $("#daco-bolscomnet").html(basico[0].BolsaCompraNet == null ? "No posee" : basico[0].BolsaCompraNet);
-    $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].ProvinciaCompraNet);
-    $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "No posee" : basico[0].LocalidadCompraNet);
+    $("#daco-clascomnet").html(basico[0].ClasificacionCompraNet == null ? "-" : basico[0].ClasificacionCompraNet);
+    $("#daco-bolecomnet").html(basico[0].BoletoCompraNet == null ? "-" : basico[0].BoletoCompraNet);
+    $("#daco-bolscomnet").html(basico[0].BolsaCompraNet == null ? "-" : basico[0].BolsaCompraNet);
+    $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].ProvinciaCompraNet);
+    $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].LocalidadCompraNet);
     $("#daco-consigcomnet").html((basico[0].Consignatario == 1) ? "Si" : "No");
 
     if ($("#daco-clascomnet").html() != 'Acopiador') {
@@ -1072,7 +1072,7 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
         '</div>' +
         '<div class="col-lg-7">' +
         '<div class="value-contacto">' +
-        '<b>' + (grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacHectSojaSust ? grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacHectSojaSust + " Has" : "No Posee") + '</b> ' +
+        '<b>' + (grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacHectSojaSust ? grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacHectSojaSust + " Has" : "-") + '</b> ' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -1084,7 +1084,7 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
         '</div>' +
         '<div class="col-lg-7">' +
         '<div class="value-contacto">' +
-        '<b>' + (grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacTonsMaxSojaSust ? grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacTonsMaxSojaSust + " Has" : "No Posee") + '</b>' +
+        '<b>' + (grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacTonsMaxSojaSust ? grupocampoacopio[0][i][Object.keys(grupocampoacopio[0][i])[0]].AlmacTonsMaxSojaSust + " Has" : "-") + '</b>' +
         '</div>' +
         '</div>' +
         '</div>';
@@ -1134,7 +1134,7 @@ function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
         '</div>' +
         '<div class="col-lg-7">' +
         '<div class="value-contacto">' +
-        '<b>' + (grupoacopio[0][i][Object.keys(grupoacopio[0][i])[0]].AlmacVolAnualTotal ? grupoacopio[0][i][Object.keys(grupoacopio[0][i])[0]].AlmacVolAnualTotal + " TNs" : "No Posee") + '</b>' +
+        '<b>' + (grupoacopio[0][i][Object.keys(grupoacopio[0][i])[0]].AlmacVolAnualTotal ? grupoacopio[0][i][Object.keys(grupoacopio[0][i])[0]].AlmacVolAnualTotal + " TNs" : "-") + '</b>' +
         '</div>' +
         '</div>' +
         '</div>' +

@@ -19,5 +19,9 @@ namespace Molinos.DataAgro.Interfaces
         Resultado EliminarLocalidad(int intLocalidadId);
 
         List<LocalidadDto> ListarLocalidad(string localidad);
+
+        List<BusquedaLocalidad> DevolverLocalidades(string filtro);
+
+        LocalidadQry TraerLocalidadProvincia(string localidad, string provincia);
     }
 }

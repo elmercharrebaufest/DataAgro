@@ -1,9 +1,6 @@
-﻿using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Interfaces;
+﻿using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Globalization;
 using System.Web.Mvc;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
@@ -21,32 +18,44 @@ namespace WebDataAgro.Controllers
         // GET: ReporteCompraNet
         public ActionResult Index()
         {
-            var model = new ReporteCompraNetModel
-            {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(),
-                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad()
-            };
-
-            return View(model);
+           return View();
         }
-        public ActionResult _ReporteCompraNet()
+        public ActionResult PartialReporteCompraNet(string fechaString)
         {
-            var model = new ReporteCompraNetModel
-            {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(),
-                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad()
-            };
+            ViewBag.Fecha = fechaString;
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            var model = ObtenerDatosReporte(fecha);
             return PartialView("_ReporteCompraNet", model);
 
         }
-        public ExcelResult DetalleExcel(int mes, int materialId, bool? clasificacion)
+        public ExcelResult DetalleExcel(int mes, int materialId,string fechaString, bool? clasificacion)
         {
-            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, clasificacion);
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, fecha, clasificacion);
             return new ExcelResult(detalle.Headers,detalle.Data,detalle.Name,detalle.SheetName);
+        }
+
+        public ActionResult ReporteComprasDelDia(string fechaString)
+        {
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            var model = ObtenerDatosReporte(fecha);
+            var posicion = mobjReportesManager.PosicionPorMaterial(fecha);
+            return File(ExcelReporteCompleto.GenerarExcel(model, posicion), "application/vnd.ms-excel");
+
+        }
+
+        private ReporteCompraNetModel ObtenerDatosReporte(DateTime fecha)
+        {
+            return new ReporteCompraNetModel
+            {
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fecha),
+                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fecha),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fecha),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fecha)
+            };
         }
     }
 }

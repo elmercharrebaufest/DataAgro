@@ -11,17 +11,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class TraerToneladasPorGrano : IConsultaEscalar<ToneladasGranoTipoDto>
     {        
         private readonly int materialId;
+        private readonly DateTime fecha;
         private readonly bool? calidad;
-        public TraerToneladasPorGrano(int materialId, bool? calidad = null)
+        public TraerToneladasPorGrano(int materialId,DateTime fecha, bool? calidad = null)
         {
             this.materialId = materialId;
+            this.fecha = fecha;
             this.calidad = calidad;
         }
 
         public ToneladasGranoTipoDto Ejecutar(DbContext contexto)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = DateTime.Now.Date;
+            var fechaHoy = fecha.Date;
 
             return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()

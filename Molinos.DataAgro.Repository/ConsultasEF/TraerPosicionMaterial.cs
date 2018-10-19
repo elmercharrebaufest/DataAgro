@@ -14,17 +14,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly int materialId;
         private readonly bool? calidad;
+        private readonly DateTime fecha;
 
-        public TraerPosicionMaterial(int materialId, bool? calidad = null)
+        public TraerPosicionMaterial(int materialId,DateTime fecha, bool? calidad = null )
         {
             this.materialId = materialId;
             this.calidad = calidad;
+            this.fecha = fecha;
         }
         
-        private static List<PosicionKilos> Query(DbContext contexto, int materialId, bool? calidad)
+        private static List<PosicionKilos> Query(DbContext contexto, int materialId, DateTime fecha, bool? calidad)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = DateTime.Now.Date;
+            var fechaHoy = fecha.Date;
 
             return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => SqlFunctions.DatePart("Month", x.FechaHasta) ?? 11)
@@ -40,7 +42,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, materialId, calidad);
+                return Query(contexto, materialId, fecha, calidad);
             }
         }
     }

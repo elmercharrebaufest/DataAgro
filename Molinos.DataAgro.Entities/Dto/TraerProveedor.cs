@@ -117,6 +117,7 @@ namespace Molinos.DataAgro.Entities.Dto
 		public Nullable<int> TipoTelefono3Id { get; set; }
 		public int ContactoComercialId { get; set; }
 		public bool? EsPrincipal { get; set; }
+        public bool? CompraNet { get; set; }
         public Nullable<int> ProveedorId { get; set; }
     }
 

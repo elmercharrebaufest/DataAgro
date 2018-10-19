@@ -131,7 +131,22 @@ namespace Molinos.DataAgro.Business
         public List<LocalidadDto> ListarLocalidad(string localidad)
         {
             return repositorio.Listar<Localidad,LocalidadDto>(x=>new LocalidadDto { LocalidadId = x.LocalidadId, Nombre= x.Nombre} ,x => localidad == "" || x.Nombre.Contains(localidad), 15);
-        }        
+        }
+
+        public List<BusquedaLocalidad> DevolverLocalidades(string filtro)
+        {
+            var resultado = repositorio.SelStore<BusquedaLocalidad>("DataAgro_BusquedaLocalidades", 15, filtro);
+            foreach (var r in resultado)
+            {
+                r.Filtro = filtro + "|" + r.Localidad + " (" + r.Provincia + ")";
+            }
+            return resultado;
+        }
+        public  LocalidadQry TraerLocalidadProvincia(string localidad, string provincia)
+        {
+            var localidadDto = repositorio.Obtener<Localidad, LocalidadQry>(x => x.Nombre == localidad && x.Provincia.Nombre == provincia, x => new LocalidadQry() { LocalidadId = x.LocalidadId, Nombre = x.Nombre, ProvinciaId= x.ProvinciaId});
+            return localidadDto;
+        }
     }
 }
 

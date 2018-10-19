@@ -42,7 +42,8 @@
 	[BolsaId] INT NULL,
 	[DesdeFijacion] DATETIME NULL,
 	[HastaFijacion] DATETIME NULL,
-	[MercsDeposito] BIT NULL
+	[MercsDeposito] BIT NULL,
+    [ComercialCreadorId] INT NULL
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
@@ -57,4 +58,5 @@
 	CONSTRAINT [FK_Contrato_BolsaCompraNet] FOREIGN KEY ([BolsaId]) REFERENCES [BolsaCompraNet]([Id]),
     CONSTRAINT [FK_Contrato_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro](Id),
     CONSTRAINT [FK_Contrato_CondicionFijacion] FOREIGN KEY ([CondicionFijacionId]) REFERENCES [CondicionFijacion]([Id]), 
+    CONSTRAINT [FK_Contrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
 )

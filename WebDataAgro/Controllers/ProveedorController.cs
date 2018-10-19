@@ -17,6 +17,7 @@ namespace WebDataAgro.Controllers
         private IProveedorManager mobjProveedorManager;
         private IHomeManager mobjHomeManager;
         private ICampañaManager mobjCampañaManager;
+        private ILocalidadManager mobjLocalidadManager;
         
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
@@ -24,14 +25,15 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
+        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager oReportesManager, ILocalidadManager oLocalidadManager)
         {
             
             mobjProveedorManager = oProveedorManager;
             mobjHomeManager = oHomeManager;
             mobjCampañaManager = oCampañaManager;
             mobComercialManager = oComercialManager;
-            mobjreportesManager = reportesManager;
+            mobjreportesManager = oReportesManager;
+            mobjLocalidadManager = oLocalidadManager;
         }
 
 
@@ -329,5 +331,9 @@ namespace WebDataAgro.Controllers
             return Json(mobjProveedorManager.DevolverProveedores(filtro), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult BuscarLocalidades(string filtro)
+        {
+           return Json(mobjLocalidadManager.DevolverLocalidades(filtro), JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string OtrosIntereses { get; set; }
         public bool? EsPrincipal { get; set; }
         public string Cargo { get; set; }
+        public bool? CompraNet { get; set; }
 
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
@@ -47,7 +48,8 @@ namespace Molinos.DataAgro.Entities.Entities
             FechaNacimiento = null;
             OtrosIntereses = "";
             EsPrincipal = null;
-            Cargo = "";                       
+            Cargo = "";
+            CompraNet = null;
         }
     }
 

@@ -14,13 +14,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? MaterialId { get; set; }
         public string MonedaId { get; set; }
         public int ComercialId { get; set; }
-        
         public decimal Precio { get; set; }
         public int Cantidad { get; set; }
         public DateTime Fecha { get; set; }
         public int? Ampliaciones { get; set; }
         public int EstadoId { get; set; }
         public string Observacion { get; set; }
+        public int ComercialCreadorId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -34,6 +34,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Moneda Moneda { get; set; }
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
+        [ForeignKey("ComercialCreadorId")]
+        public virtual Comercial ComercialCreador { get; set; }
     }
 }
 

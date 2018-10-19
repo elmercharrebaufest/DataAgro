@@ -143,6 +143,7 @@
     <Compile Include="Managers\CampañaManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\PushNotificationManager.cs" />
+    <Compile Include="Managers\RangoConfirmacionAutomaticaManager.cs" />
     <Compile Include="Managers\RangoManager.cs" />
     <Compile Include="Managers\ComercialManager.cs" />
     <Compile Include="Managers\CentroManager.cs" />

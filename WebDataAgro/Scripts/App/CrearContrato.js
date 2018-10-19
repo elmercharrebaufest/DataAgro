@@ -11,6 +11,7 @@ $(document).ready(function () {
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
+    AutocompleteProcedencia();
 
 });
 
@@ -34,15 +35,14 @@ function InicializarFondosGrises() {
     $("#precioMonedaId").data("kendoDropDownList").enable(false);
     $("#precioMonedaId").data("kendoDropDownList").value("");
     $("div.col-xs-12.col-sm-5.col-md-3.required-box-parent > span.k-widget.k-dropdown.k-header > span").addClass('no-border');
-};
+}
 
 function RemoverFondosGrises() {
     $(".gris").removeClass("no-border").prop('disabled', false);
     $("#precioMonedaId").data("kendoDropDownList").enable(true);
     $("div.col-xs-12.col-sm-5.col-md-3.required-box-parent > span.k-widget.k-dropdown.k-header > span").removeClass('no-border');
-};
-
-$("select.required-box, input.required-box").trigger("change");
+    $("select.required-box, input.required-box").trigger("change");
+}
 
 function ObtenerFechaDesde(fechaBase) {
     var hoy = fechaBase != undefined ? fechaBase : new Date();
@@ -57,7 +57,6 @@ function ObtenerFechaDesde(fechaBase) {
     }
     return dia + '-' + mes + '-' + anio;
 }
-
 
 function ObtenerFechaHasta(fechaBase) {
     var hoy = fechaBase != undefined ? fechaBase : new Date();
@@ -146,7 +145,7 @@ function InicializarElementos() {
     $("#comercialId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
-        dataValueField: "ComercialId",
+        dataValueField: "ComercialId"
     });
 
     $("#comercialId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -159,7 +158,7 @@ function InicializarElementos() {
     $("#comercialFijacionId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
-        dataValueField: "ComercialId",
+        dataValueField: "ComercialId"
     });
 
     $("#comercialFijacionId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -172,7 +171,7 @@ function InicializarElementos() {
     $("#comercialModalPendienteId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
-        dataValueField: "ComercialId",
+        dataValueField: "ComercialId"
     });
 
     $("#comercialModalPendienteId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -181,7 +180,9 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+
     $("#plazosYTopesFijacion").hide();
+
     $("#tipoId").kendoDropDownList({
         optionLabel: "SELECCIONE UN TIPO DE NEGOCIO...",
         dataTextField: "Descripcion",
@@ -228,7 +229,8 @@ function InicializarElementos() {
                 $("#fechaHastaContratoDiv").show();
                 $("#campanaDiv").show();
                 $("#procedenciaDiv").show();
-                if ($("#provinciaId").data("kendoDropDownList").value() == "") {
+                $("#procedenciaDiv").show();
+                if ($("#provinciaId").val() == "") {
                     obtenerLocalidadProvincia();
                 }
                 $("#clasificacionDiv").show();
@@ -251,7 +253,12 @@ function InicializarElementos() {
                 $("#mercsDepositoDiv").show();
                 RemoverFondosGrises();
                 if (this.value() == 1) {
-                    $("#plazosYTopesFijacion").show();
+                    if ($("#boton-ampliar").text() == "+ AMPLIAR") {
+                        $("#plazosYTopesFijacion").hide();
+                    }
+                    else {
+                        $("#plazosYTopesFijacion").show();
+                    }
                     $("#CDId").prop("checked", false);
                     $("#WarrantId").prop("checked", false);
                     InicializarFondosGrises();
@@ -262,6 +269,9 @@ function InicializarElementos() {
                     $("#fechaHastaTopeId").val("");
                     $("#condicionFijacionId").data("kendoDropDownList").value("");
                     RemoverFondosGrises();
+                }
+                if ($("#boton-ampliar").text() == "+ AMPLIAR") {
+                    $(".ampliar").hide();
                 }
             }
         }
@@ -325,46 +335,7 @@ function InicializarElementos() {
         }
     });
     $("#establecimientoDiv").hide();
-    $("#provinciaId").kendoDropDownList({
-        optionLabel: "SELECCIONE UNA PROVINCIA...",
-        dataTextField: "Nombre",
-        dataValueField: "Provinciaid",
-        change: function () {
-
-            if (this.value() != "") {
-                CargarLocalidadPorProvincia(this.value());
-            }
-
-            if (this.value() == 1) {
-                $("#establecimientoDiv").show();
-            } else {
-                $("#establecimientoDiv").hide();
-                $("#establecimientoPropioId").prop("checked", false);
-                $("#establecimientoArrendadoId").prop("checked", false);
-            }
-        }
-    });
-
-    $("#provinciaId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#provinciaId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
-
-    $("#LocalidadId").kendoDropDownList({
-        optionLabel: "SELECCIONE UNA LOCALIDAD...",
-        dataTextField: "Nombre",
-        dataValueField: "LocalidadId"
-    });
-
-    $("#LocalidadId").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#LocalidadId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
-
+    
     $("#sustentableMonedaId").kendoDropDownList({
         optionLabel: "MONEDA...",
         dataTextField: "Descripcion",
@@ -459,11 +430,11 @@ function InicializarElementos() {
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);
             } else {
-                $("#planCanjeDiv").show()
+                $("#planCanjeDiv").show();
                 
             }
 
-            $("#clasificacion").trigger('change')
+            $("#clasificacion").trigger('change');
         }
     });
 
@@ -871,6 +842,21 @@ function InicializarElementos() {
     $('#campanaId').change(function () {
         obtenerLocalidadProvincia();
     });
+    $("#boton-ampliar").click(function () {
+        if ($("#boton-ampliar").text() == "+ AMPLIAR") {
+            $("#boton-ampliar").text("- OCULTAR");
+            $(".ampliar").show();
+            if ($('#tipoId').val() == 1) {
+                $("#plazosYTopesFijacion").show();
+                $("#pagosDiv").hide();
+            }
+        }
+        else if ($("#boton-ampliar").text() == "- OCULTAR") {
+            $("#boton-ampliar").text("+ AMPLIAR");
+            $(".ampliar").hide();
+            $(".ampliar-adicionales").hide();            
+        }
+    });
 
     $('#tipoId').change(function () {
         if ($('#tipoId').val() == 1) {
@@ -881,6 +867,13 @@ function InicializarElementos() {
             $("#condicionFijacionId").data("kendoDropDownList").value("");
             $("#fechaDesdeTopeId").val("");
             $("#fechaHastaTopeId").val("");
+        }
+    });
+    $('#tipoId').change(function () {
+        if ($('#tipoId').val() == 3) {
+            $("#boton-ampliar").hide();
+        } else {
+            $("#boton-ampliar").show();
         }
     });
 
@@ -955,14 +948,20 @@ function InicializarElementos() {
     $("#trigoEspecialId").click(function () {
         if ($(this).is(':checked')) {
             $("#especialesId").show();
+            $("#agregarCalidad").show();
         }
         else {
             $("#especialesId").hide();
+            $("#agregarCalidad").hide();
+            $("#calidadesEspecialesId").data("kendoDropDownList").value("");
+            $("#porcentajeDesdeDiv").hide();
+            $("#porcentajeHastaDiv").hide();            
         }
     });
     $("#IngresarDescuento").click(AgregarDescuentos);
     $("#IngresarCalidad").click(AgregarCalidades);
 }
+
 function LimpiarBoleto() {
     $("#boletoFisicoId").prop("checked", false);
     $("#boletoConfirmaId").prop("checked", false);
@@ -995,9 +994,7 @@ function CerrarDatosPendientes() {
 
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
-    viewModel.set("EspecialesCombo", calidadGrano);  
-    $("#porcentajeDesdeDiv").hide();
-    $("#porcentajeHastaDiv").hide();
+    viewModel.set("EspecialesCombo", calidadGrano); 
 
     $('#calidadesEspecialesId').change(function () {     
         $("#porcentajeDesdeDiv").hide();
@@ -1012,13 +1009,6 @@ function CargarCalidadPorMaterial(value) {
     });
 }
 
-function CargarLocalidadPorProvincia(value) {
-    var resultLocalidad = MSExecuteOnServer('/CompraNet/TraerLocalidadPorProvincia', { ProvinciaId: value });
-
-    viewModel.set("LocalidadCombo", resultLocalidad.Localidad);
-    viewModel.set("LocalidadComboModalPendiente", resultLocalidad.Localidad);
-}
-
 function CrearViewModel() {
     var param = {
         "proveedorId": null,
@@ -1030,8 +1020,8 @@ function CrearViewModel() {
         "campanaDesc": null,
         "provinciaId": null,
         "provinciaIdDesc": null,
-        "LocalidadId": null,
-        "LocalidadIdDesc": null,
+        "LocalidadCrearContrato": null,
+        "LocalidadCrearContratoDesc": null,
         "baseId": null,
         "sustentableId": null,
         "sustentablePrecioId": null,
@@ -1075,8 +1065,8 @@ function CrearViewModel() {
         "fechaEntregaIdModal": null,
         "provinciaModalPendienteId": null,
         "provinciaIdDescModal": null,
-        "LocalidadIdModal": null,
-        "LocalidadIdDescModal": null,
+        "LocalidadCrearContratoModal": null,
+        "LocalidadCrearContratoDescModal": null,
         "baseIdModal": null,
         "sustentableIdModal": null,
         "sustentablePrecioIdModal": null,
@@ -1101,7 +1091,8 @@ function CrearViewModel() {
         "standardCalidadIdModal": null,
         "calidadesEspecialesIdModal": null,
         "tipoPeriodoDBIdModal": null,
-        "Descuentos": null
+        "Descuentos": null,
+        "ContratosPendientes":null
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -1138,7 +1129,8 @@ function CrearViewModel() {
         Descuentos: [],
         Calidades:[],
         DescuentosVisualizar: [],
-        CalidadesVisualizar: []
+        CalidadesVisualizar: [],
+        ContratosPendientes: []
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -1148,6 +1140,7 @@ function CrearViewModel() {
     kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
     kendo.bind($("#tabla-calidades"), viewModel);
     kendo.bind($("#tabla-calidades-visualizar"), viewModel);
+    kendo.bind($("#tabla-pendientes"), viewModel);
 }
 
 function InicializarDatos() {
@@ -1304,12 +1297,9 @@ function ObtenerDatos() {
     obj.Fecha = $("#fechaOperacionId").val() == "" ? hoy : $("#fechaOperacionId").val();
     if (obj.TipoNegocioId == "3") {
         obj.ComercialId = $("#comercialFijacionId").val();
-    } else {
-        obj.ComercialId = $("#comercialId").val();
     }
     obj.ComercialId = $("#comercialId").val();
-    obj.ProvinciaId = $("#provinciaId").val();
-    obj.LocalidadId = $("#LocalidadId").val();
+    obj.ComercialCreadorId = $("#comercialCreador").val();
     obj.Base = $("#baseId").is(":checked") ? true : false;
     obj.ImporteSustentable = $("#sustentablePrecioId").val();
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
@@ -1354,7 +1344,7 @@ function ObtenerDatos() {
     }
 
     if ($("#buscadorProveedor").val() != "") {
-        cuitAux = $("#buscadorProveedor").val().split('(');
+        var cuitAux = $("#buscadorProveedor").val().split('(');
         cuit = cuitAux[1].split(')');
 
         proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0] });
@@ -1362,6 +1352,14 @@ function ObtenerDatos() {
 
     obj.ProveedorId = proveedorId;
 
+    if ($("#LocalidadCrearContrato").val() != "") {
+        var localidadAux = $("#LocalidadCrearContrato").val().split('(');
+        var provinciaAux = localidadAux[1].split(')');
+        var Localidad = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadAux[0], provincia: provinciaAux[0] });
+    }
+
+    obj.LocalidadId = Localidad.LocalidadId;
+    obj.ProvinciaId = Localidad.ProvinciaId;
     obj.Descuentos = viewModel.Descuentos;
     obj.Calidad = viewModel.Calidades;
     GrabarContrato(obj);
@@ -1401,17 +1399,13 @@ function obtenerLocalidadProvincia() {
                 Consignatario: $("#consignatarioId").val()
             });
             if (localidadProvincia != null) {
-                if (localidadProvincia.LocalidadId != "") {
-                    if (localidadProvincia.CUIT != "") {
-                        $("#provinciaId").data("kendoDropDownList").value(localidadProvincia.ProvinciaId);
-                        $("#provinciaId").data("kendoDropDownList").trigger("change");
-                        $("#LocalidadId").data("kendoDropDownList").value(localidadProvincia.LocalidadId);
+                if (localidadProvincia.LocalidadId != "" && localidadProvincia.CUIT != "") {                                            
+                    $("#LocalidadCrearContrato").val(localidadProvincia.Localidad + "(" + localidadProvincia.Provincia + ")");
+                    HabilitarEstablecimiento();
                     } else {
-                        $("#provinciaId").data("kendoDropDownList").value("");
-                        $("#provinciaId").data("kendoDropDownList").trigger("change");
-                        $("#LocalidadId").data("kendoDropDownList").value("");
-                    }
-                }
+                    $("#LocalidadCrearContrato").val("");
+                    HabilitarEstablecimiento();
+                    }               
                 if ($("#clasificacion").data("kendoDropDownList").value() == "") {
                     $("#clasificacion").data("kendoDropDownList").value(localidadProvincia.ClasificacionId);
                     $("#clasificacion").data("kendoDropDownList").trigger("change");
@@ -1497,7 +1491,7 @@ function validarDescuento(descuento) {
     if (descuento.Importe !== 0 && (descuento.MonedaId == "Moneda" || descuento.MonedaId == null || descuento.MonedaId == undefined || descuento.MonedaId == "")) {
         errores.push("El campo Moneda no puede estar vacío");
     }
-    return errores
+    return errores;
 }
 
 function AgregarCalidades() {
@@ -1590,7 +1584,7 @@ function InicializarFijacionEdit() {
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
-};
+}
 
 function CargarDatosEditar(contrato) {
     InicializarBordesRojos();
@@ -1615,9 +1609,6 @@ function CargarDatosEditar(contrato) {
     $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
     $("#precioMonedaId").data("kendoDropDownList").trigger("change");
 
-    $("#provinciaId").data("kendoDropDownList").value(contrato.ProvinciaId);
-    $("#provinciaId").data("kendoDropDownList").trigger("change");
-
     $("#clasificacion").data("kendoDropDownList").value(contrato.ClasificacionId);
     $("#clasificacion").data("kendoDropDownList").trigger("change");
 
@@ -1630,7 +1621,10 @@ function CargarDatosEditar(contrato) {
 
     (contrato.PlanCanje == true) ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
     (contrato.Consignatario == true) ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
-    if (contrato.LocalidadId !== "null" && contrato.LocalidadId !== "undefined") $("#LocalidadId").data("kendoDropDownList").value(contrato.LocalidadId);
+    if (contrato.LocalidadId !== "null" && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== "null" && contrato.ProvinciaId !== "undefined") {
+        $("#LocalidadCrearContrato").val(contrato.Localidad + "(" + contrato.Provincia + ")");
+        HabilitarEstablecimiento();
+    }
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
 
     $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
@@ -1760,4 +1754,58 @@ function CargarCalidadesViewModel() {
         };
         viewModel.Calidades.push(calidadKendo);
     });
+}
+
+function AutocompleteProcedencia() {
+    $("#LocalidadCrearContrato").click(function () {
+        $("#LocalidadCrearContrato").data("kendoAutoComplete").value("");
+        $("#establecimientoDiv").hide();
+        $("#LocalidadCrearContrato").trigger("change");
+    });
+
+    $("#LocalidadCrearContrato").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function () {
+            if ($("#LocalidadCrearContrato").val().split('|').length > 1) {
+                $("#LocalidadCrearContrato").val($("#LocalidadCrearContrato").val().split('|')[1]);
+                HabilitarEstablecimiento();
+            }
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#LocalidadCrearContrato').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+}
+
+function HabilitarEstablecimiento() {
+    if ($("#LocalidadCrearContrato").val() != "") {
+        let provAux = $("#LocalidadCrearContrato").val().split('(');
+        let prov = provAux[1].split(')');
+        if (prov[0] === "BUENOS AIRES") {
+            $("#establecimientoDiv").show();
+        } else {
+            $("#establecimientoDiv").hide();
+        }
+    }
 }

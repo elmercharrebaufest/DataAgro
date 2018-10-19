@@ -305,6 +305,15 @@ namespace WebDataAgro.Controllers
             return mobjProveedorManager.TraerProveedorPorCuit(Cuit).ProveedorId;
         }
 
+        public ActionResult ObtenerLocalidadId(string localidad, string provincia)
+        {
+            return new JsonResult()
+            {
+                Data = mobjLocalidadManager.TraerLocalidadProvincia(localidad, provincia),
+                MaxJsonLength = Int32.MaxValue
+            }; 
+        }
+
         public ActionResult ObtenerProvinciaLocalidad(string Cuit)
         {
             return new JsonResult()
@@ -396,6 +405,14 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjCompraNetManager.UsuarioSuscripto(comercialId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerContratosPendientes()
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.TraerContratosPendientes(),
                 MaxJsonLength = Int32.MaxValue
             };
         }

@@ -12,10 +12,12 @@
     [Ampliaciones] INT NULL, 
     [EstadoId] INT NOT NULL, 
     [Observacion] NVARCHAR(MAX) NULL, 
+    [ComercialCreadorId] INT NULL,
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Comercial] FOREIGN KEY (ComercialId) REFERENCES Comercial(ComercialId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_ToTable] FOREIGN KEY (ProveedorId) REFERENCES Proveedor(ProveedorId),
 	CONSTRAINT [FK_FijacionDePrecioContrato_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
+    CONSTRAINT [FK_FijacionDePrecioContrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
    
 )

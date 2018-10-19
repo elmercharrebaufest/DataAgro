@@ -112,12 +112,12 @@
                                     </a>
                                 </li>
                             }
-                                <li>
-                                    <a href="/Reportes/Index" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Indicadores
-                                    </a>
-                                </li>
-                            </ul>
+                            <li>
+                                <a href="/Reportes/Index" class="nav-link misreporteslink">
+                                    <i class="icon-bar-chart"></i> Indicadores
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="agregar-contacto-mobile">
@@ -127,8 +127,8 @@
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </li>
                     @*<li class="mis-postit postit-mobile">
-                <img src="~/Content/Images/postit.png" style="width:16px;" />
-            </li>*@
+            <img src="~/Content/Images/postit.png" style="width:16px;" />
+        </li>*@
                     <li class="dropdown ">
                         <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="informes">
@@ -202,11 +202,23 @@
                     }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                     {
-                        <li class="mis-contactos-li">
-                            <a href="/CompraNet" class="nav-no-padding">
-
-                                <span> CompraNet</span>
-                            </a>
+                        <li class="dropdown ">
+                            <a onclick="return false" id="compraNet-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
+                            <ul class="dropdown-menu" id="tablas">
+                                <li>
+                                    <a href="~/CompraNet" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> CompraNet
+                                    </a>
+                                </li>
+                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                {
+                            <li>
+                                <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
+                                    <i class="icon-bar-chart"></i> Rango Confirmacion Automatica
+                                </a>
+                            </li>
+                                }
+                            </ul>
                         </li>
                     }
                 </ul>

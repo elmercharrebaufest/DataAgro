@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TipoNegocioId { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
+        public string PrecioPlazo { get; set; }
         public DateTime? FechaEntrega { get; set; }
         public int CampanaId { get; set; }
         public DateTime? FechaDesde { get; set; }
@@ -25,6 +26,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaFormateado { get; set; }
         public int GrupoCompra { get; set; }
         public int? ComercialId { get; set; }
+        public int? ComercialCreadorId { get; set; }
         public int? ProvinciaId { get; set; }
         public int? LocalidadId { get; set; }
         public bool? Base { get; set; }
@@ -43,6 +45,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoNegocio { get; set; }
         public string Proveedor { get; set; }
         public string Comercial { get; set; }
+        public string ComercialCreador { get; set; }
         public string Material { get; set; }
         public string Campania { get; set; }
         public string Provincia { get; set; }

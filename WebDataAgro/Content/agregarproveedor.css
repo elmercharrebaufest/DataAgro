@@ -1091,7 +1091,7 @@ label[for="kmz-almacenamiento"] .campo-span{
     margin-top:10px;
 }
 
-#concom-principal{
+#concom-principal, #concom-compranet {
     height: 20px;
     width: 20px;
     margin-top: 10px;

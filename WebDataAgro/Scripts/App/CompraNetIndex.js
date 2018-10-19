@@ -5,11 +5,9 @@ var filasSeleccionadas = {};
 $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
+    CrearViewModel();
     CreateGridInformeCompraNet();
-
-    AutoRecargar();
-     
-    //mobile();
+    AutoRecargar();    
 
     //+ datos modal//
     $("#reenviarMails").click(function () {
@@ -88,7 +86,7 @@ $(document).ready(function () {
     $("#cerrarVariosFinalizado").click(function () {
         $(".modal").modal('hide');
         recargarGrilla();
-    })
+    });
 });
 
 $("#confirmarVariosDiv").ready(function () {
@@ -101,12 +99,12 @@ $("#confirmarVariosDiv").ready(function () {
 
 function htmlEncode(value) {
     return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, "")).html();
-};
+}
 
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
-};
+}
 
 function botonPendiente(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +        
@@ -196,7 +194,6 @@ function botonBorrar(dataItem, icono) {
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 
-
 function AutoRecargar() {
     setInterval(function () {
         if (document.getElementById('checkRecarga').checked == true) {
@@ -204,11 +201,12 @@ function AutoRecargar() {
             recargarGrilla();
         }
     }, 30000);
-};
+
+}
 
 function recargarGrilla() {
     $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
-            
+    AvisoContratosPendientes();
 }
 
 function CreateGridInformeCompraNet() {
@@ -246,6 +244,7 @@ function CreateGridInformeCompraNet() {
                     Fecha_Dolarizado: { type: "date" },
                     Cantidad: { type: "number" },
                     Precio: { type: "number" },
+                    PrecioPlazo: { type: "string" },
                     Ampliaciones: { type: "number" },
                     DesdeFijacion: { type: "date" },
                     HastaFijacion: { type: "date" }
@@ -322,11 +321,11 @@ function CreateGridInformeCompraNet() {
             {
                 field: "TipoNegocio", type: "string", filterable: {
                     multi: true, dataSource: [{
-                        TipoNegocio: "A FIJAR",
+                        TipoNegocio: "A FIJAR"
                     }, {
-                        TipoNegocio: "A PRECIO",
+                        TipoNegocio: "A PRECIO"
                     }, {
-                        TipoNegocio: "FIJACION",
+                        TipoNegocio: "FIJACION"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -335,16 +334,16 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Material", type: "string", filterable: {
                     multi: true, dataSource: [{
-                        Material: "Maiz Duro Dentado",
+                        Material: "Maiz Duro Dentado"
                     }, {
-                        Material: "Trigo Pan",
+                        Material: "Trigo Pan"
                     }, {
-                        Material: "Semilla de Soja",
+                        Material: "Semilla de Soja"
                     }]
                 }, width: 95, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
-                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>"
+                    return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
                 }, template: "#=Material#"
             },
             {
@@ -366,28 +365,29 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs" } },
-            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs mobile-precio" } },
+            { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
+            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes:{ "class": "mobile-md" } },
             { field: "ContratoSAP", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" } },
-            { field: "Fecha", type: "date", title: "Carga", width: 20, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
+            { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-md" }
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
                     multi: true,
                     dataSource: [{
-                        Estado_Contrato: "Pendiente",
+                        Estado_Contrato: "Pendiente"
                     }, {
-                        Estado_Contrato: "Confirmado",
+                        Estado_Contrato: "Confirmado"
                     }, {
-                        Estado_Contrato: "Con Error",
+                        Estado_Contrato: "Con Error"
                     }, {
-                        Estado_Contrato: "Oferta",
+                        Estado_Contrato: "Oferta"
                     }, {
-                        Estado_Contrato: "Finalizado",
+                        Estado_Contrato: "Finalizado"
                     }, {
-                        Estado_Contrato: "Rechazado",
+                        Estado_Contrato: "Rechazado"
                     },]
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
@@ -401,7 +401,8 @@ function CreateGridInformeCompraNet() {
                     } else if (dataItem.Estado == 1) { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
-                            botonVisualizar(dataItem, 'fa-eye pend');
+                            botonVisualizar(dataItem, 'fa-eye pend')+
+                            botonBorrar(dataItem, 'fa-trash pend');
                     }
 
                     if (dataItem.Estado == 2 && ($("#perfil").val() == "Mesa")) { //confirmado
@@ -424,7 +425,8 @@ function CreateGridInformeCompraNet() {
                     } else if (dataItem.Estado == 3) {
                         return '<div class="status oferta">Oferta</div>' +
                             botonPendiente(dataItem, 'fa-pencil ofe') +
-                            botonVisualizar(dataItem, 'fa-eye ofe');
+                            botonVisualizar(dataItem, 'fa-eye ofe') +
+                            botonBorrar(dataItem, 'fa-trash ofe');
                     }
 
                     if (dataItem.Estado == 4 && ($("#perfil").val() == "Mesa")) { //error
@@ -515,6 +517,8 @@ function CreateGridInformeCompraNet() {
                 $(e.container).css("width", "300px")
             }
         }
+        
+    
     });
     var checkInputs = function (elements) {
         elements.each(function () {
@@ -523,7 +527,7 @@ function CreateGridInformeCompraNet() {
 
             input.prop("checked", element.hasClass("k-state-selected"));
         });
-    };
+    }
     function createMultiSelect(element, textField, valueField, url) {
         element.removeAttr("data-bind");
 
@@ -578,15 +582,16 @@ function CreateGridInformeCompraNet() {
             $(".k-multiselect").parent().children(".k-dropdown").remove();
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
-    };
+    }
 
     function createMultiSelectProveedor(element) {
         return createMultiSelect(element, "Proveedor", "ProveedorId", "/CompraNet/ListarProveedor");
-    };
+    }
 
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
-    };
+    }
+    AvisoContratosPendientes();
 }
 
 function SeleccionarElementos() {
@@ -1116,4 +1121,46 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId) {
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
 
     $("#modalBorrar").modal('show');
+}
+
+function CrearViewModel() {
+    var param = {
+        "Descuentos": null,
+        "ContratosPendientes": null
+    };
+    viewModel = kendo.observable({
+        Parametros: param,        
+        DescuentosVisualizar: [],
+        CalidadesVisualizar: [],
+        ContratosPendientes: []
+    });
+       
+    kendo.bind($("#tabla-descuentos-visualizar"), viewModel);    
+    kendo.bind($("#tabla-calidades-visualizar"), viewModel);
+    kendo.bind($("#tabla-pendientes"), viewModel);
+}
+
+function AvisoContratosPendientes(){
+    var iteracionesContratos = viewModel.ContratosPendientes.length;
+    for (var i = 0; i < iteracionesContratos; i++) {
+        viewModel.ContratosPendientes.pop();
+    }
+    var contratosPendientes = MSExecuteOnServer('/CompraNet/TraerContratosPendientes');
+    if (contratosPendientes.length > 0) {
+        $("#contratos-pendientes").show();
+    } else {
+        $("#contratos-pendientes").hide();
+    }
+    $.each(contratosPendientes, function (key, contrato) {
+        var contratoVM = {
+            ContratoId: contrato.ContratoId,
+            RazonSocial: contrato.RazonSocial,
+            Cantidad: contrato.Cantidad,
+            Precio: contrato.Precio,
+            Moneda: contrato.Moneda != null ? contrato.Moneda:"",
+            Fecha: contrato.Fecha,
+            NombreApellido: contrato.NombreApellido            
+        };
+        viewModel.ContratosPendientes.push(contratoVM);
+    });
 }

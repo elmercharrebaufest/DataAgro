@@ -56,3 +56,7 @@ a.Descarga {
 .borde-derecho {
     border-right: 1px solid black;
 }
+
+#fecha-buscador-reporte{
+    padding: 15px 0 0 10px;
+}

@@ -14,19 +14,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly int materialId;
         private readonly int mes;
+        private readonly DateTime fecha;
         private readonly bool? calidad;
 
-        public TraerDetallePosicion(int materialId, int mes, bool? calidad = null)
+        public TraerDetallePosicion(int materialId, int mes, DateTime fecha, bool? calidad = null)
         {
             this.materialId = materialId;
             this.mes = mes;
+            this.fecha = fecha;
             this.calidad = calidad;
         }
         
-        private static List<string[]> Query(DbContext contexto,int materialId, int mes, bool? calidad)
+        private static List<string[]> Query(DbContext contexto,int materialId, int mes,DateTime fecha, bool? calidad)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = DateTime.Now.Date;
+            var fechaHoy = fecha.Date;
 
             return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && SqlFunctions.DatePart("Month", x.FechaHasta) == mes && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))).DefaultIfEmpty()
                        .Select(x => new List<string>
@@ -74,7 +76,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, materialId, mes, calidad);
+                return Query(contexto, materialId, mes, fecha, calidad);
             }
         }
     }

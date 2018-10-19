@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
+    <Compile Include="ConsultasEF\TraerPosicionMaterialMes.cs" />
     <Compile Include="ConsultasEF\TraerDetallePosicion.cs" />
     <Compile Include="ConsultasEF\TraerPosicionMaterial.cs" />
     <Compile Include="ConsultasEF\TraerMonedaKilo.cs" />

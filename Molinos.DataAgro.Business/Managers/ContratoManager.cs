@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -14,6 +15,9 @@ using System.Configuration;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -23,20 +27,20 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private ILogger logger;
-        
+
         private IMaterialManager mobjMaterialManager;
         private ITipoNegocioManager mobjTipoNegocioManager;
-        private ICampañaManager   mobjCampaniaManager;
+        private ICampañaManager mobjCampaniaManager;
         private IProvinciaManager mobjProvinciaManager;
         private ILocalidadManager mobjLocalidadManager;
         private IProveedorManager mobjProveedorManager;
         private IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
 
-        public ContratoManager(ILogger logger, IRepositorio repositorio, 
+        public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
-            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager, 
-            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager, 
+            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
+            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager,
             IPushNotificationManager oMSNotification)
         {
@@ -56,7 +60,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var datosCombo = new DatosIniContrato();
 
-            datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden=x.Orden },null,0,"Orden");
+            datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden }, null, 0, "Orden");
 
             datosCombo.loc = new List<LocalidadQry>();
 
@@ -116,17 +120,17 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");                    
-                }                
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
+                }
             }
             var rg = repositorio.Obtener<RG2300>(x => x.CUIT == proveedor.CUIT);
-            if(rg!=null)
+            if (rg != null)
             {
                 if ((rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"])
                      || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
                          || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por situación de" + rg.Situacion);
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por situación de " + rg.Situacion);
                 }
 
             }
@@ -207,7 +211,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("BoletoId", "Boleto no debe estar vacio");
             }
-            if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 || oParam.BoletoId == 4 ) && ( oParam.BolsaId==0 || oParam.BolsaId == null))
+            if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 || oParam.BoletoId == 4) && (oParam.BolsaId == 0 || oParam.BolsaId == null))
             {
                 oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacio cuando existe Boleto");
             }
@@ -227,15 +231,15 @@ namespace Molinos.DataAgro.Business.Managers
             var anios = campana.Descripcion.Split('-');
             Int32.TryParse(anios.First(), out int anioInicial);
             Int32.TryParse(anios.Last(), out int anioFin);
-            var fechaInicial = DateTime.ParseExact("01/01/" + (anioInicial+2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var fechaFin = DateTime.ParseExact("31/12/" + (anioFin+2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            if (oParam.FechaDesde< fechaInicial || oParam.FechaHasta>fechaFin)
+            var fechaInicial = DateTime.ParseExact("01/01/" + (anioInicial + 2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var fechaFin = DateTime.ParseExact("31/12/" + (anioFin + 2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            if (oParam.FechaDesde < fechaInicial || oParam.FechaHasta > fechaFin)
             {
                 oErrorMessages.Error("FechaCampana", "Fecha fuera del rango de Campaña");
             }
 
-            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x=>x.MaterialId == oParam.MaterialId && x.MonedaId== oParam.MonedaId);
-            if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio<rangosPrecio.PrecioMinimo||oParam.Precio>rangosPrecio.PrecioMaximo))
+            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
+            if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
@@ -275,19 +279,21 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = oContrato;
             List<DescuentoBonificacion> descuentosExistentes = null;
             List<Calidad> calidadesExistentes = null;
+            List<RangoConfirmacionAutomatica> rangosConfirmacionAutomaticaExistentes = repositorio.Listar<RangoConfirmacionAutomatica>(x => x.MaterialId == oContrato.MaterialId &&
+                                                                                                            x.MonedaId == oContrato.MonedaId);
 
             if (oContrato.ContratoId != 0)
             {
                 oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
                 descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.ContratoId);
                 calidadesExistentes = repositorio.Listar<Calidad>(x => x.ContratoId == oContrato.ContratoId);
-
                 if (oContratoSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
             }
+
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
@@ -326,10 +332,11 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ClasificacionId = oContrato.ClasificacionId;
             oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
             oContratoSave.BoletoId = oContrato.BoletoId;
-            oContratoSave.BolsaId = oContrato.BolsaId==0?null: oContrato.BolsaId;
+            oContratoSave.BolsaId = oContrato.BolsaId == 0 ? null : oContrato.BolsaId;
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
+            oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
 
             if (descuentosExistentes != null)
             {
@@ -381,6 +388,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.Agregar(oContratoSave);
             }
+
+            if (rangosConfirmacionAutomaticaExistentes.Count >= 1)
+            {
+                if (rangosConfirmacionAutomaticaExistentes.Any(x => x.PrecioMinimo <= oContratoSave.Precio && x.PrecioMaximo >= oContratoSave.Precio))
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    logger.Debug("El contrato" + oContratoSave.ContratoId + "se finalizo automaticamente por estar dentro de los rangos configurados");
+                }
+            }
+
             repositorio.GuardarCambios();
             return oEntityErrors;
         }
@@ -411,7 +428,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                 foreach (var comercialId in comerciales)
                 {
-                    EnviarNotificacion(comercialId,oContratoSave);
+                    EnviarNotificacion(comercialId, oContratoSave);
                 }
             }
             else
@@ -420,8 +437,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oEntityErrors;
-        }       
-       
+        }
+
         public GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -431,7 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
-                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x=>x.ContratoId == oContratoSave.ContratoId);
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
@@ -490,7 +507,7 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
             return oEntityErrors;
         }
-        
+
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -541,7 +558,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private string SAPFinalizarContrato(Contrato contrato,List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
+        private string SAPFinalizarContrato(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
             var SapFinalizarContrato = new FinalizarContratoAgent(logger);
             return SapFinalizarContrato.Finalizar(contrato, descuentoBonificacion, calidad);
@@ -578,9 +595,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = cal.Id,
                 CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
                 CalidadEspecialId = cal.CalidadEspecialId,
-                Valor= cal.Valor,
+                Valor = cal.Valor,
                 PorcentajeDesde = cal.PorcentajeDesde,
-                PorcentajeHasta=cal.PorcentajeHasta
+                PorcentajeHasta = cal.PorcentajeHasta
             },
             x => x.ContratoId == contratoId);
         }
@@ -589,9 +606,9 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoId == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.ContratoId,
-                ProveedorId=x.ProveedorId,
+                ProveedorId = x.ProveedorId,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
-                ComercialId =x.ComercialId,
+                ComercialId = x.ComercialId,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
@@ -609,7 +626,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 CampanaId = x.CampanaId,
                 ProvinciaId = x.ProvinciaId,
+                Provincia = x.Provincia.Nombre,
                 LocalidadId = x.LocalidadId,
+                Localidad = x.Localidad.Nombre,
                 ContratoSAP = x.ContratoSAP,
                 Base = x.Base,
                 Observacion = x.Observacion,
@@ -628,18 +647,18 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = x.Consignatario,
                 CantidadCamiones = x.CantidadCamiones,
                 BoletoId = x.BoletoId,
-                BolsaId = x.BolsaId,            
-                DesdeFijacionFormateado=x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                BolsaId = x.BolsaId,
+                DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",                
-                HastaFijacionFormateado=x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.HastaFijacion) : "",
-                CondicionFijacion= x.CondicionFijacionId,
-                CD=x.CD,
-                Warrant=x.Warrant,
-                PagoDirectoVendedor=x.PagoDirectoVendedor,
-                EstablecimientoPropio=x.EstablecimientoPropio,
+                CondicionFijacion = x.CondicionFijacionId,
+                CD = x.CD,
+                Warrant = x.Warrant,
+                PagoDirectoVendedor = x.PagoDirectoVendedor,
+                EstablecimientoPropio = x.EstablecimientoPropio,
                 MercsDeposito = x.MercsDeposito
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
@@ -647,6 +666,208 @@ namespace Molinos.DataAgro.Business.Managers
             return contrato;
         }
 
-    }
+        public void EnviarMailPendiente()
+        {
+            var contratosPendientes = repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
+            {
+                ContratoId = x.ContratoId,
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cantidad = x.Cantidad,
+                Precio = x.Precio,
+                Moneda = x.MonedaId,
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
+                NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
+            }, x => x.EstadoId == 1 || x.EstadoId == 3);
+            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.PerfilId == 7);
+            var mailComercialesMesa = new List<string>();
+            foreach (var mesa in comercialesMesa)
+            {
+                try
+                {
+                    mailComercialesMesa.Add(mobjProveedorManager.GetEmailUserActiveDirectory(mesa.IdActiveDirectory));
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                }
 
+            }
+            if (contratosPendientes != null)
+            {
+                string emailComercial = "";
+                foreach (var contratosPorCreador in contratosPendientes.GroupBy(x => x.ComercialCreadorAD))
+                {
+                    try
+                    {
+
+                        logger.Debug("Numero de Contratos Pendientes " + contratosPorCreador.ToList().Count + " del comercial " + contratosPorCreador.Key);
+                        var oMensaje = new MailMessage
+                        {
+                            From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                        };
+                        if (contratosPendientes != null)
+                        {
+                            try
+                            {
+                                emailComercial = mobjProveedorManager.GetEmailUserActiveDirectory(contratosPorCreador.Key);
+                                if (!string.IsNullOrEmpty(emailComercial))
+                                {
+                                    oMensaje.To.Add(emailComercial);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                logger.Error(e);
+                            }
+                        }
+                        if (mailComercialesMesa != null)
+                        {
+                            foreach (var mesa in mailComercialesMesa)
+                            {
+                                if (!string.IsNullOrEmpty(mesa) && mesa != emailComercial)
+                                {
+                                    oMensaje.To.Add(mesa);
+                                }
+                            }
+                        }
+                        oMensaje.CC.Add(new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]));
+                        oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contratosPorCreador.ToList(), contratosPorCreador.Key));
+                        oMensaje.Subject = "Negocios Pendientes DataAgro";
+
+                        oMensaje.BodyEncoding = Encoding.UTF8;
+
+                        oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
+
+                        SmtpClient oCliente = default(SmtpClient);
+
+                        int Condicion = 0;
+                        if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                        {
+                            oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                        }
+                        else
+                        {
+                            oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                        }
+
+                        if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                        {
+                            oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                            oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                                ConfigurationManager.AppSettings["CredentialPassword"]);
+                        }
+
+                        oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+
+                        oCliente.Send(oMensaje);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                    }
+                }
+            }
+        }
+        private AlternateView CuerpoMailContrato(string filePath, List<AvisoContratoDto> contratosPendientes, string idActiveDirectory)
+        {
+            var nombreApellido = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == idActiveDirectory, x => x.Nombres + " " + x.Apellido);
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th = "<th style=\"border: 1px solid white; color: white; text-align:center; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            string td = "<td style=\"border: 1px solid white; color: black; text-align:center; background-color: #a4e751; padding: 5px 0; width: 175px;\">";
+            string htmlBody = "";
+            htmlBody += "En el presente mail, se detallan los negocios a Confirmar creados por el comercial " + nombreApellido + ": <br /><br />  ";
+            htmlBody += "<table><tr>" + th + "Proveedor</th>"+ th + "Cantidad</th>"+ th + "Precio</th>" + th + "Fecha de Carga</th>"+ th + "Comercial</th></tr>";
+            foreach (var contrato in contratosPendientes)
+            {
+                htmlBody += "<tr>";
+                htmlBody += td + contrato.RazonSocial + "</td>";
+                htmlBody += td + contrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>";
+                htmlBody += td + contrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + contrato.Moneda + "</td>";
+                htmlBody += td + contrato.Fecha + "</td>";
+                htmlBody += td + contrato.NombreApellido + "</td>";
+                htmlBody += "</tr>";
+            }
+            htmlBody += "</table>";
+            htmlBody += "<br /><br /> Por favor revisarlos a la brevedad." +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+
+        public void FinalizacionAutomatica(string idActiveDirectory)
+        {
+            var contratosConfirmados = repositorio.Listar<Contrato>(x => x.EstadoId == 2 || x.EstadoId == 4);
+            logger.Debug("Contratos a Finalizar: " + contratosConfirmados.Count);
+            var oEntityErrors = new GrabarContratoResult();
+            foreach (var contrato in contratosConfirmados)
+            {                
+                try
+                {
+                    var error = FinalizarContrato(contrato.ContratoId, idActiveDirectory);                    
+                }
+                catch(Exception ex)
+                {
+                    logger.Error(ex);
+                    oEntityErrors.Error("", ex.Message);
+                }
+            }
+        }
+
+        public void BorradoAutomatico()
+        {
+            var contratosPendientes = repositorio.Listar<Contrato>(x => x.EstadoId == 1 || x.EstadoId == 3);
+            logger.Debug("Contratos Pendientes: " + contratosPendientes.Count);
+            var diasOperables = new DiasHabiles().ObtenerDiasHabiles(repositorio);
+            var ultimosDiasOperable = DateTime.Today;
+            var i = 0;            
+            while (i<1 || !diasOperables.Contains(ultimosDiasOperable))
+            {
+                ultimosDiasOperable = ultimosDiasOperable.AddDays(-1);
+                if (diasOperables.Contains(ultimosDiasOperable))
+                {
+                    i++;
+                }
+                
+            }
+            var borrados = 0;
+            foreach (var contrato in contratosPendientes)
+            {
+                if (contrato.Fecha.Date < ultimosDiasOperable)
+                {
+                    try
+                    {
+                        BorrarContrato(contrato);
+                        borrados++;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                    }
+                }
+            }
+            logger.Debug("Contratos eliminados: " + borrados);
+        }
+
+        public List<AvisoContratoDto> TraerContratosPendientes()
+        {
+            return repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
+            {
+                ContratoId = x.ContratoId,
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cantidad = x.Cantidad,
+                Precio = x.Precio,
+                Moneda = x.MonedaId,
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
+                NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
+            }, x => x.EstadoId == 1 || x.EstadoId == 3);
+        }
+
+    }
 }

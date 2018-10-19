@@ -64,6 +64,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
+    <Compile Include="Dto\AbmRangoConfirmacionAutomatica.cs" />
     <Compile Include="Dto\AbmRango.cs" />
     <Compile Include="Dto\AbmCentro.cs" />
     <Compile Include="Dto\AbmComercial.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Dto\AbmDestinatario.cs" />
     <Compile Include="Dto\AbmMoneda.cs" />
     <Compile Include="Dto\AreaInfluenciaDto.cs" />
+    <Compile Include="Dto\BusquedaLocalidad.cs" />
     <Compile Include="Dto\CalidadEspecialDto.cs" />
     <Compile Include="Dto\CampaniaActual.cs" />
     <Compile Include="Dto\CampañaDto.cs" />
@@ -82,6 +84,8 @@
     <Compile Include="Dto\ComercialDto.cs" />
     <Compile Include="Dto\CondicionDto.cs" />
     <Compile Include="Dto\ContactoComercialDto.cs" />
+    <Compile Include="Dto\AvisoContratoDto.cs" />
+    <Compile Include="Dto\ExcelPosicionMaterialDto.cs" />
     <Compile Include="Dto\ExcelDetallePosicionDto.cs" />
     <Compile Include="Dto\DetalleContratoDto.cs" />
     <Compile Include="Dto\ContratoDto.cs" />
@@ -103,12 +107,15 @@
     <Compile Include="Dto\PrecioCantidadDto.cs" />
     <Compile Include="Dto\ProveedorDto.cs" />
     <Compile Include="Dto\ProvinciaDto.cs" />
+    <Compile Include="Dto\RangoConfirmacionAutomaticaDto.cs" />
     <Compile Include="Dto\RangoPrecioDto.cs" />
     <Compile Include="Dto\ReportesDto.cs" />
     <Compile Include="Dto\ReporteSojaSustDto.cs" />
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\FechaFeriado.cs" />
+    <Compile Include="Entities\RangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\SuscripcionComercial.cs" />
     <Compile Include="Entities\RangoPrecio.cs" />
     <Compile Include="Entities\Calidad.cs" />

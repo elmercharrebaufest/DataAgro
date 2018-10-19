@@ -26,5 +26,10 @@ namespace Molinos.DataAgro.Interfaces
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
         List<CalidadDto> TraerCalidadesPorContrato(int contratoId);
         BasicoContrato TraerContrato(int contratoId);
+
+        void EnviarMailPendiente();
+        void FinalizacionAutomatica(string idActiveDirectory);
+        void BorradoAutomatico();
+        List<AvisoContratoDto> TraerContratosPendientes();
     }
 }
