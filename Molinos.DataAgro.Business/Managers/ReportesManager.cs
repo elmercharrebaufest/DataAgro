@@ -25,8 +25,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-
-
+        
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------

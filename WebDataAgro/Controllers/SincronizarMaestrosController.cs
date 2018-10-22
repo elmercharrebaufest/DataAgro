@@ -15,16 +15,18 @@ namespace WebDataAgro.Controllers
         private readonly IRG2300Manager rG2300Manager;
         private readonly IFacacopManager facacopManager;
         private readonly IEstadoProveedorManager estadoProveedorManager;
+        private readonly ISISAManager sisaManager;
         private readonly ILogger logger;
-        private readonly IComprasManager comprasManager;
+        private readonly IComprasManager comprasManager;        
 
-        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, IEstadoProveedorManager estadoProveedorManager)
+        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager )
         {
             this.logger = log;
             this.comprasManager = comprasManager;
             this.rG2300Manager = rG2300Manager;
             this.facacopManager = facacopManager;
             this.estadoProveedorManager = estadoProveedorManager;
+            this.sisaManager = sisaManager;
         }
 
         // GET: SincronizarMaestros
@@ -87,6 +89,66 @@ namespace WebDataAgro.Controllers
             try
             {
                 rG2300Manager.InsetarRG2300(lista);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
+            return Content("ok");
+        }
+        public ActionResult ProcessSisa()
+        {
+            logger.Info("ProcessSisa - Iniciando");
+            var str = ConfigurationManager.AppSettings["SISA"];
+
+            var objReader = new StreamReader(str.ToString(), System.Text.Encoding.Default);
+
+            string sLine = "";
+            var arrText = new ArrayList();
+
+            var lista = new List<SISA>();
+
+            var j = 0;
+
+            while (sLine != null)
+            {
+                sLine = objReader.ReadLine();
+
+                if (j == 0)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    if (sLine != null)
+                    {
+                        var sisa = sLine.Split(';');
+                        lista.Add(new SISA
+                        {
+                            CUIT = !String.IsNullOrEmpty(sisa[0]) ? sisa[0].Replace('"', '\0').Replace('\\', '\0') : String.Empty,
+                            RazonSocial = !String.IsNullOrEmpty(sisa[1]) ? sisa[1].Replace("\"", String.Empty) : String.Empty,
+                            EstadoCuit = !String.IsNullOrEmpty(sisa[2]) ? Int32.Parse(sisa[2].Replace("\"", String.Empty)) : 0,
+                            FechaVigenciaEstado = !String.IsNullOrEmpty(sisa[3]) ? (DateTime?)DateTime.Parse(sisa[3]) : null,
+                            FechaNotifDFEEstado = !String.IsNullOrEmpty(sisa[4]) ? (DateTime?)DateTime.Parse(sisa[4]) : null,
+                            CBU = !String.IsNullOrEmpty(sisa[5]) ? sisa[5].Replace("\"", String.Empty) : String.Empty,
+                            FechaActCBU = !String.IsNullOrEmpty(sisa[6]) ? (DateTime?)DateTime.Parse(sisa[6]) : null,
+                            Categoria = !String.IsNullOrEmpty(sisa[7]) ? sisa[7].Replace("\"", String.Empty) : String.Empty,
+                            SituacionCategoria = !String.IsNullOrEmpty(sisa[8]) ? sisa[8].Replace("\"", String.Empty) : String.Empty,
+                            FechaVigenciaCategoria = !String.IsNullOrEmpty(sisa[9]) ? (DateTime?)DateTime.Parse(sisa[9]) : null,
+                            FechaNotifDFECategoria = !String.IsNullOrEmpty(sisa[10]) ? (DateTime?)DateTime.Parse(sisa[10]) : null,
+                            Observaciones = !String.IsNullOrEmpty(sisa[11]) ? sisa[11].Replace("\"", String.Empty) : String.Empty,
+                            FechaGeneracion = !String.IsNullOrEmpty(sisa[12]) ? (DateTime?)DateTime.Parse(sisa[12]) : null
+                        });
+                    }
+                }
+            }
+            objReader.Close();
+            logger.Info($"ProcessSisa - Lineas leidas: {lista.Count}");
+            try
+            {
+                sisaManager.InsertarSISA(lista);
             }
             catch (Exception ex)
             {

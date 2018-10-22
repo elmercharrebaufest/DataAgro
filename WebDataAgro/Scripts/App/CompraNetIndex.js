@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#menuproveedor').hide();
     CrearViewModel();
     CreateGridInformeCompraNet();
-    AutoRecargar();    
+    AutoRecargar();
 
     //+ datos modal//
     $("#reenviarMails").click(function () {
@@ -268,7 +268,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").attr('id', 'border-red');
             $("td:has(div.statusfinalizado)").attr('id', 'border-black');
             $("td:has(div.statusborrado)").attr('id', 'border-grey');
-            if (($("#perfil").val() !== "Mesa") && ($("#TieneEmpleadosACargo").val() !== "True"))
+            if (($("#perfil").val() !== "Mesa"))
             {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
             }

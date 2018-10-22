@@ -31,6 +31,15 @@ namespace WebDataAgro.Helpers.Excel
             cellBorderStyleColumnTitles.BorderRight = BorderStyle.Thin;
             cellBorderStyleColumnTitles.Alignment = HorizontalAlignment.Center;
             cellBorderStyleColumnTitles.SetFont(fontBold);
+            var cellcolorTitles = workbook.CreateCellStyle();
+            cellcolorTitles.BorderBottom = BorderStyle.Thin;
+            cellcolorTitles.BorderTop = BorderStyle.Thin;
+            cellcolorTitles.BorderLeft = BorderStyle.Thin;
+            cellcolorTitles.BorderRight = BorderStyle.Thin;
+            cellcolorTitles.Alignment = HorizontalAlignment.Center;
+            cellcolorTitles.SetFont(fontBold);
+            cellcolorTitles.FillForegroundColor = IndexedColors.LightGreen.Index;
+            cellcolorTitles.FillPattern = FillPattern.SolidForeground;
 
             #region row1
             var row = sheet.CreateRow(0);
@@ -75,63 +84,63 @@ namespace WebDataAgro.Helpers.Excel
 
             var celdasMerge = sheet.GetRow(1).GetCell(2);
             celdasMerge.SetCellValue("DISPONIBLE");
-            celdasMerge.CellStyle = cellBorderStyleColumnTitles;
+            celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge = sheet.GetRow(1).GetCell(5);
             celdasMerge.SetCellValue("FORWARD");
-            celdasMerge.CellStyle = cellBorderStyleColumnTitles;
+            celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge = sheet.GetRow(1).GetCell(8);
             celdasMerge.SetCellValue("NEW CROP");
-            celdasMerge.CellStyle = cellBorderStyleColumnTitles;
+            celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge = sheet.GetRow(1).GetCell(13);
             celdasMerge.SetCellValue("SOJA SUSTENTABLE");
-            celdasMerge.CellStyle = cellBorderStyleColumnTitles;
+            celdasMerge.CellStyle = cellcolorTitles;
             #endregion
             #region row2
             row = sheet.CreateRow(2);
             celda = row.CreateCell(0);
             celda = row.CreateCell(1);
             celda.SetCellValue("PRODUCTO");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(2);
             celda.SetCellValue("A FIJAR");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(3);
             celda.SetCellValue("A PRECIO");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(4);
             celda.SetCellValue("FIJACION");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(5);
             celda.SetCellValue("A FIJAR");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(6);
             celda.SetCellValue("A PRECIO");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(7);
             celda.SetCellValue("FIJACION");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(8);
             celda.SetCellValue("A FIJAR");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(9);
             celda.SetCellValue("A PRECIO");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(10);
             celda.SetCellValue("FIJACION");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(11);
             celda.SetCellValue("TOTAL");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(12);
             celda = row.CreateCell(13);
             celda.SetCellValue("A PRECIO");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(14);
             celda.SetCellValue("A FIJAR");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(15);
             celda.SetCellValue("TOTAL");
-            celda.CellStyle = cellBorderStyleColumnTitles;
+            celda.CellStyle = cellcolorTitles;
             #endregion
             #region PosicionToneladas
             var j = 3;
@@ -192,13 +201,17 @@ namespace WebDataAgro.Helpers.Excel
             row = sheet.CreateRow(7);
             row = sheet.CreateRow(8);
             celda = row.CreateCell(1);
-            celda.SetCellValue("Soja");
+            celda.SetCellValue("SOJA");
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(4);
             celda.SetCellValue("MAIZ");
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(7);
             celda.SetCellValue("TRIGO CAMARA");
+            celda.CellStyle = cellcolorTitles;
             celda = row.CreateCell(10);
             celda.SetCellValue("TRIGO CALIDAD");
+            celda.CellStyle = cellcolorTitles;
             row = sheet.CreateRow(9);
             row = sheet.CreateRow(10);
             row = sheet.CreateRow(11);
@@ -226,10 +239,10 @@ namespace WebDataAgro.Helpers.Excel
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("POSICION");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue("TON");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     foreach (var mes in (EnumMeses[])Enum.GetValues(typeof(EnumMeses)))
                     {
                         i++;
@@ -245,7 +258,7 @@ namespace WebDataAgro.Helpers.Excel
                     row = sheet.GetRow(i + 1);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("TOTAL");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
                     celda.CellStyle = cellBorderStyleColumnTitles;
@@ -258,10 +271,10 @@ namespace WebDataAgro.Helpers.Excel
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("POSICION");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue("TON");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     row = sheet.GetRow(i+1);
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
@@ -297,7 +310,7 @@ namespace WebDataAgro.Helpers.Excel
                     row = sheet.GetRow(i + 5);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("TOTAL");
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = cellcolorTitles;
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
                     celda.CellStyle = cellBorderStyleColumnTitles;
@@ -314,7 +327,7 @@ namespace WebDataAgro.Helpers.Excel
                 celda = row.CreateCell(c);
                 celda = row.CreateCell(c + 1);
                 celda.SetCellValue(moneda.Moneda);
-                celda.CellStyle = cellBorderStyleColumnTitles;
+                celda.CellStyle = cellcolorTitles;
                 celda = row.CreateCell(c + 2);
                 celda.SetCellValue(moneda.Cantidad.HasValue? moneda.Cantidad.Value.ToString("N2"):"0");
                 celda.CellStyle = cellBorderStyleColumnTitles;
@@ -334,19 +347,19 @@ namespace WebDataAgro.Helpers.Excel
 
             var sheet2 = (HSSFSheet)workbook.CreateSheet("Posición Soja");
             var listaSoja = posicion.Where(x => x.Material == "Soja").ToList();
-            CrearSheets(sheet2, cellStyleColumnTitles, listaSoja);
+            CrearSheets(sheet2, cellcolorTitles, cellStyleColumnTitles, listaSoja);
 
             var sheet3 = (HSSFSheet)workbook.CreateSheet("Posición Maiz");
             var listaMaiz = posicion.Where(x => x.Material == "Maiz").ToList();
-            CrearSheets(sheet3, cellStyleColumnTitles, listaMaiz);
+            CrearSheets(sheet3, cellcolorTitles, cellStyleColumnTitles, listaMaiz);
 
             var sheet4 = (HSSFSheet)workbook.CreateSheet("Posición Trigo Cámara");
             var listaTrigoCamara = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial != "X").ToList();
-            CrearSheets(sheet4, cellStyleColumnTitles, listaTrigoCamara);
+            CrearSheets(sheet4, cellcolorTitles, cellStyleColumnTitles, listaTrigoCamara);
 
             var sheet5 = (HSSFSheet)workbook.CreateSheet("Posición Trigo Calidad");
             var listaTrigoCalidad = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial == "X").ToList();
-            CrearSheets(sheet5, cellStyleColumnTitles, listaTrigoCalidad);
+            CrearSheets(sheet5, cellcolorTitles, cellStyleColumnTitles, listaTrigoCalidad);
             #endregion
             using (var fileData = new MemoryStream())
             {
@@ -354,7 +367,7 @@ namespace WebDataAgro.Helpers.Excel
                 return fileData.ToArray();
             }
         }
-        private static void CrearSheets(HSSFSheet sheet, ICellStyle cellBorderStyleColumnTitles, List<ExcelPosicionMaterialDto> listaMaterial)
+        private static void CrearSheets(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, List<ExcelPosicionMaterialDto> listaMaterial)
         {
             var cabeceras = 0;
             var filas = 0;
@@ -363,7 +376,7 @@ namespace WebDataAgro.Helpers.Excel
             {
                 var celda = row.CreateCell(cabeceras);
                 celda.SetCellValue(titulo);
-                celda.CellStyle = cellBorderStyleColumnTitles;
+                celda.CellStyle = cellcolorTitles;
                 cabeceras++;
             }
             foreach (var material in listaMaterial)

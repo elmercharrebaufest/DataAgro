@@ -165,6 +165,7 @@
     <Compile Include="Managers\ProveedorManager.cs" />
     <Compile Include="Managers\ProvinciaManager.cs" />
     <Compile Include="Managers\ReportesManager.cs" />
+    <Compile Include="Managers\SISAManager.cs" />
     <Compile Include="Managers\RG2300Manager.cs" />
     <Compile Include="Managers\RiesgoComercialManager.cs" />
     <Compile Include="Managers\TipoNegocioManager.cs" />

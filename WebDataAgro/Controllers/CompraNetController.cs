@@ -371,7 +371,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult  TraerContratoCompleto(int id)
+        public ActionResult TraerContratoCompleto(int id)
         {
             return new JsonResult()
             {
@@ -412,7 +412,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.TraerContratosPendientes(),
+                Data = mobjContratoManager.TraerContratosPendientes(GlobalVariables.Equipo),
                 MaxJsonLength = Int32.MaxValue
             };
         }

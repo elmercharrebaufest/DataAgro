@@ -1362,10 +1362,9 @@ function ObtenerDatos() {
         var localidadAux = $("#LocalidadCrearContrato").val().split('(');
         var provinciaAux = localidadAux[1].split(')');
         var Localidad = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadAux[0], provincia: provinciaAux[0] });
+        obj.LocalidadId = Localidad.LocalidadId;
+        obj.ProvinciaId = Localidad.ProvinciaId;
     }
-
-    obj.LocalidadId = Localidad.LocalidadId;
-    obj.ProvinciaId = Localidad.ProvinciaId;
     obj.Descuentos = viewModel.Descuentos;
     obj.Calidad = viewModel.Calidades;
     GrabarContrato(obj);

@@ -30,6 +30,6 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailPendiente();
         void FinalizacionAutomatica(string idActiveDirectory);
         void BorradoAutomatico();
-        List<AvisoContratoDto> TraerContratosPendientes();
+        List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo);
     }
 }

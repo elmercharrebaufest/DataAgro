@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocioId = contrato.TipoNegocioId,
                     Cantidad = contrato.Cantidad,
                     Precio = contrato.Precio,
-                    PrecioPlazo = contrato.TipoNegocioId == 1 ? SqlFunctions.DateName("day", contrato.FechaHasta) + "/" + SqlFunctions.DatePart("month", contrato.FechaHasta) + "/" + SqlFunctions.DateName("year", contrato.FechaHasta) : contrato.Precio.ToString(),
+                    PrecioPlazo = contrato.TipoNegocioId == 1 ? SqlFunctions.DateName("day", contrato.HastaFijacion) + "/" + SqlFunctions.DatePart("month", contrato.HastaFijacion) + "/" + SqlFunctions.DateName("year", contrato.HastaFijacion) : contrato.Precio.ToString(),
                     FechaEntrega = contrato.FechaEntrega,
                     CampanaId = contrato.CampanaId,
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),

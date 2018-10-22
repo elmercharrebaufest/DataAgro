@@ -7,25 +7,25 @@ using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-    public class RG2300Manager : IRG2300Manager
+    public class SISAManager : ISISAManager
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IComercialManager oComercial;
 
-        public RG2300Manager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
+        public SISAManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oComercial = oComercial;
         }
 
-        public bool InsetarRG2300(List<RG2300> oDatos)
+        public bool InsertarSISA(List<SISA> oDatos)
         {
             try
             {
-                repositorio.RemoverTodos<RG2300>(x => true);
-                repositorio.AgregarTodos<RG2300>(oDatos);
+                repositorio.RemoverTodos<SISA>(x => true);
+                repositorio.AgregarTodos<SISA>(oDatos);
             }
             catch (Exception ex)
             {
@@ -35,4 +35,3 @@ namespace Molinos.DataAgro.Business.Managers
         }
     }
 }
-

@@ -142,6 +142,7 @@
     <Compile Include="Managers\IProvinciaManager.cs" />
     <Compile Include="Managers\IReportesManager.cs" />
     <Compile Include="Managers\IRiesgoComercialManager.cs" />
+    <Compile Include="Managers\ISISAManager.cs" />
     <Compile Include="Managers\ITipoNegocioManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

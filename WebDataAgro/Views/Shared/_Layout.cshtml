@@ -157,68 +157,63 @@
                         </ul>
                     </li>
 
-                    @if (global_asax.GlobalVariables.EsAdministrador)
+                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
                     {
                         <li class="dropdown ">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">Mis Tablas <span class="caret"></span></a>
                             <ul class="dropdown-menu" id="tablas">
 
-
-
-                                <li>
-                                    <a href="~/CanalOperacion" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Canal de Operación
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/Destinatario" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Entrega A
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/Condicion" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Condición Preferente
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/Comercial" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> ABM Usuarios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/Centro" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> ABM Centros
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/RangoPrecio" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Rango Precio
-                                    </a>
-                                </li>
+                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                {
+                                    <li>
+                                        <a href="~/CanalOperacion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Canal de Operación
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Destinatario" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Entrega A
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Condicion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Condición Preferente
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Comercial" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Usuarios
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Centro" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Centros
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="~/RangoPrecio" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Rango Precio
+                                        </a>
+                                    </li>
+                                }
+                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                {
+                                    <li>
+                                        <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Rango Confirmacion Automatica
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
-
-
                     }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                     {
-                        <li class="dropdown ">
-                            <a onclick="return false" id="compraNet-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
-                            <ul class="dropdown-menu" id="tablas">
-                                <li>
-                                    <a href="~/CompraNet" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> CompraNet
-                                    </a>
-                                </li>
-                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
-                                {
-                            <li>
-                                <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Rango Confirmacion Automatica
-                                </a>
-                            </li>
-                                }
-                            </ul>
+                        <li class="mis-contactos-li">
+                            <a href="/CompraNet" class="nav-no-padding">
+
+                                <span> CompraNet</span>
+                            </a>
                         </li>
                     }
                 </ul>
@@ -243,7 +238,7 @@
                     </li>
                 </ul>
             </div>
-            
+
         </div>
     </div>
 

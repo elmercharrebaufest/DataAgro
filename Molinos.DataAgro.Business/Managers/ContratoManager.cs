@@ -854,8 +854,9 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Contratos eliminados: " + borrados);
         }
 
-        public List<AvisoContratoDto> TraerContratosPendientes()
+        public List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo)
         {
+            var fechaHoy = DateTime.Now.Date;
             return repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.ContratoId,
@@ -866,7 +867,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => x.EstadoId == 1 || x.EstadoId == 3);
+            }, x => (x.EstadoId == 1 || x.EstadoId == 3)&& equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy);
         }
 
     }
