@@ -23,7 +23,7 @@ namespace WebDataAgro.Helpers.Excel
             var fontBold = workbook.CreateFont();
             fontBold.Boldweight = (short)FontBoldWeight.Bold;
             stylebold.SetFont(fontBold);
-
+            #region colores
             var cellBorderStyleColumnTitles = workbook.CreateCellStyle();
             cellBorderStyleColumnTitles.BorderBottom = BorderStyle.Thin;
             cellBorderStyleColumnTitles.BorderTop = BorderStyle.Thin;
@@ -40,6 +40,44 @@ namespace WebDataAgro.Helpers.Excel
             cellcolorTitles.SetFont(fontBold);
             cellcolorTitles.FillForegroundColor = IndexedColors.LightGreen.Index;
             cellcolorTitles.FillPattern = FillPattern.SolidForeground;
+            var cellcolorGreen = workbook.CreateCellStyle();
+            cellcolorGreen.BorderBottom = BorderStyle.Thin;
+            cellcolorGreen.BorderTop = BorderStyle.Thin;
+            cellcolorGreen.BorderLeft = BorderStyle.Thin;
+            cellcolorGreen.BorderRight = BorderStyle.Thin;
+            cellcolorGreen.Alignment = HorizontalAlignment.Center;
+            cellcolorGreen.SetFont(fontBold);
+            cellcolorGreen.FillForegroundColor = IndexedColors.Lime.Index;
+            cellcolorGreen.FillPattern = FillPattern.SolidForeground;
+            var cellcolorTan = workbook.CreateCellStyle();
+            cellcolorTan .BorderBottom = BorderStyle.Thin;
+            cellcolorTan .BorderTop = BorderStyle.Thin;
+            cellcolorTan .BorderLeft = BorderStyle.Thin;
+            cellcolorTan .BorderRight = BorderStyle.Thin;
+            cellcolorTan .Alignment = HorizontalAlignment.Center;
+            cellcolorTan .SetFont(fontBold);
+            cellcolorTan .FillForegroundColor = IndexedColors.Tan.Index;
+            cellcolorTan.FillPattern = FillPattern.SolidForeground;
+            var cellcolorCornflowerBlue = workbook.CreateCellStyle();
+            cellcolorCornflowerBlue .BorderBottom = BorderStyle.Thin;
+            cellcolorCornflowerBlue .BorderTop = BorderStyle.Thin;
+            cellcolorCornflowerBlue .BorderLeft = BorderStyle.Thin;
+            cellcolorCornflowerBlue .BorderRight = BorderStyle.Thin;
+            cellcolorCornflowerBlue .Alignment = HorizontalAlignment.Center;
+            cellcolorCornflowerBlue .SetFont(fontBold);
+            cellcolorCornflowerBlue .FillForegroundColor = IndexedColors.CornflowerBlue.Index;
+            cellcolorCornflowerBlue.FillPattern = FillPattern.SolidForeground;
+            var cellcolorBlue = workbook.CreateCellStyle();
+            cellcolorBlue.BorderBottom = BorderStyle.Thin;
+            cellcolorBlue.BorderTop = BorderStyle.Thin;
+            cellcolorBlue.BorderLeft = BorderStyle.Thin;
+            cellcolorBlue.BorderRight = BorderStyle.Thin;
+            cellcolorBlue.Alignment = HorizontalAlignment.Center;
+            cellcolorBlue.SetFont(fontBold);
+            cellcolorBlue.FillForegroundColor = IndexedColors.PaleBlue.Index;
+            cellcolorBlue.FillPattern = FillPattern.SolidForeground;
+            #endregion 
+            ICellStyle[] colores = new ICellStyle[] { cellcolorGreen, cellcolorTan, cellcolorCornflowerBlue, cellcolorBlue };
 
             #region row1
             var row = sheet.CreateRow(0);
@@ -198,20 +236,45 @@ namespace WebDataAgro.Helpers.Excel
             }
             #endregion
             #region PosicionCompras
+            var col = 0;
             row = sheet.CreateRow(7);
             row = sheet.CreateRow(8);
             celda = row.CreateCell(1);
+            celda.CellStyle = colores[0];
+            celda = row.CreateCell(2);
+            celda.CellStyle = colores[0];
+            var merge = new CellRangeAddress(8, 8, 1, 2);
+            sheet.AddMergedRegion(merge);
+            celda  = sheet.GetRow(8).GetCell(1);
             celda.SetCellValue("SOJA");
-            celda.CellStyle = cellcolorTitles;
+            celda.CellStyle = colores[0];
             celda = row.CreateCell(4);
+            celda.CellStyle = colores[1];
+            celda = row.CreateCell(5);
+            celda.CellStyle = colores[1];
+            merge = new CellRangeAddress(8, 8, 4, 5);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(8).GetCell(4);
             celda.SetCellValue("MAIZ");
-            celda.CellStyle = cellcolorTitles;
+            celda.CellStyle = colores[1];
             celda = row.CreateCell(7);
+            celda.CellStyle = colores[2];
+            celda = row.CreateCell(8);
+            celda.CellStyle = colores[2];
+            merge = new CellRangeAddress(8, 8, 7, 8);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(8).GetCell(7);
             celda.SetCellValue("TRIGO CAMARA");
-            celda.CellStyle = cellcolorTitles;
+            celda.CellStyle = colores[2];
             celda = row.CreateCell(10);
+            celda.CellStyle = colores[3];
+            celda = row.CreateCell(11);
+            celda.CellStyle = colores[3];
+            merge = new CellRangeAddress(8, 8, 10, 11);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(8).GetCell(10);
             celda.SetCellValue("TRIGO CALIDAD");
-            celda.CellStyle = cellcolorTitles;
+            celda.CellStyle = colores[3];
             row = sheet.CreateRow(9);
             row = sheet.CreateRow(10);
             row = sheet.CreateRow(11);
@@ -239,10 +302,10 @@ namespace WebDataAgro.Helpers.Excel
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("POSICION");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue("TON");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     foreach (var mes in (EnumMeses[])Enum.GetValues(typeof(EnumMeses)))
                     {
                         i++;
@@ -258,7 +321,7 @@ namespace WebDataAgro.Helpers.Excel
                     row = sheet.GetRow(i + 1);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("TOTAL");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
                     celda.CellStyle = cellBorderStyleColumnTitles;
@@ -271,10 +334,10 @@ namespace WebDataAgro.Helpers.Excel
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("POSICION");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue("TON");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     row = sheet.GetRow(i+1);
                     celda = row.CreateCell(c);
                     celda = row.CreateCell(c + 1);
@@ -310,13 +373,14 @@ namespace WebDataAgro.Helpers.Excel
                     row = sheet.GetRow(i + 5);
                     celda = row.CreateCell(c + 1);
                     celda.SetCellValue("TOTAL");
-                    celda.CellStyle = cellcolorTitles;
+                    celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
                     celda.CellStyle = cellBorderStyleColumnTitles;
-
+                    
                     c += 3;
-                }                
+                }
+                col++;
             }
             #endregion
             #region ToneladasKilos

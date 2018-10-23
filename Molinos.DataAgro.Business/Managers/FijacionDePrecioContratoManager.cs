@@ -224,7 +224,6 @@ namespace Molinos.DataAgro.Business.Managers
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    throw;
                 }
             }
             else
@@ -259,7 +258,6 @@ namespace Molinos.DataAgro.Business.Managers
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    throw;
                 }
             }
             else
@@ -301,7 +299,6 @@ namespace Molinos.DataAgro.Business.Managers
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    throw;
                 }
             }
             else

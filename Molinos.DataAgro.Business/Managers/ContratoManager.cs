@@ -426,9 +426,16 @@ namespace Molinos.DataAgro.Business.Managers
 
                 repositorio.GuardarCambios();
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
-                foreach (var comercialId in comerciales)
+                try
                 {
-                    EnviarNotificacion(comercialId, oContratoSave);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oContratoSave);
+                    }
+                }
+                catch(Exception e)
+                {
+                    logger.Error(e);
                 }
             }
             else
@@ -518,9 +525,16 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                 repositorio.GuardarCambios();
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
-                foreach (var comercialId in comerciales)
+                try
                 {
-                    EnviarNotificacion(comercialId, oContratoSave);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oContratoSave);
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
                 }
             }
             else

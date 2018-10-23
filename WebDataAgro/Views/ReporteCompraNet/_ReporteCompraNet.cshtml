@@ -49,18 +49,20 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    
+
                     @foreach (var material in Model.PosicionCompras)
                     {
                         <div class="col-xs-6 col-md-4">
-                            <table id="@material.Material" class="table-condensed">
+                            <table id="@material.Material.Replace(" ", "")" class="table-condensed">
                                 <tbody>
 
                                     @if (material.Material == "Soja" || material.Material == "Maíz")
                                     {
-                                        <tr class="titulos"><th colspan="3">@material.Material</th></tr>
-                                        <tr>
+                                        <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
+                                        <tr class="titulosPosicion">
                                             <th>POSICIÓN</th>
-                                            <th>Ton.</th>
+                                            <th>TON</th>
                                             <th></th>
                                         </tr>
 
@@ -76,7 +78,7 @@
                                             </tr>
                                         }
                                         <tr class="total">
-                                            <th>Total</th>
+                                            <th class="titulosPosicion">Total</th>
                                             <th>@material.Total.ToString("N0")</th>
                                             <td></td>
                                         </tr>
@@ -88,8 +90,8 @@
                                         {
                                             calidad = true;
                                         }
-                                        <tr class="titulos"><th colspan="3">@material.Material</th></tr>
-                                        <tr>
+                                        <tr class="titulosPosicion"><th  colspan="3">@material.Material</th></tr>
+                                        <tr class="titulosPosicion">
                                             <th>POSICIÓN</th>
                                             <th>TON</th>
                                             <th></th>
@@ -122,8 +124,8 @@
                                                 @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
                                             </td>
                                         </tr>
-                                        <tr class="total">
-                                            <th>Total</th>
+                                        <tr>
+                                            <th class="titulosPosicion">Total</th>
                                             <th>@material.Total.ToString("N0")</th>
                                             <td></td>
                                         </tr>

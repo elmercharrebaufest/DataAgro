@@ -60,3 +60,19 @@ a.Descarga {
 #fecha-buscador-reporte{
     padding: 15px 0 0 10px;
 }
+
+#Soja .titulosPosicion {
+    background: rgb(153, 204, 0);
+}
+
+#Maíz .titulosPosicion {
+    background: rgb(255, 204, 153);
+}
+
+#TrigoCámara .titulosPosicion {
+    background: rgb(153, 153, 255);
+}
+
+#TrigoCalidad .titulosPosicion {
+    background: rgb(153, 204, 255);
+}
