@@ -22,9 +22,7 @@ namespace WebDataAgro.Controllers
 
         public DestinatarioController(IDestinatarioManager oDestinatarioManager)
         {
-            mobjDestinatarioManager = oDestinatarioManager;
-            
-            
+            mobjDestinatarioManager = oDestinatarioManager;      
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {

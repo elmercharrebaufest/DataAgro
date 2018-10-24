@@ -24,7 +24,6 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-
         public ActionResult Buscar()
         {
             var model = new ResultIniCanalOperacionModel();
@@ -43,7 +42,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
         public ActionResult Aplicar(AbmCanalOperacionParam oParam)
         {
             return new JsonResult()
@@ -55,7 +53,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
 
         public ActionResult Grabar(CanalOperacion oCanalOperacion)
         {
@@ -76,9 +73,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
+        
         public ActionResult Eliminar(AbmCanalOperacionParam oParam)
         {
             return new JsonResult()
@@ -88,7 +83,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-
         public ActionResult Cancelar()
         {
             return new JsonResult()
@@ -97,9 +91,6 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
-
     }
 }
 

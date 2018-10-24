@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!--General-->
     <ProjectSolution>..\DataAgro.sln</ProjectSolution>
-    <NUnitToolPath>C:\Program Files (x86)\NUnit 2.6.3\bin</NUnitToolPath>
+    <NUnitToolPath>C:\Program Files (x86)\NUnit.Console-3.6.0\nunit-console</NUnitToolPath>
     <NUnitProject>..\Molinos.DataAgro.Test\bin\Jenkins\Molinos.DataAgro.Test.dll</NUnitProject>
     <OutputDir>..\Deploy\</OutputDir>
     <PackageWeb>..\WebDataAgro\obj\Jenkins\Package\**\*</PackageWeb>

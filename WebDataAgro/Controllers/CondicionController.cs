@@ -23,8 +23,6 @@ namespace WebDataAgro.Controllers
         public CondicionController(ICondicionManager oCondicionManager)
         {
             mobjCondicionManager = oCondicionManager;
-            
-            
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;

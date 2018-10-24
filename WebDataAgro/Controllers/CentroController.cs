@@ -92,7 +92,7 @@ namespace WebDataAgro.Controllers
             var model = new AbmCentroResult();
 
             var entityErrors = mobjCentroManager.GrabarCentro(oCentro);
-            
+            model.Errores = entityErrors.Errores;
             if (model.HayErrores)
             {
                 model.Centro = new CentroDto { CodigoSap= oCentro.CodigoSap, Descripcion = oCentro.Descripcion, Id = oCentro.Id};

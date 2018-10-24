@@ -104,8 +104,7 @@ namespace WebDataAgro.Controllers
             var entityErrors = mobjComercialManager.GrabarComercial(oComercial);
 
             model.Errores = entityErrors.Errores;
-
-            if (model.Errores.Count > 0)
+            if (model.HayError)
             {
                 model.Comercial = oComercial;
             }
