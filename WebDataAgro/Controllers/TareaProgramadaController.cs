@@ -33,19 +33,6 @@ namespace WebDataAgro.Controllers
             }
             return View(ActionView);
         }
-
-        public ActionResult Inicializar()
-        {
-            return new JsonResult()
-            {
-                Data = new DatosIniAbmRangoModel
-                {
-                    //Datos = mobjRangoManager.TraerDatosIniciales(),
-                    RangoPrecio = new RangoPrecio()
-                },
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
         
         public ActionResult Buscar()
         {

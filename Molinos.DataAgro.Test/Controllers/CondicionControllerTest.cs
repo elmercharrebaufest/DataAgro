@@ -77,14 +77,14 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarCondicionTest()
         {
-            var canalOp = new Condicion
+            var condicion = new Condicion
             {
                 CondicionId = 1,
                 Inhabilitado = false,
                 Descripcion = "A"
             };
-            condicionManagerMock.Setup(x => x.GrabarCondicion(canalOp)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Grabar(canalOp);
+            condicionManagerMock.Setup(x => x.GrabarCondicion(condicion)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            var result = target.Grabar(condicion);
 
             Assert.NotNull(result);
 

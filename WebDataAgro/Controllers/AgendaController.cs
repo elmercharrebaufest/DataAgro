@@ -14,13 +14,11 @@ namespace WebDataAgro.Controllers
     public class AgendaController : Controller
     {
         private IAgendaManager mobjAgendaManager;
-        private IComercialManager mobjComercialManager;
         private readonly IReportesManager reportesManager;
 
-        public AgendaController(IAgendaManager oAgendaManager, IComercialManager oComercialManager, IReportesManager reportesManager)
+        public AgendaController(IAgendaManager oAgendaManager, IReportesManager reportesManager)
         {
             mobjAgendaManager = oAgendaManager;
-            mobjComercialManager = oComercialManager;
             this.reportesManager = reportesManager;
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
@@ -45,7 +43,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> ExportarAgenda(RptActividadAgendaParam oParam)
+        public ActionResult ExportarAgenda(RptActividadAgendaParam oParam)
         {
             var model = new ReportesModel();
 
@@ -53,8 +51,8 @@ namespace WebDataAgro.Controllers
 
             var datos = mobjAgendaManager.ExportarAgenda(oParam, GlobalVariables.Equipo);
 
-            var oLstAgenda = new LstAgendaActividad(reportesManager);                           
-            
+            var oLstAgenda = new LstAgendaActividad(reportesManager);
+
             var identif = oLstAgenda.GenerarListado(datos);
 
             if (datos.Count == 0)

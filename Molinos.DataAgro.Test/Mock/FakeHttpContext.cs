@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web;
 using System.Web.SessionState;
 
@@ -30,6 +28,19 @@ namespace Molinos.DataAgro.Test.Mock
                                         new[] { typeof(HttpSessionStateContainer) },
                                         null)
                                 .Invoke(new object[] { sessionContainer });
+
+
+            GenericIdentity MyIdentity = new GenericIdentity("dominio\\nombre", "pass");
+            ClaimsIdentity objClaim = new ClaimsIdentity("pass", System.IdentityModel.Claims.ClaimTypes.Name, "Recipient");
+            objClaim.AddClaim(new Claim(System.IdentityModel.Claims.ClaimTypes.Name, "dominio\\nombre"));
+            objClaim.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, "Level3"));
+            objClaim.AddClaim(new Claim(ClaimTypes.Name, "dominio\\nombre"));
+            string[] Roles = { "Recipient" };
+            GenericPrincipal MyPrincipal = new GenericPrincipal(objClaim, Roles);
+            IPrincipal Identity = (IPrincipal)MyPrincipal;
+            httpContext.User = Identity;
+
+
             return httpContext;
         }
     }

@@ -15,20 +15,13 @@ namespace WebDataAgro.Controllers
     {
         private IMaterialManager mobjMaterialManager;
 
-        
-
-        private IComercialManager mobjComercialManager;
-
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public MaterialController(IMaterialManager oMaterialManager, IComercialManager oComercialManager)
+        public MaterialController(IMaterialManager oMaterialManager)
         {
-            mobjMaterialManager = oMaterialManager;
-            
-            mobjComercialManager = oComercialManager;
-            
+            mobjMaterialManager = oMaterialManager;              
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
@@ -44,7 +37,6 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-
         public ActionResult Filtrar(ParamAbmMaterial oParam)
         {
             var model = new ResultIniMaterialModel();
@@ -58,7 +50,6 @@ namespace WebDataAgro.Controllers
             {
                 model.Datos = result.Material;
             }
-
             return new JsonResult()
             {
                 Data = model,
@@ -83,16 +74,13 @@ namespace WebDataAgro.Controllers
         public ActionResult Grabar(Material oMaterial)
         {
             var model = new AbmMaterialResult();
-
             var entityErrors = mobjMaterialManager.GrabarMaterial(oMaterial);
-
             model.Errores = entityErrors.Errores;
 
             if (model.HayErrores)
             {
                 model.Material = oMaterial;
             }
-
             return new JsonResult()
             {
                 Data = model,

@@ -1163,4 +1163,7 @@ function AvisoContratosPendientes(){
         };
         viewModel.ContratosPendientes.push(contratoVM);
     });
+    if ($("#perfil").val() != "Mesa") {
+        $(".comercial-contrato-pendiente").hide();
+    }
 }
