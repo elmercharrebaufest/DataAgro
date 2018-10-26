@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RangoConfirmacionAutomaticaControllerTest.cs" />
+    <Compile Include="Controllers\ReportesCompraNetControllerTest.cs" />
+    <Compile Include="Controllers\ReportesControllerTest.cs" />
     <Compile Include="Controllers\TareaProgramadaControllerTest.cs" />
     <Compile Include="Controllers\RangoPrecioControllerTest.cs" />
     <Compile Include="Controllers\AgendaControllerTest.cs" />

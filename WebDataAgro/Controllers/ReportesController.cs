@@ -37,15 +37,12 @@ namespace WebDataAgro.Controllers
             {
                 ActionView = "ErrorDePermisos";
             }
-
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
-
             else if (GlobalVariables.EsAdministrador)
             {
-
                 ViewBag.esadmin = true;
             }
 
@@ -186,7 +183,6 @@ namespace WebDataAgro.Controllers
                 {
                     //ListaResult = await mobjReportesManager.TraerComprasTortaExportacion(filtrosconvertidos);
                 }
-
             }
 
             if (oParamReportes.Indicadores == "capacidadproductiva")
@@ -200,8 +196,6 @@ namespace WebDataAgro.Controllers
                 {
                    // ListaResult = await mobjReportesManager.TraerCapacidadProductivaBarraExportacion(filtrosconvertidos);
                 }
-
-
             }
 
             if (oParamReportes.Indicadores == "capacidadacopio")
@@ -215,34 +209,29 @@ namespace WebDataAgro.Controllers
                 {
                     //ListaResult = await mobjReportesManager.TraerCapacidadDeAcopioBarraExportacion(oParamReportes);
                 }
-
             }
 
             if (oParamReportes.Indicadores == "basededatos")
             {
-                 
-
-
             }
-            
+
             var datos = new ResultComprasReportesExcel
             {
                 Titulo = "Titulo de Prueba",
                 Lista = ListaResult,
-                
-                   
-                    oFiltros = oParamReportes
-                };
 
-                //var oLstContacto = new LstContacto(mobjMSContext);
+                oFiltros = oParamReportes
+            };
 
-                var identif = await oLstIndicadores.GenerarComprasMapaExcelAsync(datos);
+            //var oLstContacto = new LstContacto(mobjMSContext);
 
-                model.DownloadKey = Util.GetDownloadKey(identif);
+            var identif = await oLstIndicadores.GenerarComprasMapaExcelAsync(datos);
 
-                return Json(model);
+            model.DownloadKey = Util.GetDownloadKey(identif);
 
-            }
+            return Json(model);
+
+        }
 
         #region Exportacion
         public async Task<ActionResult> ExportarCompraMapaIndicadores(ParamReportes oParamReportes)

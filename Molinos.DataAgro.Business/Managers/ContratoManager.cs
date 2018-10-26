@@ -747,7 +747,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         oMensaje.CC.Add(new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]));
                         oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contratosPorCreador.ToList(), contratosPorCreador.Key));
-                        oMensaje.Subject = "Negocios Pendientes DataAgro";
+                        oMensaje.Subject = "Negocios Pendientes CompraNet";
 
                         oMensaje.BodyEncoding = Encoding.UTF8;
 
@@ -792,7 +792,7 @@ namespace Molinos.DataAgro.Business.Managers
             string td = "<td style=\"border: 1px solid white; color: black; text-align:center; background-color: #a4e751; padding: 5px 0; width: 175px;\">";
             string htmlBody = "";
             htmlBody += "En el presente mail, se detallan los negocios a Confirmar creados por el comercial " + nombreApellido + ": <br /><br />  ";
-            htmlBody += "<table><tr>" + th + "Proveedor</th>"+ th + "Cantidad</th>"+ th + "Precio</th>" + th + "Fecha de Carga</th>"+ th + "Comercial</th></tr>";
+            htmlBody += "<table><tr>" + th + "PROVEEDOR</th>"+ th + "CANTIDAD</th>"+ th + "PRECIO</th>" + th + "FECHA DE CARGA</th>"+ th + "COMERCIAL</th></tr>";
             foreach (var contrato in contratosPendientes)
             {
                 htmlBody += "<tr>";

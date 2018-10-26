@@ -341,8 +341,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? MasCl20000 { get; set; }
         public int? MasCl40000 { get; set; }
 
-
-
         public ResultComprasBarrasReportes()
         {
             MasTn5000 = 0;
@@ -360,7 +358,6 @@ namespace Molinos.DataAgro.Entities.Dto
             MasCl20000 = 0;
             MasCl40000 = 0;
         }
-
     }
 
     public class ResultComprasBarrasReportesExcel
