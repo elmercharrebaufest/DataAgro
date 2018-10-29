@@ -2381,6 +2381,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\SincronizarMaestros\" />
+    <Folder Include="Views\TareasProgramadas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
