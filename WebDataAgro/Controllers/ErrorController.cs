@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -32,6 +33,7 @@ namespace WebDataAgro.Controllers
                 ViewBag.Title = "Error-";
                 ViewBag.Description = jsonx;
             }
+            ViewBag.Usuario = GlobalVariables.IdActiveDirectoryCompleto;
             return View();
         }
     }

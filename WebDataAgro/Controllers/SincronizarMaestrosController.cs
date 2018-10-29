@@ -98,6 +98,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
             return Content("ok");
         }
+        
         public ActionResult ProcessSisa()
         {
             logger.Info("ProcessSisa - Iniciando");

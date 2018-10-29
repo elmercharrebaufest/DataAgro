@@ -68,12 +68,12 @@ namespace WebDataAgro.Controllers
                     // Create a new task definition and assign properties
                     TaskDefinition td = ts.NewTask();
                     td.RegistrationInfo.Description = model.Name;
-
+                    td.Principal.LogonType = TaskLogonType.ServiceAccount;
                     // Create a trigger that will fire the task at this time every other day
                     td.Triggers.Add(new DailyTrigger { Repetition = new RepetitionPattern(new TimeSpan(0, model.RepeticionEnMinutos, 0), TimeSpan.Zero), StartBoundary = model.Inicio });
 
                     // Create an action that will launch Notepad whenever the trigger fires
-                    td.Actions.Add(new ExecAction("powershell.exe", $"-command {{Invoke-WebRequest {model.Action}}}", null));
+                    td.Actions.Add(new ExecAction("powershell.exe", $"powershell.exe -command {{Invoke-WebRequest {model.Action} -UseDefaultCredential}}", null));
 
                     // Register the task in the root folder
                     ObtenerCarpetaDeTasks(ts).RegisterTaskDefinition(model.Name, td);
