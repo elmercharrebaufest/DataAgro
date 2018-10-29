@@ -565,7 +565,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DiasPesificado != null)
             {
-                htmlBody += "DÍAS PESIFICADO " + oContrato.DiasPesificado + "<br />";
+                htmlBody += "DÍAS DIFERIMIENTO " + oContrato.DiasPesificado + "<br />";
             }            
             if (oContrato.CD == true)
             {

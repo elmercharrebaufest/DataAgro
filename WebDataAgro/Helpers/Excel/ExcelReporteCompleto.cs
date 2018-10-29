@@ -324,7 +324,7 @@ namespace WebDataAgro.Helpers.Excel
                     celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = colores[col];
 
                     c += 3;
                 }
@@ -376,7 +376,7 @@ namespace WebDataAgro.Helpers.Excel
                     celda.CellStyle = colores[col];
                     celda = row.CreateCell(c + 2);
                     celda.SetCellValue(material.Total.ToString("N0"));
-                    celda.CellStyle = cellBorderStyleColumnTitles;
+                    celda.CellStyle = colores[col];
                     
                     c += 3;
                 }

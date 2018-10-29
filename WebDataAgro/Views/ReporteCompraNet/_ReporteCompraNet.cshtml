@@ -77,8 +77,8 @@
                                                 </td>
                                             </tr>
                                         }
-                                        <tr class="total">
-                                            <th class="titulosPosicion">Total</th>
+                                        <tr class="titulosPosicion total">
+                                            <th >Total</th>
                                             <th>@material.Total.ToString("N0")</th>
                                             <td></td>
                                         </tr>
@@ -124,7 +124,7 @@
                                                 @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="titulosPosicion">
                                             <th class="titulosPosicion">Total</th>
                                             <th>@material.Total.ToString("N0")</th>
                                             <td></td>
