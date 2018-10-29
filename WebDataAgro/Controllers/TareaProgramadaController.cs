@@ -48,7 +48,7 @@ namespace WebDataAgro.Controllers
                     NextRunTime = x.NextRunTime,
                     RepeticionEnMinutos = x.Definition.Triggers.Any() ? (int)x.Definition.Triggers.First().Repetition.Interval.TotalMinutes : 0,
                     Action = x.Definition.Actions.Any() ? Regex.Match(((ExecAction)x.Definition.Actions.First()).Arguments,
-                        @"-command {Invoke-WebRequest (.+)}", RegexOptions.Singleline).Groups[1].Value : ""
+                        @"-command {Invoke-WebRequest (.+) -UseDefaultCredential}", RegexOptions.Singleline).Groups[1].Value : ""
                 }).ToList();
             }
 
