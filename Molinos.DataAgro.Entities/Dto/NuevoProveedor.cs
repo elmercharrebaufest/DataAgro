@@ -125,7 +125,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
 
         public int campañaId { get; set; }
-        public double? toneladasAlmacenamiento { get; set; }
+        public decimal? toneladasAlmacenamiento { get; set; }
         public bool? hasArrendadas { get; set; }
     }
 

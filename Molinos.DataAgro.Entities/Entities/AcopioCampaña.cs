@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int AcopioCampañaId { get; set; }
         public int AcopioId { get; set; }        
         public int NroItem { get; set; }
-        public double? Toneladas { get; set; }
+        public decimal? Toneladas { get; set; }
         public int CampañaId { get; set; }        
         public bool? HasArrendadas { get; set; }
 

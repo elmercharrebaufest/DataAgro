@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    public class TraerInformeComercialProduccion : IConsulta<InformeComercialProduccion>
+    public class TraerInformeComercialProduccion : IConsulta<InformeComercialProduccionDto>
     {
         private readonly int proveedorId;
         private readonly int campaniaId;
@@ -21,16 +22,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.informeComercial = informeComercial;
         }
 
-        private static List<InformeComercialProduccion> Query(DbContext contexto, int proveedorId, int campaniaId, int materialId, InformeComercial informeComercial)
+        private static List<InformeComercialProduccionDto> Query(DbContext contexto, int proveedorId, int campaniaId, int materialId, InformeComercial informeComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            return contexto.Set<CampoMaterial>()
+            var listaInformeComercial = contexto.Set<CampoMaterial>()
                        .Where(x => x.Campo.Proveedor.ProveedorId == proveedorId && x.Campaña.CampañaId == campaniaId && x.Material.MaterialId == materialId)
                        .GroupBy(z => new { z.Campo.ArrendaPropia, z.Campo.Localidad, z.Material })
-                       .Select(v => new InformeComercialProduccion()
-                       {
-                           InformeComercial = informeComercial,
+                       .Select(v => new InformeComercialProduccionDto()
+                       {                           
                            Localidad = v.Key.Localidad,
                            Material = v.Key.Material,
                            Propio = (v.Key.ArrendaPropia == 1 ? true : false),
@@ -39,9 +39,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Toneladas = v.Sum(b => b.Toneladas)
                        }
                        ).ToList();
+            foreach(var lista in listaInformeComercial)
+            {
+                lista.InformeComercial = informeComercial;
+            }
+            return listaInformeComercial;
         }
 
-        public virtual List<InformeComercialProduccion> Ejecutar(DbContext contexto)
+        public virtual List<InformeComercialProduccionDto> Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {

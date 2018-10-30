@@ -49,8 +49,8 @@ namespace Molinos.DataAgro.Business
                 var produccion = repositorio.Listar<InformeComercialProduccion>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
                 repositorio.Remover(produccion);
 
-                var almacenamiento = repositorio.Listar<InformeComercialAlmacenamiento>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
-                repositorio.Remover(almacenamiento);
+                var almacen = repositorio.Listar<InformeComercialAlmacenamiento>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
+                repositorio.Remover(almacen);
 
                 inf = repositorio.Obtener<InformeComercial>(x => x.InformeComercialId == informe.InformeComercialId);
             }
@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Business
             inf.ProveedorId = informe.ProveedorId;
             inf.EstadoId = (int)EnumEstadoInforme.Generado;
             inf.CampañaId = informe.InformeComercialId == 0 ? informe.CampañaId : inf.Campaña.CampañaId;
-            informe.CampañaId = inf.Campaña.CampañaId;
+            informe.CampañaId = inf.CampañaId ?? inf.Campaña.CampañaId;
             inf.FechaAlta = DateTime.Now;
             inf.Comercial = repositorio.Obtener<Comercial>(IdActiveDirectory);
             inf.EmplRelDep = informe.EmplRelDep;
@@ -92,16 +92,34 @@ namespace Molinos.DataAgro.Business
 
                 foreach (var produ in produccion)
                 {
-                    repositorio.Agregar(produccion);
+                    var informeProduccion = new InformeComercialProduccion()
+                    {
+                        InformeComercial = produ.InformeComercial,
+                        Hectareas = produ.Hectareas,
+                        Localidad = produ.Localidad,
+                        Material = produ.Material,
+                        Propio = produ.Propio,
+                        Alquilado = produ.Alquilado,
+                        Toneladas = produ.Toneladas                                               
+                    };
+                    repositorio.Agregar(informeProduccion);
                 }
             }
             // 3 - Tiene que grabar en informe Comercial Almacenamiento
 
-            var almacemiento = repositorio.ListarConsulta(new TraerInformeComercialAlmacenamiento(informe.ProveedorId, informe.CampañaId, inf));
+            var almacenamiento = repositorio.ListarConsulta(new TraerInformeComercialAlmacenamiento(informe.ProveedorId, informe.CampañaId, inf));
 
-            foreach (var produ in almacemiento)
+            foreach (var produ in almacenamiento)
             {
-                repositorio.Agregar(produ);
+                var informeAlmacenamiento = new InformeComercialAlmacenamiento()
+                {
+                    InformeComercial = produ.InformeComercial,
+                    Localidad = produ.Localidad,
+                    Toneladas = produ.Toneladas,
+                    Propia = produ.Propia,
+                    Alquilada = produ.Alquilada
+                };
+                repositorio.Agregar(informeAlmacenamiento);
             }
 
             try
@@ -156,8 +174,9 @@ namespace Molinos.DataAgro.Business
                     Nombres = x.Nombres + " " + x.Apellido,
                     Cargo = x.Puesto,
                     Telefono1 = x.Telefono1,
-                    Email1 = x.Email1
-                }, x => x.ProveedorId == informe.ProveedorId, 2, "EsPrincipal",DirOrden.Desc);
+                    Email1 = x.Email1,
+                    EsPrincipal = x.EsPrincipal== true? "X":""
+                }, x => x.ProveedorId == informe.ProveedorId, 2, "EsPrincipal", DirOrden.Desc);
 
             if (contactos.Count >= 1)
             {

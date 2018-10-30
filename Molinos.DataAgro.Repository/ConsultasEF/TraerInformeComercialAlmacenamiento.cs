@@ -7,7 +7,7 @@ using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    public class TraerInformeComercialAlmacenamiento : IConsulta<InformeComercialProduccion>
+    public class TraerInformeComercialAlmacenamiento : IConsulta<InformeComercialAlmacenamientoDto>
     {
         private readonly int proveedorId;
         private readonly int campaniaId;
@@ -20,25 +20,29 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.informeComercial = informeComercial;
         }
 
-        private static List<InformeComercialProduccion> Query(DbContext contexto, int proveedorId, int campaniaId, InformeComercial informeComercial)
+        private static List<InformeComercialAlmacenamientoDto> Query(DbContext contexto, int proveedorId, int campaniaId, InformeComercial informeComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            return contexto.Set<AcopioCampaña>()
+            var listaInformeAlmacenamiento = contexto.Set<AcopioCampaña>()
                        .Where(x => x.Acopio.Proveedor.ProveedorId == proveedorId && x.Campaña.CampañaId == campaniaId)
                        .GroupBy(z => new { z.Acopio.Localidad, z.HasArrendadas })
-                       .Select(v => new InformeComercialProduccion()
+                       .Select(v => new InformeComercialAlmacenamientoDto()
                        {
-                           InformeComercial = informeComercial,
                            Localidad = v.Key.Localidad,
-                           Toneladas = (decimal)v.Sum(b => b.Toneladas),
-                           Propio = v.Key.HasArrendadas,
-                           Alquilado = !v.Key.HasArrendadas
+                           Toneladas = v.Sum(b => b.Toneladas),
+                           Propia = v.Key.HasArrendadas,
+                           Alquilada = !v.Key.HasArrendadas
                        }
                        ).ToList();
+            foreach(var almacenamiento in listaInformeAlmacenamiento)
+            {
+                almacenamiento.InformeComercial = informeComercial;
+            }
+            return listaInformeAlmacenamiento;
         }
 
-        public virtual List<InformeComercialProduccion> Ejecutar(DbContext contexto)
+        public virtual List<InformeComercialAlmacenamientoDto> Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {

@@ -99,6 +99,8 @@
     <Compile Include="Dto\GrabarContratoPrueba.cs" />
     <Compile Include="Dto\GrabarSuscripcionResult.cs" />
     <Compile Include="Dto\GrabarDescuentoResult.cs" />
+    <Compile Include="Dto\InformeComercialAlmacenamientoDto.cs" />
+    <Compile Include="Dto\InformeComercialProduccionDto.cs" />
     <Compile Include="Dto\LocalidadDto.cs" />
     <Compile Include="Dto\MaterialDto.cs" />
     <Compile Include="Dto\MonedaDto.cs" />
