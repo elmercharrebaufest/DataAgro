@@ -40,6 +40,7 @@ namespace WebDataAgro.Controllers
 
             using (var ts = new TaskService())
             {
+                
                 var tasks = ObtenerCarpetaDeTasks(ts).EnumerateTasks();
                 model.Datos = tasks.Select(x => new TaskModel
                 {
@@ -67,6 +68,7 @@ namespace WebDataAgro.Controllers
                 {
                     // Create a new task definition and assign properties
                     TaskDefinition td = ts.NewTask();
+                    td.Principal.UserId = "NT AUTHORITY\\LOCALSERVICE";
                     td.RegistrationInfo.Description = model.Name;
                     td.Principal.LogonType = TaskLogonType.ServiceAccount;
                     // Create a trigger that will fire the task at this time every other day
