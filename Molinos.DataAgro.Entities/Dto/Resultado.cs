@@ -9,7 +9,6 @@ namespace Molinos.DataAgro.Entities.Dto
     [KnownType("TiposDeResultados")]
     public class Resultado
     {
-        [DataMember]
         public List<ErrorMessage> Errores { get; set; } = new List<ErrorMessage>();
         
         [DataMember]
