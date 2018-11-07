@@ -111,4 +111,16 @@
                            /endpoint[@name='HTTP_Port4']
                            /@address" />
   </parameter>
+
+  <parameter name="ServiceUser Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='ServiceUser']
+                           /@value" />
+  </parameter>
+  <parameter name="ServicePass Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='ServicePass']
+                           /@value" />
+  </parameter>
+  
 </parameters>

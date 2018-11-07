@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -68,17 +69,21 @@ namespace WebDataAgro.Controllers
                 {
                     // Create a new task definition and assign properties
                     TaskDefinition td = ts.NewTask();
-                    td.Principal.UserId = "NT AUTHORITY\\LOCALSERVICE";
                     td.RegistrationInfo.Description = model.Name;
-                    td.Principal.LogonType = TaskLogonType.ServiceAccount;
+
+                    //td.Principal.UserId = "NT AUTHORITY\\LOCALSERVICE";
+                    //td.Principal.LogonType = TaskLogonType.ServiceAccount;
+                    //String user = ConfigurationManager.AppSettings["ServiceUser"];
+                    //String pass = ConfigurationManager.AppSettings["ServicePass"];
                     // Create a trigger that will fire the task at this time every other day
                     td.Triggers.Add(new DailyTrigger { Repetition = new RepetitionPattern(new TimeSpan(0, model.RepeticionEnMinutos, 0), TimeSpan.Zero), StartBoundary = model.Inicio });
 
                     // Create an action that will launch Notepad whenever the trigger fires
                     td.Actions.Add(new ExecAction("powershell.exe", $"powershell.exe -command {{Invoke-WebRequest {model.Action} -UseDefaultCredential}}", null));
-
-                    // Register the task in the root folder
+                    //td.Principal.UserId = user;
+                    //td.Principal.LogonType = TaskLogonType.Password;
                     ObtenerCarpetaDeTasks(ts).RegisterTaskDefinition(model.Name, td);
+                    //, TaskCreation.Create, user, pass);
                 }
             }
             catch (Exception e)
