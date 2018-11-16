@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Agent.RiesgoComercial;
+﻿using Molinos.DataAgro.Agent.RelacionCorredorProveedor;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using System;
@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Agent
 {
-    public class RelacionCorredorProveedor
+    public class RelacionCorredorProveedorAgent
     {
-        public RelacionCorredorProveedor(IRepositorio repositorio)
+        public RelacionCorredorProveedorAgent(IRepositorio repositorio)
         {
             this.repositorio = repositorio;
         }
@@ -28,17 +28,25 @@ namespace Molinos.DataAgro.Agent
             else
             {
 
-                SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient agent = new SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALClient();
+                SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient agent = new SI_ZMPWS_DATAAGRO_CONSULTAR_RPClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
 
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-                var rq = new Z_MPRFC_RIESGO_COMERCIAL() { IM_CUIT = cuitProveedor };
+                var rq = new Z_MPRFC_CONSULTAR_RP()
+                {
+                    IM_CORREDOR = cuitCorredor,
+                    IM_PROVEEDOR = cuitProveedor
+                };
 
-                var valor = agent.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL(rq);
-
-                return true;
+                var valor = agent.SI_ZMPWS_DATAAGRO_CONSULTAR_RP(rq);
+                var retorno = true;
+                if (valor.EX_MENSAJE != "X")
+                {
+                    retorno = false;
+                }
+                return retorno;
             }
         }
 

@@ -455,7 +455,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        var relacionCorredor = new RelacionCorredorProveedor(repositorio);
+                        var relacionCorredor = new RelacionCorredorProveedorAgent(repositorio);
                         if (!relacionCorredor.ObtenerRelacionCorredorProveedor(oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT))
                         {
                             throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT));

@@ -89,6 +89,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ContratosParaFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\DatosDelComercial\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -100,6 +105,16 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\FinalizarContrato\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\FinalizarFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\RelacionCorredorProveedor\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -125,6 +140,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\Compras\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS.wsdl" />
+    <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.Z_MPRFC_CONTRATO_PEND_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION.wsdl" />
     <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -146,6 +168,20 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP1.wsdl" />
+    <None Include="Service References\FinalizarFijacion\Molinos.DataAgro.Agent.FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarFijacion\Molinos.DataAgro.Agent.FinalizarFijacion.Z_MPRFC_REGISTRAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION.wsdl" />
+    <None Include="Service References\RelacionCorredorProveedor\Molinos.DataAgro.Agent.RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RelacionCorredorProveedor\Molinos.DataAgro.Agent.RelacionCorredorProveedor.Z_MPRFC_CONSULTAR_RPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RelacionCorredorProveedor\SI_ZMPWS_DATAAGRO_CONSULTAR_RP.wsdl" />
     <None Include="Service References\RiesgoComercial\Molinos.DataAgro.Agent.RiesgoComercial.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -156,9 +192,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Compras\" />
+    <WCFMetadataStorage Include="Service References\ContratosParaFijacion\" />
     <WCFMetadataStorage Include="Service References\DatosDelComercial\" />
     <WCFMetadataStorage Include="Service References\DatosDelProveedor\" />
     <WCFMetadataStorage Include="Service References\FinalizarContrato\" />
+    <WCFMetadataStorage Include="Service References\FinalizarFijacion\" />
+    <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +266,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\FinalizarContrato\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

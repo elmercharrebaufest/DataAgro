@@ -262,7 +262,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        var relacionCorredor = new RelacionCorredorProveedor(repositorio);
+                        var relacionCorredor = new RelacionCorredorProveedorAgent(repositorio);
                         if (!relacionCorredor.ObtenerRelacionCorredorProveedor(oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT))
                         {
                             throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT));
@@ -293,6 +293,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
+                    oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                    repositorio.GuardarCambios();
+                    oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
                 }
             }
@@ -426,7 +429,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ClasificacionDescripcion = "",
                 Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
                 DatosFijacion = new DatosFijacionDeContratoDto() {
-                    ContratoId = fijac.ContratoSAP,
+                    ContratoId = fijac.ContratoSAP.ToString(),
                     KilosAplicados = cantidad,
                     KilosPendiente = fijac.Contrato.Cantidad - cantidad,
                     FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
@@ -441,7 +444,8 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor,int materialId, string filtro) {
-            var contratos = ContratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor,materialId, filtro, repositorio);
+            var contratosParaFijacion = new ContratosParaFijacionAgent(logger, repositorio);
+            var contratos = contratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor,materialId, filtro);
             return contratos;
         }
 

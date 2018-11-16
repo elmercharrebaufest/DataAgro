@@ -425,7 +425,7 @@ function Grabar() {
         "Apellido": viewModel.get("Comercial.Apellido"),
         "Nombres": viewModel.get("Comercial.Nombres"),
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
-        "EmpleadorACargo": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
+        "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
         "Administrador": viewModel.get("Comercial.Administrador"),
     };

@@ -4,7 +4,7 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class DatosFijacionDeContratoDto
     {
-        public int ContratoId { get; set; }
+        public string ContratoId { get; set; }
         public double KilosAplicados { get; set; }
         public double KilosPendiente { get; set; }
         public double KilosContrato { get; set; }

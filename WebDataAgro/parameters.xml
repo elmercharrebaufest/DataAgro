@@ -111,7 +111,27 @@
                            /endpoint[@name='HTTP_Port4']
                            /@address" />
   </parameter>
+  
+  <parameter name="HTTP_Port4 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port5']
+                           /@address" />
+  </parameter>
 
+  <parameter name="HTTP_Port4 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port6']
+                           /@address" />
+  </parameter>
+  
+  <parameter name="HTTP_Port4 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port7']
+                           /@address" />
+  </parameter>
   <parameter name="ServiceUser Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServiceUser']
