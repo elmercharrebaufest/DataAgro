@@ -15,17 +15,9 @@ namespace WebDataAgro.Controllers
     {
         private ILocalidadManager mobjLocalidadManager;
 
-        
-
-        private IComercialManager mobjComercialManager;
-
-        public LocalidadController(ILocalidadManager oLocalidadManager, IComercialManager oComercialManager)
+        public LocalidadController(ILocalidadManager oLocalidadManager)
         {
             mobjLocalidadManager = oLocalidadManager;
-            
-
-            mobjComercialManager = oComercialManager;
-            
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;

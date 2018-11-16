@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     RiesgoComercialSap = prove.RiesgoComercialSap,
                     Situacion = rg.Situacion,
                     Segmentacion = prove.Segmentacion.Descripcion,
+                    GrupoSegmentacion = prove.Segmentacion.Grupo,
                     Email1 = con.Email1,
                     Email2 = con.Email2,
                     Email3 = con.Email3,

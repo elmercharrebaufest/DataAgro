@@ -30,20 +30,26 @@ namespace Molinos.DataAgro.Interfaces
 
         GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
-        GrabarProveedorResult UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory);
 
         List<ReporteProveedor> ObtenerReporteProveedor(string Valor, string idActiveDirectory);
 
-        ProveedorQry TraerProveedorPorCuit(string cuit);
+        ProveedorQry TraerProveedorPorCuit(string cuit, bool corredor);
 
         ProveedorDto TraerProveedor(int? proveedorId);
 
-        List<BusquedaHome> DevolverProveedores(string filtro);
-        List<ProveedorDto> ListarProveedor(string text);
+        List<BusquedaHome> DevolverProveedores(string filtroProveedor, bool corredor);
 
+        List<BusquedaHome> DevolverProveedoresConCorredor(string filtroProveedor, string filtro);
+
+        List<ProveedorDto> ListarProveedor(string text);
+        List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId);
+        TraerProveedorResult TraerProveedorParaCorredor(string cuit);
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
 
         void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory);
         string GetEmailUserActiveDirectory(string UserName);
+        
+        GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);
+        GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory);
     }
 }

@@ -13,23 +13,16 @@ namespace WebDataAgro.Controllers
     public class CubProveedoresController : Controller
     {
         private ICubProveedoresManager mobjCubProveedoresManager;
-
         private IHomeManager mobjHomeManager;
-
         
-
-        private IComercialManager mobjComercialManager;
-
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public CubProveedoresController(ICubProveedoresManager oCubProveedoresManager, IHomeManager oHomeManager, IComercialManager oComercialManager)
-        {
-            
+        public CubProveedoresController(ICubProveedoresManager oCubProveedoresManager, IHomeManager oHomeManager)
+        {            
             mobjCubProveedoresManager = oCubProveedoresManager;
             mobjHomeManager = oHomeManager;
-            mobjComercialManager = oComercialManager;
         }
 
         //-----------------------------------------------------

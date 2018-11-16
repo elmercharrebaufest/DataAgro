@@ -66,24 +66,5 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.DetalleExcel(10, 1, "26-10-2018", null);
             Assert.NotNull(result);
         }
-
-        //[Test]
-        //public void ReporteComprasDelDiaTest()
-        //{
-        //    DateTime.TryParse("26-10-2018", out DateTime fecha);
-        //    var reportes = new ParamReportes() { ComercialActual = 1 };
-        //    reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha)).Returns(new List<ExcelPosicionMaterialDto>()
-        //    {
-        //        new ExcelPosicionMaterialDto()
-        //        {
-        //            Contrato = "123",
-        //            Comercial = "as",
-        //            RazonSocial = "BF"
-        //        }
-        //    });
-
-        //    var result = target.ReporteComprasDelDia("26-10-2018");
-        //    Assert.NotNull(result);
-        //}
-    }
+            }
 }

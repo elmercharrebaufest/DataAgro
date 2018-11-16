@@ -14,6 +14,8 @@
 
 <link rel="stylesheet" href="~/Content/agregarproveedor.css" />
 <link rel="stylesheet" href="~/Content/agregarproveedorResponsive.css" />
+
+<script type="text/javascript" src="~/Scripts/App/AgregarCorredor.js"></script>
 <script type="text/javascript" src="~/Scripts/App/agregarproveedor.js"></script>
 <script type="text/javascript" src="~/Scripts/App/agregarproveedoredit.js"></script>
 <script type="text/javascript" src="~/Scripts/App/ValidacionProveedor.js"></script>
@@ -27,11 +29,14 @@
             <div class="wizard-header-contenedor" id="contactocomercial">
                 Contacto Comercial
             </div>
-            <div class="wizard-header-contenedor" id="produccion">
+            <div class="wizard-header-contenedor noCorredor" id="produccion">
                 Producción
             </div>
-            <div class="wizard-header-contenedor" id="almacenamiento">
+            <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
                 Almacenamiento
+            </div>
+            <div class="wizard-header-contenedor" id="proveedores-corredor" style="display:none;">
+                Proveedores
             </div>
         </div>
     </div>
@@ -77,7 +82,7 @@
 
         </div>
 
-        <div class="formulario-campo campo-calificacion">
+        <div class="formulario-campo campo-calificacion noCorredor">
             <span class="campo-span">Calificación</span>
             <select multiple id="calificacion">
                 <option class="multSelktrImg" image="../Content/Images/1estr.png" value="1"></option>
@@ -88,7 +93,7 @@
             </select>
         </div>
 
-        <h2>Datos proveedor</h2>
+        <h2 id="datos">Datos proveedor</h2>
         <div class="datos-basicos-comentario">
             Domicilio Actividad
         </div>
@@ -102,40 +107,41 @@
             <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion" />
             <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost" />
         </div>
-        <div class="datos-basicos-comentario">
-            Información comercial
-        </div>
-        <div class="formulario-campo campo-operacion">
-            <span class="campo-span">Canales de operación</span>
+        <div class="noCorredor">
+            <div class="datos-basicos-comentario">
+                Información comercial
+            </div>
+            <div class="formulario-campo campo-operacion">
+                <span class="campo-span">Canales de operación</span>
 
-        </div>
-        <div class="formulario-campo campo-destinatario">
-            <span class="campo-span">Entrega a</span>
+            </div>
+            <div class="formulario-campo campo-destinatario">
+                <span class="campo-span">Entrega a</span>
 
-        </div>
-        <div class="formulario-campo campo-condicion">
-            <span class="campo-span">Condiciones preferentes</span>
+            </div>
+            <div class="formulario-campo campo-condicion">
+                <span class="campo-span">Condiciones preferentes</span>
 
-        </div>
-        <div class="formulario-campo">
-            <span class="campo-span">Intermediario</span>
-            <input type="text" class="campo-input-text" id="intermediario" />
-        </div>
-        <div class="formulario-campo">
-            <span class="campo-span">Area de influencia</span>
-            <div class="formulario-campo-radio">
-                <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
-                <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+            </div>
+            <div class="formulario-campo">
+                <span class="campo-span">Intermediario</span>
+                <input type="text" class="campo-input-text" id="intermediario" />
+            </div>
+            <div class="formulario-campo">
+                <span class="campo-span">Area de influencia</span>
+                <div class="formulario-campo-radio">
+                    <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
+                    <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+                </div>
             </div>
         </div>
-
         <div class="datos-basicos-comentario">
             CompraNet
         </div>
 
         <div class="datos-produccion-cap-prod-editor-contenedor">
             <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                <div class="formulario-campo campo-clasificacion-compranet">
+                <div class="formulario-campo campo-clasificacion-compranet noCorredor">
                     <span class="campo-span">Clasificación</span>
 
                 </div>
@@ -147,10 +153,10 @@
                     <span class="campo-span">Bolsa</span>
 
                 </div>
-                <div class="formulario-campo campo-provincia-compranet">
+                <div class="formulario-campo campo-provincia-compranet noCorredor">
                     <span class="campo-span">Provincia</span>
                 </div>
-                <div class="formulario-campo campo-localidad-compranet">
+                <div class="formulario-campo campo-localidad-compranet noCorredor">
                     <span class="campo-span">Localidad</span>
                 </div>
                 <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
@@ -158,34 +164,32 @@
             </div>
         </div>
         </div>
-       
+        <div class="noCorredor">
+            <div class="datos-basicos-comentario">
+                Objetivos
+            </div>
 
-        <div class="datos-basicos-comentario">
-            Objetivos
-        </div>
-
-        <div class="datos-produccion-cap-prod-editor-contenedor">
-            <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                <div class="datos-produccion-cap-prod-editor-granos-titulos">
-                    <div class="produccion-titulo-grano">Grano</div>
-                    <div class="produccion-titulo-grano">Campaña</div>
-                    <div class="produccion-titulo-grano">Toneladas Objetivo</div>
-                </div>
-                <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
-                    <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
-                        <div class="lineaObjetivos0 campo-granos-objetivo ObjetivoGranos">
-
-                            <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivo" id="eliminarObjetivo0" />
-                        </div>
-
+            <div class="datos-produccion-cap-prod-editor-contenedor">
+                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
+                    <div class="datos-produccion-cap-prod-editor-granos-titulos">
+                        <div class="produccion-titulo-grano">Grano</div>
+                        <div class="produccion-titulo-grano">Campaña</div>
+                        <div class="produccion-titulo-grano">Toneladas Objetivo</div>
                     </div>
-                    <div class="agregargranoObjetivo">
-                        + Agregar Objetivo
+                    <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
+                        <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
+                            <div class="lineaObjetivos0 campo-granos-objetivo ObjetivoGranos">
+
+                                <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivo" id="eliminarObjetivo0" />
+                            </div>
+                        </div>
+                        <div class="agregargranoObjetivo">
+                            + Agregar Objetivo
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="datos-basicos-comentario">
             Comentario
         </div>
@@ -377,7 +381,7 @@
                 </div>
                 <div class="guardar-contacto-basico">
                     <div id="GuardarContactoComercial">
-                        Guardar
+                        Agregar
                     </div>
                 </div>
 
@@ -406,10 +410,10 @@
                 <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
             </div>
             <div class="formulario-campo campo-provincia-produccion">
-                
+
             </div>
             <div class="formulario-campo campo-localidad-produccion">
-                
+
             </div>
             <div class="formulario-campo">
                 <span class="campo-span">Hectareas</span>
@@ -428,9 +432,9 @@
                 <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
                     <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
                         <div class="linea0 campo-granos">
-                            
-							<img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano"  id="eliminarGrano0" />
-						</div>
+
+                            <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano" id="eliminarGrano0" />
+                        </div>
                     </div>
                     <div class="agregargrano">
                         + Agregar campaña
@@ -451,7 +455,7 @@
         <div class="formulario-campo">
             <span class="campo-span">Has. Aprobadas Soja Sustentable </span>
             <input type="text" class="campo-input-text" id="has-aprob-sojasust" />
-        </div>                     
+        </div>
     </div>
 
     <div id="formulario-almacenamiento">
@@ -489,7 +493,7 @@
                     <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-grupo">
                         <div class="lineaAlmacenamiento0 campo-granos-almacenamiento" style="position:relative;">
                         </div>
-                        
+
                     </div>
                     <div class="agregargrano-almacenamiento">
                         + Agregar campaña a este campo
@@ -505,7 +509,7 @@
                 <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-contenedor">
                     <div class="datos-almacenamiento-cap-prod-editor-granosalm-cantidades-grupo">
                         <div class="lineaAlmacenamientoGranos0 campo-granos-almacenamientograno" style="position:relative;">
-                            
+
                         </div>
                     </div>
                     <div class="agregargrano-almacenamientograno">
@@ -532,18 +536,105 @@
         </div>
     </div>
 
+    <div id="formulario-proveedorescorredor">
+        <h2>Proveedores del corredor</h2>
+        <div class="datos-proveedores-guardados">
+
+        </div>
+        <div class="contenedor-grupo-proveedorescorredor-edit">
+            <div class="contenedor-proveedorescorredor-comercial">
+                <div class="row provcorr-form">
+                    <input type="hidden" id="provcorrId" />
+                    <input type="hidden" id="corredorId" />
+                    <div class="col-lg-5">
+                        <div class="label-proveedorescorredor">
+                            CUIT
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="provcorr-cuit" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-5">
+                        <div class="label-proveedorescorredor">
+                            Razón Social
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="provcorr-razonsocial" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-5"></div>
+                    <div class="campo-estadoafip-corredor col-lg-7">
+                        <span class="campo-estadoafip-span-corredor">
+                            Estado Registro AFIP
+                        </span>
+                        <img id="imgOperableCorr" src="" />
+                        <span class="campo-estadoafip-span-operable" id="Operable-agregar-corredor" onmouseover="mostrarTooltip(this)" onmouseout="ocultarTooltip(this)">
+                        </span>
+                        <div id="tooltip-corredor" class="lista-contacto-no-operable">
+                            <div class="lista-contacto-no-operable-tooltip">
+                                <span class="span-contacto-no-operable-tooltip-corredor"> </span>
+                            </div>
+                            <div class="lista-contacto-no-operable-tooltip-arrow"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="label-proveedorescorredor">
+                    Domicilio
+                </div>
+                <div>
+                    <div class="provcorr-procedencia row">
+                        <div class="formulario-procedencia">
+                            <input type="text" class="proc-input" id="procedencia" placeholder="Buscar por Localidad" />
+                            <input type="hidden" id="provinciacorrId" />
+                            <input type="hidden" id="localidadcorrId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="formulario-campo col-xs-12">
+                        <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion-provcorr" />
+                        <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost-provcorr" />
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-5">
+                        <div class="label-proveedorescorredor">
+                            Clasificación
+                        </div>
+                    </div>
+                    <div class="col-lg-7 campo-clasificacion-proveedor">
+
+                    </div>
+                </div>
+                <div class="guardar-proveedorescorredor">
+                    <div id="GuardarProveedorCorredor">
+                        Agregar
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="formulario-footer">
         <div class="formulario-footer-cancelar">
             Cancelar
         </div>
-        <div class="formulario-footer-guardar-contacto">
-            Guardar contacto
+        <div class="formulario-footer-guardar-contacto guardar-proveedor">
+            Guardar
         </div>
         <div class="formulario-footer-siguiente">
             Siguiente
         </div>
     </div>
 </div>
+
 
 <div id="modalSalir" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -566,7 +657,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-

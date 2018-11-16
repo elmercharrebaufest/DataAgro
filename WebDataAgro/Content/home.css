@@ -234,12 +234,17 @@
     background-color:#fff;
     padding-bottom: 5px;
 }
+.detalleCorredor {
+    border:1px solid #bbb;
+    background-color: #e6e6e6;
+    border-radius:5px !important;
+}
 
-.lista-contactos-estado-titulo{
-    font-size:14px;
+.lista-contactos-estado-titulo {
+    font-size: 14px;
     font-family: "G-Open Sans-n4", Arial;
-    font-weight:bold;
-    color:#757575;
+    font-weight: bold;
+    color: #757575;
 }
 
 .lista-contactos-estado-guion,
@@ -330,7 +335,6 @@
     right: 125px;
     display:none;
 }
-
 
 
 .lista-contacto-no-operable{

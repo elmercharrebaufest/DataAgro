@@ -90,31 +90,34 @@ button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all span:nth-child(ev
     top: 7px;
 }
 
-.campo-estadoafip img{
-    width:14px;
-    height:14px;
-    vertical-align:-webkit-baseline-middle;
+.campo-estadoafip img,
+.campo-estadoafip-corredor img{
+    width: 14px;
+    height: 14px;
+    vertical-align: -webkit-baseline-middle;
 }
 
 #formulario-contacto,
 #formulario-almacenamiento,
 #formulario-basico,
 #formulario-produccion,
-#formulario-contactocomercial{
-    width:550px;
-    margin:0 auto;
+#formulario-contactocomercial,
+#formulario-proveedorescorredor {
+    width: 550px;
+    margin: 0 auto;
 }
 
 #formulario-contacto h2,
 #formulario-basico h2,
 #formulario-almacenamiento h2,
 #formulario-produccion h2,
-#formulario-contactocomercial h2{
-    text-align:center;
-    font-size:23px;
-    color:#424242;
+#formulario-contactocomercial h2,
+#formulario-proveedorescorredor h2{
+    text-align: center;
+    font-size: 23px;
+    color: #424242;
     font-family: "G-Open Sans-n4", Arial;
-    font-weight:normal;
+    font-weight: normal;
 }
 
 .formulario{
@@ -155,39 +158,61 @@ button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all span:nth-child(ev
     text-align:right;
     position:relative;
 }
+.formulario-procedencia {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left:20px;
+}
 
-.campo-estadoafip{
-    background-color:rgba(150, 235, 198, 0.45);
-    width:274px;
-    text-align:right;
-    margin-left:275px;
-    margin-top:5px;
+.proc-input{
+    width:490px !important;
+}
+.campo-estadoafip {
+    background-color: rgba(150, 235, 198, 0.45);
+    width: 274px;
+    text-align: right;
+    margin-left: 275px;
+    margin-top: 5px;
     border-width: 0px;
-    border-radius: 3px!important;
+    border-radius: 3px !important;
     border-color: rgb(200, 200, 200);
     border-style: solid;
     height: 28px;
-    text-align:left;
-    position:relative;
+    text-align: left;
+    position: relative;
+}
+.campo-estadoafip-corredor {
+    background-color: rgba(150, 235, 198, 0.45);
+    width: 274px;
+    margin-top: 5px;
+    margin-left: 15px;
+    border-width: 0px;
+    border-radius: 3px !important;
+    border-color: rgb(200, 200, 200);
+    border-style: solid;
+    height: 28px;
+    text-align: left;
 }
 
-.campo-estadoafip-span{
+.campo-estadoafip-span,
+.campo-estadoafip-span-corredor {
     font-size: 14px;
     color: #757575;
     font-weight: bold;
     font-family: "G-Open Sans-n4", Arial;
     vertical-align: -webkit-baseline-middle;
     padding: 10px;
-    padding-right:0;
+    padding-right: 0;
 }
 
-.campo-estadoafip-span-operable{
+.campo-estadoafip-span-operable,
+.campo-estadoafip-span-operable-corredor {
     vertical-align: -webkit-baseline-middle;
-    color:#000;
-    font-size:14px;
-    font-weight:bold;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
     font-family: "G-Open Sans-n4", Arial;
-    padding-left:5px;
+    padding-left: 5px;
 }
 
 
@@ -352,15 +377,15 @@ campo-granos-almacenamiento button,
 .modal-cancelar,
 .formulario-footer-guardar-contacto,
 #GuardarContactoComercial,
+#GuardarProveedorCorredor,
 .modal-guardar-contacto,
 .formulario-footer-siguiente,
 .modal-salir-sin-guardar,
 .datos-almacenamiento-cap-prod-editor-contenedor-guardar,
-.datos-produccion-cap-prod-editor-contenedor-guardar
-{
-    display:inline-block;
-    margin-left:5px;
-    cursor:pointer;
+.datos-produccion-cap-prod-editor-contenedor-guardar {
+    display: inline-block;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 .modal-salir-sin-guardar,
@@ -378,22 +403,23 @@ campo-granos-almacenamiento button,
 .modal-guardar-contacto,
 .formulario-footer-guardar-contacto,
 #GuardarContactoComercial,
+#GuardarProveedorCorredor,
 .datos-almacenamiento-cap-prod-editor-contenedor-guardar,
 .datos-produccion-cap-prod-editor-contenedor-guardar,
 .formulario-footer-siguiente,
-.modal-cancelar{
+.modal-cancelar {
     padding: 0px;
     border-width: 1px;
-    border-radius: 3px!important;
+    border-radius: 3px !important;
     border-color: rgb(38, 51, 123);
     border-style: solid;
     background-color: rgb(255, 255, 255);
     width: 183px;
     height: 37px;
     color: rgb(38, 51, 123);
-    font-size:14px;
-    font-weight:bold;
-    text-align:center;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
     vertical-align: middle;
     padding-top: 8px;
 }
@@ -425,16 +451,18 @@ campo-granos-almacenamiento button,
 .modal-guardar-contacto:hover,
 .formulario-footer-guardar-contacto:hover,
 #GuardarContactoComercial:hover,
+#GuardarProveedorCorredor:hover,
 .datos-almacenamiento-cap-prod-editor-contenedor-guardar:hover,
-.datos-produccion-cap-prod-editor-contenedor-guardar:hover{
+.datos-produccion-cap-prod-editor-contenedor-guardar:hover {
     background-color: rgb(38, 51, 123);
     color: rgb(255, 255, 255);
 }
 
 #formulario-produccion,
 #formulario-almacenamiento,
-#formulario-contactocomercial{
-    display:none;
+#formulario-contactocomercial,
+#formulario-proveedorescorredor {
+    display: none;
 }
 
 
@@ -460,15 +488,17 @@ campo-granos-almacenamiento button,
     margin:0 auto!important;
 }
 
-#direccion{
-    display:inline-block;
-    width:70%;
-    margin-right:15px;
+#direccion,
+#direccion-provcorr {
+    display: inline-block;
+    width: 70%;
+    margin-right: 15px;
 }
 
-#codpost{
-    display:inline-block;
-    width:25%;
+#codpost,
+#codpost-provcorr {
+    display: inline-block;
+    width: 25%;
 }
 
 
@@ -485,7 +515,21 @@ campo-granos-almacenamiento button,
 #codpost:-ms-input-placeholder {
     text-align:center;
 }
+#codpost-provcorr::-webkit-input-placeholder {
+    text-align: center;
+}
 
+#codpost-provcorr:-moz-placeholder {
+    text-align: center;
+}
+
+#codpost-provcorr::-moz-placeholder {
+    text-align: center;
+}
+
+#codpost-provcorr:-ms-input-placeholder {
+    text-align: center;
+}
 .formulario-campo-radio{
     display:inline-block;
     width:300px;
@@ -813,11 +857,12 @@ label[for="kmz-almacenamiento"] .campo-span{
     transform: translateY(-50%);
 }
 
-.contenedor-contacto-comercial{
-    background-color:#e6e6e6;
-    padding:15px;
-    border:1px solid #d1d1d1;
-    border-radius:3px!important;
+.contenedor-contacto-comercial,
+.contenedor-proveedorescorredor-comercial {
+    background-color: #e6e6e6;
+    padding: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 3px !important;
 }
 
 .editar-contacto-basico{
@@ -844,15 +889,17 @@ label[for="kmz-almacenamiento"] .campo-span{
     font-weight:bold!important;
 }
 
-.concom-form{
-    margin-top:10px;
+.concom-form,
+.provcorr-form {
+    margin-top: 10px;
 }
 
-.label-contacto{
-    margin-left:50px;
-    color:#757575;
-    font-size:14px;
-    font-family:"G-Open Sans-n4", Arial !important;
+.label-contacto,
+.label-proveedorescorredor {
+    margin-left: 50px;
+    color: #757575;
+    font-size: 14px;
+    font-family: "G-Open Sans-n4", Arial !important;
     padding-top: 10px;
 }
 
@@ -951,11 +998,12 @@ label[for="kmz-almacenamiento"] .campo-span{
     top: 14px;
 }
 
-.guardar-contacto-basico{
-    margin-top:20px;
-    padding-top:20px;
-    border-top:1px solid #bbb;
-    text-align:right;
+.guardar-contacto-basico,
+.guardar-proveedorescorredor {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #bbb;
+    text-align: right;
 }
 
 #concom-fechanacimientodia{
@@ -1016,11 +1064,12 @@ label[for="kmz-almacenamiento"] .campo-span{
     margin-bottom:0;
 }
 
-.contenedor-contacto-comercial{
-    background-color:#e6e6e6;
-    padding:15px;
-    border:1px solid #d1d1d1;
-    border-radius:3px!important;
+.contenedor-contacto-comercial,
+.contenedor-proveedorescorredor-comercial {
+    background-color: #e6e6e6;
+    padding: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 3px !important;
 }
 
 .img-contacto-comercial{
@@ -1087,8 +1136,9 @@ label[for="kmz-almacenamiento"] .campo-span{
     margin-bottom:20px;
 }
 
-.contenedor-contacto-comercial{
-    margin-top:10px;
+.contenedor-contacto-comercial,
+.contenedor-proveedorescorredor-comercial {
+    margin-top: 10px;
 }
 
 #concom-principal, #concom-compranet {
@@ -1257,4 +1307,9 @@ button span img.multSelktrImg{
     right: 65px;
     top: 13px;
     cursor:pointer;
+}
+
+ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb {
+    margin-top: 0;
+    margin-bottom: 0;
 }

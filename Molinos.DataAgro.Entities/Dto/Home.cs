@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Condicion { get; set;}
         public DateTime? FechaAlta { get; set; }
         public string GrupoDeCompras { get; set; }
+        public int Segmentacion { get; set; }
     }
 
     public class oParamBusqueda

@@ -6,29 +6,22 @@
     var ProveedorId = '@ViewBag.ProveedorId';
     var MostrarAgenda = '@ViewBag.MostrarAgenda';
     //var mostrarEditar = '@ViewBag.MostrarEditar';
-    
+
     var extras = {};
     extras.AgendaCita = '@System.Configuration.ConfigurationManager.AppSettings["AgendaCita"]';
     extras.AgendaTareas = '@System.Configuration.ConfigurationManager.AppSettings["AgendaTareas"]';
-
-    /*if(mostrarEditar)
-    {        
-        $('#AgregarContacto').hide();
-    }*/
-
 
 </script>
 
 <link rel="stylesheet" href="~/Content/proveedorDetalle.css" />
 <link rel="stylesheet" href="~/Content/proveedorDetalleResponsive.css" />
 <script type="text/javascript" src="~/Scripts/App/proveedorDetalle.js"></script>
+<script type="text/javascript" src="~/Scripts/App/detalleCorredor.js"></script>
 
 <div class="container" id="detalle">
     <div class="detalle-contacto-header">
         <div class="row">
-            
-            
-            
+
         </div>
     </div>
     <div class="row">
@@ -63,11 +56,10 @@
                 <div class="contacto-detalle-basico-contenedor-datos">
 
                     <div class="contacto-detalle-basico-contenedor-datos-tipo">
-                        
+
                     </div>
-                  
+
                     <div class="contacto-detalle-basico-contenedor-datos-comentarios">
-                        
                     </div>
                 </div>
             </div>
@@ -78,22 +70,22 @@
                     <div class="contenedor-contacto-comercial-titulo">
                         <img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" />
                         <span class="span-contacto-comercial contacto-comercial-principal-nombre">
-                            
+
                         </span>
                     </div>
                     <div class="contenedor-contacto-comercial-posicion">
                         <span class="contenedor-contacto-comercial-posicion-izq contacto-principal-cargo">
-                        
+
                         </span>
                         <span class="contenedor-contacto-comercial-posicion-der contacto-principal-puesto">
-                            
+
                         </span>
                     </div>
                     <div class="contenedor-contacto-comercial-telefonos contacto-principal-telefonos">
-                    
+
                     </div>
                     <div class="contenedor-contacto-comercial-mails contacto-principal-mails">
-                        
+
                     </div>
                     <div class="contenedor-contacto-comercial-extras">
                         <div class="row">
@@ -104,7 +96,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <span class="contenedor-contacto-comercial-extras-value contacto-principal-fechanacimiento">
-                                    
+
                                 </span>
                             </div>
                         </div>
@@ -124,7 +116,6 @@
                 </div>
             </div>
             <!-- HASTA ACA -->
-
 
             <div class="contacto-detalle-moa">
                 <div class="contacto-detalle-moa-titulo"><span>Cliente MOA: </span><span class="cliente-moa-val"></span></div>
@@ -158,7 +149,7 @@
             </div>
 
         </div>
-        <div class="col-lg-9 color-claro">          
+        <div class="col-lg-9 color-claro">
             <div class="col-lg-6 detalle-contacto-header-campana-filtro"></div>
             <div class="col-lg-6 detalle-contacto-header-exportar">
                 <a class="exportar-contactos" id="ExportarPdf"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
@@ -188,15 +179,15 @@
                         <div class="wizard-header-contenedor whc-selected" id="contacto">
                             Datos contacto
                         </div>
-                        <div class="wizard-header-contenedor" id="produccion">
+                        <div class="wizard-header-contenedor noCorredor" id="produccion">
                             Producción
                         </div>
-                        <div class="wizard-header-contenedor" id="almacenamiento">
+                        <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
                             Almacenamiento
                         </div>
                         @if (ViewBag.MostrarEditar == true)
                         {
-                            <div class="wizard-header-contenedor" id="agenda">
+                            <div class="wizard-header-contenedor noCorredor" id="agenda">
                                 Agenda
                             </div>
                         }
@@ -206,7 +197,9 @@
                                 <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
                             </div>
                         }
-                        
+                        <div class="wizard-header-contenedor" id="proveedoresCorredor" style="display:none;">
+                            Proveedores
+                        </div>
 
 
                     </div>
@@ -310,8 +303,8 @@
                     </div>
                     <div class="datos-produccion-cap-prod-editor-contenedor" style="text-align:left">
                         <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row noCorredor">
+                                <div class="col-lg-6 ">
                                     <div class="label-contacto">
                                         Clasificación
                                     </div>
@@ -381,13 +374,13 @@
                 </div>
                 <div class="wd35p">
 
-                    <div class="datos-contacto-titular contacto-titular-comerciales">
+                    <div class="datos-contacto-titular contacto-titular-comerciales noCorredor">
                         <span>Contactos comerciales</span>
                     </div>
                     <div class="contenedor-grupo-contactos-comerciales">
 
                     </div>
-                    
+
                 </div>
             </div>
             <div id="datos-produccion">
@@ -407,13 +400,13 @@
                     </div>
                 </div>
                 <div id="campana16-17">
-                    
+
                 </div>
                 <div id="campana15-16">
-                    
+
                 </div>
                 <div id="campana14-15">
-                    
+
                 </div>
             </div>
             <div id="datos-almacenamiento">
@@ -442,7 +435,15 @@
 
                 </div>
             </div>
+            <div id="datos-proveedorescorredor">
+                <div class="col-lg-12">
+                        <div class="wizard-header-contenedor-grupo">
+                                <div class="proveedores-corredor">
 
+                                </div>
+                    </div>
+                </div>
+            </div>
             <div id="datos-agenda">
                 <div class="row datos-contacto-titulares">
                     <div class="wd30p">
@@ -457,7 +458,7 @@
                     </div>
                 </div>
                 <div class="proximas-actividades-contenedor">
-                    
+
                 </div>
                 <div class="agenda-contenedor">
                     <div class="agenda-contenedor-agregar">
@@ -470,11 +471,11 @@
                             Tipo de actividad
                         </div>
                         <div class="agenda-contenedor-agregar-campo-input campo-tipoactividad">
-                            
+
                         </div>
                     </div>
-                    
-                        
+
+
                     <div class="agenda-contenedor-agregar-campo">
                         <div class="agenda-contenedor-agregar-campo-label">
                             Detalle Actividad
@@ -490,7 +491,7 @@
                             Contacto
                         </div>
                         <div class="agenda-contenedor-agregar-campo-input campo-contactocomercial">
-                            
+
                         </div>
                     </div>
 
@@ -535,11 +536,11 @@
                             </div>
                         </div>
                     </div>
-                   
+
                     <div class="linea-separador-agenda"></div>
                     @if (ViewBag.MostrarEditar == true)
                     {
-                        <div class="guardar-agenda"  id="guardarAgendaId">
+                        <div class="guardar-agenda" id="guardarAgendaId">
                             Guardar
                         </div>
                     }
@@ -568,7 +569,7 @@
                                 <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="3" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
                                 <label for="tipo-act-Mail-chat"><input type="checkbox" value="4" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail</label>
                                 <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="5" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" />Chat</label>
-                               </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -580,7 +581,7 @@
                         <em>Último contacto <span class="actividad-ultimo-contacto">hoy</span></em>
                     </div>
                     <div class="historial-actividad-grupo-contenedor">
-                        
+
                     </div>
                 </div>
             </div>

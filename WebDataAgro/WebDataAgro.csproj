@@ -896,11 +896,13 @@
     <Content Include="Scripts\App\AbmMaterial.js" />
     <Content Include="Scripts\App\AbmProvincia.js" />
     <Content Include="Scripts\App\Agenda.js" />
+    <Content Include="Scripts\App\AgregarCorredor.js" />
     <Content Include="Scripts\App\agregarproveedor.js" />
     <Content Include="Scripts\App\agregarproveedoredit.js" />
     <Content Include="Scripts\App\CompraNetIndex.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
+    <Content Include="Scripts\App\detalleCorredor.js" />
     <Content Include="Scripts\App\firebase-suscribir.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />

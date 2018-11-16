@@ -8,6 +8,8 @@ namespace WebDataAgro.Services
     public interface IDataAgroServices
     {
         #region Servicios del ABM de Destinatarios
+        [OperationContract]
+        Resultado Ping();
 
         [OperationContract]
         Resultado GrabarRiesgoComercial(RiesgoComercial oRiesgos);

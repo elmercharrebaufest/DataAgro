@@ -1,5 +1,5 @@
 ﻿var viewModel;
-var _DefaultDateTemplate = "{0:dd/MM/yyyy hh:mm:ss}";
+var _DefaultDateTemplate = "{0:dd/MM/yyyy hh:mm:ss tt}";
 var datosIniAbmCentro;
 
 $(document).ready(function () {

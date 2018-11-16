@@ -31,5 +31,6 @@ namespace Molinos.DataAgro.Interfaces
         void FinalizacionAutomatica(string idActiveDirectory);
         void BorradoAutomatico();
         List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo);
+        DatosCompraNetDto TraerDatosCompraNet(int id);
     }
 }

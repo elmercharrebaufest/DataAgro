@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
                 cont.Estado = con.Estado;
                 cont.FechaAlta = con.FechaAlta;
                 cont.GrupoDeCompras = con.GrupoDeCompras;
-
+                cont.Corredor = con.Segmentacion == 5 || con.Segmentacion == 7 ? true : false;
                 CargarOperabilidad(cont, con);
                 if (cont.NoOperable == true)
                 {

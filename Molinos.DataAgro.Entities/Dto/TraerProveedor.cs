@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Entities.Dto
 		public string RiesgoComercialSap { get; set; }
 		public string Situacion { get; set; }
 		public string Segmentacion { get; set; }
+        public string GrupoSegmentacion { get; set; }
         public string Email1 { get; set; }
 		public string Email2 { get; set; }
 		public string Email3 { get; set; }
@@ -377,6 +378,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Consignatario { get; set; }
         public int BoletoId { get; set; }
         public int BolsaId { get; set; }
+        public bool Corredor { get; set; }
         public DatosLocalidadProvincia() {
             this.ProveedorId = 0;
             this.CUIT = "";

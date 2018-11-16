@@ -414,7 +414,7 @@ function armarContacto() {
     var objetivos = result.ObjetivosTraerPorProveedorId;
     var acopiomaterial = result.AcopioMaterialPorProveedores;
     armarSelectHeader(historial);
-
+    
     $(".detalle-contacto-header-estado-span").html(basico[0].Estado);
     var estrellas = "";
     for (var i = 0; i < basico[0].Calificacion; i++) {
@@ -894,7 +894,7 @@ function armarContacto() {
     $(".historial-actividad-grupo-contenedor").append(htmlHist);
 
     if (objetivos && objetivos.length) {
-        var htmlCamp = '<div class="datos-contacto-titular">' +
+        var htmlCamp = '<div class="noCorredor">< div class="datos-contacto-titular noCorredor" > ' +
             '<span>Objetivos</span>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-contenedor">' +
@@ -905,19 +905,19 @@ function armarContacto() {
             '<div class="produccion-titulo-grano">Objetivo</div>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
-            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo"></div>';
 
         for (var ii in objetivos) {
             (function (i) {
-                htmlCamp += '           <div class="lineaObjetivos campo-granos-objetivo">' +
+                htmlCamp += '<div class="noCorredor"><div class="lineaObjetivos campo-granos-objetivo">' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Campaña + '</span></div>' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Material + '</span></div>' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + (objetivos[i].ToneladasObjetivos ? objetivos[i].ToneladasObjetivos : "0") + ' TNs</span></div>' +
-                    '</div>';
+                    '</div></div>';
             })(ii);
         }
     } else {
-        var htmlCamp = '<div class="datos-contacto-titular">' +
+        var htmlCamp = '<div class="noCorredor"><div class="datos-contacto-titular">' +
             '<span>Objetivos</span>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-contenedor">' +
@@ -926,7 +926,7 @@ function armarContacto() {
             '<div class="produccion-titulo-grano" style="width:100%!important;">No hay Objetivos cargados</div>'
         '</div>' +
             '<div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">' +
-            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">';
+            '<div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo"></div>S';
     }
 
     htmlCamp += '</div>' +
@@ -939,6 +939,9 @@ function armarContacto() {
         setTimeout(function () {
             $("#agenda").trigger("click");
         }, 300);
+    }
+    if (basico[0].GrupoSegmentacion === "Corredores") {
+        armarDetalleCorredor(datos);
     }
 }
 
@@ -1308,6 +1311,7 @@ function armarEstilosyFuncionesDetalle() {
         $("#contacto").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
+        $("#proveedoresCorredor").removeClass("whc-selected");
         $("#contacto").addClass("whc-selected");
         if ($("#datos-produccion").is(":visible")) {
             $("#datos-produccion").fadeOut("slow", function () {
@@ -1319,6 +1323,10 @@ function armarEstilosyFuncionesDetalle() {
             });
         } else if ($("#datos-almacenamiento").is(":visible")) {
             $("#datos-almacenamiento").fadeOut("slow", function () {
+                $("#datos-contacto").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-proveedorescorredor").is(":visible")) {
+            $("#datos-proveedorescorredor").fadeOut("slow", function () {
                 $("#datos-contacto").fadeIn("slow", function () { });
             });
         }
@@ -1363,6 +1371,17 @@ function armarEstilosyFuncionesDetalle() {
             });
         }
     });
+    $("#proveedoresCorredor").click(function () {
+        $("#proveedoresCorredor").removeClass("whc-selected");
+        $("#contacto").removeClass("whc-selected");        
+        $("#proveedoresCorredor").addClass("whc-selected");
+        if ($("#datos-contacto").is(":visible")) {
+            $("#datos-contacto").fadeOut("slow", function () {
+                $("#datos-proveedorescorredor").fadeIn("slow", function () { });
+            });
+        }
+    });
+
     $("#16-17").click(function () {
         $("#16-17").removeClass("whc-selected");
         $("#15-16").removeClass("whc-selected");

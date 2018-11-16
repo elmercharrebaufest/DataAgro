@@ -1025,8 +1025,9 @@
 #datos-agenda,
 #datos-produccion-edit,
 #datos-almacenamiento-edit,
-#datos-almacenamiento{
-    display:none;
+#datos-almacenamiento,
+#datos-proveedorescorredor {
+    display: none;
     position: relative;
     min-height: 150px;
 }
@@ -2316,4 +2317,12 @@ almacenamiento-titulo-hastn,
 .contenedor-contacto-comercial-mails i,
 .contenedor-contacto-comercial-mails.contacto-principal-mails i {
     text-transform: lowercase;
+}
+
+.contenedor-proveedorescorredor-comercial {
+    background-color: #e6e6e6;
+    padding: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 3px !important;
+    margin:5px 0;
 }

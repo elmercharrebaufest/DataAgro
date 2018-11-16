@@ -207,7 +207,6 @@
     <Build Include="dbo\Tables\Contrato.sql" />
     <Build Include="dbo\Tables\FijacionDePrecioContrato.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_BasicoProveedorTraerPorCuit.sql" />
-    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaProveedores.sql" />
     <Build Include="dbo\Tables\EstadoContrato.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerAlmacenamiento.sql" />
     <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerMaterialesAModificar.sql" />
@@ -230,6 +229,7 @@
     <Build Include="dbo\Stored Procedures\DataAgro_BusquedaLocalidades.sql" />
     <Build Include="dbo\Tables\FechaFeriado.sql" />
     <Build Include="dbo\Tables\SISA.sql" />
+    <Build Include="dbo\Tables\CorredorProveedor.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

@@ -220,21 +220,21 @@ namespace Molinos.DataAgro.Test.Controllers
                 a);
         }
 
-        //[Test]
-        //public void ExportarIndicadoresTestComprasMapaTest()
-        //{
-        //    var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "compras", Grafico = "mapa" };            
-        //    homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-        //    reportesManagerMock.Setup(x => x.TransformarFiltros(reportes)).Returns(reportes);
-        //    reportesManagerMock.Setup(x => x.TraerComprasMapaExportacion(reportes)).Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini() { Cuit = "1", Comercial = "A" } });
-        //    var result = target.ExportarIndicadores(reportes);
+        [Test]
+        public void ExportarIndicadoresTestComprasMapaTest()
+        {
+            var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "compras", Grafico = "mapa" };
+            homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
+            reportesManagerMock.Setup(x => x.TransformarFiltros(reportes)).Returns(reportes);
+            reportesManagerMock.Setup(x => x.TraerComprasMapaExportacion(reportes)).Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini() { Cuit = "1", Comercial = "A" } });
+            var result = target.ExportarIndicadores(reportes) ;
+            var model = result.Result as JsonResult;
+            Assert.NotNull(result);
 
-        //    Assert.NotNull(result);
+            reportesManagerMock.Verify(x => x.TransformarFiltros(It.IsAny<ParamReportes>()), Times.Once);
+            reportesManagerMock.Verify(x => x.TraerComprasMapaExportacion(It.IsAny<ParamReportes>()), Times.Once);
 
-        //    var a = serializer.Serialize(result);
-        //    Assert.AreEqual(
-        //        "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"DownloadKey\":\"WszmTKLE1LCMZDYuGkZMecLKST6pYKlLDhzvShJIufWpJpewxSsGSuGMDa%2bo44GI\",\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
-        //        a);
-        //}        
+            Assert.IsTrue(((ReportesModel)model.Data).DownloadKey != "");
+        }
     }
 }

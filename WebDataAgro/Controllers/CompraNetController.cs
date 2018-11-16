@@ -300,9 +300,9 @@ namespace WebDataAgro.Controllers
             };
         }
         
-        public int ObtenerProveedorId(string Cuit)
+        public int ObtenerProveedorId(string Cuit, bool corredor)
         {
-            return mobjProveedorManager.TraerProveedorPorCuit(Cuit).ProveedorId;
+            return mobjProveedorManager.TraerProveedorPorCuit(Cuit, corredor).ProveedorId;
         }
 
         public ActionResult ObtenerLocalidadId(string localidad, string provincia)
@@ -413,6 +413,22 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjContratoManager.TraerContratosPendientes(GlobalVariables.Equipo),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult ObtenerDatosCompraNet(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.TraerDatosCompraNet(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult ObtenerFijacionesAutomaticas(string CuitProveedor,string CuitCorredor, int materialId, string Filtro)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(CuitProveedor, CuitCorredor, materialId, Filtro),
                 MaxJsonLength = Int32.MaxValue
             };
         }

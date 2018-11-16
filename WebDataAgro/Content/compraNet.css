@@ -71,6 +71,10 @@ label{
     margin-bottom:12px;
 }
 
+#lblPlanCanje {
+   width:76px;
+}
+
 #pivotgrid {
     display: inline-block;
     vertical-align: top;
@@ -650,13 +654,40 @@ body {
             width: max-content;
         }
     }
+    @media (min-width: 768px) {
+        #lblBase {
+            margin-right: 66px;
+        }
 
-    @media (max-width: 991px) {
-        .descuento-fecha {
-            width: -webkit-fill-available;
+        #lblPlan {
+            width: 76px;
+            margin-right: 22px;
+        }
+
+        #lblPropio {
+            margin-right: 57px;
+        }
+
+        #mercEnDepLabel {
+            margin-right: 5px;
         }
     }
 
+    @media (max-width: 991px) {
+        .descuento-fecha {
+        width: -webkit-fill-available;
+    }
+}
+    @media (max-width: 991px) and (min-width: 768px) {
+        #mercEnDepLabel {
+            margin: 0 0 12px 16px;
+        }
+    }
+    @media (min-width: 992px) {
+        .widthButton {
+            width: 91.5%;
+        }
+    } 
     @media (max-width: 1216px) {
         .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
         .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
@@ -768,5 +799,11 @@ body {
         width:500px;
     }
 }
-
-
+.datoscontrato {
+    font-size: 13px;
+    color: darkgrey;
+}
+.datoscontrato span {
+    color: darkseagreen;
+    display:inline-block;
+}

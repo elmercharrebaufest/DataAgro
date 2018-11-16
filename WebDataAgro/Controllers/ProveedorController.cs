@@ -287,8 +287,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-
+        
         public async Task<ActionResult> ImprimirReporteProveedor(int ProveedorId)
         {
             var model = new ReportesModel();
@@ -325,15 +324,53 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
-        public JsonResult BuscarProveedores(string filtro)
+        public JsonResult BuscarCorredores(string filtro,bool corredor)
         {
-            return Json(mobjProveedorManager.DevolverProveedores(filtro), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedores(filtro, corredor), JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, bool corredor)
+        {
+                if (filtro == "")
+            {
+                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, corredor), JsonRequestBehavior.AllowGet);
+            }
+        else
+            { 
+                return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor,filtro), JsonRequestBehavior.AllowGet);
+            }
+        }
         public JsonResult BuscarLocalidades(string filtro)
         {
            return Json(mobjLocalidadManager.DevolverLocalidades(filtro), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult TraerProveedoresCorredor(int ProveedorId)
+        {
+            return Json(mobjProveedorManager.ListarProveedorCorredor(ProveedorId), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult TraerProveedorParaCorredor(string cuit)
+        {
+            return Json(mobjProveedorManager.TraerProveedorParaCorredor(cuit), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GrabarCorredor(NuevoCorredor oParam)
+        {
+
+            GrabarProveedorResult model = new GrabarProveedorResult();
+
+            if (oParam.CorredorId != null && oParam.CorredorId != 0)
+            {
+                model = mobjProveedorManager.UpdateCorredor(oParam, GlobalVariables.IdActiveDirectory);
+            }
+            else
+            {
+                model = mobjProveedorManager.GrabarNuevoCorredor(oParam, GlobalVariables.IdActiveDirectory);
+            }
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
         }
     }
 }

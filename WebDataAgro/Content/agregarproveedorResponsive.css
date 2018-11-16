@@ -87,9 +87,9 @@
             width:80px;
         }
 
-        .campo-provincia button, .campo-provincia-almacenamiento button, .campo-localidad button, .campo-localidad-almacenamiento button, .campo-granos button, .campo-granos-almacenamiento button, .campo-granos-almacenamientograno button, .campo-provincia-produccion button, .campo-localidad-produccion button, .campo-sin-span{
-            width:274px!important;
-        }
+    .campo-provincia button, .campo-provincia-almacenamiento button, .campo-localidad button, .campo-localidad-almacenamiento button, .campo-granos button, .campo-granos-almacenamiento button, .campo-granos-almacenamientograno button, .campo-provincia-produccion button, .campo-localidad-produccion button, .campo-sin-span, .proc-input {
+        width: 274px !important;
+    }
 
         #direccion{
             margin-right:0;

@@ -1,4 +1,6 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Agent;
+using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -72,7 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x => new FijacionDePrecioContratoIni
                 {
                     FijacionDePrecioContratoId = x.FijacionDePrecioContratoId,
-                    ContratoId = x.ContratoId,
+                    ContratoId = x.ContratoSAP,
                     Proveedor = x.Proveedor.RazonSocial,
                     Fecha = x.Fecha.ToString(),
                     Comercial = x.Comercial.Nombres,
@@ -82,7 +85,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Ampliaciones = x.Ampliaciones,
                     Estado = x.Estado.Descripcion,
                     Observacion = x.Observacion
-                }, x => contratoId == 0 || x.ContratoId == contratoId);
+                }, x => contratoId == 0 || x.ContratoSAP == contratoId);
         }
     
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
@@ -138,11 +141,22 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
-
+            if (oParam.ContratoSAP == 0)
+            {
+                oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
+            }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
+            }
+            if (oParam.ContratoSAP != 0) {
+                var cantidadContrato = repositorio.Obtener<Contrato, double>(x=>x.ContratoSAP == oParam.ContratoSAP, x=>x.Cantidad);
+                var cantidadAplicada = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == oParam.ContratoSAP && x.FijacionDePrecioContratoId != oParam.FijacionDePrecioContratoId).Select(x => x.Cantidad).Sum();
+                if (oParam.Cantidad > cantidadContrato - (double)cantidadAplicada)
+                {
+                    oErrorMessages.Error("CantidadId", "La cantidad excede los kilos pendientes a aplicar");
+                }
             }
             return oErrorMessages;
         }
@@ -158,6 +172,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
 
+            var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.ContratoId);
             if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
             {
                 var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
@@ -166,7 +181,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;
                 }
-
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
                 oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
@@ -175,12 +189,15 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
                 oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
                 oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
-                oFijacionDePrecioSave.ContratoId = oFijacionDePrecio.ContratoId;
+                oFijacionDePrecioSave.ContratoId = oContratoId;
                 oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
+                oFijacionDePrecioSave.CorredorId = oFijacionDePrecio.CorredorId;
+                oFijacionDePrecioSave.ContratoSAP = oFijacionDePrecio.ContratoSAP;
             }
             else
             {
+                oFijacionDePrecio.ContratoId = oContratoId;
                 repositorio.Agregar(oFijacionDePrecio);
             }
 
@@ -241,13 +258,32 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
             {
-                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
-
-                //Envio de mail
-                mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
-
+                if (oFijacionDePrecioSave.CorredorId != null)
+                {
+                    try
+                    {
+                        var relacionCorredor = new RelacionCorredorProveedor(repositorio);
+                        if (!relacionCorredor.ObtenerRelacionCorredorProveedor(oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT))
+                        {
+                            throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                        repositorio.GuardarCambios();
+                        logger.Error(e);
+                        oEntityErrors.Error("", e.Message);
+                        return oEntityErrors;
+                    }
+                }
                 try
                 {
+                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
+                    string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
+                    //Envio de mail
+                    mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
+
                     repositorio.GuardarCambios();
                     var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
                     foreach (var comercialId in comerciales)
@@ -277,7 +313,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
+        private string SAPFinalizarFijacion(FijacionDePrecioContrato fijacion)
+        {
+            var SapFinalizarFijacion = new FinalizarFijacionAgent(logger, repositorio);
+            return SapFinalizarFijacion.Finalizar(fijacion);
+        }
         public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -338,6 +378,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public BasicoContrato TraerFijacion(int id)
         {
+            var sap = repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == id, x => x.ContratoSAP);
+            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap && x.FijacionDePrecioContratoId != id).Sum();
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
@@ -381,10 +423,28 @@ namespace Molinos.DataAgro.Business.Managers
                 BoletoDescripcion = "",
                 BolsaDescripcion = "",
                 CondicionFijacionDescripcion = "",
-                ClasificacionDescripcion = ""
+                ClasificacionDescripcion = "",
+                Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
+                DatosFijacion = new DatosFijacionDeContratoDto() {
+                    ContratoId = fijac.ContratoSAP,
+                    KilosAplicados = cantidad,
+                    KilosPendiente = fijac.Contrato.Cantidad - cantidad,
+                    FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",
+                    FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : ""
+                }
             });
             return contrato;
         }
+
+        public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor,int materialId, string filtro) {
+            var contratos = ContratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor,materialId, filtro, repositorio);
+            return contratos;
+        }
+
     }
 }
 

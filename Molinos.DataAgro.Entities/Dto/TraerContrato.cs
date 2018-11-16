@@ -95,6 +95,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DescuentoBonificacionDto> Descuentos { get; set; }
         public List<CalidadDto> Calidades { get; set; }
         public bool? MercsDeposito { get; set; }
+        public string Corredor { get; set; }
+        public int  CorredorId { get; set; }
+        public DatosFijacionDeContratoDto DatosFijacion { get; set; }
     }
 
 

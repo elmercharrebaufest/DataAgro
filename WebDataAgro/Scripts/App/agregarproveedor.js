@@ -259,6 +259,9 @@ function armarSelects(result) {
     htmlSegmentacion += '</select>';
 
     $(".campo-segmentacion").append(htmlSegmentacion);
+    $('#segmentacion').change(function () {
+            CrearCorredor();
+    });
 
     var htmlTipoTelefono = "";
     htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono1">';
@@ -557,6 +560,17 @@ function armarSelects(result) {
     htmlClasificacionCompraNet += '</select>';
     $(".campo-clasificacion-compranet").append(htmlClasificacionCompraNet);
 
+    var htmlClasificacionCorredorProveedor = "";
+    htmlClasificacionCorredorProveedor += '<select class="campo-input-select" id="clasificacion-proveedor-corredor">';
+    htmlClasificacionCorredorProveedor += '<option value = "null">Seleccione...</option>';
+    for (var ii in result.ClasComNet) {
+        (function (i) {
+            htmlClasificacionCorredorProveedor += '<option value="' + result.ClasComNet[i].Id + '">' + result.ClasComNet[i].Descripcion + '</option>';
+        })(ii);
+    }
+    htmlClasificacionCorredorProveedor += '</select>';
+    $(".campo-clasificacion-proveedor").append(htmlClasificacionCorredorProveedor);
+
     var htmlBoletoCompraNet = "";
     htmlBoletoCompraNet += '<select class="campo-input-select" id="boleto-compranet">';
     htmlBoletoCompraNet += '<option value = "null">Seleccione...</option>';
@@ -583,7 +597,8 @@ function armarSelects(result) {
     htmlConsignatarioCompraNet += '<input class="campo-input-text check-compranet" type="checkbox" id="consignatario-compranet">';
     $(".campo-consignatario-compranet").append(htmlConsignatarioCompraNet);
     //se oculta/muestra el consignatario
-    $("#clasificacion-compranet").change(function () { mostrarConsignatario() })
+    $("#clasificacion-compranet").change(function () { mostrarConsignatario(); });
+
     $("#agregarTelefono").click(function () {
         if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
             if (!validateNumber($("#Telefono1").val())) {
@@ -1403,7 +1418,7 @@ function armarFuncionalidades() {
         $("label[for='kmz'] img").attr('src', "../content/images/upload.png");
         $("label[for='kmz'] .campo-span").css({
             color: '#017940'
-        })
+        });
     }, function () {
         $("label[for='kmz']").css({
             'background-color': '#017940'
@@ -1412,7 +1427,7 @@ function armarFuncionalidades() {
         $("label[for='kmz'] .campo-span").css({
             color: '#fff',
             border: 'none'
-        })
+        });
     });
 
     $("#kmz").change(function (x) {
@@ -1427,7 +1442,7 @@ function armarFuncionalidades() {
         $("label[for='kmz-almacenamiento'] img").attr('src', "../content/images/upload.png");
         $("label[for='kmz-almacenamiento'] .campo-span").css({
             color: '#017940'
-        })
+        });
     }, function () {
         $("label[for='kmz-almacenamiento']").css({
             'background-color': '#017940'
@@ -1436,7 +1451,7 @@ function armarFuncionalidades() {
         $("label[for='kmz-almacenamiento'] .campo-span").css({
             color: '#fff',
             border: 'none'
-        })
+        });
     });
 
     $("#kmz-almacenamiento").change(function (x) {
@@ -1444,122 +1459,83 @@ function armarFuncionalidades() {
     });
 
     $("#contacto").click(function () {
-        $("#contacto").removeClass("whc-selected");
-        $("#produccion").removeClass("whc-selected");
-        $("#almacenamiento").removeClass("whc-selected");
-        $("#contactocomercial").removeClass("whc-selected");
+        limpiarSelected();
         $("#contacto").addClass("whc-selected");
-
-        if ($("#formulario-basico").is(":visible")) {
-            $("#formulario-basico").fadeOut("slow", function () {
-                $("#formulario-contacto").fadeIn("slow");
-            });
-        } else if ($("#formulario-produccion").is(":visible")) {
-            $("#formulario-produccion").fadeOut("slow", function () {
-                $("#formulario-contacto").fadeIn("slow");
-            });
-        } else if ($("#formulario-almacenamiento").is(":visible")) {
-            $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#formulario-contacto").fadeIn("slow");
-            });
-        } else if ($("#formulario-contactocomercial").is(":visible")) {
-            $("#formulario-contactocomercial").fadeOut("slow", function () {
-                $("#formulario-contacto").fadeIn("slow");
-            });
-        }
+        
+        esconderForms("formulario-contacto");
 
         $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").show();
     });
 
     $("#contactocomercial").click(function () {
-        $("#contacto").removeClass("whc-selected");
-        $("#produccion").removeClass("whc-selected");
-        $("#almacenamiento").removeClass("whc-selected");
-        $("#contactocomercial").removeClass("whc-selected");
+        limpiarSelected();
         $("#contactocomercial").addClass("whc-selected");
 
-        if ($("#formulario-basico").is(":visible")) {
-            $("#formulario-basico").fadeOut("slow", function () {
-                $("#formulario-contactocomercial").fadeIn("slow");
-            });
-        } else if ($("#formulario-produccion").is(":visible")) {
-            $("#formulario-produccion").fadeOut("slow", function () {
-                $("#formulario-contactocomercial").fadeIn("slow");
-            });
-        } else if ($("#formulario-almacenamiento").is(":visible")) {
-            $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#formulario-contactocomercial").fadeIn("slow");
-            });
-        } else if ($("#formulario-contacto").is(":visible")) {
-            $("#formulario-contacto").fadeOut("slow", function () {
-                $("#formulario-contactocomercial").fadeIn("slow");
-            });
-        }
-
+        esconderForms("formulario-contactocomercial");
+                
         $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").show();
     });
 
     $("#produccion").click(function () {
-        $("#basico").removeClass("whc-selected");
-        $("#contacto").removeClass("whc-selected");
-        $("#produccion").removeClass("whc-selected");
-        $("#almacenamiento").removeClass("whc-selected");
-        $("#contactocomercial").removeClass("whc-selected");
+        limpiarSelected();
         $("#produccion").addClass("whc-selected");
 
-        if ($("#formulario-basico").is(":visible")) {
-            $("#formulario-basico").fadeOut("slow", function () {
-                $("#formulario-produccion").fadeIn("slow");
-            });
-        } else if ($("#formulario-contacto").is(":visible")) {
-            $("#formulario-contacto").fadeOut("slow", function () {
-                $("#formulario-produccion").fadeIn("slow");
-            });
-        } else if ($("#formulario-almacenamiento").is(":visible")) {
-            $("#formulario-almacenamiento").fadeOut("slow", function () {
-                $("#formulario-produccion").fadeIn("slow");
-            });
-        } else if ($("#formulario-contactocomercial").is(":visible")) {
-            $("#formulario-contactocomercial").fadeOut("slow", function () {
-                $("#formulario-produccion").fadeIn("slow");
-            });
-        }
+        esconderForms("formulario-produccion");
 
         $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").show();
     });
 
     $("#almacenamiento").click(function () {
-        $("#basico").removeClass("whc-selected");
-        $("#contacto").removeClass("whc-selected");
-        $("#produccion").removeClass("whc-selected");
-        $("#almacenamiento").removeClass("whc-selected");
-        $("#contactocomercial").removeClass("whc-selected");
+        limpiarSelected();
         $("#almacenamiento").addClass("whc-selected");
-
-        if ($("#formulario-basico").is(":visible")) {
-            $("#formulario-basico").fadeOut("slow", function () {
-                $("#formulario-almacenamiento").fadeIn("slow");
-            });
-        } else if ($("#formulario-contacto").is(":visible")) {
-            $("#formulario-contacto").fadeOut("slow", function () {
-                $("#formulario-almacenamiento").fadeIn("slow");
-            });
-        } else if ($("#formulario-produccion").is(":visible")) {
-            $("#formulario-produccion").fadeOut("slow", function () {
-                $("#formulario-almacenamiento").fadeIn("slow");
-            });
-        } else if ($("#formulario-contactocomercial").is(":visible")) {
-            $("#formulario-contactocomercial").fadeOut("slow", function () {
-                $("#formulario-almacenamiento").fadeIn("slow");
-            });
-        }
+        esconderForms("formulario-almacenamiento");
 
         $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").hide();
     });
+
+    $("#proveedores-corredor").click(function () {
+        limpiarSelected();
+        $("#proveedores-corredor").addClass("whc-selected");
+
+        esconderForms("formulario-proveedorescorredor");
+
+        $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").removeClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").hide();
+    });
+    function limpiarSelected() {       
+        $("#contacto").removeClass("whc-selected");
+        $("#produccion").removeClass("whc-selected");
+        $("#almacenamiento").removeClass("whc-selected");
+        $("#contactocomercial").removeClass("whc-selected");
+        $("#proveedores-corredor").removeClass("whc-selected");
+    }
+    function esconderForms(form) {
+        if ($("#formulario-contacto").is(":visible") && "formulario-contacto" !== form) {
+            $("#formulario-contacto").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        } else if ($("#formulario-produccion").is(":visible") && "formulario-produccion" !== form) {
+            $("#formulario-produccion").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        } else if ($("#formulario-almacenamiento").is(":visible") && "formulario-almacenamiento" !== form) {
+            $("#formulario-almacenamiento").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        } else if ($("#formulario-contactocomercial").is(":visible") && "formulario-contactocomercial" !== form) {
+            $("#formulario-contactocomercial").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        } else if ($("#formulario-proveedorescorredor").is(":visible") && "formulario-proveedorescorredor" !== form) {
+            $("#formulario-proveedorescorredor").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        }    
+    }
 
     $("#agregarMail").click(function () {
         if (!($("#Email2") && $("#Email2").length > 0)) {
@@ -1631,12 +1607,24 @@ function armarFuncionalidades() {
             $("#contacto").removeClass("whc-selected");
             $("#contactocomercial").addClass("whc-selected");
         } else if ($("#formulario-contactocomercial").is(":visible")) {
-            $("#formulario-contactocomercial").fadeOut("slow", function () {
-                $("#formulario-produccion").fadeIn("slow");
-            });
+            if ($("#produccion").is(":visible")) {
+                $("#formulario-contactocomercial").fadeOut("slow", function () {
+                    $("#formulario-produccion").fadeIn("slow");
+                });
 
-            $("#contactocomercial").removeClass("whc-selected");
-            $("#produccion").addClass("whc-selected");
+                $("#contactocomercial").removeClass("whc-selected");
+                $("#produccion").addClass("whc-selected");
+            } else {
+                $("#formulario-contactocomercial").fadeOut("slow", function () {
+                    $("#formulario-proveedorescorredor").fadeIn("slow");
+                });
+
+                $("#contactocomercial").removeClass("whc-selected");
+                $("#proveedores-corredor").addClass("whc-selected");
+
+                $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
+                $(".formulario-footer-siguiente").hide();
+            }
         } else if ($("#formulario-produccion").is(":visible")) {
             $("#formulario-produccion").fadeOut("slow", function () {
                 $("#formulario-almacenamiento").fadeIn("slow");
@@ -1870,11 +1858,16 @@ function armarFuncionalidades() {
     });
 
     $(".formulario-footer-guardar-contacto").click(function () {
-        if (comprobarInputs()) {
-            if (validar()) {
-                ObtenerDatos();
+        if($(this).hasClass("guardar-proveedor")){ 
+            if (comprobarInputs()) {
+                if (validar()) {
+                    ObtenerDatos();
+                }
             }
+        } else if ($(this).hasClass("guardar-corredor")) {
+            DatosCorredor();
         }
+        
     });
 
     $("#concom-agregarMail").click(function () {

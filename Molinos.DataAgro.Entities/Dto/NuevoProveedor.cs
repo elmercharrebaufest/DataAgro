@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public Almacenamiento almacenamiento { get; set; }
         public List<ContactosComercial> contactocomercial { get; set; }
         public int? ProveedorId { get; set; }
-        
+        public int? ProveedorCorredorId { get; set; }        
     }
 
     public class Basico

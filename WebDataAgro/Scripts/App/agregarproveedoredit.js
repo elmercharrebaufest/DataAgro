@@ -18,9 +18,14 @@ function InicializarEdit() {
     var acopiomaterial = resultEdit.AcopioMaterialPorProveedores;
     armarBasico(basico[0]);
     armarComercial(comerciales);
-    armarProduccion(campoacopio);
-    armarAlmacenamiento(acopio, acopiomaterial);
-    armarObjetivos(objetivo);
+    if (basico[0].GrupoSegmentacion === "Corredores") {
+        CrearCorredor();
+        armarEditCorredor(resultEdit);
+    } else {
+        armarProduccion(campoacopio);
+        armarAlmacenamiento(acopio, acopiomaterial);
+        armarObjetivos(objetivo);
+    }
 }
 
 function armarBasico(basico) {
@@ -593,3 +598,4 @@ function eliminarObjetivo(elem) {
             $("#toneladasObjetivo" + val).val("")
     }
 }
+

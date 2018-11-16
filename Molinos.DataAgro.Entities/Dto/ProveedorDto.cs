@@ -7,17 +7,19 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ProveedorId { get; set; }
         public string CUIT { get; set; }
-        //public int? EstadoId { get; set; }
         public string RazonSocial { get; set; }
+        public string Localidad { get; set; }
+        public string Provincia { get; set; }
+        public int? LocalidadId { get; set; }
+        public int? ProvinciaId { get; set; }
+        //public int? EstadoId { get; set; }
         //public int SegmentacionId { get; set; }
         //public string NombreReferente { get; set; }
         //public int? Calificacion { get; set; }
         //public string Intermediario { get; set; }
         //public string Observaciones { get; set; }
-        //public string Direccion { get; set; }
-        //public int? LocalidadId { get; set; }
-        //public int? ProvinciaId { get; set; }
-        //public string CodigoPostal { get; set; }
+        public string Direccion { get; set; }
+        public string CodigoPostal { get; set; }
         //public int? AreaInfluenciaId { get; set; }
         //public double? AlmacVolAnualTotal { get; set; }
         //public bool? AlmacHabilitadoSojaSust { get; set; }
@@ -42,7 +44,8 @@ namespace Molinos.DataAgro.Entities.Dto
         //public DateTime? FechaAlta { get; set; }
         //public int? LocalidadCompraNetId { get; set; }
         //public int? ProvinciaCompraNetId { get; set; }
-        //public int? ClasificacionCompraNetId { get; set; }
+        public int? ClasificacionCompraNetId { get; set; }
+        public string ClasificacionDescripcion { get; set; }
         //public int? BoletoCompraNetId { get; set; }
         //public int? BolsaCompraNetId { get; set; }
     }

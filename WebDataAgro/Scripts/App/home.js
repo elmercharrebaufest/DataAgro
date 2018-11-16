@@ -8,11 +8,11 @@ var pagina = 1;
 var mostrarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
-}
+};
 var ocultarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).hide();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).hide();
-}
+};
 
 var mostrarTooltipClick = function (el) {
     if ($(el).parent().find($(".lista-contacto-no-operable-tooltip")).is(":visible")) {
@@ -26,7 +26,7 @@ var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
     var elem = $(str + " input[name='" + nam + "']");
     elem.prop("checked", !elem.is(":checked"));
-}
+};
 
 $(document).ready(function () {
     InicializarDatos();
@@ -382,7 +382,9 @@ function ArmarContactos(contactos) {
         $("#verMasContactos").show();
         (function (i) {
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
-            htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor">'
+            htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor';
+            contactos[i].Corredor ? htmlaux += ' detalleCorredor' : '';
+            htmlaux += '">'
                 + '<div class="lista-contactos-estado">'
                 + '<span class="lista-contactos-estado-titulo">Estado:</span>'
                 + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
@@ -391,7 +393,7 @@ function ArmarContactos(contactos) {
                 var url = MSGetUrl("/Content/Images/estrellacalificacion.png");
                 htmlaux += '<img src="..' + url + '" />';
             }
-
+            
             var url2 = MSGetUrl("/Content/Images/listcont.png");
 
             var telefonos = (contactos[i].Telefono ? contactos[i].Telefono : "Ninguno");

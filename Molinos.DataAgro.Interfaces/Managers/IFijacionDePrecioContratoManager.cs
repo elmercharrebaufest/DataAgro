@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -18,6 +19,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarFijacionResult FinalizarFijacion(int fijacionDePrecioContratoId, string activeDiretoryId);
 
         BasicoContrato TraerFijacion(int id);
+        List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string Filtro);
     }
 }
 

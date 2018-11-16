@@ -17,18 +17,13 @@ namespace WebDataAgro.Controllers
     {
         private ICondicionManager mobjCondicionManager;
         private IInformeComercialManager mobjInformeComercialManager;
-        
-        private IComercialManager mobjComercialManager;
         private IHomeManager mobjHomeManager;
-        private IReportesManager reportesManager;
+        private readonly IReportesManager reportesManager;
 
-        public InformeComercialController(ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IComercialManager oComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
+        public InformeComercialController(ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
         {
             mobjCondicionManager = oCondicionManager;
             mobjInformeComercialManager = oInformeComercialManager;
-            
-
-            mobjComercialManager = oComercialManager;
             mobjHomeManager = oHomeManager;
             this.reportesManager = reportesManager;
 

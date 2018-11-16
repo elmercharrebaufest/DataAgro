@@ -109,7 +109,6 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(Contrato oParam, Resultado oErrorMessages)
         {
-
             if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
@@ -138,6 +137,14 @@ namespace Molinos.DataAgro.Business.Managers
             if (facacop != null)
             {
                 oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo");
+            }
+
+            if(oParam.CorredorId != null)
+            {
+                if(!repositorio.Existe<CorredorProveedor>(x => x.CorredorId == oParam.CorredorId && x.ProveedorId == oParam.ProveedorId))
+                {
+                    oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado");
+                }
             }
             if (oParam.MaterialId == 0)
             {
@@ -226,16 +233,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.DesdeFijacion > oParam.HastaFijacion)
             {
                 oErrorMessages.Error("FechaDesdeHastaFijacion", "Fecha de Fijación inválida");
-            }
-            var campana = repositorio.Obtener<Campaña>(oParam.CampanaId);
-            var anios = campana.Descripcion.Split('-');
-            Int32.TryParse(anios.First(), out int anioInicial);
-            Int32.TryParse(anios.Last(), out int anioFin);
-            var fechaInicial = DateTime.ParseExact("01/01/" + (anioInicial + 2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var fechaFin = DateTime.ParseExact("31/12/" + (anioFin + 2000).ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            if (oParam.FechaDesde < fechaInicial || oParam.FechaHasta > fechaFin)
-            {
-                oErrorMessages.Error("FechaCampana", "Fecha fuera del rango de Campaña");
             }
 
             var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
@@ -337,6 +334,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
             oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
+            oContratoSave.CorredorId = oContrato.CorredorId;
 
             if (descuentosExistentes != null)
             {
@@ -453,8 +451,28 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
+                if (oContratoSave.CorredorId != null)
+                {
+                    try
+                    {
+                        var relacionCorredor = new RelacionCorredorProveedor(repositorio);
+                        if (!relacionCorredor.ObtenerRelacionCorredorProveedor(oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT))
+                        {
+                            throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                        repositorio.GuardarCambios();
+                        logger.Error(e);
+                        oEntityErrors.Error("", e.Message);
+                        return oEntityErrors;
+                    }
+                }
                 try
                 {
+
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
@@ -622,6 +640,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoId = x.ContratoId,
                 ProveedorId = x.ProveedorId,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
+                Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
                 ComercialId = x.ComercialId,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
@@ -884,5 +903,21 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => (x.EstadoId == 1 || x.EstadoId == 3)&& equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy);
         }
 
+         public DatosCompraNetDto TraerDatosCompraNet(int id)
+        {
+            var compranet = repositorio.Obtener<Proveedor, DatosCompraNetDto>(x => x.ProveedorId == id, x => new DatosCompraNetDto()
+            {
+                ProveedorId = id,
+                BoletoCompraNetId = x.BoletoCompraNetId,
+                BolsaCompraNetId = x.BolsaCompraNetId,
+                ClasificacionCompraNetId = x.ClasificacionCompraNetId,
+                Consignatario = x.Consignatario,
+                LocalidadId = x.LocalidadCompraNetId?? x.LocalidadId,
+                ProvinciaId = x.ProvinciaCompraNetId??x.ProvinciaId,
+                Localidad = x.LocalidadCompraNet.Nombre ?? x.Localidad.Nombre,
+                Provincia = x.ProvinciaCompraNet.Nombre ?? x.Provincia.Nombre
+            });
+            return compranet;
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? HastaFijacion { get; set; }
         public bool? MercsDeposito { get; set; }
         public int? ComercialCreadorId { get; set; }
+        public int? CorredorId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -86,6 +87,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual BolsaCompraNet Bolsa { get; set; }
         [ForeignKey("ComercialCreadorId")]
         public virtual Comercial ComercialCreador { get; set; }
+        [ForeignKey("CorredorId")]
+        public virtual Proveedor Corredor { get; set; } 
 
         [InverseProperty("Contrato")]
         public ICollection<DescuentoBonificacion> Descuentos { get; set; }

@@ -108,7 +108,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return res;
         }
-
         public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(string CUIT)
         {
             return repositorio.Obtener<Proveedor, DatosLocalidadProvincia>(x => x.CUIT == CUIT && x.Localidad != null && x.Provincia != null,
@@ -122,8 +121,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Localidad = x.Localidad.Nombre,
                 Provincia = x.Provincia.Nombre
             });
-        }
-        
+        }        
         public DatosLocalidadProvincia TraerLocalidadProveedorPorCuit(DatosLocalidadProvinciaFiltro oDatosLocalidadProvinciaFiltro)
         {
             var valor = new DatosLocalidadProvincia();
@@ -162,6 +160,14 @@ namespace Molinos.DataAgro.Business.Managers
                 valor.Consignatario = (bool)(oProveedor.Consignatario ?? false);
                 valor.BoletoId = oProveedor.BoletoCompraNetId ?? 0;
                 valor.BolsaId = oProveedor.BolsaCompraNetId ?? 0;
+                if (oProveedor.SegmentacionId == 5 || oProveedor.SegmentacionId == 7)
+                {
+                    valor.Corredor = true;
+                }
+                else
+                {
+                    valor.Corredor = false;
+                }
             }
             catch (Exception e)
             {
@@ -169,7 +175,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return valor;
         }
-
         private DatosContacto DevolverDatosContacto(int proveedorId)
         {
             return repositorio.Obtener<Proveedor, DatosContacto>(x => x.ProveedorId == proveedorId, x => new DatosContacto()
@@ -179,7 +184,6 @@ namespace Molinos.DataAgro.Business.Managers
                 Intermediario = x.Intermediario
             });
         }
-
         public Resultado GrabarRecordatorio(ActividadInsetarIni oParam)
         {
             var oEntityErrors = new Resultado();
@@ -229,7 +233,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
-
         private void EnviarCita(ActividadInsetarIni oParam)
         {
             try
@@ -337,7 +340,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-
         public void EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory)
         {
             try
@@ -414,7 +416,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-
         public void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory)
         {
             try
@@ -492,7 +493,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial)
         {
             LinkedResource res = new LinkedResource(filePath);
@@ -717,7 +717,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return email;
         }
-
         public Resultado EliminarRecordatorio(int Id)
         {
             var oEntityErrors = new Resultado();
@@ -725,7 +724,6 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
             return oEntityErrors;
         }
-
         public DatosIniProveedor TraerDatosCombo(int ProveedorId)
         {
             var DatosCombo = new DatosIniProveedor
@@ -748,12 +746,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             return DatosCombo;
         }
-
         public List<LocalidadDto> TraerLocalidad(int Id)
         {
             return repositorio.Listar<Localidad, LocalidadDto>(x => new LocalidadDto { LocalidadId = x.LocalidadId, Nombre = x.Nombre },x => x.ProvinciaId == Id);
         }
-
         public ProveedorNuevo TraerRazonSocial(string cuit)
         {
             var razonsocial = repositorio.Obtener<RG2300, ProveedorNuevo>(x => x.CUIT == cuit,
@@ -770,7 +766,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-
                 razonsocial.Existe = repositorio.Existe<Proveedor>(x => x.CUIT == cuit) ? 1 : 0;
             }
 
@@ -778,12 +773,19 @@ namespace Molinos.DataAgro.Business.Managers
 
             return razonsocial;
         }
-
-        public ProveedorQry TraerProveedorPorCuit(string cuit)
+        public ProveedorQry TraerProveedorPorCuit(string cuit, bool corredor)
         {
-            return repositorio.Obtener<Proveedor, ProveedorQry>(x => x.CUIT == cuit, x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
+            var proveedor = new ProveedorQry();
+            if (corredor)
+            {
+                proveedor = repositorio.Obtener<Proveedor, ProveedorQry>(x => x.CUIT == cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7), x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
+            } 
+            else
+            {
+                proveedor = repositorio.Obtener<Proveedor, ProveedorQry>(x => x.CUIT == cuit && (x.SegmentacionId != 5 || x.SegmentacionId != 7), x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
+            }
+            return proveedor;
         }
-
         public void TraerEstado(ProveedorNuevo prov)
         {
             var oFacacop = repositorio.Existe<FACACOP>(x => x.CUIT == prov.CUIT);
@@ -817,30 +819,11 @@ namespace Molinos.DataAgro.Business.Managers
                     return;
                 }
             }
-        }
-        
+        }        
         public GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarProveedorResult();
-
-            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit))
-            {
-                oEntityErrors.Error("Proveedor", "Ya existe un proveedor con ese CUIT");
-                return oEntityErrors;
-            }
-
-            if (!repositorio.Existe<RG2300>(x => x.CUIT == oParam.basicos.cuit))
-            {
-                oEntityErrors.Error("RG2300", "No existe el CUIT");
-                return oEntityErrors;
-            }
-
-            if (repositorio.Existe<FACACOP>(x => x.CUIT == oParam.basicos.cuit))
-            {
-                oEntityErrors.Error("FACACOP", "El CUIT es Apocrifo");
-                return oEntityErrors;
-            }
-
+            oEntityErrors = ValidarProveedor(oParam, oEntityErrors);
             var proveedor = new Proveedor
             {
                 AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null,
@@ -898,26 +881,28 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    repositorio.Agregar(new ProveedorEstado
-                    {
-                        Comercial = comercial,
-                        Proveedor = proveedor,
-                        Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault()
-                    });
-                }
+                    
+                        repositorio.Agregar(new ProveedorEstado
+                        {
+                            Comercial = comercial,
+                            Proveedor = proveedor,
+                            Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault()
+                        });
+                    }
+                
             }
             else
             {
                 proveedor.Estado = oEstados.Where(x => x.EstadoId == int.Parse(ConfigurationManager.AppSettings[oParam.basicos.nocliente == 1 ? "NoCliente" : "PotencialCliente"])).FirstOrDefault();
             }
             repositorio.Agregar(proveedor);
-
-            repositorio.Agregar(new ProveedorComercial()
-            {
-                Comercial = comercial,
-                NroItem = 1,
-                Proveedor = proveedor
-            });
+            
+                repositorio.Agregar(new ProveedorComercial()
+                {
+                    Comercial = comercial,
+                    NroItem = 1,
+                    Proveedor = proveedor
+                });
 
             if (oParam.contactocomercial != null && oParam.contactocomercial.Count > 0)
             {
@@ -1160,7 +1145,31 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
 
         }
+        private GrabarProveedorResult ValidarProveedor (NuevoProveedor oParam, GrabarProveedorResult oEntityErrors)
+        {
+            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId != 5 && x.SegmentacionId != 7) && (oParam.basicos.segmentacion != 5 && oParam.basicos.segmentacion != 7)))
+            {
+                oEntityErrors.Error("Proveedor", "Ya existe un proveedor con ese CUIT");
+                return oEntityErrors;
+            }
+            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7) && (oParam.basicos.segmentacion == 5 || oParam.basicos.segmentacion == 7)))
+            {
+                oEntityErrors.Error("Proveedor", "Ya existe un corredor con ese CUIT");
+                return oEntityErrors;
+            }
+            if (!repositorio.Existe<RG2300>(x => x.CUIT == oParam.basicos.cuit))
+            {
+                oEntityErrors.Error("RG2300", "No existe el CUIT");
+                return oEntityErrors;
+            }
 
+            if (repositorio.Existe<FACACOP>(x => x.CUIT == oParam.basicos.cuit))
+            {
+                oEntityErrors.Error("FACACOP", "El CUIT es Apocrifo");
+                return oEntityErrors;
+            }
+            return oEntityErrors;
+        }
         public ProveedorDto TraerProveedor(int? proveedorId)
         {
             return proveedorId.HasValue ? repositorio.Obtener<Proveedor, ProveedorDto>(x => x.ProveedorId == proveedorId, 
@@ -1171,7 +1180,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }) : null;
         }
 
-        public GrabarProveedorResult UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory)
+        private GrabarProveedorResult UpdateDatosBasicosProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
             var resultado = new GrabarProveedorResult();
             try
@@ -1185,7 +1194,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust;
                 oProveedorSave.Calificacion = oParam.basicos.calificacion;
                 oProveedorSave.Observaciones = oParam.basicos.comentario;
-                oProveedorSave.SegmentacionId = oParam.basicos.segmentacion;
+                oProveedorSave.SegmentacionId = oParam.basicos.segmentacion!= 0? oParam.basicos.segmentacion:2;
                 oProveedorSave.CodigoPostal = oParam.contacto.codpost;
                 oProveedorSave.Direccion = oParam.contacto.direccion;
                 oProveedorSave.Intermediario = oParam.contacto.intermediario;
@@ -2141,14 +2150,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             return repositorio.SelStore<ReporteProveedor>("DataAgro_ReporteProveedor", 0, Valor, comercialId);
         }
-
-        public List<BusquedaHome> DevolverProveedores(string filtro)
+        public List<BusquedaHome> DevolverProveedoresConCorredor(string filtro, string cuitCorredor)
         {
-            var resultado = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaProveedores", 15, filtro);
-            foreach(var r in resultado)
-            {
-                r.Filtro = filtro + "|" + r.RazonSocial + " ("+ r.Cuit + ")";
-            }
+              var resultado = repositorio.ListarConsulta(new DevolverProveedoresConCorredor(filtro, cuitCorredor));
+              
+              return resultado;     
+        }
+        public List<BusquedaHome> DevolverProveedores(string filtro, bool corredor)
+        {
+            var resultado = repositorio.ListarConsulta(new DevolverProveedores(filtro, corredor));
+
             return resultado;
         }
 
@@ -2156,7 +2167,51 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial}, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
         }
-
+        public List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId)
+        {
+            return repositorio.Listar<CorredorProveedor, ProveedorCorredorDto>(x => new ProveedorCorredorDto
+            {
+                CUIT = x.Proveedor.CUIT,
+                ProveedorId = x.ProveedorId,
+                RazonSocial = x.Proveedor.RazonSocial,
+                ClasificacionCompraNetId = x.Proveedor.ClasificacionCompraNetId,
+                ClasificacionDescripcion = x.Proveedor.ClasificacionCompraNet.Descripcion,
+                Localidad = x.Proveedor.Localidad.Nombre,
+                LocalidadId = x.Proveedor.LocalidadId,
+                ProvinciaId= x.Proveedor.ProvinciaId,
+                Provincia = x.Proveedor.Provincia.Nombre,
+                Direccion = x.Proveedor.Direccion,
+                CodigoPostal = x.Proveedor.CodigoPostal,
+                ProveedorCorredorId= x.Id
+            }, x => x.CorredorId == corredorId);
+        }
+        public TraerProveedorResult TraerProveedorParaCorredor(string cuit)
+        {
+            var proveedorResult = new TraerProveedorResult();
+            var proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => x.CUIT == cuit && (x.SegmentacionId != 5 && x.SegmentacionId!=7),x => new ProveedorDto
+            {
+                CUIT = x.CUIT,
+                ProveedorId = x.ProveedorId,
+                RazonSocial = x.RazonSocial,
+                ClasificacionCompraNetId = x.ClasificacionCompraNetId,
+                ClasificacionDescripcion=x.ClasificacionCompraNet.Descripcion,
+                Localidad = x.Localidad.Nombre,
+                LocalidadId = x.LocalidadId,
+                ProvinciaId = x.Localidad.ProvinciaId,
+                Provincia = x.Localidad.Provincia.Nombre,
+                Direccion = x.Direccion,
+                CodigoPostal = x.CodigoPostal
+            });
+            if (proveedor!= null)
+            {
+                proveedorResult.Proveedor = proveedor;
+            }
+            else
+            {
+                proveedorResult.Error("", "El Proveedor no existe");
+            }
+            return proveedorResult;
+        }
         public class ZMPES5130
         {
             public string VENDEDOR;
@@ -2175,6 +2230,193 @@ namespace Molinos.DataAgro.Business.Managers
         public List<BasicoProveedor> TraerDatosBasicosProveedor(int proveedorId, int comercialId, List<int> equipo)
         {
             return repositorio.ListarConsulta(new TraerDatosBasicosProveedor(proveedorId, comercialId, equipo));
+        }
+
+        public GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory)
+        {
+            var result = GrabarNuevoProveedor(new NuevoProveedor() { basicos = oParam.basicos,contacto = oParam.contacto, contactocomercial = oParam.contactocomercial }, idActiveDirectory);
+
+            if (oParam.proveedorCorredor != null)
+            {
+                UpdateProveedorCorredor(oParam.proveedorCorredor, result.ProveedorId.Value, idActiveDirectory);
+            }
+            return result;
+        }
+        public GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory)
+        {
+            var corredor = new NuevoProveedor()
+            {
+                ProveedorId = oParam.CorredorId,
+                basicos = oParam.basicos,
+                contacto = oParam.contacto,
+                contactocomercial = oParam.contactocomercial,
+                produccion=new Produccion(),
+                almacenamiento=new Almacenamiento()
+               
+            };
+            var resultado = UpdateDatosBasicosProveedor(corredor, idActiveDirectory);
+
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateDatosContacto(corredor);
+
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateContactoComerciales(corredor);
+
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            resultado = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("", ex.Message);
+                return resultado;
+            }
+
+            resultado.ProveedorId = oParam.CorredorId;
+
+            return resultado;
+        }
+
+        private GrabarProveedorResult UpdateProveedorCorredor(List<NuevoProveedor> proveedores, int corredorId, string idActiveDirectory)
+        {
+            var resultado = new GrabarProveedorResult();
+            foreach (var proveedor in proveedores)
+            {
+                try
+                {
+                    var nuevoProveedor = new NuevoProveedor()
+                    {
+                        ProveedorId = proveedor.ProveedorId,
+                        basicos = new Basico()
+                        {
+                            cuit = proveedor.basicos.cuit,
+                            ClasificacionCompraNet = proveedor.basicos.ClasificacionCompraNet,
+                            RazonSocial = proveedor.basicos.RazonSocial
+                        },
+                        contacto = new Contacto()
+                        {
+                            codpost = proveedor.contacto.codpost,
+                            localidad = proveedor.contacto.localidad,
+                            provincia = proveedor.contacto.provincia,
+                            direccion = proveedor.contacto.direccion
+                        },
+                        produccion = new Produccion(),
+                        almacenamiento = new Almacenamiento(),
+                        contactocomercial = new List<ContactosComercial>()
+                    };
+                    var nuevoProveedorParaCorredor = new Proveedor
+                    {
+                        CUIT = proveedor.basicos.cuit,
+                        RazonSocial = proveedor.basicos.RazonSocial,
+                        SegmentacionId = proveedor.basicos.segmentacion!= 0? proveedor.basicos.segmentacion : 2,
+                        ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet,
+                        LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet,
+                        ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet,
+                        BoletoCompraNetId = proveedor.basicos.BoletoCompraNet,
+                        BolsaCompraNetId = proveedor.basicos.BolsaCompraNet,
+                        CodigoPostal = proveedor.contacto.codpost,
+                        Direccion = proveedor.contacto.direccion,
+                        LocalidadId = proveedor.contacto.localidad,
+                        ProvinciaId = proveedor.contacto.provincia,
+                        EstadoId = 1,
+                        FechaAlta = DateTime.Now,
+                    };
+                    if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
+                    {
+                        var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
+                        proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
+                        proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet !=null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
+                        proveedorUpdate.LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId;
+                        proveedorUpdate.ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet != null ? proveedor.basicos.ClasificacionCompraNet : proveedorUpdate.ClasificacionCompraNetId;
+                        proveedorUpdate.BoletoCompraNetId = proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId;
+                        proveedorUpdate.BolsaCompraNetId = proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId;
+                        proveedorUpdate.CodigoPostal = proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal;
+                        proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
+                        proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
+                        proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
+                        
+                    }
+                    else
+                    {
+                        resultado = ValidarProveedor(nuevoProveedor, resultado);
+
+                        repositorio.Agregar(nuevoProveedorParaCorredor);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    resultado.Error("", ex.Message);
+                    return resultado;
+                }
+            }
+            try
+            {
+                var oCorredorSave = repositorio.Listar<CorredorProveedor>(x => x.CorredorId == corredorId);
+                #region Eliminar
+
+                foreach (var cor in oCorredorSave)
+                {
+                    if ((proveedores != null && !proveedores.Any(x => x.ProveedorCorredorId == cor.Id)) || proveedores == null)
+                    {
+                        var corProv = repositorio.Obtener<CorredorProveedor>(x => x.Id == cor.Id);
+                        repositorio.Remover(corProv);
+                    }
+                }
+
+                #endregion
+
+                #region Agregar
+                if (proveedores != null)
+                {
+                    foreach (var cor in proveedores)
+                    {
+                        if (cor.ProveedorCorredorId == null)
+                        {
+                            var proveedorCorredor = new CorredorProveedor()
+                            {
+                                ProveedorId = cor.ProveedorId.HasValue ? cor.ProveedorId.Value: repositorio.Obtener<Proveedor,int>(x=>x.CUIT == cor.basicos.cuit && x.RazonSocial == cor.basicos.RazonSocial && x.Segmentacion.Grupo!= "Corredores", x=>x.ProveedorId) ,
+                                CorredorId = corredorId,
+                            };
+                            repositorio.Agregar(proveedorCorredor);
+                        }
+                    }
+                }
+                #endregion
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("", ex.Message);
+            }
+            return resultado;
+        }
+
+        public DatosCompraNetDto TraerBoletoBolsa(int id)
+        {
+            return repositorio.Obtener<Proveedor, DatosCompraNetDto>(x => x.ProveedorId == id, x => new DatosCompraNetDto()
+            {
+                BoletoCompraNetId = x.BoletoCompraNetId,
+                BolsaCompraNetId = x.BolsaCompraNetId,
+                LocalidadId = x.LocalidadId,
+                ProvinciaId = x.ProvinciaId,
+                ProveedorId = x.ProveedorId,
+                ClasificacionCompraNetId = x.ClasificacionCompraNetId
+            });
         }
     }
 }

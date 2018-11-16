@@ -34,6 +34,11 @@ namespace WebDataAgro.Services
         }
         #region Servicios de DataAgro
 
+        public Resultado Ping()
+        {
+            return new Resultado();
+        }
+
         public Resultado GrabarRiesgoComercial(RiesgoComercial oRiesgos)
         {
             var oEntityErrors = new Resultado();

@@ -94,9 +94,14 @@
     <Compile Include="Dto\DestinatarioDto.cs" />
     <Compile Include="Dto\EquipoDto.cs" />
     <Compile Include="Dto\ErrorMessage.cs" />
+    <Compile Include="Dto\DatosFijacionDeContratoDto.cs" />
     <Compile Include="Dto\FijacionDePrecioDto.cs" />
     <Compile Include="Dto\FijacionDePrecioContratoDto.cs" />
     <Compile Include="Dto\GrabarContratoPrueba.cs" />
+    <Compile Include="Dto\NuevoCorredor.cs" />
+    <Compile Include="Dto\ProveedorCorredorDto.cs" />
+    <Compile Include="Dto\DatosCompraNetDto.cs" />
+    <Compile Include="Dto\TraerProveedorResult.cs" />
     <Compile Include="Dto\GrabarSuscripcionResult.cs" />
     <Compile Include="Dto\GrabarDescuentoResult.cs" />
     <Compile Include="Dto\InformeComercialAlmacenamientoDto.cs" />
@@ -117,6 +122,7 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\FechaFeriado.cs" />
+    <Compile Include="Entities\CorredorProveedor.cs" />
     <Compile Include="Entities\RangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\SISA.cs" />
     <Compile Include="Entities\SuscripcionComercial.cs" />

@@ -64,6 +64,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string RptOpera { get; set; }
         public DateTime? FechaAlta { get; set; }
         public string GrupoDeCompras { get; set; }
+        public bool Corredor { get; set; }
 
     }
 

@@ -164,6 +164,7 @@ and ((@Zona is null)
 
 SELECT 
 	p.Calificacion, 
+	p.SegmentacionId as Segmentacion,
 	e.Apellido as ComercialAcargo,
 	cc.Email1,
 	cc.Email2,

@@ -11,9 +11,6 @@ namespace WebDataAgro.Controllers
 {
     public class ContratoController : Controller
     {
-        private IHomeManager mobjHomeManager;
-        private ICampañaManager mobjCampañaManager;
-        
         private IContratoManager mobjContratoManager;
         private IProveedorManager mobjProveedorManager;
         private IComercialManager mobjComercialManager;
@@ -24,11 +21,8 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public ContratoController(IHomeManager oHomeManager,  ICampañaManager oCampañaManager, IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
+        public ContratoController(  IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
         {
-            
-            mobjHomeManager = oHomeManager;
-            mobjCampañaManager = oCampañaManager;
             mobjProveedorManager = oProveedorManager;
             mobjComercialManager = oComercialManager;
             mobjContratoManager = ocontratoManager;

@@ -11,12 +11,10 @@ namespace WebDataAgro.Controllers
     public class ProvinciaController : Controller
     {
         private IProvinciaManager mobjProvinciaManager;
-        private IComercialManager mobjComercialManager;
 
-        public ProvinciaController(IProvinciaManager oProvinciaManager, IComercialManager oComercialManager)
+        public ProvinciaController(IProvinciaManager oProvinciaManager)
         {
             mobjProvinciaManager = oProvinciaManager;
-            mobjComercialManager = oComercialManager;
             
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
