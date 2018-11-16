@@ -554,14 +554,14 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ObtenerFijacionesAutomaticasTest()
         {
-            fijacionManagerMock.Setup(x => x.TraerDatosFijacion("201","202",1,"a")).Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId=1, Filtro="a|aa", KilosAplicados=12,KilosContrato=200,KilosPendiente=20} });
+            fijacionManagerMock.Setup(x => x.TraerDatosFijacion("201","202",1,"a")).Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId="1", Filtro="a|aa", KilosAplicados=12,KilosContrato=200,KilosPendiente=20} });
             var result = target.ObtenerFijacionesAutomaticas("201", "202", 1, "a");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":1,\"KilosAplicados\":12,\"KilosPendiente\":20,\"KilosContrato\":200,\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":12,\"KilosPendiente\":20,\"KilosContrato\":200,\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }
