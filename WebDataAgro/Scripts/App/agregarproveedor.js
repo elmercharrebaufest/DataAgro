@@ -202,7 +202,6 @@ function buscarRazonSocial(val) {
         }
     }
     $("#razonsocial").val(result.razonSocial);
-    $(".campo-estadoafip-span-operable").html(result.Operable ? "Operable" : "No Operable");
     if (result.Operable === 0) {
         $(".span-contacto-no-operable-tooltip").html(result.Condicion);
         $("#Operable-agregar").show();

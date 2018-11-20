@@ -157,12 +157,15 @@ function buscarProveedor() {
         if (result.Proveedor !== null) {
             $("#provcorr-razonsocial").val(result.Proveedor.RazonSocial);
             $("#procedencia").val(result.Proveedor.Localidad + " (" + result.Proveedor.Provincia + ")");
+            $("#procedenciaCompranet").val(result.Proveedor.LocalidadCompraNet + " (" + result.Proveedor.ProvinciaCompraNet + ")");
             $("#provcorrId").val(result.Proveedor.ProveedorId);
             $("#clasificacion-proveedor-corredor").val(result.Proveedor.ClasificacionCompraNetId);
             $("#direccion-provcorr").val(result.Proveedor.Direccion);
             $("#codpost-provcorr").val(result.Proveedor.CodigoPostal);
             $("#provinciacorrId").val(result.Proveedor.ProvinciaId);
-            $("#localidadcorrId").val(result.Proveedor.LocalidadId);        
+            $("#localidadcorrId").val(result.Proveedor.LocalidadId);   
+            $("#provinciacorrCompranetId").val(result.Proveedor.ProvinciaCompraNetId);
+            $("#localidadcorrCompranetId").val(result.Proveedor.LocalidadCompraNetId);
         }
     } else {
         limpiarCargaProveedor();

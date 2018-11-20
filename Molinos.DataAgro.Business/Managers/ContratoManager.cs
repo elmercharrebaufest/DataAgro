@@ -912,10 +912,10 @@ namespace Molinos.DataAgro.Business.Managers
                 BolsaCompraNetId = x.BolsaCompraNetId,
                 ClasificacionCompraNetId = x.ClasificacionCompraNetId,
                 Consignatario = x.Consignatario,
-                LocalidadId = x.LocalidadCompraNetId?? x.LocalidadId,
-                ProvinciaId = x.ProvinciaCompraNetId??x.ProvinciaId,
-                Localidad = x.LocalidadCompraNet.Nombre ?? x.Localidad.Nombre,
-                Provincia = x.ProvinciaCompraNet.Nombre ?? x.Provincia.Nombre
+                LocalidadId = x.LocalidadCompraNetId,
+                ProvinciaId = x.ProvinciaCompraNetId,
+                Localidad = x.LocalidadCompraNet.Nombre,
+                Provincia = x.ProvinciaCompraNet.Nombre
             });
             return compranet;
         }

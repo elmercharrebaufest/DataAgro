@@ -2310,73 +2310,76 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarProveedorResult UpdateProveedorCorredor(List<NuevoProveedor> proveedores, int corredorId, string idActiveDirectory)
         {
             var resultado = new GrabarProveedorResult();
-            foreach (var proveedor in proveedores)
+            if (proveedores != null)
             {
-                try
+                foreach (var proveedor in proveedores)
                 {
-                    var nuevoProveedor = new NuevoProveedor()
+                    try
                     {
-                        ProveedorId = proveedor.ProveedorId,
-                        basicos = new Basico()
+                        var nuevoProveedor = new NuevoProveedor()
                         {
-                            cuit = proveedor.basicos.cuit,
-                            ClasificacionCompraNet = proveedor.basicos.ClasificacionCompraNet,
-                            RazonSocial = proveedor.basicos.RazonSocial
-                        },
-                        contacto = new Contacto()
+                            ProveedorId = proveedor.ProveedorId,
+                            basicos = new Basico()
+                            {
+                                cuit = proveedor.basicos.cuit,
+                                ClasificacionCompraNet = proveedor.basicos.ClasificacionCompraNet,
+                                RazonSocial = proveedor.basicos.RazonSocial
+                            },
+                            contacto = new Contacto()
+                            {
+                                codpost = proveedor.contacto.codpost,
+                                localidad = proveedor.contacto.localidad,
+                                provincia = proveedor.contacto.provincia,
+                                direccion = proveedor.contacto.direccion
+                            },
+                            produccion = new Produccion(),
+                            almacenamiento = new Almacenamiento(),
+                            contactocomercial = new List<ContactosComercial>()
+                        };
+                        var nuevoProveedorParaCorredor = new Proveedor
                         {
-                            codpost = proveedor.contacto.codpost,
-                            localidad = proveedor.contacto.localidad,
-                            provincia = proveedor.contacto.provincia,
-                            direccion = proveedor.contacto.direccion
-                        },
-                        produccion = new Produccion(),
-                        almacenamiento = new Almacenamiento(),
-                        contactocomercial = new List<ContactosComercial>()
-                    };
-                    var nuevoProveedorParaCorredor = new Proveedor
-                    {
-                        CUIT = proveedor.basicos.cuit,
-                        RazonSocial = proveedor.basicos.RazonSocial,
-                        SegmentacionId = proveedor.basicos.segmentacion!= 0? proveedor.basicos.segmentacion : 2,
-                        ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet,
-                        LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet,
-                        ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet,
-                        BoletoCompraNetId = proveedor.basicos.BoletoCompraNet,
-                        BolsaCompraNetId = proveedor.basicos.BolsaCompraNet,
-                        CodigoPostal = proveedor.contacto.codpost,
-                        Direccion = proveedor.contacto.direccion,
-                        LocalidadId = proveedor.contacto.localidad,
-                        ProvinciaId = proveedor.contacto.provincia,
-                        EstadoId = 1,
-                        FechaAlta = DateTime.Now,
-                    };
-                    if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
-                    {
-                        var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
-                        proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
-                        proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet !=null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
-                        proveedorUpdate.LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId;
-                        proveedorUpdate.ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet != null ? proveedor.basicos.ClasificacionCompraNet : proveedorUpdate.ClasificacionCompraNetId;
-                        proveedorUpdate.BoletoCompraNetId = proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId;
-                        proveedorUpdate.BolsaCompraNetId = proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId;
-                        proveedorUpdate.CodigoPostal = proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal;
-                        proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
-                        proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
-                        proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
-                        
-                    }
-                    else
-                    {
-                        resultado = ValidarProveedor(nuevoProveedor, resultado);
+                            CUIT = proveedor.basicos.cuit,
+                            RazonSocial = proveedor.basicos.RazonSocial,
+                            SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : 2,
+                            ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet,
+                            LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet,
+                            ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet,
+                            BoletoCompraNetId = proveedor.basicos.BoletoCompraNet,
+                            BolsaCompraNetId = proveedor.basicos.BolsaCompraNet,
+                            CodigoPostal = proveedor.contacto.codpost,
+                            Direccion = proveedor.contacto.direccion,
+                            LocalidadId = proveedor.contacto.localidad,
+                            ProvinciaId = proveedor.contacto.provincia,
+                            EstadoId = 1,
+                            FechaAlta = DateTime.Now,
+                        };
+                        if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
+                        {
+                            var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
+                            proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
+                            proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
+                            proveedorUpdate.LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId;
+                            proveedorUpdate.ClasificacionCompraNetId = proveedor.basicos.ClasificacionCompraNet != null ? proveedor.basicos.ClasificacionCompraNet : proveedorUpdate.ClasificacionCompraNetId;
+                            proveedorUpdate.BoletoCompraNetId = proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId;
+                            proveedorUpdate.BolsaCompraNetId = proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId;
+                            proveedorUpdate.CodigoPostal = proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal;
+                            proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
+                            proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
+                            proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
 
-                        repositorio.Agregar(nuevoProveedorParaCorredor);
+                        }
+                        else
+                        {
+                            resultado = ValidarProveedor(nuevoProveedor, resultado);
+
+                            repositorio.Agregar(nuevoProveedorParaCorredor);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    resultado.Error("", ex.Message);
-                    return resultado;
+                    catch (Exception ex)
+                    {
+                        resultado.Error("", ex.Message);
+                        return resultado;
+                    }
                 }
             }
             try

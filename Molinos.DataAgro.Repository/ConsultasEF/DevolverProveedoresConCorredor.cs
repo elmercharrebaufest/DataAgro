@@ -25,12 +25,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from c in rgs.DefaultIfEmpty()
                             where (corredorProveedor.Corredor.CUIT.Contains(cuitCorredor))
                             && (corredorProveedor.Proveedor.CUIT.Contains(filtro) || c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro) || corredorProveedor.Proveedor.RazonSocial.Contains(filtro))
+                            group c by corredorProveedor into provs
                             select new BusquedaHome
                             {
-                                Id = corredorProveedor.ProveedorId,
-                                Cuit = corredorProveedor.Proveedor.CUIT,
-                                RazonSocial = corredorProveedor.Proveedor.RazonSocial,
-                                Filtro = filtro + "|" + corredorProveedor.Proveedor.RazonSocial + " (" + corredorProveedor.Proveedor.CUIT + ")"
+                                Id = provs.Key.ProveedorId,
+                                Cuit = provs.Key.Proveedor.CUIT,
+                                RazonSocial = provs.Key.Proveedor.RazonSocial,
+                                Filtro = filtro + "|" + provs.Key.Proveedor.RazonSocial + " (" + provs.Key.Proveedor.CUIT + ")"
                             };
 
             return resultado.Take(15).ToList();

@@ -29,13 +29,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
                             (corredor.Equals(false) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7 
                             :  (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7))
-
+                            group c by Proveedor into provs
                             select new BusquedaHome
                             {
-                                Id = Proveedor.ProveedorId,
-                                Cuit = Proveedor.CUIT,
-                                RazonSocial = Proveedor.RazonSocial,
-                                Filtro = filtro + "|" + Proveedor.RazonSocial + " (" + Proveedor.CUIT + ")"
+                                Id = provs.Key.ProveedorId,
+                                Cuit = provs.Key.CUIT,
+                                RazonSocial = provs.Key.RazonSocial,
+                                Filtro = filtro + "|" + provs.Key.RazonSocial + " (" + provs.Key.CUIT + ")"
                             };
 
             return resultado.Take(15).ToList();
