@@ -24,24 +24,32 @@ function CargarProveedores(datos) {
                 (obj.Direccion ? obj.Direccion + ' (' + obj.CodigoPostal + ')' : "No se especifica dirección") +
                 '</span>' +
                 '</div>' +
-                '<div class="contenedor-contacto-comercial-posicion col-md-5">' +
+                '<div class="contenedor-contacto-comercial-posicion col-md-6">' +
                 '<span class="contenedor-contacto-comercial-posicion-izq">' +
                 (obj.Localidad ? obj.Localidad + ', ' + obj.Provincia : "No se especifica procedencia") +
                 '</span>' +
                 '</div>' +
                 '</div>' +
-                '<div class="contenedor-contacto-comercial-extras">' +
                 '<div class="row">' +
-                '<div class="col-lg-3">' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-5">' +
+                '<span class="contenedor-contacto-comercial-posicion-izq">' +
+                'Procedencia Compranet:' +
+                '</span>' +
+                '</div>' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-6">' +
+                '<span class="contenedor-contacto-comercial-posicion-der">' +
+                (obj.LocalidadCompraNetId !== null ? obj.LocalidadCompraNet + " (" + obj.ProvinciaCompraNet + ")" : "no especifica") +
+                '</span>' +
+                '</div>' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-3">' +
                 '<span class="contenedor-contacto-comercial-posicion-izq">' +
                 'Clasificacion:' +
                 '</span>' +
                 '</div>' +
-                '<div class="col-lg-6">' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-3">' +
                 '<span class="contenedor-contacto-comercial-posicion-der">' +
                 (obj.ClasificacionDescripcion ? obj.ClasificacionDescripcion : "no especifica") +
                 '</span>' +
-                '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +

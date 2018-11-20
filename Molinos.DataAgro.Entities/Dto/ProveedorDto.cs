@@ -42,8 +42,10 @@ namespace Molinos.DataAgro.Entities.Dto
         //public DateTime? FechaUltimoContacto { get; set; }
         //public string RiesgoComercialSap { get; set; }
         //public DateTime? FechaAlta { get; set; }
-        //public int? LocalidadCompraNetId { get; set; }
-        //public int? ProvinciaCompraNetId { get; set; }
+        public int? LocalidadCompraNetId { get; set; }
+        public int? ProvinciaCompraNetId { get; set; }
+        public string LocalidadCompraNet { get; set; }
+        public string ProvinciaCompraNet { get; set; }
         public int? ClasificacionCompraNetId { get; set; }
         public string ClasificacionDescripcion { get; set; }
         //public int? BoletoCompraNetId { get; set; }

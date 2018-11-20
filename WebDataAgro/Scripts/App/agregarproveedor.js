@@ -118,11 +118,11 @@ function eliminarGranoAlmacenamientoGrano(elem) {
 var mostrarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
-}
+};
 var ocultarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip")).hide();
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).hide();
-}
+};
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -561,7 +561,7 @@ function armarSelects(result) {
     $(".campo-clasificacion-compranet").append(htmlClasificacionCompraNet);
 
     var htmlClasificacionCorredorProveedor = "";
-    htmlClasificacionCorredorProveedor += '<select class="campo-input-select" id="clasificacion-proveedor-corredor">';
+    htmlClasificacionCorredorProveedor += '<select class="campo-input-select" id="clasificacion-proveedor-corredor" style="width:100%">';
     htmlClasificacionCorredorProveedor += '<option value = "null">Seleccione...</option>';
     for (var ii in result.ClasComNet) {
         (function (i) {

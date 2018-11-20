@@ -238,7 +238,7 @@ campo-granos-almacenamiento button,
     font-style: normal;
     text-align: left;
     text-align-last: left;
-    width: 274px!important;
+    width: 274px;
     height: 38px!important;
     margin-right:0px;
     vertical-align:middle;
@@ -488,19 +488,26 @@ campo-granos-almacenamiento button,
     margin:0 auto!important;
 }
 
-#direccion,
-#direccion-provcorr {
+#direccion {
     display: inline-block;
     width: 70%;
     margin-right: 15px;
 }
+#direccion-provcorr {
+    display: inline-block;
+    width: 100%;
+    margin-right: 15px;
+}
 
-#codpost,
-#codpost-provcorr {
+#codpost {
     display: inline-block;
     width: 25%;
 }
 
+#codpost-provcorr {
+    display: inline-block;
+    width: 100%;
+}
 
 
 #codpost::-webkit-input-placeholder {
@@ -894,9 +901,15 @@ label[for="kmz-almacenamiento"] .campo-span{
     margin-top: 10px;
 }
 
-.label-contacto,
-.label-proveedorescorredor {
+.label-contacto {
     margin-left: 50px;
+    color: #757575;
+    font-size: 14px;
+    font-family: "G-Open Sans-n4", Arial !important;
+    padding-top: 10px;
+}
+.label-proveedorescorredor {
+    margin-left: 10px;
     color: #757575;
     font-size: 14px;
     font-family: "G-Open Sans-n4", Arial !important;
@@ -913,12 +926,14 @@ label[for="kmz-almacenamiento"] .campo-span{
 
 .concom-intereses button,
 .value-contacto{
-    margin-right:0!important;
+    margin-right:0;
     position:relative;  
 }
-
-.concom-intereses button{
-    margin-left:0!important;
+.procedencia-corr{
+    margin-right:11px;
+}
+.concom-intereses button {
+    margin-left: 0 !important;
 }
 
 
@@ -938,6 +953,9 @@ label[for="kmz-almacenamiento"] .campo-span{
     border-style: solid;
     width: 274px;
     height: 38px;
+}
+.value-contacto input {    
+    width: 100%;
 }
 
 #concom-Telefono1,

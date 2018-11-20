@@ -537,46 +537,44 @@
     </div>
 
     <div id="formulario-proveedorescorredor">
-        <h2>Proveedores del corredor</h2>
         <div class="datos-proveedores-guardados">
-
         </div>
         <div class="contenedor-grupo-proveedorescorredor-edit">
             <div class="contenedor-proveedorescorredor-comercial">
                 <div class="row provcorr-form">
                     <input type="hidden" id="provcorrId" />
                     <input type="hidden" id="corredorId" />
-                    <div class="col-lg-5">
+                    <div class="col-lg-3">
                         <div class="label-proveedorescorredor">
                             CUIT
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-9">
                         <div class="value-contacto">
                             <input type="text" id="provcorr-cuit" />
                         </div>
                     </div>
                 </div>
                 <div class="row provcorr-form">
-                    <div class="col-lg-5">
+                    <div class="col-lg-3">
                         <div class="label-proveedorescorredor">
                             Razón Social
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-9">
                         <div class="value-contacto">
-                            <input type="text" id="provcorr-razonsocial" />
+                            <input type="text" id="provcorr-razonsocial" disabled />
                         </div>
                     </div>
                 </div>
                 <div class="row provcorr-form">
-                    <div class="col-lg-5"></div>
-                    <div class="campo-estadoafip-corredor col-lg-7">
+                    <div class="col-lg-3"></div>
+                    <div class="campo-estadoafip-corredor col-lg-9">
                         <span class="campo-estadoafip-span-corredor">
                             Estado Registro AFIP
                         </span>
                         <img id="imgOperableCorr" src="" />
-                        <span class="campo-estadoafip-span-operable" id="Operable-agregar-corredor" onmouseover="mostrarTooltip(this)" onmouseout="ocultarTooltip(this)">
+                        <span class="campo-estadoafip-span-operable" id="Operable-agregar-corredor">
                         </span>
                         <div id="tooltip-corredor" class="lista-contacto-no-operable">
                             <div class="lista-contacto-no-operable-tooltip">
@@ -586,31 +584,52 @@
                         </div>
                     </div>
                 </div>
-                <div class="label-proveedorescorredor">
-                    Domicilio
-                </div>
-                <div>
-                    <div class="provcorr-procedencia row">
-                        <div class="formulario-procedencia">
-                            <input type="text" class="proc-input" id="procedencia" placeholder="Buscar por Localidad" />
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor">
+                            Domicilio
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto procedencia-corr">
+                            <input type="text" style="width:100%" id="procedencia" placeholder="Buscar por Localidad" />
                             <input type="hidden" id="provinciacorrId" />
                             <input type="hidden" id="localidadcorrId" />
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="formulario-campo col-xs-12">
-                        <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion-provcorr" />
-                        <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost-provcorr" />
+                <div class="row provcorr-form">
+                    <div class="col-md-3"></div>
+                    <div class="formulario-campo">
+                        <div class="col-md-6">
+                            <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion-provcorr" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost-provcorr" />
+                        </div>
                     </div>
                 </div>
                 <div class="row provcorr-form">
-                    <div class="col-lg-5">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor" style="padding-top:0">
+                            Procedencia CompraNet
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto procedencia-corr">
+                            <input type="text" style="width:100%" id="procedenciaCompranet" placeholder="Buscar por Localidad" />
+                            <input type="hidden" id="provinciacorrCompranetId" />
+                            <input type="hidden" id="localidadcorrCompranetId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
                         <div class="label-proveedorescorredor">
                             Clasificación
                         </div>
                     </div>
-                    <div class="col-lg-7 campo-clasificacion-proveedor">
+                    <div class="col-lg-9 campo-clasificacion-proveedor">
 
                     </div>
                 </div>

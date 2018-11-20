@@ -20,6 +20,7 @@ function CrearCorredor() {
 
 function armarFuncionalidadesProveedorCorredor() {
     crearProcedencia();
+    crearProcedenciaCompraNet();
     $("#provcorr-cuit").change(function () { buscarProveedor(); });
     guardarProveedorCorredor();
 }
@@ -71,6 +72,53 @@ function crearProcedencia() {
     $("#procedencia").removeClass("k-input");
     $("#procedencia").addClass("campo-input-text");
 }
+function crearProcedenciaCompraNet() {
+    $("#procedenciaCompranet").click(function () {
+        $("#procedenciaCompranet").data("kendoAutoComplete").value("");
+        $("#LocalidadCrearContrato").trigger("change");
+    });
+
+    $("#procedenciaCompranet").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function (e) {
+            if ($("#procedenciaCompranet").val().split('|').length > 1) {
+                $("#procedenciaCompranet").val($("#procedenciaCompranet").val().split('|')[1]);
+            }
+        },
+        select: function (e) {
+            var item = e.dataItem;
+            $("#provinciacorrCompranetId").val(item.ProvinciaId);
+            $("#localidadcorrCompranetId").val(item.Id);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#procedenciaCompranet').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+
+    $("#procedenciaCompranet").removeClass("k-input");
+    $("#procedenciaCompranet").addClass("campo-input-text");
+}
 function buscarRazonSocialCorredor(val) {
     var data = { cuit: val };
     $("#provcorr-razonsocial").val("");
@@ -83,10 +131,9 @@ function buscarRazonSocialCorredor(val) {
     $("#localidadcorrId").val("");
     var result = MSExecuteOnServer('/Proveedor/TraerRazonSocial', data);    
     $("#provcorr-razonsocial").val(result.razonSocial);
-    $(".campo-estadoafip-span-operable-corredor").html(result.Operable ? "Operable" : "No Operable");
     if (result.Operable === 0) {
         $(".span-contacto-no-operable-tooltip-corredor").html(result.Condicion);
-        $("#Operable-agregar").show();
+        $("#Operable-agregar-corredor").show();
     }
     if (result.Operable) {
         $("#imgOperableCorr").attr("src", "../Content/Images/operableafip.png");
@@ -126,12 +173,15 @@ function limpiarCargaProveedor() {
     $("#provcorr-cuit").val("");
     $("#provcorr-razonsocial").val("");
     $("#procedencia").val("");
+    $("#procedenciaCompranet").val("");
     $("#provcorrId").val("");
     $("#clasificacion-proveedor-corredor").val("");
     $("#direccion-provcorr").val("");
     $("#codpost-provcorr").val("");  
     $("#provinciacorrId").val("");
     $("#localidadcorrId").val("");
+    $("#provinciacorrCompranetId").val("");
+    $("#localidadcorrCompranetId").val("");
     $("#imgOperableCorr").attr("src", "");
     $(".campo-estadoafip-corredor").css({
         'background-color': 'rgba(150, 235, 198, 0.45)'
@@ -154,6 +204,14 @@ function guardarProveedorCorredor() {
             obj.contacto.provinciaDesc = provinciaAux[0];
             obj.contacto.localidad = $("#localidadcorrId").val();
             obj.contacto.provincia = $("#provinciacorrId").val();
+        }
+        if ($("#procedenciaCompranet").val() !== "") {
+            var localidadcnAux = $("#procedenciaCompranet").val().split(' (');
+            obj.basicos.localidadCompraNetDesc = localidadcnAux[0];
+            var provinciacnAux = localidadcnAux[1].split(')');
+            obj.basicos.provinciaCompraNetDesc = provinciacnAux[0];
+            obj.basicos.ProvinciaCompraNet = $("#provinciacorrCompranetId").val();            
+            obj.basicos.LocalidadCompraNet = $("#localidadcorrCompranetId").val();
         }
         obj.contacto.direccion = $("#direccion-provcorr").val();
         obj.contacto.codpost = $("#codpost-provcorr").val();
@@ -199,13 +257,13 @@ function crearContenedoresProveedores(obj) {
         '<div class="contenedor-contacto-comercial-extras">' +
         '<div class="row">' +
         '<div class="col-lg-6">' +
-        '<span class="contenedor-contacto-comercial-posicion-izq">' +
-        'Clasificacion:' +
+        '<span class="contenedor-contacto-comercial-posicion-der">' +
+        'Procedencia CompraNet: <br />' + (obj.basicos.localidadCompraNetDesc ? obj.basicos.localidadCompraNetDesc + ', ' + obj.basicos.provinciaCompraNetDesc : "No se especifica") +
         '</span>' +
         '</div>' +
         '<div class="col-lg-6">' +
         '<span class="contenedor-contacto-comercial-posicion-der">' +
-        (obj.Clasificacion ? obj.Clasificacion : "no especifica") +
+        'Clasificacion: ' + (obj.Clasificacion ? obj.Clasificacion : "no especifica") +
         '</span>' +
         '</div>' +
         '</div>' +
@@ -225,15 +283,18 @@ function editarProveedorComercial(id) {
     obj = obj[0];
     $("#provcorr-cuit").val(obj.basicos.cuit);
     $("#provcorr-razonsocial").val(obj.basicos.RazonSocial);
-    obj.contacto.localidad? $("#procedencia").val(obj.contacto.localidadDesc + " (" + obj.contacto.provinciaDesc + ")"):"";
+    obj.contacto.localidad ? $("#procedencia").val(obj.contacto.localidadDesc + " (" + obj.contacto.provinciaDesc + ")") : "";
+    obj.basicos.LocalidadCompraNet ? $("#procedenciaCompranet").val(obj.basicos.localidadCompraNetDesc + " (" + obj.basicos.provinciaCompraNetDesc + ")") : "";
     $("#provcorrId").val(obj.ProveedorId);
     $("#clasificacion-proveedor-corredor").val(obj.basicos.ClasificacionCompraNet);
     $("#direccion-provcorr").val(obj.contacto.direccion);
     $("#codpost-provcorr").val(obj.contacto.codpost);
     $("#corredorId").val(obj.ProveedorCorredorId);
     $("#proveedor" + id).remove();
-    obj.contacto.localidad = $("#localidadcorrId").val();
-    obj.contacto.provincia = $("#provinciacorrId").val();
+    $("#localidadcorrId").val(obj.contacto.localidad);
+    $("#provinciacorrId").val(obj.contacto.provincia);
+    $("#localidadcorrCompraNetId").val(obj.basicos.LocalidadCompraNet);
+    $("#provinciacorrCompraNetId").val(obj.basicos.ProvinciaCompraNet);
     proveedorCorredorGuardado = proveedorCorredorGuardado.filter(function (el) {
         return el.item !== parseInt(id);
     });
@@ -274,6 +335,10 @@ function armarEditCorredor() {
             proveedor.contacto.provincia = proveedores[i].ProvinciaId;
             proveedor.contacto.localidadDesc = proveedores[i].Localidad;
             proveedor.contacto.provinciaDesc = proveedores[i].Provincia;
+            proveedor.basicos.LocalidadCompraNet = proveedores[i].LocalidadCompraNetId;
+            proveedor.basicos.ProvinciaCompraNet = proveedores[i].ProvinciaCompraNetId;
+            proveedor.basicos.localidadCompraNetDesc = proveedores[i].LocalidadCompraNet;
+            proveedor.basicos.provinciaCompraNetDesc = proveedores[i].ProvinciaCompraNet;
             proveedor.basicos.ClasificacionCompraNet = proveedores[i].ClasificacionCompraNetId;
             proveedor.Clasificacion = proveedores[i].ClasificacionDescripcion;
             proveedor.ProveedorId = proveedores[i].ProveedorId;

@@ -830,7 +830,7 @@ namespace Molinos.DataAgro.Business.Managers
                 AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust,
                 AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust,
                 AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns,
-                AreaInfluencia = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? repositorio.Obtener<AreaInfluencia>(Convert.ToInt32(oParam.contacto.areaDeInfluencia)) : null,
+                AreaInfluenciaId = oParam.contacto.areaDeInfluencia!= null ? Convert.ToInt32(oParam.contacto.areaDeInfluencia):(int?)null,
                 CUIT = oParam.basicos.cuit,
                 RazonSocial = oParam.basicos.RazonSocial,
                 SegmentacionId = oParam.basicos.segmentacion,
@@ -2178,27 +2178,35 @@ namespace Molinos.DataAgro.Business.Managers
                 ClasificacionDescripcion = x.Proveedor.ClasificacionCompraNet.Descripcion,
                 Localidad = x.Proveedor.Localidad.Nombre,
                 LocalidadId = x.Proveedor.LocalidadId,
-                ProvinciaId= x.Proveedor.ProvinciaId,
+                ProvinciaId = x.Proveedor.ProvinciaId,
                 Provincia = x.Proveedor.Provincia.Nombre,
+                LocalidadCompraNet = x.Proveedor.LocalidadCompraNet.Nombre,
+                LocalidadCompraNetId = x.Proveedor.LocalidadCompraNetId,
+                ProvinciaCompraNet = x.Proveedor.ProvinciaCompraNet.Nombre,
+                ProvinciaCompraNetId = x.Proveedor.ProvinciaCompraNetId,
                 Direccion = x.Proveedor.Direccion,
                 CodigoPostal = x.Proveedor.CodigoPostal,
-                ProveedorCorredorId= x.Id
+                ProveedorCorredorId = x.Id
             }, x => x.CorredorId == corredorId);
         }
         public TraerProveedorResult TraerProveedorParaCorredor(string cuit)
         {
             var proveedorResult = new TraerProveedorResult();
-            var proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => x.CUIT == cuit && (x.SegmentacionId != 5 && x.SegmentacionId!=7),x => new ProveedorDto
+            var proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => x.CUIT == cuit && (x.SegmentacionId != 5 && x.SegmentacionId != 7), x => new ProveedorDto
             {
                 CUIT = x.CUIT,
                 ProveedorId = x.ProveedorId,
                 RazonSocial = x.RazonSocial,
                 ClasificacionCompraNetId = x.ClasificacionCompraNetId,
-                ClasificacionDescripcion=x.ClasificacionCompraNet.Descripcion,
+                ClasificacionDescripcion = x.ClasificacionCompraNet.Descripcion,
                 Localidad = x.Localidad.Nombre,
                 LocalidadId = x.LocalidadId,
                 ProvinciaId = x.Localidad.ProvinciaId,
                 Provincia = x.Localidad.Provincia.Nombre,
+                LocalidadCompraNet = x.LocalidadCompraNet.Nombre,
+                LocalidadCompraNetId = x.LocalidadCompraNetId,
+                ProvinciaCompraNet = x.ProvinciaCompraNet.Nombre,
+                ProvinciaCompraNetId = x.ProvinciaCompraNetId,
                 Direccion = x.Direccion,
                 CodigoPostal = x.CodigoPostal
             });
@@ -2234,7 +2242,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         public GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory)
         {
-            var result = GrabarNuevoProveedor(new NuevoProveedor() { basicos = oParam.basicos,contacto = oParam.contacto, contactocomercial = oParam.contactocomercial }, idActiveDirectory);
+            var result = GrabarNuevoProveedor(new NuevoProveedor()
+            {
+                basicos = oParam.basicos,
+                contacto = oParam.contacto,
+                contactocomercial = oParam.contactocomercial,
+                produccion = new Produccion(),
+                almacenamiento = new Almacenamiento(),
+            }, idActiveDirectory);
 
             if (oParam.proveedorCorredor != null)
             {
