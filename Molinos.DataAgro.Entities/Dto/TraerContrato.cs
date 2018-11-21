@@ -98,6 +98,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Corredor { get; set; }
         public int  CorredorId { get; set; }
         public DatosFijacionDeContratoDto DatosFijacion { get; set; }
+        public decimal? PorcentajeComision { get; set; }
     }
 
 

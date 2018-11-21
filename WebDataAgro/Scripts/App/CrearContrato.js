@@ -261,7 +261,7 @@ function InicializarElementos() {
     $("#contratoId").kendoAutoComplete({
         template: '<i class="fa fa-clipboard-list"></i> ' +
             '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> <br />' +
-            'Kgs Pendientes: #: data.KilosPendiente# - Kgs Pendientes: #: data.KilosAplicados# <br />' +
+            'Kgs Pendientes: #: data.KilosPendiente# - Kgs Aplicados: #: data.KilosAplicados# <br />' +
             'Desde: #: data.FechaDesde# - Hasta:#: data.FechaHasta# </p> ',        
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
@@ -832,6 +832,14 @@ function InicializarElementos() {
         culture: "es-AR",
         format: "n0",
         spinners: false,
+        min: 0
+    });
+
+    $("#porcentajeComision").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        value:1,
         min: 0
     });
 
@@ -1419,6 +1427,7 @@ function AsignarDatos() {
     if ($("#destinoId").data("kendoDropDownList")) $("#destinoId").data("kendoDropDownList").value("1");
     if ($("#descuentoMonedaId").data("kendoDropDownList")) $("#descuentoMonedaId").data("kendoDropDownList").value("1");
     var materialId = $('select[id="material"]').val();
+
     CargarCalidadPorMaterial(materialId);
 }
 
@@ -1512,6 +1521,7 @@ function ObtenerDatos() {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.DiasPesificado = $("#pesificadoDiasId").val();
+    obj.PorcentajeComision = $("#porcentajeComision").val();
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.TrigoEspecial = $("#trigoEspecialId").is(":checked") ? true : false;
     obj.EstadoId = $("#baseId").is(":checked") ? "3" : "1";
@@ -1840,6 +1850,9 @@ function CargarDatosEditar(contrato) {
         $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
     }
 
+    if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {
+        $("#porcentajeComision").data("kendoNumericTextBox").value(contrato.PorcentajeComision);
+    }
     if (contrato.NoInformaSIO == true) {
         $("#noInformaSioId").prop("checked", true);
     } else {

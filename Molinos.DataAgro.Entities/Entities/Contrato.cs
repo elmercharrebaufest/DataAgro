@@ -54,6 +54,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? MercsDeposito { get; set; }
         public int? ComercialCreadorId { get; set; }
         public int? CorredorId { get; set; }
+        public decimal? PorcentajeComision { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }

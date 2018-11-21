@@ -138,7 +138,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         MERC_DESCARGADA = contrato.MercsDeposito ==true ? "X" : "",
                         OBSERVACION_CAL1 = contrato.Observacion,
                         CUIT_CORREDOR = contrato.Corredor.CUIT,
-                        PORC_COMISION = contrato.Corredor.CUIT != ""? 1:0
+                        PORC_COMISION = contrato.Corredor.CUIT != ""? contrato.PorcentajeComision.Value:0
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

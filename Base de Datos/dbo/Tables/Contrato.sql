@@ -44,7 +44,8 @@
 	[HastaFijacion] DATETIME NULL,
 	[MercsDeposito] BIT NULL,
     [ComercialCreadorId] INT NULL,
-	[CorredorId] INT NULL
+	[CorredorId] INT NULL,
+	[PorcentajeComision] DECIMAL(11, 2) NULL
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 

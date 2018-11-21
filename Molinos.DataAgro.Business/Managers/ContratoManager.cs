@@ -335,6 +335,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
             oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
             oContratoSave.CorredorId = oContrato.CorredorId;
+            oContratoSave.PorcentajeComision = oContrato.PorcentajeComision;
 
             if (descuentosExistentes != null)
             {
@@ -692,7 +693,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Warrant = x.Warrant,
                 PagoDirectoVendedor = x.PagoDirectoVendedor,
                 EstablecimientoPropio = x.EstablecimientoPropio,
-                MercsDeposito = x.MercsDeposito
+                MercsDeposito = x.MercsDeposito,
+                PorcentajeComision =x.PorcentajeComision
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

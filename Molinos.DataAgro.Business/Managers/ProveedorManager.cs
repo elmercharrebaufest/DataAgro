@@ -344,7 +344,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oContrato.ProveedorId && x.CompraNet == true);
+                var id = oContrato.CorredorId.HasValue ? oContrato.CorredorId : oContrato.ProveedorId;
+                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
                 
                 string emailComercial = "";
 
