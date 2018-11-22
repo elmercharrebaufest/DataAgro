@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
                         CONTR_DATAAGRO = contrato.ContratoId.ToString(),
                         COSECHA = contrato.Campana.Descripcion,
-                        DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.Value.ToString() : "0",
+                        DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
                         FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
                         FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
                         FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
@@ -137,8 +137,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
                         MERC_DESCARGADA = contrato.MercsDeposito ==true ? "X" : "",
                         OBSERVACION_CAL1 = contrato.Observacion,
-                        CUIT_CORREDOR = contrato.Corredor.CUIT,
-                        PORC_COMISION = contrato.Corredor.CUIT != ""? contrato.PorcentajeComision.Value:0
+                        CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT: "" ,
+                        PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value:0
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

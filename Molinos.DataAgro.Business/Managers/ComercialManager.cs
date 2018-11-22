@@ -154,7 +154,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Apellido = oComercial.Apellido;
                 oComercialSave.Nombres = oComercial.Nombres;
                 oComercialSave.Perfil = oComercial.Perfil;
-                oComercialSave.EmpleadorACargo = oComercial.EmpleadorACargo;
+                oComercialSave.EmpleadorACargoId = oComercial.EmpleadorACargoId;
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;

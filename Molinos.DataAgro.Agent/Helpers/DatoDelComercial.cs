@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.DatosDelComercial;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -37,7 +38,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.Password = PassSap;
 
                 var rq = new Z_MPRFC_DATOS_COMERCIAL() { IM_USUARIO = Usuario };
-
+                logger.Debug(rq.ToXml());
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES(rq);
 
                 return valor1;
