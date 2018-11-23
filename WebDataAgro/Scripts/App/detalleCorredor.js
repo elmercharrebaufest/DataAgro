@@ -31,13 +31,13 @@ function CargarProveedores(datos) {
                 '</div>' +
                 '</div>' +
                 '<div class="row">' +
-                '<div class="contenedor-contacto-comercial-posicion col-lg-5">' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-3">' +
                 '<span class="contenedor-contacto-comercial-posicion-izq">' +
                 'Procedencia Compranet:' +
                 '</span>' +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-posicion col-lg-6">' +
-                '<span class="contenedor-contacto-comercial-posicion-der">' +
+                '<span class="contenedor-contacto-comercial-posicion-der contacto-proveedor-corredor">' +
                 (obj.LocalidadCompraNetId !== null ? obj.LocalidadCompraNet + " (" + obj.ProvinciaCompraNet + ")" : "no especifica") +
                 '</span>' +
                 '</div>' +
@@ -47,7 +47,7 @@ function CargarProveedores(datos) {
                 '</span>' +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-posicion col-lg-3">' +
-                '<span class="contenedor-contacto-comercial-posicion-der">' +
+                '<span class="contenedor-contacto-comercial-posicion-der contacto-proveedor-corredor">' +
                 (obj.ClasificacionDescripcion ? obj.ClasificacionDescripcion : "no especifica") +
                 '</span>' +
                 '</div>' +

@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Interfaces
         List<BusquedaHome> DevolverProveedoresConCorredor(string filtroProveedor, string filtro);
 
         List<ProveedorDto> ListarProveedor(string text);
+        List<ProveedorDto> ListarCorredor(string text);
         List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId);
         TraerProveedorResult TraerProveedorParaCorredor(string cuit);
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);

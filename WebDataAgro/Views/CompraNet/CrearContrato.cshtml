@@ -141,17 +141,31 @@
         </div>
         <div class="col-sm-6" id="datosContrato" hidden>
             <div class="datoscontrato row">
-                <div class="col-sm-4">
-                    <label>Kgs(Pend/Aplic):</label>
-                    <span id="kgscontrato"></span>
-                </div>
-                <div class="col-sm-4">
-                    <label>Fecha Desde:</label>
-                    <span id="desdecontrato"></span>
-                </div>
-                <div class="col-sm-4">
-                    <label>Fecha Hasta:</label>
-                    <span id="hastacontrato"></span>
+                <div class="col-xs-12">
+                    <div style="display:inline-block">
+                        <label>
+                            Kgs Pendientes:
+                        </label>
+                        <span id="kgspendientescontrato"></span>
+                    </div>
+                    <div style="display:inline-block">
+                        <label>
+                            - Kgs Aplicados:
+                        </label>
+                        <span id="kgsaplicadoscontrato"></span>
+                    </div>
+                    <div style="display:inline-block">
+                        <label>
+                            - Desde:
+                        </label>
+                        <span id="desdecontrato"></span>
+                    </div>
+                    <div style="display:inline-block">
+                        <label>
+                            - Hasta:
+                        </label>
+                        <span id="hastacontrato"></span>
+                    </div>
                 </div>
             </div>
         </div>        
@@ -196,7 +210,7 @@
                 <label id="lblBase">Base</label>
                 <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
             </span>
-            <div id="pagoDirectoDiv" style="float:right;">
+            <div id="pagoDirectoDiv" hidden style="float:right;">
                 <label>Pago dir. Vend.</label>
                 <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                 <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
@@ -352,13 +366,14 @@
                 <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errnoInformaSioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-        
-            <div class="col-sm-2 ">
-                <label>Porcentaje de Comisión</label>                
-            </div>
-            <div class="col-md-2 col-sm-9">
-                <input id="porcentajeComision" placeholder="Porcentaje" style="width:100%" />
-                <img id="errporcentajeComision" src="~/Content/Images/error.png" style="display:none" />
+            <div id="porcentajeComisionDiv" hidden>
+                <div class="col-sm-2 ">
+                    <label>Porcentaje de Comisión</label>
+                </div>
+                <div class="col-md-2 col-sm-9">
+                    <input id="porcentajeComision" placeholder="Porcentaje" style="width:100%" />
+                    <img id="errporcentajeComision" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
         </div>
         <div class="row">

@@ -44,6 +44,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? Ampliaciones { get; set; }
         public string TipoNegocio { get; set; }
         public string Proveedor { get; set; }
+        public string Corredor { get; set; }
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
         public string Material { get; set; }
@@ -95,7 +96,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DescuentoBonificacionDto> Descuentos { get; set; }
         public List<CalidadDto> Calidades { get; set; }
         public bool? MercsDeposito { get; set; }
-        public string Corredor { get; set; }
         public int  CorredorId { get; set; }
         public DatosFijacionDeContratoDto DatosFijacion { get; set; }
         public decimal? PorcentajeComision { get; set; }

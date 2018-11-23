@@ -24,6 +24,10 @@
                         <strong style="float:left">Proveedor:</strong>
                         <span id="visualizar_proveedor"></span>
                     </div>
+                    <div id="corredorDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Corredor:</strong>
+                        <span id="visualizar_corredor"></span>
+                    </div>
                     <div id="fechaDivVisualizar" class="row campo marginCero clearfix">
                         <strong style="float:left">Fecha de Operación:</strong>
                         <span id="fechacontrato"></span>
@@ -51,9 +55,9 @@
                         </div>
                     </div>
                     <div class="row marginCero">
-                        <div id="cantidadDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">                           
-                                <strong style="float:left">KG:</strong>
-                                <span id="visualizar_cantidad"></span>                            
+                        <div id="cantidadDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">KG:</strong>
+                            <span id="visualizar_cantidad"></span>
                         </div>
                         <div id="cantidadDeCamionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Cantidad de Camiones:</strong>
@@ -160,7 +164,7 @@
                                     <span>#: TipoDBDesc#</span><br />
                                     <span data-bind="visible: TipoPeriodoDBId!=1"><strong>Desde:</strong> #: FechaDesde#&nbsp; </span>
                                     <span style="margin-right:10px;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta:</strong> #:FechaHasta#</span>
-                                    <span style="display:inline-block;"data-bind="visible: Importe!=0"><strong>Importe: </strong>#:Importe# #:MonedaId#</span>
+                                    <span style="display:inline-block;" data-bind="visible: Importe!=0"><strong>Importe: </strong>#:Importe# #:MonedaId#</span>
                                     <span style="display:inline-block; margin-left:10px;" data-bind="visible: Porcentaje!=0"><strong>Porc:</strong> #:Porcentaje#%</span>
                                 </div>
                             </script>
@@ -174,8 +178,8 @@
                         <strong>Condición Fijacion:</strong>
                         <span id="visualizar_condicionFijacion" class="centrar"></span>
                     </div>
-                    <div id="calidadesDivVisualizar" >
-                        
+                    <div id="calidadesDivVisualizar">
+
                         <div id="tabla-calidades-visualizar" data-template="div-calidades-visualizar-template" data-bind="source:CalidadesVisualizar">
                             <div></div>
                             <div></div>

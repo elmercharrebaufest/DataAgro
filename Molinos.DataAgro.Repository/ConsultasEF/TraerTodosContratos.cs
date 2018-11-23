@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     ContratoId = contrato.ContratoId,
                     ProveedorId = contrato.ProveedorId,
+                    CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value: 0,
                     ComercialId = contrato.ComercialId,
                     MaterialId = contrato.MaterialId,
                     TipoNegocioId = contrato.TipoNegocioId,
@@ -64,6 +65,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Ampliaciones = contrato.Ampliaciones,
                     Cuit = contrato.Proveedor == null ? "" : contrato.Proveedor.CUIT,
                     Proveedor = contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
+                    Corredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
                     Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
@@ -108,6 +110,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     ContratoId = fijac.ContratoId,
                     ProveedorId = fijac.ProveedorId,
+                    CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                     ComercialId = fijac.ComercialId,
                     MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
                     TipoNegocioId = 3,
@@ -140,6 +143,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Ampliaciones = fijac.Ampliaciones,
                     Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
                     Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial,
+                    Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial,
                     Comercial = fijac.Comercial == null ? "" : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido,
                     Material = fijac.Material == null ? "" : fijac.Material.Descripcion,
                     Campania = "",

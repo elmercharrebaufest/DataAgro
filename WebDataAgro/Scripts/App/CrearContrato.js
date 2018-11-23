@@ -201,13 +201,16 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorCorredor").val().split('|').length > 1) {
                 $("#buscadorCorredor").val($("#buscadorCorredor").val().split('|')[1]);
-                if ($("#tipoId").val() != 3 && (contratoId == 0 || contratoId == null || contratoId == "")) {                    
+                if ($("#tipoId").val() != 3 && (contratoId == 0 || contratoId == null || contratoId == "")) {
                     $("#clasificacion").data("kendoDropDownList").value("");
                     $("#consignatarioId").prop("checked", false);
                 }
             }
+            if ($("#buscadorCorredor").val() == "") {
+                $("#porcentajeComisionDiv").hide();
+                $("#pagoDirectoDiv").hide();
+            }
             $("#buscadorProveedor").val("");
-            $("#buscadorProveedor").trigger("change");
             $("#contratoId").val("");
             $("#datosContrato").hide();
         },
@@ -234,6 +237,8 @@ function InicializarElementos() {
                     $("#boletoNingunoId").prop("checked", true);
                 }
             }
+            $('#porcentajeComisionDiv').show();
+            $('#pagoDirectoDiv').show();
         },
         dataSource: {
             severFiltering: true,
@@ -259,9 +264,9 @@ function InicializarElementos() {
     });
 
     $("#contratoId").kendoAutoComplete({
-        template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong>' +
+        template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> - ' +
             ' Kgs Pendientes: #: data.KilosPendiente# - Kgs Aplicados: #: data.KilosAplicados#' +
-            ' Desde: #: data.FechaDesde# - Hasta: #: data.FechaHasta# </p> ',        
+            ' - Desde: #: data.FechaDesde# - Hasta: #: data.FechaHasta# </p> ',        
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,
@@ -274,7 +279,8 @@ function InicializarElementos() {
         },
         select: function (e) {
             $("#datosContrato").show();
-            $("#kgscontrato").text(e.dataItem.KilosPendiente + "/" + e.dataItem.KilosAplicados);
+            $("#kgspendientescontrato").text(e.dataItem.KilosPendiente);
+            $("#kgsaplicadoscontrato").text(e.dataItem.KilosAplicados);
             $("#desdecontrato").text(e.dataItem.FechaDesde);
             $("#hastacontrato").text(e.dataItem.FechaHasta);
         },
@@ -1600,8 +1606,8 @@ function GrabarContrato(nuevoContrato) {
         result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
     }
     else {
-        var kilosPendientes = $("#kgscontrato").text().split("/");
-        if (nuevoContrato.Cantidad > parseInt(kilosPendientes[0])) {
+            ;
+        if (nuevoContrato.Cantidad > parseInt(kilosPendientes)) {
             MensErr("La cantidad excede los kilos pendientes de fijar");
             $.unblockUI();
         } else {

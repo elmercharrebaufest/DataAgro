@@ -346,6 +346,11 @@ namespace WebDataAgro.Controllers
             var proveedores = mobjProveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
+        public ActionResult ListarCorredor(string text = "")
+        {
+            var corredores = mobjProveedorManager.ListarCorredor(text);
+            return Json(corredores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ListarComercial(string text = "")
         {
             var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
