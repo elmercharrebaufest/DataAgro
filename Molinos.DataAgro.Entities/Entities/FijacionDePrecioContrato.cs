@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int FijacionDePrecioContratoId { get; set; }
-        public int ContratoId { get; set; }
+        public int? ContratoId { get; set; }
         public int ContratoSAP { get; set; }
         public int ProveedorId { get; set; }
         public int? MaterialId { get; set; }

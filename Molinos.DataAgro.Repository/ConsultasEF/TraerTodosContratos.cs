@@ -108,7 +108,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where equipo.Contains(fijac.ComercialId)
                 select new BasicoContrato()
                 {
-                    ContratoId = fijac.ContratoId,
+                    ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
                     ProveedorId = fijac.ProveedorId,
                     CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                     ComercialId = fijac.ComercialId,

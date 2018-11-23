@@ -190,7 +190,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oFijacionDePrecio.ContratoId = oContratoId;
+                if (oContratoId == 0)
+                {
+                    oFijacionDePrecio.ContratoId = null;
+                }
+                else
+                {
+                    oFijacionDePrecio.ContratoId = oContratoId;
+                }
                 repositorio.Agregar(oFijacionDePrecio);
             }
 
@@ -379,7 +386,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
-                ContratoId = fijac.ContratoId,
+                ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value:0,
                 ProveedorId = fijac.ProveedorId,
                 ComercialId = fijac.ComercialId,
                 MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
