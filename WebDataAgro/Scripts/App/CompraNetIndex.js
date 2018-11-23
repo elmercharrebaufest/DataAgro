@@ -995,7 +995,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     else if (provinciaDat != "" && localidadDat != "") {
         procedencia = localidadDat + ", " + provinciaDat;
     }
-    if (corredor !== null) {
+    if (corredor !== null && corredor !== "") {
         $("#corredorDivVisualizar").show();
         $("#visualizar_corredor").text(corredor);
     } else {
