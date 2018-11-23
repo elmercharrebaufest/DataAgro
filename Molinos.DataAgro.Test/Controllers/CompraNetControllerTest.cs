@@ -560,7 +560,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
-             testAssert.AreEqual(
+            Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
