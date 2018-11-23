@@ -1606,7 +1606,7 @@ function GrabarContrato(nuevoContrato) {
         result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
     }
     else {
-        VAR kilosPendientes = $("#kgspendientescontrato").text();
+        var kilosPendientes = $("#kgspendientescontrato").text().replace('.','');
         if (nuevoContrato.Cantidad > parseInt(kilosPendientes)) {
             MensErr("La cantidad excede los kilos pendientes de fijar");
             $.unblockUI();
