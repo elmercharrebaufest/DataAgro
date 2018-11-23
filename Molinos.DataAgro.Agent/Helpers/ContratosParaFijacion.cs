@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Linq;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Helpers;
+using System.Globalization;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -35,16 +36,21 @@ namespace Molinos.DataAgro.Agent
                 foreach (var id in contratos)
                 {
                     var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id).Sum();
-                    datosContratos.Add(repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
+
+                    var contrato =repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
                     {
                         ContratoId = id.ToString(),
-                        KilosAplicados = cantidad,
-                        KilosPendiente = x.Cantidad - cantidad,
+                        KilosAplicados = cantidad.ToString(),
+                        KilosPendiente = (x.Cantidad - cantidad).ToString(),
                         FechaDesde = x.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion) : "",
                         FechaHasta = x.HastaFijacion.HasValue ? SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta) : "",
-                        KilosContrato = x.Cantidad,
+                        KilosContrato =  x.Cantidad.ToString(),
                         Filtro = filtro + "|" + id
-                    }));
+                    });
+                    contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    contrato.KilosContrato = (double.Parse(contrato.KilosContrato)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    datosContratos.Add(contrato);
                 }
             }
             else
@@ -70,11 +76,11 @@ namespace Molinos.DataAgro.Agent
                         datosContratos.Add(new DatosFijacionDeContratoDto
                         {
                             ContratoId = contrato.CONTRATO,
-                            KilosAplicados = (double)contrato.KILOS_APLICADOS,
-                            KilosPendiente = (double)contrato.KILOS_PEND_FIJAR,
-                            FechaDesde = contrato.FECHA_DESDE,
-                            FechaHasta = contrato.FECHA_HASTA,
-                            KilosContrato = (double)contrato.KILOS_CONTRATO,
+                            KilosAplicados = contrato.KILOS_APLICADOS.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosPendiente = contrato.KILOS_PEND_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            FechaDesde = contrato.FECHA_DESDE.Replace("-","/"),
+                            FechaHasta = contrato.FECHA_HASTA.Replace("-", "/"),
+                            KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             Filtro = filtro + "|" + contrato.CONTRATO
                         });
                     }                    

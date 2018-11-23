@@ -259,13 +259,13 @@ function InicializarElementos() {
     });
 
     $("#contratoId").kendoAutoComplete({
-        template: '<i class="fa fa-clipboard-list"></i> ' +
-            '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> <br />' +
-            'Kgs Pendientes: #: data.KilosPendiente# - Kgs Aplicados: #: data.KilosAplicados# <br />' +
-            'Desde: #: data.FechaDesde# - Hasta:#: data.FechaHasta# </p> ',        
+        template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong>' +
+            ' Kgs Pendientes: #: data.KilosPendiente# - Kgs Aplicados: #: data.KilosAplicados#' +
+            ' Desde: #: data.FechaDesde# - Hasta: #: data.FechaHasta# </p> ',        
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,
+        type: "number",
         filter: "contains",
         change: function () {
             if ($("#contratoId").val().split('|').length > 1) {
@@ -312,6 +312,12 @@ function InicializarElementos() {
         $('#contratoId').val("");
         $("#contratoId").data("kendoAutoComplete").search("");  
         $("#datosContrato").hide();
+    });
+    $("#contratoId").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if (event.which < 48 || event.which > 57) {
+            event.preventDefault();
+        }
     });
 
     $("#comercialId").kendoDropDownList({
@@ -837,10 +843,12 @@ function InicializarElementos() {
 
     $("#porcentajeComision").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "n2",
         spinners: false,
+        decimals: 2,        
         value:1,
-        min: 0
+        min: 0,
+        max:100
     });
 
     $("#valorEspecialesId").kendoNumericTextBox({
@@ -1534,7 +1542,7 @@ function ObtenerDatos() {
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
-    obj.consignatario = $("#consignatarioId").is(":checked") ? true : false;
+    obj.Consignatario = $("#consignatarioId").is(":checked") ? true : false;
     obj.CD = $("#CDId").is(":checked") ? true : false;
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
@@ -1592,7 +1600,13 @@ function GrabarContrato(nuevoContrato) {
         result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
     }
     else {
-        result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
+        var kilosPendientes = $("#kgscontrato").text().split("/");
+        if (nuevoContrato.Cantidad > parseInt(kilosPendientes[0])) {
+            MensErr("La cantidad excede los kilos pendientes de fijar");
+            $.unblockUI();
+        } else {
+            result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
+        }
     }
 
     if (result != null) {
@@ -1816,7 +1830,7 @@ function CargarDatosEditar(contrato) {
 
     (contrato.PlanCanje == true) ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
     (contrato.Consignatario == true) ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
-    if (contrato.LocalidadId !== "null" && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== "null" && contrato.ProvinciaId !== "undefined") {
+    if (contrato.LocalidadId !== null && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== null && contrato.ProvinciaId !== "undefined") {
         $("#LocalidadCrearContrato").val(contrato.Localidad + "(" + contrato.Provincia + ")");
         HabilitarEstablecimiento();
     }

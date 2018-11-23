@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -149,14 +150,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
-            }
-            if (oParam.ContratoSAP != 0) {
-                var cantidadContrato = repositorio.Obtener<Contrato, double>(x=>x.ContratoSAP == oParam.ContratoSAP, x=>x.Cantidad);
-                var cantidadAplicada = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == oParam.ContratoSAP && x.FijacionDePrecioContratoId != oParam.FijacionDePrecioContratoId).Select(x => x.Cantidad).Sum();
-                if (oParam.Cantidad > cantidadContrato - (double)cantidadAplicada)
-                {
-                    oErrorMessages.Error("CantidadId", "La cantidad excede los kilos pendientes a aplicar");
-                }
             }
             return oErrorMessages;
         }
@@ -381,8 +374,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public BasicoContrato TraerFijacion(int id)
         {
-            var sap = repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == id, x => x.ContratoSAP);
-            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap && x.FijacionDePrecioContratoId != id).Sum();
+            var sap = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionDePrecioContratoId == id);
+            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoId && x.FijacionDePrecioContratoId != id).Sum();
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
@@ -430,8 +423,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
                 DatosFijacion = new DatosFijacionDeContratoDto() {
                     ContratoId = fijac.ContratoSAP.ToString(),
-                    KilosAplicados = cantidad,
-                    KilosPendiente = fijac.Contrato.Cantidad - cantidad,
+                    KilosAplicados = cantidad.ToString(),
+                    KilosPendiente = ((double?)fijac.Contrato.Cantidad - cantidad).ToString(),
                     FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",
@@ -440,6 +433,8 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : ""
                 }
             });
+            contrato.DatosFijacion.KilosAplicados = (double.Parse(contrato.DatosFijacion.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+            contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             return contrato;
         }
 

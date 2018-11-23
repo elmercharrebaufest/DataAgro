@@ -510,7 +510,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "DESTINO</th>" + Td(ref linea) + oContrato.Destino.Descripcion.ToUpper() + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "NOMBRE</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "FIGURA</th>" + Td(ref linea) + oContrato.Clasificacion.Descripcion.ToUpper();
             if (oContrato.Consignatario == true)
@@ -644,7 +644,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "FECHA</th>"+ Td(ref linea) +  oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoId + "</td></tr>";
-            htmlBody += "<tr>" + th + "NOMBRE</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
+            htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
             if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null)
             {

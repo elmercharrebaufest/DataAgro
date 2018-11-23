@@ -159,6 +159,8 @@ and ((@Zona is null)
 		from @Proveedores t 
 		LEFT join ProveedorEstado pe on t.item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
 
+IF (@ComercialFiltro IS NOT NULL OR @ComercialFiltro!= '0' )
+	DELETE @EmpleadoTable WHERE ComercialId != @ComercialFiltro
 
 --DEVUELVO LOS RESULTADOS
 
