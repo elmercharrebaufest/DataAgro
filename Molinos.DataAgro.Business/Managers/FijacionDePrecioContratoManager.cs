@@ -279,17 +279,38 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 try
                 {
+                    
+
+                    
+
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
-                    //Envio de mail
-                    mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
-
-                    repositorio.GuardarCambios();
-                    var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
-                    foreach (var comercialId in comerciales)
+                    try
                     {
-                        EnviarNotificacion(comercialId, oFijacionDePrecioSave);
+                        oFijacionDePrecioSave.ContratoSAP = nroFijacionSAP;
                     }
+                    catch (Exception e)
+                    {
+                        oFijacionDePrecioSave.ContratoSAP = "";
+                        logger.Error(e);
+                    }
+                    try
+                    {
+                        //Envio de mail
+                        mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
+
+                        repositorio.GuardarCambios();
+                        var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
+                        foreach (var comercialId in comerciales)
+                        {
+                            EnviarNotificacion(comercialId, oFijacionDePrecioSave);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }//Envio de mail
+                    
                 }
                 catch (Exception ex)
                 {
