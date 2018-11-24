@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? TrigoEspecial { get; set; }
         public int? Estado { get; set; }
         public string UsuarioId { get; set; }
-        public int? ContratoSAP { get; set; }
+        public string ContratoSAP { get; set; }
         public double? Ampliaciones { get; set; }
         public string TipoNegocio { get; set; }
         public string Proveedor { get; set; }
@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Sustentable { get; set; }
         public bool? Dolarizado { get; set; }
         public bool? Pesificado { get; set; }
-        public int? Negocio { get; set; }
+        public string Negocio { get; set; }
 
         public int? ClasificacionId { get; set; }
         public string ClasificacionDescripcion { get; set; }

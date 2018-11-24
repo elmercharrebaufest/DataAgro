@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? TrigoEspecial { get; set; } // TrigoEspecial
         public int EstadoId { get; set; } // Estado (length: 50)
         public string UsuarioId { get; set; } // UsuarioId (length: 100)
-        public int? ContratoSAP { get; set; }
+        public string ContratoSAP { get; set; }
         public double? Ampliaciones { get; set; } // Cantidad
         public string Observacion { get; set; }
         public int ClasificacionId { get; set; }//ClasificacionId
@@ -105,7 +105,7 @@ namespace Molinos.DataAgro.Entities.Entities
             NoInformaSio = false;
             TrigoEspecial = false;
             EstadoId = (int)EnumEstadoContrato.Pendiente;
-            ContratoSAP = 0;
+            ContratoSAP = "";
             Ampliaciones = 0;
             CantidadCamiones = 0;
         }

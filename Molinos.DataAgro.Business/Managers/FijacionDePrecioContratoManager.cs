@@ -76,7 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x => new FijacionDePrecioContratoIni
                 {
                     FijacionDePrecioContratoId = x.FijacionDePrecioContratoId,
-                    ContratoId = x.ContratoSAP,
+                    ContratoId = Convert.ToInt32(x.ContratoSAP),
                     Proveedor = x.Proveedor.RazonSocial,
                     Fecha = x.Fecha.ToString(),
                     Comercial = x.Comercial.Nombres,
@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Ampliaciones = x.Ampliaciones,
                     Estado = x.Estado.Descripcion,
                     Observacion = x.Observacion
-                }, x => contratoId == 0 || x.ContratoSAP == contratoId);
+                }, x => contratoId == 0 || x.ContratoSAP == contratoId.ToString());
         }
     
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
@@ -142,7 +142,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
-            if (oParam.ContratoSAP == 0)
+            if (oParam.ContratoSAP == "")
             {
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
             }
@@ -182,7 +182,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
                 oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
                 oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
-                oFijacionDePrecioSave.ContratoId = oContratoId;
+                oFijacionDePrecioSave.ContratoId = oContratoId != 0 ? oContratoId : (int?)null;
                 oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
                 oFijacionDePrecioSave.CorredorId = oFijacionDePrecio.CorredorId;
@@ -382,7 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
         public BasicoContrato TraerFijacion(int id)
         {
             var sap = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionDePrecioContratoId == id);
-            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoId && x.FijacionDePrecioContratoId != id).Sum();
+            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoSAP && x.FijacionDePrecioContratoId != id).Sum();
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
@@ -431,7 +431,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DatosFijacion = new DatosFijacionDeContratoDto() {
                     ContratoId = fijac.ContratoSAP.ToString(),
                     KilosAplicados = cantidad.ToString(),
-                    KilosPendiente = ((double?)fijac.Contrato.Cantidad - cantidad).ToString(),
+                    KilosPendiente = fijac.Contrato != null ? ((double?)fijac.Contrato.Cantidad - cantidad).ToString():"0",
                     FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",

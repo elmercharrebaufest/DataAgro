@@ -483,11 +483,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                     try
                     {
-                        oContratoSave.ContratoSAP = Convert.ToInt32(nroContratoSAP);
+                        oContratoSave.ContratoSAP = nroContratoSAP;
                     }
                     catch (Exception e)
                     {
-                        oContratoSave.ContratoSAP = 0;
+                        oContratoSave.ContratoSAP = "";
                         logger.Error(e);
                     }
 

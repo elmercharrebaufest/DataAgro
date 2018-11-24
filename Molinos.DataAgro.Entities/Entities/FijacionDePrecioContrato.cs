@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int FijacionDePrecioContratoId { get; set; }
         public int? ContratoId { get; set; }
-        public int ContratoSAP { get; set; }
+        public string ContratoSAP { get; set; }
         public int ProveedorId { get; set; }
         public int? MaterialId { get; set; }
         public string MonedaId { get; set; }
@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Observacion { get; set; }
         public int ComercialCreadorId { get; set; }
         public int? CorredorId { get; set; }
-        public int? FijacionSAP { get; set; }
+        public string FijacionSAP { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]

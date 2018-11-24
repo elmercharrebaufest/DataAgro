@@ -14,8 +14,8 @@
     [Observacion] NVARCHAR(MAX) NULL, 
     [ComercialCreadorId] INT NULL,
 	[CorredorId] INT NULL,
-	[FijacionSAP] INT NULL,
-	[ContratoSAP] INT NULL
+	[FijacionSAP] NVARCHAR(15) NULL,
+	[ContratoSAP] NVARCHAR(15) NULL
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Comercial] FOREIGN KEY (ComercialId) REFERENCES Comercial(ComercialId), 

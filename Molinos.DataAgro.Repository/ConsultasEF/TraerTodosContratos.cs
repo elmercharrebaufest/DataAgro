@@ -2,6 +2,7 @@
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
@@ -77,7 +78,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Sustentable = ((decimal)contrato.ImporteSustentable) != null && ((decimal)contrato.ImporteSustentable) > 0,
                     Dolarizado = contrato.FechaDolarizado != null,
                     Pesificado = contrato.DiasPesificado != null,
-                    Negocio = (contrato.ContratoSAP == 0 || contrato.ContratoSAP == null) ? contrato.ContratoId : contrato.ContratoSAP,
+                    Negocio = (contrato.ContratoSAP == "" || contrato.ContratoSAP == null) ? SqlFunctions.StringConvert((double?)contrato.ContratoId) : contrato.ContratoSAP,
                     DestinoId = contrato.DestinoId,
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     CantidadCamiones = contrato.CantidadCamiones,

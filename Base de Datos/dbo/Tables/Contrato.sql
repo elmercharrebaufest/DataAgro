@@ -25,7 +25,7 @@
     [TrigoEspecial] BIT NULL, 
     [EstadoId] INT NOT NULL, 
     [UsuarioId] VARCHAR(100) NULL,
-    [ContratoSAP] INT NULL, 
+    [ContratoSAP] NVARCHAR(15) NULL, 
     [Ampliaciones] FLOAT NULL, 
 	[ClasificacionId] INT DEFAULT 1 NOT NULL,  
     [Observacion] NVARCHAR(MAX) NULL,
