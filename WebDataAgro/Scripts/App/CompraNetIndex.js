@@ -372,7 +372,7 @@ function CreateGridInformeCompraNet() {
             { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs mobile-precio" } },
             { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
             { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes:{ "class": "mobile-md" } },
-            { field: "ContratoSAP", type: "string", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "Negocio", type: "string", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" } },
             { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }

@@ -156,7 +156,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Sustentable = false,
                     Dolarizado = false,
                     Pesificado = false,
-                    Negocio = null,
+                    Negocio = fijac.FijacionSAP,
                     DestinoId = null,
                     DestinoDescripcion = "",
                     CantidadCamiones = null,

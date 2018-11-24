@@ -279,19 +279,15 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 try
                 {
-                    
-
-                    
-
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
                     try
                     {
-                        oFijacionDePrecioSave.ContratoSAP = nroFijacionSAP;
+                        oFijacionDePrecioSave.FijacionSAP = nroFijacionSAP;
                     }
                     catch (Exception e)
                     {
-                        oFijacionDePrecioSave.ContratoSAP = "";
+                        oFijacionDePrecioSave.FijacionSAP = "";
                         logger.Error(e);
                     }
                     try

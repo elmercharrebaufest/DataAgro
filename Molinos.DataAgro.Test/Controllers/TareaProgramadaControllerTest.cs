@@ -74,10 +74,6 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Name\":null,\"NextRunTime\":\"\\/Date(-62135586000000)\\/\",\"LastRunTime\":\"\\/Date(-62135586000000)\\/\",\"Action\":null,\"RepeticionEnMinutos\":0,\"Inicio\":\"\\/Date(-62135586000000)\\/\",\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
         }
 
         [Test]
