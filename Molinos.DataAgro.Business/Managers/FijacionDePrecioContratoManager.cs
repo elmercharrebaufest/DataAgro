@@ -293,7 +293,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
-                    oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
