@@ -356,7 +356,6 @@ function DatosCorredor() {
     obj.basicos = {};
     obj.contacto = {};
     obj.contactocomercial = {};
-    obj.proveedoresCorredor = {};
 
     obj.basicos.cuit = $("#cuit").val();
     obj.basicos.razonsocial = $("#razonsocial").val();
