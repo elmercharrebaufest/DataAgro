@@ -126,6 +126,7 @@
 
     .contenedor-principal-campanas-grano:last-of-type {
         width: 24%;
+        text-align: right;
     }
 
     .contenedor-principal-campanas-grano:first-of-type {
