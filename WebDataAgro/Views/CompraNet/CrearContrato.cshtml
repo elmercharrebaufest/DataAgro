@@ -64,49 +64,67 @@
             </div>
         </div>
     </div>
-    <div id="pagosDiv" class="ampliar ">
-        <div class="row">
-            <div class="col-sm-2 ">
-                <label>Pago</label>
-            </div>
-            <div class="col-sm-5 col-md-3">
-                <label style="width:80px">CD</label>
-                <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
-                <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
-                <div style="float:right; width:110px">
-                    <label style="width:80px">Warrant </label>
-                    <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div id="plazosYTopesFijacion" class="ampliar">
         <div class="row">
-            <div class="col-sm-2 ">
-                <label>Fijación Desde-Hasta</label>
+            <div class="contratoAFijar">
+                <div class="col-sm-2 ">
+                    <label>Fijación Desde-Hasta</label>
+                </div>
+                <div class="col-sm-5 col-md-2">
+                    <span id="fechaDesdeTopeDiv">
+                        <input id="fechaDesdeTopeId" type="date" style="width: 100%" />
+                        <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
             </div>
-            <div class="col-sm-5 col-md-2">
-                <span id="fechaDesdeTopeDiv">
-                    <input id="fechaDesdeTopeId" type="date" style="width: 100%" />
-                    <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
+            <div class="contratoAFijar">
+                <div class="col-sm-5 col-md-2">
+                    <span id="fechaHastaTopeDiv">
+                        <input id="fechaHastaTopeId" type="date" style="width: 100%" />
+                        <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
             </div>
-
-            <div class="col-sm-5 col-md-2">
-                <span id="fechaHastaTopeDiv">
-                    <input id="fechaHastaTopeId" type="date" style="width: 100%" />
-                    <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
-            </div>
+            @*<div class="contratoAFijar">
+                <div class="col-sm-1">
+                </div>
+                <div class="col-sm-5 col-md-3">
+                    <label style="width:80px">Madre</label>
+                    <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
+                    <div style="float:right; width:110px">
+                        <label style="width:80px">Hijo </label>
+                        <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+            </div>*@
         </div>
         <div class="row">
-            <div class="col-sm-2 ">
-                <label>Condición fijación</label>
+            <div class="contratoAFijar">
+                <div class="col-sm-2 ">
+                    <label>Condición fijación</label>
+                </div>
+                <div class="col-sm-10 col-md-4">
+                    <select id="condicionFijacionId" data-bind="source:CondicionFijacionCombo, value: Parametros.CondicionFijacionId, disabled: isControlDisabled"></select>
+                    <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
-            <div class="col-sm-10 col-md-4">
-                <select id="condicionFijacionId" data-bind="source:CondicionFijacionCombo, value: Parametros.CondicionFijacionId, disabled: isControlDisabled"></select>
-                <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
+            <div id="pagosDiv" class="ampliar ">
+                <div class="col-sm-2 ">
+                    <label>Pago</label>
+                </div>
+                <div class="col-sm-5 col-md-3">
+                    <label style="width:80px">CD</label>
+                    <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
+                    <div style="float:right; width:110px">
+                        <label style="width:80px">Warrant </label>
+                        <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -168,7 +186,7 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-2 ">
@@ -330,7 +348,7 @@
                 <div class="col-sm-4 col-md-2">
                     <input id="sustentablePrecioId" placeholder="Importe" style="width:100%" />
                     <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
+                </div>
                 <div class="col-sm-4 col-md-2">
                     <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="width:100%"></select>
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />

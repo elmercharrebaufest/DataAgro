@@ -365,14 +365,14 @@ function InicializarElementos() {
         }
     });
 
-    $("#plazosYTopesFijacion").hide();
+    $(".contratoAFijar").hide();
 
     $("#tipoId").kendoDropDownList({
         optionLabel: "SELECCIONE UN TIPO DE NEGOCIO...",
         dataTextField: "Descripcion",
         dataValueField: "TipoNegocioId",
         change: function () {
-            $("#plazosYTopesFijacion").hide();
+            $(".contratoAFijar").hide();
             $("#pagosDiv").hide();
             if (this.value() == 3) {
                 $("#fechasDiv").hide();
@@ -438,10 +438,10 @@ function InicializarElementos() {
                 RemoverFondosGrises();
                 if (this.value() == 1) {
                     if ($("#boton-ampliar").text() == "+ AMPLIAR") {
-                        $("#plazosYTopesFijacion").hide();
+                        $(".contratoAFijar").hide();
                     }
                     else {
-                        $("#plazosYTopesFijacion").show();
+                        $(".contratoAFijar").show();
                     }
                     $("#CDId").prop("checked", false);
                     $("#WarrantId").prop("checked", false);
@@ -460,7 +460,14 @@ function InicializarElementos() {
             }
         }
     });
-
+    //$("#madreId").click(function () {
+    //    if ($(this).is(':checked')) {
+    //        $("#pagosDiv").show();
+    //    }
+    //    else {
+    //        $("#pagosDiv").hide();
+    //    }
+    //});
     $("#tipoId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#tipoId").data("kendoDropDownList");
@@ -1068,10 +1075,10 @@ function InicializarElementos() {
             $("#boton-ampliar").text("- OCULTAR");
             $(".ampliar").show();
             if ($('#tipoId').val() == 1) {
-                $("#plazosYTopesFijacion").show();
+                $(".contratoAFijar").show();
                 $("#pagosDiv").hide();
             } else if ($('#tipoId').val() == 2) {
-                $("#plazosYTopesFijacion").hide();
+                $(".contratoAFijar").hide();
                 $("#pagosDiv").show();
             } 
         }
@@ -1080,7 +1087,7 @@ function InicializarElementos() {
             $(".ampliar").hide();
             $(".ampliar-adicionales").hide();
             if ($('#tipoId').val() == 1) {
-                $("#plazosYTopesFijacion").hide();
+                $(".contratoAFijar").hide();
             }       
         }
     });
@@ -1535,7 +1542,7 @@ function ObtenerDatos() {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.DiasPesificado = $("#pesificadoDiasId").val();
-    obj.PorcentajeComision = $("#porcentajeComision").val();
+    obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val():0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.TrigoEspecial = $("#trigoEspecialId").is(":checked") ? true : false;
     obj.EstadoId = $("#baseId").is(":checked") ? "3" : "1";
