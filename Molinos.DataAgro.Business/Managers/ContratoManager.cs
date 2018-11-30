@@ -122,16 +122,34 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
                 }
             }
-            var rg = repositorio.Obtener<RG2300>(x => x.CUIT == proveedor.CUIT);
-            if (rg != null)
+            var sisa = repositorio.Listar<SISA>(x => x.CUIT == proveedor.CUIT);
+            if (sisa != null)
             {
-                if ((rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"])
-                     || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
-                         || (rg.Situacion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
+                var sisaEstado = sisa.Where(x => x.FechaVigenciaEstado <= DateTime.Now.Date).FirstOrDefault();
+                if (sisaEstado != null)
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por situación de " + rg.Situacion);
+                    if ((sisaEstado.EstadoCuit == 3)
+                             || (sisaEstado.EstadoCuit == 0))
+                    {
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT " + ((EnumEstadoCuit)sisaEstado.EstadoCuit).ToString());
+                    }
                 }
-
+                else
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado no Vigente");
+                }
+                var sisaCategoria = sisa.Where(x => x.FechaVigenciaCategoria <= DateTime.Now.Date).FirstOrDefault();
+                if (sisaCategoria != null)
+                {
+                    if (sisaCategoria.SituacionCategoria != "AL")
+                    {
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+                    }
+                }
+                else
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Categoría no Vigente");
+                }
             }
             var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
             if (facacop != null)

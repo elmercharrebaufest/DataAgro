@@ -8,6 +8,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Operable { get; set; }
         public string CUIT { get; set; }
         public string Condicion { get; set; }
+        public int EstadoCuit { get; set; }
+        public DateTime FechaVigenciaEstado { get; set; }
         public string RiesgoComercial { get; set; }
         public int Existe { get; set; }
 

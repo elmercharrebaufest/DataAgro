@@ -15,6 +15,7 @@
     <setParameter name="SinConexionSap Key" value="1" />
     <setParameter name="ValorPruebaSap Key" value="1" />
 
+  <setParameter name="SISA Key" value="C:\Img\RG_4310.txt" />
   <setParameter name="Rg2300 Key" value="C:\Img\RG2300.LST" />
   <setParameter name="Facacop Key" value="C:\Img\facacop.txt" />
 

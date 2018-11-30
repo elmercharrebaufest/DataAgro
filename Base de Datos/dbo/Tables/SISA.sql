@@ -7,6 +7,7 @@
     [FechaNotifDFEEstado]			DATETIME		NULL,
     [CBU]							VARCHAR (500)	NULL,
     [FechaActCBU]					DATETIME		NULL,
+	[CodCategoria]					INT				NULL,
     [Categoria]					    VARCHAR (500)	NOT NULL,
     [SituacionCategoria]			VARCHAR (10)	NOT NULL,
     [FechaVigenciaCategoria]		DATETIME		NULL,

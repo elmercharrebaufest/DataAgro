@@ -17,6 +17,7 @@
 
   <setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG2300.LST" />
   <setParameter name="Facacop Key" value="\\sapprgap\ftproot\transf\matprim\facacop.txt" />
+  <setParameter name="Rg2300 Key" value="\\sapprgap\ftproot\transf\matprim\RG_4310.txt" />
 
   <setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
   <setParameter name="ServicePass Key" value="MOA.Test" />

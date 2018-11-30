@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaNotifDFEEstado { get; set; }
         public string CBU { get; set; }
         public DateTime? FechaActCBU { get; set; }
+        public int CodCategoria { get; set; }
         public string Categoria { get; set; }
         public string SituacionCategoria { get; set; }
         public DateTime? FechaVigenciaCategoria { get; set; }

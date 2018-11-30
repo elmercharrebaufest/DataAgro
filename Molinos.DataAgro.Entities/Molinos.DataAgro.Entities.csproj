@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
+    <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
     <Compile Include="Common\Enums\EnumMeses.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />

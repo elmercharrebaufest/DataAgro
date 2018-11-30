@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -753,25 +754,31 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public ProveedorNuevo TraerRazonSocial(string cuit)
         {
-            var razonsocial = repositorio.Obtener<RG2300, ProveedorNuevo>(x => x.CUIT == cuit,
-                x => new ProveedorNuevo
+            var sisa = repositorio.Listar<SISA>(x => x.CUIT == cuit && x.FechaVigenciaEstado <= DateTime.Now.Date).FirstOrDefault();
+            var razonsocial = new ProveedorNuevo();
+            if (sisa != null)
+            {
+                razonsocial = new ProveedorNuevo()
                 {
-                    CUIT = x.CUIT,
+                    CUIT = sisa.CUIT,
                     Operable = 1,
-                    Condicion = x.Situacion,
-                    razonSocial = x.RazonSocial
-                });
-            if (razonsocial == null)
-            {
-                razonsocial = new ProveedorNuevo() { Condicion = "no incluido", CUIT = cuit, Operable = 0, razonSocial = "No existe Razon Social" };
-            }
-            else
-            {
-                razonsocial.Existe = repositorio.Existe<Proveedor>(x => x.CUIT == cuit) ? 1 : 0;
-            }
+                    EstadoCuit = sisa.EstadoCuit,
+                    razonSocial = sisa.RazonSocial,
+                    FechaVigenciaEstado = sisa.FechaVigenciaEstado ?? DateTime.Parse(null)
+                };
 
+                if (razonsocial == null)
+                {
+                    razonsocial = new ProveedorNuevo() { Condicion = "no incluido", CUIT = cuit, Operable = 0, razonSocial = "No existe Razon Social" };
+                }
+                else
+                {
+                    razonsocial.Existe = repositorio.Existe<Proveedor>(x => x.CUIT == cuit) ? 1 : 0;
+
+                }
+            }
             TraerEstado(razonsocial);
-
+            
             return razonsocial;
         }
         public ProveedorQry TraerProveedorPorCuit(string cuit, bool corredor)
@@ -797,14 +804,11 @@ namespace Molinos.DataAgro.Business.Managers
                 prov.Condicion = "Apocrifos";
                 return;
             }
-            else if (!String.IsNullOrEmpty(prov.Condicion))
+            else if ((prov.EstadoCuit == 0)
+                     || (prov.EstadoCuit == 3))
             {
-                if ((prov.Condicion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"])
-                     || (prov.Condicion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
-                         || (prov.Condicion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
-                {
-                    prov.Operable = 0;
-                }
+                prov.Condicion = ((EnumEstadoCuit)prov.EstadoCuit).ToString();
+                prov.Operable = 0;
             }
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] != "1")
@@ -1158,9 +1162,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("Proveedor", "Ya existe un corredor con ese CUIT");
                 return oEntityErrors;
             }
-            if (!repositorio.Existe<RG2300>(x => x.CUIT == oParam.basicos.cuit))
+            if (!repositorio.Existe<SISA>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Error("RG2300", "No existe el CUIT");
+                oEntityErrors.Error("SISA", "No existe el CUIT");
                 return oEntityErrors;
             }
 

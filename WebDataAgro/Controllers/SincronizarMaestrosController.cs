@@ -101,6 +101,7 @@ namespace WebDataAgro.Controllers
         
         public ActionResult ProcessSisa()
         {
+
             logger.Info("ProcessSisa - Iniciando");
             var str = ConfigurationManager.AppSettings["SISA"];
 
@@ -121,42 +122,49 @@ namespace WebDataAgro.Controllers
                 {
                     j = 1;
                 }
+                else if (j == 1)
+                {
+                    j = 2;
+                }
                 else
                 {
                     if (sLine != null)
                     {
                         var sisa = sLine.Split(';');
-                        lista.Add(new SISA
-                        {
-                            CUIT = !String.IsNullOrEmpty(sisa[0]) ? sisa[0].Replace('"', '\0').Replace('\\', '\0') : String.Empty,
-                            RazonSocial = !String.IsNullOrEmpty(sisa[1]) ? sisa[1].Replace("\"", String.Empty) : String.Empty,
-                            EstadoCuit = !String.IsNullOrEmpty(sisa[2]) ? Int32.Parse(sisa[2].Replace("\"", String.Empty)) : 0,
-                            FechaVigenciaEstado = !String.IsNullOrEmpty(sisa[3]) ? (DateTime?)DateTime.Parse(sisa[3]) : null,
-                            FechaNotifDFEEstado = !String.IsNullOrEmpty(sisa[4]) ? (DateTime?)DateTime.Parse(sisa[4]) : null,
-                            CBU = !String.IsNullOrEmpty(sisa[5]) ? sisa[5].Replace("\"", String.Empty) : String.Empty,
-                            FechaActCBU = !String.IsNullOrEmpty(sisa[6]) ? (DateTime?)DateTime.Parse(sisa[6]) : null,
-                            Categoria = !String.IsNullOrEmpty(sisa[7]) ? sisa[7].Replace("\"", String.Empty) : String.Empty,
-                            SituacionCategoria = !String.IsNullOrEmpty(sisa[8]) ? sisa[8].Replace("\"", String.Empty) : String.Empty,
-                            FechaVigenciaCategoria = !String.IsNullOrEmpty(sisa[9]) ? (DateTime?)DateTime.Parse(sisa[9]) : null,
-                            FechaNotifDFECategoria = !String.IsNullOrEmpty(sisa[10]) ? (DateTime?)DateTime.Parse(sisa[10]) : null,
-                            Observaciones = !String.IsNullOrEmpty(sisa[11]) ? sisa[11].Replace("\"", String.Empty) : String.Empty,
-                            FechaGeneracion = !String.IsNullOrEmpty(sisa[12]) ? (DateTime?)DateTime.Parse(sisa[12]) : null
-                        });
+                        var sisaList = new SISA();
+
+                        sisaList.CUIT = !String.IsNullOrEmpty(sisa[0]) ? sisa[0].Replace('"', '\0').Replace('\\', '\0') : String.Empty;
+                        sisaList.RazonSocial = !String.IsNullOrEmpty(sisa[1]) ? sisa[1].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.EstadoCuit = !String.IsNullOrEmpty(sisa[2]) ? Int32.Parse(sisa[2].Replace("\"", String.Empty)) : 0;
+                        sisaList.FechaVigenciaEstado = !String.IsNullOrEmpty(sisa[3]) ? (DateTime?)DateTime.Parse(sisa[3]) : null;
+                        sisaList.FechaNotifDFEEstado = !String.IsNullOrEmpty(sisa[4]) ? (DateTime?)DateTime.Parse(sisa[4]) : null;
+                        sisaList.CBU = !String.IsNullOrEmpty(sisa[5]) ? sisa[5].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.FechaActCBU = !String.IsNullOrEmpty(sisa[6]) ? (DateTime?)DateTime.Parse(sisa[6]) : null;
+                        sisaList.CodCategoria = !String.IsNullOrEmpty(sisa[7]) ? Int32.Parse(sisa[7].Replace("\"", String.Empty)) : 0;
+                        sisaList.Categoria = !String.IsNullOrEmpty(sisa[8]) ? sisa[8].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.SituacionCategoria = !String.IsNullOrEmpty(sisa[9]) ? sisa[9].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.FechaVigenciaCategoria = !String.IsNullOrEmpty(sisa[10]) ? (DateTime?)DateTime.Parse(sisa[10]) : null;
+                        sisaList.FechaNotifDFECategoria = !String.IsNullOrEmpty(sisa[11]) ? (DateTime?)DateTime.Parse(sisa[11]) : null;
+                        sisaList.Observaciones = !String.IsNullOrEmpty(sisa[12]) ? sisa[12].Replace("\"", String.Empty) : String.Empty;
+                        sisaList.FechaGeneracion = !String.IsNullOrEmpty(sisa[13]) ? (DateTime?)DateTime.Parse(sisa[13]) : null;
+
+                        lista.Add(sisaList);
                     }
                 }
             }
             objReader.Close();
             logger.Info($"ProcessSisa - Lineas leidas: {lista.Count}");
+            int lineas = 0;
             try
             {
-                sisaManager.InsertarSISA(lista);
+                lineas = sisaManager.InsertarSISA(lista);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 throw;
             }
-            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
+            logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lineas}");
             return Content("ok");
         }
 

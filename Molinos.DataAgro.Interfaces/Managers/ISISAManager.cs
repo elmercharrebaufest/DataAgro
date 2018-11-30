@@ -6,6 +6,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface ISISAManager
     {
-        bool InsertarSISA(List<SISA> oDatos);
+        int InsertarSISA(List<SISA> oDatos);
     }
 }

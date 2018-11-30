@@ -4,6 +4,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -20,18 +21,51 @@ namespace Molinos.DataAgro.Business.Managers
             this.oComercial = oComercial;
         }
 
-        public bool InsertarSISA(List<SISA> oDatos)
+        public int InsertarSISA(List<SISA> oDatos)
         {
             try
             {
-                repositorio.RemoverTodos<SISA>(x => true);
-                repositorio.AgregarTodos<SISA>(oDatos);
+                var sisaViejos = repositorio.Listar<SISA>();
+                if (sisaViejos.Count() > 0)
+                {
+                    var listaVieja = new List<SISA>();
+                    foreach (var dato in oDatos)
+                    {
+                        var categoriaVieja = sisaViejos.Where(x => x.CUIT == dato.CUIT && x.FechaVigenciaCategoria < dato.FechaVigenciaCategoria && x.FechaVigenciaCategoria <= DateTime.Now.Date).OrderBy(x => x.FechaVigenciaCategoria).FirstOrDefault();
+                        var estadoViejo = sisaViejos.Where(x => x.CUIT == dato.CUIT && x.FechaVigenciaEstado < dato.FechaVigenciaEstado && x.FechaVigenciaCategoria <= DateTime.Now.Date).OrderBy(x => x.FechaVigenciaEstado).FirstOrDefault();
+                        var datoSisa = new SISA();
+                        if (categoriaVieja != null && estadoViejo != null)
+                        {
+                            datoSisa = estadoViejo;
+                            datoSisa.FechaVigenciaCategoria = estadoViejo.FechaVigenciaCategoria;
+                        }
+                        else if (categoriaVieja != null)
+                        {
+                            datoSisa = categoriaVieja;
+                        }
+                        else
+                        {
+                            datoSisa = estadoViejo;
+                        }
+                        if (datoSisa != null)
+                        {
+                            listaVieja.Add(datoSisa);
+                        }
+                    }
+                    oDatos.AddRange(listaVieja);
+                    repositorio.RemoverTodos<SISA>(x => true);
+                    repositorio.AgregarTodos<SISA>(oDatos);
+                }
+                else
+                {
+                    repositorio.AgregarTodos<SISA>(oDatos);
+                }
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
             }
-            return false;
+            return oDatos.Count();
         }
     }
 }
