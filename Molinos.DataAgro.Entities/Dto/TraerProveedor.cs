@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Entities.Dto
 		public string Estado { get; set; }
 		public int Facacop { get; set; }
 		public string RiesgoComercialSap { get; set; }
-		public string Situacion { get; set; }
+		public int EstadoCuit { get; set; }
 		public string Segmentacion { get; set; }
         public string GrupoSegmentacion { get; set; }
         public string Email1 { get; set; }

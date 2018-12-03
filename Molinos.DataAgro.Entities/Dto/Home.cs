@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaUltimoContacto { get; set; }
         public int? Facacop { get; set; }
         public string RiesgoComercialSap { get; set; }
+        public int EstadoCuit { get; set; }
         public string Situacion { get; set; }
         public string Estado { get; set; }
         public string Condicion { get; set;}

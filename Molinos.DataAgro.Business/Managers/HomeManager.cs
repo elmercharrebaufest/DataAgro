@@ -109,16 +109,17 @@ namespace Molinos.DataAgro.Business.Managers
                     cont.TooltipNoOperable = "Riesgo Comercial Alto";
                 }
             }
-            if (!String.IsNullOrEmpty(con.Situacion))
+            if (con.EstadoCuit == 0)
             {
-                if ((con.Situacion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"]) 
-                    || (con.Situacion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
-                        || (con.Situacion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
-                {
-                    cont.NoOperable = true;
-                    cont.Operando = false;
-                    cont.TooltipNoOperable = con.Situacion;
-                }
+                cont.NoOperable = true;
+                cont.Operando = false;
+                cont.TooltipNoOperable = "Inactivo";
+            }
+            if (con.EstadoCuit == 3)
+            {
+                cont.NoOperable = true;
+                cont.Operando = false;
+                cont.TooltipNoOperable = "No incluido/Suspendido";
             }
             if (con.Facacop == 1)
             {

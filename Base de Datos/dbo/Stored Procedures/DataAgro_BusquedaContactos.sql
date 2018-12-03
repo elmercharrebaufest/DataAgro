@@ -181,7 +181,7 @@ SELECT
 	p.ProveedorId,
 	p.FechaUltimoContacto,
 	est.Descripcion as Estado ,
-	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 Situacion from rg2300 where CUIT = p.CUIT),'') as situacion 
+	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 EstadoCuit from SISA where CUIT = p.CUIT),'') as EstadoCuit 
 FROM Proveedor p
 left join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
 inner join @EmpleadoTable  e on e.ComercialId = pc.ComercialId

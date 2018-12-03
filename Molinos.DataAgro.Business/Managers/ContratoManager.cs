@@ -122,35 +122,28 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
                 }
             }
-            var sisa = repositorio.Listar<SISA>(x => x.CUIT == proveedor.CUIT);
+            int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
+            var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
             if (sisa != null)
             {
-                var sisaEstado = sisa.Where(x => x.FechaVigenciaEstado <= DateTime.Now.Date).FirstOrDefault();
-                if (sisaEstado != null)
+                if ((sisa.EstadoCuit == 3) || (sisa.EstadoCuit == 0))
                 {
-                    if ((sisaEstado.EstadoCuit == 3)
-                             || (sisaEstado.EstadoCuit == 0))
-                    {
-                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT " + ((EnumEstadoCuit)sisaEstado.EstadoCuit).ToString());
-                    }
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT " + ((EnumEstadoCuit)sisa.EstadoCuit).ToString());
                 }
                 else
                 {
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado no Vigente");
                 }
-                var sisaCategoria = sisa.Where(x => x.FechaVigenciaCategoria <= DateTime.Now.Date).FirstOrDefault();
-                if (sisaCategoria != null)
+                if (sisa.SituacionCategoria != "AL")
                 {
-                    if (sisaCategoria.SituacionCategoria != "AL")
-                    {
-                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
-                    }
-                }
-                else
-                {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Categoría no Vigente");
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
                 }
             }
+            else
+            {
+                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Inactivo");
+            }
+            
             var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
             if (facacop != null)
             {

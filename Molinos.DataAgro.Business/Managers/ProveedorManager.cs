@@ -88,16 +88,17 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                if (!String.IsNullOrEmpty(aux.Situacion))
+                if (aux.EstadoCuit == 0)
                 {
-                    if ((aux.Situacion.ToLower() == ConfigurationManager.AppSettings["SitNoIncluida"])
-                         || (aux.Situacion.ToLower() == ConfigurationManager.AppSettings["SitExcluido"])
-                             || (aux.Situacion.ToLower() == ConfigurationManager.AppSettings["SitSuspendido"]))
-                    {
-                        aux.NoOperable = true;
-                        aux.Operando = false;
-                        aux.TooltipNoOperable = aux.Situacion;
-                    }
+                    aux.NoOperable = true;
+                    aux.Operando = false;
+                    aux.TooltipNoOperable = "Inactivo";                    
+                }
+                if (aux.EstadoCuit == 3)
+                {
+                    aux.NoOperable = true;
+                    aux.Operando = false;
+                    aux.TooltipNoOperable = "No incluido / Suspendido";
                 }
                 if (aux.Facacop == 1)
                 {

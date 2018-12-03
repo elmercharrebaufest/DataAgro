@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 from est in ests.DefaultIfEmpty()
                 join fac in contexto.Set<FACACOP>() on prove.CUIT equals fac.CUIT into facs
                 from fac in facs.DefaultIfEmpty()
-                join rg in contexto.Set<RG2300>() on prove.CUIT equals rg.CUIT into rgs
+                join rg in contexto.Set<SISA>().GroupBy(x=> x.CUIT).Select(x=>new {CUIT = x.Key, EstadoCUIT = x.FirstOrDefault().EstadoCuit }) on prove.CUIT equals rg.CUIT  into rgs 
                 from rg in rgs.DefaultIfEmpty()
                 join con in contexto.Set<ContactoComercial>() on prove.ProveedorId equals con.Proveedor.ProveedorId into cons
                 from con in cons.DefaultIfEmpty()
@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado = est.Descripcion,
                     Facacop = (fac.CUIT == null) ? 0 : 1,
                     RiesgoComercialSap = prove.RiesgoComercialSap,
-                    Situacion = rg.Situacion,
+                    EstadoCuit = rg != null ? rg.EstadoCUIT: 0,
                     Segmentacion = prove.Segmentacion.Descripcion,
                     GrupoSegmentacion = prove.Segmentacion.Grupo,
                     Email1 = con.Email1,
