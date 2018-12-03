@@ -1,10 +1,10 @@
 ﻿ create FUNCTION [dbo].[Split] (
-      @InputString                  VARCHAR(8000),
+      @InputString                  VARCHAR(MAX),
       @Delimiter                    VARCHAR(50)
 )
 
 RETURNS @Items TABLE (
-      Item                          VARCHAR(8000)
+      Item                          VARCHAR(MAX)
 )
 
 AS
@@ -21,8 +21,8 @@ BEGIN
 --INSERT INTO @Items VALUES (@Delimiter) -- Diagnostic
 --INSERT INTO @Items VALUES (@InputString) -- Diagnostic
 
-      DECLARE @Item           VARCHAR(8000)
-      DECLARE @ItemList       VARCHAR(8000)
+      DECLARE @Item           VARCHAR(MAX)
+      DECLARE @ItemList       VARCHAR(MAX)
       DECLARE @DelimIndex     INT
 
       SET @ItemList = @InputString

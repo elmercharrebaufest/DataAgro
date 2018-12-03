@@ -98,7 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     aux.NoOperable = true;
                     aux.Operando = false;
-                    aux.TooltipNoOperable = "No incluido / Suspendido";
+                    aux.TooltipNoOperable = "Estado 3";
                 }
                 if (aux.Facacop == 1)
                 {
@@ -805,14 +805,18 @@ namespace Molinos.DataAgro.Business.Managers
                 prov.Condicion = "Apocrifos";
                 return;
             }
-            else if ((prov.EstadoCuit == 0)
-                     || (prov.EstadoCuit == 3))
+            else if (prov.EstadoCuit == 0)                     
             {
-                prov.Condicion = ((EnumEstadoCuit)prov.EstadoCuit).ToString();
+                prov.Condicion = "Inactivo";
+                prov.Operable = 0;
+            }
+            else if (prov.EstadoCuit == 3)
+            {
+                prov.Condicion = "Estado 3";
                 prov.Operable = 0;
             }
 
-            if (ConfigurationManager.AppSettings["SinConexionSap"] != "1")
+                if (ConfigurationManager.AppSettings["SinConexionSap"] != "1")
             {
                 var riesgo = new Agent.RiesgoComerciales();
 

@@ -126,9 +126,12 @@ namespace Molinos.DataAgro.Business.Managers
             var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
             if (sisa != null)
             {
-                if ((sisa.EstadoCuit == 3) || (sisa.EstadoCuit == 0))
+                if (sisa.EstadoCuit == 3) 
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT " + ((EnumEstadoCuit)sisa.EstadoCuit).ToString());
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
+                }else if (sisa.EstadoCuit == 0)
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
                 }
                 else
                 {
