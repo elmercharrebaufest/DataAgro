@@ -57,7 +57,11 @@
                     match="/configuration/appSettings/add[@key='Rg2300']
                            /@value" />
   </parameter>
-
+  <parameter name="SISA Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='SISA']
+                           /@value" />
+  </parameter>
   <parameter name="Facacop Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='Facacop']
