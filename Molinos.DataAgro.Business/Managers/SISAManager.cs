@@ -21,46 +21,33 @@ namespace Molinos.DataAgro.Business.Managers
             this.oComercial = oComercial;
         }
 
-        public int InsertarSISA(List<SISA> oDatos)
+        public int InsertarSISA(List<SISA> oDatos, List<SISA> Cuits)
         {
             try
             {
                 var sisaViejos = repositorio.Listar<SISA>();
-                if (sisaViejos.Count() > 0)
+                foreach (var nuevo in Cuits)
                 {
-                    var listaVieja = new List<SISA>();
-                    foreach (var dato in oDatos)
+                    var viejo = sisaViejos.Where(x => x.CUIT == nuevo.CUIT && x.CodCategoria == nuevo.CodCategoria).FirstOrDefault();
+
+                    if (viejo != null)
                     {
-                        var categoriaVieja = sisaViejos.Where(x => x.CUIT == dato.CUIT && x.FechaVigenciaCategoria < dato.FechaVigenciaCategoria && x.FechaVigenciaCategoria <= DateTime.Now.Date).OrderBy(x => x.FechaVigenciaCategoria).FirstOrDefault();
-                        var estadoViejo = sisaViejos.Where(x => x.CUIT == dato.CUIT && x.FechaVigenciaEstado < dato.FechaVigenciaEstado && x.FechaVigenciaCategoria <= DateTime.Now.Date).OrderBy(x => x.FechaVigenciaEstado).FirstOrDefault();
-                        var datoSisa = new SISA();
-                        if (categoriaVieja != null && estadoViejo != null)
+                        if (nuevo.FechaVigenciaCategoria > DateTime.Now.Date)
                         {
-                            datoSisa = estadoViejo;
-                            datoSisa.FechaVigenciaCategoria = estadoViejo.FechaVigenciaCategoria;
+                            nuevo.FechaVigenciaCategoria = viejo.FechaVigenciaCategoria;
+                            nuevo.SituacionCategoria = viejo.SituacionCategoria;
                         }
-                        else if (categoriaVieja != null)
+                        if (nuevo.FechaVigenciaEstado > DateTime.Now.Date)
                         {
-                            datoSisa = categoriaVieja;
+                            nuevo.FechaVigenciaEstado = viejo.FechaVigenciaEstado;
+                            nuevo.EstadoCuit = viejo.EstadoCuit;
                         }
-                        else
-                        {
-                            datoSisa = estadoViejo;
-                        }
-                        if (datoSisa != null)
-                        {
-                            listaVieja.Add(datoSisa);
-                        }
+                        oDatos.Add(nuevo);
                     }
-                    oDatos.AddRange(listaVieja);
-                    repositorio.RemoverTodos<SISA>(x => true);
-                    repositorio.AgregarTodos<SISA>(oDatos);
                 }
-                else
-                {
-                    repositorio.AgregarTodos<SISA>(oDatos);
-                }
-            }
+                repositorio.RemoverTodos<SISA>(x => true);
+                repositorio.AgregarTodos<SISA>(oDatos);                
+            }        
             catch (Exception ex)
             {
                 logger.Error(ex);

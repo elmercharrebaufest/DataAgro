@@ -129,14 +129,10 @@ namespace Molinos.DataAgro.Business.Managers
                 if (sisa.EstadoCuit == 3) 
                 {
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
-                }else if (sisa.EstadoCuit == 0)
+                }else if (sisa.EstadoCuit == 0 )
                 {
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
-                }
-                else
-                {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado no Vigente");
-                }
+                }                
                 if (sisa.SituacionCategoria != "AL")
                 {
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");

@@ -111,7 +111,7 @@ namespace WebDataAgro.Controllers
             var arrText = new ArrayList();
 
             var lista = new List<SISA>();
-
+            var cuits = new List<SISA>();
             var j = 0;
 
             while (sLine != null)
@@ -128,6 +128,7 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
+
                     if (sLine != null)
                     {
                         var sisa = sLine.Split(';');
@@ -148,16 +149,23 @@ namespace WebDataAgro.Controllers
                         sisaList.Observaciones = !String.IsNullOrEmpty(sisa[12]) ? sisa[12].Replace("\"", String.Empty) : String.Empty;
                         sisaList.FechaGeneracion = !String.IsNullOrEmpty(sisa[13]) ? (DateTime?)DateTime.Parse(sisa[13]) : null;
 
-                        lista.Add(sisaList);
+                        if (sisaList.FechaVigenciaEstado > DateTime.Now.Date || sisaList.FechaVigenciaCategoria > DateTime.Now.Date)
+                        {
+                            cuits.Add(sisaList);
+                        }
+                        else
+                        {
+                            lista.Add(sisaList);
+                        }
                     }
                 }
             }
-            objReader.Close();
+        objReader.Close();
             logger.Info($"ProcessSisa - Lineas leidas: {lista.Count}");
             int lineas = 0;
             try
             {
-                lineas = sisaManager.InsertarSISA(lista);
+                lineas = sisaManager.InsertarSISA(lista, cuits);
             }
             catch (Exception ex)
             {
