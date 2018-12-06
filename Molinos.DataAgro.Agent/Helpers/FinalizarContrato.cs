@@ -135,10 +135,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
                         MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null,
                         PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
-                        MERC_DESCARGADA = contrato.MercsDeposito ==true ? "X" : "",
+                        MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
                         OBSERVACION_CAL1 = contrato.Observacion,
                         CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT: "" ,
-                        PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value:0
+                        PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value:0,
+                        CONTRCORR = contrato.ContratoCorredor ?? "",
+                        CONTRVEND = contrato.ContratoVendedor ?? "",
+                        SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X":"",
+                        SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Sustentable = ((decimal)contrato.ImporteSustentable) != null && ((decimal)contrato.ImporteSustentable) > 0,
                     Dolarizado = contrato.FechaDolarizado != null,
                     Pesificado = contrato.DiasPesificado != null,
-                    Negocio = (contrato.ContratoSAP == "" || contrato.ContratoSAP == null) ? SqlFunctions.StringConvert((double?)contrato.ContratoId) : contrato.ContratoSAP,
+                    Negocio = contrato.ContratoSAP!= "0" ? contrato.ContratoSAP: "" ,
                     DestinoId = contrato.DestinoId,
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     CantidadCamiones = contrato.CantidadCamiones,
@@ -100,8 +100,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
                     CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara",
                     MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false,
-                    ComercialCreadorId = contrato.ComercialCreadorId,
-                    ComercialCreador = contrato.ComercialCreador == null ? "" : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido
+                    ComercialCreadorId = contrato.ComercialCreadorId, 
+                    ComercialCreador = contrato.ComercialCreador == null ? "" : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
+                    ContratoCorredor = contrato.ContratoCorredor,
+                    ContratoVendedor = contrato.ContratoVendedor,
+                    SelCargoMOA = contrato.SelCargoMOA,
+                    SelCargoVendedor = contrato.SelCargoVendedor
                 };
 
             var queryFijacion =
@@ -179,7 +183,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CalidadDescripcion = "",
                     MercsDeposito = null,
                     ComercialCreadorId = fijac.ComercialCreadorId,
-                    ComercialCreador = ""
+                    ComercialCreador = "",
+                    ContratoCorredor = "",
+                    ContratoVendedor = "",
+                    SelCargoMOA = null,
+                    SelCargoVendedor = null
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);

@@ -456,6 +456,14 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private decimal pORC_COMISIONField;
         
+        private string cONTRVENDField;
+        
+        private string cONTRCORRField;
+        
+        private string sEL_CARGO_VENDField;
+        
+        private string sEL_CARGO_MOAField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1041,6 +1049,54 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.pORC_COMISIONField = value;
                 this.RaisePropertyChanged("PORC_COMISION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=49)]
+        public string CONTRVEND {
+            get {
+                return this.cONTRVENDField;
+            }
+            set {
+                this.cONTRVENDField = value;
+                this.RaisePropertyChanged("CONTRVEND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=50)]
+        public string CONTRCORR {
+            get {
+                return this.cONTRCORRField;
+            }
+            set {
+                this.cONTRCORRField = value;
+                this.RaisePropertyChanged("CONTRCORR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=51)]
+        public string SEL_CARGO_VEND {
+            get {
+                return this.sEL_CARGO_VENDField;
+            }
+            set {
+                this.sEL_CARGO_VENDField = value;
+                this.RaisePropertyChanged("SEL_CARGO_VEND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=52)]
+        public string SEL_CARGO_MOA {
+            get {
+                return this.sEL_CARGO_MOAField;
+            }
+            set {
+                this.sEL_CARGO_MOAField = value;
+                this.RaisePropertyChanged("SEL_CARGO_MOA");
             }
         }
         

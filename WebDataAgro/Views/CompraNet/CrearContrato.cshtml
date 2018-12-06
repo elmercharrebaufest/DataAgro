@@ -344,16 +344,25 @@
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
 
-            <div id="sustentableDiv" hidden>
-                <div class="col-sm-4 col-md-2">
+            <div class="col-sm-4 col-md-2">
+                <div class="sustentableDiv" hidden>
                     <input id="sustentablePrecioId" placeholder="Importe" style="width:100%" />
                     <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-                <div class="col-sm-4 col-md-2">
+            </div>
+            <div class="col-sm-4 col-md-2">
+
+                <div class="sustentableDiv" hidden>
                     <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="width:100%"></select>
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
-
                 </div>
+            </div>
+            <div class="col-sm-2 ">
+                <label>Contrato vendedor</label>
+            </div>
+            <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
+                <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10"  />
+                <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         <div class="row">
@@ -362,9 +371,18 @@
                 <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-md-4 col-sm-9" id="dolarizadoDiv" hidden>
-                <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
-                <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="col-md-4 col-sm-9">
+                <div id="dolarizadoDiv" hidden>
+                    <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
+                    <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
+            <div class="col-sm-2 ">
+                <label>Contrato Corredor</label>
+            </div>
+            <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
+                <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
+                <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         <div class="row">
@@ -373,9 +391,16 @@
                 <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-md-4 col-sm-9" id="pesificadoDiv" hidden>
-                <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
-                <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="col-md-4 col-sm-9">
+                <div id="pesificadoDiv" hidden>
+                    <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
+                    <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
+            <div class="col-sm-6 ">
+                <label style="width:200px">Sellado 100% a cargo vendedor</label>
+                <input id="selCargoVendedorId" class="campo-input-input" data-bind="checked:Parametros.selCargoVendedorId, disabled: isControlDisabled" type="checkbox" />
+                <img id="errselCargoVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         <div class="row">
@@ -393,6 +418,12 @@
                     <img id="errporcentajeComision" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-6 ">
+                <label style="width:200px">Sellado 100% a cargo MOA</label>
+                <input id="selCargoMOAId" class="campo-input-input" data-bind="checked:Parametros.selCargoMOAId, disabled: isControlDisabled" type="checkbox" />
+                <img id="errselCargoMOAId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-2">
@@ -401,7 +432,7 @@
             <div class="col-md-4 col-sm-9">
                 <select id="comercialId" data-bind="source: ComercialCombo, value: Parametros.comercialId, disabled: isControlDisabled"></select>
                 <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
+            </div>            
         </div>
     </div>
 
@@ -499,7 +530,7 @@
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-3 col-md-1">
-                <span id="IngresarDescuento" class="k-button k-button-icontext" type="button">Agregar</span>
+                <span id="IngresarDescuento" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
         </div>
 
@@ -560,7 +591,7 @@
             </div>
         </div>
         <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad row">
-            <div class="col-md-offset-3 col-md-3">
+            <div class="col-md-offset-2 col-md-3">
                 <span id="porcentajeDesdeDiv" hidden>
                     <input id="porcentajeDesdeId" placeholder="PORCENTAJE DESDE" style="width:100%" />
                     <img id="errporcentajeDesdeId" src="~/Content/Images/error.png" style="display:none" />
@@ -574,8 +605,8 @@
             </div>
         </div>
         <div class="row">
-            <div id="agregarCalidad" class="col-sm-3 col-md-1 col-md-offset-3" hidden>
-                <span id="IngresarCalidad" class="k-button k-button-icontext" type="button">Agregar</span>
+            <div id="agregarCalidad" class="col-sm-3 col-md-1 col-md-offset-2" hidden>
+                <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
         </div>
 

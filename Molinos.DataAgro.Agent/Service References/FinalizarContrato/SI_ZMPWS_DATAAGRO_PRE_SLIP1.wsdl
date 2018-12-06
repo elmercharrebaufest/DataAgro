@@ -192,6 +192,10 @@
           <xsd:element name="CARTA_OFERTA" type="rfc:char1" />
           <xsd:element name="CUIT_CORREDOR" type="rfc:char16" />
           <xsd:element name="PORC_COMISION" type="rfc:decimal5.2" />
+          <xsd:element name="CONTRVEND" type="rfc:char10" />
+          <xsd:element name="CONTRCORR" type="rfc:char10" />
+          <xsd:element name="SEL_CARGO_VEND" type="rfc:char1" />
+          <xsd:element name="SEL_CARGO_MOA" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

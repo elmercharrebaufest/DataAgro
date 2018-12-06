@@ -41,8 +41,8 @@
 .btnVerde {
     background-color: #017940;
     color: #fff;
-    padding: 8px;
-    border-radius: 5px!important;
+    /*padding: 8px;
+    border-radius: 5px!important;*/
 }
 #boton-ampliar {
     font-weight: bold;
@@ -806,4 +806,8 @@ body {
 .datoscontrato span {
     color: darkseagreen;
     display:inline-block;
+}
+.contratoinput {
+    width: 100%;
+    text-indent: .8em;
 }

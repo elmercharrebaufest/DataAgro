@@ -123,25 +123,25 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
-            var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
-            if (sisa != null)
-            {
-                if (sisa.EstadoCuit == 3) 
-                {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
-                }else if (sisa.EstadoCuit == 0 )
-                {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
-                }                
-                if (sisa.SituacionCategoria != "AL")
-                {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
-                }
-            }
-            else
-            {
-                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Inactivo");
-            }
+            //var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
+            //if (sisa != null)
+            //{
+            //    if (sisa.EstadoCuit == 3) 
+            //    {
+            //        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
+            //    }else if (sisa.EstadoCuit == 0 )
+            //    {
+            //        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
+            //    }                
+            //    if (sisa.SituacionCategoria != "AL")
+            //    {
+            //        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+            //    }
+            //}
+            //else
+            //{
+            //    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Inactivo");
+            //}
             
             var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
             if (facacop != null)
@@ -346,6 +346,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
             oContratoSave.CorredorId = oContrato.CorredorId;
             oContratoSave.PorcentajeComision = oContrato.PorcentajeComision;
+            oContratoSave.ContratoVendedor = oContrato.ContratoVendedor;
+            oContratoSave.ContratoCorredor = oContrato.ContratoCorredor;
+            oContratoSave.SelCargoVendedor = oContrato.SelCargoVendedor;
+            oContratoSave.SelCargoMOA = oContrato.SelCargoMOA;
 
             if (descuentosExistentes != null)
             {
@@ -704,7 +708,11 @@ namespace Molinos.DataAgro.Business.Managers
                 PagoDirectoVendedor = x.PagoDirectoVendedor,
                 EstablecimientoPropio = x.EstablecimientoPropio,
                 MercsDeposito = x.MercsDeposito,
-                PorcentajeComision =x.PorcentajeComision
+                PorcentajeComision =x.PorcentajeComision,
+                ContratoCorredor = x.ContratoCorredor,
+                ContratoVendedor = x.ContratoVendedor,
+                SelCargoMOA = x.SelCargoMOA,
+                SelCargoVendedor = x.SelCargoVendedor
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

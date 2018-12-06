@@ -182,7 +182,13 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CalidadEspecialDescripcion + "'" + ',' +
         "'" + formatearFecha(dataItem.DesdeFijacion) + "'" + ',' +
         "'" + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
-        "'" + dataItem.MercsDeposito + "'" +
+        "'" + dataItem.MercsDeposito + "'" + ',' +
+
+        "'" + dataItem.ContratoCorredor + "'" + ',' +
+        "'" + dataItem.ContratoVendedor + "'" + ',' +
+        "'" + dataItem.SelCargoMOA + "'" + ',' +
+        "'" + dataItem.SelCargoVendedor + "'" + ',' +
+
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -371,8 +377,17 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs mobile-precio" } },
             { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
-            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes:{ "class": "mobile-md" } },
-            { field: "Negocio", type: "string", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "mobile-md" } },
+            {
+                field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
+                template: function (dataItem) {
+                    if (dataItem.Negocio !== "" && dataItem.Negocio !== null ) {
+                        return kendo.parseInt(dataItem.Negocio);
+                    } else {
+                        return "";
+                    }
+                }
+            },
             { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
@@ -942,7 +957,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion) {
+function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor) {
     $("#modalVisualizar").modal('show');
     if (tipo === "FIJACION") {
         $(".noFijacion").hide();
@@ -984,8 +999,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
     (precio != 0)? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
+
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
 
+    
     var procedencia = "";
     var provinciaDat = provincia != "undefined" && provincia != "null" ? provincia : "";
     var localidadDat = localidad != "undefined" && localidad != "null" ? localidad : "";
@@ -1001,6 +1018,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else {
         $("#corredorDivVisualizar").hide();
     }
+    
+    contratoCorredor != null || contratoCorredor != "" ? $("#visualizar_contratoCorredor").text(contratoCorredor) : "null";
+    contratoVendedor != null || contratoVendedor != "" ? $("#visualizar_contratoVendedor").text(contratoVendedor) : "null";
+    visualizacionRowDoble("contratoCorredorVisualizar", "visualizar_contratoCorredor", "contratoVendedorVisualizar", "visualizar_contratoVendedor");
+
+    selCargoMOA === "true" ? $("#visualizar_selladoACargo").text("MOA") : selCargoVendedor === "true" ? $("#visualizar_selladoACargo").text("Vendedor") : $("#selladoACargoVisualizar").hide();
+
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");
     $("#visualizar_observacion").text(Observacion != "undefined" && Observacion ? Observacion : "");

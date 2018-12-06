@@ -45,7 +45,11 @@
 	[MercsDeposito] BIT NULL,
     [ComercialCreadorId] INT NULL,
 	[CorredorId] INT NULL,
-	[PorcentajeComision] DECIMAL(11, 2) NULL
+	[PorcentajeComision] DECIMAL(11, 2) NULL,
+	[ContratoVendedor] NVARCHAR(15) NULL,
+    [ContratoCorredor] NVARCHAR(15) NULL,
+	[SelCargoVendedor] BIT NULL,
+	[SelCargoMOA] BIT NULL
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
