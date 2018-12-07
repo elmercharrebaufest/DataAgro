@@ -499,7 +499,7 @@
     </div>
     <div class="datos-descuentos ampliar-adicionales" display="block">
         <div class="row">
-            <div class="col-md-2 col-sm-6 ">
+            <div class="col-md-2 col-sm-6 col-md-offset-2">
                 <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled"></select>
                 <img id="errtipoPeriodoDBId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -507,19 +507,22 @@
                 <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled"></select>
                 <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="fecha-descuento" style="display:none">
-                <span id="fechaDesdeDiv" class="col-xs-6 col-md-2 ">
-                    <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" style="width:100%" data-bind="value: Parametros.fechaDesdeDescuentoId" />
-                    <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
-                <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
-                    <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
-                    <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
+            <div class="col-sm-3 col-md-1 col-md-offset-2">
+                <span id="IngresarDescuento" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
+            @*<div class="fecha-descuento" style="display:none">
+            <span id="fechaDesdeDiv" class="col-xs-6 col-md-2 ">
+                <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" style="width:100%" data-bind="value: Parametros.fechaDesdeDescuentoId" />
+                <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+            </span>
+            <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
+                <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
+                <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+            </span>
+        </div>*@
         </div>
         <div class="row">
-            <div class="col-sm-3 col-md-2 ">
+            <div class="col-sm-3 col-md-2 col-md-offset-2">
                 <input type="text" id="ImporteDescuentoId" class="campo-input-text k-textbox" placeholder="(importe)" />
                 <img id="errImporteDescuentoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -530,10 +533,7 @@
             <div class="col-sm-3 col-md-2">
                 <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="(porcentaje)" style="width: 90%" />%
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
-            <div class="col-sm-3 col-md-1">
-                <span id="IngresarDescuento" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
-            </div>
+            </div>            
         </div>
 
         <br />
@@ -591,6 +591,9 @@
                     </div>
                 </div>
             </div>
+            <div id="agregarCalidad" class="col-sm-3 col-md-1" hidden>
+                <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
+            </div>
         </div>
         <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad row">
             <div class="col-md-offset-2 col-md-3">
@@ -606,11 +609,9 @@
                 </span>
             </div>
         </div>
-        <div class="row">
-            <div id="agregarCalidad" class="col-sm-3 col-md-1 col-md-offset-2" hidden>
-                <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
-            </div>
-        </div>
+        @*<div class="row">
+            
+        </div>*@
 
     </div>
 
