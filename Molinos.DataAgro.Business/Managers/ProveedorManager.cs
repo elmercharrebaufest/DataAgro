@@ -619,6 +619,22 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "PLAN CANJE" + "<br />";
             }
+            if (oContrato.ContratoVendedor != null)
+            {
+                htmlBody += "Contrato Vendedor: " + oContrato.ContratoVendedor + "<br />";
+            }
+            if (oContrato.ContratoCorredor != null)
+            {
+                htmlBody += "Contrato Corredor: " + oContrato.ContratoCorredor + "<br />";
+            }
+            if (oContrato.SelCargoMOA != null)
+            {
+                htmlBody += " Sellado 100% a Cargo MOA " + "<br />";
+            }
+            if (oContrato.SelCargoVendedor != null)
+            {
+                htmlBody += " Sellado 100% a Cargo vendedor " + "<br />";
+            }
             if (oContrato.Observacion != null)
             {
                 htmlBody += oContrato.Observacion + "<br />";
