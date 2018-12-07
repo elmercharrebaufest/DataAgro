@@ -358,7 +358,7 @@
                 </div>
             </div>
             <div class="col-sm-2 ">
-                <label>Contrato vendedor</label>
+                <label>Contrato Vendedor</label>
             </div>
             <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
                 <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10"  />
@@ -377,12 +377,14 @@
                     <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-sm-2 ">
-                <label>Contrato Corredor</label>
-            </div>
-            <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
-                <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
-                <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
+            <div id="contCorredorDiv" hidden>
+                <div class="col-sm-2 ">
+                    <label>Contrato Corredor</label>
+                </div>
+                <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
+                    <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
+                    <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
         </div>
         <div class="row">

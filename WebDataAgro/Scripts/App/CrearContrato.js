@@ -208,6 +208,8 @@ function InicializarElementos() {
             }
             if ($("#buscadorCorredor").val() == "") {
                 $("#porcentajeComisionDiv").hide();
+                $("#contCorredorId").val("");
+                $("#contCorredorDiv").hide();
                 $("#pagoDirectoDiv").hide();
             }
             $("#buscadorProveedor").val("");
@@ -238,6 +240,7 @@ function InicializarElementos() {
                 }
             }
             $('#porcentajeComisionDiv').show();
+            $('#contCorredorDiv').show();
             $('#pagoDirectoDiv').show();
         },
         dataSource: {
