@@ -627,11 +627,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Contrato Corredor: " + oContrato.ContratoCorredor + "<br />";
             }
-            if (oContrato.SelCargoMOA != null)
+            if (oContrato.SelCargoMOA == true)
             {
                 htmlBody += " Sellado 100% a Cargo MOA " + "<br />";
             }
-            if (oContrato.SelCargoVendedor != null)
+            if (oContrato.SelCargoVendedor == true)
             {
                 htmlBody += " Sellado 100% a Cargo vendedor " + "<br />";
             }
