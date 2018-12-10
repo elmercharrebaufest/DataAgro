@@ -771,7 +771,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public ProveedorNuevo TraerRazonSocial(string cuit)
         {
-            var sisa = repositorio.Listar<SISA>(x => x.CUIT == cuit && x.FechaVigenciaEstado <= DateTime.Now.Date).FirstOrDefault();
+            var sisa = repositorio.Listar<SISA>(x => x.CUIT == cuit).FirstOrDefault();
             var razonsocial = new ProveedorNuevo();
             if (sisa != null)
             {
