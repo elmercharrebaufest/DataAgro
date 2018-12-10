@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="plazosYTopesFijacion" class="ampliar">
         <div class="row">
             <div class="contratoAFijar">
@@ -361,7 +361,7 @@
                 <label>Contrato Vendedor</label>
             </div>
             <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
-                <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10"  />
+                <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10" />
                 <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -434,7 +434,7 @@
             <div class="col-md-4 col-sm-9">
                 <select id="comercialId" data-bind="source: ComercialCombo, value: Parametros.comercialId, disabled: isControlDisabled"></select>
                 <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
-            </div>            
+            </div>
         </div>
     </div>
 
@@ -511,15 +511,15 @@
                 <span id="IngresarDescuento" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
             @*<div class="fecha-descuento" style="display:none">
-            <span id="fechaDesdeDiv" class="col-xs-6 col-md-2 ">
-                <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" style="width:100%" data-bind="value: Parametros.fechaDesdeDescuentoId" />
-                <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-            </span>
-            <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
-                <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
-                <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-            </span>
-        </div>*@
+                    <span id="fechaDesdeDiv" class="col-xs-6 col-md-2 ">
+                        <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" style="width:100%" data-bind="value: Parametros.fechaDesdeDescuentoId" />
+                        <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                    <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
+                        <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
+                        <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>*@
         </div>
         <div class="row">
             <div class="col-sm-3 col-md-2 col-md-offset-2">
@@ -533,7 +533,7 @@
             <div class="col-sm-3 col-md-2">
                 <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="(porcentaje)" style="width: 90%" />%
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-            </div>            
+            </div>
         </div>
 
         <br />
@@ -610,28 +610,29 @@
             </div>
         </div>
         @*<div class="row">
-            
-        </div>*@
 
-    </div>
+            </div>*@
 
-    <div id="tabla-calidades" data-template="div-calidades-template" data-bind="source:Calidades">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <script id="div-calidades-template" type="text/x-kendo-template">
-        <div class="row">
-            <div>
-                <div class="col-xs-2 col-md-1 " id="eliminar-calidad" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></div>
-                <div class="col-xs-3 col-md-2 " style="margin-top:8px"><strong> #: CalidadEspecialDesc#</strong></div>
-                <div class="col-xs-2 col-md-2" style="margin-top:8px"><strong>Valor: </strong>#: Valor#</div>
-                <div class="col-xs-3 col-md-3" data-bind="visible: PorcentajeDesde!=null"><strong>Porcentaje Desde: </strong>#: PorcentajeDesde#% <br /> <strong>Porcentaje Hasta: </strong>#: PorcentajeHasta#%</div>
-            </div>
-            <br /><br />
+
+
+        <div id="tabla-calidades" data-template="div-calidades-template" data-bind="source:Calidades">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
-    </script>
+        <script id="div-calidades-template" type="text/x-kendo-template">
+            <div class="row">
+                <div>
+                    <div class="col-xs-2 col-md-1 " id="eliminar-calidad" data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></div>
+                    <div class="col-xs-3 col-md-2 " style="margin-top:8px"><strong> #: CalidadEspecialDesc#</strong></div>
+                    <div class="col-xs-2 col-md-2" style="margin-top:8px"><strong>Valor: </strong>#: Valor#</div>
+                    <div class="col-xs-3 col-md-3" data-bind="visible: PorcentajeDesde!=null"><strong>Porcentaje Desde: </strong>#: PorcentajeDesde#% <br /> <strong>Porcentaje Hasta: </strong>#: PorcentajeHasta#%</div>
+                </div>
+                <br /><br />
+            </div>
+        </script>
+    </div>
 </div>
 <br />
 <div class="row">
