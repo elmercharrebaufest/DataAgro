@@ -330,16 +330,9 @@ function InicializarElementos() {
         }
     });
 
-    if ($(window).width() <= 400) {
-        $("#buscadorProveedor").data("kendoAutoComplete").list.width(300);
-        $("#buscadorCorredor").data("kendoAutoComplete").list.width(300);
-        $("#contratoId").data("kendoAutoComplete").list.width(300);
-    } else {
-        $("#buscadorProveedor").data("kendoAutoComplete").list.width("auto");
-        $("#buscadorCorredor").data("kendoAutoComplete").list.width("auto");
-        $("#contratoId").data("kendoAutoComplete").list.width("auto");
-    }
-
+    windowsResize();
+    $(window).resize(windowsResize);
+    
     $("#comercialId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
@@ -1249,7 +1242,17 @@ function CerrarDatosPendientes() {
     document.querySelector(".datos-descuentos").style.display = "none";
     document.querySelector(".datos-calidades").style.display = "none";
 }
-
+function windowsResize() {
+    if ($(window).width() <= 400) {
+        $("#buscadorProveedor").data("kendoAutoComplete").list.width(300);
+        $("#buscadorCorredor").data("kendoAutoComplete").list.width(300);
+        $("#contratoId").data("kendoAutoComplete").list.width(300);
+    } else {
+        $("#buscadorProveedor").data("kendoAutoComplete").list.width("auto");
+        $("#buscadorCorredor").data("kendoAutoComplete").list.width("auto");
+        $("#contratoId").data("kendoAutoComplete").list.width("auto");
+    }
+}
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     viewModel.set("EspecialesCombo", calidadGrano); 
