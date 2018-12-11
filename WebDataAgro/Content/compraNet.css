@@ -559,8 +559,8 @@ body {
 
 @media (max-width: 1220px) {
     .k-header[data-field*="Campania"],
-    .k-header[data-field*="ContratoSAP"],
-       .mobile-md {
+    .k-header[data-field*="Negocio"],
+    .mobile-md {
         display: none;
     }
 }
