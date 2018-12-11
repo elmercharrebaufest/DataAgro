@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaHoy = fecha.Date;
 
-            return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
+            var query = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
@@ -37,10 +37,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) < DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 3 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewAFijar = x.Where(y => y.TipoNegocioId == 1 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewAPrecio = x.Where(y => y.TipoNegocioId == 2 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    NewFijac = x.Where(y => y.TipoNegocioId == 3 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    Total = x.Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum()
+                    NewFijac = x.Where(y => y.TipoNegocioId == 3 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum()                    
                 }).First();
-             
+            query.Total = query.DispAFijar + query.DispAPrecio + query.DispFijac +
+               query.FrwAFijar + query.FrwAPrecio + query.FrwFijac +
+               query.NewAFijar + query.NewAPrecio + query.NewFijac;
+
+            return query;
         }
     }
 }
