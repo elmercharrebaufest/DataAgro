@@ -718,7 +718,11 @@ namespace Molinos.DataAgro.Business.Managers
             DirectoryEntry entry = new DirectoryEntry();
             string userName = UserName;
 
-            try { userName = UserName.Split('\\')[1]; } catch { }
+            try {
+                var userNameArray = UserName.Split('\\');
+                userName = userNameArray.Length == 1 ? userNameArray[0] : userNameArray[1];
+
+            } catch { }
 
 
             DirectorySearcher search = new DirectorySearcher(entry);

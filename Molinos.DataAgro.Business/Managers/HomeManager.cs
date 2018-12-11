@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 cont.NoOperable = true;
                 cont.Operando = false;
-                cont.TooltipNoOperable = "Estado 0";
+                cont.TooltipNoOperable = "Inactivo";
             }
             if (con.EstadoCuit == 3)
             {
