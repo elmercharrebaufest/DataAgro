@@ -184,6 +184,11 @@ function InicializarElementos() {
             }
         }
     });
+    if ($(window).width() <= 400) {
+        $("#buscadorProveedor").data("kendoAutoComplete").list.width(300);
+        $("#buscadorCorredor").data("kendoAutoComplete").list.width(300);
+        $("#contratoId").data("kendoAutoComplete").list.width(300);
+    }
 
     $("#buscadorCorredor").click(function() {
         $("#buscadorCorredor").data("kendoAutoComplete").value("");
