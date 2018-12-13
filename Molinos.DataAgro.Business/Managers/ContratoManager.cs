@@ -122,6 +122,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
                 }
             }
+            if (oParam.ClasificacionId == 0)
+            {
+                oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
+            }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
             var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
             if (sisa != null)
@@ -168,11 +172,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.Precio == 0 && oParam.TipoNegocioId != 1)
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
-            }
-            if (oParam.ClasificacionId == 0)
-            {
-                oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
-            }
+            }            
             if (oParam.DestinoId == 0 || oParam.DestinoId == null)
             {
                 oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
