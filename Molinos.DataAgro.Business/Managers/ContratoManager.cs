@@ -127,7 +127,20 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
             }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
-            var sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && (x.CodCategoria == 1 && oParam.ClasificacionId == 1) || (x.CodCategoria == 6 && oParam.ClasificacionId == 2) || (otros.Contains(x.CodCategoria) && oParam.ClasificacionId == 3));
+            var sisa = new SISA();
+            if (oParam.ClasificacionId == 1)
+            {
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1);
+            }
+            else if (oParam.ClasificacionId == 2)
+            {
+
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6);
+            }
+            else if (oParam.ClasificacionId == 3)
+            {
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && otros.Contains(x.CodCategoria));
+            }
             if (sisa != null)
             {
                 if (sisa.EstadoCuit == 3)
@@ -145,7 +158,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Inactivo");
+                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoria Inactivo");
             }
 
             var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
