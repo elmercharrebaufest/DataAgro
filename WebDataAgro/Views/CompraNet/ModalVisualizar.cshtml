@@ -17,6 +17,7 @@
                 <div class="status conerror-modal"><div>CON ERROR</div></div>
                 <div class="status finalizado-modal"><div>FINALIZADO</div></div>
                 <div class="status borrado-modal"><div>RECHAZADO</div></div>
+                <div class="status reconfirmar-modal"><div>RECONFIRMAR</div></div>
             </div>
             <div class="modal-body clearfix ">
                 <div id="DivVisualizar" class="row">
@@ -32,14 +33,15 @@
                         <strong style="float:left">Fecha de Operación:</strong>
                         <span id="fechacontrato"></span>
                     </div>
-                    <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero clearfix noFijacion">
+                    <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero noFason clearfix noFijacion">
                         <strong style="float:left">Fecha Desde - Fecha Hasta (Entrega):</strong>
                         <span id="visualizar_desdeHasta"></span>
                     </div>
-                    <div class="row campo marginCero clearfix noFijacion">
-                        <div id="clasificacionDivVisualizar">
+                        <div class="row campo marginCero clearfix noFason noFijacion">
+                    <div id="clasificacionDivVisualizar ">
                             <strong style="float:left">Clasificación:</strong>
                             <span id="visualizar_clasificacion"></span>
+                            <span id="visualizar_consignatario" style="margin:0"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -83,9 +85,19 @@
                             <strong style="float:left">Tipo:</strong>
                             <span id="visualizar_tipo"></span>
                         </div>
-                        <div id="establecimientoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Establecimiento:</strong>
-                            <span id="visualizar_establecimiento"></span>
+                        <div id="destinoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding noFason clearfix">
+                            <strong style="float:left">Destino:</strong>
+                            <span id="visualizar_destino"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero fason" hidden>
+                        <div id="tipoFasonDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Tipo de Fasón:</strong>
+                            <span id="visualizar_tipofason"></span>
+                        </div>
+                        <div id="posicionDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Posicion:</strong>
+                            <span id="visualizar_posicion"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -93,27 +105,21 @@
                             <strong style="float:left">Plan Canje:</strong>
                             <span id="visualizar_planCanje"></span>
                         </div>
-                        <div id="consignatarioDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Consignatario:</strong>
-                            <span id="visualizar_consignatario"></span>
+                        <div id="establecimientoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Establecimiento:</strong>
+                            <span id="visualizar_establecimiento"></span>
                         </div>
                     </div>
-                    <div id="procedenciaDivVisualizar" class="row campo marginCero clearfix noPadding noFijacion">
+                    <div id="procedenciaDivVisualizar" class="row campo marginCero clearfix noFason noPadding noFijacion">
                         <strong style="float:left">Procedencia:</strong>
                         <span id="visualizar_procedencia"></span>
-                    </div>
-                    <div class="row marginCero clearfix campo col-xs-12 noPadding noFijacion">
-                        <div id="destinoDivVisualizar">
-                            <strong style="float:left">Destino:</strong>
-                            <span id="visualizar_destino"></span>
-                        </div>
                     </div>
                     <div class="row marginCero">
                         <div id="sustentableDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Sustentable (Bonificaci&oacute;n):</strong>
                             <span id="visualizar_sustentablePrecio"></span>
                         </div>
-                        <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                        <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding noFason clearfix">
                             <strong style="float:left">Dolarizado (Fecha l&iacute;mite):</strong>
                             <span id="visualizar_dolarizadoFecha"></span>
                         </div>
@@ -159,9 +165,9 @@
                                 <span></span>
                             </div>
                             <script id="div-template-visualizar" type="text/x-kendo-template">
-                                <div class="row marginCero campo campoAdicionales">
+                                <div class="row marginCero campo campoAdicionales" style="font-size: 12px;">
                                     <span style="margin:0"><strong> Descuentos y Bonificaciones #: TipoPeriodoDBDesc#:</strong></span>
-                                    <span>#: TipoDBDesc#</span><br />
+                                    <span style="margin:0">#: TipoDBDesc#</span>
                                     <span data-bind="visible: TipoPeriodoDBId!=1"><strong>Desde:</strong> #: FechaDesde#&nbsp; </span>
                                     <span style="margin-right:10px;" data-bind="visible: TipoPeriodoDBId!=1"><strong>Hasta:</strong> #:FechaHasta#</span>
                                     <span style="display:inline-block;" data-bind="visible: Importe!=0"><strong>Importe: </strong>#:Importe# #:MonedaId#</span>
@@ -219,7 +225,7 @@
                             <span id="visualizar_selladoACargo"></span>
                         </div>
                     </div>
-                    <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales observacion">
+                    <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFason observacion">
                         <strong style="float:left">Observaci&oacute;n: </strong>
                         <span id="visualizar_observacion"></span>
                     </div>

@@ -59,6 +59,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string ContratoCorredor { get; set; }
         public bool? SelCargoVendedor { get; set; }
         public bool? SelCargoMOA { get; set; }
+        public bool? Madre { get; set; }
+        public string ContratoMadre { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }

@@ -103,6 +103,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ContratoVendedor { get; set; }
         public bool? SelCargoMOA { get; set; }
         public bool? SelCargoVendedor { get; set; }
+        public bool? Madre { get; set; }
+        public string ContratoMadre { get; set; }
+        public string Posicion { get; set; }
+        public string TipoFason { get; set; }
+        public int TipoFasonId { get; set; }
+        public int FasonId { get; set; }
     }
 
 

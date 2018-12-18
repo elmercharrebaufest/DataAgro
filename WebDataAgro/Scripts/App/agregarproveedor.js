@@ -2688,6 +2688,7 @@ function eliminarError(elem, clase) {
 function mostrarConsignatario() {
     if ($("#clasificacion-compranet").val() != 2) {
         $("#consignatarioCompraNet").hide();
+        $("#consignatario-compranet").prop("checked", false);
     }
     else {
         $("#consignatarioCompraNet").show();

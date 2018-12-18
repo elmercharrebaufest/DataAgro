@@ -1080,6 +1080,7 @@
     <Content Include="Scripts\jquery-ui-1.12.1\LICENSE.txt" />
     <Content Include="Scripts\jquery.blockui.min.js" />
     <Content Include="Scripts\jquery.bootstrap.wizard.min.js" />
+    <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />

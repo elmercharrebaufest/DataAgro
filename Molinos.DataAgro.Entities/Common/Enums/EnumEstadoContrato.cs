@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         Oferta=3,
         Con_Error=4,
         Finalizado=5,
-        Rechazado=6
-        
+        Rechazado=6,
+        Reconfirmar = 7
     }
 }

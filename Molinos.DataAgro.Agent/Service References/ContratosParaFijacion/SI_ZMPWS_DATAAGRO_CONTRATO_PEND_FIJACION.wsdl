@@ -5,6 +5,13 @@
   <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION" />
   <wsdl:types>
     <xsd:schema xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Z_MPRFC_CONTRATO_PEND_FIJACIONResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="EX_SALIDA" type="rfc:ZMPTT7910" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
       <xsd:element name="Z_MPRFC_CONTRATO_PEND_FIJACION">
         <xsd:complexType>
           <xsd:sequence>
@@ -14,13 +21,33 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="Z_MPRFC_CONTRATO_PEND_FIJACIONResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="EX_SALIDA" type="rfc:ZMPTT7910" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal25.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="25" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal10.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="10" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char7">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="7" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
@@ -37,18 +64,6 @@
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="decimal25.0">
-        <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="25" />
-          <xsd:fractionDigits value="0" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="decimal10.2">
-        <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="10" />
-          <xsd:fractionDigits value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
@@ -62,6 +77,11 @@
           <xsd:element name="FECHA_DESDE" type="rfc:date" />
           <xsd:element name="FECHA_HASTA" type="rfc:date" />
           <xsd:element name="KILOS_CONTRATO" type="rfc:decimal25.0" />
+          <xsd:element name="ENTREGA_DESDE" type="rfc:date" />
+          <xsd:element name="ENTREGA_HASTA" type="rfc:date" />
+          <xsd:element name="POSICION" type="rfc:char7" />
+          <xsd:element name="COSECHA" type="rfc:char5" />
+          <xsd:element name="CALIDAD" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7910">

@@ -54,6 +54,11 @@
         public string MonedaId;
         public string Descripcion;
     }
+    public class TipoFasonQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
     public class TipoNegocioQry
     {
         public int TipoNegocioId;
@@ -193,7 +198,7 @@
         public string Descripcion;
         public string CodigoSap;
     }
-
+    
     public class RangoCombo
     {
         public int Id { get; set; }

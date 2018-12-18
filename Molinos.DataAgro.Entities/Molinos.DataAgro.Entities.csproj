@@ -81,6 +81,9 @@
     <Compile Include="Dto\CampañaDto.cs" />
     <Compile Include="Dto\CampañaMaterialDto.cs" />
     <Compile Include="Dto\CanalOperacionDto.cs" />
+    <Compile Include="Dto\ContratoResult.cs" />
+    <Compile Include="Dto\FasonDto.cs" />
+    <Compile Include="Dto\GrabarFasonResult.cs" />
     <Compile Include="Dto\CentroDto.cs" />
     <Compile Include="Dto\ComercialDto.cs" />
     <Compile Include="Dto\CondicionDto.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Dto\FijacionDePrecioContratoDto.cs" />
     <Compile Include="Dto\GrabarContratoPrueba.cs" />
     <Compile Include="Dto\NuevoCorredor.cs" />
+    <Compile Include="Dto\PosicionPorMaterial.cs" />
     <Compile Include="Dto\ProveedorCorredorDto.cs" />
     <Compile Include="Dto\DatosCompraNetDto.cs" />
     <Compile Include="Dto\TraerProveedorResult.cs" />
@@ -122,6 +126,8 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\Fason.cs" />
+    <Compile Include="Entities\Operador.cs" />
     <Compile Include="Entities\FechaFeriado.cs" />
     <Compile Include="Entities\CorredorProveedor.cs" />
     <Compile Include="Entities\RangoConfirmacionAutomatica.cs" />
@@ -130,6 +136,7 @@
     <Compile Include="Entities\RangoPrecio.cs" />
     <Compile Include="Entities\Calidad.cs" />
     <Compile Include="Entities\DescuentoBonificacion.cs" />
+    <Compile Include="Entities\TipoFason.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
     <Compile Include="Helpers\ExtensionesSerializacion.cs" />

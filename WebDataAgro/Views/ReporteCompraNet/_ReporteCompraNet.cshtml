@@ -29,6 +29,8 @@
                             </tr>
                             @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
                             {
+                                if (toneladaPrecio.Total > 0)
+                                {
                                 <tr>
                                     <th class="borde-derecho">@toneladaPrecio.Material</th>
                                     <td>@toneladaPrecio.DispAFijar.ToString("N0")</td>
@@ -42,60 +44,62 @@
                                     <td class="borde-derecho">@toneladaPrecio.NewFijac.ToString("N0")</td>
                                     <th>@toneladaPrecio.Total.ToString("N0")</th>
                                 </tr>
+                                }
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    
 
-                    @foreach (var material in Model.PosicionCompras)
-                    {
-                        <div class="col-xs-6 col-md-4">
-                            <table id="@material.Material.Replace(" ", "")" class="table-condensed">
-                                <tbody>
 
-                                    @if (material.Material == "Soja" || material.Material == "Maíz")
+                @foreach (var material in Model.PosicionCompras)
+                {
+                    <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 col-md-4">
+                        <table id="@material.Material.Replace(" ", "")" class="table-condensed">
+                            <tbody>
+
+                                @if (material.Material == "Soja" || material.Material == "Maíz")
+                                {
+                                    <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
+                                    <tr class="titulosPosicion">
+                                        <th>POSICIÓN</th>
+                                        <th>TON</th>
+                                        <th></th>
+                                    </tr>
+
+                                    foreach (var mes in material.PosicionKilos.OrderBy(x => x.Mes))
                                     {
-                                        <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
-                                        <tr class="titulosPosicion">
-                                            <th>POSICIÓN</th>
-                                            <th>TON</th>
-                                            <th></th>
-                                        </tr>
-
-                                        foreach (var mes in (EnumMeses[])Enum.GetValues(typeof(EnumMeses)))
-                                        {
-                                            int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.ToString()));
-                                            <tr>
-                                                <td> @mes </td>
-                                                <td> @(material.PosicionKilos.Where(x => x.Mes == mes).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"))</td>
-                                                <td>
-                                                    @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
-                                                </td>
-                                            </tr>
-                                        }
-                                        <tr class="titulosPosicion total">
-                                            <th >Total</th>
-                                            <th>@material.Total.ToString("N0")</th>
-                                            <td></td>
+                                        int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
+                                        <tr>
+                                            <td> @mes.Mes </td>
+                                            <td> @(mes.Kilos.ToString("N0"))</td>
+                                            <td>
+                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
+                                            </td>
                                         </tr>
                                     }
-                                    else
+                                    <tr class="titulosPosicion total">
+                                        <th>Total</th>
+                                        <th>@material.Total.ToString("N0")</th>
+                                        <td></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    bool calidad = false;
+                                    if (material.Material == "Trigo Calidad")
                                     {
-                                        bool calidad = false;
-                                        if (material.Material == "Trigo Calidad")
-                                        {
-                                            calidad = true;
-                                        }
-                                        <tr class="titulosPosicion"><th  colspan="3">@material.Material</th></tr>
-                                        <tr class="titulosPosicion">
-                                            <th>POSICIÓN</th>
-                                            <th>TON</th>
-                                            <th></th>
-                                        </tr>
+                                        calidad = true;
+                                    }
+                                    <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
+                                    <tr class="titulosPosicion">
+                                        <th>POSICIÓN</th>
+                                        <th>TON</th>
+                                        <th></th>
+                                    </tr>
+                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).FirstOrDefault() > 0)
+                                    {
                                         <tr>
                                             <td>Noviembre</td>
                                             <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0")</td>
@@ -103,39 +107,49 @@
                                                 @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 11, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>Diciembre</td>
-                                            <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                            <td>
-                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 12, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Enero</td>
-                                            <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                            <td>
-                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 1, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Febrero</td>
-                                            <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                            <td>
-                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                            </td>
-                                        </tr>
-                                        <tr class="titulosPosicion">
-                                            <th class="titulosPosicion">Total</th>
-                                            <th>@material.Total.ToString("N0")</th>
-                                            <td></td>
-                                        </tr>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-                <div>
+                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).FirstOrDefault() > 0)
+                                    {
+                                    <tr>
+                                        <td>Diciembre</td>
+                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 12, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    }
+                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).FirstOrDefault() > 0)
+                                    {
+                                    <tr>
+                                        <td>Enero</td>
+                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 1, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    }
+                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).FirstOrDefault() > 0)
+                                    {
+                                    <tr>
+                                        <td>Febrero</td>
+                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
+                                        <td>
+                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
+                                        </td>
+                                    </tr>
+                                    }
+                                    <tr class="titulosPosicion">
+                                        <th class="titulosPosicion">Total</th>
+                                        <th>@material.Total.ToString("N0")</th>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+                <div class="row">
                     <div class="col-md-12">
                         <table class="table-condensed col-xs-12 col-md-3 col-md-offset-2" id="SojaSustentable">
                             <tbody>
@@ -167,5 +181,5 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            
         </div>

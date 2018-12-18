@@ -164,21 +164,23 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
-
             var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.ContratoId);
             if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
             {
                 var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
-                if (oFijacionDePrecioSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
+                if (oFijacionDePrecioSave.EstadoId == 5 || oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;
+                }
+                if ((oFijacionDePrecioSave.Precio != oFijacionDePrecio.Precio || oFijacionDePrecioSave.Cantidad != oFijacionDePrecio.Cantidad) && (oFijacionDePrecioSave.EstadoId != 1 && oFijacionDePrecioSave.EstadoId != 3))
+                {
+                    oFijacionDePrecioSave.EstadoId = 7;
                 }
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
                 oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
                 oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
-                oFijacionDePrecioSave.EstadoId = oFijacionDePrecio.EstadoId;
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
                 oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
                 oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
@@ -187,6 +189,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
                 oFijacionDePrecioSave.CorredorId = oFijacionDePrecio.CorredorId;
                 oFijacionDePrecioSave.ContratoSAP = oFijacionDePrecio.ContratoSAP;
+                oFijacionDePrecioSave.CampanaId = oFijacionDePrecio.CampanaId;
+                oFijacionDePrecioSave.Posicion = oFijacionDePrecio.Posicion;
+                oFijacionDePrecioSave.TrigoEspecial = oFijacionDePrecioSave.TrigoEspecial;
+                oFijacionDePrecioSave.FechaDesde = oFijacionDePrecio.FechaDesde;
+                oFijacionDePrecioSave.FechaHasta = oFijacionDePrecio.FechaHasta;
             }
             else
             {
@@ -219,7 +226,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarFijacionResult();
             var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
 
-            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
+            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar)
             {
                 if (oFijacionDePrecioSave.Ampliaciones != null)
                 {
@@ -416,6 +423,12 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)fijac.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.Fecha),
                 Fecha_Order = fijac.Fecha,
+                FechaDesdeFormateado = SqlFunctions.DateName("day", fijac.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.DateName("day", fijac.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.FechaHasta),
                 GrupoCompra = 0,
                 MonedaId_Sustentable = "",
                 Moneda_Sustentable = "",
@@ -427,7 +440,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
                 Comercial = fijac.Comercial == null ? "" : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido,
                 Material = fijac.Material == null ? "" : fijac.Material.Descripcion,
-                Campania = "",
+                CampanaId = fijac.CampanaId,
+                Campania = fijac.Campana.Descripcion,
                 Provincia = "",
                 TipoNegocio = "FIJACION",
                 Localidad = "",
@@ -436,6 +450,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Sustentable = false,
                 Dolarizado = false,
                 Pesificado = false,
+                TrigoEspecial = fijac.TrigoEspecial,
+                Posicion = fijac.Posicion,
                 DestinoDescripcion = "",
                 Consignatario = false,
                 PlanCanje = false,

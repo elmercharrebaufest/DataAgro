@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
                         IM_MATERIAL = fijacion.Material.Codigo,
-                        IM_KILOS = fijacion.Cantidad,
+                        IM_KILOS = (decimal)fijacion.Cantidad,
                         IM_PRECIO = fijacion.Precio,
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),

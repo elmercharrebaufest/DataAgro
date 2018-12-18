@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
             mobjNotification = oMSNotification;
         }
 
-        public DatosIniContrato TraerDatosCombo()
+        public DatosIniContrato TraerDatosCombo(int perfilId)
         {
             var datosCombo = new DatosIniContrato();
 
@@ -76,7 +76,10 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
-
+            if(perfilId != 7)
+            {
+                datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
+            }
             datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             datosCombo.Bolsa = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -92,6 +95,9 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.TipoPeriodoDB = repositorio.Listar<TipoPeriodoDB, TipoPeriodoDBQry>(x => new TipoPeriodoDBQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
+
+            datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
+            datosCombo.TipoFason = repositorio.Listar<TipoFason, TipoFasonQry>(x => new TipoFasonQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
@@ -275,8 +281,11 @@ namespace Molinos.DataAgro.Business.Managers
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado))
             {
                 oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
-                oContratoSave.EstadoId = oContratoSave.Base == true ? (int)EnumEstadoContrato.Oferta : (int)EnumEstadoContrato.Pendiente;
-
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Reconfirmar;
+                if(oContratoSave.CantidadCamiones != null)
+                {
+                    oContratoSave.CantidadCamiones =Convert.ToInt32(Math.Ceiling(((decimal)oContratoSave.Cantidad + (decimal) oContrato.Ampliaciones) / 30000)); 
+                }
                 repositorio.GuardarCambios();
             }
             else
@@ -308,10 +317,18 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
                 descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.ContratoId);
                 calidadesExistentes = repositorio.Listar<Calidad>(x => x.ContratoId == oContrato.ContratoId);
-                if (oContratoSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
+                if (oContratoSave.EstadoId == 5 || oContratoSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
+                }
+                if((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                {
+                    oContrato.EstadoId = 7;
+                }
+                else
+                {
+                    oContrato.EstadoId = oContratoSave.EstadoId;
                 }
             }
 
@@ -364,6 +381,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ContratoCorredor = oContrato.ContratoCorredor;
             oContratoSave.SelCargoVendedor = oContrato.SelCargoVendedor;
             oContratoSave.SelCargoMOA = oContrato.SelCargoMOA;
+            oContratoSave.Madre = oContrato.Madre;
+            oContratoSave.ContratoMadre = oContrato.ContratoMadre;
 
             if (descuentosExistentes != null)
             {
@@ -372,6 +391,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == descExistente.Id))
                     {
                         repositorio.Remover(descExistente);
+                        if(oContratoSave.ContratoId!= 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        {
+                            oContratoSave.EstadoId = 7;
+                        }
                     }
                 }
             }
@@ -381,6 +404,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     descuento.Contrato = oContratoSave;
                     repositorio.Agregar(descuento);
+                    if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    {
+                        oContratoSave.EstadoId = 7;
+                    }
                 }
             }
             if (calidadesExistentes != null)
@@ -390,6 +417,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calidadExistente.Id))
                     {
                         repositorio.Remover(calidadExistente);
+                        if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        {
+                            oContratoSave.EstadoId = 7;
+                        }
                     }
                 }
             }
@@ -399,6 +430,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     calidad.Contrato = oContratoSave;
                     repositorio.Agregar(calidad);
+                    if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    {
+                        oContratoSave.EstadoId = 7;
+                    }
                 }
             }
             if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
@@ -429,9 +464,9 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, List<int> listComercialesId)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, listComercialesId));
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request,perfilId, listComercialesId));
         }
 
         public GrabarContratoResult ConfirmarContrato(int contratoId)
@@ -440,7 +475,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta) || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
             {
                 try
                 {
@@ -726,7 +761,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoCorredor = x.ContratoCorredor,
                 ContratoVendedor = x.ContratoVendedor,
                 SelCargoMOA = x.SelCargoMOA,
-                SelCargoVendedor = x.SelCargoVendedor
+                SelCargoVendedor = x.SelCargoVendedor,
+                Madre = x.Madre,
+                ContratoMadre = x.ContratoMadre
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);
@@ -938,7 +975,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
          public DatosCompraNetDto TraerDatosCompraNet(int id)
-        {
+         {
             var compranet = repositorio.Obtener<Proveedor, DatosCompraNetDto>(x => x.ProveedorId == id, x => new DatosCompraNetDto()
             {
                 ProveedorId = id,
@@ -952,6 +989,22 @@ namespace Molinos.DataAgro.Business.Managers
                 Provincia = x.ProvinciaCompraNet.Nombre
             });
             return compranet;
+         }
+
+        public ContratoResult TraerContratoMadre(string sap)
+        {
+            var result = new ContratoResult();
+            var idContrato = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == sap && x.Madre == true, x => x.ContratoId);
+            if (idContrato != 0)
+            {
+                result.Contrato = TraerContrato(idContrato);
+                return result;
+            }
+            else
+            {
+                result.Error("", "No existe Contrato Madre");
+                return result;
+            }
         }
     }
 }

@@ -196,6 +196,7 @@
           <xsd:element name="CONTRCORR" type="rfc:char10" />
           <xsd:element name="SEL_CARGO_VEND" type="rfc:char1" />
           <xsd:element name="SEL_CARGO_MOA" type="rfc:char1" />
+          <xsd:element name="CONTRATO_MADRE" type="rfc:char10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

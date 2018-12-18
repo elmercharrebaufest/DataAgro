@@ -109,8 +109,12 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/AbmComercial").Include(
                                        "~/Scripts/App/AbmComercial.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/AbmCentro").Include(
                                        "~/Scripts/App/AbmCentro.js"));
+
+            //bundles.Add(new ScriptBundle("~/bundles/AbmOperador").Include(
+            //                           "~/Scripts/App/AbmOperador.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/AbmRangoPrecio").Include(
                                        "~/Scripts/App/AbmRangoPrecio.js"));
@@ -128,8 +132,10 @@ namespace WebDataAgro
                                          "~/Scripts/App/AbmFijacionDePrecio.js"));
             
             bundles.Add(new ScriptBundle("~/bundles/CompraNetContrato").Include(
-                                         "~/Scripts/App/CrearContrato.js"));
-            
+                                         "~/Scripts/App/CrearContrato.js",
+                                         "~/Scripts/jquery.mask.js"));
+
+
             bundles.Add(new ScriptBundle("~/bundles/CompraNetIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/firebase-suscribir.js",

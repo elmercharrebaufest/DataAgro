@@ -142,7 +142,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CONTRCORR = contrato.ContratoCorredor ?? "",
                         CONTRVEND = contrato.ContratoVendedor ?? "",
                         SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X":"",
-                        SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : ""
+                        SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
+                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre: ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
@@ -151,7 +152,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
-                    IM_TIPO_NEGOCIO = contrato.TipoNegocio.Descripcion,
+                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE": contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion
                 };
 
                 logger.Debug(rq.ToXml());

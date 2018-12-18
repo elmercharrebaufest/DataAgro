@@ -71,8 +71,13 @@ a.Descarga {
 
 #TrigoCámara .titulosPosicion {
     background: rgb(153, 153, 255);
+    
 }
 
 #TrigoCalidad .titulosPosicion {
     background: rgb(153, 204, 255);
+}
+
+#TrigoCalidadTable, #TrigoCámaraTable {
+    float: right;
 }

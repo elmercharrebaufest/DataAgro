@@ -15,14 +15,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly KendoGridMvcRequest request;
         private readonly List<int> equipo;
+        private readonly int perfilId;
 
-        public TraerTodosContratos(KendoGridMvcRequest request, List<int> equipo)
+        public TraerTodosContratos(KendoGridMvcRequest request,int perfilId, List<int> equipo)
         {
             this.request = request;
             this.equipo = equipo;
+            this.perfilId = perfilId;
         }
 
-        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, List<int> equipo)
+        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, int perfilId, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
@@ -71,7 +73,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
                     Provincia = contrato.Provincia == null ? "" : contrato.Provincia.Nombre,
-                    TipoNegocio = contrato.TipoNegocio == null ? "" : contrato.TipoNegocio.Descripcion,
+                    TipoNegocio = contrato.TipoNegocio == null ? "" : contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion,
                     Localidad = contrato.Localidad == null ? "" : contrato.Localidad.Nombre,
                     Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                     FijacionDePrecioContratoId = null,
@@ -105,7 +107,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ContratoCorredor = contrato.ContratoCorredor,
                     ContratoVendedor = contrato.ContratoVendedor,
                     SelCargoMOA = contrato.SelCargoMOA,
-                    SelCargoVendedor = contrato.SelCargoVendedor
+                    SelCargoVendedor = contrato.SelCargoVendedor,
+                    Posicion = "",
+                    TipoFason ="",
+                    FasonId = 0
                 };
 
             var queryFijacion =
@@ -187,11 +192,102 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ContratoCorredor = "",
                     ContratoVendedor = "",
                     SelCargoMOA = null,
-                    SelCargoVendedor = null
+                    SelCargoVendedor = null,
+                    Posicion = "",
+                    TipoFason = "",
+                    FasonId = 0
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
+            if (perfilId == 7)
+            {
+                var queryFason =
+                    from fas in contexto.Set<Fason>()
+                    where equipo.Contains(fas.ComercialId)
+                    select new BasicoContrato()
+                    {
+                        ContratoId = 0,
+                        ProveedorId = fas.FasoneroId,
+                        CorredorId = 0,
+                        ComercialId = fas.ComercialId,
+                        MaterialId = fas.MaterialId,
+                        TipoNegocioId = 4,
+                        Cantidad = fas.Cantidad,
+                        Precio = fas.Precio,
+                        PrecioPlazo = "",
+                        FechaEntrega = null,
+                        CampanaId = 0,
+                        FechaDesde = null,
+                        FechaHasta = null,
+                        MonedaId = fas.MonedaId,
+                        Moneda = fas.Moneda == null ? "" : fas.Moneda.Descripcion,
+                        Fecha = DbFunctions.TruncateTime(fas.Fecha),
+                        Fecha_Order = fas.Fecha,
+                        GrupoCompra = 0,
+                        ProvinciaId = null,
+                        LocalidadId = null,
+                        Base = null,
+                        Importe_Sustentable = null,
+                        MonedaId_Sustentable = "",
+                        Moneda_Sustentable = "",
+                        Fecha_Dolarizado = null,
+                        Dias_Pesificado = null,
+                        NoInformaSIO = null,
+                        Estado = fas.EstadoId,
+                        Estado_Contrato = fas.Estado.Descripcion,
+                        Estado_Order = fas.Estado.Orden,
+                        UsuarioId = "",
+                        ContratoSAP = null,
+                        Ampliaciones = null,
+                        Cuit = "",
+                        Proveedor = fas.Fasonero == null ? "" : fas.Fasonero.RazonSocial,
+                        Corredor = "",
+                        Comercial = fas.Comercial == null ? "" : fas.Comercial.Nombres + " " + fas.Comercial.Apellido,
+                        Material = fas.Material == null ? "" : fas.Material.Descripcion,
+                        Campania = fas.Campana == null ? "" : fas.Campana.Descripcion,
+                        Provincia = "",
+                        TipoNegocio = "FASON",
+                        Localidad = "",
+                        Observacion = "",
+                        FijacionDePrecioContratoId = null,
+                        Sustentable = false,
+                        Dolarizado = false,
+                        Pesificado = false,
+                        Negocio = null,
+                        DestinoId = null,
+                        DestinoDescripcion = "",
+                        CantidadCamiones = null,
+                        Consignatario = false,
+                        PlanCanje = false,
+                        CD = null,
+                        Warrant = null,
+                        PagoDirectoVendedor = null,
+                        EstablecimientoPropio = null,
+                        BoletoId = null,
+                        BolsaId = null,
+                        BoletoDescripcion = "",
+                        BolsaDescripcion = "",
+                        DesdeFijacion = null,
+                        HastaFijacion = null,
+                        CondicionFijacion = null,
+                        CondicionFijacionDescripcion = "",
+                        ClasificacionId = null,
+                        ClasificacionDescripcion = "",
+                        CalidadDescripcion = "",
+                        MercsDeposito = null,
+                        ComercialCreadorId = 0,
+                        ComercialCreador = "",
+                        ContratoCorredor = "",
+                        ContratoVendedor = "",
+                        SelCargoMOA = null,
+                        SelCargoVendedor = null,
+                        Posicion = fas.Posicion,
+                        TipoFason = fas.TipoFason.Descripcion,
+                    FasonId = fas.Id
+                    };
 
+                queryContratos = queryContratos.Union(queryFason);
+            }
             return new KendoGrid<BasicoContrato>(request, queryContratos);
         }
 
@@ -199,7 +295,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, equipo);
+                return Query(contexto, request,perfilId, equipo);
             }
         }
     }

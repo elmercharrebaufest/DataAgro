@@ -230,6 +230,8 @@
     <Build Include="dbo\Tables\FechaFeriado.sql" />
     <Build Include="dbo\Tables\SISA.sql" />
     <Build Include="dbo\Tables\CorredorProveedor.sql" />
+    <Build Include="dbo\Tables\Fason.sql" />
+    <Build Include="dbo\Tables\TipoFason.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

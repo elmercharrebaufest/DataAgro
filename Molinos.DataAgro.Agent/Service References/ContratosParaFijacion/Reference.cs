@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -103,6 +103,16 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private string fECHA_HASTAField;
         
         private decimal kILOS_CONTRATOField;
+        
+        private string eNTREGA_DESDEField;
+        
+        private string eNTREGA_HASTAField;
+        
+        private string pOSICIONField;
+        
+        private string cOSECHAField;
+        
+        private string cALIDADField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -176,6 +186,66 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string ENTREGA_DESDE {
+            get {
+                return this.eNTREGA_DESDEField;
+            }
+            set {
+                this.eNTREGA_DESDEField = value;
+                this.RaisePropertyChanged("ENTREGA_DESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public string ENTREGA_HASTA {
+            get {
+                return this.eNTREGA_HASTAField;
+            }
+            set {
+                this.eNTREGA_HASTAField = value;
+                this.RaisePropertyChanged("ENTREGA_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string POSICION {
+            get {
+                return this.pOSICIONField;
+            }
+            set {
+                this.pOSICIONField = value;
+                this.RaisePropertyChanged("POSICION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string COSECHA {
+            get {
+                return this.cOSECHAField;
+            }
+            set {
+                this.cOSECHAField = value;
+                this.RaisePropertyChanged("COSECHA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string CALIDAD {
+            get {
+                return this.cALIDADField;
+            }
+            set {
+                this.cALIDADField = value;
+                this.RaisePropertyChanged("CALIDAD");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -187,7 +257,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

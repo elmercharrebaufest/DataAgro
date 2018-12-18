@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string MonedaId { get; set; }
         public int ComercialId { get; set; }
         public decimal Precio { get; set; }
-        public int Cantidad { get; set; }
+        public double Cantidad { get; set; }
         public DateTime Fecha { get; set; }
         public int? Ampliaciones { get; set; }
         public int EstadoId { get; set; }
@@ -24,6 +24,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialCreadorId { get; set; }
         public int? CorredorId { get; set; }
         public string FijacionSAP { get; set; }
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public int CampanaId { get; set; }
+        public string Posicion { get; set; }
+        public bool? TrigoEspecial { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]
@@ -40,6 +45,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial ComercialCreador { get; set; }
         [ForeignKey("CorredorId")]
         public virtual Proveedor Corredor { get; set; }
+        [ForeignKey("CampanaId")]
+        public virtual Campaña Campana { get; set; }
     }
 }
 

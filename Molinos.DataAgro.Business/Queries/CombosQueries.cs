@@ -115,8 +115,7 @@ namespace Molinos.DataAgro.Business
                 logger.Error(ex);
             }
             return null;
-        }
-
+        }       
         public List<RangoCombo> GetAbmRangoCombo()
         {
             try

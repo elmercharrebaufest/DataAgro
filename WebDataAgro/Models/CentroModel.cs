@@ -12,7 +12,7 @@ namespace WebDataAgro.Models
             this.Datos = new DatosIniAbmCentro();
         }
     }
-    
+
     public class ResultIniCentroModel : Resultado
     {
         public List<CentroIni> Datos { get; set; }
@@ -43,4 +43,6 @@ namespace WebDataAgro.Models
         public string Texto { get; set; }
     }
 }
+
+
 

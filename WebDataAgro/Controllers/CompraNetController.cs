@@ -38,13 +38,14 @@ namespace WebDataAgro.Controllers
 
         private ILogger mobjLogger;
 
+        private readonly IFasonManager mobjFasonManager;
         
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger)
+        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger, IFasonManager oFasonManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -56,7 +57,7 @@ namespace WebDataAgro.Controllers
             mobjProveedorManager = oProveedorManager;
             mobjLocalidadManager = ojLocalidadManager;
             mobjLogger = oLogger;
-            
+            mobjFasonManager = oFasonManager;
         }
 
         //-----------------------------------------------------
@@ -83,7 +84,12 @@ namespace WebDataAgro.Controllers
             ViewBag.FijacionId = id;
             return View("CrearContrato");
         }
-
+        public ActionResult CrearFason(int? id)
+        {
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
+            ViewBag.FasonId = id;
+            return View("CrearContrato");
+        }
         public ActionResult Inicializar()
         {
             return new JsonResult()
@@ -102,7 +108,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new ContratoModel_prueba
                 {
-                    Datos = mobjContratoManager.TraerDatosCombo()
+                    Datos = mobjContratoManager.TraerDatosCombo((int)GlobalVariables.Perfil)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
@@ -248,7 +254,7 @@ namespace WebDataAgro.Controllers
             }
             request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
 
-            var model = mobjContratoManager.TraerTodosContratos(request, GlobalVariables.Equipo);
+            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo);
 
             return Json(model);
         }
@@ -434,6 +440,37 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(CuitProveedor, CuitCorredor, materialId, Filtro),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerContratoMadre (string sap) {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.TraerContratoMadre(sap),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult GrabarFason(Fason oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.GrabarFason(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerFasonCompleto(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.TraerFason(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult FinalizarFason(int fasonId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.FinalizarFason(fasonId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

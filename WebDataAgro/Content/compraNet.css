@@ -195,6 +195,16 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 .bor { /*icons*/
     color: #848484;
 }
+
+.status.reconfirmar {
+    background-color: #ac67ca;
+    color: #ffffff;
+}
+
+.reconf { /*icons*/
+    color: #ac67ca;
+}
+
 #border-orange {
     border-bottom: 5px solid #ffc100;
 }
@@ -218,7 +228,9 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 #border-grey {
     border-bottom: 5px solid #848484;
 }
-
+#border-purple {
+    border-bottom: 5px solid #ac67ca;
+}
 .divtop {
     /*position: relative;
     bottom: 4px;*/
@@ -307,6 +319,9 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 }
 
 #modalVisualizar .campo:last-child {
+    border-bottom: 1px solid #dbdbdb;
+}
+#modalVisualizar .fason {
     border-bottom: 1px solid #dbdbdb;
 }
 
@@ -401,7 +416,12 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 .modal .conerror-modal div {
     background: #d00707!important;
 }
-
+.modal .borrado-modal div {
+    background: #848484 !important;
+}
+.modal .reconfirmar-modal div {
+    background: #ac67ca !important;
+}
 .modal .close {
     float: right;
     font-size: 21px;
@@ -450,6 +470,7 @@ textarea.k-textbox {
 
 #gridInformeCompraNet {
     font-size: 12px;
+    zoom:90%
 }
 
 .modal-dialog-pendiente {

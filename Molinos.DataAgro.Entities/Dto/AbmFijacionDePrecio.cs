@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }
         public string Comercial { get; set; }
         public decimal Precio { get; set; }
-        public int Cantidad { get; set; }
+        public double Cantidad { get; set; }
         public string Fecha { get; set; }
         public int? Ampliaciones { get; set; }
         public string Estado { get; set; }

@@ -11,6 +11,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaDesde { get; set; }
         public string FechaHasta { get; set; }
         public string Filtro { get; set; }
+        public string DesdeEntrega { get; set; }
+        public string HastaEntrega { get; set; }
+        public string Posicion { get; set; }
+        public bool? Calidad { get; set; }
+        public string Campana { get; set; }
 
     }
 }

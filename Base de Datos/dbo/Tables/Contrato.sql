@@ -49,7 +49,9 @@
 	[ContratoVendedor] NVARCHAR(15) NULL,
     [ContratoCorredor] NVARCHAR(15) NULL,
 	[SelCargoVendedor] BIT NULL,
-	[SelCargoMOA] BIT NULL
+	[SelCargoMOA] BIT NULL,
+	[Madre] BIT NULL,
+	[ContratoMadre] NVARCHAR(15) NULL
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 

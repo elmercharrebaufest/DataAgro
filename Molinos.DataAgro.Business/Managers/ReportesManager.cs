@@ -10,6 +10,8 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Reflection;
 
@@ -364,7 +366,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<PosicionComprasDto> TraerPosicionCompras(DateTime fecha)
         {
-            var kilosPosicionSoja = repositorio.ListarConsulta(new TraerPosicionMaterial(3, fecha));
+            var kilosPosicionSoja =TraerPosicionMaterial(3, fecha, null);
             var posicionSoja = new PosicionComprasDto
             {
                 Material = "Soja",
@@ -372,7 +374,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionSoja,
                 Total = kilosPosicionSoja.Sum(x=>x.Kilos)
             };
-            var kilosPosicionMaiz = repositorio.ListarConsulta(new TraerPosicionMaterial(1, fecha));
+            var kilosPosicionMaiz = TraerPosicionMaterial(1, fecha, null);
             var posicionMaiz = new PosicionComprasDto
             {
                 Material = "Maíz",
@@ -380,7 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionMaiz,
                 Total = kilosPosicionMaiz.Sum(x => x.Kilos)
             };
-            var kilosPosicionTrigoCamara = repositorio.ListarConsulta(new TraerPosicionMaterial(2, fecha, false));
+            var kilosPosicionTrigoCamara = TraerPosicionMaterial(2, fecha, false);
             var posicionTrigoCamara = new PosicionComprasDto
             {
                 Material = "Trigo Cámara",
@@ -388,7 +390,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionTrigoCamara,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.Kilos)
             };
-            var kilosPosicionTrigoCalidad = repositorio.ListarConsulta(new TraerPosicionMaterial(2, fecha, true));
+            var kilosPosicionTrigoCalidad = TraerPosicionMaterial(2, fecha, true);
             var posicionTrigoCalidad = new PosicionComprasDto
             {
                 Material = "Trigo Calidad",
@@ -409,7 +411,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var excel = new ExcelDetallePosicionDto();
             excel.Headers = typeof(DetalleContratoDto).GetProperties().Select(p =>Text.ResourceManager.GetString(p.Name)).ToArray();
-            excel.Data = repositorio.ListarConsulta(new TraerDetallePosicion(materialId, mes, fecha, calidad));
+            excel.Data = TraerDetallePosicion(materialId, mes, fecha, calidad);
             excel.Name = "Detalle Posición de Negocios de " + (EnumMeses)Enum.ToObject(typeof(EnumMeses), mes)+".xlsx";
             excel.SheetName = "Posición";
             return excel;
@@ -419,5 +421,191 @@ namespace Molinos.DataAgro.Business.Managers
         {            
             return repositorio.ListarConsulta(new TraerPosicionMaterialMes(fecha));
         }
+        private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fecha, bool? calidad) {
+            var fechaHoy = fecha.Date;
+            var posicionKilos = new List<PosicionKilos>();
+            var contratos = repositorio.Listar<Contrato, PosicionPorMaterial>(x => new PosicionPorMaterial { Id = x.ContratoId, FechaDesde =x.FechaDesde, FechaHasta=x.FechaHasta, Cantidad=x.Cantidad},
+                x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+                && x.MaterialId == materialId
+                && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)));
+
+            contratos.AddRange(repositorio.Listar<FijacionDePrecioContrato, PosicionPorMaterial>(x => new PosicionPorMaterial { Id = x.FijacionDePrecioContratoId, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, Cantidad = x.Cantidad },
+                x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+                && x.MaterialId == materialId
+                && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))));
+
+            foreach (var cont in contratos)
+            {
+                var posKil = new PosicionKilos();
+
+                if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month)-cont.FechaDesde.Day) >= 10)
+                {
+                    posKil.Kilos = cont.Cantidad;
+                    posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                {
+                    cont.FechaDesde = cont.FechaDesde.AddMonths(1);
+                    posKil.Kilos = cont.Cantidad;
+                    posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                {
+                    posKil.Kilos = cont.Cantidad;
+                    posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
+                }
+                posicionKilos.Add(posKil);                
+            }
+            posicionKilos = posicionKilos.GroupBy(x=>x.Mes).Select(x=> new PosicionKilos { Mes = x.Key, Kilos = Math.Ceiling(x.Sum(y=>y.Kilos)/1000)}).ToList();
+            return posicionKilos;
+        }
+        private List<string[]> TraerDetallePosicion(int materialId, int mes, DateTime fecha, bool? calidad)
+        {
+            var fechaHoy = fecha.Date;
+            var listaDatos = new List<string[]>();
+            var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
+            {
+                Contrato = x.ContratoId.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = x.Madre == true ? "MADRE" : x.Madre == false ? "HIJO" : x.TipoNegocio.Descripcion,
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadCamiones = x.CantidadCamiones.ToString(),
+                Campana = x.Campana != null ? x.Campana.Descripcion : "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = x.Provincia != null ? x.Provincia.Nombre : "",
+                Localidad = x.Localidad != null ? x.Localidad.Nombre : "",
+                Boleto = x.Boleto != null ? x.Boleto.Descripcion : "",
+                Bolsa = x.Bolsa != null ? x.Bolsa.Descripcion : "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
+                CondicionFijacion = x.CondicionFijacion != null ? x.CondicionFijacion.Descripcion : "",
+                DesdeFijacion = x.DesdeFijacion != null? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion):"",
+                HastaFijacion = x.HastaFijacion != null? SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.HastaFijacion):"",
+                Base = x.Base == true ? "X" : "",
+                ImporteSustentable = x.ImporteSustentable.HasValue && x.MonedaSustentable != null ? x.ImporteSustentable.Value.ToString() + " " + x.MonedaSustentable.Descripcion : "0",
+                FechaDolarizado = x.FechaDolarizado!= null? SqlFunctions.DateName("day", x.FechaDolarizado) + "/" + SqlFunctions.DatePart("month", x.FechaDolarizado) + "/" + SqlFunctions.DateName("year", x.FechaDolarizado):"" ,
+                DiasPesificado = x.DiasPesificado.ToString(),
+                NoInformaSio = x.NoInformaSio == true ? "X":"",
+                Ampliaciones= x.Ampliaciones.ToString(),
+                Consignatario= x.Consignatario== true? "X":"",
+                PlanCanje= x.PlanCanje == true ? "X":"",
+                Pago= x.PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : x.Warrant == true ? "Warrant" : "",
+                CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                EstablecimientoPropio= x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
+                Observacion= x.Observacion ?? ""
+            },x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy
+            && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+            && x.MaterialId == materialId
+            && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)));
+
+            contratos.AddRange(repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
+            {
+                Contrato = x.ContratoId.ToString(),
+                RazonSocial = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                Material = x.Material.Descripcion,
+                TipoNegocio = "FIJACION",
+                Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadCamiones = "",
+                Campana = x.Campana != null ? x.Campana.Descripcion : "",
+                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                Precio = x.Precio.ToString(),
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
+                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Provincia = "",
+                Localidad = "",
+                Boleto =  "",
+                Bolsa =  "",
+                Destino = "",
+                CondicionFijacion = "",
+                DesdeFijacion = "",
+                HastaFijacion = "",
+                Base = "",
+                ImporteSustentable = "",
+                FechaDolarizado = "",
+                DiasPesificado = "",
+                NoInformaSio = "",
+                Ampliaciones = x.Ampliaciones.ToString(),
+                Consignatario = "",
+                PlanCanje = "",
+                Pago =  "",
+                CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                EstablecimientoPropio = "",
+                Observacion = x.Observacion ?? ""
+            }, 
+            x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy
+             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+             && x.MaterialId == materialId
+             && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))));
+
+            foreach (var cont in contratos)
+            {
+                var fechaDesde = DateTime.Parse(cont.FechaDesde);
+                var fechaHasta = DateTime.Parse(cont.FechaHasta);
+                var dato = new string[34];
+                if ((DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) >= 10 && fechaDesde.Month == mes)
+                {
+                    listaDatos.Add(CrearArray(cont));
+                }
+                else if (fechaDesde.AddMonths(1).Month <= fechaHasta.Month && fechaDesde.AddMonths(1).Month == mes)
+                {
+                    listaDatos.Add(CrearArray(cont));
+                }
+                else if (fechaDesde.AddMonths(1).Month > fechaHasta.Month && fechaHasta.Month == mes)
+                {
+                    listaDatos.Add(CrearArray(cont));
+                }                
+            }
+            return listaDatos;
+        }
+        private string[] CrearArray(DetalleContratoDto x)
+        {
+            return new string[]{
+                x.Contrato ?? "",
+                x.RazonSocial ?? "",
+                x.Cuit ?? "",
+                x.Material ?? "",
+                x.TipoNegocio ?? "",
+                x.Comercial ?? "",
+                x.Cantidad ?? "",
+                x.CantidadCamiones ?? "",
+                x.Campana ?? "",
+                x.FechaDesde ?? "",
+                x.FechaHasta ?? "",
+                x.Precio ?? "",
+                x.Moneda ?? "",
+                x.Fecha ?? "",
+                x.Provincia ?? "",
+                x.Localidad ?? "",
+                x.Boleto ?? "",
+                x.Bolsa ?? "",
+                x.Destino ?? "",
+                x.CondicionFijacion ?? "",
+                x.DesdeFijacion ?? "",
+                x.HastaFijacion ?? "",
+                x.Base ?? "",
+                x.ImporteSustentable ?? "",
+                x.FechaDolarizado ?? "",
+                x.DiasPesificado ?? "",
+                x.NoInformaSio ?? "",
+                x.Ampliaciones?? "",
+                x.Consignatario ?? "",
+                x.PlanCanje ?? "",
+                x.Pago ?? "",
+                x.CalidadEspecial ?? "",
+                x.EstablecimientoPropio ?? "",
+                x.Observacion ?? ""
+            };
+        }        
     }
 }

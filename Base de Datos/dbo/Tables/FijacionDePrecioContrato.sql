@@ -7,7 +7,7 @@
 	[MonedaId] CHAR(5) NOT NULL, 
     [ComercialId] INT NOT NULL, 
     [Precio] DECIMAL(18, 2) NOT NULL, 
-    [Cantidad] INT NOT NULL, 
+    [Cantidad] FLOAT NOT NULL, 
     [Fecha] DATETIME NOT NULL, 
     [Ampliaciones] INT NULL, 
     [EstadoId] INT NOT NULL, 
@@ -15,7 +15,13 @@
     [ComercialCreadorId] INT NULL,
 	[CorredorId] INT NULL,
 	[FijacionSAP] NVARCHAR(15) NULL,
-	[ContratoSAP] NVARCHAR(15) NULL
+	[ContratoSAP] NVARCHAR(15) NULL,
+	[FechaDesde] DATETIME NULL, 
+    [FechaHasta] DATETIME NULL, 
+    [CampanaId] INT NOT NULL DEFAULT 6,	
+	[Posicion] NVARCHAR(10) NULL,
+    [TrigoEspecial] BIT NULL
+
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Comercial] FOREIGN KEY (ComercialId) REFERENCES Comercial(ComercialId), 
@@ -23,5 +29,6 @@
 	CONSTRAINT [FK_FijacionDePrecioContrato_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
     CONSTRAINT [FK_FijacionDePrecioContrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
-    CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Contrato]([ContratoId])   
+    CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Contrato]([ContratoId]),
+    CONSTRAINT [FK_FijacioDePrecioContrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId])  
 )
