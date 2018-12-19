@@ -377,10 +377,10 @@ function CreateGridInformeCompraNet() {
                 field: "Ampliaciones", type: "number", width: 60, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
-                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
+                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2 ) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
-                    } else if (dataItem.Estado == 1 || dataItem.Estado == 3) {
+                    } else if (dataItem.Estado == 1 || dataItem.Estado == 3 || dataItem.Estado == 7) {
                         return dataItem.Ampliaciones;
                     } else {
                         return '';
