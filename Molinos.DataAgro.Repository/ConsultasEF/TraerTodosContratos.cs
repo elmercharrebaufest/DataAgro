@@ -73,7 +73,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
                     Provincia = contrato.Provincia == null ? "" : contrato.Provincia.Nombre,
-                    TipoNegocio = contrato.TipoNegocio == null ? "" : contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion,
+                    TipoNegocio = contrato.TipoNegocio == null ? "" : contrato.Madre == true ? "CONVENIO" : contrato.Madre == false ? "FIJ. CONVENIO" : contrato.TipoNegocio.Descripcion,
                     Localidad = contrato.Localidad == null ? "" : contrato.Localidad.Nombre,
                     Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                     FijacionDePrecioContratoId = null,

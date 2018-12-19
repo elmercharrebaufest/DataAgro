@@ -345,9 +345,9 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "FIJACION"
                         }, {
-                            TipoNegocio: "MADRE"
+                            TipoNegocio: "CONVENIO"
                         }, {
-                            TipoNegocio: "HIJO"
+                            TipoNegocio: "FIJ. CONVENIO"
                         }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"

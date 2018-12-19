@@ -929,12 +929,14 @@ function InicializarElementos() {
 
     $("#contMadreId").change(function () {
         var sap = $("#contMadreId").val();
-        var datos = { sap };
-        contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoMadre', datos);
-        if (ExistsErrorMessages(contratoEdit.Errores)) {
-            ShowErrorMessages(contratoEdit.Errores);
-        } else {
-            CargarDatosEditar(contratoEdit.Contrato, true);
+        if (sap !== "") {
+            var datos = { sap };
+            contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoMadre', datos);
+            if (ExistsErrorMessages(contratoEdit.Errores)) {
+                ShowErrorMessages(contratoEdit.Errores);
+            } else {
+                CargarDatosEditar(contratoEdit.Contrato, true);
+            }
         }
     });
     $("#contMadreId").on("keypress keyup blur", function (event) {

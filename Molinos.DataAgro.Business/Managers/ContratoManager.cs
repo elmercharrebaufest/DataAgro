@@ -993,6 +993,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public ContratoResult TraerContratoMadre(string sap)
         {
+            sap = sap.PadLeft(10,'0');
             var result = new ContratoResult();
             var idContrato = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == sap && x.Madre == true, x => x.ContratoId);
             if (idContrato != 0)
