@@ -352,6 +352,27 @@ function armarEditCorredor() {
 }
 
 function DatosCorredor() {
+    if ($("#concom-nombre").val() !== ""
+        || $("#concom-apellido").val() !== ""
+        || $("#concom-email1").val() !== ""
+        || !$("#concom-fechanacimientodia").val()
+        || !$("#concom-fechanacimientomes").val()
+        || !$("#concom-anionacimientomes").val() 
+        || $("#concom-cargo").val() !== ""
+        || $("#concom-puesto").val() !== ""
+        || $("#concom-cargo").val() !== "") {
+        $("#GuardarContactoComercial").trigger("click");
+    }
+    if ($("#provcorr-cuit").val() !== ""
+        || $("#provcorr-razonsocial").val() !== ""
+        || $("#procedencia").val() !== ""
+        || $("#direccion-provcorr").val() !== ""
+        || $("#codpost-provcorr").val() !== ""
+        || $("#procedenciaCompranet").val() !== ""
+        || ($("#clasificacion-proveedor-corredor").val() !== "null"
+            && $("#clasificacion-proveedor-corredor").val() !== null)) {
+        $("#GuardarProveedorCorredor").trigger("click");
+    }
     var obj = {};
     obj.basicos = {};
     obj.contacto = {};

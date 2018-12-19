@@ -2283,6 +2283,17 @@ function InicializarDatos() {
 }
 
 function ObtenerDatos() {
+    if ($("#concom-nombre").val() !== ""
+        || $("#concom-apellido").val() !== ""
+        || $("#concom-email1").val() !== ""
+        || !$("#concom-fechanacimientodia").val()
+        || !$("#concom-fechanacimientomes").val()
+        || !$("#concom-anionacimientomes").val()
+        || $("#concom-cargo").val() !== ""
+        || $("#concom-puesto").val() !== ""
+        || $("#concom-cargo").val() !== "") {
+        $("#GuardarContactoComercial").trigger("click");
+    }
     var obj = {};
     obj.basicos = {};
     obj.contacto = {};
@@ -2374,7 +2385,7 @@ function ObtenerDatos() {
         })(ii);
     }
     obj.contactocomercial = aGuardarContactoComercial;
-
+    
     GrabarProveedor(obj);
 }
 
