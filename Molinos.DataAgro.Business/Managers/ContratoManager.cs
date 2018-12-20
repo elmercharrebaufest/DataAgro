@@ -190,7 +190,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if(oParam.ContratoMadre != null)
             {
-                var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == oParam.ContratoMadre, x => x.Cantidad);
+                var sap = oParam.ContratoMadre.PadLeft(10, '0');
+                var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
                 if(cantidadMadre < oParam.Cantidad)
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");

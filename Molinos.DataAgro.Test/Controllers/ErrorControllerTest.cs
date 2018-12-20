@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Web;
 using WebDataAgro.Controllers;
 
 namespace Molinos.DataAgro.Test.Controllers
@@ -12,6 +13,8 @@ namespace Molinos.DataAgro.Test.Controllers
         [SetUp]
         public void SetUp()
         {
+            HttpContext.Current = Mock.FakeContext.FakeHttpContext();
+            HttpContext.Current.Session["perfil"] = 1;
             target = new ErrorController();
         }
 

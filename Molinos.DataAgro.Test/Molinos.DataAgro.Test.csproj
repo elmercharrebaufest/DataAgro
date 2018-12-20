@@ -120,9 +120,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ErrorControllerTest.cs" />
+    <Compile Include="Controllers\FijacionDePrecioControllerTest.cs" />
     <Compile Include="Controllers\CubproveedoresControllerTest.cs" />
     <Compile Include="Controllers\ContratoControllerTest.cs" />
     <Compile Include="Controllers\CompraNetControllerTest.cs" />
+    <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ProveedorControllerTest.cs" />
     <Compile Include="Controllers\LocalidadControllerTest.cs" />
     <Compile Include="Controllers\ProvinciaControllerTest.cs" />
@@ -168,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Managers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
