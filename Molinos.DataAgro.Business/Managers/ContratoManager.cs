@@ -392,7 +392,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.SelCargoVendedor = oContrato.SelCargoVendedor;
             oContratoSave.SelCargoMOA = oContrato.SelCargoMOA;
             oContratoSave.Madre = oContrato.Madre;
-            oContratoSave.ContratoMadre = oContrato.ContratoMadre.PadLeft(10,'0');
+            oContratoSave.ContratoMadre = oContrato.ContratoMadre?.PadLeft(10,'0');
 
             if (descuentosExistentes != null)
             {
