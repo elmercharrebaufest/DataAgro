@@ -1964,6 +1964,17 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaOperacionId").val(formatearFecha(contrato.FechaFormateado));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
+        if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
+            $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
+        } else {
+            $("#fechaDesdeTopeId").val("");
+        }
+        if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
+            $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
+        } else {
+            $("#fechaDesdeTopeId").val("");
+        }
+        $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
     }
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
@@ -2055,18 +2066,7 @@ function CargarDatosEditar(contrato, hijo) {
     }else if (contrato.BoletoId == 3) {
         $("#boletoNingunoId").prop("checked", true);
     }
-
-    if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-        $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
-    } else {
-        $("#fechaDesdeTopeId").val("");
-    }
-    if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-        $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
-    } else {
-        $("#fechaDesdeTopeId").val("");
-    }
-    $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
+    
     contrato.CD == true ? $("#CDId").prop("checked", true) : $("#CDId").prop("checked", false);
     contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);

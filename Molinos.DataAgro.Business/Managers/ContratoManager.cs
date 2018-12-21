@@ -192,7 +192,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
-                var sumaContratosHijos = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoMadre == sap).Sum();
+                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oParam.ContratoId).Select(x=>x.Cantidad).Sum();
                 if(cantidadMadre- sumaContratosHijos < oParam.Cantidad)
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
@@ -287,7 +287,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
-
+            var sap = oContratoSave.ContratoMadre.PadLeft(10,'0');
+            var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
+            var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oContrato.ContratoId).Select(x => x.Cantidad).Sum();
+            if (cantidadMadre - sumaContratosHijos < oContratoSave.Cantidad + oContrato.Ampliaciones)
+            {
+                oEntityErrors.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
+            }
+            if (oEntityErrors.Errores.Count > 0)
+            {
+                return oEntityErrors;
+            }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado))
             {
                 oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
