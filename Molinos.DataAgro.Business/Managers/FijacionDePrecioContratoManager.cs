@@ -130,6 +130,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
             }
+            if (oParam.Cantidad < 0)
+            {
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+            }
             if (oParam.Precio == 0)
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");

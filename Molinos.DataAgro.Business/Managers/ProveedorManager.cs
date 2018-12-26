@@ -384,9 +384,14 @@ namespace Molinos.DataAgro.Business.Managers
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
 
                 oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
-
-                oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
-
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                {
+                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                }
+                else
+                {
+                    oMensaje.Subject = "Mail Pruebas - Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                }
                 oMensaje.BodyEncoding = Encoding.UTF8;
 
                 oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
@@ -460,9 +465,14 @@ namespace Molinos.DataAgro.Business.Managers
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
 
                 oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
-
-                oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
-
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                {
+                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - DataAgro";
+                }
+                else
+                {
+                    oMensaje.Subject = "Mail Pruebas - Nuevo  negocio Molinos Agro S.A. - DataAgro";
+                }
                 var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
 
                 oMensaje.BodyEncoding = Encoding.UTF8;
@@ -500,8 +510,17 @@ namespace Molinos.DataAgro.Business.Managers
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
-            string th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
             var linea = 0;
+
             string htmlBody = "";
             htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
@@ -654,9 +673,18 @@ namespace Molinos.DataAgro.Business.Managers
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
             var linea = 0;
             string htmlBody = "";
-            string th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";            
+            
             //htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>"+ Td(ref linea) +  oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
@@ -700,8 +728,18 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string Td(ref int linea)
         {
-            string td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
-            string td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+            string td1 = "";
+            string td2="";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+            }
+            else
+            {
+                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #bba7da; padding: 5px 0; width: 250px;\">";
+                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #dccdea; padding: 5px 0; width: 250px;\">";
+            }
             linea += 1;
             if (linea % 2 == 0)
             {

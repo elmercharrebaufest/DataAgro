@@ -890,7 +890,6 @@ function InicializarElementos() {
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min: 0,
         change: function () {
             if ($("#cargarCantidadCamiones").is(':checked')) {
                 $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
@@ -1344,6 +1343,12 @@ function windowsResize() {
         $("#buscadorCorredor").data("kendoAutoComplete").list.width("auto");
         $("#contratoId").data("kendoAutoComplete").list.width("auto");
     }
+
+    if ($(window).width() >= 751 && $(window).width() <= 991) {
+        $("#proveedorLabelId").addClass("noLeftPadding");
+    } else {
+        $("#proveedorLabelId").removeClass("noLeftPadding");
+    }
 }
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
@@ -1706,23 +1711,29 @@ function ObtenerDatos() {
 
     if ($("#buscadorProveedor").val() != "") {
         var cuitAux = $("#buscadorProveedor").val().split('(');
-        var cuit = cuitAux[1].split(')');
-        var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor:false });
+        if (cuitAux[1]) {
+            var cuit = cuitAux[1].split(')');
+            var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+        }
     }
     if ($("#buscadorCorredor").val() != "") {
         var cuitAuxC = $("#buscadorCorredor").val().split('(');
-        var cuitC = cuitAuxC[1].split(')');
-        var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor:true });
+        if (cuitAuxC[1]) {
+            var cuitC = cuitAuxC[1].split(')');
+            var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
+        }
     }
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 
     if ($("#LocalidadCrearContrato").val() != "") {
         var localidadAux = $("#LocalidadCrearContrato").val().split('(');
-        var provinciaAux = localidadAux[1].split(')');
-        var Localidad = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadAux[0], provincia: provinciaAux[0] });
-        obj.LocalidadId = Localidad.LocalidadId;
-        obj.ProvinciaId = Localidad.ProvinciaId;
+        if (localidadAux[1]) {
+            var provinciaAux = localidadAux[1].split(')');
+            var Localidad = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadAux[0], provincia: provinciaAux[0] });
+            obj.LocalidadId = Localidad.LocalidadId;
+            obj.ProvinciaId = Localidad.ProvinciaId;
+        }
     }
     obj.ContratoVendedor = $("#contVendedorId").val();
     obj.ContratoCorredor = $("#contCorredorId").val();

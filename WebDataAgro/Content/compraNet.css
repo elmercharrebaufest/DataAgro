@@ -832,3 +832,6 @@ body {
     width: 100%;
     text-indent: .8em;
 }
+.noLeftPadding {
+    padding-left: 0;
+}

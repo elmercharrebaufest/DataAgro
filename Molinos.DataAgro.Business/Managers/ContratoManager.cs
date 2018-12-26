@@ -188,7 +188,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
             }
-            if(oParam.ContratoMadre != null)
+            if (oParam.Cantidad < 0)
+            {
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+            }
+            if (oParam.ContratoMadre != null)
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);

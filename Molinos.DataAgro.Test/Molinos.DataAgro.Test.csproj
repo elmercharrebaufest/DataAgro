@@ -152,6 +152,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Molinos.DataAgro.Business\Molinos.DataAgro.Business.csproj">
+      <Project>{93EB5467-F12E-4953-A02D-C250757EED29}</Project>
+      <Name>Molinos.DataAgro.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Molinos.DataAgro.Entities\Molinos.DataAgro.Entities.csproj">
       <Project>{E940ADB2-18F1-436C-B24F-B18CEE04F6C0}</Project>
       <Name>Molinos.DataAgro.Entities</Name>
@@ -163,6 +167,10 @@
     <ProjectReference Include="..\Molinos.DataAgro.Report\Molinos.DataAgro.Report.csproj">
       <Project>{9925F118-7FCE-4298-849E-8449AEDD25CB}</Project>
       <Name>Molinos.DataAgro.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
+      <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>
+      <Name>Molinos.DataAgro.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebDataAgro\WebDataAgro.csproj">
       <Project>{4A4B326D-1ED3-4AED-A2B9-06EC9464810D}</Project>
