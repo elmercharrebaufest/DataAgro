@@ -637,5 +637,20 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FasonId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void GrabarAmpliacionFasonTest()
+        {
+            var fason = new Fason { Id = 1, ComercialId = 1, MaterialId = 1, CampanaId = 1 };
+            fasonManagerMock.Setup(x => x.GrabarAmpliacionFason(fason)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            var result = target.GrabarAmpliacionFason(fason);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fasonManagerMock.Verify(x => x.GrabarAmpliacionFason(It.IsAny<Fason>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

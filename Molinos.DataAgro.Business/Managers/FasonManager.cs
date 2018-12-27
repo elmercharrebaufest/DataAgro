@@ -130,6 +130,11 @@ namespace Molinos.DataAgro.Business.Managers
             {                
                 try
                 {
+                    if(oFasonSave.Ampliaciones != null && oFasonSave.Ampliaciones != 0)
+                    {
+                        oFasonSave.Cantidad += oFasonSave.Ampliaciones.Value;
+                        oFasonSave.Ampliaciones = null;
+                    }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
                 }
@@ -202,6 +207,31 @@ namespace Molinos.DataAgro.Business.Managers
                 FasonId = x.Id
             });
             return contrato;
+        }
+
+        public GrabarContratoResult GrabarAmpliacionFason(Fason oFason)
+        {
+            var oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
+            var oEntityErrors = new GrabarContratoResult();
+
+            if (oFasonSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
+            {
+                oFasonSave.Ampliaciones = oFason.Ampliaciones.Value;
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "El Contrato Fasón no se puede modificar");
+            }
+            return oEntityErrors;
         }
     }
 }

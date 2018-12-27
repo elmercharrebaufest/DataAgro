@@ -47,7 +47,7 @@
   </parameter>
   <parameter name="AmbientePruebas Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
-                    match="/configuration/appSettings/add[@key='SinConexionSap']
+                    match="/configuration/appSettings/add[@key='AmbientePruebas']
                            /@value" />
   </parameter>
 

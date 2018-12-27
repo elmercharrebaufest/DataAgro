@@ -474,5 +474,13 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult GrabarAmpliacionFason(Fason oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.GrabarAmpliacionFason(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

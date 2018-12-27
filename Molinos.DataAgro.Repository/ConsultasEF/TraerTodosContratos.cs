@@ -238,7 +238,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Estado_Order = fas.Estado.Orden,
                         UsuarioId = "",
                         ContratoSAP = null,
-                        Ampliaciones = null,
+                        Ampliaciones = fas.Ampliaciones,
                         Cuit = "",
                         Proveedor = fas.Fasonero == null ? "" : fas.Fasonero.RazonSocial,
                         Corredor = "",

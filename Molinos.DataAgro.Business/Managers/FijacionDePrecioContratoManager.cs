@@ -94,7 +94,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.FijacionDePrecioContratoId);
             var oEntityErrors = new GrabarContratoResult();
 
-            if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
+            if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Finalizado && oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Rechazado)
             {
                 oFijacionDePrecioContratoSave.Ampliaciones = oFijacion.Ampliaciones.Value;
                 oFijacionDePrecioContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);

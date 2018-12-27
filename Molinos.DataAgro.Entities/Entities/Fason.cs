@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime Fecha { get; set; }
         public int ComercialId { get; set; }
         public int EstadoId { get; set; }
+        public double? Ampliaciones { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("CampanaId")]

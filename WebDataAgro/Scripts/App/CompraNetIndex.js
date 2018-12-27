@@ -379,7 +379,7 @@ function CreateGridInformeCompraNet() {
                 }, template: function (dataItem) {
                     if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2 ) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
-                            "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
+                            "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + "," + "'" + dataItem.FasonId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3 || dataItem.Estado == 7) {
                         return dataItem.Ampliaciones;
                     } else {
@@ -805,7 +805,9 @@ function ModalFinalizarVarios() {
             if (negocios[i].Estado === 2 || negocios[i].Estado === 4) {
                 if (negocios[i].TipoNegocioId === 3) {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
-                } else {
+                } else if (negocios[i].TipoNegocioId === 4) {
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fas&oacute;n: ' + negocios[i].FasonId + '</div>' + loader + '</div>');
+                } else{
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
             }
@@ -833,6 +835,9 @@ function FinalizarVariosContratos() {
         if (negocios[i].TipoNegocioId === 3) {
             objFinalizado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
             result = MSExecuteOnServer('/CompraNet/FinalizarFijacion', objFinalizado);
+        } else if (negocios[i].TipoNegocioId === 4) {
+            objFinalizado.fasonId = negocios[i].FasonId;
+            result = MSExecuteOnServer('/CompraNet/FinalizarFason', objFinalizado);
         } else {
             objFinalizado.contratoId = negocios[i].ContratoId;
             result = MSExecuteOnServer('/CompraNet/FinalizarContrato', objFinalizado);
@@ -942,12 +947,14 @@ function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContra
     $("#modalConfirmadoTilde").modal('show');
 }
 
-function ModalAmpliaciones(contrato, ampliacion, tipoNegocio, FijacionDePrecioContratoId) {
+function ModalAmpliaciones(contrato, ampliacion, tipoNegocio, FijacionDePrecioContratoId, fasonId) {
     $(".modal-title-ampliaciones").empty();
     $(".modal-title-ampliaciones").append("Contrato DataAgro: " + contrato);
 
     if (tipoNegocio === "3") {
         $("#contratoIdAmpliaciones").val(FijacionDePrecioContratoId);
+    } else if (tipoNegocio === "4") {
+        $("#contratoIdAmpliaciones").val(fasonId);
     } else {
         $("#contratoIdAmpliaciones").val(contrato);
     }
@@ -966,6 +973,8 @@ function ObtenerDatosModalAmpliaciones() {
     objAmpliaciones.Ampliaciones = $("#inputAmpliaciones").val();
     if ($("#tipoNegocioIdAmpliaciones").val() == 3) {
         objAmpliaciones.FijacionDePrecioContratoId = $("#contratoIdAmpliaciones").val();
+    } else if ($("#tipoNegocioIdAmpliaciones").val() == 4) {
+        objAmpliaciones.Id = $("#contratoIdAmpliaciones").val();
     }
 
     GuardarAmpliacion(objAmpliaciones);
@@ -974,6 +983,8 @@ function ObtenerDatosModalAmpliaciones() {
 function GuardarAmpliacion(ampliacion) {
     if ($("#tipoNegocioIdAmpliaciones").val() === "3") {
         var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionFijacion', ampliacion);
+    } else if ($("#tipoNegocioIdAmpliaciones").val() === "4") {
+        var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionFason', ampliacion);
     } else {
         var result = MSExecuteOnServer('/CompraNet/GrabarAmpliacionContrato', ampliacion);
     }

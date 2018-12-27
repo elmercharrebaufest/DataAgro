@@ -11,7 +11,8 @@
 	[Posicion] NVARCHAR(10) NOT NULL,	
     [Fecha] DATETIME NOT NULL, 
     [ComercialId] INT NULL, 
-	[EstadoId] INT NOT NULL
+	[EstadoId] INT NOT NULL,
+	[Ampliaciones] FLOAT NULL
 
     CONSTRAINT [FK_Fason_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),  
     CONSTRAINT [FK_Fason_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),  
