@@ -929,7 +929,7 @@ function InicializarElementos() {
     $("#contMadreId").change(function () {
         var sap = $("#contMadreId").val();
         if (sap !== "") {
-            var datos = { sap };
+            var datos = { sap:sap };
             contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoMadre', datos);
             if (ExistsErrorMessages(contratoEdit.Errores)) {
                 ShowErrorMessages(contratoEdit.Errores);
