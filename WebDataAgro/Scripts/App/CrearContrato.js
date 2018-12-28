@@ -1661,7 +1661,7 @@ function ObtenerDatos() {
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
     obj.Fecha = $("#fechaOperacionId").val() == "" ? hoy : $("#fechaOperacionId").val();
-    if (obj.TipoNegocioId == "3") {
+    if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
         obj.ComercialId = $("#comercialFijacionId").val();
         obj.ContratoSAP = $("#contratoId").val();
     }

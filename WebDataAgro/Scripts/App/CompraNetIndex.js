@@ -348,6 +348,8 @@ function CreateGridInformeCompraNet() {
                             TipoNegocio: "CONVENIO"
                         }, {
                             TipoNegocio: "FIJ. CONVENIO"
+                        }, {
+                            TipoNegocio: "FASON"
                         }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
