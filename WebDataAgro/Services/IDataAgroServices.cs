@@ -9,19 +9,19 @@ namespace WebDataAgro.Services
     {
         #region Servicios del ABM de Destinatarios
         [OperationContract]
-        Resultado Ping();
+        ResultadoSap Ping();
 
         [OperationContract]
-        Resultado GrabarRiesgoComercial(RiesgoComercial oRiesgos);
+        ResultadoSap GrabarRiesgoComercial(RiesgoComercial oRiesgos);
 
         [OperationContract]
-        Resultado GrabarCampaniaActual(CampaniaActual oRiesgos);
+        ResultadoSap GrabarCampaniaActual(CampaniaActual oRiesgos);
 
         [OperationContract]
-        Resultado ActualizarCampaniaMaterial(List<CampaniaMaterialSAPDTO> oCampaniaMaterialSAP);
+        ResultadoSap ActualizarCampaniaMaterial(List<CampaniaMaterialSAPDTO> oCampaniaMaterialSAP);
 
         [OperationContract]
-        Resultado ActualizarEstadoComercial(List<InformeComercialSAPDTO> oInformeComercialSAP);
+        ResultadoSap ActualizarEstadoComercial(List<InformeComercialSAPDTO> oInformeComercialSAP);
 
         #endregion
     }

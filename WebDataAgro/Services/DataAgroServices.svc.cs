@@ -34,23 +34,24 @@ namespace WebDataAgro.Services
         }
         #region Servicios de DataAgro
 
-        public Resultado Ping()
+        public ResultadoSap Ping()
         {
-            return new Resultado();
+            return new ResultadoSap();
         }
 
-        public Resultado GrabarRiesgoComercial(RiesgoComercial oRiesgos)
+        public ResultadoSap GrabarRiesgoComercial(RiesgoComercial oRiesgos)
         {
-            var oEntityErrors = new Resultado();
+            var oEntityErrors = new ResultadoSap();
 
             try
             {
                 logger.Debug("GrabarRiesgoComercial" + oRiesgos.ToXml());
                 var resultado = riesgoComercial.ActualizacionDeRiesgoComercial(oRiesgos);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)
             {
-                oEntityErrors.Errores.Add(new ErrorMessage()
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
                     Message = ex.Message
                 });
@@ -59,27 +60,31 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public Resultado GrabarCampaniaActual(CampaniaActual oCampania)
+        public ResultadoSap GrabarCampaniaActual(CampaniaActual oCampania)
         {
+            var oEntityErrors = new ResultadoSap();
+
             try
             {
                 logger.Debug("GrabarCampaniaActual " + oCampania.ToXml());
-                return campanaActual.ActualizacionCampaniaActual(oCampania);
+                var resultado = campanaActual.ActualizacionCampaniaActual(oCampania);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+
+                return oEntityErrors;
             }
             catch (Exception ex)
             {
-                var resultado = new Resultado();
-                resultado.Errores.Add(new ErrorMessage()
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
                     Message = ex.Message
                 });
-                return resultado;
+                return oEntityErrors;
             }
         }
 
-        public Resultado ActualizarCampaniaMaterial(List<CampaniaMaterialSAPDTO> oCampaniaMaterialSAP)
+        public ResultadoSap ActualizarCampaniaMaterial(List<CampaniaMaterialSAPDTO> oCampaniaMaterialSAP)
         {
-            var oEntityErrors = new Resultado();
+            var oEntityErrors = new ResultadoSap();
 
             try
             {
@@ -93,11 +98,11 @@ namespace WebDataAgro.Services
                 }
                 logger.Debug(aux);
 
-                oEntityErrors = campaniaMaterial.TraerCampañasPorGrano(oCampaniaMaterialSAP);
+                oEntityErrors.ListaErrores.AddRange(campaniaMaterial.TraerCampañasPorGrano(oCampaniaMaterialSAP).Errores);
             }
             catch (Exception ex)
             {
-                oEntityErrors.Errores.Add(new ErrorMessage()
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
                     Message = ex.Message
                 });
@@ -106,9 +111,9 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public Resultado ActualizarEstadoComercial(List<InformeComercialSAPDTO> LoInformeComercialSAP)
+        public ResultadoSap ActualizarEstadoComercial(List<InformeComercialSAPDTO> LoInformeComercialSAP)
         {
-            var oEntityErrors = new Resultado();
+            var oEntityErrors = new ResultadoSap();
 
             try
             {
@@ -123,14 +128,14 @@ namespace WebDataAgro.Services
                     if (oInformeComercialSAP.RptSap.ToLower() != "ok")
                         rtaSap = oInformeComercialSAP.RptSap;
 
-                    oEntityErrors = informeComercial.RespuestaDeSapCapacidadProductiva(oInformeComercialSAP.CUIT, oInformeComercialSAP.Material, rtaSap);
+                    oEntityErrors.ListaErrores.AddRange(informeComercial.RespuestaDeSapCapacidadProductiva(oInformeComercialSAP.CUIT, oInformeComercialSAP.Material, rtaSap).ListaErrores);
                 }
 
                 logger.Debug(aux);
             }
             catch (Exception ex)
             {
-                oEntityErrors.Errores.Add(new ErrorMessage()
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
                     Message = ex.Message
                 });

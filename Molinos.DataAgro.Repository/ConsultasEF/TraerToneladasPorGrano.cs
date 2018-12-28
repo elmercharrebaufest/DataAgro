@@ -31,8 +31,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     DispAFijar = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) == DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 1 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     DispAPrecio = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) == DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 2 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    FrwAFijar = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) < DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 1 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    FrwAPrecio = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) < DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 2 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                    FrwAFijar = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 1 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                    FrwAPrecio = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha) && y.TipoNegocioId == 2 && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewAFijar = x.Where(y => y.TipoNegocioId == 1 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewAPrecio = x.Where(y => y.TipoNegocioId == 2 && y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                 }).First();
@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new ToneladasGranoTipoDto()
                 {                    
                     DispFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) == DbFunctions.TruncateTime(y.Fecha) &&  y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) < DbFunctions.TruncateTime(y.Fecha)  && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),                    
+                    FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha)  && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),                    
                     NewFijac = x.Where(y => y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                 }).First();
             
