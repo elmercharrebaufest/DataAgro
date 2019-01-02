@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.Web.Mvc;
 
@@ -56,7 +57,7 @@ namespace WebDataAgro.Services
                     Message = ex.Message
                 });
             }
-
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
 
@@ -69,8 +70,6 @@ namespace WebDataAgro.Services
                 logger.Debug("GrabarCampaniaActual " + oCampania.ToXml());
                 var resultado = campanaActual.ActualizacionCampaniaActual(oCampania);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-
-                return oEntityErrors;
             }
             catch (Exception ex)
             {
@@ -78,8 +77,9 @@ namespace WebDataAgro.Services
                 {
                     Message = ex.Message
                 });
-                return oEntityErrors;
             }
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
         }
 
         public ResultadoSap ActualizarCampaniaMaterial(List<CampaniaMaterialSAPDTO> oCampaniaMaterialSAP)
@@ -107,7 +107,7 @@ namespace WebDataAgro.Services
                     Message = ex.Message
                 });
             }
-
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
 
@@ -140,7 +140,7 @@ namespace WebDataAgro.Services
                     Message = ex.Message
                 });
             }
-
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
 

@@ -6,9 +6,6 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<ErrorMessage> ListaErrores { get; set; }
         
-        public bool HayError
-        {
-            get { return ListaErrores.Count != 0; }
-        }
+        public bool HayError { get; set; }
     }
 }
