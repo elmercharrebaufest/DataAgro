@@ -44,11 +44,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.NewAFijar = query.NewAFijar;
             toneladasPorGrano.NewAPrecio = query.NewAPrecio;
 
-            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) <= fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
+            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {                    
-                    DispFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) == DbFunctions.TruncateTime(y.Fecha) &&  y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                    DispFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha) &&  y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha)  && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),                    
                     NewFijac = x.Where(y => y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                 }).First();
