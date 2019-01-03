@@ -43,7 +43,6 @@ namespace WebDataAgro.Services
         public ResultadoSap GrabarRiesgoComercial(RiesgoComercial oRiesgos)
         {
             var oEntityErrors = new ResultadoSap();
-
             try
             {
                 logger.Debug("GrabarRiesgoComercial" + oRiesgos.ToXml());
