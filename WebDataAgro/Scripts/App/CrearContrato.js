@@ -1759,8 +1759,13 @@ function ObtenerDatos() {
 function GrabarContrato(nuevoContrato) {
     var result;
 
-    if (nuevoContrato.TipoNegocioId != 3 && nuevoContrato.TipoNegocioId != 4) {
-        result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
+    if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2) {
+        if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val()=="") {
+            MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
+            $.unblockUI();
+        } else {
+            result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
+        }
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
     }
