@@ -799,7 +799,7 @@ namespace Molinos.DataAgro.Business.Managers
                 cond = repositorio.Listar<Condicion, CondicionQry>(x => new CondicionQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion, Inhabilitado = false }),
                 inte = repositorio.Listar<Interes, InteresQry>(x => new InteresQry() { InteresId = x.InteresId, Descripcion = x.Descripcion }),
                 tipoact = repositorio.Listar<TipoActividad, TipoActividadQry>(x => new TipoActividadQry() { TipoActividadId = x.TipoActividadId, Descripcion = x.Descripcion }),
-                concom = repositorio.Listar<ContactoComercial, ContactoComercialQry>(x => new ContactoComercialQry() { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres }),
+                concom = repositorio.Listar<ContactoComercial, ContactoComercialQry>(x => new ContactoComercialQry() { ContactoComercialId = x.ContactoComercialId, Nombres = x.Nombres + " " +x.Apellido },x=>x.ProveedorId == ProveedorId),
                 ClasComNet = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }),
                 BoleComNet = repositorio.Listar<BoletoCompraNet, BoletoCompraNetQry>(x => new BoletoCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion }),
                 BolsComNet = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion })
