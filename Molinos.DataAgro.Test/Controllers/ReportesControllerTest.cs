@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void PartialReporteCompraNetTest()
         {
-            var fecha = DateTime.Parse("26-10-2018");
+            var fecha = new DateTime(2018,08,26);
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
             var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018") as PartialViewResult;
@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void DetalleExcelTest()
         {
-            DateTime.TryParse("26-10-2018", out DateTime fecha);
+            var fecha = new DateTime(2018, 08, 26);
             var reportes = new ParamReportes() { ComercialActual = 1 };
             reportesManagerMock.Setup(x => x.DetallePosicion(1, 10, 2018, fecha, fecha, null)).Returns(new ExcelDetallePosicionDto()
             {
@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ReporteComprasDelDiaTest()
         {
-            DateTime.TryParse("26-10-2018", out DateTime fecha);
+            var fecha = new DateTime(2018, 08, 26);
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha)).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha)).Returns(new ReporteSojaSustDto());
