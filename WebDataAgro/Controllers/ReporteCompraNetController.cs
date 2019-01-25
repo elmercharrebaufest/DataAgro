@@ -44,10 +44,8 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString)
         {
-            DateTime fechaDesde;
-            DateTime.TryParse(fechaString, out fechaDesde);
-            DateTime fechaHasta;
-            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var model = ObtenerDatosReporte(fechaDesde, fechaHasta);
             var posicion = mobjReportesManager.PosicionPorMaterial(fechaDesde, fechaHasta);
             return File(ExcelReporteCompleto.GenerarExcel(model, posicion, fechaDesde == fechaHasta), "application/vnd.ms-excel");

@@ -40,7 +40,7 @@
         </div>
     }
     <div id="CuerpoCompraNet" class="container-reporte">
-        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString(), fechaHastaString = DateTime.Now.Date.ToString() })
+        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy") })
     </div>
 </div>
 
