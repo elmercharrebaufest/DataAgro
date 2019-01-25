@@ -132,9 +132,9 @@
     <Compile Include="Controllers\ProvinciaControllerTest.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaControllerTest.cs" />
     <Compile Include="Controllers\HedgeControllerTest.cs" />
-    <Compile Include="Controllers\ReportesCompraNetControllerTest.cs" />
-    <Compile Include="Controllers\InformeComercialControllerTest.cs" />
     <Compile Include="Controllers\ReportesControllerTest.cs" />
+    <Compile Include="Controllers\InformeComercialControllerTest.cs" />
+    <Compile Include="Controllers\ReporteCompraNetControllerTest.cs" />
     <Compile Include="Controllers\TareaProgramadaControllerTest.cs" />
     <Compile Include="Controllers\RangoPrecioControllerTest.cs" />
     <Compile Include="Controllers\AgendaControllerTest.cs" />
