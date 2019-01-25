@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+@section Styles {
+    <link href="~/Content/ReporteCompraNet.css" rel="stylesheet" />
+}
+<div class="modal fade" id="ModalDetallePosicion" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-mio">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div id="titulo" class="tituloPosicion"></div>
+                </div>
+            </div>
+            <div class="modal-body clearfix scrollInside">
+                <div id="grilla"></div>
+            </div>
+            <div class="modal-footer clearfix ">
+                <div class="align-right">
+                    <button type="button" id="cancelarContratoPendiente" class="btn " data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

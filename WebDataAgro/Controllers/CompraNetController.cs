@@ -183,7 +183,6 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.BorrarContrato(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public ActionResult BorrarFijacion(FijacionDePrecioContrato oParam)
@@ -538,6 +537,14 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjAgenteManager.GrabarAmpliacionAgente(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult AnularContrato(Contrato oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.AnularContrato(oParam, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }

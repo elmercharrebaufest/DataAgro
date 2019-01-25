@@ -19,5 +19,6 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public EnumMeses Mes { get; set; }
         public double Kilos { get; set; }
+        public int? Anio { get; set; }
     }
 }

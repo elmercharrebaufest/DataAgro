@@ -75,6 +75,7 @@
     <Compile Include="Dto\AbmContrato.cs" />
     <Compile Include="Dto\AbmDestinatario.cs" />
     <Compile Include="Dto\AbmMoneda.cs" />
+    <Compile Include="Dto\AgenteCompraDto.cs" />
     <Compile Include="Dto\AreaInfluenciaDto.cs" />
     <Compile Include="Dto\BusquedaLocalidad.cs" />
     <Compile Include="Dto\CalidadEspecialDto.cs" />
@@ -82,7 +83,10 @@
     <Compile Include="Dto\CampañaDto.cs" />
     <Compile Include="Dto\CampañaMaterialDto.cs" />
     <Compile Include="Dto\CanalOperacionDto.cs" />
+    <Compile Include="Dto\DetalleAgenteDto.cs" />
     <Compile Include="Dto\GrabarAgenteResult.cs" />
+    <Compile Include="Dto\HedgeCargaObjetivoDto.cs" />
+    <Compile Include="Dto\HedgeTCPromedioDto.cs" />
     <Compile Include="Dto\HedgeTCDto.cs" />
     <Compile Include="Dto\HedgeObjetivoDto.cs" />
     <Compile Include="Dto\HedgeMaterialDto.cs" />

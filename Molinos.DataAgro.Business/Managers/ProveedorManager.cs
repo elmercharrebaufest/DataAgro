@@ -342,7 +342,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-        public void EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory)
+        public void EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar)
         {
             try
             {
@@ -383,7 +383,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
 
-                oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial));
+                oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial,eliminar));
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
                     oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
@@ -506,7 +506,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-        private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial)
+        private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial,bool? eliminar)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
@@ -522,11 +522,18 @@ namespace Molinos.DataAgro.Business.Managers
             var linea = 0;
 
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+            if (eliminar.HasValue && eliminar.Value)
+            {
+                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+            }
+            else
+            {
+                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+            }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + Split(oContrato.Fecha.ToShortDateString()) + "</td></tr>";            
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.ToString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.ToString()).TrimStart('0') + "</td></tr>";
             if (oContrato.DestinoId != null)
             {
                 htmlBody += "<tr>" + th + "DESTINO</th>" + Td(ref linea) + oContrato.Destino.Descripcion.ToUpper() + "</td></tr>";
@@ -689,7 +696,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>"+ Td(ref linea) +  oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP+ " / " + oFijacionDePrecioContrato.FijacionSAP + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP.TrimStart('0') + " / " + oFijacionDePrecioContrato.FijacionSAP.TrimStart('0') + "</td></tr>";
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
             if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null)
@@ -897,6 +904,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarProveedorResult();
             oEntityErrors = ValidarProveedor(oParam, oEntityErrors);
+            if (oEntityErrors.HayError)
+            {
+                return oEntityErrors;
+            }
             var proveedor = new Proveedor
             {
                 AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null,

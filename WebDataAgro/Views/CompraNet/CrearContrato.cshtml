@@ -27,15 +27,15 @@
     <br />
     <br />
     <div class="proveedores row no-gutter noAgente">
-            <div id="corredorDiv">
-                <div class="col-sm-2">
-                    <label>Corredor</label>
-                </div>
-                <div class="col-md-4 col-sm-5">
-                    <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
-                    <div id="buscadorCorredorResult"></div>
-                </div>
+        <div id="corredorDiv">
+            <div class="col-sm-2">
+                <label>Corredor</label>
             </div>
+            <div class="col-md-4 col-sm-5">
+                <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+                <div id="buscadorCorredorResult"></div>
+            </div>
+        </div>
         <div>
             <div class="col-sm-1 fasonero" id="proveedorLabelId">
                 <label id="proveedorLabel">Proveedor</label>
@@ -235,17 +235,17 @@
                 <label>Posición</label>
             </div>
             <div class="col-sm-4">
-                <input id="posicionFasonId" class="k-input contratoinput" type="text" data-bind="value: Parametros.Posicion"/>
+                <input id="posicionFasonId" class="k-input contratoinput" type="text" data-bind="value: Parametros.Posicion" />
                 <img id="errPosicionFasonId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-2 ">
+        <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio</label>
         </div>
-        <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
+        <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
             <div class="col-xs-7 col-md-6 noPadding">
                 <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
                 <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
@@ -265,6 +265,13 @@
                 <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                 <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
+        </div>
+        <div  class="col-sm-2 espacioPrecioMoneda" hidden></div>
+        <div  class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
+        <div class="col-sm-2" id="fasonEspecial" hidden>
+            <label style="width:110px">Trigo Especial</label>
+            <input id="trigoEspecialFasonId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialFasonId, disabled: isControlDisabled" type="checkbox" />
+            <img id="errtrigoEspecialFasonId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
 
@@ -313,25 +320,25 @@
             </div>
         </div>
     </div>
-    <div class="row ampliar noFason noAgente">
-        <div id="fechasDiv">
+    <div class="row">
+        <div id="fechasDiv" class="ampliar fason noAgente">
             <div class="col-sm-2 ">
                 <label>Entrega Desde-Hasta</label>
             </div>
             <div class="col-sm-5 col-md-2">
-                <span id="fechaDesdeDiv">
+                <span id="fechaDesdeDiv" class="fason">
                     <input id="fechaDesdeId" type="date" data-bind="value: Parametros.fechaDesdeId" style="width:100%" />
                     <img id="errfechaDesdeId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
             <div class="col-sm-5 col-md-2">
-                <span id="fechaHastaDiv">
+                <span id="fechaHastaDiv" class="fason">
                     <input id="fechaHastaId" type="date" data-bind="value: Parametros.fechaHastaId" style="width:100%" />
                     <img id="errfechaHastaId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
         </div>
-        <div id="mercsDepositoDiv" class="col-md-5">
+        <div id="mercsDepositoDiv" class="ampliar noFason noAgente col-md-5">
             <div>
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
                 <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" />

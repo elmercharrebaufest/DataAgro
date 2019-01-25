@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CampanaId { get; set; }
         public string Posicion { get; set; }
         public bool? TrigoEspecial { get; set; }
+        public int? FinDelDiaId { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]
@@ -47,6 +48,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Proveedor Corredor { get; set; }
         [ForeignKey("CampanaId")]
         public virtual Campaña Campana { get; set; }
+        [ForeignKey("FinDelDiaId")]
+        public virtual FinDelDia FinDelDia { get; set; }
     }
 }
 

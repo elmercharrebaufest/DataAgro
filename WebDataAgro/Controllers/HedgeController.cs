@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
@@ -14,10 +15,13 @@ namespace WebDataAgro.Controllers
     public class HedgeController : Controller
     {
         private readonly IHedgeManager oHedgeManager;
+        private readonly IReportesManager mobjReportesManager;
 
-        public HedgeController(IHedgeManager oHedgeManager)
+
+        public HedgeController(IHedgeManager oHedgeManager, IReportesManager mobjReportesManager)
         {
             this.oHedgeManager = oHedgeManager;
+            this.mobjReportesManager = mobjReportesManager;
         }
         public ActionResult Index()
         {
@@ -65,7 +69,7 @@ namespace WebDataAgro.Controllers
             var comercialId = GlobalVariables.ComercialId;
             var hedge = TransformarAEntidad(hedgeMat.HedgeMaterial);
             var res = oHedgeManager.GrabarHedgeMaterial(hedge, comercialId);
-            
+
             return HedgeMaterialPartial(res);
         }
         [HttpPost]
@@ -93,7 +97,12 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult CerrarDia()
         {
-            oHedgeManager.CerrarDia(GlobalVariables.ComercialId);
+            oHedgeManager.CerrarDia(GlobalVariables.ComercialId, ExcelReporteCompleto.GenerarExcel(this.ObtenerDatosReporte(), mobjReportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true) , GlobalVariables.IdActiveDirectory);
+            return RedirectToAction("Index");
+        }
+        public ActionResult ReabrirDia()
+        {
+            oHedgeManager.ReabrirDia(GlobalVariables.ComercialId);
             return RedirectToAction("Index");
         }
         private List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat)
@@ -163,7 +172,7 @@ namespace WebDataAgro.Controllers
                 sumProd += hT.TC * hT.HedgePesos;
                 hedge.TotalHedge += hT.HedgePesos;
             }
-            if(hedge.TotalHedge>0)
+            if (hedge.TotalHedge > 0)
             {
                 hedge.TotalTC = sumProd / hedge.TotalHedge;
             }
@@ -172,9 +181,9 @@ namespace WebDataAgro.Controllers
         private List<HedgeMaterial> TransformarAEntidad(List<HedgeMaterialModel> hedgeMat)
         {
             var listaDto = new List<HedgeMaterial>();
-            foreach(var mat in hedgeMat)
+            foreach (var mat in hedgeMat)
             {
-                if (listaDto!= null)
+                if (listaDto != null)
                 {
                     listaDto.AddRange(new List<HedgeMaterial>(){
                         new HedgeMaterial { MaterialId = mat.MaterialId, TipoHedgeMaterialId = 1, Cantidad = mat.Disponible },
@@ -207,8 +216,25 @@ namespace WebDataAgro.Controllers
                 TipoCambio = hedgeTC.TC,
                 HedgePesos = hedgeTC.HedgePesos
             };
-            
+
             return TC;
+        }
+
+        private ReporteCompraNetModel ObtenerDatosReporte()
+        {            
+            var agentes = mobjReportesManager.TraerAgenteDeCompra(DateTime.Now, DateTime.Now);
+            var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
+            return new ReporteCompraNetModel
+            {
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(DateTime.Now, DateTime.Now),
+                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(DateTime.Now, DateTime.Now),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(DateTime.Now, DateTime.Now),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(DateTime.Now, DateTime.Now),
+                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(DateTime.Now, DateTime.Now)),
+                HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(DateTime.Now, DateTime.Now),
+                TCPromedioDto = mobjReportesManager.TraerTcPromedio(DateTime.Now, DateTime.Now),
+                AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
+            };
         }
     }
 }

@@ -1,185 +1,262 @@
 ﻿@using Molinos.DataAgro.Entities.Common.Enums
 @model WebDataAgro.Models.ReporteCompraNetModel
 
+@{    
+    var dispAFijar = Model.ToneladasGranoTipo.Any(x => x.DispAFijar > 0);
+    var dispAPrecio = Model.ToneladasGranoTipo.Any(x => x.DispAPrecio > 0);
+    var dispFijacion = Model.ToneladasGranoTipo.Any(x => x.DispFijac > 0);
+    var dispFason = Model.ToneladasGranoTipo.Any(x => x.DispFason > 0);
+    var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispFason ? 0 : 1);
+    var forwAFijar = Model.ToneladasGranoTipo.Any(x => x.FrwAFijar > 0);
+    var forwAPrecio = Model.ToneladasGranoTipo.Any(x => x.FrwAPrecio > 0);
+    var forwFijacion = Model.ToneladasGranoTipo.Any(x => x.FrwFijac > 0);
+    var forwFason = Model.ToneladasGranoTipo.Any(x => x.FrwFason > 0);
+    var dispFwd = dispAPrecio || dispFijacion || forwAPrecio || forwFijacion;
+    var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwFason ? 0 : 1);
+    var newcAFijar = Model.ToneladasGranoTipo.Any(x => x.NewAFijar > 0);
+    var newcAPrecio = Model.ToneladasGranoTipo.Any(x => x.NewAPrecio > 0);
+    var newcFijacion = Model.ToneladasGranoTipo.Any(x => x.NewFijac > 0);
+    var newcFason = Model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
+    var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcFason ? 0 : 1);
 
-        <div id="ReportesCompraNet">
-            <div class="row">
-                <div class="table-responsive col-md-12">
-                    <table class="table-condensed noSideMargin" id="ComprasToneladasTipo">
-                        <tbody>
-                            <tr class="titulos">
-                                <td id="" class="borde-derecho"></td>
-                                <th id="disponible" class="borde-derecho" colspan="3">DISPONIBLE</th>
-                                <th id="forward" class="borde-derecho" colspan="3">FORWARD</th>
-                                <th id="newCrop" class="borde-derecho" colspan="3">NEW CROP</th>
+    var hedgeMat = Model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0) ? 1 : 0;
+    var hedgeObj = Model.HedgeObjetivo.RemitirObjetivo!= 0 && Model.HedgeObjetivo.PricingObjetivo != 0 ? 1 : 0;
+}
+
+<div id="ReportesCompraNet">
+    <div class="row">
+        <div class="table-responsive col-md-6 @(hedgeMat == 1 ? "":"hide")">
+            <table class="table-condensed" id="HedgeMaterial">
+                <tbody>
+                    <tr class="titulos">
+                        <th colspan="4">HEDGE</th>
+                    </tr>
+                    <tr class="titulos">
+                        <th>PRODUCTO</th>
+                        <th>DISPONIBLE</th>
+                        <th>FORWARD</th>
+                        <th>NEW CROP</th>
+                    </tr>
+                    @foreach (var mat in Model.HedgeMaterial)
+                    {
+                        if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
+                        {
+                            <tr>
+                                <td>@mat.MaterialDescripcion</td>
+                                <td>@mat.Disponible</td>
+                                <td>@mat.Forward</td>
+                                <td>@mat.NewCrop</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="table-responsive col-md-6 @(hedgeObj == 1 ? "":"hide")">
+                <table class="table-condensed" id="HedgeObjetivo">
+                    <tr class="titulos">
+                        <th></th>
+                        <th>Dia</th>
+                        <th>Objetivo</th>
+                    </tr>
+                    <tr>
+                        <th class="titulos">Pricing</th>
+                        <td>@Model.HedgeObjetivo.PricingCumplido</td>
+                        <td>@Model.HedgeObjetivo.PricingObjetivo</td>
+                    </tr>
+                    <tr>
+                        <th class="titulos">A remitir</th>
+                        <td>@Model.HedgeObjetivo.RemitirCumplido</td>
+                        <td>@Model.HedgeObjetivo.RemitirObjetivo</td>
+                    </tr>
+                </table>
+                <canvas id="graficoHedge" height="40"></canvas>
+                <table class="table-condensed" id="HedgeTC">
+                    <tr>
+                        <td>@Model.TCPromedioDto.PromedioTC.ToString("N2")</td>
+                        <td>@Model.TCPromedioDto.TotalTC.ToString("N2")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row @(disp+forw+newc==0?"hide":"")">
+        <div class="table-responsive col-md-12">
+            <table class="table-condensed noSideMargin" id="ComprasToneladasTipo">
+                <tbody>
+                    <tr class="titulos">
+                        <td id="" class="borde-derecho"></td>
+                        <th id="disponible" class="borde-derecho @(disp==0?"hide":"")" colspan="@(disp)">DISPONIBLE</th>
+                        <th id="forward" class="borde-derecho @(forw==0?"hide":"")" colspan="@(forw)">FORWARD</th>
+                        <th id="dispFwd" class="borde-derecho @(dispFwd ?"":"hide")" colspan="@(dispFwd?2:0 )">DISP FWD</th>
+                        <th id="newCrop" class="borde-derecho @(newc==0?"hide":"")" colspan="@(newc)">NEW CROP</th>
+                        <td></td>
+                    </tr>
+                    <tr class="titulos">
+                        <th class="producto borde-derecho">PRODUCTO</th>
+                        <th class="valores @(dispAFijar ? "" : "hide")">A FIJAR</th>
+                        <th class="valores @(dispAPrecio ? "" : "hide")">A PRECIO</th>
+                        <th class="valores @(dispFijacion ? " " : " hide")">FIJACIÓN</th>
+                        <th class="valores @(dispFason ? "" : "hide")">FASÓN</th>
+                        <th class="valores @(forwAFijar ? "" : "hide")">A FIJAR</th>
+                        <th class="valores @(forwAPrecio ? "" : "hide")">A PRECIO</th>
+                        <th class="valores @(forwFijacion ? " " : " hide")">FIJACIÓN</th>
+                        <th class="valores @(forwFason ? "" : "hide")">FASÓN</th>
+                        <th class="valores @(dispFwd ? "" : "hide")">PRECIO</th>
+                        <th class="valores @(dispFwd ? "" : "hide")">TOTAL</th>
+                        <th class="valores @(newcAFijar ? "" : "hide")">A FIJAR</th>
+                        <th class="valores @(newcAPrecio ? "" : "hide")">A PRECIO</th>
+                        <th class="valores @(newcFijacion ? " " : " hide")">FIJACIÓN</th>
+                        <th class="valores @(newcFason ? "" : "hide")">FASÓN</th>
+                        <th class="valores">TOTAL</th>
+                    </tr>
+                    @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
+                    {
+                        if (toneladaPrecio.Total > 0)
+                        {
+                            <tr>
+                                <th class="borde-derecho">@toneladaPrecio.Material</th>
+                                <td class="@(dispAFijar ? "" : "hide")">@toneladaPrecio.DispAFijar.ToString("N0")</td>
+                                <td class="@(dispAPrecio ? "" : "hide")">@toneladaPrecio.DispAPrecio.ToString("N0")</td>
+                                <td class="@(dispFijacion ? "" : "hide")">@toneladaPrecio.DispFijac.ToString("N0")</td>
+                                <td class="@(dispFason ? "" : "hide")">@toneladaPrecio.DispFason.ToString("N0")</td>
+                                <td class="@(forwAFijar ? "" : "hide")">@toneladaPrecio.FrwAFijar.ToString("N0")</td>
+                                <td class="@(forwAPrecio ? "" : "hide")">@toneladaPrecio.FrwAPrecio.ToString("N0")</td>
+                                <td class="@(forwFijacion ? "" : "hide")">@toneladaPrecio.FrwFijac.ToString("N0")</td>
+                                <td class="@(forwFason ? "" : "hide")">@toneladaPrecio.FrwFason.ToString("N0")</td>
+                                <td class="@(dispFwd ? "" : "hide")">@((toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac).ToString("N0"))</td>
+                                <td class="@(dispFwd ? "" : "hide")">@((toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.DispAFijar + toneladaPrecio.FrwAFijar).ToString("N0"))</td>
+                                <td class="@(newcAFijar ? "" : "hide")">@toneladaPrecio.NewAFijar.ToString("N0")</td>
+                                <td class="@(newcAPrecio ? "" : "hide")">@toneladaPrecio.NewAPrecio.ToString("N0")</td>
+                                <td class="@(newcFijacion ? "" : "hide")">@toneladaPrecio.NewFijac.ToString("N0")</td>
+                                <td class="@(newcFason ? "" : "hide")">@toneladaPrecio.NewFason.ToString("N0")</td>
+                                <th>@toneladaPrecio.Total.ToString("N0")</th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        @foreach (var material in Model.PosicionCompras)
+        {
+            <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 col-md-3 @(material.Total > 0? "":"hide")">
+                <table id="@material.Material.Replace(" ", "")" class="table-condensed">
+                    <tbody>
+                        <tr class="titulosPosicion"><th colspan="4">@material.Material</th></tr>
+                        <tr class="titulosPosicion">
+                            <th>POSICIÓN</th>
+                            <th>TON</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
+                        {
+                            int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
+                            <tr>
+                                <td> @mes.Mes - @mes.Anio</td>
+                                <td> @(mes.Kilos.ToString("N0"))</td>
+                                <td>
+                                    @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta }, new { @class = "Descarga" })
+                                </td>
+                                <td>
+                                    <a id="AbrirModal" class="abrirModal" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()')">Ir</a>
+                                </td>
+                            </tr>
+                        }
+                            <tr class="titulosPosicion total">
+                                <th>Total</th>
+                                <th>@material.Total.ToString("N0")</th>
+                                <td></td>
                                 <td></td>
                             </tr>
-                            <tr class="titulos">
-                                <th class="producto borde-derecho">PRODUCTO</th>
-                                <th class="valores">A FIJAR</th>
-                                <th class="valores">A PRECIO</th>
-                                <th class="valores borde-derecho">FIJACIÓN</th>
-                                <th class="valores">A FIJAR</th>
-                                <th class="valores">A PRECIO</th>
-                                <th class="valores borde-derecho">FIJACIÓN</th>
-                                <th class="valores">A FIJAR</th>
-                                <th class="valores">A PRECIO</th>
-                                <th class="valores borde-derecho">FIJACIÓN</th>
-                                <th class="valores">TOTAL</th>
-                            </tr>
-                            @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
-                            {
-                                if (toneladaPrecio.Total > 0)
-                                {
-                                <tr>
-                                    <th class="borde-derecho">@toneladaPrecio.Material</th>
-                                    <td>@toneladaPrecio.DispAFijar.ToString("N0")</td>
-                                    <td>@toneladaPrecio.DispAPrecio.ToString("N0")</td>
-                                    <td class="borde-derecho">@toneladaPrecio.DispFijac.ToString("N0")</td>
-                                    <td>@toneladaPrecio.FrwAFijar.ToString("N0")</td>
-                                    <td>@toneladaPrecio.FrwAPrecio.ToString("N0")</td>
-                                    <td class="borde-derecho">@toneladaPrecio.FrwFijac.ToString("N0")</td>
-                                    <td>@toneladaPrecio.NewAFijar.ToString("N0")</td>
-                                    <td>@toneladaPrecio.NewAPrecio.ToString("N0")</td>
-                                    <td class="borde-derecho">@toneladaPrecio.NewFijac.ToString("N0")</td>
-                                    <th>@toneladaPrecio.Total.ToString("N0")</th>
-                                </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
-            <div class="row">
-
-
-                @foreach (var material in Model.PosicionCompras)
+        }
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count > 0 ?"":"hide")">
+            <table id="agenteCompras" class="table-condensed">
+                <tr class="titulos">
+                    <th colspan="@(Model.AgenteCompras.ListaOperadores.Count+2)">MAT</th>
+                    <th style="display:inline-flex;">
+                        @Html.ActionLink("Descarga", "ExcelAgente", "ReporteCompraNet", new { fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
+                        <a id="AbrirModalAgente" class="abrirModal" onclick="ModalAgenteCompras('@ViewBag.Fecha')">Ver</a>
+                    </th>
+                </tr>
+                <tr class="titulos">
+                    <th>Producto</th>
+                    <th>Posición</th>
+                    @foreach (var op in Model.AgenteCompras.ListaOperadores)
+                    {
+                        <th>@op.OperadorDesc</th>
+                    }
+                    <th>Total</th>
+                </tr>
+                @foreach (var agente in Model.AgenteCompras.ListaAgenteCompras)
                 {
-                    <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 col-md-4">
-                        <table id="@material.Material.Replace(" ", "")" class="table-condensed">
-                            <tbody>
+                    var pos = agente.Posicion.Split('.');
+                    <tr>
+                        <td>@agente.MaterialDesc</td>
 
-                                @if (material.Material == "Soja" || material.Material == "Maíz")
-                                {
-                                    <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
-                                    <tr class="titulosPosicion">
-                                        <th>POSICIÓN</th>
-                                        <th>TON</th>
-                                        <th></th>
-                                    </tr>
-
-                                    foreach (var mes in material.PosicionKilos.OrderBy(x => x.Mes))
-                                    {
-                                        int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
-                                        <tr>
-                                            <td> @mes.Mes </td>
-                                            <td> @(mes.Kilos.ToString("N0"))</td>
-                                            <td>
-                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
-                                            </td>
-                                        </tr>
-                                    }
-                                    <tr class="titulosPosicion total">
-                                        <th>Total</th>
-                                        <th>@material.Total.ToString("N0")</th>
-                                        <td></td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    bool calidad = false;
-                                    if (material.Material == "Trigo Calidad")
-                                    {
-                                        calidad = true;
-                                    }
-                                    <tr class="titulosPosicion"><th colspan="3">@material.Material</th></tr>
-                                    <tr class="titulosPosicion">
-                                        <th>POSICIÓN</th>
-                                        <th>TON</th>
-                                        <th></th>
-                                    </tr>
-                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).FirstOrDefault() > 0)
-                                    {
-                                        <tr>
-                                            <td>Noviembre</td>
-                                            <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0")</td>
-                                            <td>
-                                                @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 11, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                            </td>
-                                        </tr>
-                                    }
-                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).FirstOrDefault() > 0)
-                                    {
-                                    <tr>
-                                        <td>Diciembre</td>
-                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                        <td>
-                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 12, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                        </td>
-                                    </tr>
-                                    }
-                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).FirstOrDefault() > 0)
-                                    {
-                                    <tr>
-                                        <td>Enero</td>
-                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                        <td>
-                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 1, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                        </td>
-                                    </tr>
-                                    }
-                                    if (material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).FirstOrDefault() > 0)
-                                    {
-                                    <tr>
-                                        <td>Febrero</td>
-                                        <td>@material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).DefaultIfEmpty().FirstOrDefault().ToString("N0")</td>
-                                        <td>
-                                            @Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = 2, fechaString = ViewBag.Fecha, clasificacion = calidad }, new { @class = "Descarga" })
-                                        </td>
-                                    </tr>
-                                    }
-                                    <tr class="titulosPosicion">
-                                        <th class="titulosPosicion">Total</th>
-                                        <th>@material.Total.ToString("N0")</th>
-                                        <td></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                        <td>@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])</td>
+                        @foreach (var op in Model.AgenteCompras.ListaOperadores)
+                        {
+                            var cantidad = agente.Operador.Where(x => x.OperadorId == op.OperadorId).Select(x => x.Cantidad.ToString("N0")).FirstOrDefault();
+                            <td> @(cantidad != null ? cantidad : "0") </td>
+                        }
+                        <td>@agente.Operador.Sum(x => x.Cantidad).ToString("N0")</td>
+                    </tr>
                 }
-            </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table-condensed col-xs-12 col-md-3 col-md-offset-2" id="SojaSustentable">
-                            <tbody>
-                                <tr>
-                                    <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
-                                </tr>
-                                <tr>
-                                    <th>A PRECIO</th>
-                                    <th>A FIJAR</th>
-                                    <th>TOTAL</th>
-                                </tr>
-                                <tr>
-                                    <td>@Model.SojaSustentable.Precio.ToString("N0")</td>
-                                    <td>@Model.SojaSustentable.Fijar.ToString("N0")</td>
-                                    <th>@Model.SojaSustentable.Total.ToString("N0")</th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="table-condensed noSideMargin col-xs-12 col-md-3 col-md-offset-2" id="MonedaKilo">
-                            <tbody>
-                                @foreach (var moneda in Model.PrecioCantidad)
-                                {
-                                    <tr class="total">
-                                        <th>@moneda.Moneda</th>
-                                        <td>@moneda.Cantidad.Value.ToString("N2")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            
+            </table>
         </div>
+        <div class="col-xs-6 col-md-3">
+            <table class="table-condensed @(Model.SojaSustentable.Total > 0 ?"":"hide")" id="SojaSustentable">
+                <tbody>
+                    <tr>
+                        <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
+                    </tr>
+                    <tr>
+                        <th class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">A PRECIO</th>
+                        <th class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">A FIJAR</th>
+                        <th>TOTAL</th>
+                    </tr>
+                    <tr>
+                        <td class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">@Model.SojaSustentable.Precio.ToString("N0")</td>
+                        <td class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">@Model.SojaSustentable.Fijar.ToString("N0")</td>
+                        <th>@Model.SojaSustentable.Total.ToString("N0")</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-6 col-md-3">
+            <table class="table-condensed noSideMargin" id="MonedaKilo">
+                <tbody>
+                    @foreach (var moneda in Model.PrecioCantidad)
+                    {
+                        <tr class="total @(moneda.Cantidad>0?"":"hide")">
+                            <th>@moneda.Moneda</th>
+                            <td>@moneda.Cantidad.Value.ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var data = {PricingCumplido : Number(@Model.HedgeObjetivo.PricingCumplido.ToString().Replace(',','.')),
+                RemitirCumplido : Number(@Model.HedgeObjetivo.RemitirCumplido.ToString().Replace(',','.')),
+                PricingObjetivo : Number(@Model.HedgeObjetivo.PricingObjetivo.ToString().Replace(',','.')),
+                RemitirObjetivo : Number(@Model.HedgeObjetivo.RemitirObjetivo.ToString().Replace(',','.'))}
+    CrearGraficoHedgeObjetivo(data)
+</script>

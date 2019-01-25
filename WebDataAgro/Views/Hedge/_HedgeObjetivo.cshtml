@@ -7,52 +7,54 @@
     @using (Ajax.BeginForm("GrabarHedgeObjetivo", null, new AjaxOptions { UpdateTargetId = "objetivos", InsertionMode = InsertionMode.Replace, OnSuccess = "objetivoInput" }, new { }))
     {
         @Html.AntiForgeryToken();
-    <div id="formularioObjetivo" class="table-container">
-        @if (Model.Resultado.HayError)
-        {
-            if (Model.Resultado.Errores[0].ErrorCode != 200)
+        <div id="formularioObjetivo" class="table-container">
+            @if (Model.Resultado.HayError)
             {
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @Model.Resultado.Errores[0]
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @Model.Resultado.Errores[0]
-                </div>
-            }
-        }
-        <table id="tabla-obj" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Pricing</th>
-                    <th>A Remitir</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (var i = 0; i < Model.HedgeObjetivo.Count; i++)
+                if (Model.Resultado.Errores[0].ErrorCode != 200)
                 {
-                    <tr>
-                        <th>
-                            @Html.DisplayFor(model => Model.HedgeObjetivo[i].MaterialDescripcion)
-                            @Html.HiddenFor(model => Model.HedgeObjetivo[i].MaterialId)
-                        </th>
-                        <td>
-                            @Html.TextBoxFor(model => Model.HedgeObjetivo[i].Pricing, new { @class = "number-input number-input-objetivo", @id = "pricing" + i })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => Model.HedgeObjetivo[i].ARemitir, new { @class = "number-input number-input-objetivo", @id = "remitir" + i })
-                        </td>
-                    </tr>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
                 }
-            </tbody>
-        </table>
-        <input id="guardarHedgeObjBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
-        @Ajax.ActionLink("Cancelar", "HedgeObjetivoPartial", null, new AjaxOptions { UpdateTargetId = "objetivos", InsertionMode = InsertionMode.Replace, OnSuccess = "objetivoInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
-    </div>
+                else
+                {
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
+                }
+            }
+            <table id="tabla-obj" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Pricing</th>
+                        <th>A Remitir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.HedgeObjetivo.Count; i++)
+                    {
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(model => Model.HedgeObjetivo[i].MaterialDescripcion)
+                                @Html.HiddenFor(model => Model.HedgeObjetivo[i].MaterialId)
+                            </th>
+                            <td>
+                                @Html.TextBoxFor(model => Model.HedgeObjetivo[i].Pricing, new { @class = "number-input number-input-objetivo", @id = "pricing" + i })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(model => Model.HedgeObjetivo[i].ARemitir, new { @class = "number-input number-input-objetivo", @id = "remitir" + i })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="row-botones-objetivo">
+                <input id="guardarHedgeObjBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
+                @Ajax.ActionLink("Cancelar", "HedgeObjetivoPartial", null, new AjaxOptions { UpdateTargetId = "objetivos", InsertionMode = InsertionMode.Replace, OnSuccess = "objetivoInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+            </div>
+        </div>
     }
 </div>

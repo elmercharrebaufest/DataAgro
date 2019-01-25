@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Interfaces
         TraerProveedorResult TraerProveedorParaCorredor(string cuit);
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
 
-        void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory);
+        void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar);
         string GetEmailUserActiveDirectory(string UserName);
         
         GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);

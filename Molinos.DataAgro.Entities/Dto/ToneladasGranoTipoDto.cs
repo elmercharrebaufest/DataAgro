@@ -12,12 +12,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public double DispAFijar { get; set; }
         public double DispAPrecio { get; set; }
         public double DispFijac { get; set; }
+        public double DispFason { get; set; }
         public double FrwAFijar { get; set; }
         public double FrwAPrecio { get; set; }
         public double FrwFijac { get; set; }
+        public double FrwFason { get; set; }
         public double NewAFijar { get; set; }
         public double NewAPrecio { get; set; }
         public double NewFijac { get; set; }
+        public double NewFason { get; set; }
         public double Total { get; set; }
     }
 }

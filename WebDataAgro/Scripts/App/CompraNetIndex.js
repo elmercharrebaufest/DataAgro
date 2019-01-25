@@ -78,7 +78,7 @@ $(document).ready(function () {
         } else {
             MensInfo("No posee permisos para la carga de contratos");
         }
-    });   
+    });
     $("#cerrarVarios").click(function () {
         $(".modal").modal('hide');
         recargarGrilla();
@@ -107,12 +107,12 @@ function formatearFecha(fecha) {
 }
 
 function botonPendiente(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +        
+    return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
         "'" + dataItem.ContratoId + "'" + ',' +
         "'" + dataItem.TipoNegocioId + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
         "'" + dataItem.FasonId + "'" + ',' +
-        "'" + dataItem.AgenteId + "'" + 
+        "'" + dataItem.AgenteId + "'" +
         ')"><i class="fa ' + icono + '"></i></button>';
 }
 
@@ -207,7 +207,8 @@ function botonBorrar(dataItem, icono) {
         "'" + dataItem.TipoNegocioId + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
         "'" + dataItem.FasonId + "'" + ',' +
-        "'" + dataItem.AgenteId + "'" +
+        "'" + dataItem.AgenteId + "'" + ',' +
+        "'" + dataItem.Estado + "'" +
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 
@@ -286,8 +287,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusfinalizado)").attr('id', 'border-black');
             $("td:has(div.statusborrado)").attr('id', 'border-grey');
             $("td:has(div.statusreconfirmar)").attr('id', 'border-purple');
-            if (($("#perfil").val() !== "Mesa"))
-            {
+            if (($("#perfil").val() !== "Mesa")) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
             }
             var grid = $("#gridInformeCompraNet").data("kendoGrid");
@@ -304,9 +304,10 @@ function CreateGridInformeCompraNet() {
             }
             filasSeleccionadas = {};
         },
-        columns: [            
+        columns: [
             { selectable: true, width: "50px" },
-            { field: "Proveedor", type: "string", width: 150, attributes: {
+            {
+                field: "Proveedor", type: "string", width: 150, attributes: {
                     "id": "line"
                 },
                 template: function (dataItem) {
@@ -324,6 +325,8 @@ function CreateGridInformeCompraNet() {
                         return '<div class="statusborrado "></div>' + dataItem.Proveedor;
                     } else if (dataItem.Estado == 7) {
                         return '<div class="statusreconfirmar "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.Estado == 8) {
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
                 },
                 filterable: { ui: createMultiSelectProveedor }
@@ -349,15 +352,15 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "A PRECIO"
                     }, {
                         TipoNegocio: "FIJACION"
-                        }, {
-                            TipoNegocio: "CONVENIO"
-                        }, {
-                            TipoNegocio: "FIJ. CONVENIO"
-                        }, {
-                            TipoNegocio: "FASON"
-                        }, {
-                            TipoNegocio: "AGENTE COMPRAS"
-                        }]
+                    }, {
+                        TipoNegocio: "CONVENIO"
+                    }, {
+                        TipoNegocio: "FIJ. CONVENIO"
+                    }, {
+                        TipoNegocio: "FASON"
+                    }, {
+                        TipoNegocio: "AGENTE COMPRAS"
+                    }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
@@ -386,7 +389,7 @@ function CreateGridInformeCompraNet() {
                 field: "Ampliaciones", type: "number", width: 60, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
-                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2 ) {
+                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + "," + "'" + dataItem.FasonId + "'" + "," + "'" + dataItem.AgenteId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3 || dataItem.Estado == 7) {
@@ -402,7 +405,7 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
-                    if (dataItem.Negocio !== "" && dataItem.Negocio !== null ) {
+                    if (dataItem.Negocio !== "" && dataItem.Negocio !== null) {
                         return kendo.parseInt(dataItem.Negocio);
                     } else {
                         return "";
@@ -430,6 +433,8 @@ function CreateGridInformeCompraNet() {
                         Estado_Contrato: "Rechazado"
                     }, {
                         Estado_Contrato: "Reconfirmar"
+                    }, {
+                        Estado_Contrato: "Eliminado"
                     }]
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
@@ -443,7 +448,7 @@ function CreateGridInformeCompraNet() {
                     } else if (dataItem.Estado == 1) { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
-                            botonVisualizar(dataItem, 'fa-eye pend')+
+                            botonVisualizar(dataItem, 'fa-eye pend') +
                             botonBorrar(dataItem, 'fa-trash pend');
                     }
 
@@ -484,10 +489,15 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        return '<div class="status finalizado">Finalizado</div>' +
-                            botonVisualizar(dataItem, 'fa-eye fin');
+                        if ($("#perfil").val() == "Mesa" && dataItem.ContratoId && !dataItem.FijacionDePrecioContratoId && !dataItem.FasonId && !dataItem.AgenteId) {
+                            return '<div class="status finalizado">Finalizado</div>' +
+                                botonVisualizar(dataItem, 'fa-eye fin') +
+                                botonBorrar(dataItem, 'fa-trash fin');
+                        } else {
+                            return '<div class="status finalizado">Finalizado</div>' +
+                                botonVisualizar(dataItem, 'fa-eye fin');
+                        }
                     }
-
                     if (dataItem.Estado == 6) { //Rechazado
                         return '<div class="status borrado">Rechazado</div>' +
                             botonVisualizar(dataItem, 'fa-eye bor');
@@ -498,11 +508,15 @@ function CreateGridInformeCompraNet() {
                             botonConfirmadoTilde(dataItem, 'fa-check reconf') +
                             botonVisualizar(dataItem, 'fa-eye reconf') +
                             botonBorrar(dataItem, 'fa-trash reconf');
-                    } else if (dataItem.Estado == 1) { //reconfirmar
+                    } else if (dataItem.Estado == 7) { //reconfirmar
                         return '<div class="status reconfirmar">Reconfirmar</div>' +
                             botonPendiente(dataItem, 'fa-pencil reconf') +
                             botonVisualizar(dataItem, 'fa-eye reconf') +
                             botonBorrar(dataItem, 'fa-trash reconf');
+                    }
+                    if (dataItem.Estado == 8) { //Finalizado
+                        return '<div class="status anulado">Anulado</div>' +
+                            botonVisualizar(dataItem, 'fa-eye anu');
                     }
                 }
             }
@@ -571,8 +585,8 @@ function CreateGridInformeCompraNet() {
                 $(e.container).css("width", "300px")
             }
         }
-        
-    
+
+
     });
     var checkInputs = function (elements) {
         elements.each(function () {
@@ -655,7 +669,7 @@ function SeleccionarElementos() {
     var selectedRows = grid.select();
     obj = [];
 
-    selectedRows.each(function (index, row) {        
+    selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
         if (selectedItem.TipoNegocioId == 3) {
             obj.push(selectedItem);
@@ -663,7 +677,7 @@ function SeleccionarElementos() {
             obj.push(selectedItem);
         }
     });
-    return(obj); 
+    return (obj);
 }
 
 function editarContrato(contratoId, tipoId, fijacionDePrecioContratoId, fasonId, agenteId) {
@@ -751,7 +765,7 @@ function ReenviarMails(reenviarMail) {
     }
 }
 
-function ModalConfirmadoVarios( ) {
+function ModalConfirmadoVarios() {
     $("#negocioConfirmado-modal").empty();
     $("#confirmarVarios").show();
     $("#cancelarVarios").show();
@@ -765,12 +779,12 @@ function ModalConfirmadoVarios( ) {
     var negocios = SeleccionarElementos();
     if (negocios.length > 0) {
         for (var i in negocios) {
-            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';            
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
             if (negocios[i].Estado === 1 || negocios[i].Estado === 3) {
                 if (negocios[i].TipoNegocioId === 3) {
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>'+ loader + '</div>');
-                } else {                                                     
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>' );
+                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
+                } else {
+                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
             }
         }
@@ -793,7 +807,7 @@ function ConfirmarVariosContratos() {
     for (var i in negocios) {
         var objConfirmado = {};
         $("#estado" + i).empty();
-        var result=null;
+        var result = null;
         if (negocios[i].TipoNegocioId === 3) {
             objConfirmado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
             result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', objConfirmado);
@@ -801,7 +815,7 @@ function ConfirmarVariosContratos() {
             objConfirmado.contratoId = negocios[i].ContratoId;
             result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', objConfirmado);
         }
-        finalizacionCallBack(i, result);                
+        finalizacionCallBack(i, result);
     }
 }
 
@@ -820,13 +834,13 @@ function ModalFinalizarVarios() {
     var negocios = SeleccionarElementos();
     if (negocios.length > 0) {
         for (var i in negocios) {
-            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';            
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
             if (negocios[i].Estado === 2 || negocios[i].Estado === 4) {
                 if (negocios[i].TipoNegocioId === 3) {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else if (negocios[i].TipoNegocioId === 4) {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fas&oacute;n: ' + negocios[i].FasonId + '</div>' + loader + '</div>');
-                } else{
+                } else {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
             }
@@ -835,7 +849,7 @@ function ModalFinalizarVarios() {
         $("#negocioFinalizado-modal").append('<div style="text-align:center"> Se debe seleccionar negocios</div>');
         $("#finalizarVarios").hide();
         $("#cancelarVariosFinalizado").hide();
-        $("#cerrarVariosFinalizado").show();        
+        $("#cerrarVariosFinalizado").show();
     }
     $("#ModalFinalizarVarios").modal('show');
 }
@@ -860,9 +874,9 @@ function FinalizarVariosContratos() {
         } else {
             objFinalizado.contratoId = negocios[i].ContratoId;
             result = MSExecuteOnServer('/CompraNet/FinalizarContrato', objFinalizado);
-        }   
+        }
         finalizacionCallBack(i, result);
-    }    
+    }
 }
 
 function finalizacionCallBack(i, result) {
@@ -888,7 +902,7 @@ function ObtenerDatosModalConfirmado() {
 }
 
 function Confirmar(confirmarContratoFijacion) {
-    if ($("#tipoNegocioModalConTilde").val() === '3') {        
+    if ($("#tipoNegocioModalConTilde").val() === '3') {
         var result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
     } else {
         var result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
@@ -916,7 +930,11 @@ function ObtenerDatosModalBorrado() {
         result = MSExecuteOnServer('/CompraNet/BorrarAgente', objConfirmado);
     } else {
         objConfirmado.contratoId = $("#contratoModalBorrar").val();
-        result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
+        if ($("#estadoModalBorrar").val() == '5') {
+            result = MSExecuteOnServer('/CompraNet/AnularContrato', objConfirmado);
+        } else {
+            result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
+        }
     }
 
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
@@ -1035,6 +1053,7 @@ function GuardarAmpliacion(ampliacion) {
 
 function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador) {
     $("#modalVisualizar").modal('show');
+    visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
         $(".noFason").show();
         $(".fason").hide();
@@ -1049,7 +1068,15 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $(".agente").show();
         $("#visualizar_operador").text(operador);
         $("#visualizar_posicion").text(posicion);
+    } else if (tipo === "A PRECIO") {
+        $(".noFason").show();
+        $(".noAgente").show();
+        $(".noFijacion").show();
+        $("#fechaDivVisualizar").show();
+        $("fechaDesdeHastaDivVisualizar").show();
+        $(".fason").hide();
     } else {
+        visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", true);
         $(".noFason").show();
         $(".noAgente").show();
         $(".noFijacion").show();
@@ -1057,6 +1084,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("fechaDesdeHastaDivVisualizar").show();
         $(".fason").hide();
     }
+
 
     switch (status) {
         case "1": //pendiente
@@ -1096,14 +1124,15 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_desdeHasta").text(fecha);
     $("#visualizar_tipo").text(tipo);
     $("#visualizar_comercial").text(comercial);
+    $("#visualizar_comercial_AFijar").text(comercial);
     $("#visualizar_material").text(material);
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
-    (precio != 0)? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
+    (precio != 0) ? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
 
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
 
-    
+
     var procedencia = "";
     var provinciaDat = provincia != "undefined" && provincia != "null" ? provincia : "";
     var localidadDat = localidad != "undefined" && localidad != "null" ? localidad : "";
@@ -1119,7 +1148,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else {
         $("#corredorDivVisualizar").hide();
     }
-    
+
     contratoCorredor != null && contratoCorredor != "" ? $("#visualizar_contratoCorredor").text(contratoCorredor) : $("#visualizar_contratoCorredor").text("null");
     contratoVendedor != null && contratoVendedor != "" ? $("#visualizar_contratoVendedor").text(contratoVendedor) : $("#visualizar_contratoVendedor").text("null");
     visualizacionRowDoble("contratoCorredorVisualizar", "visualizar_contratoCorredor", "contratoVendedorVisualizar", "visualizar_contratoVendedor");
@@ -1129,7 +1158,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");
     $("#visualizar_observacion").text(Observacion != "undefined" && Observacion ? Observacion : "");
-    
+
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
@@ -1138,8 +1167,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     informaSIO === "true" ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
     mercsFijacion == "true" ? $("#visualizar_mercsDeposito").text("Si") : $("#visualizar_mercsDeposito").text("null");
     cd === "true" ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
-    boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined"? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
-    
+    boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined" ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
+
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
@@ -1151,20 +1180,20 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     planCanje === "true" ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");
     consignatario === "true" ? $("#visualizar_consignatario").text("Consignatario") : $("#visualizar_consignatario").text("");
     cantidadCamiones !== 0 && cantidadCamiones !== "null" ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : $("#visualizar_cantidadDeCamiones").text("null");
-    establecimientoPropio === "true" ? $("#visualizar_establecimiento").text("Propio") : establecimientoPropio === "false" ? $("#visualizar_establecimiento").text("Arrendado") : $("#visualizar_establecimiento").text("null");   
+    establecimientoPropio === "true" ? $("#visualizar_establecimiento").text("Propio") : establecimientoPropio === "false" ? $("#visualizar_establecimiento").text("Arrendado") : $("#visualizar_establecimiento").text("null");
     destinoDescripcion != "" ? $("#visualizar_destino").text(destinoDescripcion) : $("#visualizar_destino").text("null");
     visualizacionRowDoble("cantidadDivVisualizar", "visualizar_cantidad", "cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones");
     visualizacionRowDoble("tipoDivVisualizar", "visualizar_tipo", "destinoDivVisualizar", "visualizar_destino");
     visualizacionRowDoble("mercsDepositoDivVisualizar", "visualizar_mercsDeposito", "pagoDivVisualizar", "visualizar_pago");
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
-    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");    
-    visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "establecimientoDivVisualizar", "visualizar_establecimiento" );
+    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
+    visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "establecimientoDivVisualizar", "visualizar_establecimiento");
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
     }
-        
+
     var iteracionesDescuentos = viewModel.DescuentosVisualizar.length;
     for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
@@ -1211,6 +1240,23 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     });
 }
 
+function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {
+    if (aFijar) {
+        $("#" + div1).hide();
+        $("#" + div2).show();
+        $("#" + div2).removeClass("col-sm-6");
+        $("#" + div2).addClass("col-sm-12");
+    } else {
+        $("#" + div1).show();
+        $("#" + div1).removeClass("col-sm-12");
+        $("#" + div1).addClass("col-sm-6");
+        $("#" + div2).show();
+        $("#" + div2).removeClass("col-sm-12");
+        $("#" + div2).addClass("col-sm-6");
+    }
+}
+
+
 function visualizacionRowDoble(div1, span1, div2, span2) {
     if ($("#" + span1).text() === "null" && $("#" + span2).text() === "null") {
         $("#" + div1).hide();
@@ -1245,7 +1291,7 @@ function visualizacionRowSimple(dato, idDiv, idText) {
     }
 }
 
-function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId,fasonId, agenteId) {
+function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, estado) {
     $("#proveedor_a_borrar").text(proveedor);
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
@@ -1260,6 +1306,7 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId,faso
         $("#agente_a_borrar").val(agenteId);
     } else {
         $("#contratoModalBorrar").val(id);
+        $("#estadoModalBorrar").val(estado);
     }
 
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
@@ -1273,18 +1320,18 @@ function CrearViewModel() {
         "ContratosPendientes": null
     };
     viewModel = kendo.observable({
-        Parametros: param,        
+        Parametros: param,
         DescuentosVisualizar: [],
         CalidadesVisualizar: [],
         ContratosPendientes: []
     });
-       
-    kendo.bind($("#tabla-descuentos-visualizar"), viewModel);    
+
+    kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
     kendo.bind($("#tabla-calidades-visualizar"), viewModel);
     kendo.bind($("#tabla-pendientes"), viewModel);
 }
 
-function AvisoContratosPendientes(){
+function AvisoContratosPendientes() {
     var iteracionesContratos = viewModel.ContratosPendientes.length;
     for (var i = 0; i < iteracionesContratos; i++) {
         viewModel.ContratosPendientes.pop();
@@ -1301,9 +1348,9 @@ function AvisoContratosPendientes(){
             RazonSocial: contrato.RazonSocial,
             Cantidad: contrato.Cantidad,
             Precio: contrato.Precio,
-            Moneda: contrato.Moneda != null ? contrato.Moneda:"",
+            Moneda: contrato.Moneda != null ? contrato.Moneda : "",
             Fecha: contrato.Fecha,
-            NombreApellido: contrato.NombreApellido            
+            NombreApellido: contrato.NombreApellido
         };
         viewModel.ContratosPendientes.push(contratoVM);
     });

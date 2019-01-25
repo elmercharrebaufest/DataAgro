@@ -61,6 +61,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? SelCargoMOA { get; set; }
         public bool? Madre { get; set; }
         public string ContratoMadre { get; set; }
+        public int? FinDelDiaId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -95,7 +96,9 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("ComercialCreadorId")]
         public virtual Comercial ComercialCreador { get; set; }
         [ForeignKey("CorredorId")]
-        public virtual Proveedor Corredor { get; set; } 
+        public virtual Proveedor Corredor { get; set; }
+        [ForeignKey("FinDelDiaId")]
+        public virtual FinDelDia FinDelDia { get; set; }
 
         [InverseProperty("Contrato")]
         public ICollection<DescuentoBonificacion> Descuentos { get; set; }

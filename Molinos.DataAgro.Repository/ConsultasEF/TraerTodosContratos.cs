@@ -336,7 +336,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ContratoSAP = null,
                         Ampliaciones = age.Ampliaciones,
                         Cuit = "",
-                        Proveedor = "",
+                        Proveedor = age.Operador.Descripcion,
                         Corredor = "",
                         Comercial = age.Comercial == null ? "" : age.Comercial.Nombres + " " + age.Comercial.Apellido,
                         Material = age.Material == null ? "" : age.Material.Descripcion,

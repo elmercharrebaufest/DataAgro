@@ -44,8 +44,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void PartialReporteCompraNetTest()
         {
-            
-            var resultado = target.PartialReporteCompraNet("26-10-2018") as PartialViewResult;
+            var fecha = DateTime.Parse("26-10-2018");
+            reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
+            reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
+            var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018") as PartialViewResult;
 
             Assert.NotNull(resultado);
         }
@@ -55,15 +57,33 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             DateTime.TryParse("26-10-2018", out DateTime fecha);
             var reportes = new ParamReportes() { ComercialActual = 1 };
-            reportesManagerMock.Setup(x => x.DetallePosicion(1,10, fecha, null)).Returns(new ExcelDetallePosicionDto()
+            reportesManagerMock.Setup(x => x.DetallePosicion(1, 10, 2018, fecha, fecha, null)).Returns(new ExcelDetallePosicionDto()
             {
-                Headers = new string[] { "1","2" },
-                Data = new List<string[]>() { new string[] {"a","b" } },
+                Headers = new string[] { "1", "2" },
+                Data = new List<string[]>() { new string[] { "a", "b" } },
                 Name = "B",
                 SheetName = "C"
             });
-            
-            var result = target.DetalleExcel(10, 1, "26-10-2018", null);
+
+            var result = target.DetalleExcel(10, 2018, 1, "26-10-2018", "26-10-2018", null);
+            Assert.NotNull(result);
+        }
+        [Test]
+        public void ReporteComprasDelDiaTest()
+        {
+            DateTime.TryParse("26-10-2018", out DateTime fecha);
+            reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
+            reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
+            reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
+            reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());
+            var reportes = new ParamReportes() { ComercialActual = 1 };
+            reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha, fecha)).Returns(new List<ExcelPosicionMaterialDto>());
+
+            var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018");
             Assert.NotNull(result);
         }
     }

@@ -47,8 +47,8 @@ a.Descarga {
     text-indent: -9999px; 
 }
 
-#ComprasToneladasTipo{
-    width:100%;
+#ComprasToneladasTipo {
+    width: 100%;
 }
 #MonedaKilo th{
     width:115px;
@@ -78,6 +78,76 @@ a.Descarga {
     background: rgb(153, 204, 255);
 }
 
-#TrigoCalidadTable, #TrigoCámaraTable {
+/*#TrigoCalidadTable, #TrigoCámaraTable {
     float: right;
+}*/
+
+#ComprasToneladasTipo td, #ComprasToneladasTipo th {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.container-reporte {
+    margin: 0;
+    padding:0 10PX;
+}
+
+.page-container, .page-content-wrapper .page-content {
+    padding: 0;
+}
+
+.page-footer{
+    margin-top:0;
+}
+.noRightPadding{
+    padding-right:0;
+}
+.sideMargin-15{
+    margin:0 15px;
+}
+
+.modal-mio{
+    width:90%;
+    margin:auto;
+}
+
+.scrollInside {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.trPar {
+    background-color: #eaeaea;
+}
+
+.trTitulo{
+    font-weight:bold;
+}
+
+.tituloPosicion{
+    font-weight: bolder;
+    text-align:center;
+    margin: auto;
+    width:100%;
+}
+
+.abrirModal {
+    background: url(../Content/Images/Tablas.png) no-repeat top left;
+    display: block;
+    width: 17px;
+    text-indent: -9999px;
+}
+
+#HedgeObjetivo {
+    margin: 15px 0 5px 0;
+}
+
+.trTitulo td{
+    padding-right:5px;
+    padding-left:5px;
+}
+
+#HedgeTC td {
+    border: 1px solid black;
+    border-top: 2px solid black;
 }

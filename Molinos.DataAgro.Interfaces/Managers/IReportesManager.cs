@@ -21,42 +21,49 @@ namespace Molinos.DataAgro.Interfaces
         List<ResulIndicadores> TraerComprasTorta(ParamReportes oParamReportes);
 
         List<ResultComprasBarrasReportes> TraerComprasBarra(ParamReportes oParamReportes);
-        
+
         List<ResulIndicadores> TraerCapacidadProductivaMapa(ParamReportes oParamReportes);
 
         List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes);
-        
+
         List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes);
-         
+
         List<ResultComprasBarrasReportes> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes);
 
 
         #region Objetivos
         List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes);
-        List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes); 
+        List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes);
         #endregion
 
-        
+
         List<ResulIndicadores> TraerBasedeDatos(ParamReportes oParamReportes);
 
         ParamReportes TransformarFiltros(ParamReportes oParamReportes);
-        
-        List<ResultIndicadoresReportesmini>TraerComprasMapaExportacion(ParamReportes oParamReportes);
-           
+
+        List<ResultIndicadoresReportesmini> TraerComprasMapaExportacion(ParamReportes oParamReportes);
+
         List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes filtrosconvertidos);
 
-        List<ResultComprasBarrasReportesmini>TraerComprasBarraExportacion(ParamReportes filtrosconvertidos);
-         
+        List<ResultComprasBarrasReportesmini> TraerComprasBarraExportacion(ParamReportes filtrosconvertidos);
+
         List<ResultProduccionMapaReportes> TraerCapacidadProductivaMapaExportacion(ParamReportes filtrosconvertidos);
         List<ResultProduccionBarraReportes> TraerCapacidadProductivaBarraExportacion(ParamReportes filtrosconvertidos);
-        
+
         List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes);
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes);
-        List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fecha);
-        ReporteSojaSustDto TraerToneladasSojaSust(DateTime fecha);
-        List<PosicionComprasDto> TraerPosicionCompras(DateTime fecha);
-        List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fecha);
-        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, DateTime fecha, bool? calidad);
-        List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fecha);
+        List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta);
+        ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta);
+        List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta);
+        List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta);
+        List<HedgeMaterialDto> TraerTodosHedgeMaterial(DateTime fechaDesde, DateTime fechaHasta);
+        HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta);
+        HedgeTCPromedioDto TraerTcPromedio(DateTime fechaDesde, DateTime fechaHasta);
+        List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta);
+        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, bool? calidad);
+        ExcelDetallePosicionDto DetalleAgente(DateTime fecha);
+        List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta);
+        string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, bool? calidad);
+        string DetalleAgenteModal(DateTime fecha);
     }
 }

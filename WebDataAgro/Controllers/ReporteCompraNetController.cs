@@ -1,6 +1,9 @@
-﻿using Molinos.DataAgro.Interfaces;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
@@ -10,6 +13,7 @@ namespace WebDataAgro.Controllers
     public class ReporteCompraNetController : Controller
     {
         private readonly IReportesManager mobjReportesManager;
+
         public ReporteCompraNetController(IReportesManager oReportesManager)
         {
             mobjReportesManager = oReportesManager;
@@ -18,44 +22,106 @@ namespace WebDataAgro.Controllers
         // GET: ReporteCompraNet
         public ActionResult Index()
         {
-           return View();
+            return View();
         }
-        public ActionResult PartialReporteCompraNet(string fechaString)
+        public ActionResult PartialReporteCompraNet(string fechaString, string fechaHastaString)
         {
             ViewBag.Fecha = fechaString;
-            DateTime fecha;
-            DateTime.TryParse(fechaString, out fecha);
-            var model = ObtenerDatosReporte(fecha);
+            ViewBag.FechaHasta = fechaHastaString;
+            DateTime fechaDesde;
+            DateTime.TryParse(fechaString, out fechaDesde);
+            DateTime fechaHasta;
+            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            var model = ObtenerDatosReporte(fechaDesde, fechaHasta);
             return PartialView("_ReporteCompraNet", model);
 
         }
-        public ExcelResult DetalleExcel(int mes, int materialId,string fechaString, bool? clasificacion)
+        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
         {
             DateTime fecha;
             DateTime.TryParse(fechaString, out fecha);
-            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, fecha, clasificacion);
-            return new ExcelResult(detalle.Headers,detalle.Data,detalle.Name,detalle.SheetName);
+            DateTime fechaHasta;
+            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion);
+            return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
 
-        public ActionResult ReporteComprasDelDia(string fechaString)
+        public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString)
         {
-            DateTime fecha;
-            DateTime.TryParse(fechaString, out fecha);
-            var model = ObtenerDatosReporte(fecha);
-            var posicion = mobjReportesManager.PosicionPorMaterial(fecha);
-            return File(ExcelReporteCompleto.GenerarExcel(model, posicion), "application/vnd.ms-excel");
-
+            DateTime fechaDesde;
+            DateTime.TryParse(fechaString, out fechaDesde);
+            DateTime fechaHasta;
+            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            var model = ObtenerDatosReporte(fechaDesde, fechaHasta);
+            var posicion = mobjReportesManager.PosicionPorMaterial(fechaDesde, fechaHasta);
+            return File(ExcelReporteCompleto.GenerarExcel(model, posicion, fechaDesde == fechaHasta), "application/vnd.ms-excel");
         }
 
-        private ReporteCompraNetModel ObtenerDatosReporte(DateTime fecha)
+        private ReporteCompraNetModel ObtenerDatosReporte(DateTime fechaDesde, DateTime fechaHasta)
         {
+            var agentes = mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta);
+            var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
             return new ReporteCompraNetModel
             {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fecha),
-                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fecha),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fecha),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fecha)
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta),
+                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta),
+                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta)),
+                HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(fechaDesde,fechaHasta),
+                TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta),
+                AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores= op },
             };
+        }
+        private List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat)
+        {
+            var lista = new List<HedgeMaterialModel>()
+            {
+                new HedgeMaterialModel {MaterialId = 1, MaterialDescripcion ="Hedge Maíz"},
+                new HedgeMaterialModel {MaterialId = 3, MaterialDescripcion ="Hedge Soja" }
+            };
+            foreach (var hedge in hedgeMat)
+            {
+                var elemLista = lista.Where(x => x.MaterialId == hedge.MaterialId).FirstOrDefault();
+                if (elemLista != null)
+                {
+                    if (hedge.TipoHedgeMaterialId == 1)
+                    {
+                        elemLista.Disponible = hedge.Cantidad;
+                    }
+                    else if (hedge.TipoHedgeMaterialId == 2)
+                    {
+                        elemLista.Forward = hedge.Cantidad;
+                    }
+                    else if (hedge.TipoHedgeMaterialId == 3)
+                    {
+                        elemLista.NewCrop = hedge.Cantidad;
+                    }
+                }
+            }
+            return lista;
+        }
+
+        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
+        {
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            DateTime fechaHasta;
+            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, clasificacion), JsonRequestBehavior.AllowGet);
+        }
+        public ExcelResult ExcelAgente(string fechaString)
+        {
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            var detalle = mobjReportesManager.DetalleAgente(fecha);
+            return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
+        }
+        public JsonResult DetalleAgenteModal(string fechaString)
+        {
+            DateTime fecha;
+            DateTime.TryParse(fechaString, out fecha);
+            return Json(mobjReportesManager.DetalleAgenteModal(fecha), JsonRequestBehavior.AllowGet);
         }
     }
 }

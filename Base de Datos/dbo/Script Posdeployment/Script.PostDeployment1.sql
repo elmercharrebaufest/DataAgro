@@ -33,6 +33,7 @@ IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Con Error') BEG
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Finalizado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Finalizado', 5); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Rechazado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Rechazado', 6); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Reconfirmar') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Reconfirmar', 7); END
+IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Eliminado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Eliminado', 8); END
 
 --StandardDeCalidad
 IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Camara') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Camara','03'); END

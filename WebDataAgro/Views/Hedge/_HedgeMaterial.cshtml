@@ -5,58 +5,60 @@
 <div class="container">
     @using (Ajax.BeginForm("GrabarHedgeMaterial", null, new AjaxOptions { UpdateTargetId = "hedgeMaterial", InsertionMode = InsertionMode.Replace, OnSuccess = "materialInput" }, new { }))
     {
-        
+
         @Html.AntiForgeryToken();
-    <div id="formularioHedgeMaterial" class="table-container">
-        @if (Model.Resultado.HayError)
-        {
-            if (Model.Resultado.Errores[0].ErrorCode != 200)
+        <div id="formularioHedgeMaterial" class="table-container">
+            @if (Model.Resultado.HayError)
             {
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @Model.Resultado.Errores[0]
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @Model.Resultado.Errores[0]
-                </div>
-            }
-        }
-        <table id="tabla-mat" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th class="">Disponible</th>
-                    <th class="">Forward</th>
-                    <th class="">New Crop</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (var i = 0; i < Model.HedgeMaterial.Count; i++)
+                if (Model.Resultado.Errores[0].ErrorCode != 200)
                 {
-                    <tr>
-                        <th>
-                            @Html.DisplayFor(model => Model.HedgeMaterial[i].MaterialDescripcion)
-                            @Html.HiddenFor(model => Model.HedgeMaterial[i].MaterialId)
-                        </th>
-                        <td class="td-input">
-                            @Html.TextBoxFor(model => Model.HedgeMaterial[i].Disponible, new { @class = "number-input number-input-material", @id = "disponible" + i })
-                        </td>
-                        <td class="td-input">
-                            @Html.TextBoxFor(model => Model.HedgeMaterial[i].Forward, new { @class = "number-input number-input-material", @id = "forward" + i })
-                        </td>
-                        <td class="td-input">
-                            @Html.TextBoxFor(model => Model.HedgeMaterial[i].NewCrop, new { @class = "number-input number-input-material", @id = "new-crop" + i })
-                        </td>
-                    </tr>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
                 }
-            </tbody>
-        </table>
-        <input id="guardarHedgeMatBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
-        @Ajax.ActionLink("Cancelar", "HedgeMaterialPartial", null, new AjaxOptions { UpdateTargetId = "hedgeMaterial", InsertionMode = InsertionMode.Replace, OnSuccess = "materialInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
-    </div>
+                else
+                {
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
+                }
+            }
+            <table id="tabla-mat" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="">Disponible</th>
+                        <th class="">Forward</th>
+                        <th class="">New Crop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.HedgeMaterial.Count; i++)
+                    {
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(model => Model.HedgeMaterial[i].MaterialDescripcion)
+                                @Html.HiddenFor(model => Model.HedgeMaterial[i].MaterialId)
+                            </th>
+                            <td class="td-input">
+                                @Html.TextBoxFor(model => Model.HedgeMaterial[i].Disponible, new { @class = "number-input number-input-material", @id = "disponible" + i })
+                            </td>
+                            <td class="td-input">
+                                @Html.TextBoxFor(model => Model.HedgeMaterial[i].Forward, new { @class = "number-input number-input-material", @id = "forward" + i })
+                            </td>
+                            <td class="td-input">
+                                @Html.TextBoxFor(model => Model.HedgeMaterial[i].NewCrop, new { @class = "number-input number-input-material", @id = "new-crop" + i })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="row-botones-material">
+                <input id="guardarHedgeMatBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
+                @Ajax.ActionLink("Cancelar", "HedgeMaterialPartial", null, new AjaxOptions { UpdateTargetId = "hedgeMaterial", InsertionMode = InsertionMode.Replace, OnSuccess = "materialInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+            </div>
+        </div>
     }
 </div>

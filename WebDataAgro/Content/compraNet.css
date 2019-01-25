@@ -126,6 +126,7 @@ label{
 ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     margin-top: 0;
     margin-bottom: 0;
+    padding-right: 1px;
 }
 
 #gridInformeCompraNet td .status,
@@ -195,7 +196,14 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 .bor { /*icons*/
     color: #848484;
 }
+.status.anulado {
+    background-color: #848484;
+    color: #000000;
+}
 
+.anu { /*icons*/
+    color: #848484;
+}
 .status.reconfirmar {
     background-color: #ac67ca;
     color: #ffffff;

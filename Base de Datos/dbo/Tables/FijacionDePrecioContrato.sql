@@ -20,7 +20,8 @@
     [FechaHasta] DATETIME NULL, 
     [CampanaId] INT NOT NULL DEFAULT 6,	
 	[Posicion] NVARCHAR(10) NULL,
-    [TrigoEspecial] BIT NULL
+    [TrigoEspecial] BIT NULL,
+	[FinDelDiaId] INT NULL 
 
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
@@ -30,5 +31,6 @@
     CONSTRAINT [FK_FijacionDePrecioContrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
     CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Contrato]([ContratoId]),
-    CONSTRAINT [FK_FijacioDePrecioContrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId])  
+    CONSTRAINT [FK_FijacioDePrecioContrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),
+	CONSTRAINT [FK_FijacioDePrecioContrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id])
 )

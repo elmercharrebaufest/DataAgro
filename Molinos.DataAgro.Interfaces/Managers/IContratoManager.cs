@@ -33,5 +33,6 @@ namespace Molinos.DataAgro.Interfaces
         List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo);
         DatosCompraNetDto TraerDatosCompraNet(int id);
         ContratoResult TraerContratoMadre(string sap);
+        GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory);
     }
 }

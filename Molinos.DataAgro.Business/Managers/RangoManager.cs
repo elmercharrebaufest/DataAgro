@@ -121,9 +121,13 @@ namespace Molinos.DataAgro.Business
         private Resultado ValidarRango(Resultado oEntityErrors,RangoPrecio oRango)
         {
             var rangosExistentes = repositorio.Listar<RangoPrecio>();
+            if (oRango.PrecioMaximo == 0)
+            {
+                oEntityErrors.Error("PrecioMaximo", "El valor máximo no puede ser cero");
+            }
             if (oRango.PrecioMinimo > oRango.PrecioMaximo)
             {
-                oEntityErrors.Error("Precio", "El valor minimo no puede ser mayor que el máximo");
+                oEntityErrors.Error("Precio", "El valor mínimo no puede ser mayor que el máximo");
             }
             if (rangosExistentes.Exists(x=> x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId))
             {

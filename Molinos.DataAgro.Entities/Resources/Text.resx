@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Agente" xml:space="preserve">
+    <value>Agente</value>
+  </data>
   <data name="Ampliaciones" xml:space="preserve">
     <value>Ampliaciones</value>
   </data>
@@ -237,11 +240,17 @@
   <data name="October" xml:space="preserve">
     <value>Octubre</value>
   </data>
+  <data name="Operador" xml:space="preserve">
+    <value>Operador</value>
+  </data>
   <data name="Pago" xml:space="preserve">
     <value>Pago</value>
   </data>
   <data name="PlanCanje" xml:space="preserve">
     <value>Plan Canje</value>
+  </data>
+  <data name="Posicion" xml:space="preserve">
+    <value>Posición</value>
   </data>
   <data name="Precio" xml:space="preserve">
     <value>Precio</value>

@@ -61,6 +61,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Agente.
+        /// </summary>
+        public static string Agente {
+            get {
+                return ResourceManager.GetString("Agente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ampliaciones.
         /// </summary>
         public static string Ampliaciones {
@@ -421,6 +430,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operador.
+        /// </summary>
+        public static string Operador {
+            get {
+                return ResourceManager.GetString("Operador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pago.
         /// </summary>
         public static string Pago {
@@ -435,6 +453,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string PlanCanje {
             get {
                 return ResourceManager.GetString("PlanCanje", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Posición.
+        /// </summary>
+        public static string Posicion {
+            get {
+                return ResourceManager.GetString("Posicion", resourceCulture);
             }
         }
         

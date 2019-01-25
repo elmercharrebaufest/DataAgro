@@ -57,8 +57,15 @@ function InicializarElementos() {
         $(".number-input").children().addClass("inhabilitado");
         $(".fin-dia").hide();
         $("#fin-dia").hide();
+        $("#reabrir-dia").show();
+
+        $("#row-botones-material").hide();
+        $("#row-botones-objetivo").hide();
+    } else {
+        $("#row-botones-material").show();
+        $("#row-botones-objetivo").show();
+        $("#reabrir-dia").hide();
     }
-    
 }
 
 function DeseleccionarForms() {
@@ -78,6 +85,17 @@ function materialInput() {
         min: 0
     });
     TimeOut();
+    if (diaCerrado === "True") {
+        $("#tc").data("kendoNumericTextBox").enable(false);
+        $("#hedgepesos").data("kendoNumericTextBox").enable(false);
+        for (var i = 0; i < matLen; i++) {
+            $("#disponible" + i).data("kendoNumericTextBox").enable(false);
+            $("#forward" + i).data("kendoNumericTextBox").enable(false);
+            $("#new-crop" + i).data("kendoNumericTextBox").enable(false);
+        }
+        $(".number-input").addClass("inhabilitado");
+        $(".number-input").children().addClass("inhabilitado");
+    }    
 }
 function objetivoInput() {
     $(".number-input-objetivo").kendoNumericTextBox({
@@ -87,6 +105,16 @@ function objetivoInput() {
         min: 0
     });
     TimeOut();
+    if (diaCerrado === "True") {
+        $("#tc").data("kendoNumericTextBox").enable(false);
+        $("#hedgepesos").data("kendoNumericTextBox").enable(false);
+        for (var h = 0; h < objLen; h++) {
+            $("#pricing" + h).data("kendoNumericTextBox").enable(false);
+            $("#remitir" + h).data("kendoNumericTextBox").enable(false);
+        }
+        $(".number-input").addClass("inhabilitado");
+        $(".number-input").children().addClass("inhabilitado");
+    }    
 }
 function tcInput() {
     $(".number-input-tc").kendoNumericTextBox({

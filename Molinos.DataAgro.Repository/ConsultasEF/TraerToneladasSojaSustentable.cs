@@ -10,18 +10,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerToneladasSojaSustentable : IConsultaEscalar<ReporteSojaSustDto>
     {
-        private readonly DateTime fecha;
-        public TraerToneladasSojaSustentable(DateTime fecha)
+        private readonly DateTime fechaDesde;
+        private readonly DateTime fechaHasta;
+        public TraerToneladasSojaSustentable(DateTime fechaDesde, DateTime fechaHasta)
         {
-            this.fecha = fecha;
+            this.fechaDesde = fechaDesde;
+            this.fechaHasta = fechaHasta;
         }
 
         public ReporteSojaSustDto Ejecutar(DbContext contexto)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var fechaHoy = fecha.Date;
+            var fechaHoy = fechaDesde.Date;
+            var fechaManana = fechaHasta.Date;
 
-            return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null))
+            return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ReporteSojaSustDto()
                 {

@@ -137,16 +137,15 @@ namespace Molinos.DataAgro.Business.Managers
             var sisa = new SISA();
             if (oParam.ClasificacionId == 1)
             {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1);
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
             }
             else if (oParam.ClasificacionId == 2)
             {
-
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6);
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
             }
             else if (oParam.ClasificacionId == 3)
             {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && otros.Contains(x.CodCategoria));
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && otros.Contains(x.CodCategoria) && x.SituacionCategoria == "AL");
             }
             if (sisa != null)
             {
@@ -585,7 +584,7 @@ namespace Molinos.DataAgro.Business.Managers
                     try
                     {
                         //Envio de mail
-                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory,null);
                         var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                         foreach (var comercialId in comerciales)
                         {
@@ -1003,7 +1002,7 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => (x.EstadoId == 1 || x.EstadoId == 3)&& equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy);
         }
 
-         public DatosCompraNetDto TraerDatosCompraNet(int id)
+        public DatosCompraNetDto TraerDatosCompraNet(int id)
          {
             var compranet = repositorio.Obtener<Proveedor, DatosCompraNetDto>(x => x.ProveedorId == id, x => new DatosCompraNetDto()
             {
@@ -1036,5 +1035,137 @@ namespace Molinos.DataAgro.Business.Managers
                 return result;
             }
         }
+        public GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+            var SapEliminarContrato = new EliminarContratoAgent(logger);
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
+            {
+                var respuesta = SapEliminarContrato.Eliminar(oContratoSave);
+                if (respuesta.Contains("Error"))
+                {
+                    if (respuesta.Contains("SIO"))
+                    {
+                        var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
+                        EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
+                    }
+                    oEntityErrors.Error("", respuesta);
+                }
+                else
+                {
+                    try
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        repositorio.GuardarCambios();
+                    }
+                    catch(Exception e)
+                    {
+                        logger.Error(e);
+                        oEntityErrors.Error("", e.Message);
+
+                    }
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
+                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                    mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
+                }                
+            }
+            else
+            {
+                oEntityErrors.Error("", "El contrato no se puede eliminar");
+            }
+            return oEntityErrors;
+        }
+
+        private void EnviarMailSio(Contrato oContrato, List<Comercial> administrativo,string idActiveDirectory)
+        {
+            try
+            {
+                var emailComercial = new List<string>();
+
+                if (administrativo != null)
+                {
+                    foreach (var com in administrativo)
+                    {
+                        try { emailComercial.Add(mobjProveedorManager.GetEmailUserActiveDirectory(com.IdActiveDirectory)); }
+                        catch (Exception e) { logger.Error(e); }
+                    }
+                }
+
+                var oMensaje = new MailMessage
+                {
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
+
+                if (emailComercial.Count > 0)
+                {
+                    foreach (var adm in emailComercial)
+                    {
+                        oMensaje.To.Add(adm);
+                    }
+                }
+                else
+                {
+                    logger.Debug($"No existen Administrativos para Informar SIO");
+                    return;
+                }
+                oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+
+                oMensaje.AlternateViews.Add(CuerpoMailSIO(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, idActiveDirectory));
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                {
+                    oMensaje.Subject = "Anulacion de Contrato Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                }
+                else
+                {
+                    oMensaje.Subject = "Mail Pruebas - Anulacion de Contrato Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                }
+                oMensaje.BodyEncoding = Encoding.UTF8;
+
+                oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
+
+                SmtpClient oCliente = default(SmtpClient);
+
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
+                else
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
+
+                if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                {
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                        ConfigurationManager.AppSettings["CredentialPassword"]);
+                }
+
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+
+                oCliente.Send(oMensaje);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+        private AlternateView CuerpoMailSIO(string filePath, Contrato contrato, string idActiveDirectory)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = "";
+            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP +" de  SIO Granos <br /><br />  ";
+            htmlBody += "<br /><br /> Por favor anularlos a la brevedad y comunicarse con "+ idActiveDirectory +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }        
     }
 }

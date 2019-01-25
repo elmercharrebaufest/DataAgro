@@ -51,7 +51,8 @@
 	[SelCargoVendedor] BIT NULL,
 	[SelCargoMOA] BIT NULL,
 	[Madre] BIT NULL,
-	[ContratoMadre] NVARCHAR(15) NULL
+	[ContratoMadre] NVARCHAR(15) NULL,
+	[FinDelDiaId] INT NULL 
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
@@ -67,5 +68,6 @@
     CONSTRAINT [FK_Contrato_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro](Id),
     CONSTRAINT [FK_Contrato_CondicionFijacion] FOREIGN KEY ([CondicionFijacionId]) REFERENCES [CondicionFijacion]([Id]), 
     CONSTRAINT [FK_Contrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
-    CONSTRAINT [FK_Contrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId])
+    CONSTRAINT [FK_Contrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
+	CONSTRAINT [FK_Contrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id])
 )

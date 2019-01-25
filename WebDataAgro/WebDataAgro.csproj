@@ -237,6 +237,7 @@
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
+    <Compile Include="Models\AgenteCompraModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
     <Compile Include="Models\RangoModel.cs" />
@@ -1066,6 +1067,8 @@
     </Content>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="firebase-messaging-sw.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\package.json" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\AUTHORS.txt" />
@@ -2392,6 +2395,8 @@
     <Content Include="Views\Hedge\_HedgeObjetivo.cshtml" />
     <Content Include="Views\Hedge\_HedgeTC.cshtml" />
     <Content Include="Views\Operador\Index.cshtml" />
+    <Content Include="Views\ReporteCompraNet\ModalDetallePosicion.cshtml" />
+    <Content Include="Views\ReporteCompraNet\ModalAgente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

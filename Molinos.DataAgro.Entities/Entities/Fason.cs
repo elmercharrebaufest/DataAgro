@@ -21,6 +21,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialId { get; set; }
         public int EstadoId { get; set; }
         public double? Ampliaciones { get; set; }
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public bool Especial { get; set; }
+        public int? FinDelDiaId { get; set; }
+
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("CampanaId")]
@@ -35,6 +40,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Proveedor Fasonero { get; set; }
         [ForeignKey("TipoFasonId")]
         public virtual TipoFason TipoFason { get; set; }
+        [ForeignKey("FinDelDiaId")]
+        public virtual FinDelDia FinDelDia { get; set; }
     }
 }
 

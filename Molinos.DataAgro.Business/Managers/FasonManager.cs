@@ -65,6 +65,14 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
             }
+            if (oParam.FechaDesde.Year == 1)
+            {
+                oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacio");
+            }
+            if (oParam.FechaHasta.Year == 1)
+            {
+                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
+            }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
             {
@@ -102,7 +110,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.MaterialId = oFason.MaterialId;
                 oFasonSave.CampanaId = oFason.CampanaId;
                 oFasonSave.Posicion = oFason.Posicion;
-                oFasonSave.TipoFasonId = oFason.TipoFasonId;                
+                oFasonSave.TipoFasonId = oFason.TipoFasonId;
+                oFasonSave.FechaDesde = oFason.FechaDesde;
+                oFasonSave.FechaHasta = oFason.FechaHasta;
+                oFasonSave.Especial = oFason.Especial;
             }
             else
             {
@@ -204,7 +215,14 @@ namespace Molinos.DataAgro.Business.Managers
                 Posicion = x.Posicion,
                 TipoFason = x.TipoFason.Descripcion,
                 TipoFasonId = x.TipoFasonId,
-                FasonId = x.Id
+                FasonId = x.Id,
+                TrigoEspecial = x.Especial,
+                FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHasta)
             });
             return contrato;
         }
