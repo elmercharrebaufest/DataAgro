@@ -28,20 +28,16 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.Fecha = fechaString;
             ViewBag.FechaHasta = fechaHastaString;
-            DateTime fechaDesde;
-            DateTime.TryParse(fechaString, out fechaDesde);
-            DateTime fechaHasta;
-            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            DateTime fechaDesde= DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var model = ObtenerDatosReporte(fechaDesde, fechaHasta);
             return PartialView("_ReporteCompraNet", model);
 
         }
         public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
         {
-            DateTime fecha;
-            DateTime.TryParse(fechaString, out fecha);
-            DateTime fechaHasta;
-            DateTime.TryParse(fechaHastaString, out fechaHasta);
+            DateTime fecha= DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion);
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
