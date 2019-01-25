@@ -113,8 +113,8 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/AbmCentro").Include(
                                        "~/Scripts/App/AbmCentro.js"));
 
-            //bundles.Add(new ScriptBundle("~/bundles/AbmOperador").Include(
-            //                           "~/Scripts/App/AbmOperador.js"));
+            bundles.Add(new ScriptBundle("~/bundles/AbmOperador").Include(
+                                       "~/Scripts/App/AbmOperador.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/AbmRangoPrecio").Include(
                                        "~/Scripts/App/AbmRangoPrecio.js"));

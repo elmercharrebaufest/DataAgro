@@ -117,7 +117,7 @@ function CreateGridRango() {
         scrollable: false,
         sortable: false,
         selectable: "row",
-        change: onChangeGridInicial,
+        change: onChangeGridInicial
     });
 }
 

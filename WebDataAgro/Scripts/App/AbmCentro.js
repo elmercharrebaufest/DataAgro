@@ -315,7 +315,6 @@ function EjecutarEliminar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
             LimpiarValidaciones();
             HabilitarInicio();
             InicializarBusquedaInicial();

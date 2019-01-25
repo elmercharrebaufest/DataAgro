@@ -773,10 +773,15 @@ namespace Molinos.DataAgro.Business.Managers
 
             // perform the search
             SearchResult result = search.FindOne();
-            string email = result.Properties["mail"][0].ToString();
-
-
-            return email;
+            try
+            {
+                return result.Properties.Contains("mail") ? result.Properties["mail"][0].ToString() : result.Properties["userPrincipalName"][0].ToString();
+            }
+            catch
+            {
+                logger.Error($"No se encontró el mail en AD para el usuario {userName}");
+            }
+            return string.Empty;
         }
         public Resultado EliminarRecordatorio(int Id)
         {

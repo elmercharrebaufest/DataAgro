@@ -313,7 +313,7 @@ function EjecutarEliminar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
+            //UpdateViewModel(result);
             LimpiarValidaciones();
             HabilitarInicio();
             InicializarBusquedaInicial();

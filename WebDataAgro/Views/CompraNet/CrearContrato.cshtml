@@ -6,6 +6,7 @@
     contratoId = '@ViewBag.ContratoId';
     fijacionId = '@ViewBag.FijacionId';
     fasonId = '@ViewBag.FasonId';
+    agenteId = '@ViewBag.AgenteId'
     comercialId = '@ViewBag.ComercialId';
     BlockUi("Cargando...");
 </script>
@@ -25,8 +26,7 @@
     <span class="k-button k-button-icontext" id="boton-ampliar" type="button">+ AMPLIAR</span>
     <br />
     <br />
-    <div class="row no-gutter">
-        <div id="corredorDiv">
+    <div class="proveedores row no-gutter noAgente">
             <div id="corredorDiv">
                 <div class="col-sm-2">
                     <label>Corredor</label>
@@ -36,7 +36,6 @@
                     <div id="buscadorCorredorResult"></div>
                 </div>
             </div>
-        </div>
         <div>
             <div class="col-sm-1 fasonero" id="proveedorLabelId">
                 <label id="proveedorLabel">Proveedor</label>
@@ -58,7 +57,7 @@
             </div>
         </div>
 
-        <div id="destinoDiv" class="noFason ampliar">
+        <div id="destinoDiv" class="noFason noAgente">
             <div class="col-sm-1">
                 <label>Destino</label>
             </div>
@@ -76,9 +75,18 @@
                 <img id="errTipoFasonId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+        <div id="operadorDiv" class="agente" hidden>
+            <div class="col-sm-1">
+                <label>Operador</label>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <select id="operadorId" data-bind="source: operadorCombo, value: Parametros.Operador, disabled: isControlDisabled"></select>
+                <img id="errOperadorId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
     </div>
 
-    <div id="plazosYTopesFijacion" class="noFason ampliar">
+    <div id="plazosYTopesFijacion" class="noFason noAgente ampliar">
         <div class="row">
             <div class="contratoAFijar">
                 <div class="col-sm-2 ">
@@ -91,7 +99,7 @@
                     </span>
                 </div>
             </div>
-            <div class="contratoAFijar noFason ">
+            <div class="contratoAFijar noFason noAgente">
                 <div class="col-sm-5 col-md-2">
                     <span id="fechaHastaTopeDiv">
                         <input id="fechaHastaTopeId" type="date" style="width: 100%" />
@@ -99,7 +107,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-5 col-md-3 noFason ">
+            <div class="col-sm-5 col-md-3 noFason noAgente">
                 <div class="madreDiv contratoAFijar" style="padding-right:0">
                     <label style="width:60px">Convenio</label>
                     <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
@@ -108,7 +116,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="contratoAFijar noFason ">
+            <div class="contratoAFijar noFason noAgente">
                 <div class="col-sm-2 ">
                     <label>Condición fijación</label>
                 </div>
@@ -117,7 +125,7 @@
                     <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div id="pagosDiv" class="noFason ampliar ">
+            <div id="pagosDiv" class="noFason noAgente ampliar ">
                 <div class="col-sm-2 ">
                     <label>Pago</label>
                 </div>
@@ -132,12 +140,12 @@
                     </div>
                 </div>
             </div>
-            <div class="noFason hijoDiv contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
+            <div class="noFason noAgente hijoDiv contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
                 <label style="width:60px">Fij. Conv.</label>
                 <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
                 <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="noFason col-sm-4 contratoMadreDiv" hidden>
+            <div class="noFason  noAgente col-sm-4 contratoMadreDiv" hidden>
                 <input id="contMadreId" placeholder="Contrato Madre" class="k-input contratoinput" type="text" s data-bind="value: Parametros.contMadreId" maxlength="10" style="width:100%" />
                 <img id="errcontMadreId" src="~/Content/Images/error.png" style="display:none" />
             </div>
@@ -164,7 +172,7 @@
             </div>
         </div>
     </div>
-    <div id="ContratoDiv" hidden class="noFason row">
+    <div id="ContratoDiv" hidden class="noFason noAgente row">
         <div class="col-sm-2 ">
             <label>Contrato</label>
         </div>
@@ -212,7 +220,7 @@
             <img id="errcantidadId" src="~/Content/Images/error.png" style="display:none" />
         </div>
 
-        <div id="CantidadCamionesDiv" class="noFason">
+        <div id="CantidadCamionesDiv" class="noFason noAgente">
             <div class="col-sm-1">
                 <label>Camiones</label>
             </div>
@@ -222,7 +230,7 @@
                 <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div id="posicionFasonDiv" class="fason" hidden>
+        <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
             </div>
@@ -247,7 +255,7 @@
                 <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div class="col-xs-10 col-sm-5 noFason ampliar">
+        <div class="col-xs-10 col-sm-5 noFason noAgente ampliar">
             <span id="baseDiv" style="display:inline-block">
                 <label id="lblBase">Base</label>
                 <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
@@ -260,7 +268,7 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason ampliar ">
+    <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente ampliar ">
         <div class="col-sm-2 ">
             <label>Clasificación</label>
         </div>
@@ -284,7 +292,7 @@
         </div>
     </div>
 
-    <div id="procedenciaDiv" class="row ampliar noFason ">
+    <div id="procedenciaDiv" class="row ampliar noFason noAgente">
         <div class="col-sm-2 ">
             <label>Procedencia</label>
         </div>
@@ -305,7 +313,7 @@
             </div>
         </div>
     </div>
-    <div class="row ampliar noFason">
+    <div class="row ampliar noFason noAgente">
         <div id="fechasDiv">
             <div class="col-sm-2 ">
                 <label>Entrega Desde-Hasta</label>
@@ -340,7 +348,7 @@
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
-    <div class="row ampliar noFason">
+    <div class="row ampliar noFason noAgente">
         <div class="col-sm-2 ">
             <label>Observaci&oacute;n</label>
         </div>
@@ -355,12 +363,12 @@
             </div>
         </div>
     </div>
-    <div class="ampliar noFason">
+    <div class="ampliar noFason noAgente">
         <div id="DatosAdicionales" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Datos adicionales
         </div>
     </div>
-    <div class="datos-adicionales ampliar-adicionales noFason" display="block">
+    <div class="datos-adicionales ampliar-adicionales noFason noAgente" display="block">
         <div class="row">
             <div class="col-sm-2 ">
                 <label style="width:120px">Sustentable</label>
@@ -462,12 +470,12 @@
         </div>
     </div>
 
-    <div class="noFason ampliar">
+    <div class="noFason noAgente ampliar">
         <div id="DatosBoleto" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Boleto
         </div>
     </div>
-    <div class="noFason datos-boleto ampliar-adicionales" display="block">
+    <div class="noFason noAgente datos-boleto ampliar-adicionales" display="block">
         <div class="row">
             <div class="col-sm-3 ">
                 <label style="width:120px">Confirma</label>
@@ -516,12 +524,12 @@
         </div>
     </div>
 
-    <div class="noFason ampliar">
+    <div class="noFason noAgente ampliar">
         <div id="DatosDescuentos" class="btnagregar btnAzul widthButton ampliar " type="button">
             <i class="fa fa-plus"></i> Descuentos y Bonificaciones
         </div>
     </div>
-    <div class="noFason datos-descuentos ampliar-adicionales" display="block">
+    <div class="noFason noAgente datos-descuentos ampliar-adicionales" display="block">
         <div class="row">
             <div class="col-md-2 col-sm-6 col-md-offset-2">
                 <select id="tipoPeriodoDBId" data-bind="source: TipoPeriodoDBCombo, value: Parametros.TipoPeriodoDBId, disabled: isControlDisabled"></select>
@@ -589,12 +597,12 @@
         </script>
     </div>
 
-    <div class="noFason ampliar">
+    <div class="noFason noAgente ampliar">
         <div id="DatosCalidades" class="btnagregar widthButton btnAzul ampliar " type="button">
             <i class="fa fa-plus"></i> Calidad
         </div>
     </div>
-    <div class="noFason datos-calidades ampliar-adicionales" display="block">
+    <div class="noFason noAgente datos-calidades ampliar-adicionales" display="block">
         <div class="row">
             <div class="col-sm-2 ">
                 <label style="width:110px">Calidad Especial</label>

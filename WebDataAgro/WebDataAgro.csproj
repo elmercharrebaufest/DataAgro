@@ -194,6 +194,8 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\HedgeController.cs" />
+    <Compile Include="Controllers\OperadorController.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\RangoPrecioController.cs" />
     <Compile Include="Controllers\CentroController.cs" />
@@ -235,6 +237,7 @@
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
+    <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
     <Compile Include="Models\RangoModel.cs" />
     <Compile Include="Models\CentroModel.cs" />
@@ -250,6 +253,7 @@
     <Compile Include="Models\LocalidadModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\ProvinciaModel.cs" />
+    <Compile Include="Models\HedgeModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\ReporteCompraNetModel.cs" />
     <Compile Include="Models\TareaProgramadaModel.cs" />
@@ -316,6 +320,7 @@
     <Content Include="Content\font-awesome-4.7.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.7.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\hedge.css" />
     <Content Include="Content\homeResponsive.css" />
     <Content Include="Content\Images\1estr.png" />
     <Content Include="Content\Images\2estr.png" />
@@ -884,6 +889,7 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
     <Content Include="Scripts\App\AbmRangoPrecio.js" />
@@ -904,6 +910,7 @@
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\detalleCorredor.js" />
     <Content Include="Scripts\App\firebase-suscribir.js" />
+    <Content Include="Scripts\App\hedge.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
     <Content Include="Scripts\App\PCFToken.js" />
@@ -2380,6 +2387,11 @@
     <Content Include="Views\ReporteCompraNet\_ReporteCompraNet.cshtml" />
     <Content Include="Views\RangoConfirmacionAutomatica\Index.cshtml" />
     <Content Include="Views\TareaProgramada\Index.cshtml" />
+    <Content Include="Views\Hedge\Index.cshtml" />
+    <Content Include="Views\Hedge\_HedgeMaterial.cshtml" />
+    <Content Include="Views\Hedge\_HedgeObjetivo.cshtml" />
+    <Content Include="Views\Hedge\_HedgeTC.cshtml" />
+    <Content Include="Views\Operador\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

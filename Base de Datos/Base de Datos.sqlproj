@@ -232,6 +232,14 @@
     <Build Include="dbo\Tables\CorredorProveedor.sql" />
     <Build Include="dbo\Tables\Fason.sql" />
     <Build Include="dbo\Tables\TipoFason.sql" />
+    <Build Include="dbo\Tables\TipoHedgeMaterial.sql" />
+    <Build Include="dbo\Tables\HedgeMaterial.sql" />
+    <Build Include="dbo\Tables\TipoObjetivo.sql" />
+    <Build Include="dbo\Tables\HedgeObjetivo.sql" />
+    <Build Include="dbo\Tables\HedgeTC.sql" />
+    <Build Include="dbo\Tables\FinDelDia.sql" />
+    <Build Include="dbo\Tables\Operador.sql" />
+    <Build Include="dbo\Tables\AgenteCompra.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

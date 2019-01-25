@@ -26,8 +26,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class OperadorIni
     {
         public int Id { get; set; }                  
-        public string Descripcion { get; set; }                  
-        public string CodigoSap { get; set; }               
+        public string Descripcion { get; set; }
     }
 }
 

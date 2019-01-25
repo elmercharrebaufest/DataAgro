@@ -39,13 +39,15 @@ namespace WebDataAgro.Controllers
         private ILogger mobjLogger;
 
         private readonly IFasonManager mobjFasonManager;
-        
+        private readonly IAgenteCompraManager mobjAgenteManager;
+
+
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger, IFasonManager oFasonManager)
+        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -58,6 +60,7 @@ namespace WebDataAgro.Controllers
             mobjLocalidadManager = ojLocalidadManager;
             mobjLogger = oLogger;
             mobjFasonManager = oFasonManager;
+            mobjAgenteManager = oAgenteManager;
         }
 
         //-----------------------------------------------------
@@ -88,6 +91,12 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.FasonId = id;
+            return View("CrearContrato");
+        }
+        public ActionResult CrearAgente(int? id)
+        {
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
+            ViewBag.AgenteId = id;
             return View("CrearContrato");
         }
         public ActionResult Inicializar()
@@ -182,6 +191,24 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.BorrarFijacion(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+        public ActionResult BorrarFason(Fason oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.BorrarFason(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+        public ActionResult BorrarAgente(AgenteCompra oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.BorrarAgente(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -458,11 +485,27 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult GrabarAgente(AgenteCompra oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.GrabarAgente(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult TraerFasonCompleto(int id)
         {
             return new JsonResult()
             {
                 Data = mobjFasonManager.TraerFason(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerAgenteCompleto(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.TraerAgente(id),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -474,11 +517,27 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult FinalizarAgente(int agenteId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.FinalizarAgente(agenteId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult GrabarAmpliacionFason(Fason oParam)
         {
             return new JsonResult()
             {
                 Data = mobjFasonManager.GrabarAmpliacionFason(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult GrabarAmpliacionAgente(AgenteCompra oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.GrabarAmpliacionAgente(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
         }

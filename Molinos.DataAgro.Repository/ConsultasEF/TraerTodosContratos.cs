@@ -110,7 +110,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     SelCargoVendedor = contrato.SelCargoVendedor,
                     Posicion = "",
                     TipoFason ="",
-                    FasonId = 0
+                    FasonId = 0,
+                    Operador = "",
+                    OperadorId = 0,
+                    AgenteId = 0
                 };
 
             var queryFijacion =
@@ -195,7 +198,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     SelCargoVendedor = null,
                     Posicion = "",
                     TipoFason = "",
-                    FasonId = 0
+                    FasonId = 0,
+                    Operador = "",
+                    OperadorId = 0,
+                    AgenteId = 0
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -283,10 +289,103 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         SelCargoVendedor = null,
                         Posicion = fas.Posicion,
                         TipoFason = fas.TipoFason.Descripcion,
-                    FasonId = fas.Id
+                        FasonId = fas.Id,
+                        Operador = "",
+                        OperadorId = 0,
+                        AgenteId = 0
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
+
+                var queryAgente =
+                    from age in contexto.Set<AgenteCompra>()
+                    where equipo.Contains(age.ComercialId)
+                    select new BasicoContrato()
+                    {
+                        ContratoId = 0,
+                        ProveedorId = 0,
+                        CorredorId = 0,
+                        ComercialId = age.ComercialId,
+                        MaterialId = age.MaterialId,
+                        TipoNegocioId = 5,
+                        Cantidad = age.Cantidad,
+                        Precio = age.Precio,
+                        PrecioPlazo = "",
+                        FechaEntrega = null,
+                        CampanaId = 0,
+                        FechaDesde = null,
+                        FechaHasta = null,
+                        MonedaId = age.MonedaId,
+                        Moneda = age.Moneda == null ? "" : age.Moneda.Descripcion,
+                        Fecha = DbFunctions.TruncateTime(age.Fecha),
+                        Fecha_Order = age.Fecha,
+                        GrupoCompra = 0,
+                        ProvinciaId = null,
+                        LocalidadId = null,
+                        Base = null,
+                        Importe_Sustentable = null,
+                        MonedaId_Sustentable = "",
+                        Moneda_Sustentable = "",
+                        Fecha_Dolarizado = null,
+                        Dias_Pesificado = null,
+                        NoInformaSIO = null,
+                        Estado = age.EstadoId,
+                        Estado_Contrato = age.Estado.Descripcion,
+                        Estado_Order = age.Estado.Orden,
+                        UsuarioId = "",
+                        ContratoSAP = null,
+                        Ampliaciones = age.Ampliaciones,
+                        Cuit = "",
+                        Proveedor = "",
+                        Corredor = "",
+                        Comercial = age.Comercial == null ? "" : age.Comercial.Nombres + " " + age.Comercial.Apellido,
+                        Material = age.Material == null ? "" : age.Material.Descripcion,
+                        Campania = "",
+                        Provincia = "",
+                        TipoNegocio = "AGENTE COMPRAS",
+                        Localidad = "",
+                        Observacion = "",
+                        FijacionDePrecioContratoId = null,
+                        Sustentable = false,
+                        Dolarizado = false,
+                        Pesificado = false,
+                        Negocio = null,
+                        DestinoId = null,
+                        DestinoDescripcion = "",
+                        CantidadCamiones = null,
+                        Consignatario = false,
+                        PlanCanje = false,
+                        CD = null,
+                        Warrant = null,
+                        PagoDirectoVendedor = null,
+                        EstablecimientoPropio = null,
+                        BoletoId = null,
+                        BolsaId = null,
+                        BoletoDescripcion = "",
+                        BolsaDescripcion = "",
+                        DesdeFijacion = null,
+                        HastaFijacion = null,
+                        CondicionFijacion = null,
+                        CondicionFijacionDescripcion = "",
+                        ClasificacionId = null,
+                        ClasificacionDescripcion = "",
+                        CalidadDescripcion = "",
+                        MercsDeposito = null,
+                        ComercialCreadorId = 0,
+                        ComercialCreador = "",
+                        ContratoCorredor = "",
+                        ContratoVendedor = "",
+                        SelCargoMOA = null,
+                        SelCargoVendedor = null,
+                        Posicion = age.Posicion,
+                        TipoFason = "",
+                        FasonId = 0,
+                        Operador = age.Operador.Descripcion,
+                        OperadorId = age.OperadorId,
+                        AgenteId = age.Id
+                    };
+
+                queryContratos = queryContratos.Union(queryAgente);
             }
             return new KendoGrid<BasicoContrato>(request, queryContratos);
         }

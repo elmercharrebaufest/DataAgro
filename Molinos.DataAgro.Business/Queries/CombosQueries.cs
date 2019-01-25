@@ -115,7 +115,24 @@ namespace Molinos.DataAgro.Business
                 logger.Error(ex);
             }
             return null;
-        }       
+        }
+
+        public List<OperadorCombo> GetAbmOperadorCombo()
+        {
+            try
+            {
+                return repositorio.Listar<Operador, OperadorCombo>(x => new OperadorCombo()
+                {
+                    Id = x.Id,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
         public List<RangoCombo> GetAbmRangoCombo()
         {
             try

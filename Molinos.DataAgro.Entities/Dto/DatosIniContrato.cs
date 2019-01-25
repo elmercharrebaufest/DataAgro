@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<TipoPeriodoDBQry> TipoPeriodoDB { get; set; }
         public List<MonedaQry> MonedaDescuento { get; set; }
         public List<TipoFasonQry> TipoFason { get; set; }
+        public List<OperadorQry> Operador { get; set; }
 
 
         public DatosIniContrato()

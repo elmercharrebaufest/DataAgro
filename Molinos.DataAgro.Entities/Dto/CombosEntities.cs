@@ -59,6 +59,11 @@
         public int Id;
         public string Descripcion;
     }
+    public class OperadorQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
     public class TipoNegocioQry
     {
         public int TipoNegocioId;
@@ -198,7 +203,13 @@
         public string Descripcion;
         public string CodigoSap;
     }
-    
+
+    public class OperadorCombo
+    {
+        public int Id;
+        public string Descripcion;
+    }
+
     public class RangoCombo
     {
         public int Id { get; set; }

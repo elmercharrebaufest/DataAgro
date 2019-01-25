@@ -164,7 +164,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarFasonResult();
             var oContratoSave = repositorio.Obtener<Fason>(oFason.Id);
 
-            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
+            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 

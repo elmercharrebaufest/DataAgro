@@ -1,0 +1,124 @@
+﻿.wizard-header-contenedor {
+    color: #017940;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans",sans-serif;
+}
+.wizard-header-group{
+    text-align:center;
+}
+.wizard-header-contenedor {
+    display: inline-block;
+    padding-bottom: 10px;
+    padding-top: 18px;
+    border-bottom: 5px solid transparent;
+    margin-left: 15px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.bordertopbottom {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    height: 55px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.whc-selected {
+    border-bottom: 5px solid #017940;
+}
+
+#HedgeMaterial, #Objetivos, #HedgeTC{
+    text-align:center;
+}
+
+.danger {
+    color: crimson;
+    font-size: 22px;
+}
+.danger:hover {
+    color: crimson;
+    text-decoration:none;
+}
+#guardarHedgeTCBtn {
+    vertical-align: unset;
+    font-size:22px;
+    border-width: 0;
+    text-decoration: none;
+    padding: 5px;
+    background-color: #f0f0f0;
+    color: #017940;
+}
+
+.table-container {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /*background-color: white;*/
+}
+table {
+    /*background-color: white;*/
+    text-align:center;
+}
+td.td-input {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top:3px;
+    width: 175px !important;
+}
+td.tr-input {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 75px !important;
+}
+.number-input {
+    width: 165px;
+    padding:0;
+    margin:0 !important;
+}
+
+#tabla-tc, #tabla-obj {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+ #tabla-mat {
+    margin-left: auto;
+    margin-right: auto;
+    width: 650px;
+}
+
+#fin-dia{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.inhabilitado {
+    color: #333 !important;
+    text-align: center;
+    background-color: #f0f0f0;
+    border:0;
+    opacity:1;
+}
+th{
+    text-align:center;
+}
+
+.pd-r{
+    padding-right:30px;
+}
+.alert {
+    height: 45px;
+    width: 750px;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.close {
+    width: 15px;
+    height: 15px;
+    background-image: url('images/cancelar.png') !important;
+}

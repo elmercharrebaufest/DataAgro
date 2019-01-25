@@ -120,6 +120,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\OperadorControllerTest.cs" />
     <Compile Include="Controllers\ErrorControllerTest.cs" />
     <Compile Include="Controllers\FijacionDePrecioControllerTest.cs" />
     <Compile Include="Controllers\CubproveedoresControllerTest.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Controllers\LocalidadControllerTest.cs" />
     <Compile Include="Controllers\ProvinciaControllerTest.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaControllerTest.cs" />
+    <Compile Include="Controllers\HedgeControllerTest.cs" />
     <Compile Include="Controllers\ReportesCompraNetControllerTest.cs" />
     <Compile Include="Controllers\InformeComercialControllerTest.cs" />
     <Compile Include="Controllers\ReportesControllerTest.cs" />

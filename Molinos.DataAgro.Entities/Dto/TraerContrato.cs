@@ -109,6 +109,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoFason { get; set; }
         public int TipoFasonId { get; set; }
         public int FasonId { get; set; }
+        public string Operador { get; set; }
+        public int OperadorId { get; set; }
+        public int AgenteId { get; set; }
     }
 
 

@@ -65,7 +65,17 @@ IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Generales') BEGI
 
 --Tipo Negocio
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'FASON') BEGIN insert into TipoNegocio (Descripcion) values ('FASON'); END
+IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'AGENTE DE COMPRAS') BEGIN insert into TipoNegocio (Descripcion) values ('AGENTE DE COMPRAS'); END
 
 --Tipo Fason
 IF NOT EXISTS (select 1 from TipoFason where Descripcion = 'FAS') BEGIN insert into TipoFason (Descripcion) values ('FAS'); END
 IF NOT EXISTS (select 1 from TipoFason where Descripcion = 'FOB') BEGIN insert into TipoFason (Descripcion) values ('FOB'); END
+
+--Tipo Hedge Material
+IF NOT EXISTS (select 1 from TipoHedgeMaterial where Descripcion = 'Disponible') BEGIN insert into TipoHedgeMaterial (Descripcion) values ('Disponible'); END
+IF NOT EXISTS (select 1 from TipoHedgeMaterial where Descripcion = 'Forward') BEGIN insert into TipoHedgeMaterial (Descripcion) values ('Forward'); END
+IF NOT EXISTS (select 1 from TipoHedgeMaterial where Descripcion = 'New Crop') BEGIN insert into TipoHedgeMaterial (Descripcion) values ('New Crop'); END
+
+--Tipo Objetivo
+IF NOT EXISTS (select 1 from TipoObjetivo where Descripcion = 'Pricing') BEGIN insert into TipoObjetivo (Descripcion) values ('Pricing'); END
+IF NOT EXISTS (select 1 from TipoObjetivo where Descripcion = 'A Remitir') BEGIN insert into TipoObjetivo (Descripcion) values ('A Remitir'); END

@@ -65,6 +65,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
+    <Compile Include="Dto\AbmOperador.cs" />
     <Compile Include="Dto\AbmRangoConfirmacionAutomatica.cs" />
     <Compile Include="Dto\AbmRango.cs" />
     <Compile Include="Dto\AbmCentro.cs" />
@@ -81,6 +82,10 @@
     <Compile Include="Dto\CampañaDto.cs" />
     <Compile Include="Dto\CampañaMaterialDto.cs" />
     <Compile Include="Dto\CanalOperacionDto.cs" />
+    <Compile Include="Dto\GrabarAgenteResult.cs" />
+    <Compile Include="Dto\HedgeTCDto.cs" />
+    <Compile Include="Dto\HedgeObjetivoDto.cs" />
+    <Compile Include="Dto\HedgeMaterialDto.cs" />
     <Compile Include="Dto\ContratoResult.cs" />
     <Compile Include="Dto\FasonDto.cs" />
     <Compile Include="Dto\GrabarFasonResult.cs" />
@@ -101,8 +106,8 @@
     <Compile Include="Dto\DatosFijacionDeContratoDto.cs" />
     <Compile Include="Dto\FijacionDePrecioDto.cs" />
     <Compile Include="Dto\FijacionDePrecioContratoDto.cs" />
-    <Compile Include="Dto\GrabarContratoPrueba.cs" />
     <Compile Include="Dto\NuevoCorredor.cs" />
+    <Compile Include="Dto\OperadorDto.cs" />
     <Compile Include="Dto\PosicionPorMaterial.cs" />
     <Compile Include="Dto\ProveedorCorredorDto.cs" />
     <Compile Include="Dto\DatosCompraNetDto.cs" />
@@ -127,6 +132,13 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\AgenteCompra.cs" />
+    <Compile Include="Entities\HedgeTC.cs" />
+    <Compile Include="Entities\HedgeObjetivo.cs" />
+    <Compile Include="Entities\FinDelDia.cs" />
+    <Compile Include="Entities\TipoObjetivo.cs" />
+    <Compile Include="Entities\TipoHedgeMaterial.cs" />
+    <Compile Include="Entities\HedgeMaterial.cs" />
     <Compile Include="Entities\Fason.cs" />
     <Compile Include="Entities\Operador.cs" />
     <Compile Include="Entities\FechaFeriado.cs" />

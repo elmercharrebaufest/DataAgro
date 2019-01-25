@@ -4,7 +4,7 @@ var contratoEdit;
 var contratoId;
 var fijacionId;
 var fasonId;
-
+var agenteId;
 var posicionFijacion;
 
 $(document).ready(function () {
@@ -16,7 +16,6 @@ $(document).ready(function () {
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
-
 });
 
 function InicializarBordesRojos() {
@@ -404,6 +403,8 @@ function InicializarElementos() {
             $(".fasonero").addClass("col-sm-1");
             $(".fasonero").removeClass("col-sm-2");
             $(".fason").hide();
+            $(".agente").hide();
+            $(".proveedores").show();
             if (this.value() == 3) {
                 $("#fechasDiv").hide();
                 $("#fechaDesdeDiv").hide();
@@ -446,8 +447,18 @@ function InicializarElementos() {
                 $("#campanaDiv").show;
                 $("#boton-ampliar").hide();
                 $("#corredorDiv").hide();
+                RemoverFondosGrises();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Fasón");
+                if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
+            } else if (this.value() == 5) {
+                $(".noAgente").hide();
+                $(".agente").show();
+                $("#boton-ampliar").hide();
+                $("#corredorDiv").hide();
+                RemoverFondosGrises();
+                $("#guardarBtn").empty();
+                $("#guardarBtn").append("Guardar Agente");
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
             } else {
                 $("#fechasDiv").show();
@@ -764,6 +775,18 @@ function InicializarElementos() {
         }
     });
 
+    $("#operadorId").kendoDropDownList({
+        optionLabel: "SELECCIONE OPERADOR...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#operadorId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#operadorId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
     $("#destinoModalPendienteId").kendoDropDownList({
         optionLabel: "DESTINO...",
         dataTextField: "Descripcion",
@@ -1396,6 +1419,7 @@ function CrearViewModel() {
         "condicionFijacionId": null,
         "destinoId": null,
         "tipoFasonId": null,
+        "operadorId": null,
         "planCanjeId": null,
         "consignatarioId": null,
         "cdId": null,
@@ -1483,6 +1507,7 @@ function CrearViewModel() {
         CondicionFijacionComboModalPendiente: [],
         Destino: [],
         TipoFason: [],
+        Operador:[],
         StandardComboModalPendiente: [],
         EspecialesComboModalPendiente: [],
         isControlDisabled: true,
@@ -1519,6 +1544,8 @@ function InicializarDatos() {
             setTimeout(InicializarFijacionEdit, 300);
         } else if (fasonId != undefined && fasonId) {
             setTimeout(InicializarFasonEdit, 300);
+        } else if (agenteId != undefined && agenteId) {
+            setTimeout(InicializarAgenteEdit, 300);
         } else {
             $.unblockUI();
             InicializarBordesRojos();
@@ -1544,6 +1571,7 @@ function AsignarDatos() {
     viewModel.set("CondicionFijacionCombo", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardCombo", datosIniCrearContrato.Datos.Standard);
     viewModel.set("tipoFasonCombo", datosIniCrearContrato.Datos.TipoFason);
+    viewModel.set("operadorCombo", datosIniCrearContrato.Datos.Operador);
 
     viewModel.set("TipoPeriodoDBCombo", datosIniCrearContrato.Datos.TipoPeriodoDB);
     viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB);
@@ -1650,7 +1678,7 @@ function ObtenerDatos() {
 
     obj.ContratoId = contratoId == undefined ? 0 : contratoId;
     obj.FijacionDePrecioContratoId = fijacionId == undefined ? 0 : fijacionId;
-    obj.Id = fasonId == undefined ? 0 : fasonId;
+    obj.Id = fasonId !== undefined && fasonId !== "" ? fasonId : agenteId !== undefined && agenteId !== "" ? agenteId : 0;
     obj.MaterialId = $("#material").val();
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Cantidad = $("#cantidadId").val();
@@ -1676,7 +1704,7 @@ function ObtenerDatos() {
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val():0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.TrigoEspecial = $("#trigoEspecialId").is(":checked") ? true : false;
-    obj.EstadoId = $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 ? "1": "2";
+    obj.EstadoId = $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 ? "1": "2";
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
@@ -1742,7 +1770,7 @@ function ObtenerDatos() {
     obj.FasoneroId = proveedorId;
     obj.Posicion = $("#posicionFasonId").val();
     obj.TipoFasonId = $("#tipoFasonId").val();
-
+    obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;
     }
@@ -1768,6 +1796,8 @@ function GrabarContrato(nuevoContrato) {
         }
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
+    } else if (nuevoContrato.TipoNegocioId == 5) {
+        result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
     }
     else {
         var kilosPendientes = $("#kgspendientescontrato").text().replace('.','');
@@ -1962,6 +1992,12 @@ function InicializarFasonEdit() {
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();
 }
+function InicializarAgenteEdit() {
+    var datos = { id: agenteId };
+    contratoEdit = MSExecuteOnServer('/CompraNet/TraerAgenteCompleto', datos, function () { $.unblockUI(); });
+    CargarDatosEditar(contratoEdit);
+    InicializarBordesRojos();
+}
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
@@ -2112,6 +2148,7 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.SelCargoVendedor === true ? $("#selCargoVendedorId").prop("checked", true) : $("#selCargoVendedorId").prop("checked", false);
 
     $("#tipoFasonId").data("kendoDropDownList").value(contrato.TipoFasonId);
+    $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
 
     var iteracionesDescuentos = viewModel.Descuentos.length;
