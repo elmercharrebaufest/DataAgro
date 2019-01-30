@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IHedgeManager
     {
-        bool Dia();
+        FinDelDiaDto Dia();
         List<HedgeMaterialDto> TraerTodosHedgeMaterial();
         List<HedgeObjetivoDto> TraerTodosHedgeObjetivo();
         List<HedgeTCDto> TraerTodosHedgeTC();
@@ -14,7 +14,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarHedgeObjetivo(List<HedgeObjetivo> hedgeMat, int comercialId);
         Resultado GrabarHedgeTC(HedgeTC hedgeTC, int comercialId);
         Resultado EliminarHedgeTC(int hedgeTCId);
-        Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory);
-        Resultado ReabrirDia(int comercialId);
+        Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory,bool mail, string cuerpoMail);
+        Resultado ReabrirDia(int comercialId, double? diferencial);
+        Resultado Diferencial();
     }
 }

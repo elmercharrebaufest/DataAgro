@@ -5,8 +5,11 @@ namespace WebDataAgro.Models
 {
     public class HedgeModel
     {
+        public FinDelDiaDto Dia { get; set; }
         public List<HedgeMaterialModel> HedgeMaterial { get; set; }
+        public List<HedgeMaterialDto> HistorialMaterial { get; set; }
         public List<HedgeObjetivoModel> HedgeObjetivo { get; set; }
+        public List<HedgeObjetivoDto> HistorialObjetivo { get; set; }
         public HedgeTCModel HedgeTC { get; set; }
         public TcModel TCModel { get; set; }
         public Resultado Resultado { get; set; }

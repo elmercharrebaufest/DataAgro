@@ -34,11 +34,11 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
-                string emailComercial = "";
-                if (desde != null)
-                {
-                    try { emailComercial = GetEmailUserActiveDirectory(desde.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
-                }
+                //string emailComercial = "";
+                //if (desde != null)
+                //{
+                //    try { emailComercial = GetEmailUserActiveDirectory(desde.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                //}
                 var oMensaje = CrearMailBase(cuerpo, asunto, enviarA);
                 if (copia != null)
                 {
@@ -150,14 +150,25 @@ namespace Molinos.DataAgro.Business
         public void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
         {
             List<string> enviarAstring = new List<string>();
-            foreach (Comercial comercial in enviarA)
+            if (enviarA != null)
             {
-                try { enviarAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
+                foreach (Comercial comercial in enviarA)
+                {
+                    try
+                    {
+                        var mail = GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
+                        enviarAstring.Add(mail);
+                    }
+                    catch (Exception e) { logger.Error(e); }
+                }
             }
             List<string> copiaAstring = new List<string>();
-            foreach (Comercial comercial in copia)
+            if (copia != null)
             {
-                try { copiaAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
+                foreach (Comercial comercial in copia)
+                {
+                    try { copiaAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
+                }
             }
             this.EnviarMail(desde, enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
         }

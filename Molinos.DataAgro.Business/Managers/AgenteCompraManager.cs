@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
         //--------------------------------------------------
 
         private Resultado Validar(AgenteCompra oParam, Resultado oErrorMessages)
-        {           
+        {
             if (oParam.MaterialId == 0)
             {
                 oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
@@ -52,19 +52,27 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.OperadorId == 0)
             {
                 oErrorMessages.Error("OperadorId", "El campo 'Operador' no debe estar vacio");
-            }            
-            if (oParam.Posicion == ""|| oParam.Posicion == null)
+            }
+            if (oParam.TipoAgenteCompraId == 0)
+            {
+                oErrorMessages.Error("TipoAgenteCompraId", "El campo 'Tipo Agente' no debe estar vacio");
+            }
+            if (oParam.Posicion == "" || oParam.Posicion == null)
             {
                 oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
             }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
-            if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
+            if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
             }
-            if (oHedgeManager.Dia())
+            var dia = oHedgeManager.Dia();
+            if (dia != null)
             {
-                oErrorMessages.Error("","El Día de Operación ya se ha cerrado");
+                if (dia.Cerrado.Value)
+                {
+                    oErrorMessages.Error("", "El Día de Operación ya se ha cerrado");
+                }
             }
             return oErrorMessages;
         }
@@ -96,7 +104,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.ComercialId = oAgente.ComercialId;
                 oFasonSave.MonedaId = oAgente.MonedaId;
                 oFasonSave.MaterialId = oAgente.MaterialId;
-                oFasonSave.Posicion = oAgente.Posicion;               
+                oFasonSave.Posicion = oAgente.Posicion;
             }
             else
             {
@@ -114,17 +122,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oEntityErrors;
-        }     
+        }
         public GrabarAgenteResult FinalizarAgente(int agenteId)
         {
             var oEntityErrors = new GrabarAgenteResult();
             var oFasonSave = repositorio.Obtener<AgenteCompra>(agenteId);
 
             if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
-            {                
+            {
                 try
                 {
-                    if(oFasonSave.Ampliaciones != null && oFasonSave.Ampliaciones != 0)
+                    if (oFasonSave.Ampliaciones != null && oFasonSave.Ampliaciones != 0)
                     {
                         oFasonSave.Cantidad += oFasonSave.Ampliaciones.Value;
                         oFasonSave.Ampliaciones = null;
@@ -158,13 +166,13 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarAgenteResult();
             var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
 
-            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado|| oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
+            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 
                 try
                 {
-                    repositorio.GuardarCambios();                    
+                    repositorio.GuardarCambios();
                 }
                 catch (Exception ex)
                 {
@@ -180,7 +188,7 @@ namespace Molinos.DataAgro.Business.Managers
         public BasicoContrato TraerAgente(int contratoId)
         {
             var contrato = repositorio.Obtener<AgenteCompra, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
-            {                
+            {
                 ComercialId = x.ComercialId,
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
@@ -201,9 +209,9 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarAgenteResult GrabarAmpliacionAgente(AgenteCompra oAgente)
         {
             var oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
-            
+
             var oEntityErrors = new GrabarAgenteResult();
-            if (oHedgeManager.Dia())
+            if (oHedgeManager.Dia().Cerrado ?? false)
             {
                 oEntityErrors.Error("", "El Día de Operación ya se ha cerrado");
                 return oEntityErrors;

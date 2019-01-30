@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class DatosIniContrato {
+    public class DatosIniContrato
+    {
 
         public List<MonedaQry> moneda { get; set; }
         public List<TipoNegocioQry> tiponegocio { get; set; }
@@ -24,6 +25,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<TipoPeriodoDBQry> TipoPeriodoDB { get; set; }
         public List<MonedaQry> MonedaDescuento { get; set; }
         public List<TipoFasonQry> TipoFason { get; set; }
+        public List<TipoAgenteCompraQry> TipoAgenteCompra { get; set; }
         public List<OperadorQry> Operador { get; set; }
 
 
@@ -47,10 +49,12 @@ namespace Molinos.DataAgro.Entities.Dto
             TipoPeriodoDB = new List<TipoPeriodoDBQry>();
             MonedaDescuento = new List<MonedaQry>();
             TipoFason = new List<TipoFasonQry>();
+            TipoAgenteCompra = new List<TipoAgenteCompraQry>();
         }
     }
 
-    public class NuevoContrato {
+    public class NuevoContrato
+    {
         public int? ProveedorId { get; set; }
         public int? ComercialId { get; set; }
         public int material { get; set; }

@@ -6,13 +6,9 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
-using System.DirectoryServices;
-using System.IO;
 using System.Linq;
 using System.Net.Mail;
-using System.Text;
 
 namespace Molinos.DataAgro.Business
 {
@@ -22,24 +18,26 @@ namespace Molinos.DataAgro.Business
         private ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IMailManager mailManager;
+        private readonly IReportesManager reportesManager;
 
-        public HedgeManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager)
+        public HedgeManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IReportesManager reportesManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
+            this.reportesManager = reportesManager;
         }
 
-        public bool Dia()
+        public FinDelDiaDto Dia()
         {
             var hoy = DateTime.Now.Date;
-            var dia = repositorio.Listar<FinDelDia>(x => DbFunctions.TruncateTime(x.Dia) == hoy && x.Cerrado, 0, "Id").LastOrDefault();
-            var cerrado = false;
-            if (dia != null)
+            var dia = repositorio.ObtenerMayor<FinDelDia, DateTime, FinDelDiaDto>(x => DbFunctions.TruncateTime(x.Dia) == hoy, x => x.Dia, x => new FinDelDiaDto
             {
-                cerrado = dia.Cerrado;
-            }
-            return cerrado;
+                Cerrado = x.Cerrado,
+                Diferencial = x.Diferencial
+            });
+
+            return dia;
         }
 
         public List<HedgeMaterialDto> TraerTodosHedgeMaterial()
@@ -47,19 +45,29 @@ namespace Molinos.DataAgro.Business
             var hoy = DateTime.Now.Date;
             return repositorio.Listar<HedgeMaterial, HedgeMaterialDto>(x => new HedgeMaterialDto
             {
+                Id = x.Id,
                 MaterialId = x.MaterialId,
+                MaterialDesc = x.MaterialId == 1 ? "Hedge Maíz" : "Hedge Soja",
                 TipoHedgeMaterialId = x.TipoHedgeMaterialId,
-                Cantidad = x.Cantidad
-            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy);
+                TipoHedgeMaterialDesc = x.TipoHedgeMaterial.Descripcion,
+                Cantidad = x.Cantidad,
+                Fecha = x.Fecha,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
+            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy, 0, "Fecha");
         }
         public List<HedgeObjetivoDto> TraerTodosHedgeObjetivo()
         {
             var hoy = DateTime.Now.Date;
             return repositorio.Listar<HedgeObjetivo, HedgeObjetivoDto>(x => new HedgeObjetivoDto
             {
+                Id = x.Id,
                 MaterialId = x.MaterialId,
+                MaterialDesc = x.Material.Descripcion,
                 TipoObjetivoId = x.TipoObjetivoId,
-                Cantidad = x.Cantidad
+                TipoHedgeMaterialDesc = x.TipoObjetivo.Descripcion,
+                Cantidad = x.Cantidad,
+                Fecha = x.Fecha,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => DbFunctions.TruncateTime(x.Fecha) == hoy);
         }
         public List<HedgeTCDto> TraerTodosHedgeTC()
@@ -91,28 +99,12 @@ namespace Molinos.DataAgro.Business
                     return oEntityErrors;
                 }
 
-                var hedgeMatSave = repositorio.Obtener<HedgeMaterial>(x => x.MaterialId == hM.MaterialId && x.TipoHedgeMaterialId == hM.TipoHedgeMaterialId && DbFunctions.TruncateTime(x.Fecha) == hoy);
-                if (hedgeMatSave != null)
+                if (hM.Cantidad != 0)
                 {
-                    if (hedgeMatSave.Cantidad != hM.Cantidad)
-                    {
-                        hedgeMatSave.MaterialId = hM.MaterialId;
-                        hedgeMatSave.TipoHedgeMaterialId = hM.TipoHedgeMaterialId;
-                        hedgeMatSave.Cantidad = hM.Cantidad;
-                        hedgeMatSave.ComercialId = comercialId;
-                        hedgeMatSave.Fecha = DateTime.Now;
-                        modificado = true;
-                    }
-                }
-                else
-                {
-                    if (hM.Cantidad > 0)
-                    {
-                        hM.ComercialId = comercialId;
-                        hM.Fecha = DateTime.Now;
-                        repositorio.Agregar(hM);
-                        modificado = true;
-                    }
+                    hM.ComercialId = comercialId;
+                    hM.Fecha = DateTime.Now;
+                    repositorio.Agregar(hM);
+                    modificado = true;
                 }
             }
             try
@@ -152,30 +144,14 @@ namespace Molinos.DataAgro.Business
                 {
                     return oEntityErrors;
                 }
+                if (hM.Cantidad != 0)
+                {
+                    hM.ComercialId = comercialId;
+                    hM.Fecha = DateTime.Now;
+                    repositorio.Agregar(hM);
+                    modificado = true;
+                }
 
-                var hedgeMatSave = repositorio.Obtener<HedgeObjetivo>(x => x.MaterialId == hM.MaterialId && x.TipoObjetivoId == hM.TipoObjetivoId && DbFunctions.TruncateTime(x.Fecha) == hoy);
-                if (hedgeMatSave != null)
-                {
-                    if (hedgeMatSave.Cantidad != hM.Cantidad)
-                    {
-                        hedgeMatSave.MaterialId = hM.MaterialId;
-                        hedgeMatSave.TipoObjetivoId = hM.TipoObjetivoId;
-                        hedgeMatSave.Cantidad = hM.Cantidad;
-                        hedgeMatSave.ComercialId = comercialId;
-                        hedgeMatSave.Fecha = DateTime.Now;
-                        modificado = true;
-                    }
-                }
-                else
-                {
-                    if (hM.Cantidad > 0)
-                    {
-                        hM.ComercialId = comercialId;
-                        hM.Fecha = DateTime.Now;
-                        repositorio.Agregar(hM);
-                        modificado = true;
-                    }
-                }
             }
             try
             {
@@ -255,7 +231,7 @@ namespace Molinos.DataAgro.Business
             }
             return oEntityErrors;
         }
-        public Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory)
+        public Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory, bool mail, string cuerpoMail)
         {
             var oEntityErrors = new Resultado();
             oEntityErrors = ValidarFinDelDia(oEntityErrors);
@@ -266,10 +242,8 @@ namespace Molinos.DataAgro.Business
             var dia = new FinDelDia { Dia = DateTime.Now, Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null };
             try
             {
-                
                 repositorio.Agregar(dia);
                 repositorio.GuardarCambios();
-                mailManager.EnviarMail(repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId), new List<string>(), "Cierre del dia", string.Empty, null, null, archivo, "Cierre del dia.xls");
             }
             catch (Exception ex)
             {
@@ -281,7 +255,7 @@ namespace Molinos.DataAgro.Business
             {
                 var hoy = DateTime.Now.Date;
                 var finDia = repositorio.Obtener<FinDelDia>(x => x.Cerrado && DbFunctions.TruncateTime(x.Dia) == hoy);
-                var contratos = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null &&(x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
+                var contratos = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
                 var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
                 var fason = repositorio.Listar<Fason>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
 
@@ -289,7 +263,18 @@ namespace Molinos.DataAgro.Business
                 fijaciones.ForEach(x => x.FinDelDiaId = finDia.Id);
                 fason.ForEach(x => x.FinDelDiaId = finDia.Id);
 
-                repositorio.GuardarCambios();
+                if (mail)
+                {
+                    mailManager.EnviarMail(repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId),
+                                            repositorio.Listar<Comercial>(x => x.PerfilId == 3 || x.PerfilId == 6),
+                                                "Cierre del dia",
+                                                    string.Empty,
+                                                        null,
+                                                            AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
+                                                                archivo,
+                                                                    "Cierre del dia.xls");
+                    repositorio.GuardarCambios();
+                }
             }
             catch (Exception ex)
             {
@@ -300,16 +285,17 @@ namespace Molinos.DataAgro.Business
 
             return oEntityErrors;
         }
-        public Resultado ReabrirDia(int comercialId)
+        public Resultado ReabrirDia(int comercialId, double? diferencial)
         {
             var oEntityErrors = new Resultado();
             var dia = repositorio.Listar<FinDelDia>().OrderBy(x => x.Id).LastOrDefault();
             try
             {
-                if (dia != null && dia.Cerrado)
+                if (dia != null)
                 {
                     dia.ReabrioComercialId = comercialId;
-                    dia.Cerrado = false; 
+                    dia.Diferencial = diferencial;
+                    dia.Cerrado = false;
                     repositorio.GuardarCambios();
                 }
                 else
@@ -326,15 +312,45 @@ namespace Molinos.DataAgro.Business
 
             return oEntityErrors;
         }
+        public Resultado Diferencial()
+        {
+            var mensaje = new Resultado();
+            var hoy = DateTime.Now.Date;
+            var finDia = repositorio.Listar<FinDelDia>(x => DbFunctions.TruncateTime(x.Dia) == hoy, 0, "Id").LastOrDefault();
+
+            if (finDia == null)
+            {
+                mensaje.Errores.Add(new ErrorMessage(1, "Se cerrara el día, enviándose un mail a Gerentes y Directivos."));
+            }
+            else if (finDia.Diferencial.HasValue)
+            {
+                var cantidad = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Cantidad) +
+                repositorio.Listar<FijacionDePrecioContrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Cantidad) +
+                repositorio.Listar<Fason>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Cantidad);
+                if (finDia.Diferencial.Value < cantidad)
+                {
+                    mensaje.Errores.Add(new ErrorMessage(1, "Se cerrara el día, enviándose un mail a Gerentes y Directivos. ¿Aceptar?"));
+                }
+                else
+                {
+                    mensaje.Errores.Add(new ErrorMessage(2, "Se cerrara el día. ¿Aceptar?"));
+                }
+            }
+            else
+            {
+                mensaje.Errores.Add(new ErrorMessage(2, "Se cerrara el día. ¿Aceptar?"));
+            }
+            return mensaje;
+        }
         private Resultado ValidarFinDelDia(Resultado res)
         {
-            if (Dia())
+            var dia = Dia();
+            if (dia != null && dia.Cerrado.Value)
             {
-                res.Errores.Add(new ErrorMessage(400, "El día ya ha finalizado"));
+                res.Errores.Add(new ErrorMessage(400, "El día se encuentra cerrado"));
             }
             return res;
         }
-
     }
 }
 

@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool Cerrado { get; set; }
         public int ComercialId { get; set; }
         public int? ReabrioComercialId { get; set; }
+        public double? Diferencial { get; set; }
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
         [ForeignKey("ReabrioComercialId")]

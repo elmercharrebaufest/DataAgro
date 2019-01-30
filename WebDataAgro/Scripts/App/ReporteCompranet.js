@@ -8,6 +8,7 @@ $(document).ready(function () {
     $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString);
     InicializarDate();
     setInterval(Refrescar, 300000);
+
 });
 
 function InicializarDate() {
@@ -82,7 +83,7 @@ function setearTituloModal(materialNombre, mesNombre, anio) {
     $('#titulo').text('DETALLE ' + materialNombre + ' ' + mesNombre + ' - ' + anio);
 }
 
-function ModalAgenteCompras(fecha) {    
+function ModalAgenteCompras(fecha) {
     var href = window.location.href;
     href = href + "/DetalleAgenteModal?fechaString=" + fecha;
     $.get(href, function (data) { crearGrillaAgente(data); });
@@ -132,8 +133,19 @@ function CrearGraficoHedgeObjetivo(data) {
                 display: false
             },
             scales: {
-                xAxes: [{ stacked: true, barThickness: 10 }],
-                yAxes: [{ stacked: true, barThickness: 10 }]
+                xAxes: [{
+                    stacked: true, barThickness: 10,
+                    ticks: {
+                        beginAtZero: true,
+                        userCallback: function (value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
+                    }}],
+                yAxes: [{
+                    stacked: true, barThickness: 10 }]
             },
             tooltips: {
                 enabled: false
@@ -149,15 +161,15 @@ function crearGrilladetallePosicion(href) {
             data: JSON.parse(href),
             type: JSON,
             schema: {
-                data: "items"
+                data: "items",
+                total: "total"
             },
-            pageSize: 20
+            pageSize: 5
         },
         dataBound: ShowModal,
-        height: 550,
         sortable: true,
-        reorderable: true,
-        groupable: true,
+        reorderable: false,
+        groupable: false,
         resizable: true,
         filterable: true,
         columnMenu: true,
@@ -307,7 +319,8 @@ function crearGrilladetallePosicion(href) {
                 field: "Observación",
                 title: "Observación",
                 width: 150
-            }]
+            }],
+
     });
 
 }
@@ -324,12 +337,24 @@ function crearGrillaAgente(href) {
         },
         dataBound: ShowModalAgente,
         sortable: true,
-        reorderable: true,
-        groupable: true,
-        resizable: true,
         filterable: true,
-        columnMenu: true,
-        pageable: true,
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            input: true,
+            numeric: true
+        },
         columns: [
             {
                 field: "Agente",
@@ -368,10 +393,13 @@ function crearGrillaAgente(href) {
 
 }
 
-function ShowModal() {
+function ShowModal(e) {
     //A saber: Esto sirve para que se pueda escribir en los input de los filtros cuando la grilla de Kendo esta dentro de un modal (error de Kendo).
     $("#ModalDetallePosicion").on('shown.bs.modal', function () {
         $(document).off('focusin.modal');
+    });
+    $("#ModalDetallePosicion").on('hidden.bs.modal', function () {
+        $("#grilla").kendoGrid().destroy;
     });
     $("#ModalDetallePosicion").modal('show');
 }

@@ -10,11 +10,13 @@
     [Fecha] DATETIME NOT NULL, 
     [ComercialId] INT NULL, 
 	[EstadoId] INT NOT NULL,
-	[Ampliaciones] FLOAT NULL
+	[Ampliaciones] FLOAT NULL,
+	[TipoAgenteCompraId] INT NOT NULL
   
-    CONSTRAINT [FK_AgenteCompra_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),  
+    CONSTRAINT [FK_AgenteCompra_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]) DEFAULT 1,  
     CONSTRAINT [FK_AgenteCompra_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
     CONSTRAINT [FK_AgenteCompra_Operador] FOREIGN KEY ([OperadorId]) REFERENCES [Operador]([Id]), 
     CONSTRAINT [FK_AgenteCompra_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),  
-    CONSTRAINT [FK_AgenteCompra_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId])
+    CONSTRAINT [FK_AgenteCompra_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
+	CONSTRAINT [FK_AgenteCompra_TipoAgenteCompra] FOREIGN KEY (TipoAgenteCompraId) REFERENCES [TipoAgenteCompra]([Id])
 )

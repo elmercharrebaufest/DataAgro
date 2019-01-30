@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void IndexOk()
         {
-            hedgeManagerMock.Setup(x => x.Dia()).Returns(false);
+            hedgeManagerMock.Setup(x => x.Dia()).Returns(new FinDelDiaDto());
             var result = target.Index() as ViewResult;
 
             hedgeManagerMock.Verify(x => x.Dia(), Times.Once);
@@ -166,7 +166,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CerrarDiaTest()
         {
-            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null,false, string.Empty)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ToneladasGranoTipoDto>());
@@ -177,12 +177,25 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeTCPromedioDto());
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ExcelPosicionMaterialDto>());
-            var result = target.CerrarDia() as RedirectToRouteResult;
+            var result = target.CerrarDia(false) as RedirectToRouteResult;
 
             Assert.NotNull(result);
 
-            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<string>()), Times.Once);
+            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<string>(),It.IsAny<bool>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+        [Test]
+        public void DiferencialTest()
+        {
+            hedgeManagerMock.Setup(x => x.Diferencial()).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            var result = target.Diferencial();
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            hedgeManagerMock.Verify(x => x.Diferencial(), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
         }
     }
 }

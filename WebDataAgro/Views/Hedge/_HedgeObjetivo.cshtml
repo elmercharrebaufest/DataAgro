@@ -56,5 +56,37 @@
                 @Ajax.ActionLink("Cancelar", "HedgeObjetivoPartial", null, new AjaxOptions { UpdateTargetId = "objetivos", InsertionMode = InsertionMode.Replace, OnSuccess = "objetivoInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-8 m-grid-col-xs-offset-2">
+                <div class="historial-desplegable" data-toggle="collapse" data-target="#historialObjetivos">
+                    <span class="historial">Historial</span>
+                </div>
+                <div id="historialObjetivos" class="collapse">
+                    <table class="tabla-historial table">
+                        <tr>
+                            <th>Material</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Comercial</th>
+                            <th>Hora</th>
+                        </tr>
+                        @foreach (var mat in Model.HistorialObjetivo)
+                        {
+                            @Html.HiddenFor(model => mat.MaterialId)
+                            @Html.HiddenFor(model => mat.TipoObjetivoId)
+                            <tr>
+                                <td>@Html.DisplayFor(model => mat.MaterialDesc)</td>
+                                <td>@Html.DisplayFor(model => mat.TipoHedgeMaterialDesc)</td>
+                                <td class="text-right">@Html.DisplayFor(model => mat.Cantidad)</td>
+                                <td>@Html.DisplayFor(model => mat.Comercial)</td>
+                                @{var fecha = mat.Fecha.ToShortTimeString();}
+                                <td>@Html.DisplayFor(model => fecha)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
     }
 </div>

@@ -1,6 +1,7 @@
 ﻿var diaCerrado;
 var matLen;
 var objLen;
+var diferencial;
 
 $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
@@ -19,9 +20,35 @@ function TimeOut() {
 
 
 function InicializarElementos() {
-    $(".number-input").kendoNumericTextBox({
+    $(".number-input-material").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals:true,
+        spinners: false,
+        min: 0
+    });
+    $(".number-input-objetivo").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    $(".number-input-tc").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
+        decimals: 2,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    $("#diferencial").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
         spinners: false,
         min: 0
     });
@@ -66,6 +93,11 @@ function InicializarElementos() {
         $("#row-botones-objetivo").show();
         $("#reabrir-dia").hide();
     }
+    if (diferencial) {
+        $("#diferencial-dia").show();
+    } else {
+        $("#diferencial-dia").hide();
+    }
 }
 
 function DeseleccionarForms() {
@@ -80,7 +112,9 @@ function DeseleccionarForms() {
 function materialInput() {
     $(".number-input-material").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n2",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
         spinners: false,
         min: 0
     });
@@ -100,7 +134,9 @@ function materialInput() {
 function objetivoInput() {
     $(".number-input-objetivo").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n2",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
         spinners: false,
         min: 0
     });
@@ -120,9 +156,30 @@ function tcInput() {
     $(".number-input-tc").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
+        decimals: 2,
+        restrictDecimals: true,
         spinners: false,
         value:"",
         min: 0        
     });
     TimeOut();
+}
+
+function ShowModal() {    
+    $("#modalDiferencial").modal('show');
+}
+function ShowCerrarDia() {
+    var result = MSExecuteOnServer('/Hedge/Diferencial');
+    if (result.Errores !== null) {
+
+        $("#cierreDelDia").html(result.Errores[0].Message);
+        if (result.Errores[0].ErrorCode === 1) {
+            $("#fin-dia-con-mail").show();
+            $("#fin-dia-sin-mail").html("Cerrar sin enviar");
+        } else {
+            $("#fin-dia-con-mail").hide();
+            $("#fin-dia-sin-mail").html("Aceptar");
+        }
+        $("#modalCierreDia").modal('show');
+    }
 }

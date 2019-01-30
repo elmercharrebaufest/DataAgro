@@ -151,3 +151,24 @@ a.Descarga {
     border: 1px solid black;
     border-top: 2px solid black;
 }
+
+.titulos.hedgemat {
+    background: darkcyan;
+}
+.titulos.hedgeobj {
+    background: plum;
+}
+.titulos.agente {
+    background: yellow;
+    color: black;
+}
+
+#grillaAgente > .k-grid-header, #grillaAgente .k-grid-header .k-header {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+#grilla > .k-grid-header, #grilla .k-grid-header .k-header {
+    background-color: yellowgreen;
+    font-weight:bold;
+}

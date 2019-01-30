@@ -2397,6 +2397,8 @@
     <Content Include="Views\Operador\Index.cshtml" />
     <Content Include="Views\ReporteCompraNet\ModalDetallePosicion.cshtml" />
     <Content Include="Views\ReporteCompraNet\ModalAgente.cshtml" />
+    <Content Include="Views\Hedge\ModalDiferencial.cshtml" />
+    <Content Include="Views\Hedge\ModalCierreDia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

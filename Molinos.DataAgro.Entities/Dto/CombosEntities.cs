@@ -59,6 +59,11 @@
         public int Id;
         public string Descripcion;
     }
+    public class TipoAgenteCompraQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
     public class OperadorQry
     {
         public int Id;

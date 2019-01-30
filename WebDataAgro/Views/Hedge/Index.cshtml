@@ -10,9 +10,10 @@
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/App/hedge.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script>diaCerrado = '@ViewBag.DiaCerrado';</script>
+    <script> 
+    diaCerrado = '@ViewBag.DiaCerrado';
+    diferencial = '@ViewBag.Diferencial';</script>
 }
-
 
 <div class="container">
     <div class="row bordertopbottom">
@@ -42,13 +43,19 @@
     <div id="objetivos" hidden>
         @Html.Action("HedgeObjetivoPartial", "Hedge", new { hedgeMaterial = Model })
     </div>
+
     <div id="hedgeTC" hidden>
         @Html.Action("HedgeTCPartial", "Hedge", new { hedgeMaterial = Model })
     </div>
+
     <div class="row">
         <div class="text-right pd-r">
-            @Html.ActionLink("Cerrar Día", "CerrarDia", "Hedge", null, new { @class = "formulario-footer-cancelar k-button k-button-icontext", @id = "fin-dia" })
-            @Html.ActionLink("Reabrir Día", "ReabrirDia", "Hedge", null, new { @class = "formulario-footer-cancelar k-button k-button-icontext", @id = "reabrir-dia" })
+            <a id="reabrir-dia" onclick="ShowModal()" class="formulario-footer-cancelar k-button k-button-icontext">Reabrir Día</a>
+            <a id="diferencial-dia" onclick="ShowModal()">Diferencial</a>
+            <a id="fin-dia" class="formulario-footer-cancelar k-button k-button-icontext" onclick="ShowCerrarDia()">Cerrar Día</a>
         </div>
     </div>
 </div>
+
+@Html.Partial("ModalDiferencial")
+@Html.Partial("ModalCierreDia")

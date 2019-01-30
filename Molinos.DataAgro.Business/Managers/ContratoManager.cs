@@ -99,6 +99,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             datosCombo.TipoFason = repositorio.Listar<TipoFason, TipoFasonQry>(x => new TipoFasonQry() { Id = x.Id, Descripcion = x.Descripcion });
+            datosCombo.TipoAgenteCompra = repositorio.Listar<TipoAgenteCompra, TipoAgenteCompraQry>(x => new TipoAgenteCompraQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Operador = repositorio.Listar<Operador, OperadorQry>(x => new OperadorQry() { Id = x.Id, Descripcion = x.Descripcion });
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
@@ -119,6 +120,11 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
+                return oErrorMessages;
+            }
+            if (oParam.ProveedorId == -1)
+            {
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' debe tener un proveedor existente");
                 return oErrorMessages;
             }
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
@@ -213,6 +219,10 @@ namespace Molinos.DataAgro.Business.Managers
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
+            }
+            if ((oParam.LocalidadId == -1) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
+            {
+                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' debe tener un valor existente");
             }
             if (oParam.ProvinciaId == null && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {

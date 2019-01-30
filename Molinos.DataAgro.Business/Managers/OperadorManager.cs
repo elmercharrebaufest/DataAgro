@@ -53,12 +53,15 @@ namespace Molinos.DataAgro.Business
             var oEntityErrors = new Resultado();
 
             EntityValid.ValidateAll(oOperador, oEntityErrors);
-
+            if(oOperador.Descripcion == "" || oOperador.Descripcion == null)
+            {
+                oEntityErrors.Error("","El nombre del operador no debe estar vacío");
+            }
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-
+            
             if (oOperador.Id != 0)
             {
                 var oOperadorSave = repositorio.Obtener<Operador>(oOperador.Id);

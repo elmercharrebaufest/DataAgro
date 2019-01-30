@@ -1,0 +1,30 @@
+﻿@model WebDataAgro.Models.HedgeModel
+
+<div id="modalDiferencial" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm("ReabrirDia", "Hedge"))
+            {
+                @Html.AntiForgeryToken();
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Diferencial</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="row">
+                            <span class="col-xs-2">Cantidad</span>
+                            <div class="col-xs-10">
+                    @Html.TextBoxFor(model => Model.Dia.Diferencial, new { @class = "number-input-diferencial", @id = "diferencial" })
+                            </div>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <input id="diferencialDiaBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
+                    <button type="button" class="formulario-footer-guardar-contrato k-button k-button-icontext" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

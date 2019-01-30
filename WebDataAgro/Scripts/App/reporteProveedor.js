@@ -149,6 +149,6 @@ function armarResultado(result) {
 
 function volver() {
     $(".resultado").hide();
-    $(".Titulo").html("Reporte de Proveedor").css({ "margin": '', 'text-align': '' })
+    $(".Titulo").html("Reporte de Proveedor").css({ "margin": '', 'text-align': '' });
     $(".formulario").show();
 }

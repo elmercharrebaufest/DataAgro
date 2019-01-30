@@ -29,9 +29,9 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th class="">Disponible</th>
-                        <th class="">Forward</th>
-                        <th class="">New Crop</th>
+                        <th>Disponible</th>
+                        <th>Forward</th>
+                        <th>New Crop</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,9 +55,39 @@
                     }
                 </tbody>
             </table>
+
             <div id="row-botones-material">
                 <input id="guardarHedgeMatBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
                 @Ajax.ActionLink("Cancelar", "HedgeMaterialPartial", null, new AjaxOptions { UpdateTargetId = "hedgeMaterial", InsertionMode = InsertionMode.Replace, OnSuccess = "materialInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-8 m-grid-col-xs-offset-2">
+                <div class="historial-desplegable" data-toggle="collapse" data-target="#historialMaterial">
+                    <span class="historial">Historial</span>
+                </div>
+                <div id="historialMaterial" class="collapse">
+                    <table class="tabla-historial table">
+                        <tr>
+                            <th>Material</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Comercial</th>
+                            <th>Hora</th>
+                        </tr>
+                        @foreach (var mat in Model.HistorialMaterial)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(model => mat.MaterialDesc)</td>
+                                <td>@Html.DisplayFor(model => mat.TipoHedgeMaterialDesc)</td>
+                                <td class="text-right">@Html.DisplayFor(model => mat.Cantidad)</td>
+                                <td>@Html.DisplayFor(model => mat.Comercial)</td>
+                                @{var fecha = mat.Fecha.ToShortTimeString();}
+                                <td>@Html.DisplayFor(model => fecha)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
             </div>
         </div>
     }

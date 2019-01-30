@@ -3,7 +3,8 @@
     [Dia]		DATETIME  NOT NULL,
 	[Cerrado]	BIT NOT NULL,
 	[ComercialId]INT NOT NULL,
-    [ReabrioComercialId] INT NULL
+    [ReabrioComercialId] INT NULL,
+	[Diferencial] FLOAT NULL
     CONSTRAINT [PK_FinDelDia] PRIMARY KEY CLUSTERED ([Id] ASC)
     CONSTRAINT [FK_FinDelDia_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]), 
 	CONSTRAINT [FK_FinDelDia_ReabrioComercialId] FOREIGN KEY ([ReabrioComercialId]) REFERENCES [Comercial]([ComercialId]), 

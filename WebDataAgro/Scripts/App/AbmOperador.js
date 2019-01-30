@@ -236,7 +236,9 @@ function HabilitarCancelar() {
 function Agregar() {
     var result = MSExecuteURLOnServer('/Operador/Cancelar');
 
-    if (result != null) {
+    if (result.HayError) {
+        MensErr(result.Errores[0].Message);
+    } else {
         viewModel.set("isModifyDisabled", false);
         HabilitarAgregar();
         UpdateViewModel(result);

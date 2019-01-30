@@ -80,3 +80,7 @@ IF NOT EXISTS (select 1 from TipoHedgeMaterial where Descripcion = 'New Crop') B
 --Tipo Objetivo
 IF NOT EXISTS (select 1 from TipoObjetivo where Descripcion = 'Pricing') BEGIN insert into TipoObjetivo (Descripcion) values ('Pricing'); END
 IF NOT EXISTS (select 1 from TipoObjetivo where Descripcion = 'A Remitir') BEGIN insert into TipoObjetivo (Descripcion) values ('A Remitir'); END
+
+--Tipo Agente de Compra
+IF NOT EXISTS (select 1 from TipoAgenteCompra where Descripcion = 'MAT') BEGIN insert into TipoAgenteCompra (Descripcion) values ('MAT'); END
+IF NOT EXISTS (select 1 from TipoAgenteCompra where Descripcion = 'Rofex') BEGIN insert into TipoAgenteCompra (Descripcion) values ('Rofex'); END

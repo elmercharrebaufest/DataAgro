@@ -171,6 +171,16 @@
                 <img id="errcampanaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+
+        <div id="tipoAgenteCompraDiv" class="agente" hidden>
+            <div class="col-sm-1">
+                <label>Tipo Agente</label>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <select id="tipoAgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra, disabled: isControlDisabled"></select>
+                <img id="errAgenteCompraId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
     </div>
     <div id="ContratoDiv" hidden class="noFason noAgente row">
         <div class="col-sm-2 ">

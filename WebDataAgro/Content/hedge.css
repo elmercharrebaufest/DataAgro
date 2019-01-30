@@ -82,11 +82,24 @@ td.tr-input {
     margin-right: auto;
     width: 500px;
 }
- #tabla-mat {
-    margin-left: auto;
-    margin-right: auto;
-    width: 650px;
+
+@media (min-width: 685px){
+    #tabla-mat {
+        margin-left: auto;
+        margin-right: auto;
+        width: 650px;
+    }
 }
+
+@media (max-width:684px) {
+    #tabla-mat {
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+}
+
+
 
 #fin-dia{
     margin-left:auto;
@@ -121,4 +134,41 @@ th{
     width: 15px;
     height: 15px;
     background-image: url('images/cancelar.png') !important;
+}
+
+.modal .modal-header {
+    border-bottom: 5px solid #017940;
+    margin-bottom:20px;
+}
+
+p{
+    margin-top:0;
+}
+
+.historial {
+    color: #017940;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans",sans-serif;
+    text-align: center;
+}
+.historial-desplegable {
+    border-bottom: 3px solid #017940;
+    margin-bottom: 10px;
+    padding: 0 0 5px 20px;
+    cursor: pointer;
+}
+
+.tabla-historial{
+    margin:auto;
+}
+
+.tabla-historial.table thead > tr > th,
+.tabla-historial.table tbody > tr > th,
+.tabla-historial.table tfoot > tr > th,
+.tabla-historial.table thead > tr > td,
+.tabla-historial.table tbody > tr > td,
+.tabla-historial.table tfoot > tr > td {
+    padding-bottom: 0;
+    padding-top: 0;
 }

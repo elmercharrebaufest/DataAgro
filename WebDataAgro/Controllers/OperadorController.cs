@@ -26,7 +26,7 @@ namespace WebDataAgro.Controllers
             {
                 ViewBag.edita = false;
             }
-            else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
+            else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory) || GlobalVariables.Perfil != EnumPerfil.Mesa)
             {
                 ActionView = "ErrorDePermisos";
             }

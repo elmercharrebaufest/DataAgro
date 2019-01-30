@@ -28,7 +28,7 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.Fecha = fechaString;
             ViewBag.FechaHasta = fechaHastaString;
-            DateTime fechaDesde= DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var model = ObtenerDatosReporte(fechaDesde, fechaHasta);
             return PartialView("_ReporteCompraNet", model);
@@ -36,7 +36,7 @@ namespace WebDataAgro.Controllers
         }
         public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
         {
-            DateTime fecha= DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion);
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
@@ -55,6 +55,13 @@ namespace WebDataAgro.Controllers
         {
             var agentes = mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta);
             var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
+            agentes.ForEach(x => x.Operador.ForEach(y => y.Cantidad = Math.Ceiling(y.Cantidad / 1000)));
+
+            var objetivos = mobjReportesManager.TraerHedgeObjetivo(fechaDesde, fechaHasta);
+            objetivos.PricingCumplido = Math.Ceiling(objetivos.PricingCumplido / 1000);
+            objetivos.PricingObjetivo = Math.Ceiling(objetivos.PricingObjetivo / 1000);
+            objetivos.RemitirCumplido = Math.Ceiling(objetivos.RemitirCumplido / 1000);
+            objetivos.RemitirObjetivo = Math.Ceiling(objetivos.RemitirObjetivo / 1000);
             return new ReporteCompraNetModel
             {
                 ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta),
@@ -62,37 +69,24 @@ namespace WebDataAgro.Controllers
                 PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta),
                 PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta),
                 HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta)),
-                HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(fechaDesde,fechaHasta),
+                HedgeObjetivo = objetivos,
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta),
-                AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores= op },
+                AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
             };
         }
         private List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat)
         {
             var lista = new List<HedgeMaterialModel>()
             {
-                new HedgeMaterialModel {MaterialId = 1, MaterialDescripcion ="Hedge Maíz"},
-                new HedgeMaterialModel {MaterialId = 3, MaterialDescripcion ="Hedge Soja" }
+                new HedgeMaterialModel {MaterialId = 1, MaterialDescripcion ="Hedge Maíz",
+                Disponible = Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad)/1000),
+                Forward= Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad)/1000),
+                NewCrop= Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)/1000)},
+                new HedgeMaterialModel {MaterialId = 3, MaterialDescripcion ="Hedge Soja",
+                Disponible = Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad)/1000),
+                Forward= Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad)/1000),
+                NewCrop= Math.Ceiling(hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)/1000) }
             };
-            foreach (var hedge in hedgeMat)
-            {
-                var elemLista = lista.Where(x => x.MaterialId == hedge.MaterialId).FirstOrDefault();
-                if (elemLista != null)
-                {
-                    if (hedge.TipoHedgeMaterialId == 1)
-                    {
-                        elemLista.Disponible = hedge.Cantidad;
-                    }
-                    else if (hedge.TipoHedgeMaterialId == 2)
-                    {
-                        elemLista.Forward = hedge.Cantidad;
-                    }
-                    else if (hedge.TipoHedgeMaterialId == 3)
-                    {
-                        elemLista.NewCrop = hedge.Cantidad;
-                    }
-                }
-            }
             return lista;
         }
 

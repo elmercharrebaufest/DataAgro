@@ -28,10 +28,10 @@
         <div class="table-responsive col-md-6 @(hedgeMat == 1 ? "":"hide")">
             <table class="table-condensed" id="HedgeMaterial">
                 <tbody>
-                    <tr class="titulos">
+                    <tr class="titulos hedgemat">
                         <th colspan="4">HEDGE</th>
                     </tr>
-                    <tr class="titulos">
+                    <tr class="titulos hedgemat">
                         <th>PRODUCTO</th>
                         <th>DISPONIBLE</th>
                         <th>FORWARD</th>
@@ -43,9 +43,9 @@
                         {
                             <tr>
                                 <td>@mat.MaterialDescripcion</td>
-                                <td>@mat.Disponible</td>
-                                <td>@mat.Forward</td>
-                                <td>@mat.NewCrop</td>
+                                <td>@mat.Disponible.ToString("N0")</td>
+                                <td>@mat.Forward.ToString("N0")</td>
+                                <td>@mat.NewCrop.ToString("N0")</td>
                             </tr>
                         }
                     }
@@ -55,20 +55,20 @@
         <div>
             <div class="table-responsive col-md-6 @(hedgeObj == 1 ? "":"hide")">
                 <table class="table-condensed" id="HedgeObjetivo">
-                    <tr class="titulos">
+                    <tr class="titulos hedgeobj">
                         <th></th>
                         <th>Dia</th>
                         <th>Objetivo</th>
                     </tr>
                     <tr>
-                        <th class="titulos">Pricing</th>
-                        <td>@Model.HedgeObjetivo.PricingCumplido</td>
-                        <td>@Model.HedgeObjetivo.PricingObjetivo</td>
+                        <th class="titulos hedgeobj">Pricing</th>
+                        <td>@Model.HedgeObjetivo.PricingCumplido.ToString("N0")</td>
+                        <td>@Model.HedgeObjetivo.PricingObjetivo.ToString("N0")</td>
                     </tr>
                     <tr>
-                        <th class="titulos">A remitir</th>
-                        <td>@Model.HedgeObjetivo.RemitirCumplido</td>
-                        <td>@Model.HedgeObjetivo.RemitirObjetivo</td>
+                        <th class="titulos hedgeobj">A remitir</th>
+                        <td>@Model.HedgeObjetivo.RemitirCumplido.ToString("N0")</td>
+                        <td>@Model.HedgeObjetivo.RemitirObjetivo.ToString("N0")</td>
                     </tr>
                 </table>
                 <canvas id="graficoHedge" height="40"></canvas>
@@ -141,8 +141,6 @@
     </div>
 
     <div class="row">
-
-
         @foreach (var material in Model.PosicionCompras)
         {
             <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 col-md-3 @(material.Total > 0? "":"hide")">
@@ -180,18 +178,16 @@
                 </table>
             </div>
         }
-    </div>
-    <div class="row">
         <div class="col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count > 0 ?"":"hide")">
             <table id="agenteCompras" class="table-condensed">
-                <tr class="titulos">
+                <tr class="titulos agente">
                     <th colspan="@(Model.AgenteCompras.ListaOperadores.Count+2)">MAT</th>
                     <th style="display:inline-flex;">
                         @Html.ActionLink("Descarga", "ExcelAgente", "ReporteCompraNet", new { fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
                         <a id="AbrirModalAgente" class="abrirModal" onclick="ModalAgenteCompras('@ViewBag.Fecha')">Ver</a>
                     </th>
                 </tr>
-                <tr class="titulos">
+                <tr class="titulos agente">
                     <th>Producto</th>
                     <th>Posición</th>
                     @foreach (var op in Model.AgenteCompras.ListaOperadores)
@@ -217,8 +213,8 @@
                 }
             </table>
         </div>
-        <div class="col-xs-6 col-md-3">
-            <table class="table-condensed @(Model.SojaSustentable.Total > 0 ?"":"hide")" id="SojaSustentable">
+        <div class="col-xs-6 col-md-3 @(Model.SojaSustentable.Total > 0 ?"":"hide")">
+            <table class="table-condensed " id="SojaSustentable">
                 <tbody>
                     <tr>
                         <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>

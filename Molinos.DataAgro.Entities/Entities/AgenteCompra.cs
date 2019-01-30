@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal Precio { get; set; }
         public string MonedaId { get; set; }
         public int OperadorId { get; set; }
+        public int TipoAgenteCompraId { get; set; }
         public string Posicion { get; set; }        
         public DateTime Fecha { get; set; }
         public int ComercialId { get; set; }
@@ -29,6 +30,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial Comercial { get; set; }
         [ForeignKey("OperadorId")]
         public virtual Operador Operador { get; set; }
+
+        [ForeignKey("TipoAgenteCompraId")]
+        public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
     }
 }
 
