@@ -44,9 +44,15 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void PartialReporteCompraNetTest()
         {
-            var fecha = new DateTime(2018,10,26);
-            reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
+            var fecha = new DateTime(2018, 10, 26);
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
+            reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
+            reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
+            reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());
             var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018") as PartialViewResult;
 
             Assert.NotNull(resultado);

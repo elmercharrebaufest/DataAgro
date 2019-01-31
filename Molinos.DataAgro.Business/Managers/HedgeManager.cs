@@ -266,7 +266,7 @@ namespace Molinos.DataAgro.Business
                 if (mail)
                 {
                     mailManager.EnviarMail(repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId),
-                                            repositorio.Listar<Comercial>(x => x.PerfilId == 3 || x.PerfilId == 6),
+                                            repositorio.Listar<Comercial>(x => x.PerfilId == 3 || x.PerfilId == 6 || x.PerfilId == 7),
                                                 "Cierre del dia",
                                                     string.Empty,
                                                         null,
