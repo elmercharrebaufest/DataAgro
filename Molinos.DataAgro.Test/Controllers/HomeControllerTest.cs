@@ -119,8 +119,9 @@ namespace Molinos.DataAgro.Test.Controllers
 
         [Test]
         public void BusquedaHomeTest()
-        {            
-            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId)).Returns(new List<BusquedaHome>()
+        {
+            HttpContext.Current.Session["equipo"] = new List<int>();
+            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo)).Returns(new List<BusquedaHome>()
             {
                 new BusquedaHome
                 {
@@ -131,7 +132,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }
             });            
             var result = target.BusquedaHome("a");
-            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(

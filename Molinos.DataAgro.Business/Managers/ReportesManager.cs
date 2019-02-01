@@ -475,7 +475,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (fechaDesde == fechaHasta)
             {
                 fechaDesde = fechaDesde.Date;
-                var agentes = repositorio.Listar<AgenteCompra>(x => DbFunctions.TruncateTime(x.Fecha) == fechaDesde && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId });
+                var agentes = repositorio.Listar<AgenteCompra>(x => DbFunctions.TruncateTime(x.Fecha) == fechaDesde && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId,x.TipoAgenteCompraId });
                 foreach (var agentesPorPosicionYMaterial in agentes)
                 {
                     var agenteTemp = new AgenteCompraDto() { Operador = new List<AgenteCompraDto.OperadorCantidad>() };
@@ -491,6 +491,8 @@ namespace Molinos.DataAgro.Business.Managers
                         agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
                         agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
                         agenteTemp.MaterialDesc = agente.Material.Descripcion;
+                        agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
+                        agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
                     }
                     listaAgentes.Add(agenteTemp);
                 }
@@ -816,7 +818,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, bool? calidad)
         {
-            var data = FiltrardetalleContratosPorMesAnio(TraerDetallePosicion(materialId, mes, anio, fechaDesde, fechaHasta, calidad), mes, anio);
+            var detalle = TraerDetallePosicion(materialId, mes, anio, fechaDesde, fechaHasta, calidad);
+            detalle.ForEach(x => x.Cantidad = int.Parse(x.Cantidad).ToString("n0"));
+            detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio).ToString("n2"));
+            var data = FiltrardetalleContratosPorMesAnio(detalle, mes, anio);
             return JsonConvert.SerializeObject(new { items = data, total = data.Count() }); ;
         }
         public string DetalleAgenteModal(DateTime fecha)

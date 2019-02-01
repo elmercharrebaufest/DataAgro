@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -212,10 +213,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public List<BusquedaHome> BusquedaHome(string filtro, int ComercialId)
+        public List<BusquedaHome> BusquedaHome(string filtro, int comercialId,List<int> equipo)
         {
-            var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
-            return query.ToList();
+            //var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
+            var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo,comercialId,filtro));
+            return query;
         }
 
         public List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId)

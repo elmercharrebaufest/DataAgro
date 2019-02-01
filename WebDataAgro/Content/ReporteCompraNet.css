@@ -57,7 +57,12 @@ a.Descarga {
     border-right: 1px solid black;
 }
 
-#fecha-buscador-reporte{
+.borde-derecho-oscuro,
+.borde-derecho-oscuro {
+    border-right: 2px solid black !important;
+}
+
+#fecha-buscador-reporte {
     padding: 15px 0 0 10px;
 }
 
@@ -159,7 +164,7 @@ a.Descarga {
     background: plum;
 }
 .titulos.agente {
-    background: yellow;
+    background: gold;
     color: black;
 }
 

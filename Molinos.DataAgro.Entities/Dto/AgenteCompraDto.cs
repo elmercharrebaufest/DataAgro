@@ -9,6 +9,8 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class AgenteCompraDto
     {
         public int MaterialId { get; set; }
+        public int TipoAgenteId { get; set; }
+        public string TipoAgenteDesc { get; set; }
         public string MaterialDesc { get; set; }
         public List<OperadorCantidad> Operador {get;set;}
         public string Posicion { get; set; }

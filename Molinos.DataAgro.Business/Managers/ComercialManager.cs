@@ -236,7 +236,10 @@ namespace Molinos.DataAgro.Business
         {
             
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
-
+            if(comercial.PerfilId == 4|| comercial.PerfilId == 5)
+            {
+                comercial = repositorio.Obtener<Comercial>(x => x.PerfilId == 3);
+            }
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
             
             var resultado = new EquipoDto

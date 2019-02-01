@@ -2,6 +2,7 @@
 var url;
 
 $(document).ready(function () {
+    kendo.culture("es-AR");
     $('#menuproveedor').hide();
     fechaString = ObtenerFechaDesde();
     url = $('#descargaReporte').attr('href');
@@ -143,9 +144,11 @@ function CrearGraficoHedgeObjetivo(data) {
                             value = value.join('.');
                             return value;
                         }
-                    }}],
+                    }
+                }],
                 yAxes: [{
-                    stacked: true, barThickness: 10 }]
+                    stacked: true, barThickness: 10
+                }]
             },
             tooltips: {
                 enabled: false
@@ -157,6 +160,7 @@ function CrearGraficoHedgeObjetivo(data) {
 
 function crearGrilladetallePosicion(href) {
     $("#grilla").kendoGrid({
+        culture: "es-AR",
         dataSource: {
             data: JSON.parse(href),
             type: JSON,

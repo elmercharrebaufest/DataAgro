@@ -95,10 +95,10 @@ namespace WebDataAgro.Controllers
         }
 
         public ActionResult BusquedaHome(string filtro)
-        {            
+        {    
             return new JsonResult()
             {
-                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId),
+                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, GlobalVariables.Equipo),
                 MaxJsonLength = Int32.MaxValue
             };
 

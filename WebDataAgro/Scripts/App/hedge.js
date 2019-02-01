@@ -97,6 +97,13 @@ function InicializarElementos() {
         $("#diferencial-dia").show();
     } else {
         $("#diferencial-dia").hide();
+    }    
+}
+function mostrarocultar(element) {
+    if ($(element).text() == "Mostrar") {
+        $(element).text("Ocultar");
+    } else {
+        $(element).text("Mostrar");
     }
 }
 
