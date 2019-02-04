@@ -101,7 +101,7 @@ namespace WebDataAgro.Controllers
         public ExcelResult ExcelAgente(string fechaString)
         {
             DateTime fecha;
-            DateTime.TryParse(fechaString, out fecha);
+            DateTime.TryParseExact(fechaString,"dd-MM-yyyy", CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha);
             var detalle = mobjReportesManager.DetalleAgente(fecha);
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }

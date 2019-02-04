@@ -119,7 +119,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Name = "B",
                 SheetName = "C"
             });
-            var result = target.ExcelAgente("26/10/2018");
+            var result = target.ExcelAgente("26-10-2018");
             reportesManagerMock.Verify(x => x.DetalleAgente(It.IsAny<DateTime>()), Times.Once);
             Assert.NotNull(result);
         }
