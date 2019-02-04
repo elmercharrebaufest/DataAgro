@@ -168,7 +168,7 @@ function crearGrilladetallePosicion(href) {
                 data: "items",
                 total: "total"
             },
-            pageSize: 5
+            pageSize: 20
         },
         dataBound: ShowModal,
         sortable: true,
@@ -177,7 +177,23 @@ function crearGrilladetallePosicion(href) {
         resizable: true,
         filterable: true,
         columnMenu: true,
-        pageable: true,
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            input: true,
+            numeric: true
+        },
         columns: [
             {
                 field: "Contrato",
@@ -323,7 +339,7 @@ function crearGrilladetallePosicion(href) {
                 field: "Observación",
                 title: "Observación",
                 width: 150
-            }],
+            }]
 
     });
 

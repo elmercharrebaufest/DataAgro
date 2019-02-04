@@ -820,13 +820,15 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var detalle = TraerDetallePosicion(materialId, mes, anio, fechaDesde, fechaHasta, calidad);
             detalle.ForEach(x => x.Cantidad = int.Parse(x.Cantidad).ToString("n0"));
-            detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio).ToString("n2"));
+            detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio.Replace('.',',')).ToString("n2"));
             var data = FiltrardetalleContratosPorMesAnio(detalle, mes, anio);
             return JsonConvert.SerializeObject(new { items = data, total = data.Count() }); ;
         }
         public string DetalleAgenteModal(DateTime fecha)
         {
             var data = TraerDetalleAgente(fecha);
+            data.ForEach(x => x.Cantidad = int.Parse(x.Cantidad).ToString("n0"));
+            data.ForEach(x => x.Precio = decimal.Parse(x.Precio).ToString("n2"));
             return JsonConvert.SerializeObject(new { items = data, total = data.Count() }); ;
         }
         private List<DetalleContratoDto> FiltrardetalleContratosPorMesAnio(List<DetalleContratoDto> contratos, int mes, int anio)

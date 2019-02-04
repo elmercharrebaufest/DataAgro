@@ -92,5 +92,50 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018");
             Assert.NotNull(result);
         }
+        [Test]
+        public void DetalleExcelModalTest()
+        {
+            var fecha = new DateTime(2018, 10, 26);
+            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
+            reportesManagerMock.Setup(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>())).Returns("");
+            var result = target.DetalleExcelModal(2, 2018, 1, "26-10-2018", "26-10-2018", true);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            reportesManagerMock.Verify(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ExcelAgenteTest()
+        {
+            var fecha = new DateTime(2018, 10, 26);
+            var reportes = new ParamReportes() { ComercialActual = 1 };
+            reportesManagerMock.Setup(x => x.DetalleAgente(fecha)).Returns(new ExcelDetallePosicionDto()
+            {
+                Headers = new string[] { "1", "2" },
+                Data = new List<string[]>() { new string[] { "a", "b" } },
+                Name = "B",
+                SheetName = "C"
+            });
+            var result = target.ExcelAgente("26/10/2018");
+            reportesManagerMock.Verify(x => x.DetalleAgente(It.IsAny<DateTime>()), Times.Once);
+            Assert.NotNull(result);
+        }
+        [Test]
+        public void DetalleAgenteModalTest()
+        {
+            var fecha = new DateTime(2018, 10, 26);
+            reportesManagerMock.Setup(x => x.DetalleAgenteModal(fecha)).Returns("");
+            var result = target.DetalleAgenteModal("26/10/2018");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            reportesManagerMock.Verify(x => x.DetalleAgenteModal(It.IsAny<DateTime>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

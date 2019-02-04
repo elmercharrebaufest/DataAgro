@@ -110,7 +110,10 @@ namespace Molinos.DataAgro.Business
             };
             foreach (string mail in enviarA)
             {
-                oMensaje.To.Add(mail);
+                if (!string.IsNullOrEmpty(mail))
+                {
+                    oMensaje.To.Add(mail);
+                }
             }
             oMensaje.To.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
             return oMensaje;

@@ -1,4 +1,5 @@
 ﻿
+--Se agrego como un listado en AcopioMaterialPorProveedores
 CREATE PROCEDURE [dbo].[DataAgro_AcopioMaterialPorProveedorId] --3761
 (
 	 @ProveedorId INT

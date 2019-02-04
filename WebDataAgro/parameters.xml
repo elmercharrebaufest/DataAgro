@@ -141,6 +141,12 @@
                            /endpoint[@name='HTTP_Port7']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port8 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port8']
+                           /@address" />
+  </parameter>
   <parameter name="ServiceUser Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServiceUser']

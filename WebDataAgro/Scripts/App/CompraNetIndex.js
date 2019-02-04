@@ -489,7 +489,7 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if ($("#perfil").val() == "Mesa" && dataItem.ContratoId && !dataItem.FijacionDePrecioContratoId && !dataItem.FasonId && !dataItem.AgenteId) {
+                        if ($("#perfil").val() == "Mesa" && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId) && !dataItem.FijacionDePrecioContratoId) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 botonBorrar(dataItem, 'fa-trash fin');
@@ -1303,7 +1303,7 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
         $("#proveedorBorrarDivVisualizar").hide();
         $("#agenteBorrarDivVisualizar").show();
         $("#contratoModalBorrar").val(agenteId);
-        $("#agente_a_borrar").val(agenteId);
+        $("#agente_a_borrar").text(agenteId);
     } else {
         $("#contratoModalBorrar").val(id);
         $("#estadoModalBorrar").val(estado);

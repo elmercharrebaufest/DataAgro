@@ -53,7 +53,22 @@ namespace Molinos.DataAgro.Business.Managers
                 res.ContactosComercialesTraerPorProveedores = repositorio.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", 0, ProveedorId);
                 res.ActividadHistoriaTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, null, null);
                 res.ObjetivosTraerPorProveedorId = repositorio.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", 0, ProveedorId);
-                res.AcopioMaterialPorProveedores = repositorio.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", 0, ProveedorId);
+                //res.AcopioMaterialPorProveedores = repositorio.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", 0, ProveedorId);
+                res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
+                {
+                    AcopioId = x.AcopioId,
+                    AcopioMaterialId = x.AcopioMaterialId,
+                    CampañaId = x.CampañaId,
+                    Campaña = x.Campaña.Descripcion,
+                    MaterialId=x.MaterialId,
+                    NroItem = x.NroItem,
+                    Toneladas = x.Toneladas,
+                    Material = x.Material.Descripcion,
+                    LocalidadId = x.Acopio.LocalidadId.Value,
+                    Localidad =x.Acopio.Localidad.Nombre,
+                    ProvinciaId =x.Acopio.Localidad.ProvinciaId,
+                    Provincia = x.Acopio.Localidad.Provincia.Nombre
+                }, x=>x.Acopio.ProveedorId == ProveedorId);
                 var campoacopio = repositorio.SelStore<CampoProduccionAcopio>("DataAgro_CampoProduccionAcopioPorProveedorId", 0, ProveedorId);
                 res.CampoProduccionAcopioPorProveedores = campoacopio.Where(z => z.EsCampoProduccion == true).ToList();
                 res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).ToList();

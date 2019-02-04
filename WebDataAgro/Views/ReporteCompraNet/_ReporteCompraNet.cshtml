@@ -28,10 +28,10 @@
                         <th colspan="4">HEDGE</th>
                     </tr>
                     <tr class="titulos hedgemat">
-                        <th>PRODUCTO</th>
-                        <th>DISPONIBLE</th>
-                        <th>FORWARD</th>
-                        <th>NEW CROP</th>
+                        <th>Producto</th>
+                        <th>Disponible</th>
+                        <th>Forward</th>
+                        <th>New Crop</th>
                     </tr>
                     @foreach (var mat in Model.HedgeMaterial)
                     {
@@ -92,15 +92,15 @@
                     </tr>
                     <tr class="titulos">
                         <th class="producto borde-derecho">PRODUCTO</th>
-                        <th class="valores @(dispAFijar ? "" : "hide")">A FIJAR</th>
-                        <th class="valores @(dispAPrecio ? "" : "hide")">A PRECIO</th>
-                        <th class="valores @(dispFijacion ? " " : " hide")">FIJACIÓN</th>
-                        <th class="valores @(forwAFijar ? "" : "hide")">A FIJAR</th>
-                        <th class="valores @(forwAPrecio ? "" : "hide")">A PRECIO</th>
-                        <th class="valores @(forwFijacion ? " " : " hide")">FIJACIÓN</th>
-                        <th class="valores @(newcAFijar ? "" : "hide")">A FIJAR</th>
-                        <th class="valores @(newcAPrecio ? "" : "hide")">A PRECIO</th>
-                        <th class="valores @(newcFijacion ? " " : " hide")">FIJACIÓN</th>
+                        <th class="valores @(dispAFijar ? "" : "hide")">A Fijar</th>
+                        <th class="valores @(dispAPrecio ? "" : "hide")">A Precio</th>
+                        <th class="valores @(dispFijacion ? " " : " hide")">Fijación</th>
+                        <th class="valores @(forwAFijar ? "" : "hide")">A Fijar</th>
+                        <th class="valores @(forwAPrecio ? "" : "hide")">A Precio</th>
+                        <th class="valores @(forwFijacion ? " " : " hide")">Fijación</th>
+                        <th class="valores @(newcAFijar ? "" : "hide")">A Fijar</th>
+                        <th class="valores @(newcAPrecio ? "" : "hide")">A Precio</th>
+                        <th class="valores @(newcFijacion ? " " : " hide")">Fijación</th>
                     </tr>
                     @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
                     {
@@ -134,10 +134,10 @@
             <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 col-md-3 @(material.Total > 0? "":"hide")">
                 <table id="@material.Material.Replace(" ", "")" class="table-condensed">
                     <tbody>
-                        <tr class="titulosPosicion"><th colspan="4">@material.Material</th></tr>
+                        <tr class="titulosPosicion"><th colspan="4">@material.Material.ToUpper()</th></tr>
                         <tr class="titulosPosicion">
-                            <th>POSICIÓN</th>
-                            <th>TON</th>
+                            <th>Posición</th>
+                            <th>Ton.</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -210,9 +210,9 @@
                         <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
                     </tr>
                     <tr>
-                        <th class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">A PRECIO</th>
-                        <th class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">A FIJAR</th>
-                        <th>TOTAL</th>
+                        <th class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">A Precio</th>
+                        <th class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">A Fijar</th>
+                        <th>Total</th>
                     </tr>
                     <tr>
                         <td class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">@Model.SojaSustentable.Precio.ToString("N0")</td>
