@@ -512,11 +512,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta) || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar))
             {
                 try
                 {
-                    oContratoSave.Cantidad += oContratoSave.Ampliaciones.Value;
+                    oContratoSave.Cantidad += oContratoSave.Ampliaciones ?? 0;
                     oContratoSave.Ampliaciones = 0;
                 }
                 catch { }
