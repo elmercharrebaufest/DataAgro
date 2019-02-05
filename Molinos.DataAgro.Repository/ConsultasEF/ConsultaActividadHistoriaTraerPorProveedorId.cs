@@ -38,7 +38,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 var ids = from t in contexto.Set<TipoActividad>() select t.TipoActividadId;
                 actividad = ids.ToArray();
             }
-
+            if (string.IsNullOrEmpty(detalle))
+            {
+                detalle = "";
+            }
             var resultado = from a in contexto.Set<Actividad>()
                             join ta in contexto.Set<TipoActividad>() on a.TipoActividadId equals ta.TipoActividadId into tas
                             from ta in tas.DefaultIfEmpty()
@@ -46,7 +49,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from c in cs.DefaultIfEmpty()
                             join cc in contexto.Set<ContactoComercial>() on a.ContactoComercialId equals cc.ContactoComercialId into ccs
                             from cc in ccs.DefaultIfEmpty()
-                            where a.ProveedorId == proveedorId && actividad.Contains(a.TipoActividadId)
+                            where a.ProveedorId == proveedorId && (actividad.Contains(a.TipoActividadId) && a.Detalle.Contains(detalle))
                             orderby a.FechaHoraActividad
                             select new ActividadTraer
                             {
