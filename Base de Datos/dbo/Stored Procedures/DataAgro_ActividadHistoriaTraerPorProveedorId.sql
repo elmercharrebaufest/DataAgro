@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[DataAgro_ActividadHistoriaTraerPorProveedorId]  
+﻿--Hecho en repositorio: ConsultaActividadHistoriaTraerPorProveedorId
+CREATE PROCEDURE [dbo].[DataAgro_ActividadHistoriaTraerPorProveedorId]  
 
 (  
 

@@ -289,6 +289,10 @@ namespace WebDataAgro.Controllers
             var titulo = " border: 1px solid black; background: #017940; color: white; ";
             var datoIzquierda = " font-weight:bold; border: 1px solid black; text-align:left; ";
             var datoCentro = " font-weight:bold; border: 1px solid black; text-align:center; ";
+            var colorHedge = " background: #008b8b; ";
+            var colorObjetivo = " background: #dda0dd; ";
+            var colorPosicion = "";
+            var colorAgente = " background: #FFD700; ";
 
             var htmlBody = "";
 
@@ -301,13 +305,13 @@ namespace WebDataAgro.Controllers
 
             htmlBody += "<table style=\" width: 100%; border-collapse:unset\">";
             htmlBody += "<tbody>";
-            htmlBody += "<tr style=\" background: #017940; color: white;\">";
+            htmlBody += "<tr style=\" " + colorHedge + " color: white;\">";
             htmlBody += "<th style=\" border: 1px solid black;\" colspan=\"4\" > HEDGE </th>";
             htmlBody += "</tr>";
-            htmlBody += "<tr> <th style=\" " + titulo + " \">PRODUCTO</th>";
-            htmlBody += "<th style=\" " + titulo + " \">DISPONIBLE</th> ";
-            htmlBody += "<th style=\" " + titulo + " \">FORWARD</th> ";
-            htmlBody += "<th style=\" " + titulo + "\">NEW CROP</th></tr>";
+            htmlBody += "<tr> <th style=\" " + titulo + colorHedge + " \">PRODUCTO</th>";
+            htmlBody += "<th style=\" " + titulo + colorHedge + " \">DISPONIBLE</th> ";
+            htmlBody += "<th style=\" " + titulo + colorHedge + " \">FORWARD</th> ";
+            htmlBody += "<th style=\" " + titulo + colorHedge + "\">NEW CROP</th></tr>";
             foreach (var mat in model.HedgeMaterial)
             {
                 if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
@@ -329,17 +333,17 @@ namespace WebDataAgro.Controllers
             {
                 htmlBody += "  <table  style=\" width: 50%; border-collapse:unset;\">";
                 htmlBody += "     <tr>";
-                htmlBody += "         <th style=\"  " + titulo + "  \"></th>";
-                htmlBody += "         <th style=\"  " + titulo + "  \">Dia</th>";
-                htmlBody += "         <th style=\"  " + titulo + "  \">Objetivo</th>";
+                htmlBody += "         <th style=\"  " + titulo + colorObjetivo + "  \"></th>";
+                htmlBody += "         <th style=\"  " + titulo + colorObjetivo + "  \">Dia</th>";
+                htmlBody += "         <th style=\"  " + titulo + colorObjetivo + "  \">Objetivo</th>";
                 htmlBody += "     </tr>";
                 htmlBody += "     <tr>";
-                htmlBody += "         <th style=\"  " + titulo + "  \">Pricing</th>";
+                htmlBody += "         <th style=\"  " + titulo + colorObjetivo + "  \">Pricing</th>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingCumplido + "</td>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingObjetivo + "</td>";
                 htmlBody += "     </tr>";
                 htmlBody += "     <tr>";
-                htmlBody += "         <th  style=\"  " + titulo + "  \">A remitir</th>";
+                htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + "  \">A remitir</th>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirCumplido + "</td>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirObjetivo + "</td>";
                 htmlBody += "     </tr>";
@@ -349,8 +353,8 @@ namespace WebDataAgro.Controllers
 
                 htmlBody += " <table style=\" width: 40%; border-collapse:unset;\">";
                 htmlBody += "     <tr>";
-                htmlBody += "         <th  style=\"  " + titulo + " \">TC Promedio</th>";
-                htmlBody += "         <th  style=\"  " + titulo + " \">TC Total</th>";
+                htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + " \">TC Promedio</th>";
+                htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + " \">TC Total</th>";
                 htmlBody += "     </tr>";
                 htmlBody += "     <tr>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.TCPromedioDto.PromedioTC.ToString("N2") + "</td>";
@@ -483,12 +487,30 @@ namespace WebDataAgro.Controllers
             {
                 if (material.Total > 0)
                 {
+                    switch (material.Material)
+                    {
+                        case "Soja":
+                            colorPosicion = " background: #99cc00; ";
+                            break;
+                        case "Maíz":
+                            colorPosicion = " background: #ffcc99 ;";
+                            break;
+                        case "Trigo Cámara":
+                            colorPosicion = " background: #9999ff ;";
+                            break;
+                        case "Trigo Calidad":
+                            colorPosicion = " background: #99ccff ;";
+                            break;
+                        default:
+                            break;
+                    }
+
                     htmlBody += "<table  style=\"width:50%; border-collapse:unset;\">";
                     htmlBody += "<tbody>";
-                    htmlBody += "<tr><th style=\" " + titulo + "\" colspan = \"2\">" + material.Material.ToUpper() + "</th></tr>";
+                    htmlBody += "<tr><th style=\" " + titulo + colorPosicion + "\" colspan = \"2\">" + material.Material.ToUpper() + "</th></tr>";
                     htmlBody += "<tr>";
-                    htmlBody += "<th style=\" " + titulo + "\">POSICIÓN</th>";
-                    htmlBody += "<th style=\" " + titulo + "\">TON</th>";
+                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">POSICIÓN</th>";
+                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">TON</th>";
                     htmlBody += "</tr>";
                     foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                     {
@@ -509,20 +531,21 @@ namespace WebDataAgro.Controllers
                 }
             }
 
+
             if (model.AgenteCompras.ListaAgenteCompras.Count > 0)
             {
                 htmlBody += "<table  style=\"width:70%; border-collapse:unset;\" > ";
                 htmlBody += "<tr>";
-                htmlBody += "<th style=\" " + titulo + "\" colspan = \" " + model.AgenteCompras.ListaOperadores.Count + 2 + " \"> MAT </ th >";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\" colspan = \" " + model.AgenteCompras.ListaOperadores.Count + 2 + " \"> MAT </ th >";
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
-                htmlBody += "<th style=\" " + titulo + "\">Producto</th>";
-                htmlBody += "<th style=\" " + titulo + "\">Posición</th>";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\">Producto</th>";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\">Posición</th>";
                 foreach (var op in model.AgenteCompras.ListaOperadores)
                 {
-                    htmlBody += "<th style=\" " + titulo + "\">" + op.OperadorDesc + "</th>";
+                    htmlBody += "<th style=\" " + titulo + colorAgente + "\">" + op.OperadorDesc + "</th>";
                 }
-                htmlBody += "<th style=\" " + titulo + "\">Total</th>";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\">Total</th>";
                 htmlBody += "</tr>";
                 foreach (var agente in model.AgenteCompras.ListaAgenteCompras)
                 {

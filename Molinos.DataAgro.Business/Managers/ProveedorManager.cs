@@ -38,7 +38,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new StoredHistorialResult
             {
-                ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId) 
+                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, oParam.detalle, TipoActividadId))
+                //ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId)
             };
         }
 
@@ -51,7 +52,8 @@ namespace Molinos.DataAgro.Business.Managers
                 res.BasicoProveedorTraerPorProveedores = TraerDatosBasicosProveedor(ProveedorId, oComerciales.ComercialId, equipo);
                 res.ActividadTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadTraerPorProveedorId", 0, ProveedorId);
                 res.ContactosComercialesTraerPorProveedores = repositorio.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", 0, ProveedorId);
-                res.ActividadHistoriaTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, null, null);
+                res.ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId));
+                //res.ActividadHistoriaTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, null, null);
                 res.ObjetivosTraerPorProveedorId = repositorio.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", 0, ProveedorId);
                 //res.AcopioMaterialPorProveedores = repositorio.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", 0, ProveedorId);
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
@@ -399,14 +401,21 @@ namespace Molinos.DataAgro.Business.Managers
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
 
                 oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial,eliminar));
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                var subject = "";
+                
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {                
+                    subject += "Mail Pruebas - ";
+                }
+                if(eliminar!= null && eliminar == true)
                 {
-                    oMensaje.Subject = "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                    subject += "Anulación negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
                 }
                 else
                 {
-                    oMensaje.Subject = "Mail Pruebas - Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                    subject += "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
                 }
+                oMensaje.Subject = subject;
                 oMensaje.BodyEncoding = Encoding.UTF8;
 
                 oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");

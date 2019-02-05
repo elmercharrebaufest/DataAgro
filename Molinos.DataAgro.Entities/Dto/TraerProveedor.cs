@@ -180,7 +180,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class StoredHistorialResult
     {
-        public List<HistorialTraer> ActividadHistoriaTraerPorProveedores { get; set; }
+        public List<ActividadTraer> ActividadHistoriaTraerPorProveedores { get; set; }
     }
 
     public class ObjetivosTraer
