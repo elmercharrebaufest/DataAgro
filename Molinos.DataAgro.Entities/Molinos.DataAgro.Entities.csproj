@@ -87,6 +87,7 @@
     <Compile Include="Dto\FinDelDiaDto.cs" />
     <Compile Include="Dto\GrabarAgenteResult.cs" />
     <Compile Include="Dto\HedgeCargaObjetivoDto.cs" />
+    <Compile Include="Dto\DiferencialDto.cs" />
     <Compile Include="Dto\HedgeTCPromedioDto.cs" />
     <Compile Include="Dto\HedgeTCDto.cs" />
     <Compile Include="Dto\HedgeObjetivoDto.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
+    <Compile Include="Entities\Diferencial.cs" />
     <Compile Include="Entities\HedgeTC.cs" />
     <Compile Include="Entities\HedgeObjetivo.cs" />
     <Compile Include="Entities\FinDelDia.cs" />

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="a2bd918a-2ae2-4552-abe3-fe3e3a9f6235" ChangeDateTime="02/07/2019 13:48:00">
+    <Property Name="ElementName" Value="[dbo].[RangoConfirmacionAutomatica].[PrecioMaximo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RangoConfirmacionAutomatica]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Diferencial" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3f34b387-37f4-4f53-91e4-3bfccb5cc4b1" ChangeDateTime="02/07/2019 13:48:43">
+    <Property Name="ElementName" Value="[dbo].[RangoConfirmacionAutomatica].[MaterialId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RangoConfirmacionAutomatica]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="fecha" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="85c7defe-7c20-44af-a80f-4de84018b18a" ChangeDateTime="02/07/2019 13:48:53">
+    <Property Name="ElementName" Value="[dbo].[RangoConfirmacionAutomatica].[fecha]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[RangoConfirmacionAutomatica]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Fecha" />
+  </Operation>
+</Operations>

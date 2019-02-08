@@ -1,15 +1,17 @@
 ﻿var fechaString;
 var url;
+var viewModel;
+var datosIniCrearContrato;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     fechaString = ObtenerFechaDesde();
     url = $('#descargaReporte').attr('href');
-    $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString);
+    $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroNombre=' + $("#centroId").val());
     InicializarDate();
     setInterval(Refrescar, 300000);
-
+    CargarComboCentro();
 });
 
 function InicializarDate() {
@@ -33,7 +35,7 @@ function InicializarDate() {
             });
             fechaString = $("#fecha").val();
             fechaHastaString = $("#fechaHasta").val();
-            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString);
+            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
         }
     });
     var fechaMax = new Date($("#fecha").val().toString().split('-')[2], parseInt($("#fecha").val().toString().split('-')[1], 10) - 1, $("#fecha").val().toString().split('-')[0]);
@@ -48,7 +50,7 @@ function InicializarDate() {
     $("#fechaHasta").change(function () {
         fechaString = $("#fecha").val();
         fechaHastaString = $("#fechaHasta").val();
-        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString);
+        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
     });
 
 }
@@ -111,20 +113,20 @@ function CrearGraficoHedgeObjetivo(data) {
                 {
                     label: 'Cumplido',
                     data: [cumplirPricing, cumplirRemitir],
-                    backgroundColor: '#92d050', // yellow
+                    backgroundColor: '#92d050',
                     borderColor: '#4a682a',
                     borderWidth: 1
                 }, {
                     label: 'A Cumplir',
                     data: [objetivoPricing, objetivoRemitir],
-                    backgroundColor: '#ddd', // red,
+                    backgroundColor: '#ddd', 
                     borderColor: 'black',
                     borderWidth: 1
                 },
                 {
                     label: 'Excedido',
                     data: [excedidoPricing, excedidoRemitir],
-                    backgroundColor: '#12bd00', // green
+                    backgroundColor: '#ff1414',
                     borderColor: '#085200',
                     borderWidth: 1
                 }]
@@ -430,4 +432,38 @@ function ShowModalAgente() {
         $(document).off('focusin.modal');
     });
     $("#ModalAgenteCompra").modal('show');
+}
+
+
+function CargarComboCentro() {
+    var href = window.location.href;
+    href = href + "/ObtenerCentros";
+    $.get(href, function (data) { CrearCombo(data, "centroId"); });
+    return false;
+}
+
+
+function CrearCombo(data, idElemento) {
+    $("#" + idElemento).kendoDropDownList({
+        dataSource: {
+            data: JSON.parse(data),
+            type: JSON,
+            schema: {
+                data: "data"
+            }
+        },
+        optionLabel: "TODOS",
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        change: function (e) {
+            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
+        }
+    });
+    $("#" + idElemento).closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#" + idElemento).data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+    
 }

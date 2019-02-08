@@ -78,7 +78,8 @@ namespace Molinos.DataAgro.Business
                 Id = x.Id,
                 Fecha = x.Fecha,
                 TC = x.TipoCambio,
-                HedgePesos = x.HedgePesos
+                HedgePesos = x.HedgePesos,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => DbFunctions.TruncateTime(x.Fecha) == hoy);
         }
         public Resultado GrabarHedgeMaterial(List<HedgeMaterial> hedgeMat, int comercialId)
@@ -267,7 +268,7 @@ namespace Molinos.DataAgro.Business
                 {
                     mailManager.EnviarMail(repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId),
                                             repositorio.Listar<Comercial>(x => x.PerfilId == 3 || x.PerfilId == 6 || x.PerfilId == 7),
-                                                "Cierre del dia",
+                                                "Cierre del dia " + hoy.Day + "/" + hoy.Month,
                                                     string.Empty,
                                                         null,
                                                             AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),

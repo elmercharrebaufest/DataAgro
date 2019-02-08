@@ -241,6 +241,7 @@
     <Build Include="dbo\Tables\Operador.sql" />
     <Build Include="dbo\Tables\AgenteCompra.sql" />
     <Build Include="dbo\Tables\TipoAgenteCompra.sql" />
+    <Build Include="dbo\Tables\Diferencial.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
@@ -249,5 +250,8 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Base de Datos.refactorlog" />
   </ItemGroup>
 </Project>

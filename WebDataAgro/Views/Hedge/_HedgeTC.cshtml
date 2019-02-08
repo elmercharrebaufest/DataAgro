@@ -30,6 +30,7 @@
                     <th>Hora</th>
                     <th>TC</th>
                     <th>HEDGE $</th>
+                    <th>COMERCIAL</th>
                     <th class="fin-dia"></th>
                 </tr>
             </thead>
@@ -37,15 +38,19 @@
                 @for (var i = 0; i < Model.HedgeTC.HedgeTC.Count; i++)
                 {
                     var hora = Model.HedgeTC.HedgeTC[i].Fecha.TimeOfDay.ToString("hh\\:mm");
+                    var TC = Model.HedgeTC.HedgeTC[i].TC.ToString("n0");
                     <tr>
                         <td>
                             @Html.DisplayFor(model => hora)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].TC)
+                            @Html.DisplayFor(model => TC)
                         </td>
                         <td>
                             @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].HedgePesos)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].Comercial)
                         </td>
                         <td class="fin-dia">
                             @Ajax.ActionLink(" ", "EliminarHedgeTC", new { id = Model.HedgeTC.HedgeTC[i].Id }, new AjaxOptions { UpdateTargetId = "hedgeTC", InsertionMode = InsertionMode.Replace, OnSuccess = "tcInput" }, new { @class = "fa fa-minus-circle danger" })

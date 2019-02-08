@@ -196,6 +196,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
     <Compile Include="Controllers\OperadorController.cs" />
+    <Compile Include="Controllers\DiferencialController.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\RangoPrecioController.cs" />
     <Compile Include="Controllers\CentroController.cs" />
@@ -911,6 +912,7 @@
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\detalleCorredor.js" />
     <Content Include="Scripts\App\firebase-suscribir.js" />
+    <Content Include="Scripts\App\diferencial.js" />
     <Content Include="Scripts\App\hedge.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
@@ -2399,6 +2401,8 @@
     <Content Include="Views\ReporteCompraNet\ModalAgente.cshtml" />
     <Content Include="Views\Hedge\ModalDiferencial.cshtml" />
     <Content Include="Views\Hedge\ModalCierreDia.cshtml" />
+    <Content Include="Views\Diferencial\Index.cshtml" />
+    <Content Include="Views\Diferencial\_AbmDiferencial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

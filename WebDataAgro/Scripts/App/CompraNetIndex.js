@@ -301,9 +301,16 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
+                if (view[i].DestinoDescripcion != "San Lorenzo") {
+                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                            .addClass("otroDestino");                           
+                    }
             }
             filasSeleccionadas = {};
+
         },
+
+        attributes: { "class": "# if(data.DestinoDescripcion === 'San Lorenzo') { # destinoSanLorenzo # } else { # otroDestino # } #" },
         columns: [
             { selectable: true, width: "50px" },
             {
@@ -386,7 +393,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Ampliaciones", type: "number", width: 60, attributes: {
+                field: "Ampliaciones", type: "number", width: 60, title: "Ampl.", attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
                     if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
@@ -401,7 +408,7 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs mobile-precio" } },
             { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
-            { field: "Campania", type: "string", title: "Campa&ntilde;a", width: 70, attributes: { "class": "mobile-md" } },
+            { field: "Campania", type: "string", title: "Cos", width: 70, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
                 field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
@@ -415,6 +422,9 @@ function CreateGridInformeCompraNet() {
             { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
+            },
+            {
+                field: "DestinoDescripcion", type: "string", title: "Destino"
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {

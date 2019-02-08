@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new StoredHistorialResult
             {
-                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, oParam.detalle, TipoActividadId))
+                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false, oParam.detalle, TipoActividadId))
                 //ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId)
             };
         }
@@ -50,9 +50,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
                 res.BasicoProveedorTraerPorProveedores = TraerDatosBasicosProveedor(ProveedorId, oComerciales.ComercialId, equipo);
-                res.ActividadTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadTraerPorProveedorId", 0, ProveedorId);
+                res.ActividadTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, true));
                 res.ContactosComercialesTraerPorProveedores = repositorio.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", 0, ProveedorId);
-                res.ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId));
+                res.ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId,false));
                 //res.ActividadHistoriaTraerPorProveedores = repositorio.SelStore<ActividadTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, null, null);
                 res.ObjetivosTraerPorProveedorId = repositorio.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", 0, ProveedorId);
                 //res.AcopioMaterialPorProveedores = repositorio.SelStore<AcopioMaterialPorProveedor>("DataAgro_AcopioMaterialPorProveedorId", 0, ProveedorId);

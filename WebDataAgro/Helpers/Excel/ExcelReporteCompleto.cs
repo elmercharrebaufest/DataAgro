@@ -590,16 +590,9 @@ namespace WebDataAgro.Helpers.Excel
             {
                 row = sheet.CreateRow(30);
             }
-            CrearCelda(row, iC + 7, "TC promedio", cellcolorTitlesObjectivos);
-            CrearCelda(row, iC + 8, "TC total", cellcolorTitlesObjectivos);
-
-            row = sheet.GetRow(31);
-            if (row == null)
-            {
-                row = sheet.CreateRow(31);
-            }
-            CrearCelda(row, iC + 7, model.TCPromedioDto.PromedioTC.ToString("n2"), cellBorderStyleColumnTitles);
-            CrearCelda(row, iC + 8, model.TCPromedioDto.TotalTC.ToString("n2"), cellBorderStyleColumnTitles);
+      
+            CrearCelda(row, iC + 7, "Hedge TC: $" + model.TCPromedioDto.PromedioTC.ToString("n2"), cellBorderStyleColumnTitles);
+            CrearCelda(row, iC + 8, "$" + model.TCPromedioDto.TotalTC.ToString("n2") + " MM", cellBorderStyleColumnTitles);
 
         }
         private static void CrearTablaAgenteDeCompras(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model)

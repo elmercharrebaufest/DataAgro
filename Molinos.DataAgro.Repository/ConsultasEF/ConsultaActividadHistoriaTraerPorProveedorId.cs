@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -12,17 +13,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly int proveedorId;
         private readonly string detalle;
         private readonly string tipoActividad;
+        private readonly bool actual;
 
-        public ConsultaActividadHistoriaTraerPorProveedorId(int proveedorId, string detalle = null, string tipoActividad = null)
+        public ConsultaActividadHistoriaTraerPorProveedorId(int proveedorId, bool actual, string detalle = null, string tipoActividad = null)
         {
             this.proveedorId = proveedorId;
             this.detalle = detalle;
             this.tipoActividad = tipoActividad;
+            this.actual = actual;
         }
 
-        private static List<ActividadTraer> Query(DbContext contexto, int proveedorId, string detalle, string tipoActividad)
+        private static List<ActividadTraer> Query(DbContext contexto, int proveedorId, string detalle, string tipoActividad, bool actual)
         {
             int[] actividad;
+            
+            var hoy = DateTime.Now;
             if (!string.IsNullOrWhiteSpace(tipoActividad)&&tipoActividad!="0")
             {
                 var idactividad = tipoActividad.Split('|');
@@ -49,7 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from c in cs.DefaultIfEmpty()
                             join cc in contexto.Set<ContactoComercial>() on a.ContactoComercialId equals cc.ContactoComercialId into ccs
                             from cc in ccs.DefaultIfEmpty()
-                            where a.ProveedorId == proveedorId && (actividad.Contains(a.TipoActividadId) && a.Detalle.Contains(detalle))
+                            where a.ProveedorId == proveedorId && (actividad.Contains(a.TipoActividadId) && a.Detalle.Contains(detalle)) && actual? a.FechaHoraRecordatorio >= hoy: a.ProveedorId == proveedorId
                             orderby a.FechaHoraActividad
                             select new ActividadTraer
                             {
@@ -71,7 +76,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, proveedorId, detalle, tipoActividad);
+                return Query(contexto, proveedorId, detalle, tipoActividad, actual);
             }
         }
     }

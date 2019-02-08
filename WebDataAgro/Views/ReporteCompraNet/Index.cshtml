@@ -34,6 +34,14 @@
                         <input id="fechaHasta" name="fechaHastaString" type="date" style="width: 100%" />
                     </span>
                 </div>
+                <div class="col-sm-1 noRightPadding" @*style="display:none"*@>
+                    <label>Centro</label>
+                </div>
+                <div class="col-sm-4 col-md-2" @*style="display:none"*@>
+                    <span id="centroReporte">
+                        <select id="centroId" name="centroNombre"></select>
+                    </span>
+                </div>
                 <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
                 @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new { }, new { @class = "k-button k-button-icontext sideMargin-15", @id = "descargaReporte" })
             </div>

@@ -148,6 +148,7 @@
     <Compile Include="Managers\FasonManager.cs" />
     <Compile Include="Managers\OperadorManager.cs" />
     <Compile Include="Managers\PushNotificationManager.cs" />
+    <Compile Include="Managers\DiferencialManager.cs" />
     <Compile Include="Managers\RangoConfirmacionAutomaticaManager.cs" />
     <Compile Include="Managers\RangoManager.cs" />
     <Compile Include="Managers\ComercialManager.cs" />

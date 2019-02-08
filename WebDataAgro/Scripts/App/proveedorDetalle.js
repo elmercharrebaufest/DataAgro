@@ -894,7 +894,7 @@ function armarContacto() {
     $(".historial-actividad-grupo-contenedor").append(htmlHist);
 
     if (objetivos && objetivos.length) {
-        var htmlCamp = '<div class="noCorredor">< div class="datos-contacto-titular noCorredor" > ' +
+        var htmlCamp = '<div class="noCorredor"><div class="datos-contacto-titular noCorredor"> ' +
             '<span>Objetivos</span>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-contenedor">' +

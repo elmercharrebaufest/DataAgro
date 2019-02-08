@@ -16,11 +16,13 @@ namespace WebDataAgro.Controllers
     {
         private readonly IHedgeManager oHedgeManager;
         private readonly IReportesManager mobjReportesManager;
+        private readonly IDiferencialManager diferencialManager;
 
-        public HedgeController(IHedgeManager oHedgeManager, IReportesManager mobjReportesManager)
+        public HedgeController(IHedgeManager oHedgeManager, IReportesManager mobjReportesManager, IDiferencialManager diferencialManager)
         {
             this.oHedgeManager = oHedgeManager;
             this.mobjReportesManager = mobjReportesManager;
+            this.diferencialManager = diferencialManager;
         }
         public ActionResult Index()
         {
@@ -117,7 +119,8 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult ReabrirDia(HedgeModel diferencialHedge)
         {
-            oHedgeManager.ReabrirDia(GlobalVariables.ComercialId, diferencialHedge.Dia.Diferencial);
+            var diferencial = diferencialManager.TraerDiferencial();
+            oHedgeManager.ReabrirDia(GlobalVariables.ComercialId, diferencial == null ? 0 : diferencial.DiferencialDefault);
             return RedirectToAction("Index");
         }
 
@@ -288,7 +291,7 @@ namespace WebDataAgro.Controllers
 
             var titulo = " border: 1px solid black; background: #017940; color: white; ";
             var datoIzquierda = " font-weight:bold; border: 1px solid black; text-align:left; ";
-            var datoCentro = " font-weight:bold; border: 1px solid black; text-align:center; ";
+            var datoCentro = " border: 1px solid black; text-align:center; ";
             var colorHedge = " background: #008b8b; ";
             var colorObjetivo = " background: #dda0dd; ";
             var colorPosicion = "";
@@ -298,7 +301,7 @@ namespace WebDataAgro.Controllers
 
             htmlBody += "Estimados,";
             htmlBody += "<br></br>";
-            htmlBody += "los siguientes son los datos del cierre del día.";
+            htmlBody += "A continuación, se detallan las compras correspondientes al cierre del día.";
             htmlBody += "<br></br>";
             htmlBody += "<br></br>";
 
@@ -308,19 +311,19 @@ namespace WebDataAgro.Controllers
             htmlBody += "<tr style=\" " + colorHedge + " color: white;\">";
             htmlBody += "<th style=\" border: 1px solid black;\" colspan=\"4\" > HEDGE </th>";
             htmlBody += "</tr>";
-            htmlBody += "<tr> <th style=\" " + titulo + colorHedge + " \">PRODUCTO</th>";
-            htmlBody += "<th style=\" " + titulo + colorHedge + " \">DISPONIBLE</th> ";
-            htmlBody += "<th style=\" " + titulo + colorHedge + " \">FORWARD</th> ";
-            htmlBody += "<th style=\" " + titulo + colorHedge + "\">NEW CROP</th></tr>";
+            htmlBody += "<tr> <th style=\" " + titulo + colorHedge + " \">Producto</th>";
+            htmlBody += "<th style=\" " + titulo + colorHedge + " \">Disponible</th> ";
+            htmlBody += "<th style=\" " + titulo + colorHedge + " \">Forward</th> ";
+            htmlBody += "<th style=\" " + titulo + colorHedge + "\">New Crop</th></tr>";
             foreach (var mat in model.HedgeMaterial)
             {
                 if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
                 {
                     htmlBody += "<tr>";
                     htmlBody += "<td style=\" " + datoIzquierda + " \" >" + mat.MaterialDescripcion + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Disponible + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Forward + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.NewCrop + "</td>";
+                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Disponible.ToString("n0") + "</td>";
+                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Forward.ToString("n0") + "</td>";
+                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.NewCrop.ToString("n0") + "</td>";
                     htmlBody += "</tr>";
                 }
             };
@@ -339,26 +342,22 @@ namespace WebDataAgro.Controllers
                 htmlBody += "     </tr>";
                 htmlBody += "     <tr>";
                 htmlBody += "         <th style=\"  " + titulo + colorObjetivo + "  \">Pricing</th>";
-                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingCumplido + "</td>";
-                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingObjetivo + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingCumplido.ToString("n0") + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.PricingObjetivo.ToString("n0") + "</td>";
                 htmlBody += "     </tr>";
                 htmlBody += "     <tr>";
                 htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + "  \">A remitir</th>";
-                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirCumplido + "</td>";
-                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirObjetivo + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirCumplido.ToString("n0") + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.HedgeObjetivo.RemitirObjetivo.ToString("n0") + "</td>";
                 htmlBody += "     </tr>";
                 htmlBody += " </table>";
 
                 htmlBody += "<br></br>";
 
-                htmlBody += " <table style=\" width: 40%; border-collapse:unset;\">";
+                htmlBody += " <table style=\" width: 25%; border-collapse:unset;\">";
                 htmlBody += "     <tr>";
-                htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + " \">TC Promedio</th>";
-                htmlBody += "         <th  style=\"  " + titulo + colorObjetivo + " \">TC Total</th>";
-                htmlBody += "     </tr>";
-                htmlBody += "     <tr>";
-                htmlBody += "         <td style=\" " + datoCentro + " \" >" + model.TCPromedioDto.PromedioTC.ToString("N2") + "</td>";
-                htmlBody += "         <td style=\" " + datoCentro + " \">" + model.TCPromedioDto.TotalTC.ToString("N2") + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \" >Hedge TC: $" + model.TCPromedioDto.PromedioTC.ToString("N0") + "</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \">$" + model.TCPromedioDto.TotalTC.ToString("N0") + " MM</td>";
                 htmlBody += "     </tr>";
                 htmlBody += "</table>";
 
@@ -372,85 +371,45 @@ namespace WebDataAgro.Controllers
                 htmlBody += "<tbody>";
                 htmlBody += "<tr>";
                 htmlBody += "<td style=\"  " + titulo + " \"></td>";
-                if (disp != 0)
-                {
-                    htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + disp + "\">DISPONIBLE</th>";
-                }
-                if (forw != 0)
-                {
-                    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + forw + "\">FORWARD</th>";
-                }
 
-                if (dispFwd)
-                {
-                    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + (dispFwd ? 2 : 0) + "\">DISP FWD</th>";
-                }
-                if (newc != 0)
-                {
-                    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + newc + "\">NEW CROP</th>";
-                }
-                htmlBody += "<td  style=\" " + titulo + "\"></td>";
+                htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + 3 + "\">DISPONIBLE</th>";
+                htmlBody += "<th  style=\"  " + titulo + " \" rowspan=\" " + 2 + "\">TOTAL DISP</th>";
+
+                htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">FORWARD</th>";
+                htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL FORWARD</th>";
+
+                htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">NEW CROP</th>";
+                htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL NEW CROP</th>";
+
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
                 htmlBody += "<th  style=\" " + titulo + "\">PRODUCTO</th>";
-                if (dispAFijar)
-                {
-                    htmlBody += "<th  style=\" " + titulo + "\" >A FIJAR</th>";
-                }
-                if (dispAPrecio)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">A PRECIO</th>";
-                }
-                if (dispFijacion)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FIJACIÓN</th>";
-                }
-                if (dispFason)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FASÓN</th>";
-                }
-                if (forwAFijar)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">A FIJAR</th>";
-                }
-                if (forwAPrecio)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">A PRECIO</th>";
-                }
-                if (forwFijacion)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FIJACIÓN</th>";
-                }
-                if (forwFason)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FASÓN</th>";
-                }
-                if (dispFwd)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">PRECIO</th>";
-                }
-                if (dispFwd)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">TOTAL</th>";
-                }
-                if (newcAFijar)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">A FIJAR</th>";
-                }
-                if (newcAPrecio)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">A PRECIO</th>";
-                }
-                if (newcFijacion)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FIJACIÓN</th>";
-                }
-                if (newcFason)
-                {
-                    htmlBody += "<th style=\" " + titulo + "\">FASÓN</th>";
-                }
 
-                htmlBody += "<th  style=\" " + titulo + "\">TOTAL</th>";
+                htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+
+
+
+                htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+
+
+
+                htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+
+                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+
+
+
+
                 htmlBody += "</tr>";
 
                 foreach (var toneladaPrecio in model.ToneladasGranoTipo)
@@ -459,21 +418,21 @@ namespace WebDataAgro.Controllers
                     {
                         htmlBody += "<tr>";
                         htmlBody += " <th  style=\" " + datoIzquierda + " \" >" + toneladaPrecio.Material + "</th>";
-                        htmlBody += dispAFijar ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += dispAPrecio ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += dispFijacion ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += dispFason ? "  <td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispFason.ToString("N0") + "</td>" : "";
-                        htmlBody += forwAFijar ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += forwAPrecio ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += forwFijacion ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += forwFason ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwFason.ToString("N0") + "</td>" : "";
-                        htmlBody += dispFwd ? "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac).ToString("N0") + "</td>" : "";
-                        htmlBody += dispFwd ? "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.DispAFijar + toneladaPrecio.FrwAFijar).ToString("N0") + "</td>" : "";
-                        htmlBody += newcAFijar ? "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += newcAPrecio ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += newcFijacion ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += newcFason ? "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewFason.ToString("N0") + "</td>" : "";
-                        htmlBody += "<th style=\" " + datoCentro + " \" >" + toneladaPrecio.Total.ToString("N0") + "</th>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAFijar + toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwAFijar + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+
+                        htmlBody += "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewAFijar + toneladaPrecio.NewAPrecio + toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+
                         htmlBody += "</tr>";
                     }
                 }
@@ -483,8 +442,16 @@ namespace WebDataAgro.Controllers
 
             htmlBody += "<br></br>";
 
+            if (model.PosicionCompras.Any(x => x.Total > 0))
+            {
+
+                htmlBody += "<table  style=\"width:" + 25 * model.PosicionCompras.Count(x => x.Total > 0) + "%; border-collapse:unset;\">";
+                htmlBody += "<tbody>";
+                htmlBody += "<tr>";
+            }
             foreach (var material in model.PosicionCompras)
             {
+
                 if (material.Total > 0)
                 {
                     switch (material.Material)
@@ -504,19 +471,20 @@ namespace WebDataAgro.Controllers
                         default:
                             break;
                     }
-
-                    htmlBody += "<table  style=\"width:50%; border-collapse:unset;\">";
+                    htmlBody += "<td valign =\"top\">";
+                    htmlBody += "<table  style=\"width:100%; border-collapse:unset;\">";
                     htmlBody += "<tbody>";
+
                     htmlBody += "<tr><th style=\" " + titulo + colorPosicion + "\" colspan = \"2\">" + material.Material.ToUpper() + "</th></tr>";
                     htmlBody += "<tr>";
-                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">POSICIÓN</th>";
-                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">TON</th>";
+                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">Posición</th>";
+                    htmlBody += "<th style=\" " + titulo + colorPosicion + "\">Ton</th>";
                     htmlBody += "</tr>";
                     foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                     {
                         int mesActual = (int)(EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString());
                         htmlBody += "<tr>";
-                        htmlBody += "<td  style=\" " + datoIzquierda + " \" >" + mes.Mes + " - " + mes.Anio + "</td>";
+                        htmlBody += "<td  style=\" " + datoCentro + " \" >" + mes.Mes + " - " + mes.Anio + "</td>";
                         htmlBody += "<td style=\" " + datoCentro + " \" >" + mes.Kilos.ToString("N0") + "</td>";
                         htmlBody += "</tr>";
                     }
@@ -527,18 +495,26 @@ namespace WebDataAgro.Controllers
                     htmlBody += "</tr>";
                     htmlBody += "</tbody>";
                     htmlBody += "</table>";
-                    htmlBody += "<br></br>";
+                    htmlBody += "</td>";
+
                 }
             }
-
+            if (model.PosicionCompras.Any(x => x.Total > 0))
+            {
+                htmlBody += "</tr>";
+                htmlBody += "</tbody>";
+                htmlBody += "</table>";
+                htmlBody += "<br></br>";
+            }
 
             if (model.AgenteCompras.ListaAgenteCompras.Count > 0)
             {
                 htmlBody += "<table  style=\"width:70%; border-collapse:unset;\" > ";
                 htmlBody += "<tr>";
-                htmlBody += "<th style=\" " + titulo + colorAgente + "\" colspan = \" " + model.AgenteCompras.ListaOperadores.Count + 2 + " \"> MAT </ th >";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\" colspan = \" " + (model.AgenteCompras.ListaOperadores.Count + 4) + " \">AGENTE DE COMPRAS</th>";
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
+                htmlBody += "<th style=\" " + titulo + colorAgente + "\">Agente de Compra</th>";
                 htmlBody += "<th style=\" " + titulo + colorAgente + "\">Producto</th>";
                 htmlBody += "<th style=\" " + titulo + colorAgente + "\">Posición</th>";
                 foreach (var op in model.AgenteCompras.ListaOperadores)
@@ -551,9 +527,12 @@ namespace WebDataAgro.Controllers
                 {
                     var pos = agente.Posicion.Split('.');
                     htmlBody += "<tr>";
-                    htmlBody += "<td  style=\" " + datoIzquierda + " \" >" + agente.MaterialDesc + "</td>";
 
-                    htmlBody += "<td  style=\" " + datoIzquierda + " \" >" + (EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1] + "</td>";
+                    htmlBody += "<td  style=\" " + datoCentro + " \" >" + agente.TipoAgenteDesc + "</td>";
+
+                    htmlBody += "<td  style=\" " + datoCentro + " \" >" + agente.MaterialDesc + "</td>";
+
+                    htmlBody += "<td  style=\" " + datoCentro + " \" >" + (EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1] + "</td>";
                     foreach (var op in model.AgenteCompras.ListaOperadores)
                     {
                         var cantidad = agente.Operador.Where(x => x.OperadorId == op.OperadorId).Select(x => x.Cantidad.ToString("N0")).FirstOrDefault();
@@ -572,18 +551,18 @@ namespace WebDataAgro.Controllers
                 htmlBody += "<table style=\"width:50%; border-collapse:unset;\">";
                 htmlBody += "<tbody>";
                 htmlBody += "<tr>";
-                htmlBody += "<th style=\" " + titulo + "\" colspan=\"3\">SOJA SUSTENTABLE</th>";
+                htmlBody += "<th style=\" " + titulo + "\" colspan=\"" + (1 + Convert.ToInt32(model.SojaSustentable.Precio > 0) + Convert.ToInt32(model.SojaSustentable.Fijar > 0)) + "\">SOJA SUSTENTABLE</th>";
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
                 if (model.SojaSustentable.Precio > 0)
                 {
-                    htmlBody += "<th  style=\" " + titulo + "\" >A PRECIO</th>";
+                    htmlBody += "<th  style=\" " + titulo + "\" >A Precio</th>";
                 }
                 if (model.SojaSustentable.Fijar > 0)
                 {
-                    htmlBody += "<th  style=\" " + titulo + "\" >A FIJAR</th>";
+                    htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
                 }
-                htmlBody += "<th  style=\" " + titulo + "\" >TOTAL</th>";
+                htmlBody += "<th  style=\" " + titulo + "\" >Total</th>";
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
                 if (model.SojaSustentable.Precio > 0)
@@ -611,7 +590,7 @@ namespace WebDataAgro.Controllers
                 if (moneda.Cantidad > 0)
                 {
                     htmlBody += "<tr>";
-                    htmlBody += "<th style=\" " + titulo + "\">" + moneda.Moneda.ToUpper() + "</th>";
+                    htmlBody += "<th style=\" " + titulo + "\">" + moneda.Moneda + "</th>";
                     htmlBody += "<td  style=\" " + datoCentro + " \" >" + moneda.Cantidad.Value.ToString("N2") + "</td>";
                     htmlBody += "</tr>";
                 }

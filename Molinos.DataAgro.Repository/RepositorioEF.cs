@@ -293,10 +293,6 @@ namespace Molinos.DataAgro.Repository
 
         private static IQueryable<TProyeccion> ListarProyeccionQueryable<TProyeccion>(IQueryable<TProyeccion> resultadoFinal, string orden, DirOrden direccionOrden, int maxResultados)
         {
-            if (maxResultados != 0)
-            {
-                resultadoFinal = resultadoFinal.Take(maxResultados);
-            }
 
             if (orden != null)
             {
@@ -304,6 +300,11 @@ namespace Molinos.DataAgro.Repository
                 resultadoFinal = direccionOrden == DirOrden.Asc
                                  ? resultadoFinal.OrderBy(selectorOrden)
                                  : resultadoFinal.OrderByDescending(selectorOrden);
+            }
+            //CAMBIE ESTO ARA ACA ABAJO
+            if (maxResultados != 0)
+            {
+                resultadoFinal = resultadoFinal.Take(maxResultados);
             }
 
             return resultadoFinal;

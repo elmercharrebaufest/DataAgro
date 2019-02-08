@@ -124,6 +124,7 @@
     <Compile Include="Managers\IHedgeManager.cs" />
     <Compile Include="Managers\IOperadorManager.cs" />
     <Compile Include="Managers\IPushNotificationManager.cs" />
+    <Compile Include="Managers\IDiferencialManager.cs" />
     <Compile Include="Managers\IRangoConfirmacionAutomaticaManager.cs" />
     <Compile Include="Managers\IRangoManager.cs" />
     <Compile Include="Managers\IComercialManager.cs" />
