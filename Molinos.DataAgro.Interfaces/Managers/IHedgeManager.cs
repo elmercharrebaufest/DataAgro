@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarHedgeObjetivo(List<HedgeObjetivo> hedgeMat, int comercialId);
         Resultado GrabarHedgeTC(HedgeTC hedgeTC, int comercialId);
         Resultado EliminarHedgeTC(int hedgeTCId);
-        Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory,bool mail, string cuerpoMail);
+        Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory,bool mail, string cuerpoMail, int diferencial);
         Resultado ReabrirDia(int comercialId, double? diferencial);
         Resultado Diferencial();
     }

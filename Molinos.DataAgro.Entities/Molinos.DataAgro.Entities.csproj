@@ -117,6 +117,7 @@
     <Compile Include="Dto\PosicionPorMaterial.cs" />
     <Compile Include="Dto\ProveedorCorredorDto.cs" />
     <Compile Include="Dto\DatosCompraNetDto.cs" />
+    <Compile Include="Dto\ReporteCompraNetDto.cs" />
     <Compile Include="Dto\ResultadoSap.cs" />
     <Compile Include="Dto\TraerProveedorResult.cs" />
     <Compile Include="Dto\GrabarSuscripcionResult.cs" />

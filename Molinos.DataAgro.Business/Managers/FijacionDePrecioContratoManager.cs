@@ -221,7 +221,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
-
             return oEntityErrors;
         }
 

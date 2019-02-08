@@ -1,4 +1,6 @@
 ﻿using Autofac.Extras.NLog;
+using GemBox.Email.Imap;
+using GemBox.Email.Mime;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -174,6 +176,73 @@ namespace Molinos.DataAgro.Business
                 }
             }
             this.EnviarMail(desde, enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
+        }
+
+        public void ReenviarMailCierreDia(string asuntoABuscar, string asuntoNuevoMail, string cuerpo)
+        {
+            try
+            {
+                GemBox.Email.ComponentInfo.SetLicense("FREE-LIMITED-KEY");
+                GemBox.Email.MailMessage originalMessage;
+                using (ImapClient imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"]))
+                {
+                    imap.Connect();
+                    imap.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
+                    imap.SelectInbox();
+
+                    string search = "SUBJECT \"" + asuntoNuevoMail + "\"";
+                    try
+                    {
+                        originalMessage = imap.GetMessage(imap.SearchMessageNumbers(search).Last());
+                    }
+                    catch (Exception e)
+                    {
+                        search = "SUBJECT \"" + asuntoABuscar + "\"";
+                        originalMessage = imap.GetMessage(imap.SearchMessageNumbers(search).Last());
+                    }
+                }
+
+                GemBox.Email.MailMessage replyMessage = new GemBox.Email.MailMessage(
+                    originalMessage.From[0],
+                    originalMessage.To.ToArray());
+
+                replyMessage.MimeEntity.Headers.Add(
+                    new Header(HeaderId.InReplyTo, originalMessage.Id));
+                replyMessage.MimeEntity.Headers.Add(
+                    new Header(HeaderId.References, originalMessage.Id));
+
+                replyMessage.Subject = asuntoNuevoMail;
+
+                replyMessage.BodyHtml = cuerpo;
+
+                // Append original message text.
+                replyMessage.BodyHtml +=
+                    $"<div>On {originalMessage.Date:G}, {originalMessage.From[0].Address} wrote:</div>" +
+                    $"<blockquote>{originalMessage.BodyHtml}</blockquote>";
+
+
+                // Send reply email.
+                GemBox.Email.Smtp.SmtpClient smtp;
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {
+                    smtp = new GemBox.Email.Smtp.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
+                else
+                {
+                    smtp = new GemBox.Email.Smtp.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
+                using (smtp)
+                {
+                    smtp.Connect();
+                    smtp.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
+                    smtp.SendMessage(replyMessage);
+                }
+            }
+            catch (Exception diego)
+            {
+                var eeeee = diego;
+            }
         }
     }
 }

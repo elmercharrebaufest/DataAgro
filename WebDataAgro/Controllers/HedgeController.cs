@@ -109,11 +109,13 @@ namespace WebDataAgro.Controllers
             mail = true;
             var mailEnviar = mail ? ExcelReporteCompleto.GenerarExcel(this.ObtenerDatosReporte(), mobjReportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true) : new byte[1];
 
+            var diferencial = diferencialManager.TraerDiferencial();
             oHedgeManager.CerrarDia(GlobalVariables.ComercialId,
                                     mailEnviar,
                                     GlobalVariables.IdActiveDirectory,
                                     mail,
-                                    GenerarCuerpoMail());
+                                    GenerarCuerpoMail(),
+                                    diferencial.DiferencialDefault);
             return RedirectToAction("Index");
         }
         [HttpPost]

@@ -129,7 +129,6 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
-
             return oEntityErrors;
         }     
         public GrabarFasonResult FinalizarFason(int fijacionDePrecioContratoId)

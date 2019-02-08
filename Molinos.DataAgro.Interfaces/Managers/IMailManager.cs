@@ -10,5 +10,7 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMail(Comercial desde, List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null);
 
         void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null);
+
+        void ReenviarMailCierreDia(string asunto, string asuntoNuevoMail, string cuerpo);
     }
 }

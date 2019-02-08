@@ -232,7 +232,7 @@ namespace Molinos.DataAgro.Business
             }
             return oEntityErrors;
         }
-        public Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory, bool mail, string cuerpoMail)
+        public Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory, bool mail, string cuerpoMail, int diferencial)
         {
             var oEntityErrors = new Resultado();
             oEntityErrors = ValidarFinDelDia(oEntityErrors);
@@ -240,7 +240,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            var dia = new FinDelDia { Dia = DateTime.Now, Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null };
+            var dia = new FinDelDia { Dia = DateTime.Now, Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null, Diferencial = diferencial };
             try
             {
                 repositorio.Agregar(dia);
