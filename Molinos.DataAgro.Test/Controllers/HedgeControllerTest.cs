@@ -21,6 +21,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private HedgeController target;
         private Mock<IHedgeManager> hedgeManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<IDiferencialManager> diferencialManagerMock;
+
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -29,11 +31,12 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             hedgeManagerMock = new Mock<IHedgeManager>();
             reportesManagerMock = new Mock<IReportesManager>();
+            diferencialManagerMock = new Mock<IDiferencialManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             HttpContext.Current.Session["perfil"] = 7;
             HttpContext.Current.Session["comercialId"] = 1;
-            target = new HedgeController(hedgeManagerMock.Object, reportesManagerMock.Object);
+            target = new HedgeController(hedgeManagerMock.Object, reportesManagerMock.Object, diferencialManagerMock.Object);
         }
 
         [Test]

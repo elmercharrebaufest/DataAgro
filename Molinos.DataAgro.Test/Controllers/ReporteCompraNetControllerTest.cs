@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Test.Controllers
     {
         private ReporteCompraNetController target;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<ICentroManager> centroManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -27,9 +28,11 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             this.serializer = new JavaScriptSerializer();
             reportesManagerMock = new Mock<IReportesManager>();
+            centroManagerMock = new Mock<ICentroManager>();
+
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ReporteCompraNetController(reportesManagerMock.Object);
+            target = new ReporteCompraNetController(reportesManagerMock.Object, centroManagerMock.Object);
         }
 
         [Test]
@@ -53,7 +56,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());
-            var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018") as PartialViewResult;
+            var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018", "centro") as PartialViewResult;
 
             Assert.NotNull(resultado);
         }
@@ -89,7 +92,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var reportes = new ParamReportes() { ComercialActual = 1 };
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha, fecha)).Returns(new List<ExcelPosicionMaterialDto>());
 
-            var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018");
+            var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018", "centro");
             Assert.NotNull(result);
         }
         [Test]
