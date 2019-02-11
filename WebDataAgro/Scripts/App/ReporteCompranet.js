@@ -114,22 +114,25 @@ function CrearGraficoHedgeObjetivo(data) {
                     label: 'Cumplido',
                     data: [cumplirPricing, cumplirRemitir],
                     backgroundColor: '#92d050',
-                    borderColor: '#4a682a',
-                    borderWidth: 1
-                }, {
+                    borderColor: '#ff1414',
+                    borderWidth: 1,
+                    segmentShowStroke: false
+
+                },{
                     label: 'A Cumplir',
                     data: [objetivoPricing, objetivoRemitir],
-                    backgroundColor: '#ddd', 
-                    borderColor: 'black',
+                    backgroundColor: '#fff', 
+                    borderColor: '#ff1414',
                     borderWidth: 1
                 },
                 {
                     label: 'Excedido',
                     data: [excedidoPricing, excedidoRemitir],
-                    backgroundColor: '#ff1414',
-                    borderColor: '#085200',
+                    backgroundColor: '#92d050',
+                    //borderColor: '#085200',
                     borderWidth: 1
-                }]
+                },
+                ]
         },
         options: {
             legend: {

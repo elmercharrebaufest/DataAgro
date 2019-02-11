@@ -287,6 +287,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusfinalizado)").attr('id', 'border-black');
             $("td:has(div.statusborrado)").attr('id', 'border-grey');
             $("td:has(div.statusreconfirmar)").attr('id', 'border-purple');
+            $("td:has(div.statuseliminado)").attr('id', 'border-grey');
             if (($("#perfil").val() !== "Mesa")) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
             }
@@ -301,16 +302,15 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                if (view[i].DestinoDescripcion != "San Lorenzo") {
-                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
-                            .addClass("otroDestino");                           
-                    }
+                //if (view[i].DestinoDescripcion != "San Lorenzo") {
+                //        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                //            .addClass("otroDestino");                           
+                //    }
             }
             filasSeleccionadas = {};
 
         },
 
-        attributes: { "class": "# if(data.DestinoDescripcion === 'San Lorenzo') { # destinoSanLorenzo # } else { # otroDestino # } #" },
         columns: [
             { selectable: true, width: "50px" },
             {
@@ -942,6 +942,11 @@ function ObtenerDatosModalBorrado() {
         objConfirmado.contratoId = $("#contratoModalBorrar").val();
         if ($("#estadoModalBorrar").val() == '5') {
             result = MSExecuteOnServer('/CompraNet/AnularContrato', objConfirmado);
+
+            if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores) && result.Errores[0].Message.indexOf("SIO") >= 0) {
+                MensInfo(result.Errores[0].Message);
+                return;
+            }
         } else {
             result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
         }

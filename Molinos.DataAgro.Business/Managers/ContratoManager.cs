@@ -36,13 +36,15 @@ namespace Molinos.DataAgro.Business.Managers
         private IProveedorManager mobjProveedorManager;
         private IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
+        private IDiferencialManager diferencialManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
             ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
             ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager,
-            IPushNotificationManager oMSNotification)
+            IPushNotificationManager oMSNotification,
+            IDiferencialManager diferencialManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -54,6 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
             mobjComercialManager = oMSComercialManager;
             mobjTipoNegocioManager = oMSTipoNegocioManager;
             mobjNotification = oMSNotification;
+            this.diferencialManager = diferencialManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
@@ -485,7 +488,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave.ContratoId == 0)
             {
-                repositorio.Agregar(oContratoSave);
+                repositorio.Agregar(oContratoSave);                
             }
 
             if (rangosConfirmacionAutomaticaExistentes.Count >= 1)
@@ -498,6 +501,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             repositorio.GuardarCambios();
+        
             return oEntityErrors;
         }
 
@@ -524,7 +528,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
                 repositorio.GuardarCambios();
-                var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
+                var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.ComercialId.Value);
                 try
                 {
                     foreach (var comercialId in comerciales)
@@ -631,6 +635,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             repositorio.GuardarCambios();
+            diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
             return oEntityErrors;
         }
 
@@ -1057,8 +1062,20 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (respuesta.Contains("SIO"))
                     {
-                        var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
-                        EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
+                        try
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                            repositorio.GuardarCambios();
+                            var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
+                            EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
+                            oEntityErrors.Error("", $"El contrato {oContratoSave.ContratoSAP} se anuló correctamente, pero debe ser anulado también en SIO");
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(e);
+                            oEntityErrors.Error("", e.Message);
+
+                        }
                     }
                     oEntityErrors.Error("", respuesta);
                 }
@@ -1068,6 +1085,9 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
+                        var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
+                        var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
                     }
                     catch(Exception e)
                     {
@@ -1075,9 +1095,6 @@ namespace Molinos.DataAgro.Business.Managers
                         oEntityErrors.Error("", e.Message);
 
                     }
-                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
-                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                    mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
                 }                
             }
             else
@@ -1166,9 +1183,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
+            Comercial comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             string htmlBody = "";
-            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP +" de  SIO Granos <br /><br />  ";
-            htmlBody += "<br /><br /> Por favor anularlos a la brevedad y comunicarse con "+ idActiveDirectory +
+            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP + " de  SIO Granos <br /><br />  ";
+            htmlBody += "<br /><br /> Por favor anularlos a la brevedad y comunicarse con " + comercial.Nombres + " " + comercial.Apellido +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +

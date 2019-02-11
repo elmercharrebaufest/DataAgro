@@ -169,7 +169,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CerrarDiaTest()
         {
-            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null,false, string.Empty, 100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null,false, string.Empty,100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ToneladasGranoTipoDto>());

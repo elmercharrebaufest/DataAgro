@@ -39,6 +39,7 @@
                 {
                     var hora = Model.HedgeTC.HedgeTC[i].Fecha.TimeOfDay.ToString("hh\\:mm");
                     var TC = Model.HedgeTC.HedgeTC[i].TC.ToString("n0");
+                    var HedgePesos = Model.HedgeTC.HedgeTC[i].HedgePesos.ToString("n0");
                     <tr>
                         <td>
                             @Html.DisplayFor(model => hora)
@@ -47,7 +48,7 @@
                             @Html.DisplayFor(model => TC)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].HedgePesos)
+                            @Html.DisplayFor(model => HedgePesos)
                         </td>
                         <td>
                             @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].Comercial)
@@ -72,8 +73,8 @@
                 </tr>
                 <tr>
                     <th>Total</th>
-                    <td>@Model.HedgeTC.TotalTC.ToString("N2")</td>
-                    <td>@Model.HedgeTC.TotalHedge.ToString("N2")</td>
+                    <td>@Model.HedgeTC.TotalTC.ToString("N0")</td>
+                    <td>@Model.HedgeTC.TotalHedge.ToString("N0")</td>
                 </tr>
             </tbody>
         </table>
