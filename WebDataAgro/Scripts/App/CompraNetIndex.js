@@ -942,11 +942,6 @@ function ObtenerDatosModalBorrado() {
         objConfirmado.contratoId = $("#contratoModalBorrar").val();
         if ($("#estadoModalBorrar").val() == '5') {
             result = MSExecuteOnServer('/CompraNet/AnularContrato', objConfirmado);
-
-            if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores) && result.Errores[0].Message.indexOf("SIO") >= 0) {
-                MensInfo(result.Errores[0].Message);
-                return;
-            }
         } else {
             result = MSExecuteOnServer('/CompraNet/BorrarContrato', objConfirmado);
         }
