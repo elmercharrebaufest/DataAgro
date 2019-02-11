@@ -359,7 +359,7 @@ namespace WebDataAgro.Controllers
                 htmlBody += " <table style=\" width: 25%; border-collapse:unset;\">";
                 htmlBody += "     <tr>";
                 htmlBody += "         <td style=\" " + datoCentro + " \" >Hedge TC: $" + model.TCPromedioDto.PromedioTC.ToString("N0") + "</td>";
-                htmlBody += "         <td style=\" " + datoCentro + " \">$" + model.TCPromedioDto.TotalTC.ToString("N0") + " MM</td>";
+                htmlBody += "         <td style=\" " + datoCentro + " \">$" + model.TCPromedioDto.TotalTC.ToString("N0") + "</td>";
                 htmlBody += "     </tr>";
                 htmlBody += "</table>";
 

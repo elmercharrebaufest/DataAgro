@@ -592,7 +592,7 @@ namespace WebDataAgro.Helpers.Excel
             }
       
             CrearCelda(row, iC + 7, "Hedge TC: $" + model.TCPromedioDto.PromedioTC.ToString("n2"), cellBorderStyleColumnTitles);
-            CrearCelda(row, iC + 8, "$" + model.TCPromedioDto.TotalTC.ToString("n2") + " MM", cellBorderStyleColumnTitles);
+            CrearCelda(row, iC + 8, "$" + model.TCPromedioDto.TotalTC.ToString("n2"), cellBorderStyleColumnTitles);
 
         }
         private static void CrearTablaAgenteDeCompras(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model)

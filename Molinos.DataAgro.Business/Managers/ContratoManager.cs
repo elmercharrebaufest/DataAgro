@@ -1062,20 +1062,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (respuesta.Contains("SIO"))
                     {
-                        try
-                        {
-                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
-                            repositorio.GuardarCambios();
-                            var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
-                            EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
-                            oEntityErrors.Error("", $"El contrato {oContratoSave.ContratoSAP} se anuló correctamente, pero debe ser anulado también en SIO");
-                        }
-                        catch (Exception e)
-                        {
-                            logger.Error(e);
-                            oEntityErrors.Error("", e.Message);
-
-                        }
+                        var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
+                        EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
                     }
                     oEntityErrors.Error("", respuesta);
                 }
@@ -1085,17 +1073,17 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
-                        var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
-                        var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         logger.Error(e);
                         oEntityErrors.Error("", e.Message);
 
                     }
-                }                
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
+                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                    mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
+                }
             }
             else
             {
