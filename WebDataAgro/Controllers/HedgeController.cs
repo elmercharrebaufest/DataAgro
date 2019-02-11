@@ -374,40 +374,74 @@ namespace WebDataAgro.Controllers
                 htmlBody += "<tr>";
                 htmlBody += "<td style=\"  " + titulo + " \"></td>";
 
-                htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + 3 + "\">DISPONIBLE</th>";
-                htmlBody += "<th  style=\"  " + titulo + " \" rowspan=\" " + 2 + "\">TOTAL DISP</th>";
+                if (disp != 0)
+                {
+                    htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + (disp) + "\">DISPONIBLE</th>";
+                    htmlBody += "<th  style=\"  " + titulo + " \" rowspan=\" " + 2 + "\">TOTAL DISP</th>";
+                }
 
-                htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">FORWARD</th>";
-                htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL FORWARD</th>";
+                if (forw != 0)
+                {
+                    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + (forw) + "\">FORWARD</th>";
+                    htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL FORWARD</th>";
+                }
 
-                htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">NEW CROP</th>";
-                htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL NEW CROP</th>";
+                if (newc != 0)
+                {
+                    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + (newc) + "\">NEW CROP</th>";
+                    htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL NEW CROP</th>";
+                }
 
                 htmlBody += "</tr>";
                 htmlBody += "<tr>";
                 htmlBody += "<th  style=\" " + titulo + "\">PRODUCTO</th>";
 
-                htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
+                if (dispAFijar)
+                {
+                    htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
+                }
 
-                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+                if (dispAPrecio)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+                }
 
-                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
-
-
-
-                htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
-
-                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
-
-                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+                if (dispFijacion || dispFason)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+                }
 
 
+                if (forwAFijar)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+                }
 
-                htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+                if (forwAPrecio)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+                }
 
-                htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+                if (forwFason || forwFijacion)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+                }
 
-                htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+
+                if (newcAFijar)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+                }
+
+                if (newcAPrecio)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+                }
+
+                if (newcFason || newcFijacion)
+                {
+                    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+                }
 
 
 
@@ -420,20 +454,60 @@ namespace WebDataAgro.Controllers
                     {
                         htmlBody += "<tr>";
                         htmlBody += " <th  style=\" " + datoIzquierda + " \" >" + toneladaPrecio.Material + "</th>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAFijar + toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
 
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwAFijar + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+                        //DISPONIBLE
+                        if (dispAFijar)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>";
+                        }
+                        if (dispAPrecio)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>";
+                        }
+                        if (dispFason || dispFijacion)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+                        }
+                        if (disp != 0)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAFijar + toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+                        }
 
-                        htmlBody += "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewAFijar + toneladaPrecio.NewAPrecio + toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+                        //FORWARD
+                        if (forwAFijar)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>";
+                        }
+                        if (forwAPrecio)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>";
+                        }
+                        if (forwFason || forwFijacion)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+                        }
+                        if (forw != 0)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwAFijar + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+                        }
+
+                        //NEW CROP
+                        if (newcAFijar)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>";
+                        }
+                        if (newcAPrecio)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>";
+                        }
+                        if (newcFason || newcFijacion)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+                        }
+                        if (newc != 0)
+                        {
+                            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewAFijar + toneladaPrecio.NewAPrecio + toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+                        }
 
                         htmlBody += "</tr>";
                     }

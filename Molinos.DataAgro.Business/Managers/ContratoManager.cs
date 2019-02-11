@@ -1173,7 +1173,7 @@ namespace Molinos.DataAgro.Business.Managers
             res.ContentId = Guid.NewGuid().ToString();
             Comercial comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             string htmlBody = "";
-            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP + " de  SIO Granos <br /><br />  ";
+            htmlBody += "Por el presente mail, se solicita anular el contrato " + contrato.ContratoSAP.TrimStart('0') + " de  SIO Granos <br /><br />  ";
             htmlBody += "<br /><br /> Por favor anularlos a la brevedad y comunicarse con " + comercial.Nombres + " " + comercial.Apellido +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +

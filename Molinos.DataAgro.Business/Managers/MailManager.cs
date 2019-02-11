@@ -36,11 +36,6 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
-                //string emailComercial = "";
-                //if (desde != null)
-                //{
-                //    try { emailComercial = GetEmailUserActiveDirectory(desde.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
-                //}
                 var oMensaje = CrearMailBase(cuerpo, asunto, enviarA);
                 if (copia != null)
                 {
@@ -103,7 +98,6 @@ namespace Molinos.DataAgro.Business
 
         private MailMessage CrearMailBase(string cuerpo, string asunto, List<string> enviarA)
         {
-
             MailMessage oMensaje = new MailMessage
             {
                 From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]),
@@ -125,7 +119,6 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
-
                 SmtpClient oCliente = default(SmtpClient);
                 int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
@@ -136,7 +129,6 @@ namespace Molinos.DataAgro.Business
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
                 }
-
                 if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
                 {
                     oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
@@ -205,14 +197,11 @@ namespace Molinos.DataAgro.Business
                 GemBox.Email.MailMessage replyMessage = new GemBox.Email.MailMessage(
                     originalMessage.From[0],
                     originalMessage.To.ToArray());
-
                 replyMessage.MimeEntity.Headers.Add(
                     new Header(HeaderId.InReplyTo, originalMessage.Id));
                 replyMessage.MimeEntity.Headers.Add(
                     new Header(HeaderId.References, originalMessage.Id));
-
                 replyMessage.Subject = asuntoNuevoMail;
-
                 replyMessage.BodyHtml = cuerpo;
 
                 // Append original message text.
@@ -239,9 +228,9 @@ namespace Molinos.DataAgro.Business
                     smtp.SendMessage(replyMessage);
                 }
             }
-            catch (Exception diego)
+            catch (Exception e)
             {
-                var eeeee = diego;
+                logger.Error("Error reenvio de mail", e);
             }
         }
     }
