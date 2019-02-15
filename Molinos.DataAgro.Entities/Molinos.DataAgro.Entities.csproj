@@ -77,6 +77,7 @@
     <Compile Include="Dto\AbmMoneda.cs" />
     <Compile Include="Dto\AgenteCompraDto.cs" />
     <Compile Include="Dto\AreaInfluenciaDto.cs" />
+    <Compile Include="Dto\ContratoCopiar.cs" />
     <Compile Include="Dto\BusquedaLocalidad.cs" />
     <Compile Include="Dto\CalidadEspecialDto.cs" />
     <Compile Include="Dto\CampaniaActual.cs" />

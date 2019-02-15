@@ -27,36 +27,38 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-        public ActionResult PartialReporteCompraNet(string fechaString, string fechaHastaString, string centroNombre)
+        public ActionResult PartialReporteCompraNet(string fechaString, string fechaHastaString, string centroId = "0")
         {
             ViewBag.Fecha = fechaString;
             ViewBag.FechaHasta = fechaHastaString;
+            ViewBag.CentroSeleccionado = centroId;
             DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var model = ObtenerDatosReporte(fechaDesde, fechaHasta, centroNombre);
+            var model = ObtenerDatosReporte(fechaDesde, fechaHasta, centroId ?? "0");
             return PartialView("_ReporteCompraNet", model);
 
         }
-        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
+        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion, string centroId = "0")
         {
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion);
+            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion, int.Parse(centroId));
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
-
-        public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString, string centroNombre)
+        public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString, string centroId = "0")
         {
             DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var model = ObtenerDatosReporte(fechaDesde, fechaHasta, centroNombre);
+            var model = ObtenerDatosReporte(fechaDesde, fechaHasta, centroId ?? "0");
             var posicion = mobjReportesManager.PosicionPorMaterial(fechaDesde, fechaHasta);
             return File(ExcelReporteCompleto.GenerarExcel(model, posicion, fechaDesde == fechaHasta), "application/vnd.ms-excel");
         }
 
-        private ReporteCompraNetModel ObtenerDatosReporte(DateTime fechaDesde, DateTime fechaHasta, string centroNombre)
+        private ReporteCompraNetModel ObtenerDatosReporte(DateTime fechaDesde, DateTime fechaHasta, string centroId)
         {
-            var agentes = mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta);
+            int idCentro = int.Parse(centroId);
+            bool filtrarAcopio = idCentro == 0 || idCentro == 1;
+            var agentes = filtrarAcopio ? mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta) : new List<AgenteCompraDto>();
             var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
             agentes.ForEach(x => x.Operador.ForEach(y => y.Cantidad = y.Cantidad));
 
@@ -67,9 +69,9 @@ namespace WebDataAgro.Controllers
             objetivos.RemitirObjetivo = objetivos.RemitirObjetivo;
             return new ReporteCompraNetModel
             {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta),
-                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta),
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta, idCentro),
+                SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta, idCentro),
                 PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta),
                 HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta)),
                 HedgeObjetivo = objetivos,
@@ -93,18 +95,18 @@ namespace WebDataAgro.Controllers
             return lista;
         }
 
-        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion)
+        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion, string centroId = "0")
         {
             DateTime fecha;
             DateTime.TryParse(fechaString, out fecha);
             DateTime fechaHasta;
             DateTime.TryParse(fechaHastaString, out fechaHasta);
-            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, clasificacion), JsonRequestBehavior.AllowGet);
+            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
         }
         public ExcelResult ExcelAgente(string fechaString)
         {
             DateTime fecha;
-            DateTime.TryParseExact(fechaString,"dd-MM-yyyy", CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha);
+            DateTime.TryParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fecha);
             var detalle = mobjReportesManager.DetalleAgente(fecha);
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
@@ -117,7 +119,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult ObtenerCentros()
         {
-            return Json(JsonConvert.SerializeObject(new { data = centroManager.TraerTodoCentro().Centro}), JsonRequestBehavior.AllowGet);
+            return Json(JsonConvert.SerializeObject(new { data = centroManager.TraerTodoCentro().Centro }), JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -908,6 +908,7 @@
     <Content Include="Scripts\App\agregarproveedor.js" />
     <Content Include="Scripts\App\agregarproveedoredit.js" />
     <Content Include="Scripts\App\CompraNetIndex.js" />
+    <Content Include="Scripts\App\CopiarContrato.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\detalleCorredor.js" />

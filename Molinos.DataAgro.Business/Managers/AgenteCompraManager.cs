@@ -105,6 +105,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.MonedaId = oAgente.MonedaId;
                 oFasonSave.MaterialId = oAgente.MaterialId;
                 oFasonSave.Posicion = oAgente.Posicion;
+                oFasonSave.ComercialCreadorId = oAgente.ComercialCreadorId;
             }
             else
             {

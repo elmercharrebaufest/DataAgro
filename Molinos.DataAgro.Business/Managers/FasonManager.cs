@@ -114,6 +114,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.FechaDesde = oFason.FechaDesde;
                 oFasonSave.FechaHasta = oFason.FechaHasta;
                 oFasonSave.Especial = oFason.Especial;
+                oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
             }
             else
             {

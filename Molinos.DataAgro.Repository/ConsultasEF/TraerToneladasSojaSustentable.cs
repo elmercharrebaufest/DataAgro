@@ -12,10 +12,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
-        public TraerToneladasSojaSustentable(DateTime fechaDesde, DateTime fechaHasta)
+        private readonly int centroId;
+        public TraerToneladasSojaSustentable(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
         {
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
+            this.centroId = centroId;
         }
 
         public ReporteSojaSustDto Ejecutar(DbContext contexto)
@@ -24,7 +26,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
 
-            return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null))
+            return contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null) && (centroId == 0 || x.DestinoId == centroId))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ReporteSojaSustDto()
                 {

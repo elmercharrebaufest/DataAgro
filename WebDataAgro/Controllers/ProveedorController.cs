@@ -18,7 +18,7 @@ namespace WebDataAgro.Controllers
         private IHomeManager mobjHomeManager;
         private ICampañaManager mobjCampañaManager;
         private ILocalidadManager mobjLocalidadManager;
-        
+
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
         //-----------------------------------------------------
@@ -27,7 +27,7 @@ namespace WebDataAgro.Controllers
 
         public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager oReportesManager, ILocalidadManager oLocalidadManager)
         {
-            
+
             mobjProveedorManager = oProveedorManager;
             mobjHomeManager = oHomeManager;
             mobjCampañaManager = oCampañaManager;
@@ -39,7 +39,7 @@ namespace WebDataAgro.Controllers
 
         // GET: Contactos
         public ActionResult Index()
-        {            
+        {
             return View();
         }
 
@@ -52,11 +52,11 @@ namespace WebDataAgro.Controllers
 
             return View();
         }
-        
+
 
         public ActionResult Agregar(int? ProveedorId)
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
+            if (GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 return RedirectToAction("Index", "Error");
             }
@@ -64,7 +64,7 @@ namespace WebDataAgro.Controllers
             {
                 ViewBag.ProveedorId = ProveedorId;
                 return View();
-            }            
+            }
 
         }
 
@@ -142,17 +142,17 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Detalle(int ProveedorId, bool? Agenda)
         {
-            string ActionView  = "";
+            string ActionView = "";
             bool mostrarEditar = true;
-            
+
 
             if (!mobComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
             }
 
-            
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
+
+            if ((GlobalVariables.Perfil == EnumPerfil.Administrativo && !mobjProveedorManager.ValidarProveedorEsCorredor(ProveedorId)) || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 mostrarEditar = false;
                 ViewBag.edita = false;
@@ -183,7 +183,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjProveedorManager.TraerDatosCombo(proveedorId),
+                Data = mobjProveedorManager.TraerDatosCombo(proveedorId, GlobalVariables.Perfil == EnumPerfil.Administrativo),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -221,7 +221,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult TraerRazonSocial(string cuit)
         {
             return new JsonResult()
@@ -287,7 +287,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public async Task<ActionResult> ImprimirReporteProveedor(int ProveedorId)
         {
             var model = new ReportesModel();
@@ -299,7 +299,7 @@ namespace WebDataAgro.Controllers
             var identif = oLstProveedor.GenerarListado(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
-            
+
             return new JsonResult()
             {
                 Data = model,
@@ -324,24 +324,24 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public JsonResult BuscarCorredores(string filtro,bool corredor)
+        public JsonResult BuscarCorredores(string filtro, bool corredor)
         {
             return Json(mobjProveedorManager.DevolverProveedores(filtro, corredor), JsonRequestBehavior.AllowGet);
         }
         public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, bool corredor)
         {
-                if (filtro == "")
+            if (filtro == "")
             {
                 return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, corredor), JsonRequestBehavior.AllowGet);
             }
-        else
-            { 
-                return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor,filtro), JsonRequestBehavior.AllowGet);
+            else
+            {
+                return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor, filtro), JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult BuscarLocalidades(string filtro)
         {
-           return Json(mobjLocalidadManager.DevolverLocalidades(filtro), JsonRequestBehavior.AllowGet);
+            return Json(mobjLocalidadManager.DevolverLocalidades(filtro), JsonRequestBehavior.AllowGet);
         }
         public JsonResult TraerProveedoresCorredor(int ProveedorId)
         {

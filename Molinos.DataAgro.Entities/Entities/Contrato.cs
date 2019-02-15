@@ -105,6 +105,9 @@ namespace Molinos.DataAgro.Entities.Entities
         [InverseProperty("Contrato")]
         public ICollection<Calidad> Calidad { get; set; }
 
+        [ForeignKey("GrupoCompra")]
+        public virtual GrupoDeCompras GrupoDeCompras { get; set; }
+
         public Contrato()
         {
             Cantidad = 0;
