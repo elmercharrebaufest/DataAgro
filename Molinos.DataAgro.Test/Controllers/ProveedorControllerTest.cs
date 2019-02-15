@@ -126,11 +126,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void IniciliazarTest()
         {
-            proveedorManagerMock.Setup(x => x.TraerDatosCombo(1, true)).Returns(new DatosIniProveedor());
+            proveedorManagerMock.Setup(x => x.TraerDatosCombo(1, false)).Returns(new DatosIniProveedor());
 
             var result = target.Iniciliazar(1);
 
-            proveedorManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int>(), true), Times.Once);
+            proveedorManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int>(), false), Times.Once);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

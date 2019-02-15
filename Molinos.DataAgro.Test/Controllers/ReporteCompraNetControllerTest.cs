@@ -49,14 +49,14 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var fecha = new DateTime(2018, 10, 26);
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha)).Returns(new List<ToneladasGranoTipoDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, 0)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, 0)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());
-            var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018", "centro") as PartialViewResult;
+            var resultado = target.PartialReporteCompraNet("26-10-2018", "26-10-2018", "0") as PartialViewResult;
 
             Assert.NotNull(resultado);
         }
@@ -66,7 +66,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var fecha = new DateTime(2018, 10, 26);
             var reportes = new ParamReportes() { ComercialActual = 1 };
-            reportesManagerMock.Setup(x => x.DetallePosicion(1, 10, 2018, fecha, fecha, null)).Returns(new ExcelDetallePosicionDto()
+            reportesManagerMock.Setup(x => x.DetallePosicion(1, 10, 2018, fecha, fecha, null, 0)).Returns(new ExcelDetallePosicionDto()
             {
                 Headers = new string[] { "1", "2" },
                 Data = new List<string[]>() { new string[] { "a", "b" } },
@@ -82,9 +82,9 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var fecha = new DateTime(2018, 10, 26);
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha)).Returns(new List<AgenteCompraDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha)).Returns(new List<ToneladasGranoTipoDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, 0)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, 0)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var reportes = new ParamReportes() { ComercialActual = 1 };
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha, fecha)).Returns(new List<ExcelPosicionMaterialDto>());
 
-            var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018", "centro");
+            var result = target.ReporteComprasDelDia("26-10-2018", "26-10-2018", "0");
             Assert.NotNull(result);
         }
         [Test]
@@ -100,12 +100,12 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var fecha = new DateTime(2018, 10, 26);
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            reportesManagerMock.Setup(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>())).Returns("");
+            reportesManagerMock.Setup(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>(), 0)).Returns("");
             var result = target.DetalleExcelModal(2, 2018, 1, "26-10-2018", "26-10-2018", true);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            reportesManagerMock.Verify(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>()), Times.Once);
+            reportesManagerMock.Verify(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>(), 0), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);

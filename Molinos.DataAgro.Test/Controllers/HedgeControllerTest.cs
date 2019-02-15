@@ -169,12 +169,12 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CerrarDiaTest()
         {
-            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null,false, string.Empty,100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            
+            hedgeManagerMock.Setup(x => x.CerrarDia(1, null, null, false, string.Empty, 100)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<AgenteCompraDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ToneladasGranoTipoDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeCargaObjetivoDto());
@@ -185,7 +185,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             Assert.NotNull(result);
 
-            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<string>(),It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            hedgeManagerMock.Verify(x => x.CerrarDia(It.IsAny<int>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
         [Test]
@@ -208,15 +208,15 @@ namespace Molinos.DataAgro.Test.Controllers
             hedgeManagerMock.Setup(x => x.ReabrirDia(GlobalVariables.ComercialId, 200)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
 
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<AgenteCompraDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ToneladasGranoTipoDto>());
-            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new List<ToneladasGranoTipoDto>());
+            reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new ReporteSojaSustDto());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(It.IsAny<DateTime>(), It.IsAny<DateTime>(), 0)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeTCPromedioDto());
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ExcelPosicionMaterialDto>());
-            var result = target.ReabrirDia(new HedgeModel { Dia= new FinDelDiaDto { Diferencial = 200 } }) as RedirectToRouteResult;
+            var result = target.ReabrirDia(new HedgeModel { Dia = new FinDelDiaDto { Diferencial = 200 } }) as RedirectToRouteResult;
 
             Assert.NotNull(result);
 
