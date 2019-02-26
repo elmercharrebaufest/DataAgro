@@ -144,7 +144,6 @@ function InicializarElementos() {
             }
             if ($("#buscadorCorredor").val() === "") {
                 if (compraNet.BoletoCompraNetId !== null) {
-                    LimpiarBoleto();
                     if (compraNet.BoletoCompraNetId === 1) {
                         $("#boletoConfirmaId").prop("checked", true);
                         $("#BolsaConfirmaDiv").show();

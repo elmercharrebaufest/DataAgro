@@ -14,14 +14,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
         private readonly bool? calidad;
-        private readonly int centroId;
-        public TraerToneladasPorGrano(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad = null, int centroId = 0)
+        public TraerToneladasPorGrano(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad = null)
         {
             this.materialId = materialId;
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
             this.calidad = calidad;
-            this.centroId = centroId;
         }
 
         public ToneladasGranoTipoDto Ejecutar(DbContext contexto)
@@ -30,7 +28,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var toneladasPorGrano = new ToneladasGranoTipoDto();
-            var query = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (0 == centroId || x.DestinoId == centroId))
+            var query = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
@@ -49,11 +47,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.NewAFijar = query.NewAFijar;
             toneladasPorGrano.NewAPrecio = query.NewAPrecio;
 
-            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (centroId == 0 || centroId == 1))
+            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
-                    DispFijac = x.Where(y => (DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId) || (y.Material.CampañaId > y.CampanaId)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                    DispFijac = x.Where(y => (DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId) || (y.Material.CampañaId > y.CampanaId )).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewFijac = x.Where(y => y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                 }).First();
@@ -62,7 +60,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.FrwFijac = query.FrwFijac;
             toneladasPorGrano.NewFijac = query.NewFijac;
 
-            query = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
+            query = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {

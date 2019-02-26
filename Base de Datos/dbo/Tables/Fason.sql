@@ -16,8 +16,7 @@
 	[FechaDesde] DATETIME NULL, 
     [FechaHasta] DATETIME NULL,
 	[Especial] BIT NULL,
-    [FinDelDiaId] INT NULL,
-	[ComercialCreadorId] INT NULL
+    [FinDelDiaId] INT NULL 
 
     CONSTRAINT [FK_Fason_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),  
     CONSTRAINT [FK_Fason_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),  
@@ -25,6 +24,5 @@
     CONSTRAINT [FK_Fason_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),  
     CONSTRAINT [FK_Fason_Fasonero] FOREIGN KEY (FasoneroId) REFERENCES [Proveedor]([ProveedorId]),
     CONSTRAINT [FK_Fason_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
-	CONSTRAINT [FK_Fason_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
-	CONSTRAINT [FK_Fason_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId])
+	CONSTRAINT [FK_Fason_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id])
 )

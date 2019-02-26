@@ -288,7 +288,7 @@ namespace WebDataAgro.Controllers
             var newcFason = model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
             var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcFason ? 0 : 1);
 
-            var hedgeMat = model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0) ? 1 : 0;
+            var hedgeMat = model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0);
             var hedgeObj = model.HedgeObjetivo.RemitirObjetivo != 0 && model.HedgeObjetivo.PricingObjetivo != 0;
 
             var titulo = " border: 1px solid black; background: #017940; color: white; ";
@@ -308,30 +308,34 @@ namespace WebDataAgro.Controllers
             htmlBody += "<br></br>";
 
 
-            htmlBody += "<table style=\" width: 100%; border-collapse:unset\">";
-            htmlBody += "<tbody>";
-            htmlBody += "<tr style=\" " + colorHedge + " color: white;\">";
-            htmlBody += "<th style=\" border: 1px solid black;\" colspan=\"4\" > HEDGE </th>";
-            htmlBody += "</tr>";
-            htmlBody += "<tr> <th style=\" " + titulo + colorHedge + " \">Producto</th>";
-            htmlBody += "<th style=\" " + titulo + colorHedge + " \">Disponible</th> ";
-            htmlBody += "<th style=\" " + titulo + colorHedge + " \">Forward</th> ";
-            htmlBody += "<th style=\" " + titulo + colorHedge + "\">New Crop</th></tr>";
-            foreach (var mat in model.HedgeMaterial)
+            if (hedgeMat)
             {
-                if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
+                htmlBody += "<table style=\" width: 100%; border-collapse:unset\">";
+                htmlBody += "<tbody>";
+                htmlBody += "<tr style=\" " + colorHedge + " color: white;\">";
+                htmlBody += "<th style=\" border: 1px solid black;\" colspan=\"4\" > HEDGE </th>";
+                htmlBody += "</tr>";
+                htmlBody += "<tr> <th style=\" " + titulo + colorHedge + " \">Producto</th>";
+                htmlBody += "<th style=\" " + titulo + colorHedge + " \">Disponible</th> ";
+                htmlBody += "<th style=\" " + titulo + colorHedge + " \">Forward</th> ";
+                htmlBody += "<th style=\" " + titulo + colorHedge + "\">New Crop</th></tr>";
+                foreach (var mat in model.HedgeMaterial)
                 {
-                    htmlBody += "<tr>";
-                    htmlBody += "<td style=\" " + datoIzquierda + " \" >" + mat.MaterialDescripcion + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Disponible.ToString("n0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Forward.ToString("n0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.NewCrop.ToString("n0") + "</td>";
-                    htmlBody += "</tr>";
-                }
-            };
-            htmlBody += "</tbody>";
-            htmlBody += "</table>";
-            htmlBody += "<br></br>";
+                    if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
+                    {
+                        htmlBody += "<tr>";
+                        htmlBody += "<td style=\" " + datoIzquierda + " \" >" + mat.MaterialDescripcion + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Disponible.ToString("n0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.Forward.ToString("n0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + mat.NewCrop.ToString("n0") + "</td>";
+                        htmlBody += "</tr>";
+                    }
+                };
+                htmlBody += "</tbody>";
+                htmlBody += "</table>";
+                htmlBody += "<br></br>";
+            }
+
 
 
             if (hedgeObj)

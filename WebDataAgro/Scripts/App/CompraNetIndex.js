@@ -195,7 +195,8 @@ function botonVisualizar(dataItem, icono) {
 
         "'" + dataItem.TipoFason + "'" + ',' +
         "'" + dataItem.Posicion + "'" + ',' +
-        "'" + dataItem.Operador + "'" +
+        "'" + dataItem.Operador + "'" + ',' +
+
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -301,10 +302,10 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                if (view[i].DestinoDescripcion != "San Lorenzo" && view[i].DestinoDescripcion != "") {
-                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
-                            .addClass("otroDestino");                           
-                    }
+                //if (view[i].DestinoDescripcion != "San Lorenzo") {
+                //        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                //            .addClass("otroDestino");                           
+                //    }
             }
             filasSeleccionadas = {};
 
@@ -418,18 +419,11 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { 
-                field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" }
-            },
-            {
-                field: "GrupoCompraDescripcion", type: "string", title: "Zona", width: 70,  attributes: { "class": "mobile-xs" }
-            },
+            { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
             },
-            {
-                field: "DestinoDescripcion", type: "string", title: "Destino"
-            },
+            
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
                     multi: true,

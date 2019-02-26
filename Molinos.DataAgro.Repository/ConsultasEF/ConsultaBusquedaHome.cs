@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     (proveedorComercial.Proveedor.CUIT.StartsWith(filtro) ||
                     (contactoComercial.Apellido + " " + contactoComercial.Nombres).StartsWith(filtro) ||
                     (contactoComercial.Nombres + " " + contactoComercial.Apellido).StartsWith(filtro) ||
-                    contactoComercial.Proveedor.RazonSocial.Contains(filtro))
+                    contactoComercial.Proveedor.RazonSocial.StartsWith(filtro))
 
                 group new { contactoComercial } by new
                 {

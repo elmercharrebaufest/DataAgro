@@ -20,8 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime Fecha { get; set; }
         public int ComercialId { get; set; }
         public int EstadoId { get; set; }           
-        public string Fasonero { get; set; }
-        public int? ComercialCreadorId { get; set; }
+        public string Fasonero { get; set; }     
     }
 }
 

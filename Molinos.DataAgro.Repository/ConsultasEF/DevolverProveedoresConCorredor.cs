@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         private static List<BusquedaHome> Query(DbContext contexto, string filtro, string cuitCorredor)
         {
-            var resultado = (from corredorProveedor in contexto.Set<CorredorProveedor>()
+            var resultado = from corredorProveedor in contexto.Set<CorredorProveedor>()
                             join c in contexto.Set<ContactoComercial>() on corredorProveedor.ProveedorId equals c.ProveedorId into rgs
                             from c in rgs.DefaultIfEmpty()
                             where (corredorProveedor.Corredor.CUIT.Contains(cuitCorredor))
@@ -32,9 +32,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 Cuit = provs.Key.Proveedor.CUIT,
                                 RazonSocial = provs.Key.Proveedor.RazonSocial,
                                 Filtro = filtro + "|" + provs.Key.Proveedor.RazonSocial + " (" + provs.Key.Proveedor.CUIT + ")"
-                            }).Distinct().Take(15);
+                            };
 
-            return resultado.ToList();
+            return resultado.Take(15).ToList();
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)

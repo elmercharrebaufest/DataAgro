@@ -20,7 +20,6 @@ namespace Molinos.DataAgro.Entities.Dto
             public string OperadorDesc { get; set; }
             public double Cantidad { get; set; }
         }
-        public int? ComercialCreadorId { get; set; }
     }
 }
 

@@ -20,7 +20,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialId { get; set; }
         public int EstadoId { get; set; }
         public double? Ampliaciones { get; set; }
-        public int? ComercialCreadorId { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("MaterialId")]
@@ -34,8 +33,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
-        [ForeignKey("ComercialCreadorId")]
-        public virtual Comercial ComercialCreador { get; set; }
     }
 }
 

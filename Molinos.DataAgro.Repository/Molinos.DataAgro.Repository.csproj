@@ -96,7 +96,6 @@
   <ItemGroup>
     <Compile Include="ConsultasEF\DevolverProveedores.cs" />
     <Compile Include="ConsultasEF\ConsultaActividadHistoriaTraerPorProveedorId.cs" />
-    <Compile Include="ConsultasEF\DevolverContratos.cs" />
     <Compile Include="ConsultasEF\DevolverProveedoresConCorredor.cs" />
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />

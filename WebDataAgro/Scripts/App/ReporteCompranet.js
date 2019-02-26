@@ -7,10 +7,11 @@ $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     fechaString = ObtenerFechaDesde();
+    url = $('#descargaReporte').attr('href');
+    $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroNombre=' + $("#centroId").val());
     InicializarDate();
     setInterval(Refrescar, 300000);
     CargarComboCentro();
-
 });
 
 function InicializarDate() {
@@ -34,7 +35,7 @@ function InicializarDate() {
             });
             fechaString = $("#fecha").val();
             fechaHastaString = $("#fechaHasta").val();
-            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId());
+            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
         }
     });
     var fechaMax = new Date($("#fecha").val().toString().split('-')[2], parseInt($("#fecha").val().toString().split('-')[1], 10) - 1, $("#fecha").val().toString().split('-')[0]);
@@ -49,7 +50,7 @@ function InicializarDate() {
     $("#fechaHasta").change(function () {
         fechaString = $("#fecha").val();
         fechaHastaString = $("#fechaHasta").val();
-        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId());
+        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
     });
 
 }
@@ -72,15 +73,11 @@ function Refrescar() {
     $("#buscar-reporte").click();
 }
 
-function ObtenerValorCentroId() {
-    return $("#centroId").val() ? $("#centroId").val() : "0";
-}
 
 function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre, mesNombre) {
-    var calidad = materialNombre == "TRIGO CALIDAD";
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
-    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad;
+    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta;
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }
@@ -121,10 +118,10 @@ function CrearGraficoHedgeObjetivo(data) {
                     borderWidth: 1,
                     segmentShowStroke: false
 
-                }, {
+                },{
                     label: 'A Cumplir',
                     data: [objetivoPricing, objetivoRemitir],
-                    backgroundColor: '#fff',
+                    backgroundColor: '#fff', 
                     borderColor: '#ff1414',
                     borderWidth: 1
                 },
@@ -135,7 +132,7 @@ function CrearGraficoHedgeObjetivo(data) {
                     //borderColor: '#085200',
                     borderWidth: 1
                 },
-            ]
+                ]
         },
         options: {
             legend: {
@@ -458,30 +455,18 @@ function CrearCombo(data, idElemento) {
                 data: "data"
             }
         },
-        optionLabel: {
-            Descripcion: "TODOS",
-            Id: "0"
-        },
+        optionLabel: "TODOS",
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function (e) {
-            var fechaString = $("#fecha").val();
-            var fechaHastaString = $("#fechaHasta").val();
-            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId());
-        },
-        dataBound: setearValoresComboDeInicio
+            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroNombre=' + $("#centroId").val());
+        }
     });
-
     $("#" + idElemento).closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#" + idElemento).data("kendoDropDownList");
             dropdownlist.text("");
         }
     });
+    
 }
-
-function setearValoresComboDeInicio() {
-    url = $('#descargaReporte').attr('href');
-    $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroId=' + ObtenerValorCentroId());
-}
-

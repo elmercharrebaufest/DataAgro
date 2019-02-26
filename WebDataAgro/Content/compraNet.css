@@ -598,6 +598,8 @@ body {
     .k-header[data-field*="FechaDesde"],
     .k-header[data-field*="FechaHasta"],
     .k-header[data-field*="TipoNegocio"],
+    .k-header[data-field*="GrupoCompraDescripcion"],
+    .k-header[data-field*="DestinoDescripcion"],
     .mobile-sm {
         display: none;
     }
@@ -651,6 +653,8 @@ body {
         .k-header[data-field*="Fecha"],
         .k-header[data-field*="Precio"],
         .k-header[data-field*="Comercial"],
+        .k-header[data-field*="GrupoCompraDescripcion"],
+        .k-header[data-field*="DestinoDescripcion"],
         .mobile-xs {
             display: none;
         }
