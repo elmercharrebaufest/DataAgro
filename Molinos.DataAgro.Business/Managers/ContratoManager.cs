@@ -584,6 +584,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
+                    diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
 
                     try
                     {
@@ -635,7 +636,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             repositorio.GuardarCambios();
-            diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
             return oEntityErrors;
         }
 
