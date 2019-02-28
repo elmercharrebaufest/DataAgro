@@ -155,6 +155,7 @@ namespace Molinos.DataAgro.Business
                     {
                         var mail = GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
                         enviarAstring.Add(mail);
+                        logger.Info("Se envia el mail cierre del dia a {0}, con idad {1}", mail, comercial.IdActiveDirectory);
                     }
                     catch (Exception e) { logger.Error(e); }
                 }
