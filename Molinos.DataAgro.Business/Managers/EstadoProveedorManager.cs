@@ -23,12 +23,12 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarProveedores()
         {
             try
-            {                
+            {
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
                 logger.Debug("Obteniendo datos de SAP");
-                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), comerciales.Keys.ToList());
+                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string> { "nunezml"});
                 var crearEstadoProvedor = new List<ProveedorEstado>();
 
                 logger.Debug("Resultado: " + list.Count);
