@@ -81,7 +81,7 @@ namespace Molinos.DataAgro.Agent
                 agent.ClientCredentials.UserName.Password = PassSap;
 
                 var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = valor.ToArray() };
-                logger.Debug(rq.ToXml());
+                //logger.Debug(rq.ToXml());
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR(rq);
 
                 return valor1.EX_DATOS.ToList();

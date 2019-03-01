@@ -80,13 +80,13 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         logger.Debug("Actualizar Clientes MOA:" + list.Count);
 
-                        repositorio.GuardarCambios();
                     }
                     catch (Exception e)
                     {
                         logger.Error("FALLO EL USUARIO " + userSap, e);
                     }
                 }
+                repositorio.GuardarCambios();
 
             }
             catch (Exception ex)
