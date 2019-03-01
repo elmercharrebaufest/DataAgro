@@ -20,16 +20,16 @@ namespace Molinos.DataAgro.Business.Managers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        
+
         public void ActualizarProveedores()
         {
             try
             {
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper().Trim());
+                var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
                 var usuariosSap = ConfigurationManager.AppSettings["UsuariosEnSap"].Split(',');
-               
+
                 logger.Debug("Obteniendo datos de SAP");
                 var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), usuariosSap.ToList());
                 var crearEstadoProvedor = new List<ProveedorEstado>();
@@ -41,14 +41,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var estado in list)
                 {
-                    if(!proveedores.ContainsKey(estado.CUIT.ToUpper()))
+                    if (!proveedores.ContainsKey(estado.CUIT.ToUpper()))
                     {
                         logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
                     }
                     var proveedorAgrupados = proveedores[estado.CUIT.ToUpper()];
                     var comercial = comerciales[estado.USUARIO.ToUpper()];
-                    
-                    foreach(var proveedor in proveedorAgrupados)
+
+                    foreach (var proveedor in proveedorAgrupados)
                     {
                         var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
                         if (proveedorEstado != null)
@@ -67,20 +67,21 @@ namespace Molinos.DataAgro.Business.Managers
                         proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                     }
                 }
+
                 logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
                 if (crearEstadoProvedor.Count > 0)
                 {
                     repositorio.AgregarTodos(crearEstadoProvedor);
                 }
                 logger.Debug("Actualizar Clientes MOA:" + list.Count);
-                
+
                 repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 throw;
-            }            
+            }
         }
 
         private Proveedor TraerComercial(string CUIT)
