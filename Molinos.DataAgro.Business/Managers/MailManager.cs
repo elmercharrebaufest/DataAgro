@@ -177,7 +177,20 @@ namespace Molinos.DataAgro.Business
             {
                 GemBox.Email.ComponentInfo.SetLicense("FREE-LIMITED-KEY");
                 GemBox.Email.MailMessage originalMessage;
-                using (ImapClient imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"]))
+
+                ImapClient imap = default(ImapClient);
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["ImapServerPort"], out Condicion))
+                {
+                    imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"], int.Parse(ConfigurationManager.AppSettings["ImapServerPort"]));
+                }
+                else
+                {
+                    imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"]);
+                }
+
+
+                using (imap)
                 {
                     imap.Connect();
                     imap.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
@@ -207,13 +220,11 @@ namespace Molinos.DataAgro.Business
 
                 // Append original message text.
                 replyMessage.BodyHtml +=
-                    $"<div>On {originalMessage.Date:G}, {originalMessage.From[0].Address} wrote:</div>" +
+                    $"<div>{originalMessage.Date:G}, {originalMessage.From[0].Address} Escribió:</div>" +
                     $"<blockquote>{originalMessage.BodyHtml}</blockquote>";
-
-
+                
                 // Send reply email.
                 GemBox.Email.Smtp.SmtpClient smtp;
-                int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
                 {
                     smtp = new GemBox.Email.Smtp.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));

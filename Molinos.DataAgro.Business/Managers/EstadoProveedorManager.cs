@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Business.Managers
             {                
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper().Trim());
+                var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
                 logger.Debug("Obteniendo datos de SAP");
                 var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), comerciales.Keys.ToList());
                 var crearEstadoProvedor = new List<ProveedorEstado>();
@@ -42,24 +42,27 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
                     }
-                    var proveedor = proveedores[estado.CUIT.ToUpper()];
+                    var proveedorAgrupados = proveedores[estado.CUIT.ToUpper()];
                     var comercial = comerciales[estado.USUARIO.ToUpper()];
                     
-                    var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
-                    if(proveedorEstado != null)
+                    foreach(var proveedor in proveedorAgrupados)
                     {
-                        proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
-                    }
-                    else
-                    {
-                        crearEstadoProvedor.Add(new ProveedorEstado
+                        var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
+                        if (proveedorEstado != null)
                         {
-                            ComercialId = comercial.ComercialId,
-                            EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
-                            ProveedorId = proveedor.ProveedorId
-                        });
+                            proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
+                        }
+                        else
+                        {
+                            crearEstadoProvedor.Add(new ProveedorEstado
+                            {
+                                ComercialId = comercial.ComercialId,
+                                EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
+                                ProveedorId = proveedor.ProveedorId
+                            });
+                        }
+                        proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                     }
-                    proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                 }
                 logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
                 if (crearEstadoProvedor.Count > 0)
