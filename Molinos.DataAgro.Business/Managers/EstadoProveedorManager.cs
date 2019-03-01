@@ -30,52 +30,64 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
                 var usuariosSap = ConfigurationManager.AppSettings["UsuariosEnSap"].Split(',');
 
-                logger.Debug("Obteniendo datos de SAP");
-                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), usuariosSap.ToList());
-                var crearEstadoProvedor = new List<ProveedorEstado>();
-
-                logger.Debug("Resultado: " + list.Count);
-                var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
-                var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
-                var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper().Trim()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper().Trim()));
-
-                foreach (var estado in list)
+                foreach (string userSap in usuariosSap)
                 {
-                    if (!proveedores.ContainsKey(estado.CUIT.ToUpper()))
+                    try
                     {
-                        logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
-                    }
-                    var proveedorAgrupados = proveedores[estado.CUIT.ToUpper()];
-                    var comercial = comerciales[estado.USUARIO.ToUpper()];
+                        logger.Debug("Obteniendo datos de SAP" + userSap);
 
-                    foreach (var proveedor in proveedorAgrupados)
-                    {
-                        var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
-                        if (proveedorEstado != null)
+                        var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
+                        var crearEstadoProvedor = new List<ProveedorEstado>();
+
+                        logger.Debug("Resultado: " + list.Count);
+                        var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
+                        var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
+                        var proveedoresEstado = repositorio.Listar<ProveedorEstado>(x => proveedoresCuit.Contains(x.Proveedor.CUIT.ToUpper().Trim()) && comercialesAd.Contains(x.Comercial.IdActiveDirectory.ToUpper().Trim()));
+
+                        foreach (var estado in list)
                         {
-                            proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
-                        }
-                        else
-                        {
-                            crearEstadoProvedor.Add(new ProveedorEstado
+                            if (!proveedores.ContainsKey(estado.CUIT.ToUpper()))
                             {
-                                ComercialId = comercial.ComercialId,
-                                EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
-                                ProveedorId = proveedor.ProveedorId
-                            });
+                                logger.Debug("El proveedor " + proveedores[estado.CUIT.ToUpper()] + " no existe en la base");
+                            }
+                            var proveedorAgrupados = proveedores[estado.CUIT.ToUpper()];
+                            var comercial = comerciales[estado.USUARIO.ToUpper()];
+
+                            foreach (var proveedor in proveedorAgrupados)
+                            {
+                                var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
+                                if (proveedorEstado != null)
+                                {
+                                    proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
+                                }
+                                else
+                                {
+                                    crearEstadoProvedor.Add(new ProveedorEstado
+                                    {
+                                        ComercialId = comercial.ComercialId,
+                                        EstadoId = estados[estado.STATUS.ToLower()].EstadoId,
+                                        ProveedorId = proveedor.ProveedorId
+                                    });
+                                }
+                                proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
+                            }
                         }
-                        proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
+
+                        logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
+                        if (crearEstadoProvedor.Count > 0)
+                        {
+                            repositorio.AgregarTodos(crearEstadoProvedor);
+                        }
+                        logger.Debug("Actualizar Clientes MOA:" + list.Count);
+
+                        repositorio.GuardarCambios();
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error("FALLO EL USUARIO " + userSap, e);
                     }
                 }
 
-                logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
-                if (crearEstadoProvedor.Count > 0)
-                {
-                    repositorio.AgregarTodos(crearEstadoProvedor);
-                }
-                logger.Debug("Actualizar Clientes MOA:" + list.Count);
-
-                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {
