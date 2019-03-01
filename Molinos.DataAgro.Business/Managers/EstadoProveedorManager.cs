@@ -5,6 +5,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -26,9 +27,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
-                var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
+                var proveedores = repositorio.Listar<Proveedor>().ToDictionary(x => x.CUIT.ToUpper().Trim());
+                var usuariosSap = ConfigurationManager.AppSettings["UsuariosEnSap"].Split(',');
+               
                 logger.Debug("Obteniendo datos de SAP");
-                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string> { "nunezml"});
+                var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), usuariosSap.ToList());
                 var crearEstadoProvedor = new List<ProveedorEstado>();
 
                 logger.Debug("Resultado: " + list.Count);
