@@ -69,9 +69,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                             }
-                            logger.Debug("Actualizar Clientes MOA:" + list.Count);
-
                         }
+
+                        logger.Debug("Actualizar Clientes MOA:" + list.Count);
                     }
                     catch (Exception e)
                     {
