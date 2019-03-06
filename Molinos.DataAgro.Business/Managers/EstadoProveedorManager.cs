@@ -28,17 +28,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var comerciales = repositorio.Listar<Comercial>().ToDictionary(x => x.IdActiveDirectory.ToUpper().Trim());
                 var estados = repositorio.Listar<Estado>().ToDictionary(x => x.Descripcion.ToLower());
                 var proveedores = repositorio.Listar<Proveedor>().GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
-                var usuariosSap = ConfigurationManager.AppSettings["UsuariosEnSap"].Split(',');
-
-                foreach (string userSap in usuariosSap)
+                var crearEstadoProvedor = new List<ProveedorEstado>();
+                foreach (string userSap in comerciales.Keys)
                 {
                     try
                     {
                         logger.Debug("Obteniendo datos de SAP" + userSap);
 
                         var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
-                        var crearEstadoProvedor = new List<ProveedorEstado>();
-
+                        
                         logger.Debug("Resultado: " + list.Count);
                         var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
                         var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
@@ -71,20 +69,20 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 proveedor.ClienteMOA = !string.IsNullOrEmpty(estado.CLIENTE_MOA) ? true : false;
                             }
-                        }
+                            logger.Debug("Actualizar Clientes MOA:" + list.Count);
 
-                        logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
-                        if (crearEstadoProvedor.Count > 0)
-                        {
-                            repositorio.AgregarTodos(crearEstadoProvedor);
                         }
-                        logger.Debug("Actualizar Clientes MOA:" + list.Count);
-
                     }
                     catch (Exception e)
                     {
                         logger.Error("FALLO EL USUARIO " + userSap, e);
                     }
+                }
+
+                logger.Debug("ActualizarProveedores - Proveedores a actualizar: " + crearEstadoProvedor.Count);
+                if (crearEstadoProvedor.Count > 0)
+                {
+                    repositorio.AgregarTodos(crearEstadoProvedor);
                 }
                 repositorio.GuardarCambios();
 
