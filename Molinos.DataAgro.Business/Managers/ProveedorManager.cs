@@ -2484,7 +2484,9 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             resultado = ValidarProveedor(nuevoProveedor, resultado);
 
-                            repositorio.Agregar(nuevoProveedorParaCorredor);
+                            var entidad = repositorio.Agregar(nuevoProveedorParaCorredor);
+                            repositorio.GuardarCambios();
+                            proveedor.ProveedorId = entidad.ProveedorId;
                         }
                     }
                     catch (Exception ex)
