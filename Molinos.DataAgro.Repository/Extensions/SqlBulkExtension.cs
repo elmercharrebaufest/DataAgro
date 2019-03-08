@@ -9,10 +9,9 @@ namespace Molinos.DataAgro.Repository
     {
         public static void SqlBulkInsert(this DbContext session, DataTable dataTable, string tableName)
         {
-            var conn = (SqlConnection)session.Database.Connection;
+            var conn = session.Database.Connection.ConnectionString;
             using (var copy = new SqlBulkCopy(conn))
             {
-                conn.Open();
                 copy.BulkCopyTimeout = 10000;
                 copy.DestinationTableName = tableName;
                 foreach (DataColumn column in dataTable.Columns)
@@ -21,7 +20,6 @@ namespace Molinos.DataAgro.Repository
                 }
 
                 copy.WriteToServer(dataTable);
-                copy.Close();
             }
         }
         

@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var a = new List<string>();
             var ayer = DateTime.Now.AddDays(-1);
-            var oProveedor = repositorio.Listar<Proveedor,string>(x => x.CUIT,x=> x.FechaAlta >= ayer);
+            var oProveedor = repositorio.Listar<Proveedor,string>(x => x.CUIT,x=> x.FechaAlta >= ayer).Distinct().ToList();
             var oComercial = repositorio.Listar<Comercial>();
 
             var listProve = new List<ComprasIniciales>();
