@@ -9,6 +9,19 @@
                         match="/configuration/appSettings/add[@key='SmtpServerPort']
                            /@value" />
     </parameter>
+
+  <parameter name="ImapServer Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='ImapServer']
+                           /@value" />
+  </parameter>
+  <parameter name="ImapServerPort Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='ImapServerPort']
+                           /@value" />
+  </parameter>
+  
+  
     <parameter name="EnableSSL Key">
         <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='EnableSSL']

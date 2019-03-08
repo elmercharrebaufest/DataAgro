@@ -4,6 +4,8 @@
     <setParameter name="DataAgro-Web.config Connection String" value="Data Source=gvicsqltest2016.molinosagro.ad; Initial Catalog=Dataagro; Integrated Security=True " />
     <setParameter name="SmtpServer Key" value="smtpmol.molinos.com.ar" />
     <setParameter name="SmtpServerPort Key" value="26" />
+  <setParameter name="ImapServer Key" value="outlook.office365.com" />
+  <setParameter name="ImapServerPort Key" value="993" />
     <setParameter name="EnableSSL Key" value="N" />
     <setParameter name="UseDefaultCredentials Key" value="N" />
     <setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />

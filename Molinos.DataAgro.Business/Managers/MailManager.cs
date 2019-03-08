@@ -177,7 +177,6 @@ namespace Molinos.DataAgro.Business
             {
                 GemBox.Email.ComponentInfo.SetLicense("FREE-LIMITED-KEY");
                 GemBox.Email.MailMessage originalMessage;
-
                 ImapClient imap = default(ImapClient);
                 int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["ImapServerPort"], out Condicion))
