@@ -401,9 +401,9 @@ namespace Molinos.DataAgro.Business.Managers
             };
             return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, posicionTrigoCalidad };
         }
-        public List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta)
+        public List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
         {
-            var moneda = repositorio.ListarConsulta(new TraerMonedaKilo(fechaDesde, fechaHasta));
+            var moneda = repositorio.ListarConsulta(new TraerMonedaKilo(fechaDesde, fechaHasta, centroId));
 
             return new List<PrecioCantidadDto>() { new PrecioCantidadDto {Moneda = "Pesos" , Cantidad= moneda.Exists(x=>x.Moneda == "ARP  ")?moneda.Where(x=>x.Moneda== "ARP  ").Select(x=>x.Cantidad).First():0},
                 new PrecioCantidadDto {Moneda = "Dólares" , Cantidad=moneda.Exists(x=>x.Moneda == "USDM ")? moneda.Where(x=>x.Moneda== "USDM ").Select(x=>x.Cantidad).First():0}};

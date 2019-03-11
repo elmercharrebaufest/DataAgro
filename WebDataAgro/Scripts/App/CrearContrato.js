@@ -1823,7 +1823,6 @@ function ObtenerDatos() {
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
     obj.Calidad = viewModel.Calidades;
-    console.log($("#contratoAcuerdoId").val());
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
 
     GrabarContrato(obj);

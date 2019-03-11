@@ -72,7 +72,7 @@ namespace WebDataAgro.Controllers
                 ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta, idCentro),
                 SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro),
                 PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta, idCentro),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta, idCentro),
                 HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta)),
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta),

@@ -12,10 +12,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
-        public TraerMonedaKilo(DateTime fechaDesde, DateTime fechaHasta)
+        private readonly int centroId;
+        public TraerMonedaKilo(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
         {
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
+            this.centroId = centroId;
         }
 
         public List<PrecioCantidadDto> Ejecutar(DbContext contexto)
@@ -24,15 +26,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
 
-            var cont = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5))
-                .GroupBy(x => x.MonedaId).DefaultIfEmpty()
-                .Select(x => new PrecioCantidadDto()
-                {
-                    Moneda = x.Key,
-                    Cantidad= x.Sum(y => (double)y.Precio * y.Cantidad/1000)
-                }).ToList();
-
-            var fij = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5))
+            var cont = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId) && x.ContratoAcuerdo == null)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {
@@ -40,15 +34,32 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
                 }).ToList();
 
-            var fas = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5))
+            var fij = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
                     Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
                 }).ToList();
-            var res = cont.Union(fij).Union(fas).GroupBy(x=>x.Moneda)
-                .Select(x=> new PrecioCantidadDto()
+
+            var fas = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
+                .GroupBy(x => x.MonedaId).DefaultIfEmpty()
+                .Select(x => new PrecioCantidadDto()
+                {
+                    Moneda = x.Key,
+                    Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+                }).ToList();
+
+            var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2) && (0 == centroId || x.DestinoId == centroId))
+               .GroupBy(x => x.MonedaId).DefaultIfEmpty()
+               .Select(x => new PrecioCantidadDto()
+               {
+                   Moneda = x.Key,
+                   Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+               }).ToList();
+
+            var res = cont.Union(fij).Union(fas).Union(contAcuerdo).GroupBy(x => x.Moneda)
+                .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
                     Cantidad = x.Sum(y => y.Cantidad)

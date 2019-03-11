@@ -19,23 +19,22 @@ $(document).ready(function () {
 });
 
 function InicializarBordesRojos() {
-    $("select.required-box, input.required-box").on("change", function (e) {
-        var padre = $(this).hasClass("required-box-parent") ? $(this) : $(this).parent().parent();
+    //$("select.required-box, input.required-box").on("change", function (e) {
+    //    var padre = $(this).hasClass("required-box-parent") ? $(this) : $(this).parent().parent();
 
-        if ($(this).val() == "") {
-            padre.addClass("required-border");
-        } else {
-            padre.removeClass("required-border");
-        }
-    });
+    //    if ($(this).val() == "") {
+    //        padre.addClass("required-border");
+    //    } else {
+    //        padre.removeClass("required-border");
+    //    }
+    //});
 
-
-    $("select.required-box, input.required-box").trigger("change");
+    //$("select.required-box, input.required-box").trigger("change");
 }
 
 function InicializarElementos() {
-  
-    InicializarBordesRojos();
+
+    //InicializarBordesRojos();
 
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
@@ -79,7 +78,7 @@ function InicializarElementos() {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
-            InicializarBordesRojos();
+            //InicializarBordesRojos();
         },
         dataSource: {
             severFiltering: true,
@@ -167,7 +166,24 @@ function InicializarElementos() {
         }
     });
 
+    $("#Cantidad").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        change: function () {
+            if ($("#cargarCantidadCamiones").is(':checked')) {
+                $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
+            }
+        }
+    });
 
+    $("#Precio").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: 0
+    });
+    InicializarBordesRojos();
 }
 
 function InicializarDate() {
@@ -241,7 +257,7 @@ function CrearResultadosDataSource(datos) {
     var ds = new kendo.data.DataSource({
         data: datos,
         pageSize: 10,
-        schema: {      
+        schema: {
             model: {
                 id: 'Id',
                 fields: {
@@ -269,6 +285,7 @@ function CreateGridContratoAcuerdo() {
     $("#gridIni").kendoGrid({
         columns: [
             { selectable: true, width: "50px" },
+            { field: "Id", title: "Id" },
             {
                 field: "Proveedor", title: "Proveedor",
                 template: function (dataItem) {
@@ -487,8 +504,8 @@ function Agregar() {
         $('#buscadorProveedor').val("");
         $("#buscadorProveedor").trigger("change");
         $("#material").data("kendoDropDownList").value(0);
-        $("#moneda").data("kendoDropDownList").value(0);
-        $("#comercialId").data("kendoDropDownList").value(0);
+        $("#moneda").data("kendoDropDownList").value("ARP  ");
+        $("#comercialId").data("kendoDropDownList").value(comercialId);
         $("#destinoId").data("kendoDropDownList").value(0);
         $('#Precio').val();
         $('#Cantidad').val();
@@ -545,7 +562,7 @@ function Modificar() {
             $('#Cantidad').val(viewModel.ContratoAcuerdo.Cantidad);
             $("#fechaHasta").val(viewModel.ContratoAcuerdo.FechaModificacion);
             viewModel.set("isModifyDisabled", true);
-            InicializarBordesRojos();
+            //InicializarBordesRojos();
             HabilitarEdicion();
             LimpiarValidaciones();
         }
@@ -695,7 +712,7 @@ function ModificarPorId(id) {
             $('#Cantidad').val(viewModel.ContratoAcuerdo.Cantidad);
             $("#fechaHasta").val(viewModel.ContratoAcuerdo.FechaModificacion);
             viewModel.set("isModifyDisabled", true);
-            InicializarBordesRojos();
+            //InicializarBordesRojos();
             HabilitarEdicion();
             LimpiarValidaciones();
         }

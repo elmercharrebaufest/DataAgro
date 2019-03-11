@@ -556,7 +556,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult ObtenerContratosAcuerdo(string filtro)
         {
-            var data = mobjContratoManager.TraerContratosAcuerdo(filtro);
+            //var data = mobjContratoManager.TraerContratosAcuerdo(filtro);
             return Json(mobjContratoManager.TraerContratosAcuerdo(filtro), JsonRequestBehavior.AllowGet);
         }
     }

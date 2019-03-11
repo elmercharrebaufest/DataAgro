@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, 0)).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, 0)).Returns(new List<PosicionComprasDto>());
-            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
+            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, 0)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, 0)).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
             reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, 0)).Returns(new List<PosicionComprasDto>());
-            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha)).Returns(new List<PrecioCantidadDto>());
+            reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, 0)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha)).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha)).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha)).Returns(new HedgeTCPromedioDto());

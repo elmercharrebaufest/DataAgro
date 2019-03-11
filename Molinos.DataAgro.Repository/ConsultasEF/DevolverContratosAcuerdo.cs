@@ -21,14 +21,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             var resultado = (from c in contexto.Set<ContratoAcuerdo>()
                              where (c.Comercial.Apellido.Contains(filtro) || c.Destino.Descripcion.Contains(filtro) ||
-                             c.Proveedor.RazonSocial.Contains(filtro) || c.Material.Descripcion.Contains(filtro))
+                             c.Proveedor.RazonSocial.Contains(filtro) || c.Material.Descripcion.Contains(filtro) ||
+                             c.Id.ToString().Contains(filtro))
 
                              select new ContratoCopiar
                              {
                                  Id = c.Id,
                                  Comercial = c.Comercial.Nombres + " " + c.Comercial.Apellido,
                                  RazonSocial = c.Proveedor.RazonSocial,
-                                 Filtro = c.Material.Descripcion + " - " + c.Proveedor.RazonSocial + " - " + (SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : ""),
+                                 Filtro = c.Id + " - " + c.Material.Descripcion + " - " + c.Proveedor.RazonSocial + " - " + (SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : ""),
                                  Cantidad = c.Cantidad.ToString(),
                                  Fecha = SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : "",
                                  Material = c.Material.Descripcion,

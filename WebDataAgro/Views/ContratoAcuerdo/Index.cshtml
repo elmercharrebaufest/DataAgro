@@ -1,9 +1,14 @@
 ﻿@{
     ViewBag.Title = "ABM de Contrato Acuerdo";
+
 }
 
+<script>
+        comercialId = '@ViewBag.ComercialId';
+</script>
+
 @section Scripts {
-    @Scripts.Render("~/bundles/AbmContratoAcuerdo")
+    @Scripts.Render("~/bundles/AbmContratoAcuerdo");
 }
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 
@@ -16,6 +21,7 @@
 
 <br />
 <input type="hidden" id="perfil" value="@ViewBag.perfil" />
+<input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
 <div id="rootwizard">
 
     <div id="Abm">
@@ -50,7 +56,7 @@
                         <div class="col-sm-2 fasonero" id="proveedorLabelId">
                             <label id="proveedorLabel">Proveedor</label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 required-box-parent">
                             <input id="buscadorProveedor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
                             <div id="buscadorResult"></div>
                         </div>
@@ -60,8 +66,8 @@
                     <div class="col-md-2">
                         <label>Cantidad</label>
                     </div>
-                    <div class="col-md-4">
-                        <input id="Cantidad" type="number" class="k-textbox  required-box required-box-parent" " data-bind="value: ContratoAcuerdo.Cantidad, disabled: isControlDisabled" maxlength="50" />
+                    <div class="col-md-4 required-box-parent">
+                        <input id="Cantidad" type="number" class="k-textbox  required-box" style="width:100%" data-bind="value: ContratoAcuerdo.Cantidad, disabled: isControlDisabled" maxlength="50" />
                     </div>
                     <div class="col-md-6">
                     </div>
@@ -70,7 +76,7 @@
                     <div class="col-sm-2 ">
                         <label>Moneda</label>
                     </div>
-                    <div class="col-sm-5 col-md-4">
+                    <div class="col-sm-5 col-md-4 required-box-parent">
                         <div>
                             <select id="moneda" class="required-box" data-bind="source: MonedaCombo, value: Resultados.moneda, disabled: isControlDisabled"></select>
                             <img id="errmoneda" src="~/Content/Images/error.png" style="display:none" />
@@ -83,8 +89,8 @@
                     <div class="col-md-2">
                         <label>Precio</label>
                     </div>
-                    <div class="col-md-4">
-                        <input id="Precio" type="number" class="k-textbox  required-box required-box-parent" data-bind="value: ContratoAcuerdo.Precio, disabled: isControlDisabled" maxlength="50" />
+                    <div class="col-md-4 required-box-parent">
+                        <input id="Precio" type="number" class="k-textbox  required-box " style="width:100%" data-bind="value: ContratoAcuerdo.Precio, disabled: isControlDisabled" maxlength="50" />
                     </div>
                     <div class="col-md-6">
                     </div>

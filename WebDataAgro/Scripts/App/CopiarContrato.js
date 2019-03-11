@@ -60,8 +60,8 @@ function InicializarAutocompletar() {
     });
 
     $("#contratoAcuerdoId").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.Material# - #: data.RazonSocial# - #: data.Fecha# - #: data.Cantidad# Kg. </p>',
-        minLength: 3,
+        template: '<p class="buscar-nomb">#: data.Id# - #: data.Material# - #: data.RazonSocial# - #: data.Fecha# - #: data.Cantidad# Kg. </p>',
+        minLength: 2,
         enforceMinLength: true,
         dataTextField: "Id",
         dataValueField: "Id",
@@ -111,26 +111,36 @@ function modificarContrato(contratoCopia) {
 
 function CargarDatosCopiar(contrato, hijo, tipo) {
     InicializarBordesRojos();
+    if (tipo == "acuerdo") {
+        CargarCampaniaPorMaterial($("#material").val());
+        $("#contratoACopiarId").data("kendoAutoComplete").value("");
+        $("#contratoACopiarId").data("kendoAutoComplete").trigger("change");
+    } else {
+        $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
+        $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+        $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
+    }
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
 
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
-
+    $("#fechaDesdeId").val(formatearFecha(contrato.FechaDesdeFormateado));
+    $("#fechaHastaId").val(formatearFecha(contrato.FechaHastaFormateado));
     if (!hijo) {
 
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
-        //if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-        //    $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
-        //} else {
-        //    $("#fechaDesdeTopeId").val("");
-        //}
-        //if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-        //    $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
-        //} else {
-        //    $("#fechaDesdeTopeId").val("");
-        //}
+        if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
+            $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
+        } else {
+            $("#fechaDesdeTopeId").val("");
+        }
+        if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
+            $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
+        } else {
+            $("#fechaDesdeTopeId").val("");
+        }
         $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
     }
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
@@ -163,12 +173,9 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     }
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialFijacionId").data("kendoDropDownList").value(contrato.ComercialId);
+    
+  
 
-    if (tipo != "acuerdo") {
-        $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
-    } else {
-        CargarCampaniaPorMaterial($("#material").val());
-    }
 
     if (contrato.Base == true) {
         $("#baseId").prop("checked", true);
@@ -183,11 +190,11 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         $(".sustentableDiv").show();
     }
 
-    //if (contrato.Fecha_DolarizadoFormateado !== null && contrato.Fecha_DolarizadoFormateado !== undefined && contrato.Fecha_DolarizadoFormateado !== "") {
-    //    $("#dolarizadoId").prop("checked", true);
-    //    $("#dolarizadoDiv").show();
-    //    $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
-    //}
+    if (contrato.Fecha_DolarizadoFormateado !== null && contrato.Fecha_DolarizadoFormateado !== undefined && contrato.Fecha_DolarizadoFormateado !== "") {
+        $("#dolarizadoId").prop("checked", true);
+        $("#dolarizadoDiv").show();
+        $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
+    }
 
     if (contrato.Dias_Pesificado !== null && contrato.Dias_Pesificado !== undefined && contrato.Dias_Pesificado !== "") {
         $("#pesificadoId").prop("checked", true);
@@ -238,8 +245,8 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         $("#contratoId").val(contrato.DatosFijacion.ContratoId);
         $("#datosContrato").show();
         $("#kgscontrato").text(contrato.DatosFijacion.KilosPendiente + "/" + contrato.DatosFijacion.KilosAplicados);
-        //$("#desdecontrato").text(contrato.DatosFijacion.FechaDesde);
-        //$("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
+        $("#desdecontrato").text(contrato.DatosFijacion.FechaDesde);
+        $("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
@@ -271,43 +278,43 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     }
     contrato.MercsDeposito == true ? $("#mercsDepositoId").prop("checked", true) : $("#mercsDepositoId").prop("checked", false);
 
-    //var descuentosDto = contrato.Descuentos;
-    //$.each(descuentosDto, function (key, descuento) {
-    //    var descuentoKendo = {
-    //        Id: descuento.Id,
-    //        TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
-    //        TipoPeriodoDBId: descuento.TipoPeriodoDBId,
-    //        TipoDBDesc: descuento.TipoDBDesc,
-    //        TipoDBId: descuento.TipoDBId,
-    //        FechaDesde: descuento.FechaDesde,
-    //        FechaHasta: descuento.FechaHasta,
-    //        Importe: descuento.Importe,
-    //        MonedaId: descuento.MonedaId,
-    //        Porcentaje: descuento.Porcentaje,
-    //        ContratoId: descuento.ContratoId,
-    //        Borrar: function () {
-    //            viewModel.Descuentos.remove(this);
-    //        }
-    //    };
-    //    viewModel.Descuentos.push(descuentoKendo);
-    //});
+    var descuentosDto = contrato.Descuentos;
+    $.each(descuentosDto, function (key, descuento) {
+        var descuentoKendo = {
+            Id: descuento.Id,
+            TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
+            TipoPeriodoDBId: descuento.TipoPeriodoDBId,
+            TipoDBDesc: descuento.TipoDBDesc,
+            TipoDBId: descuento.TipoDBId,
+            FechaDesde: descuento.FechaDesde,
+            FechaHasta: descuento.FechaHasta,
+            Importe: descuento.Importe,
+            MonedaId: descuento.MonedaId,
+            Porcentaje: descuento.Porcentaje,
+            ContratoId: descuento.ContratoId,
+            Borrar: function () {
+                viewModel.Descuentos.remove(this);
+            }
+        };
+        viewModel.Descuentos.push(descuentoKendo);
+    });
 
-    //calidadesDto = contrato.Calidades;
-    //$.each(calidadesDto, function (key, calidad) {
-    //    var calidadKendo = {
-    //        Id: calidad.Id,
-    //        CalidadEspecialId: calidad.CalidadEspecialId,
-    //        CalidadEspecialDesc: calidad.CalidadEspecialDesc,
-    //        Valor: calidad.Valor,
-    //        ContratoId: calidad.ContratoId,
-    //        PorcentajeDesde: calidad.PorcentajeDesde,
-    //        PorcentajeHasta: calidad.PorcentajeHasta,
-    //        StandardDeCalidadId: 2,
-    //        Borrar: function () {
-    //            viewModel.Calidades.remove(this);
-    //        }
-    //    };
-    //    viewModel.Calidades.push(calidadKendo);
-    //});
+    calidadesDto = contrato.Calidades;
+    $.each(calidadesDto, function (key, calidad) {
+        var calidadKendo = {
+            Id: calidad.Id,
+            CalidadEspecialId: calidad.CalidadEspecialId,
+            CalidadEspecialDesc: calidad.CalidadEspecialDesc,
+            Valor: calidad.Valor,
+            ContratoId: calidad.ContratoId,
+            PorcentajeDesde: calidad.PorcentajeDesde,
+            PorcentajeHasta: calidad.PorcentajeHasta,
+            StandardDeCalidadId: 2,
+            Borrar: function () {
+                viewModel.Calidades.remove(this);
+            }
+        };
+        viewModel.Calidades.push(calidadKendo);
+    });
 }
 

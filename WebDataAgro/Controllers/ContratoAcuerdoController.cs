@@ -28,6 +28,7 @@ namespace WebDataAgro.Controllers
             {
                 ViewBag.edita = false;
             }
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
 
             return View(ActionView);
