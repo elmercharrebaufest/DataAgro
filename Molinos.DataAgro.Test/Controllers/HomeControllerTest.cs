@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
@@ -121,7 +122,8 @@ namespace Molinos.DataAgro.Test.Controllers
         public void BusquedaHomeTest()
         {
             HttpContext.Current.Session["equipo"] = new List<int>();
-            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo)).Returns(new List<BusquedaHome>()
+            HttpContext.Current.Session["perfil"] = EnumPerfil.CorredoresComercial;
+            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo, GlobalVariables.CorredoresComercial, (int)GlobalVariables.Perfil)).Returns(new List<BusquedaHome>()
             {
                 new BusquedaHome
                 {
@@ -132,7 +134,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }
             });            
             var result = target.BusquedaHome("a");
-            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
+            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(

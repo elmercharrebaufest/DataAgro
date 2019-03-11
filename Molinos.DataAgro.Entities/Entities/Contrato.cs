@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CondicionFijacionId { get; set; }
         public bool? CD { get; set; }
         public bool? Warrant { get; set; }
-        public bool? PagoDirectoVendedor { get; set; } 
+        public bool? PagoDirectoVendedor { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Madre { get; set; }
         public string ContratoMadre { get; set; }
         public int? FinDelDiaId { get; set; }
+        public int? ContratoAcuerdoId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -88,7 +89,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("DestinoId")]
         public virtual Centro Destino { get; set; }
         [ForeignKey("CondicionFijacionId")]
-        public virtual CondicionFijacion CondicionFijacion { get; set; }     
+        public virtual CondicionFijacion CondicionFijacion { get; set; }
         [ForeignKey("BoletoId")]
         public virtual BoletoCompraNet Boleto { get; set; }
         [ForeignKey("BolsaId")]
@@ -104,6 +105,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public ICollection<DescuentoBonificacion> Descuentos { get; set; }
         [InverseProperty("Contrato")]
         public ICollection<Calidad> Calidad { get; set; }
+
+        [ForeignKey("GrupoCompra")]
+        public virtual GrupoDeCompras GrupoDeCompras { get; set; }
+
+        [ForeignKey("ContratoAcuerdoId")]
+        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
 
         public Contrato()
         {

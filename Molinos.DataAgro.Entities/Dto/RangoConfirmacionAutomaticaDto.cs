@@ -1,4 +1,6 @@
-﻿namespace Molinos.DataAgro.Entities.Dto
+﻿using System;
+
+namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class RangoConfirmacionAutomaticaDto
     {
@@ -9,6 +11,7 @@
         public int MaterialId { get; set; }
         public string Moneda { get; set; }
         public string MonedaId { get; set; }
+        public DateTime FechaDesde { get; set; }
     }
 }
    

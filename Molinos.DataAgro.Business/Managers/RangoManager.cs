@@ -125,6 +125,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("PrecioMaximo", "El valor máximo no puede ser cero");
             }
+            if (oRango.MonedaId == null)
+            {
+                oEntityErrors.Error("Moneda", "El campo Moneda no puede estar vacío");
+            }
             if (oRango.PrecioMinimo > oRango.PrecioMaximo)
             {
                 oEntityErrors.Error("Precio", "El valor mínimo no puede ser mayor que el máximo");

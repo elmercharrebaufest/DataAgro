@@ -21,4 +21,67 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Fecha" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="638a0bcf-303c-4181-b95d-f08c1857412c" ChangeDateTime="02/13/2019 18:13:00">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[Proveedor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Corredor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="18050d04-78bf-415d-ba11-ded54d057840" ChangeDateTime="02/13/2019 18:13:26">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[Corredor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CorredorId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2c5da1bb-c38d-43bc-bd22-3ceaf8ef8602" ChangeDateTime="02/13/2019 18:14:04">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[Cantidad]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProveedorId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a6f413ae-a601-4cd5-a845-715f0396d23b" ChangeDateTime="02/13/2019 18:14:26">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[Material]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MaterialId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3d78b810-01ba-48cf-8e02-0e23fbb91c42" ChangeDateTime="02/13/2019 18:14:56">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[Fecha_Desde]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4a39152c-108f-4d69-bbf4-f496966b57c8" ChangeDateTime="02/13/2019 18:15:01">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[F]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaAsta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0f1dbbaa-aa23-4ffa-b582-f3cac7ab2f9e" ChangeDateTime="02/13/2019 18:15:06">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[FechaAsta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaHasta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d3e67cb6-526e-4b8f-b135-e33f9402f895" ChangeDateTime="02/13/2019 18:19:26">
+    <Property Name="ElementName" Value="[dbo].[FK_ContratoAcuerdo_]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_ContratoAcuerdo_Proveedor]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="09adf216-f483-4c85-be54-f224209115e3" ChangeDateTime="02/13/2019 18:38:23">
+    <Property Name="ElementName" Value="[dbo].[ContratoAcuerdo].[ComercialId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ContratoAcuerdo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ComercialCreadorId" />
+  </Operation>
 </Operations>

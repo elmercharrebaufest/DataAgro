@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -31,6 +32,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal PrecioMaximo { get; set; }
         public string Material { get; set; }
         public string Moneda { get; set; }
+        public DateTime FechaDesde { get; set; }
     }
 }
 

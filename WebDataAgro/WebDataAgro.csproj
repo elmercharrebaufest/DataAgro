@@ -194,6 +194,7 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\ContratoAcuerdoController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
     <Compile Include="Controllers\OperadorController.cs" />
     <Compile Include="Controllers\DiferencialController.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
     <Compile Include="Models\AgenteCompraModel.cs" />
+    <Compile Include="Models\ContratoAcuerdoModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
     <Compile Include="Models\RangoModel.cs" />
@@ -891,6 +893,7 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
@@ -908,6 +911,7 @@
     <Content Include="Scripts\App\agregarproveedor.js" />
     <Content Include="Scripts\App\agregarproveedoredit.js" />
     <Content Include="Scripts\App\CompraNetIndex.js" />
+    <Content Include="Scripts\App\CopiarContrato.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\detalleCorredor.js" />
@@ -2403,6 +2407,7 @@
     <Content Include="Views\Hedge\ModalCierreDia.cshtml" />
     <Content Include="Views\Diferencial\Index.cshtml" />
     <Content Include="Views\Diferencial\_AbmDiferencial.cshtml" />
+    <Content Include="Views\ContratoAcuerdo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

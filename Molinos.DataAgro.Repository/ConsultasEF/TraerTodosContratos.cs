@@ -1,5 +1,6 @@
 ﻿using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
@@ -16,21 +17,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly KendoGridMvcRequest request;
         private readonly List<int> equipo;
         private readonly int perfilId;
+        private readonly List<int> corredoresComercial;
 
-        public TraerTodosContratos(KendoGridMvcRequest request,int perfilId, List<int> equipo)
+        public TraerTodosContratos(KendoGridMvcRequest request,int perfilId, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
             this.perfilId = perfilId;
+            this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, int perfilId, List<int> equipo)
+        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, int perfilId, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)
+                where (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) 
+                    || (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new BasicoContrato()
                 {
                     ContratoId = contrato.ContratoId,
@@ -51,6 +55,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Fecha = DbFunctions.TruncateTime(contrato.Fecha),
                     Fecha_Order = contrato.Fecha,
                     GrupoCompra = contrato.GrupoCompra,
+                    GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
                     ProvinciaId = contrato.ProvinciaId,
                     LocalidadId = contrato.LocalidadId,
                     Base = contrato.Base,
@@ -103,7 +108,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara",
                     MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false,
                     ComercialCreadorId = contrato.ComercialCreadorId, 
-                    ComercialCreador = contrato.ComercialCreador == null ? "" : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
+                    ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                     ContratoCorredor = contrato.ContratoCorredor,
                     ContratoVendedor = contrato.ContratoVendedor,
                     SelCargoMOA = contrato.SelCargoMOA,
@@ -118,7 +123,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where equipo.Contains(fijac.ComercialId)
+                where equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) || 
+                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) || corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new BasicoContrato()
                 {
                     ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
@@ -139,6 +145,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Fecha = DbFunctions.TruncateTime(fijac.Fecha),
                     Fecha_Order = fijac.Fecha,
                     GrupoCompra = 0,
+                    GrupoCompraDescripcion = null,
                     ProvinciaId = null,
                     LocalidadId = null,
                     Base = null,
@@ -191,7 +198,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CalidadDescripcion = "",
                     MercsDeposito = null,
                     ComercialCreadorId = fijac.ComercialCreadorId,
-                    ComercialCreador = "",
+                    ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
                     ContratoCorredor = "",
                     ContratoVendedor = "",
                     SelCargoMOA = null,
@@ -230,6 +237,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha = DbFunctions.TruncateTime(fas.Fecha),
                         Fecha_Order = fas.Fecha,
                         GrupoCompra = 0,
+                        GrupoCompraDescripcion = null,
                         ProvinciaId = null,
                         LocalidadId = null,
                         Base = null,
@@ -281,8 +289,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ClasificacionDescripcion = "",
                         CalidadDescripcion = "",
                         MercsDeposito = null,
-                        ComercialCreadorId = 0,
-                        ComercialCreador = "",
+                        ComercialCreadorId = fas.ComercialCreadorId,
+                        ComercialCreador = fas.ComercialCreador == null ? fas.Comercial.Nombres + " " + fas.Comercial.Apellido : fas.ComercialCreador.Nombres + " " + fas.ComercialCreador.Apellido,
                         ContratoCorredor = "",
                         ContratoVendedor = "",
                         SelCargoMOA = null,
@@ -320,6 +328,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha = DbFunctions.TruncateTime(age.Fecha),
                         Fecha_Order = age.Fecha,
                         GrupoCompra = 0,
+                        GrupoCompraDescripcion = null,
                         ProvinciaId = null,
                         LocalidadId = null,
                         Base = null,
@@ -371,8 +380,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ClasificacionDescripcion = "",
                         CalidadDescripcion = "",
                         MercsDeposito = null,
-                        ComercialCreadorId = 0,
-                        ComercialCreador = "",
+                        ComercialCreadorId = age.ComercialCreadorId,
+                        ComercialCreador = age.ComercialCreador == null ? age.Comercial.Nombres + " " + age.Comercial.Apellido : age.ComercialCreador.Nombres + " " + age.ComercialCreador.Apellido,
                         ContratoCorredor = "",
                         ContratoVendedor = "",
                         SelCargoMOA = null,
@@ -394,7 +403,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request,perfilId, equipo);
+                return Query(contexto, request,perfilId, equipo, corredoresComercial);
             }
         }
     }

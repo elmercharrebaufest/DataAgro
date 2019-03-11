@@ -20,10 +20,10 @@ namespace Molinos.DataAgro.Interfaces
         Resultado EliminarComercial(int intComercialId);
 
         List<ComercialDto> ListarComercial(string comercial, List<int> comerciales);
-        
+
         bool ComercialExiste(string ActiveDirectoryId);
 
-        bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId);
+        bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId, int perfilId, List<int> corredoresComercial);
 
         EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId);
 
@@ -32,7 +32,12 @@ namespace Molinos.DataAgro.Interfaces
         EquipoDto ListarEquipo(string idActiveDirectory);
 
         int ObtenerComercialId(string idActiveDirectory);
+
         List<int> CadenaComerciales(int comercialId);
+
+        List<int> ListarCorredoresComercial(int perfilId);
+
+        List<Comercial> ListarComercialesPorPerfil(EnumPerfil perfil);
     }
 }
 

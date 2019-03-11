@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business.Managers
         //--------------------------------------------------
         //  Metodos Publicos
         //--------------------------------------------------
-        
+
         public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina)
         {
             var res = new ResultIniContacto();
@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Business.Managers
             res.TotalNoOperandoContactos = queryPorEstado.Count(x => x.Estado == "No operando");
             res.TotalBajaContactos = queryPorEstado.Count(x => x.Estado == "Baja");
             res.TotalSinInteresContactos = queryPorEstado.Count(x => x.Estado == "Sin interés de operar");
-            
+
             return res;
         }
 
@@ -193,7 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var DatosIni = new DatosIniciales
             {
-                camp = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion },null, 0, "CampañaId", Entities.Helpers.DirOrden.Desc),
+                camp = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion }, null, 0, "CampañaId", Entities.Helpers.DirOrden.Desc),
 
                 mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }),
 
@@ -207,23 +207,23 @@ namespace Molinos.DataAgro.Business.Managers
 
                 come = repositorio.Listar<Comercial, ComercialQry>(s => new ComercialQry() { ComercialId = s.ComercialId, IdActiveDirectory = s.IdActiveDirectory }, x => equipo.Contains(x.ComercialId)),
 
-                zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { ZonaId = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId)&&x.GrupoDeCompras!=null, 0, "Descripcion")
+                zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { ZonaId = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId) && x.GrupoDeCompras != null, 0, "Descripcion")
             };
             return DatosIni;
 
         }
 
-        public List<BusquedaHome> BusquedaHome(string filtro, int comercialId,List<int> equipo)
+        public List<BusquedaHome> BusquedaHome(string filtro, int comercialId, List<int> equipo, List<int> corredoresComercial, int perfilId)
         {
             //var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
-            var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo,comercialId,filtro));
+            var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo, comercialId, filtro, corredoresComercial, perfilId));
             return query;
         }
 
         public List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId)
         {
             var list = new List<ActividadRecordatorio>();
-            
+
             var result = repositorio.Listar<Actividad, ActividadRecordatorioGrid>(x => new ActividadRecordatorioGrid
             {
                 ActividadId = x.ActividadId,
@@ -317,10 +317,10 @@ namespace Molinos.DataAgro.Business.Managers
                 return new ExportAll();
             }
         }
-        
+
         public PostItDto TraerTexto(int idComercial)
         {
-            return repositorio.Obtener<PostIt, PostItDto>(x => x.ComercialId == idComercial, x => new PostItDto { ComercialId = x.ComercialId, Texto = x.Texto});
+            return repositorio.Obtener<PostIt, PostItDto>(x => x.ComercialId == idComercial, x => new PostItDto { ComercialId = x.ComercialId, Texto = x.Texto });
         }
 
         public GrabarPostItResult GuardarPostIt(PostIt post)

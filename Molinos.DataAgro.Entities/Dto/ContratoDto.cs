@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? HastaFijacion { get; set; }
         public int? ComercialCreadorId { get; set; }
         public decimal? PorcentajeComision { get; set; }
+        public int? ContratoAcuerdoId { get; set; }
     }
 }
 

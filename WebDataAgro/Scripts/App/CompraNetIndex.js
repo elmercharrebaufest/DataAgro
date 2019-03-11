@@ -73,7 +73,7 @@ $(document).ready(function () {
         $('.datosEditarPendiente').show();
     });
     $("#crearContrato").click(function () {
-        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") {
+        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "CorredoresComercial" ) {
             window.location.href = window.location.origin + "/CompraNet/CrearContrato";
         } else {
             MensInfo("No posee permisos para la carga de contratos");
@@ -195,8 +195,7 @@ function botonVisualizar(dataItem, icono) {
 
         "'" + dataItem.TipoFason + "'" + ',' +
         "'" + dataItem.Posicion + "'" + ',' +
-        "'" + dataItem.Operador + "'" + ',' +
-
+        "'" + dataItem.Operador + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -290,6 +289,8 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuseliminado)").attr('id', 'border-grey');
             if (($("#perfil").val() !== "Mesa")) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
+                $("#gridInformeCompraNet").data("kendoGrid").hideColumn("GrupoCompraDescripcion");
+                
             }
             var grid = $("#gridInformeCompraNet").data("kendoGrid");
             var view = grid.dataSource.view();
@@ -302,10 +303,10 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                //if (view[i].DestinoDescripcion != "San Lorenzo") {
-                //        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
-                //            .addClass("otroDestino");                           
-                //    }
+                if (view[i].DestinoDescripcion != "San Lorenzo" && view[i].DestinoDescripcion != "") {
+                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                            .addClass("otroDestino");                           
+                    }
             }
             filasSeleccionadas = {};
 
@@ -396,7 +397,7 @@ function CreateGridInformeCompraNet() {
                 field: "Ampliaciones", type: "number", width: 60, title: "Ampl.", attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
-                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial") && dataItem.Estado == 2) {
+                    if (($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "CorredoresComercial") && dataItem.Estado == 2) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + "," + "'" + dataItem.FasonId + "'" + "," + "'" + dataItem.AgenteId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3 || dataItem.Estado == 7) {
@@ -419,11 +420,18 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" } },
+            { 
+                field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" }
+            },
+            {
+                field: "GrupoCompraDescripcion", type: "string", title: "Zona", width: 70, attributes: { "class": "mobile-xs mobile-md" }
+            },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
             },
-            
+            {
+                field: "DestinoDescripcion", type: "string", title: "Destino", attributes: { "class": "mobile-xs mobile-md" }
+            },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", filterable: {
                     multi: true,

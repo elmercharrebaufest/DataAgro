@@ -116,6 +116,10 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/AbmOperador").Include(
                                        "~/Scripts/App/AbmOperador.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/AbmContratoAcuerdo").Include(
+                                                 "~/Scripts/KendoExtensions.js",
+                                       "~/Scripts/App/AbmContratoAcuerdo.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/AbmRangoPrecio").Include(
                                        "~/Scripts/App/AbmRangoPrecio.js"));
 
@@ -133,6 +137,7 @@ namespace WebDataAgro
             
             bundles.Add(new ScriptBundle("~/bundles/CompraNetContrato").Include(
                                          "~/Scripts/App/CrearContrato.js",
+                                         "~/Scripts/App/CopiarContrato.js",
                                          "~/Scripts/jquery.mask.js"));
 
 

@@ -52,7 +52,7 @@ namespace WebDataAgro.Controllers
                 request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
             }
             
-            var model = mobjContratoManager.TraerTodosContratos(request,(int)GlobalVariables.Perfil, GlobalVariables.Equipo);
+            var model = mobjContratoManager.TraerTodosContratos(request,(int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
         }

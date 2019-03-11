@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         StoredPorProveedorResult TraerProveedor(int ProveedorId, string UsuarioDirectory, List<int> equipo);
 
-        DatosIniProveedor TraerDatosCombo(int ProveedorId);
+        DatosIniProveedor TraerDatosCombo(int ProveedorId, bool noFiltrarAdministrativo);
 
         List<LocalidadDto> TraerLocalidad(int Id);
 
@@ -46,11 +46,10 @@ namespace Molinos.DataAgro.Interfaces
         List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId);
         TraerProveedorResult TraerProveedorParaCorredor(string cuit);
         void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory);
-
         void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar);
-        string GetEmailUserActiveDirectory(string UserName);
-        
+        string GetEmailUserActiveDirectory(string UserName);        
         GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);
         GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory);
+        bool ValidarProveedorEsCorredor(int idproveedor);
     }
 }

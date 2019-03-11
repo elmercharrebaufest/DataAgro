@@ -119,6 +119,7 @@
     <Compile Include="Managers\ICampañaManager.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
     <Compile Include="Managers\IAgenteCompraManager.cs" />
+    <Compile Include="Managers\IContratoAcuerdoManager.cs" />
     <Compile Include="Managers\IFasonManager.cs" />
     <Compile Include="Managers\IMailManager.cs" />
     <Compile Include="Managers\IHedgeManager.cs" />

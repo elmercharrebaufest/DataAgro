@@ -15,6 +15,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Material Material { get; set; }
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
+
+        public DateTime FechaDesde { get; set; }
     }
 
 }

@@ -52,9 +52,10 @@
 	[SelCargoMOA] BIT NULL,
 	[Madre] BIT NULL,
 	[ContratoMadre] NVARCHAR(15) NULL,
-	[FinDelDiaId] INT NULL 
+	[FinDelDiaId] INT NULL,
+	[ContratoAcuerdoId] INT NULL,
 
-    CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]), 
+    CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
     CONSTRAINT [FK_Contrato_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Contrato_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]), 
@@ -69,5 +70,6 @@
     CONSTRAINT [FK_Contrato_CondicionFijacion] FOREIGN KEY ([CondicionFijacionId]) REFERENCES [CondicionFijacion]([Id]), 
     CONSTRAINT [FK_Contrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_Contrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
-	CONSTRAINT [FK_Contrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id])
+	CONSTRAINT [FK_Contrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
+	CONSTRAINT [FK_Contrato_ContratoAcuerdo] FOREIGN KEY (ContratoAcuerdoId) REFERENCES [ContratoAcuerdo]([Id])
 )

@@ -41,7 +41,8 @@ namespace Molinos.DataAgro.Business
                     PrecioMinimo = x.PrecioMinimo,
                     PrecioMaximo = x.PrecioMaximo,
                     Material = x.Material.Descripcion,
-                    Moneda = x.MonedaId
+                    Moneda = x.MonedaId,
+                    FechaDesde = x.FechaDesde
                 }, null, 0, "Material")
             };
         }
@@ -56,7 +57,8 @@ namespace Molinos.DataAgro.Business
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Moneda = x.Moneda.Descripcion,
-                MonedaId = x.MonedaId
+                MonedaId = x.MonedaId,
+                FechaDesde = x.FechaDesde,
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
@@ -78,6 +80,7 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.PrecioMaximo = oRango.PrecioMaximo;
                 oRangoSave.MaterialId = oRango.MaterialId;
                 oRangoSave.MonedaId = oRango.MonedaId;
+                oRangoSave.FechaDesde = oRango.FechaDesde;
             }
             else
             {
@@ -94,7 +97,7 @@ namespace Molinos.DataAgro.Business
                 throw;
             }
 
-            logger.Debug("Nuevo Rango de Confirmacion automática desde" + oRango.PrecioMinimo + " Hasta " + oRango.PrecioMaximo + " Para " + oRango.MaterialId + " en " + oRango.MonedaId);
+            logger.Debug("Nuevo Rango de Confirmacion automática desde" + oRango.PrecioMinimo + " Hasta " + oRango.PrecioMaximo + " Para " + oRango.MaterialId + " en " + oRango.MonedaId + " desde el" + oRango.FechaDesde);
 
             return oEntityErrors;
         }
@@ -120,14 +123,27 @@ namespace Molinos.DataAgro.Business
 
         private Resultado ValidarRango(Resultado oEntityErrors, RangoConfirmacionAutomatica oRango)
         {
-            var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
+            if (oRango.PrecioMaximo == 0)
+            {
+                oEntityErrors.Error("PrecioMaximo", "El valor máximo no puede ser cero");
+            }
             if (oRango.PrecioMinimo > oRango.PrecioMaximo)
             {
                 oEntityErrors.Error("Precio", "El valor minimo no puede ser mayor que el máximo");
             }
-            if (rangosExistentes.Exists(x=> x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId))
+            if (oRango.MonedaId == null)
             {
-                oEntityErrors.Error("Rango", "Ya existe un rango para el grano y moneda elegidos");
+                oEntityErrors.Error("Moneda", "El campo Moneda no puede estar vacío");
+            }
+            if (oRango.FechaDesde == null)
+            {
+                oEntityErrors.Error("FechaDesde", "El campo Fecha Desde no puede estar vacío");
+            }
+
+            var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
+            if (rangosExistentes.Exists(x => x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId && x.FechaDesde == oRango.FechaDesde))
+            {
+                oEntityErrors.Error("Rango", "Ya existe un rango para el grano, moneda y fecha de activación elegidos");
             }
             return oEntityErrors;
         }

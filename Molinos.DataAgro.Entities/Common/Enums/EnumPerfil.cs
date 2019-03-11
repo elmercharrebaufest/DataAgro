@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         Administrativo = 4,
         Visualizador = 5,
         Gerente = 6,
-        Mesa = 7
+        Mesa = 7,
+        CorredoresComercial = 8
     }
 }

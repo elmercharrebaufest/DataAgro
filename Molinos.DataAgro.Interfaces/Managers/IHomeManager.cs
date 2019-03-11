@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
 
         int TraerIdComercial(string idActiveDirectory);
 
-        List<BusquedaHome> BusquedaHome(string filtro, int ComercialId, List<int> equipo);
+        List<BusquedaHome> BusquedaHome(string filtro, int ComercialId, List<int> equipo, List<int> corredoresComercial, int perfilId);
 
         List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId);
 

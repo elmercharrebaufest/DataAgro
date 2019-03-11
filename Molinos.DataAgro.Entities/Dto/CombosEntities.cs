@@ -1,4 +1,5 @@
-﻿namespace Molinos.DataAgro.Entities.Dto
+﻿using System;
+namespace Molinos.DataAgro.Entities.Dto
 {
     //---------------------------------------------------------
     // Clases para proyectar resultados de combos,
@@ -215,6 +216,11 @@
         public string Descripcion;
     }
 
+    public class ContratoAcuerdoCombo
+    {
+        public int Id;
+    }
+
     public class RangoCombo
     {
         public int Id { get; set; }
@@ -222,6 +228,7 @@
         public decimal PrecioMaximo { get; set; }
         public string Material { get; set; }
         public string MonedaId { get; set; }
+        public DateTime FechaDesde { get; set; }
     }
 }
 

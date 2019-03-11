@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
             }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
-            if (rangosPrecio.Exists(x => (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio) &&  x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId) )
+            if (rangosPrecio.Exists(x => (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio) && x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
             }
@@ -114,6 +114,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.FechaDesde = oFason.FechaDesde;
                 oFasonSave.FechaHasta = oFason.FechaHasta;
                 oFasonSave.Especial = oFason.Especial;
+                oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
             }
             else
             {

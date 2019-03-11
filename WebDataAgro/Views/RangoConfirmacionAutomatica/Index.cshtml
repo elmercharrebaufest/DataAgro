@@ -5,7 +5,12 @@
 @section Scripts {
     @Scripts.Render("~/bundles/AbmRangoConfirmacionAutomatica")
 }
+<style>
+    .k-i-warning{
+        display:none;
+    }
 
+</style>
 
 <h3>Rango de Confirmacion Automática</h3>
 <br />
@@ -51,13 +56,13 @@
                         <img id="errPrecio" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                     <div class="col-md-2">
-                        <input id="precioMaximo" data-bind="value: RangoConfirmacionAutomatica.PrecioMaximo, disabled: isControlDisabled" style="width:100%"/>
+                        <input id="precioMaximo" data-bind="value: RangoConfirmacionAutomatica.PrecioMaximo, disabled: isControlDisabled" style="width:100%" />
                         <img id="errPrecio" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                     <div class="col-md-6">
                     </div>
                 </div>
-                                
+
                 <div class="row">
                     <div class="col-md-2">
                         <label>Material</label>
@@ -78,6 +83,15 @@
                         <img id="errMoneda" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                     <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label> Fecha Desde </label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="FechaDesde" type="text" data-bind="value: RangoConfirmacionAutomatica.FechaDesde, disabled: isControlDisabled" style="width:100%" />
+                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                 </div>
                 <br />

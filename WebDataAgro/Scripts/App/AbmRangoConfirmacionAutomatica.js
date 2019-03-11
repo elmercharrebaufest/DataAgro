@@ -66,6 +66,11 @@ function InicializarElementos() {
         }
     });
 
+    $("#FechaDesde").kendoDateTimePicker({
+        value: new Date(),
+        dateInput: true
+    });
+
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
     });
@@ -95,12 +100,14 @@ function CrearResultadosDataSource(datos) {
                 fields: {
                     Id: { type: "number", editable: false },
                     PrecioMinimo: { type: "number", editable: false },
-                    PrecioMaximo: { type: "number", editable: false },    
-                    Material: { type: "string", editable: false },    
-                    Moneda: { type: "string", editable: false },    
+                    PrecioMaximo: { type: "number", editable: false },
+                    Material: { type: "string", editable: false },
+                    Moneda: { type: "string", editable: false },
+                    FechaDesde: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
                 }
             }
         },
+        sort: { field: "FechaDesde", dir: "desc" }
     });
 
     return ds;
@@ -108,16 +115,21 @@ function CrearResultadosDataSource(datos) {
 
 function CreateGridRango() {
     $("#gridIniRango").kendoGrid({
+
         columns: [
             { field: "PrecioMinimo", title: "Mínimo", filterable: false },
             { field: "PrecioMaximo", title: "Máximo", filterable: false },
             { field: "Material", title: "Material", filterable: false },
             { field: "Moneda", title: "Moneda", filterable: false },
+            {
+                field: "FechaDesde", title: "Fecha Desde", filterable: false,
+                template: "#= kendo.toString(kendo.parseDate(FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm') #"
+            }
         ],
+        sortable: true,
         scrollable: false,
-        sortable: false,
         selectable: "row",
-        change: onChangeGridInicial,
+        change: onChangeGridInicial
     });
 }
 
@@ -215,13 +227,15 @@ function AsignarBotones() {
 }
 
 function UpdateViewModel(model) {
-    
+
+
     var rango = {
         "Id": model.Rango.Id,
         "PrecioMinimo": model.Rango.PrecioMinimo,
         "PrecioMaximo": model.Rango.PrecioMaximo,
         "MaterialId": model.Rango.MaterialId,
         "MonedaId": model.Rango.MonedaId,
+        "FechaDesde": model.Rango.FechaDesde
     };
 
     viewModel.set("RangoConfirmacionAutomatica", rango);
@@ -269,10 +283,11 @@ function Agregar() {
 function LimpiarAgregarModificar() {
     var rango = {};
     viewModel.set("RangoConfirmacionAutomatica", rango);
-    $("#precioMinimo").data("kendoNumericTextBox").value("")
-    $("#precioMaximo").data("kendoNumericTextBox").value("")
-    $("#material").data("kendoDropDownList").value("")
-    $("#moneda").data("kendoDropDownList").value("")
+    $("#precioMinimo").data("kendoNumericTextBox").value("");
+    $("#precioMaximo").data("kendoNumericTextBox").value("");
+    $("#material").data("kendoDropDownList").value("");
+    $("#moneda").data("kendoDropDownList").value("");
+    $("#FechaDesde").data("kendoDateTimePicker").value("");
 }
 function Modificar() {
 
@@ -299,23 +314,30 @@ function Modificar() {
             }
             else {
                 viewModel.set("RangoConfirmacionAutomatica", datosRango.Rango);
+                $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                viewModel.set("isModifyDisabled", true);
+                $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                HabilitarEdicion();
+                LimpiarValidaciones();
+                UpdateViewModel(datosRango);
             }
         }
     }
 
-    var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Aplicar', param);
+    //var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Aplicar', param);
 
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowTooltipMessages("err", result.Errores);
-        }
-        else {
-            viewModel.set("isModifyDisabled", true);
-            HabilitarEdicion();
-            LimpiarValidaciones();
-            UpdateViewModel(result);
-        }
-    }
+    //if (result != null) {
+    //    if (ExistsErrorMessages(result.Errores)) {
+    //        ShowTooltipMessages("err", result.Errores);
+    //    }
+    //    else {
+    //        viewModel.set("isModifyDisabled", true);
+    //        $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+    //        HabilitarEdicion();
+    //        LimpiarValidaciones();
+    //        UpdateViewModel(result);
+    //    }
+    //}
 }
 
 function Eliminar() {
@@ -357,7 +379,7 @@ function Grabar() {
     var row = grid.select();
 
     var data = grid.dataItem(row);
-    
+
     LimpiarValidaciones();
 
     var datos = {
@@ -366,6 +388,7 @@ function Grabar() {
         "PrecioMaximo": $("#precioMaximo").data("kendoNumericTextBox").value(),
         "MaterialId": $("#material").data("kendoDropDownList").value(),
         "MonedaId": $("#moneda").data("kendoDropDownList").value(),
+        "FechaDesde": $("#FechaDesde").data("kendoDateTimePicker").value(),
     };
     var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Grabar', datos);
 

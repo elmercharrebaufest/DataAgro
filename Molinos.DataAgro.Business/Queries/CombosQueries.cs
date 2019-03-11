@@ -133,6 +133,22 @@ namespace Molinos.DataAgro.Business
             }
             return null;
         }
+
+        public List<ContratoAcuerdoCombo> GetAbmContratoAcuerdoCombo()
+        {
+            try
+            {
+                return repositorio.Listar<ContratoAcuerdo, ContratoAcuerdoCombo>(x => new ContratoAcuerdoCombo()
+                {
+                    Id = x.Id,
+                }, null, 0, "Id");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
         public List<RangoCombo> GetAbmRangoCombo()
         {
             try

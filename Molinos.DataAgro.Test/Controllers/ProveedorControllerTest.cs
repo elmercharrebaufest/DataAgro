@@ -104,7 +104,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             
             comercialManagerMock.Setup(x => x.ComercialExiste(GlobalVariables.IdActiveDirectory)).Returns(true);
-            comercialManagerMock.Setup(x => x.ComercialPerteneceProveedor(GlobalVariables.Equipo, 1)).Returns(true);
+            comercialManagerMock.Setup(x => x.ComercialPerteneceProveedor(GlobalVariables.Equipo, 1, (int)GlobalVariables.Perfil, GlobalVariables.CorredoresComercial)).Returns(true);
             var result = target.Detalle(1,null);
             Assert.NotNull(result);
         }
@@ -126,11 +126,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void IniciliazarTest()
         {
-            proveedorManagerMock.Setup(x => x.TraerDatosCombo(1)).Returns(new DatosIniProveedor());
+            proveedorManagerMock.Setup(x => x.TraerDatosCombo(1, false)).Returns(new DatosIniProveedor());
 
             var result = target.Iniciliazar(1);
 
-            proveedorManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int>(), false), Times.Once);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

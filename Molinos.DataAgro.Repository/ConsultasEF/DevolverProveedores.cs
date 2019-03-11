@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 Filtro = filtro + "|" + provs.Key.RazonSocial + " (" + provs.Key.CUIT + ")"
                             };
 
-            return resultado.Take(15).ToList();
+            return resultado.Distinct().Take(15).ToList();
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)

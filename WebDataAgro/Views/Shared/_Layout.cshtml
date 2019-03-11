@@ -223,18 +223,7 @@
                         </li>
                     }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-                    {
-                        if (global_asax.GlobalVariables.Perfil != EnumPerfil.Mesa)
-                        {
-                            <li class="mis-contactos-li">
-                                <a href="/CompraNet" class="nav-no-padding">
-
-                                    <span> CompraNet</span>
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
+                    {                       
                             <li class="dropdown ">
                                 <a onclick="return false" id="negocios-a" class="dropdown-toggle nav-text4 padding-left nav-no-padding" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
                                 <ul class="dropdown-menu" id="negocios">
@@ -243,14 +232,21 @@
                                             <i class="icon-bar-chart"></i> Negocios
                                         </a>
                                     </li>
+                                    @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                    {
+                                        <li>
+                                            <a href="/Hedge" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart"></i> Otros Negocios
+                                            </a>
+                                        </li>
+                                    }
                                     <li>
-                                        <a href="/Hedge" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Otros Negocios
+                                        <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Contrato Acuerdo
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
-                        }
+                            </li>                        
                     }
                 </ul>
                 <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">

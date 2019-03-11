@@ -280,7 +280,7 @@ namespace WebDataAgro.Controllers
             }
             request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
 
-            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo);
+            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
         }
@@ -331,7 +331,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public int ObtenerProveedorId(string Cuit, bool corredor)
         {
             return mobjProveedorManager.TraerProveedorPorCuit(Cuit, corredor).ProveedorId;
@@ -343,7 +343,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = mobjLocalidadManager.TraerLocalidadProvincia(localidad, provincia),
                 MaxJsonLength = Int32.MaxValue
-            }; 
+            };
         }
 
         public ActionResult ObtenerProvinciaLocalidad(string Cuit)
@@ -408,11 +408,11 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult TraerContratoCompleto(int id)
+        public ActionResult TraerContratoCompleto(int id, string tipo)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.TraerContrato(id),
+                Data = (tipo != "acuerdo") ? mobjContratoManager.TraerContrato(id) : mobjContratoManager.TraerContratoAcuerdoACopiar(id),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -461,7 +461,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult ObtenerFijacionesAutomaticas(string CuitProveedor,string CuitCorredor, int materialId, string Filtro)
+        public ActionResult ObtenerFijacionesAutomaticas(string CuitProveedor, string CuitCorredor, int materialId, string Filtro)
         {
             return new JsonResult()
             {
@@ -469,7 +469,8 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult TraerContratoMadre (string sap) {
+        public ActionResult TraerContratoMadre(string sap)
+        {
             return new JsonResult()
             {
                 Data = mobjContratoManager.TraerContratoMadre(sap),
@@ -547,6 +548,16 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.AnularContrato(oParam, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+        public JsonResult ObtenerContratosParaCopiar(string filtro)
+        {
+            return Json(mobjContratoManager.TraerContratosPorSap(filtro), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ObtenerContratosAcuerdo(string filtro)
+        {
+            var data = mobjContratoManager.TraerContratosAcuerdo(filtro);
+            return Json(mobjContratoManager.TraerContratosAcuerdo(filtro), JsonRequestBehavior.AllowGet);
         }
     }
 }

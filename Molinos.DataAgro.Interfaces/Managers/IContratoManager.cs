@@ -9,10 +9,10 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IContratoManager
     {
-        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfil, List<int> listComercialesId);
+        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
 
         DatosIniContrato TraerDatosCombo(int perfil);
-        
+
         GrabarContratoResult GrabarContrato(Contrato oContrato);
 
         GrabarContratoResult ConfirmarContrato(int contratoId);
@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory);
 
         GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
-        
+
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
         List<CalidadDto> TraerCalidadesPorContrato(int contratoId);
         BasicoContrato TraerContrato(int contratoId);
@@ -34,5 +34,8 @@ namespace Molinos.DataAgro.Interfaces
         DatosCompraNetDto TraerDatosCompraNet(int id);
         ContratoResult TraerContratoMadre(string sap);
         GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory);
+        List<ContratoCopiar> TraerContratosPorSap(string nrocontratoSap);
+        List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
+        BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
     }
 }

@@ -32,7 +32,7 @@ namespace WebDataAgro
 
             //Autofac Configuration
             var builder = new ContainerBuilder();
-            
+
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
             builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
 
@@ -60,6 +60,7 @@ namespace WebDataAgro
             GlobalVariables.Equipo = equipo.Equipo;
             GlobalVariables.EquipoReal = equipo.EquipoReal;
             GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial((int)GlobalVariables.Perfil);
         }
 
 
@@ -77,7 +78,7 @@ namespace WebDataAgro
         }
 
         public static class GlobalVariables
-        {            
+        {
             // read-write variable
             public static EnumPerfil Perfil
             {
@@ -160,6 +161,18 @@ namespace WebDataAgro
                 get
                 {
                     return HttpContext.Current.User.Identity.Name;
+                }
+            }
+
+            public static List<int> CorredoresComercial
+            {
+                get
+                {
+                    return (List<int>)HttpContext.Current.Session["corredoresComercial"];
+                }
+                set
+                {
+                    HttpContext.Current.Session["corredoresComercial"] = value;
                 }
             }
         }

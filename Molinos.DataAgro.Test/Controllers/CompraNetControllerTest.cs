@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             HttpContext.Current.Session["perfil"] = 7;
             var request = new KendoGridMvcRequest() { SortObjects = new List<SortObject> { new SortObject("Fecha", "asc"), new SortObject("ContratoId", "asc") } };
-            contratoManagerMock.Setup(x => x.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo)).Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato { ContratoId = 1, ComercialId = 1 } }, 15));
+            contratoManagerMock.Setup(x => x.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato { ContratoId = 1, ComercialId = 1 } }, 15));
             var result = target.BuscaDatosTabla(request);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -546,7 +546,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void TraerContratoCompletoTest()
         {
             contratoManagerMock.Setup(x => x.TraerContrato(1)).Returns(new BasicoContrato { ContratoId = 1, Precio = 1, MaterialId = 1, ProveedorId = 1, BoletoId = 3 });
-            var result = target.TraerContratoCompleto(1);
+            var result = target.TraerContratoCompleto(1,"");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 

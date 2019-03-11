@@ -17,7 +17,7 @@ namespace WebDataAgro.Controllers
     public class HomeController : Controller
     {
         private IHomeManager mobjHomeManager;
-        
+
         private IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
 
@@ -27,22 +27,22 @@ namespace WebDataAgro.Controllers
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager)
         {
-            
+
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
         }
 
-        
+
         public ActionResult Index()
         {
             string ActionView = "";
-            
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
+
+            if (GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
-            
+
             if (!comercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
             {
                 ActionView = "ErrorDePermisos";
@@ -52,8 +52,8 @@ namespace WebDataAgro.Controllers
 
                 ViewBag.esadmin = true;
             }
-            
-            return View(ActionView);            
+
+            return View(ActionView);
         }
 
 
@@ -68,11 +68,12 @@ namespace WebDataAgro.Controllers
 
             return View("ErrorUsuarioSinDerechos");
         }
-        
+
         public ActionResult Inicializar()
         {
             var model = new ResultIniContactoModel();
-            var filtro = new oParamBusqueda {
+            var filtro = new oParamBusqueda
+            {
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.EquipoReal
             };
@@ -95,10 +96,10 @@ namespace WebDataAgro.Controllers
         }
 
         public ActionResult BusquedaHome(string filtro)
-        {    
+        {
             return new JsonResult()
             {
-                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, GlobalVariables.Equipo),
+                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial, (int)GlobalVariables.Perfil),
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -129,7 +130,7 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerActividadesPorComercialId()
         {
             var model = new ResultActividadesModel();
-            
+
             var result = mobjHomeManager.TraerActividadesPorComercialId(GlobalVariables.ComercialId);
 
             if (result != null)
@@ -204,7 +205,7 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerPostIt()
         {
             var model = new ResultIniPostItModel();
-            
+
             var result = mobjHomeManager.TraerTexto(GlobalVariables.ComercialId);
 
             if (result != null)
@@ -223,7 +224,7 @@ namespace WebDataAgro.Controllers
         public ActionResult GuardarPostIt(PostIt post)
         {
             var model = new GrabarPostItResult();
-            
+
             post.ComercialId = GlobalVariables.ComercialId;
 
             if (post.ComercialId != 0)
@@ -240,6 +241,6 @@ namespace WebDataAgro.Controllers
 
         }
 
-    } 
- 
+    }
+
 }

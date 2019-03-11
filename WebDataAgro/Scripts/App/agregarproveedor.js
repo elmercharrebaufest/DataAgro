@@ -18,6 +18,12 @@ var aEliminarGranos = [];
 var aEliminarGranosAlmacenamiento = [];
 var aEliminarGranosAlmacenamientoGrano = [];
 
+$(document).ready(function () {
+    kendo.culture("es-AR");
+    armarFuncionalidades();
+    InicializarDatos();
+});
+
 function eliminarGrano(elem) {
     var val = $(elem).prop("id").split("eliminarGrano")[1];
 
@@ -124,11 +130,7 @@ var ocultarTooltip = function (el) {
     $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).hide();
 };
 
-$(document).ready(function () {
-    kendo.culture("es-AR");
-    armarFuncionalidades();
-    InicializarDatos();
-});
+
 
 function buscarLocalidad(val) {
     var data = { Id: val };
@@ -261,6 +263,7 @@ function armarSelects(result) {
     $('#segmentacion').change(function () {
             CrearCorredor();
     });
+    CrearCorredor();
 
     var htmlTipoTelefono = "";
     htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono1">';

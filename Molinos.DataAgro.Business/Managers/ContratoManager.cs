@@ -37,6 +37,7 @@ namespace Molinos.DataAgro.Business.Managers
         private IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
         private IDiferencialManager diferencialManager;
+        private IContratoAcuerdoManager contratoAcuerdoManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -44,7 +45,8 @@ namespace Molinos.DataAgro.Business.Managers
             ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager,
             IPushNotificationManager oMSNotification,
-            IDiferencialManager diferencialManager)
+            IDiferencialManager diferencialManager,
+            IContratoAcuerdoManager contratoAcuerdoManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -57,6 +59,7 @@ namespace Molinos.DataAgro.Business.Managers
             mobjTipoNegocioManager = oMSTipoNegocioManager;
             mobjNotification = oMSNotification;
             this.diferencialManager = diferencialManager;
+            this.contratoAcuerdoManager = contratoAcuerdoManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
@@ -74,7 +77,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
-                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial || x.Perfil.PerfilId == (int)EnumPerfil.Jefe || x.Perfil.PerfilId == (int)EnumPerfil.Mesa), 0, "Comercial");
+                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial || x.Perfil.PerfilId == (int)EnumPerfil.CorredoresComercial || x.Perfil.PerfilId == (int)EnumPerfil.Mesa), 0, "Comercial");
 
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
@@ -349,8 +352,12 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = oContrato;
             List<DescuentoBonificacion> descuentosExistentes = null;
             List<Calidad> calidadesExistentes = null;
-            List<RangoConfirmacionAutomatica> rangosConfirmacionAutomaticaExistentes = repositorio.Listar<RangoConfirmacionAutomatica>(x => x.MaterialId == oContrato.MaterialId &&
-                                                                                                            x.MonedaId == oContrato.MonedaId);
+            var hoy = DateTime.Now;
+
+            var rangoConfirmacionAutomaticaActivo = repositorio.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(
+                                    x => x.FechaDesde <= hoy && x.MaterialId == oContrato.MaterialId && x.MonedaId == oContrato.MonedaId,
+                                    x => x.FechaDesde);
+
 
             if (oContrato.ContratoId != 0)
             {
@@ -488,30 +495,34 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave.ContratoId == 0)
             {
+                oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
                 repositorio.Agregar(oContratoSave);
             }
 
-            if (rangosConfirmacionAutomaticaExistentes.Count >= 1)
+            if (rangoConfirmacionAutomaticaActivo != null)
             {
-                if (rangosConfirmacionAutomaticaExistentes.Any(x => x.PrecioMinimo <= oContratoSave.Precio && x.PrecioMaximo >= oContratoSave.Precio))
+                if (rangoConfirmacionAutomaticaActivo.MaterialId == oContrato.MaterialId && rangoConfirmacionAutomaticaActivo.MonedaId == oContrato.MonedaId)
                 {
-                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                    logger.Debug("El contrato" + oContratoSave.ContratoId + "se finalizo automaticamente por estar dentro de los rangos configurados");
+                    if (rangoConfirmacionAutomaticaActivo.PrecioMinimo <= oContratoSave.Precio && rangoConfirmacionAutomaticaActivo.PrecioMaximo >= oContratoSave.Precio)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        logger.Debug("El contrato" + oContratoSave.ContratoId + "se finalizo automaticamente por estar dentro de los rangos configurados");
+                    }
                 }
             }
 
+
             repositorio.GuardarCambios();
-            if(oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
+            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
                 diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
             }
-
             return oEntityErrors;
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, perfilId, listComercialesId));
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, perfilId, listComercialesId, corredoresComercial));
         }
 
         public GrabarContratoResult ConfirmarContrato(int contratoId)
@@ -533,6 +544,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 repositorio.GuardarCambios();
                 diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
+
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.ComercialId.Value);
                 try
                 {
@@ -585,20 +597,22 @@ namespace Molinos.DataAgro.Business.Managers
 
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
+                    //DESCOMENTAR -----------------------
+                    //string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
 
-                    try
-                    {
-                        oContratoSave.ContratoSAP = nroContratoSAP;
-                    }
-                    catch (Exception e)
-                    {
-                        oContratoSave.ContratoSAP = "";
-                        logger.Error(e);
-                    }
+                    //DESCOMENTAR -----------------------
+                    //try
+                    //{
+                    //    oContratoSave.ContratoSAP = nroContratoSAP;
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    oContratoSave.ContratoSAP = "";
+                    //    logger.Error(e);
+                    //}
 
                     try
                     {
@@ -1186,6 +1200,91 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+
+        public List<ContratoCopiar> TraerContratosPorSap(string nrocontratoSap)
+        {
+            return repositorio.ListarConsulta(new DevolverContratos(nrocontratoSap));
+        }
+
+        private void AsignarContratoAcuerdo(Contrato contrato)
+        {
+            var contratoAcuerdo = contratoAcuerdoManager.ObtenerContratoAcuerdoParaAsociar(contrato.Fecha, contrato.DestinoId.Value, contrato.MaterialId, contrato.ProveedorId);
+            if (contratoAcuerdo != null)
+            {
+                contrato.ContratoAcuerdoId = contratoAcuerdo.Id;
+            }
+        }
+
+        public List<ContratoCopiar> TraerContratosAcuerdo(string filtro)
+        {
+            return repositorio.ListarConsulta(new DevolverContratosAcuerdo(filtro));
+        }
+
+
+        public BasicoContrato TraerContratoAcuerdoACopiar(int contratoId)
+        {
+            var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
+            {
+                ContratoId = x.Id,
+                ProveedorId = x.ProveedorId,
+                Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
+                Corredor = "",
+                ComercialId = x.ComercialCreadorId,
+                FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHasta),
+                FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.Fecha),
+                TipoNegocioId = 2,
+                MaterialId = x.MaterialId,
+                Cantidad = x.Cantidad,
+                Ampliaciones = null,
+                Precio = x.Precio,
+                MonedaId = x.MonedaId,
+                CampanaId = 0,
+                ProvinciaId = x.Proveedor.ProveedorId,
+                Provincia = x.Proveedor.Provincia.Nombre,
+                LocalidadId = x.Proveedor.LocalidadId,
+                Localidad = x.Proveedor.Localidad.Nombre,
+                ContratoSAP = "",
+                Base = null,
+                Observacion = "",
+                Estado = x.EstadoId,
+                Importe_Sustentable = 0,
+                Moneda_Sustentable = "",
+                Fecha_DolarizadoFormateado = "",
+                Dias_Pesificado = 0,
+                NoInformaSIO = null,
+                TrigoEspecial = null,
+                ClasificacionId = x.Proveedor.ClasificacionCompraNetId,
+                DestinoId = x.DestinoId,
+                PlanCanje = null,
+                Consignatario = x.Proveedor.Consignatario,
+                CantidadCamiones = 0,
+                BoletoId = x.Proveedor.BoletoCompraNetId,
+                BolsaId = x.Proveedor.BolsaCompraNetId,
+                DesdeFijacionFormateado = "",
+                HastaFijacionFormateado = "",
+                CondicionFijacion = null,
+                CD = null,
+                Warrant = null,
+                PagoDirectoVendedor = null,
+                EstablecimientoPropio = null,
+                MercsDeposito = null,
+                PorcentajeComision = null,
+                ContratoCorredor = "",
+                ContratoVendedor = "",
+                SelCargoMOA = null,
+                SelCargoVendedor = null,
+                Madre = null,
+                ContratoMadre = null
+            });
+            return contrato;
         }
     }
 }

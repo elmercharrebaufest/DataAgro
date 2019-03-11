@@ -167,10 +167,11 @@ function CreateGridInformeCompraNet() {
             {
                 title: "Fecha", columns: [
                     { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 80 },
-                    { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 },
+                    { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 }
                 ]
             },
             { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
+            { field: "ComercialCreador", title: "Comercial Registra", filterable: { ui: createMultiSelectComercial } },
             {
                 field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },

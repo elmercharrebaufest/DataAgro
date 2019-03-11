@@ -73,7 +73,7 @@ namespace Molinos.DataAgro.Business
 
         public ComercialDto TraerComercial(int intComercialId)
         {
-            return repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x => 
+            return repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
                 new ComercialDto
                 {
                     IdActiveDirectory = x.IdActiveDirectory,
@@ -211,14 +211,15 @@ namespace Molinos.DataAgro.Business
             return repositorio.Existe<Comercial>(x => x.IdActiveDirectory == ActiveDirectoryId);
         }
 
-        public bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId)
+        public bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId, int perfilId, List<int> corredoresComercial)
         {
-            return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId));
+            return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId
+                        && (equipo.Contains(x.Comercial.ComercialId) || (perfilId ==(int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(x.Comercial.ComercialId))));
         }
 
         public List<ComercialDto> ListarComercial(string comercial, List<int> comerciales)
         {
-            return repositorio.Listar<Comercial, ComercialDto>( x => new ComercialDto {ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido },
+            return repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido },
                 x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
         }
 
@@ -234,14 +235,14 @@ namespace Molinos.DataAgro.Business
 
         public EquipoDto ListarEquipo(string idActiveDirectory)
         {
-            
+
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
-            if(comercial.PerfilId == 4|| comercial.PerfilId == 5)
+            if (comercial.PerfilId == 4 || comercial.PerfilId == 5)
             {
                 comercial = repositorio.Obtener<Comercial>(x => x.PerfilId == 3);
             }
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
-            
+
             var resultado = new EquipoDto
             {
                 EquipoReal = ListarEquipo(comercial.ComercialId, comerciales)
@@ -261,15 +262,15 @@ namespace Molinos.DataAgro.Business
             return resultado;
         }
         public List<int> CadenaComerciales(int comercialId)
-        {           
+        {
             var listaSuperiores = new List<int>();
-            var perfilComercial = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x=>x.PerfilId);
+            var perfilComercial = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x => x.PerfilId);
             if (perfilComercial != 7)
             {
                 listaSuperiores.Add(comercialId);
             }
             ObtenerCadenaUsuarios(comercialId, listaSuperiores);
-            
+
             return listaSuperiores;
         }
         private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
@@ -277,7 +278,7 @@ namespace Molinos.DataAgro.Business
             var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId);
             if (comercial.PerfilId == 7)
             {
-            listaSuperiores.Add(comercial.ComercialId);
+                listaSuperiores.Add(comercial.ComercialId);
             }
 
             if (comercial.EmpleadorACargo != null)
@@ -290,9 +291,20 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
         }
+
+        public List<int> ListarCorredoresComercial(int perfilId)
+        {
+            var resultado = (perfilId == (int)EnumPerfil.CorredoresComercial) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.PerfilId == (int)EnumPerfil.CorredoresComercial) : new List<int>();
+            return resultado;
+        }
+
+        public List<Comercial> ListarComercialesPorPerfil(EnumPerfil perfil)
+        {
+            return repositorio.Listar<Comercial>(x => x.PerfilId == (int)perfil);
+        }
     }
 }
-    
+
 
 
 

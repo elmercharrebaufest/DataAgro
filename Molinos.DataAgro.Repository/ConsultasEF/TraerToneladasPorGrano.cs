@@ -14,12 +14,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
         private readonly bool? calidad;
-        public TraerToneladasPorGrano(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad = null)
+        private readonly int centroId;
+        public TraerToneladasPorGrano(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad = null, int centroId = 0)
         {
             this.materialId = materialId;
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
             this.calidad = calidad;
+            this.centroId = centroId;
         }
 
         public ToneladasGranoTipoDto Ejecutar(DbContext contexto)
@@ -28,7 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var toneladasPorGrano = new ToneladasGranoTipoDto();
-            var query = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
+            var query = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (0 == centroId || x.DestinoId == centroId) && x.ContratoAcuerdo == null)
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
@@ -47,11 +49,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.NewAFijar = query.NewAFijar;
             toneladasPorGrano.NewAPrecio = query.NewAPrecio;
 
-            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)))
+            query = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (centroId == 0 || centroId == 1))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
-                    DispFijac = x.Where(y => (DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId) || (y.Material.CampañaId > y.CampanaId )).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                    DispFijac = x.Where(y => (DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId) || (y.Material.CampañaId > y.CampanaId)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     FrwFijac = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha) && y.Material.CampañaId == y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     NewFijac = x.Where(y => y.Material.CampañaId < y.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                 }).First();
@@ -60,7 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.FrwFijac = query.FrwFijac;
             toneladasPorGrano.NewFijac = query.NewFijac;
 
-            query = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)))
+            query = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
                 .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
                 .Select(x => new ToneladasGranoTipoDto()
                 {
@@ -73,9 +75,20 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.FrwFason = query.FrwFason;
             toneladasPorGrano.NewFason = query.NewFason;
 
+            query = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2) && x.MaterialId == materialId && (calidad == null || !calidad.Value) && (0 == centroId || x.DestinoId == centroId))
+               .GroupBy(x => x.Material.MaterialId).DefaultIfEmpty()
+               .Select(x => new ToneladasGranoTipoDto()
+               {
+                   DispAPrecio = x.Where(y => (DbFunctions.TruncateTime(y.FechaDesde) <= DbFunctions.TruncateTime(y.Fecha))).Select(y => Math.Ceiling((double)y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+                   FrwAPrecio = x.Where(y => DbFunctions.TruncateTime(y.FechaDesde) > DbFunctions.TruncateTime(y.Fecha)).Select(y => Math.Ceiling((double)y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
+               }).First();
+
+            toneladasPorGrano.DispAPrecio += query.DispAPrecio;
+            toneladasPorGrano.FrwAPrecio += query.FrwAPrecio;
+
             toneladasPorGrano.Total = toneladasPorGrano.DispAFijar + toneladasPorGrano.DispAPrecio + toneladasPorGrano.DispFijac + toneladasPorGrano.DispFason +
-               toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
-               toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
+            toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
+            toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
             return toneladasPorGrano;
         }
