@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report.ActiveReport;
 using System.Collections.Generic;
 using System.IO;
 
@@ -40,7 +41,7 @@ namespace Molinos.DataAgro.Report.Clases
                 {
                     Identificador = identif,
                     FileName = "Agenda.pdf",
-                    Contenido = ms.ToArray()
+                    Contenido = ms.ToArray().ReplaceText()
                 };
 
                 reportesManager.GrabarReporte(oReporte);

@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Managers
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina)
+        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> corredoresComerciales)
         {
             var res = new ResultIniContacto();
 
@@ -37,6 +37,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
 
             res.Contactos = DevolverContactosIni(query);
+            foreach (int comercialAmigo in corredoresComerciales)
+            {
+                var re = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(comercialAmigo, oParam.ComercialId)));
+                res.Contactos.AddRange(re);
+            }
 
             oParam.Estado = null;
             var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
@@ -346,6 +351,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", ex.Message);
             }
             return oEntityErrors;
+        }
+
+        public ResultIniContacto TraerBusquedaContactoCorredores(int comercialId, int comercialOriginalIda)
+        {
+            var lista = repositorio.ListarConsulta(new TraerCorredoresComercial(comercialId, comercialOriginalIda));
+            return null;
         }
 
 

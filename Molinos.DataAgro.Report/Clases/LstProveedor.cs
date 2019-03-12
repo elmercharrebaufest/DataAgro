@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report.ActiveReport;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -218,7 +219,7 @@ namespace Molinos.DataAgro.Report.Clases
                 {
                     Identificador = identif,
                     FileName = "Proveedor.pdf",
-                    Contenido = ms.ToArray()
+                    Contenido = ms.ToArray().ReplaceText()
                 };
 
                 reportesManager.GrabarReporte(oReporte);

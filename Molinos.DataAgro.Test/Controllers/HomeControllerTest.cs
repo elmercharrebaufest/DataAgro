@@ -76,13 +76,14 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void InicializarTest()
         {
+            HttpContext.Current.Session["perfil"] = 7;
             HttpContext.Current.Session["equipoReal"] = new List<int>();
             var filtro = new oParamBusqueda
             {
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.EquipoReal
             };
-            homeManagerMock.Setup(x => x.TraerBusquedaContacto(filtro, 1)).Returns(new ResultIniContacto
+            homeManagerMock.Setup(x => x.TraerBusquedaContacto(filtro, 1, new List<int>())).Returns(new ResultIniContacto
             {
                 Contactos = new List<ContactoIni>(),
                 TotalBajaContactos = 0,
@@ -109,7 +110,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var result = target.Inicializar();
             Assert.NotNull(result);
-            homeManagerMock.Verify(x => x.TraerBusquedaContacto(It.IsAny<oParamBusqueda>(), It.IsAny<int>()), Times.Once);
+            homeManagerMock.Verify(x => x.TraerBusquedaContacto(It.IsAny<oParamBusqueda>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
             homeManagerMock.Verify(x => x.TraerInfoCampaña(It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
             var a = serializer.Serialize(result);

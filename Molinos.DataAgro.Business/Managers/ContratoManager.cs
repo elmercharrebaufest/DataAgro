@@ -506,7 +506,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (rangoConfirmacionAutomaticaActivo.PrecioMinimo <= oContratoSave.Precio && rangoConfirmacionAutomaticaActivo.PrecioMaximo >= oContratoSave.Precio)
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                        logger.Debug("El contrato" + oContratoSave.ContratoId + "se finalizo automaticamente por estar dentro de los rangos configurados");
+                        logger.Debug("El contrato " + oContratoSave.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
                     }
                 }
             }
@@ -515,7 +515,21 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
-                diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
+                try
+                {
+                    if (oContratoSave.ComercialId.HasValue)
+                    {
+                        diferencialManager.ValidarComprasDiferencial(oContratoSave.ComercialId.Value);
+                    }
+                    else
+                    {
+                        diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("No se pudo ValidarComprasDiferencial", ex);
+                }
             }
             return oEntityErrors;
         }
@@ -543,7 +557,21 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
                 repositorio.GuardarCambios();
-                diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
+                try
+                {
+                    if (oContratoSave.ComercialId.HasValue)
+                    {
+                        diferencialManager.ValidarComprasDiferencial(oContratoSave.ComercialId.Value);
+                    }
+                    else
+                    {
+                        diferencialManager.ValidarComprasDiferencial(oContratoSave.Comercial.ComercialId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("No se pudo ValidarComprasDiferencial", ex);
+                }
 
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.ComercialId.Value);
                 try

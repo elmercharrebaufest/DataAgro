@@ -1,7 +1,9 @@
 ﻿using DataDynamics.ActiveReports.Export.Pdf;
+using iTextSharp.text.pdf;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report.ActiveReport;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
@@ -60,13 +62,14 @@ namespace Molinos.DataAgro.Report.Clases
 
             using (MemoryStream ms = new MemoryStream())
             {
+                //oRptInformeComercial.Document.
                 oExportPDF.Export(oRptInformeComercial.Document, ms);
 
                 var oReporte = new Reportes()
                 {
                     Identificador = identif,
                     FileName = oParam.CUIT.ToString() + " - " + oParam.RazonSocial.ToString() + ".pdf",
-                    Contenido = ms.ToArray()
+                    Contenido = ms.ToArray().ReplaceText()
                 };
                 
                 reportesManager.GrabarReporte(oReporte);

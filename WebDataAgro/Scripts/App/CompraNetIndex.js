@@ -98,6 +98,15 @@ $("#confirmarVariosDiv").ready(function () {
     }
 });
 
+$("#buscadorZonaDiv").ready(function () {
+    if ($("#perfil").val() == "Mesa") {
+        $("#buscadorZonaDiv").show();
+    } else {
+        $("#buscadorZonaDiv").hide();
+    }
+}
+);
+
 function htmlEncode(value) {
     return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, "")).html();
 }

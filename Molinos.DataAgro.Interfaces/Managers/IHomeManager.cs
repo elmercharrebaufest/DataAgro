@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IHomeManager
     {
-        ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina);
+        ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> corredoresComerciales);
 
         CampañaHome TraerInfoCampaña(int idComercial, List<int> equipo);
 
@@ -25,5 +25,7 @@ namespace Molinos.DataAgro.Interfaces
         PostItDto TraerTexto(int idComercial);
 
         GrabarPostItResult GuardarPostIt(PostIt post);
+
+        ResultIniContacto TraerBusquedaContactoCorredores(int comercialId, int comercialOrigicalId);
     }
 }

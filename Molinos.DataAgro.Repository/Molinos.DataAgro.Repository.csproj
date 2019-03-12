@@ -101,6 +101,7 @@
     <Compile Include="ConsultasEF\DevolverProveedoresConCorredor.cs" />
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
+    <Compile Include="ConsultasEF\TraerCorredoresComercial.cs" />
     <Compile Include="ConsultasEF\TraerPosicionMaterialMes.cs" />
     <Compile Include="ConsultasEF\TraerMonedaKilo.cs" />
     <Compile Include="ConsultasEF\TraerToneladasSojaSustentable.cs" />

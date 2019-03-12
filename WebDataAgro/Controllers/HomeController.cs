@@ -77,7 +77,15 @@ namespace WebDataAgro.Controllers
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.EquipoReal
             };
-            var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1);
+            ResultIniContacto result;
+            if (GlobalVariables.Perfil != EnumPerfil.CorredoresComercial)
+            {
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, new List<int>());
+            }
+            else
+            {
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.CorredoresComercial);
+            }
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
 
@@ -112,7 +120,15 @@ namespace WebDataAgro.Controllers
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = GlobalVariables.EquipoReal;
 
-            var result = mobjHomeManager.TraerBusquedaContacto(filtro, pagina);
+            ResultIniContacto result;
+            if (GlobalVariables.Perfil != EnumPerfil.CorredoresComercial)
+            {
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, new List<int>());
+            }
+            else
+            {
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.CorredoresComercial);
+            }
 
             if (result != null)
             {
