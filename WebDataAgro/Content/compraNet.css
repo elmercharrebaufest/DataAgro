@@ -4,9 +4,9 @@
     font-size: 100%;
 }
 
-.formulario-footer-cancelar:hover {
-    text-decoration: none;
-}
+    .formulario-footer-cancelar:hover {
+        text-decoration: none;
+    }
 
 .btnDestacado {
     background-color: #26337B;
@@ -17,15 +17,17 @@
 }
 
 .mySearchHide, .hideFiltros {
-	display: none
+    display: none
 }
 
 .k-icon.k-i-close {
     display: none !important;
 }
-#LocalidadCrearContrato{
-    width:100%;
+
+#LocalidadCrearContrato {
+    width: 100%;
 }
+
 .btnAzul {
     background-color: #26337B;
     color: #fff;
@@ -33,10 +35,10 @@
     border-radius: 5px !important;
 }
 
-.btnAzul:hover {
-    background-color: #151f52;
-    cursor: pointer
-}
+    .btnAzul:hover {
+        background-color: #151f52;
+        cursor: pointer
+    }
 
 .btnVerde {
     background-color: #017940;
@@ -44,19 +46,22 @@
     /*padding: 8px;
     border-radius: 5px!important;*/
 }
+
 #boton-ampliar {
     font-weight: bold;
     color: white;
     background-color: #286ed2;
 }
-.ampliar{
-    display:none;
+
+.ampliar {
+    display: none;
 }
-    #boton-ampliar:hover {
-        background-color: #286ed2;
-        background-image: none;
-        border-color: #286ed2;
-    }
+
+#boton-ampliar:hover {
+    background-color: #286ed2;
+    background-image: none;
+    border-color: #286ed2;
+}
 
 .btnVerde:hover {
     background-color: #046135;
@@ -67,12 +72,12 @@
     line-height: 1.6;
 }
 
-label{
-    margin-bottom:12px;
+label {
+    margin-bottom: 12px;
 }
 
 #lblPlanCanje {
-   width:76px;
+    width: 76px;
 }
 
 #pivotgrid {
@@ -95,18 +100,20 @@ label{
     background-color: #017940;
     color: #fff;
 }
+
 .required-border-proveedor:invalid {
     border: 1px solid red;
     border-right: 3px solid red;
 }
+
 .required-border {
     border: 1px solid red !important;
     border-right: 2px solid red !important;
 }
 
 .no-border {
-    background-color:#d3d3d3 !important;
-    border:none !important;
+    background-color: #d3d3d3 !important;
+    border: none !important;
 }
 
 #buscadorResult, #buscadorResultModalPendiente {
@@ -123,11 +130,11 @@ label{
     z-index: 1000;
 }
 
-ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-right: 1px;
-}
+    ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-right: 1px;
+    }
 
 #gridInformeCompraNet td .status,
 #gridInformeCompraNet td .status:hover {
@@ -196,6 +203,7 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 .bor { /*icons*/
     color: #848484;
 }
+
 .status.anulado {
     background-color: #848484;
     color: #000000;
@@ -204,6 +212,7 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 .anu { /*icons*/
     color: #848484;
 }
+
 .status.reconfirmar {
     background-color: #ac67ca;
     color: #ffffff;
@@ -236,9 +245,11 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 #border-grey {
     border-bottom: 5px solid #848484;
 }
+
 #border-purple {
     border-bottom: 5px solid #ac67ca;
 }
+
 .divtop {
     /*position: relative;
     bottom: 4px;*/
@@ -249,18 +260,18 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     text-align: right;
 }
 
-#gridInformeCompraNet td button {
-    border: 0;
-    margin: 5px;
-    padding: 0;
-    background-color: transparent;
-    color: #aaa;
-    font-size: 23px;
-}
+    #gridInformeCompraNet td button {
+        border: 0;
+        margin: 5px;
+        padding: 0;
+        background-color: transparent;
+        color: #aaa;
+        font-size: 23px;
+    }
 
-#gridInformeCompraNet td button:hover {
-    color: #fff;
-}
+        #gridInformeCompraNet td button:hover {
+            color: #fff;
+        }
 
 .modal .modal-header {
     padding: 6px;
@@ -300,8 +311,7 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     text-align: right;
     padding: 3px 5px;
     border-bottom: 0;
-    color: #333!important;
-
+    color: #333 !important;
 }
 
 #modalVisualizar .marginCero {
@@ -329,6 +339,7 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 #modalVisualizar .campo:last-child {
     border-bottom: 1px solid #dbdbdb;
 }
+
 #modalVisualizar .fason {
     border-bottom: 1px solid #dbdbdb;
 }
@@ -352,15 +363,15 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    font-weight: 400!important;
+    font-weight: 400 !important;
     background-color: #fff;
 }
 
-.myBtn:hover, .myBtn:active {
-    color: #FFF;
-    background: #017940;
-    border-color: #017940;
-}
+    .myBtn:hover, .myBtn:active {
+        color: #FFF;
+        background: #017940;
+        border-color: #017940;
+    }
 
 #modalVisualizar div.status {
     display: none;
@@ -377,59 +388,64 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
 }
 
 .mover-izquierda {
-    right:14px;
-    bottom:3px;
+    right: 14px;
+    bottom: 3px;
 }
+
 .mover-derecha {
     left: 17px;
     bottom: 3px;
 }
+
 .modal .confirmado div {
-    background: #008e61!important;
+    background: #008e61 !important;
 }
 
 .modal .finalizado div {
-    background: #000!important;
+    background: #000 !important;
 }
 
 .modal .pendiente div {
-    background: #ffc100!important;
+    background: #ffc100 !important;
 }
 
 .modal .oferta div {
-    background: #00adf5!important;
+    background: #00adf5 !important;
 }
 
 .modal .conerror div {
-    background: #d00707!important;
+    background: #d00707 !important;
 }
 
 
 .modal .confirmado-modal div {
-    background: #008e61!important;
+    background: #008e61 !important;
 }
 
 .modal .finalizado-modal div {
-    background: #000!important;
+    background: #000 !important;
 }
 
 .modal .pendiente-modal div {
-    background: #ffc100!important;
+    background: #ffc100 !important;
 }
 
 .modal .oferta-modal div {
-    background: #00adf5!important;
+    background: #00adf5 !important;
 }
 
 .modal .conerror-modal div {
-    background: #d00707!important;
+    background: #d00707 !important;
 }
+
 .modal .borrado-modal div {
     background: #848484 !important;
 }
+
 .modal .reconfirmar-modal div {
     background: #ac67ca !important;
 }
+
 .modal .close {
     float: right;
     font-size: 21px;
@@ -438,7 +454,7 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb{
     color: #000000;
     text-shadow: 0 1px 0 #ffffff;
     opacity: 0.2;
-    background: none!important;
+    background: none !important;
     text-indent: 0;
 }
 
@@ -471,14 +487,14 @@ textarea.k-textbox {
     text-align: justify;
 }
 
-#modalVisualizar .campo.campoAdicionales.observacion p {
-    margin: 0px 0 10px 100px;
-    padding-top: 5px;
-}
+    #modalVisualizar .campo.campoAdicionales.observacion p {
+        margin: 0px 0 10px 100px;
+        padding-top: 5px;
+    }
 
 #gridInformeCompraNet {
     font-size: 12px;
-    zoom:90%
+    zoom: 90%
 }
 
 .modal-dialog-pendiente {
@@ -490,7 +506,7 @@ textarea.k-textbox {
 }
 
 .linea-pendiente {
-    margin-top:3px;
+    margin-top: 3px;
     margin-bottom: 2px
 }
 
@@ -503,32 +519,34 @@ body.modal-open {
     overflow-y: hidden !important;
 }
 
-.modal-dialog.pendienteM{
-    padding-top:5px;
-    padding-bottom:10px;
+.modal-dialog.pendienteM {
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 .k-filter-menu .k-button {
     width: auto !important;
 }
 
-body { 
+body {
     height: 100%;
 }
 
-.checks-adicionales{
-    display:contents;
+.checks-adicionales {
+    display: contents;
 }
-.row-checks{
-    width:130px;
-    display:inline-block;
+
+.row-checks {
+    width: 130px;
+    display: inline-block;
 }
 
 .calidad {
     display: inherit;
 }
-#descuento-datos{
-    display:flex;
+
+#descuento-datos {
+    display: flex;
 }
 
 #descuentos-bonificaciones {
@@ -538,17 +556,20 @@ body {
 #IngresarDescuento {
     vertical-align: initial;
 }
-#tabla-descuentos{
-    overflow:auto;
-    margin-right:auto;
+
+#tabla-descuentos {
+    overflow: auto;
+    margin-right: auto;
 }
 
-#tabla-descuentos div div {
+    #tabla-descuentos div div {
+        border-bottom: 1px solid #bdbcbc
+    }
+
+#tabla-calidades > div {
     border-bottom: 1px solid #bdbcbc
 }
-#tabla-calidades>div{
-    border-bottom: 1px solid #bdbcbc
-}
+
 #eliminar-descuento {
     margin-right: 20px;
     margin-bottom: 20px;
@@ -561,7 +582,8 @@ body {
     box-shadow: none !important;
     color: #787878;
 }
-#eliminar-calidad {    
+
+#eliminar-calidad {
     font-size: 25px;
     text-decoration: none;
     cursor: pointer;
@@ -569,8 +591,9 @@ body {
     box-shadow: none !important;
     color: #787878;
 }
+
 .page-container {
-    padding:0!important;
+    padding: 0 !important;
 }
 
 .page-content-wrapper .page-content {
@@ -580,7 +603,7 @@ body {
 
 @media only screen and (max-width: 768px) {
     #descuento-datos {
-        display:inherit;
+        display: inherit;
     }
 }
 
@@ -593,6 +616,7 @@ body {
         display: none;
     }
 }
+
 @media (max-width: 1023px) {
     .k-header[data-field*="Ampliaciones"],
     .k-header[data-field*="FechaDesde"],
@@ -603,9 +627,11 @@ body {
     .mobile-sm {
         display: none;
     }
+
     .k-filter-row th, .k-grid-header th.k-header {
         padding: .5em .6em 0em .0em;
     }
+
     #border-orange {
         border-bottom: none;
     }
@@ -629,14 +655,17 @@ body {
     #border-grey {
         border-bottom: none;
     }
+
     #gridInformeCompraNet {
         display: inherit;
     }
 }
+
 @media (max-width: 1023px) and (min-width: 500px) {
-    .k-header[data-field*="PrecioPlazo"]{
+    .k-header[data-field*="PrecioPlazo"] {
         padding-bottom: 2px !important;
     }
+
     .k-header[data-field*="PrecioPlazo"],
     .mobile-precioPlazo {
         display: table-cell !important;
@@ -647,210 +676,219 @@ body {
         display: none;
     }
 }
-    @media(max-width: 500px) {
-        .k-header[data-field*="Material"],
-        .k-header[data-field*="Cantidad"],
-        .k-header[data-field*="Fecha"],
-        .k-header[data-field*="Precio"],
-        .k-header[data-field*="Comercial"],
-        .k-header[data-field*="GrupoCompraDescripcion"],
-        .k-header[data-field*="DestinoDescripcion"],
-        .mobile-xs {
-            display: none;
-        }
-    }
 
-    @media (max-width: 370px) {
-        #valorespecialDiv {
-            display: flex;
-        }
+@media(max-width: 500px) {
+    .k-header[data-field*="Material"],
+    .k-header[data-field*="Cantidad"],
+    .k-header[data-field*="Fecha"],
+    .k-header[data-field*="Precio"],
+    .k-header[data-field*="Comercial"],
+    .k-header[data-field*="GrupoCompraDescripcion"],
+    .k-header[data-field*="DestinoDescripcion"],
+    .mobile-xs {
+        display: none;
     }
+}
 
-    .col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
+@media (max-width: 370px) {
+    #valorespecialDiv {
         display: flex;
     }
+}
 
-    @media (max-width: 425px) {
-        #modalPendienteDiv {
-            padding: 10px 5px 15px 5px;
+.col-md-10 span .k-numeric-wrap, .col-md-5 span .k-numeric-wrap {
+    display: flex;
+}
+
+@media (max-width: 425px) {
+    #modalPendienteDiv {
+        padding: 10px 5px 15px 5px;
+    }
+
+        #modalPendienteDiv .modal-body {
+            padding: 0 5px 0px 5px;
         }
 
-            #modalPendienteDiv .modal-body {
-                padding: 0 5px 0px 5px;
+            #modalPendienteDiv .modal-body h5 {
+                font-size: 11px;
             }
 
-                #modalPendienteDiv .modal-body h5 {
-                    font-size: 11px;
-                }
-
-        #tabla-descuentos {
-            width: max-content;
-        }
+    #tabla-descuentos {
+        width: max-content;
     }
-    @media (min-width: 768px) {
-        #lblBase {
-            margin-right: 66px;
-        }
+}
 
-        #lblPlan {
-            width: 76px;
-            margin-right: 22px;
-        }
-
-        #lblPropio {
-            margin-right: 57px;
-        }
-
-        #mercEnDepLabel {
-            margin-right: 5px;
-        }
+@media (min-width: 768px) {
+    #lblBase {
+        margin-right: 66px;
     }
 
-    @media (max-width: 991px) {
-        .descuento-fecha {
+    #lblPlan {
+        width: 76px;
+        margin-right: 22px;
+    }
+
+    #lblPropio {
+        margin-right: 57px;
+    }
+
+    #mercEnDepLabel {
+        margin-right: 5px;
+    }
+}
+
+@media (max-width: 991px) {
+    .descuento-fecha {
         width: -webkit-fill-available;
     }
 }
-    @media (max-width: 991px) and (min-width: 768px) {
-        #mercEnDepLabel {
-            margin: 0 0 12px 16px;
-        }
-    }
-    @media (min-width: 992px) {
-        .widthButton {
-            width: 91.5%;
-        }
-    } 
-    @media (max-width: 1216px) {
-        .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-        .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-        .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-        .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-        .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
-            display: none;
-        }
-    }
 
-    .loader {
-        border: 4px solid #f3f3f3; /* Light grey */
-        border-top: 4px solid #017940;
-        border-radius: 50% !important;
-        width: 25px;
-        height: 25px;
-        animation: spin 1s linear infinite;
+@media (max-width: 991px) and (min-width: 768px) {
+    #mercEnDepLabel {
+        margin: 0 0 12px 16px;
     }
+}
 
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
+@media (min-width: 992px) {
+    .widthButton {
+        width: 91.5%;
+    }
+}
 
-        100% {
-            transform: rotate(360deg);
-        }
+@media (max-width: 1216px) {
+    .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+    .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+        display: none;
+    }
+}
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #017940;
+    border-radius: 50% !important;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
 
-    .botonVarios {
-        cursor: pointer;
-        font-size: 25px;
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.botonVarios {
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.varios {
+    color: #017940;
+}
+
+.k-radio, input.k-checkbox {
+    display: inherit;
+}
+
+.k-checkbox-label, .k-radio-label {
+    display: inherit;
+}
+
+.k-filter-row > th:first-child, .k-grid tbody td:first-child, .k-grid tfoot td:first-child, .k-grid-header th.k-header:first-child {
+    padding-left: 14px;
+}
+
+#modalVisualizar .campo {
+    text-align: left;
+}
+
+#variosDiv {
+    float: right;
+}
+
+#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv {
+    border: 1px solid #848484;
+    border-radius: 5px !important;
+    background: white;
+    text-align: center;
+    margin: 10px;
+    cursor: pointer;
+}
+
+    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span {
+        vertical-align: middle;
     }
 
-    .varios {
-        color: #017940;
-    }
-
-    .k-radio, input.k-checkbox {
-        display: inherit;
-    }
-
-    .k-checkbox-label, .k-radio-label {
-        display: inherit;
-    }
-
-    .k-filter-row > th:first-child, .k-grid tbody td:first-child, .k-grid tfoot td:first-child, .k-grid-header th.k-header:first-child {
-        padding-left: 14px;
-    }
-
-    #modalVisualizar .campo {
-        text-align: left;
-    }
-
-    #variosDiv {
-        float: right;
-    }
-
-    #confirmarVariosDiv, #finalizarVariosDiv {
-        border: 1px solid #848484;
-        border-radius: 5px !important;
-        background: white;
-        text-align: center;
-        margin: 10px;
-        cursor: pointer;
-    }
-
-        #confirmarVariosDiv > span, #finalizarVariosDiv > span {
-            vertical-align: middle;
-        }
-
-        #confirmarVariosDiv:hover, #finalizarVariosDiv:hover {
-            background: #ccc;
-            border: 1px solid #017940;
-        }
-
-    .myBtn-disabled {
-        width: 100%;
-        text-decoration: none;
-        color: #787878;
-        text-align: center;
-        box-shadow: none !important;
-        padding: 6px;
-        color: #000;
+    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover {
+        background: #ccc;
         border: 1px solid #017940;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        font-weight: 400 !important;
-        background-color: #fff;
     }
 
-#contratos-pendientes{
-    color:red;
-    margin:0 30px;
-    overflow-x:auto;
+.myBtn-disabled {
+    width: 100%;
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400 !important;
+    background-color: #fff;
 }
 
-#contratos-pendientes span {
-    font-weight: bold;
-    font-size: 15px;
-    font-style:italic;
+#contratos-pendientes {
+    color: red;
+    margin: 0 30px;
+    overflow-x: auto;
 }
 
-@media (max-width: 756px){
-    #tabla-contratos-pendientes{
-        width:500px;
+    #contratos-pendientes span {
+        font-weight: bold;
+        font-size: 15px;
+        font-style: italic;
+    }
+
+@media (max-width: 756px) {
+    #tabla-contratos-pendientes {
+        width: 500px;
     }
 }
+
 .datoscontrato {
     font-size: 13px;
     color: darkgrey;
 }
-.datoscontrato span {
-    color: darkseagreen;
-    display:inline-block;
-}
+
+    .datoscontrato span {
+        color: darkseagreen;
+        display: inline-block;
+    }
+
 .contratoinput {
     width: 100%;
     text-indent: .8em;
 }
+
 .noLeftPadding {
     padding-left: 0;
 }
 
 .destinoSanLorenzo {
-  
 }
+
 .otroDestino {
     background-color: #ffe5aa;
 }
@@ -881,3 +919,13 @@ body {
     #gridIni td button:hover {
         color: #fff;
     }
+
+
+.floatDerecha {
+    float: right;
+}
+
+#inputZona {
+    text-align: center;
+    margin: 15px;
+}

@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Interfaces
         List<int> ListarCorredoresComercial(int perfilId);
 
         List<Comercial> ListarComercialesPorPerfil(EnumPerfil perfil);
+        List<GrupoDeCompras> ListarGrupoDeCompras(string filtro);
     }
 }
 

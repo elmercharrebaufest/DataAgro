@@ -6,6 +6,7 @@ $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     CrearViewModel();
+    InicializarBuscador();
     CreateGridInformeCompraNet();
     AutoRecargar();
 
@@ -73,7 +74,7 @@ $(document).ready(function () {
         $('.datosEditarPendiente').show();
     });
     $("#crearContrato").click(function () {
-        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "CorredoresComercial" ) {
+        if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "CorredoresComercial") {
             window.location.href = window.location.origin + "/CompraNet/CrearContrato";
         } else {
             MensInfo("No posee permisos para la carga de contratos");
@@ -226,6 +227,67 @@ function recargarGrilla() {
     AvisoContratosPendientes();
 }
 
+function filtrarZona() {
+    //FILTRO MANUAL
+    var grilla = $('#gridInformeCompraNet').data("kendoGrid");
+    if ($("#buscadorFiltroZona").val() != null) {
+        addOrRemoveFilter(grilla, "GrupoCompraDescripcion", "eq", $("#buscadorFiltroZona").val());
+    } else {
+        addOrRemoveFilter(grilla, "GrupoCompraDescripcion", "eq", "");
+    }
+    recargarGrilla();
+}
+
+
+function addOrRemoveFilter(grid, field, operator, value) {
+
+    var newFilter = { field: field, operator: operator, value: value };
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+
+    if (value && value.length > 0) {
+        //Add filter
+        if (filters == null) {
+            filters = [newFilter];
+        }
+        else {
+            var isNew = true;
+            var index = 0;
+            for (index = 0; index < filters.length; index++) {
+                if (filters[index].field == field) {
+                    isNew = false;
+                    break;
+                }
+            }
+            if (isNew) {
+                filters.push(newFilter);
+            }
+            else {
+                filters[index] = newFilter;
+            }
+        }
+    }
+    else {
+        //Remove filter 
+        var removeIndex = -1;
+        if (filters != null) {
+            for (var x = 0; x < filters.length; x++) {
+                var temp = filters[x];
+                if (temp.field == field) {
+                    removeIndex = x;
+                    break;
+                }
+            }
+            if (removeIndex != -1)
+                filters.splice(removeIndex, 1);
+        }
+    }
+    dataSource.filter(filters);
+}
+
 function CreateGridInformeCompraNet() {
     var defaultFilter = { field: "Fecha", operator: "eq", value: new Date };
 
@@ -239,7 +301,7 @@ function CreateGridInformeCompraNet() {
             read: {
                 type: 'post',
                 dataType: 'json',
-                url: '/CompraNet/BuscaDatosTabla'
+                url: '/CompraNet/BuscaDatosTablaNew'
             },
             parameterMap: function (options, operation) {
                 if (options.filter) {
@@ -290,7 +352,7 @@ function CreateGridInformeCompraNet() {
             if (($("#perfil").val() !== "Mesa")) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("GrupoCompraDescripcion");
-                
+
             }
             var grid = $("#gridInformeCompraNet").data("kendoGrid");
             var view = grid.dataSource.view();
@@ -304,9 +366,9 @@ function CreateGridInformeCompraNet() {
                     }
                 }
                 if (view[i].DestinoDescripcion != "San Lorenzo" && view[i].DestinoDescripcion != "") {
-                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
-                            .addClass("otroDestino");                           
-                    }
+                    grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                        .addClass("otroDestino");
+                }
             }
             filasSeleccionadas = {};
 
@@ -420,7 +482,7 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { 
+            {
                 field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" }
             },
             {
@@ -1373,4 +1435,45 @@ function AvisoContratosPendientes() {
     if ($("#perfil").val() != "Mesa") {
         $(".comercial-contrato-pendiente").hide();
     }
+}
+
+
+function InicializarBuscador() {
+    $("#buscadorFiltroZona").click(function () {
+        $("#buscadorFiltroZona").data("kendoAutoComplete").value("");
+        $("#buscadorFiltroZona").data("kendoAutoComplete").trigger("change");
+    });
+
+
+
+    $("#buscadorFiltroZona").kendoAutoComplete({
+        template: '<p class="buscar-nomb">#: data.Descripcion#</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/BuscarGrupoDeCompras"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $("#buscadorFiltroZona").val() };
+                }
+            }
+
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+
 }

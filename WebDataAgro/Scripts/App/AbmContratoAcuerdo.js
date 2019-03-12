@@ -189,9 +189,10 @@ function InicializarElementos() {
 function InicializarDate() {
     kendo.culture("es-AR");
     var date = ObtenerFechaDesde();
+    var datehasta = ObtenerFechaHasta();
 
     $("#fechaHasta").kendoDatePicker({
-        value: date,
+        value: datehasta,
         format: "dd/MM/yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     }).kendoDatePicker().data("kendoDatePicker");
@@ -199,12 +200,15 @@ function InicializarDate() {
     $("#fechaDesde").kendoDatePicker({
         value: date,
         format: "dd/MM/yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            $("#fechaHasta").val(ObtenerFechaHasta(this.value()));
+        }
     }).kendoDatePicker().data("kendoDatePicker");
 
 }
-function ObtenerFechaDesde() {
-    var hoy = new Date();
+function ObtenerFechaDesde(fechaBase) {
+    var hoy = fechaBase != undefined ? fechaBase : new Date();
     var anio = hoy.getFullYear();
     var mes = hoy.getMonth() + 1;
     var dia = hoy.getDate();
@@ -215,6 +219,33 @@ function ObtenerFechaDesde() {
         dia = "0" + dia.toString();
     }
     return dia + '-' + mes + '-' + anio;
+}
+
+function ObtenerFechaHasta(fechaBase) {
+    var hoy = fechaBase != undefined ? fechaBase : new Date();
+    var anio = hoy.getFullYear();
+    var mesPost = hoy.getMonth() + 2;
+    var dia = hoy.getDate();
+    var ultimoDia = new Date(anio, hoy.getMonth() + 1, 0).getDate();
+
+    if (dia === 1) {
+        dia = new Date(anio, hoy.getMonth() + 1, 0).getDate();
+        mesPost = hoy.getMonth() + 1;
+    }
+    if (dia === ultimoDia || (mesPost === 2 && dia >= 29)) {
+        dia = new Date(anio, mesPost, 0).getDate();
+    }
+    if (mesPost === 13) {
+        mesPost = 1;
+        anio += 1;
+    }
+    if (mesPost < 10) {
+        mesPost = "0" + mesPost.toString();
+    }
+    if (dia < 10) {
+        dia = "0" + dia.toString();
+    }
+    return dia + '-' + mesPost + '-' + anio;
 }
 
 
@@ -285,7 +316,7 @@ function CreateGridContratoAcuerdo() {
     $("#gridIni").kendoGrid({
         columns: [
             { selectable: true, width: "50px" },
-            { field: "Id", title: "Id" },
+            { field: "Id", title: "Acuerdo" },
             {
                 field: "Proveedor", title: "Proveedor",
                 template: function (dataItem) {

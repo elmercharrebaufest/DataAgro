@@ -302,6 +302,11 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Listar<Comercial>(x => x.PerfilId == (int)perfil);
         }
+
+        public List<GrupoDeCompras> ListarGrupoDeCompras(string filtro)
+        {
+            return repositorio.Listar<GrupoDeCompras>(x => x.Descripcion.Contains(filtro));
+        }
     }
 }
 
