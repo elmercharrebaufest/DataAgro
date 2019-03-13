@@ -61,7 +61,7 @@ function InicializarAutocompletar() {
 
     $("#contratoAcuerdoId").kendoAutoComplete({
         template: '<p class="buscar-nomb">#: data.Id# - #: data.Material# - #: data.RazonSocial# - #: data.Fecha# - #: data.Cantidad# Kg. </p>',
-        minLength: 2,
+        minLength: 1,
         enforceMinLength: true,
         dataTextField: "Id",
         dataValueField: "Id",

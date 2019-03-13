@@ -622,29 +622,26 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 try
                 {
-
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                    //DESCOMENTAR -----------------------
-                    //string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
+                   
+                    string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
-
-                    //DESCOMENTAR -----------------------
-                    //try
-                    //{
-                    //    oContratoSave.ContratoSAP = nroContratoSAP;
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    oContratoSave.ContratoSAP = "";
-                    //    logger.Error(e);
-                    //}
+                    
+                    try
+                    {
+                        oContratoSave.ContratoSAP = nroContratoSAP;
+                    }
+                    catch (Exception e)
+                    {
+                        oContratoSave.ContratoSAP = "";
+                        logger.Error(e);
+                    }
 
                     try
                     {
-                        //Envio de mail
                         mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
                         var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                         foreach (var comercialId in comerciales)
