@@ -78,7 +78,6 @@ function InicializarElementos() {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
-            //InicializarBordesRojos();
         },
         dataSource: {
             severFiltering: true,
@@ -90,7 +89,14 @@ function InicializarElementos() {
                     url: "/Proveedor/BuscarProveedoresConCorredor"
                 },
                 parameterMap: function (data, type) {
-                    return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: false };
+                    var cuitAux = $("#buscadorCorredor").val().split('(');
+                    if (cuitAux[1] != null) {
+                        var cuit = cuitAux[1].split(')');
+                    }
+                    else {
+                        cuit = cuitAux;
+                    }
+                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: false };
                 }
             }
 
@@ -101,6 +107,52 @@ function InicializarElementos() {
             }
         }
     });
+
+
+    $("#buscadorCorredor").click(function () {
+        $("#buscadorCorredor").data("kendoAutoComplete").value("");
+        $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
+    });
+    $("#buscadorCorredor").kendoAutoComplete({
+        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
+            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#buscadorCorredor").val().split('|').length > 1) {
+                $("#buscadorCorredor").val($("#buscadorCorredor").val().split('|')[1]);
+            }
+        },
+        select: function (e) {
+
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarCorredores"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#buscadorCorredor').val(), corredor: true };
+                }
+            }
+
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+
+    });
+
 
 
     $("#comercialId").kendoDropDownList({
@@ -292,6 +344,7 @@ function CrearResultadosDataSource(datos) {
             model: {
                 id: 'Id',
                 fields: {
+                    Corredor: { type: "string", editable: false },
                     Proveedor: { type: "string", editable: false },
                     Cantidad: { type: "number", editable: false },
                     Precio: { type: "number", editable: false },
@@ -316,27 +369,32 @@ function CreateGridContratoAcuerdo() {
     $("#gridIni").kendoGrid({
         columns: [
             { selectable: true, width: "50px" },
-            { field: "Id", title: "Acuerdo" },
             {
-                field: "Proveedor", title: "Proveedor",
+                field: "Id", title: "Acuerdo", 
                 template: function (dataItem) {
                     if (dataItem.EstadoId == 1) {
-                        return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
+                        return '<div class="statuspendiente "></div>' + dataItem.Id;
                     } else if (dataItem.EstadoId == 2) {
-                        return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
+                        return '<div class="statusconfirmado "></div>' + dataItem.Id;
                     }
                 }
             },
+            { field: "Corredor", title: "Corredor" },
+            { field: "Proveedor", title: "Proveedor" },
             { field: "Cantidad", title: "Cantidad" },
-            { field: "Precio", title: "Precio" },
-            { field: "Moneda", title: "Moneda" },
+            {
+                field: "Precio", title: "Precio",
+                template: function (dataItem) {                    
+                        return dataItem.Precio + " " + dataItem.Moneda;                    
+                }},
+            //{ field: "Moneda", title: "Moneda" },
             { field: "Material", title: "Material" },
             { field: "Comercial", title: "Comercial" },
             { field: "Destino", title: "Destino" },
             { field: "Fecha", type: "date", title: "Fecha", format: _DefaultDateTemplate },
-            { field: "FechaDesde", type: "date", title: "Fecha E. Desde", format: _DefaultDateTemplate },
-            { field: "FechaHasta", type: "date", title: "Fecha E. Hasta", format: _DefaultDateTemplate },
-            { field: "PorcentajeCargado", title: "Porc. Cargado (%)", filterable: false },
+            { field: "FechaDesde", type: "date", title: "F. E. Desde", format: _DefaultDateTemplate },
+            { field: "FechaHasta", type: "date", title: "F. E. Hasta", format: _DefaultDateTemplate },
+            { field: "PorcentajeCargado", title: "Cargado (%)", filterable: false },
             {
                 field: "Estado", title: "Estado",
                 itemTemplate: function (e) {
@@ -534,10 +592,10 @@ function Agregar() {
         viewModel.ContratoAcuerdo = null;
         $('#buscadorProveedor').val("");
         $("#buscadorProveedor").trigger("change");
-        $("#material").data("kendoDropDownList").value(0);
+        $("#material").data("kendoDropDownList").value(3);
         $("#moneda").data("kendoDropDownList").value("ARP  ");
         $("#comercialId").data("kendoDropDownList").value(comercialId);
-        $("#destinoId").data("kendoDropDownList").value(0);
+        $("#destinoId").data("kendoDropDownList").value(1);
         $('#Precio').val();
         $('#Cantidad').val();
         InicializarDate();
@@ -659,10 +717,21 @@ function Grabar() {
             proveedorId = -1;
         }
     }
+
+    var corredorId = -1;
+    if ($("#buscadorCorredor").val() != "") {
+        var cuitAuxCorredor = $("#buscadorCorredor").val().split('(');
+        if (cuitAuxCorredor[1]) {
+            var cuitCorredor = cuitAuxCorredor[1].split(')');
+            corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitCorredor[0], corredor: true });
+        }
+    }
+
     var datos = {
         "ObjectState": objectstate,
         "Id": viewModel.get("ContratoAcuerdo.Id"),
         "ProveedorId": proveedorId,
+        "CorredorId": corredorId,
         "Precio": viewModel.get("ContratoAcuerdo.Precio"),
         "Cantidad": viewModel.get("ContratoAcuerdo.Cantidad"),
         "MaterialId": $("#material").val(),
@@ -680,9 +749,8 @@ function Grabar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
+            //UpdateViewModel(result);
             InicializarBusquedaInicial();
-            MensInfo("Grabación Realizada Correctamente");
             HabilitarInicio();
         }
     }

@@ -50,6 +50,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public decimal Precio { get; set; }
         public string Proveedor { get; set; }
+        public string Corredor { get; set; }
         public int Cantidad { get; set; }
         public string Material { get; set; }
         public string Destino { get; set; }

@@ -561,7 +561,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult BuscarGrupoDeCompras(string filtro)
         {
-            return Json(mobjComercialManager.ListarGrupoDeCompras(filtro), JsonRequestBehavior.AllowGet); 
+            return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet); 
         }
 
         [HttpPost]

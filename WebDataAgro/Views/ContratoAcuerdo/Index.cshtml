@@ -53,7 +53,18 @@
             <div class="tab-pane" id="tab2">
                 <div class="row">
                     <div>
-                        <div class="col-sm-2 fasonero" id="proveedorLabelId">
+                        <div class="col-sm-2 " id="corredorLabelId">
+                            <label id="corredorLabel">Corredor</label>
+                        </div>
+                        <div class="col-sm-4 required-box-parent">
+                            <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                            <div id="buscadorCorredorResult"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="col-sm-2 " id="proveedorLabelId">
                             <label id="proveedorLabel">Proveedor</label>
                         </div>
                         <div class="col-sm-4 required-box-parent">
@@ -73,6 +84,16 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-2">
+                        <label>Precio</label>
+                    </div>
+                    <div class="col-md-4 required-box-parent">
+                        <input id="Precio" type="number" class="k-textbox  required-box " style="width:100%" data-bind="value: ContratoAcuerdo.Precio, disabled: isControlDisabled" maxlength="50" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-2 ">
                         <label>Moneda</label>
                     </div>
@@ -81,16 +102,6 @@
                             <select id="moneda" class="required-box" data-bind="source: MonedaCombo, value: Resultados.moneda, disabled: isControlDisabled"></select>
                             <img id="errmoneda" src="~/Content/Images/error.png" style="display:none" />
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label>Precio</label>
-                    </div>
-                    <div class="col-md-4 required-box-parent">
-                        <input id="Precio" type="number" class="k-textbox  required-box " style="width:100%" data-bind="value: ContratoAcuerdo.Precio, disabled: isControlDisabled" maxlength="50" />
                     </div>
                     <div class="col-md-6">
                     </div>

@@ -124,14 +124,14 @@ namespace WebDataAgro.Controllers
 
             var entityErrors = mobjContratoAcuerdoManager.GrabarContratoAcuerdo(oContratoAcuerdo, GlobalVariables.Perfil);
             model.Errores = entityErrors.Errores;
-            if (model.HayErrores)
-            {
-                model.ContratoAcuerdo = new ContratoAcuerdoDto { Cantidad = oContratoAcuerdo.Cantidad, Comercial = oContratoAcuerdo.Comercial.ToString(), Destino = oContratoAcuerdo.Destino.ToString() };
-            }
+            //if (model.HayErrores)
+            //{
+            //    model.ContratoAcuerdo = new ContratoAcuerdoDto { Cantidad = oContratoAcuerdo.Cantidad, Comercial = oContratoAcuerdo.Comercial.ToString(), Destino = oContratoAcuerdo.Destino.ToString() };
+            //}
 
             return new JsonResult()
             {
-                Data = model,
+                Data = entityErrors,
                 MaxJsonLength = Int32.MaxValue
             };
         }

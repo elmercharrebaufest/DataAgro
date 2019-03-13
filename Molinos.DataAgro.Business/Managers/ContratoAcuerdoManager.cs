@@ -52,6 +52,11 @@ namespace Molinos.DataAgro.Business
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
+            if (oContratoAcuerdo.ProveedorId <= 0 && oContratoAcuerdo.CorredorId <= 0)
+            {
+                oEntityErrors.Error("", "Debe ingresar al menos proveedor o corredor");
+            }
+
             if (oContratoAcuerdo.Precio <= 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
@@ -96,6 +101,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.Precio = oContratoAcuerdo.Precio;
                 objContratoAcuerdo.Cantidad = oContratoAcuerdo.Cantidad;
                 objContratoAcuerdo.ProveedorId = oContratoAcuerdo.ProveedorId;
+                objContratoAcuerdo.CorredorId = oContratoAcuerdo.CorredorId;
                 objContratoAcuerdo.MonedaId = oContratoAcuerdo.MonedaId;
             }
 
@@ -125,7 +131,9 @@ namespace Molinos.DataAgro.Business
                         ComercialId = x.ComercialCreadorId,
                         MaterialId = x.MaterialId,
                         Proveedor = x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")",
-                        ProveedorId = x.ProveedorId,
+                        ProveedorId = x.ProveedorId ?? 0,
+                        Corredor = x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")",
+                        CorredorId = x.CorredorId ?? 0,
                         DestinoId = x.DestinoId,
                         FechaHasta = x.FechaHasta,
                         FechaDesde = x.FechaDesde,
@@ -172,6 +180,7 @@ namespace Molinos.DataAgro.Business
                     Precio = x.Precio,
                     Material = x.Material.Descripcion,
                     Proveedor = x.Proveedor.RazonSocial,
+                    Corredor = x.Corredor.RazonSocial,
                     EstadoId = x.EstadoId,
                     Estado = x.Estado.Descripcion,
                     MonedaId = x.MonedaId,
@@ -201,6 +210,7 @@ namespace Molinos.DataAgro.Business
                                     Precio = x.Precio,
                                     Material = x.Material.Descripcion,
                                     Proveedor = x.Proveedor.RazonSocial,
+                                    Corredor = x.Corredor.RazonSocial,
                                     EstadoId = x.EstadoId,
                                     Estado = x.Estado.Descripcion
                                 }

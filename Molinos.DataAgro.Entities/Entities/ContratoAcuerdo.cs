@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int ProveedorId { get; set; }
+        public int? ProveedorId { get; set; }
         public int Cantidad { get; set; }
         public decimal Precio { get; set; }
         public int MaterialId { get; set; }
@@ -23,6 +23,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialCreadorId { get; set; }
         public string MonedaId { get; set; }
 
+        public int? CorredorId { get; set; }
         public int EstadoId { get; set; }
 
         [ForeignKey("ProveedorId")]
@@ -39,6 +40,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
 
+        [ForeignKey("CorredorId")]
+        public virtual Proveedor Corredor { get; set; }
 
     }
 }

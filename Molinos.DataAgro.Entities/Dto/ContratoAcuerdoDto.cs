@@ -13,6 +13,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }
         public string Proveedor { get; set; }
         public int ProveedorId { get; set; }
+        public string Corredor { get; set; }
+        public int CorredorId { get; set; }
         public int Cantidad { get; set; }
         public decimal Precio { get; set; }
         public string Material { get; set; }

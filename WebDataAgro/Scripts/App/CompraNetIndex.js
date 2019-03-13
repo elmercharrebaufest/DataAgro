@@ -310,7 +310,7 @@ function CreateGridInformeCompraNet() {
             read: {
                 type: 'post',
                 dataType: 'json',
-                url: '/CompraNet/BuscaDatosTablaNew'
+                url: '/CompraNet/BuscaDatosTabla'
             },
             parameterMap: function (options, operation) {
                 if (options.filter) {
@@ -1448,22 +1448,50 @@ function AvisoContratosPendientes() {
 
 
 function InicializarBuscador() {
-    $("#buscadorFiltroZona").click(function () {
-        $("#buscadorFiltroZona").data("kendoAutoComplete").value("");
-        $("#buscadorFiltroZona").data("kendoAutoComplete").trigger("change");
-    });
+    //$("#buscadorFiltroZona").click(function () {
+    //    $("#buscadorFiltroZona").data("kendoAutoComplete").value("");
+    //    $("#buscadorFiltroZona").data("kendoAutoComplete").trigger("change");
+    //});
 
 
 
-    $("#buscadorFiltroZona").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.Descripcion#</p>',
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "Descripcion",
-        dataValueField: "Id",
+    //$("#buscadorFiltroZona").kendoAutoComplete({
+    //    template: '<p class="buscar-nomb">#: data.Descripcion#</p>',
+    //    minLength: 3,
+    //    enforceMinLength: true,
+    //    dataTextField: "Descripcion",
+    //    dataValueField: "Id",
+    //    autoWidth: true,
+    //    filter: "contains",
+    //    dataSource: {
+    //        severFiltering: true,
+    //        serverPaging: true,
+    //        transport: {
+    //            read: {
+    //                type: 'post',
+    //                dataType: 'json',
+    //                url: "/CompraNet/BuscarGrupoDeCompras"
+    //            },
+    //            parameterMap: function (data, type) {
+    //                return { filtro: $("#buscadorFiltroZona").val() };
+    //            }
+    //        }
+
+    //    },
+    //    filtering: function (e) {
+    //        if (!e.filter.value) {
+    //            e.preventDefault();
+    //        }
+    //    }
+    //});
+
+
+    $("#buscadorFiltroZona").kendoDropDownList({
         autoWidth: true,
-        filter: "contains",
-        dataSource: {
+        optionLabel: "SELECCIONE UNA ZONA...",
+        dataTextField: "Descripcion",
+        dataValueField: "Descripcion",
+        dataSource:  {
             severFiltering: true,
             serverPaging: true,
             transport: {
@@ -1471,18 +1499,22 @@ function InicializarBuscador() {
                     type: 'post',
                     dataType: 'json',
                     url: "/CompraNet/BuscarGrupoDeCompras"
-                },
-                parameterMap: function (data, type) {
-                    return { filtro: $("#buscadorFiltroZona").val() };
                 }
             }
 
         },
-        filtering: function (e) {
-            if (!e.filter.value) {
-                e.preventDefault();
-            }
+        change: function () {            
+            
         }
     });
+
+    $("#material").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#material").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+
+
 
 }

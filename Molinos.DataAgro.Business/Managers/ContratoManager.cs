@@ -624,12 +624,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                   
+
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
-                    
+
                     try
                     {
                         oContratoSave.ContratoSAP = nroContratoSAP;
@@ -1252,9 +1252,10 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.Id,
-                ProveedorId = x.ProveedorId,
+                ProveedorId = x.ProveedorId ?? 0,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
-                Corredor = "",
+                CorredorId = x.CorredorId ?? 0,
+                Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
                 ComercialId = x.ComercialCreadorId,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
