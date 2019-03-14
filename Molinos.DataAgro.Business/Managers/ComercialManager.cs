@@ -214,7 +214,10 @@ namespace Molinos.DataAgro.Business
         public bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId, int perfilId, List<int> corredoresComercial)
         {
             return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId
-                        && (equipo.Contains(x.Comercial.ComercialId) || (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(x.Comercial.ComercialId))));
+                        && (equipo.Contains(x.Comercial.ComercialId) ||
+                        (perfilId == (int)EnumPerfil.Administrativo && x.Proveedor.Segmentacion.Grupo == "Corredores") ||
+                        (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(x.Comercial.ComercialId)))
+                        );
         }
 
         public List<ComercialDto> ListarComercial(string comercial, List<int> comerciales)

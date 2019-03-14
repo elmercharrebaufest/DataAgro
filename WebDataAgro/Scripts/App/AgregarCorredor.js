@@ -2,10 +2,10 @@
 var cantProveedorCorredor = 0;
 
 function CrearCorredor() {
-    if ($('#segmentacion :selected').parent().attr('label') === "Corredores") {        
+    if ($('#segmentacion :selected').parent().attr('label') === "Corredores") {
         $(".noCorredor").hide();
         $("#datos").text("Datos corredor");
-        $("#proveedores-corredor").show(); 
+        $("#proveedores-corredor").show();
         armarFuncionalidadesProveedorCorredor();
         $(".formulario-footer-guardar-contacto").addClass("guardar-corredor");
         $(".formulario-footer-guardar-contacto").removeClass("guardar-proveedor");
@@ -27,7 +27,7 @@ function armarFuncionalidadesProveedorCorredor() {
 
 function crearProcedencia() {
     $("#procedencia").click(function () {
-        $("#procedencia").data("kendoAutoComplete").value("");        
+        $("#procedencia").data("kendoAutoComplete").value("");
         $("#LocalidadCrearContrato").trigger("change");
     });
 
@@ -129,7 +129,7 @@ function buscarRazonSocialCorredor(val) {
     $("#codpost-provcorr").val("");
     $("#provinciacorrId").val("");
     $("#localidadcorrId").val("");
-    var result = MSExecuteOnServer('/Proveedor/TraerRazonSocial', data);    
+    var result = MSExecuteOnServer('/Proveedor/TraerRazonSocial', data);
     $("#provcorr-razonsocial").val(result.razonSocial);
     if (result.Operable === 0) {
         $(".span-contacto-no-operable-tooltip-corredor").html(result.Condicion);
@@ -163,13 +163,13 @@ function buscarProveedor() {
             $("#direccion-provcorr").val(result.Proveedor.Direccion);
             $("#codpost-provcorr").val(result.Proveedor.CodigoPostal);
             $("#provinciacorrId").val(result.Proveedor.ProvinciaId);
-            $("#localidadcorrId").val(result.Proveedor.LocalidadId);   
+            $("#localidadcorrId").val(result.Proveedor.LocalidadId);
             $("#provinciacorrCompranetId").val(result.Proveedor.ProvinciaCompraNetId);
             $("#localidadcorrCompranetId").val(result.Proveedor.LocalidadCompraNetId);
         }
     } else {
         limpiarCargaProveedor();
-    }    
+    }
 }
 
 function limpiarCargaProveedor() {
@@ -180,7 +180,7 @@ function limpiarCargaProveedor() {
     $("#provcorrId").val("");
     $("#clasificacion-proveedor-corredor").val("");
     $("#direccion-provcorr").val("");
-    $("#codpost-provcorr").val("");  
+    $("#codpost-provcorr").val("");
     $("#provinciacorrId").val("");
     $("#localidadcorrId").val("");
     $("#provinciacorrCompranetId").val("");
@@ -194,38 +194,39 @@ function guardarProveedorCorredor() {
     $("#GuardarProveedorCorredor").click(function () {
         if (!ValidarProveedorCorredor()) {
             return false;
-        }
-        var obj = {};
-        obj.basicos = {};
-        obj.contacto = {};
-        obj.basicos.cuit = $("#provcorr-cuit").val();
-        obj.basicos.RazonSocial = $("#provcorr-razonsocial").val();
-        if ($("#procedencia").val() !== "") {
-            var localidadAux = $("#procedencia").val().split(' (');
-            obj.contacto.localidadDesc = localidadAux[0];
-            var provinciaAux = localidadAux[1].split(')');
-            obj.contacto.provinciaDesc = provinciaAux[0];
-            obj.contacto.localidad = $("#localidadcorrId").val();
-            obj.contacto.provincia = $("#provinciacorrId").val();
-        }
-        if ($("#procedenciaCompranet").val() !== "") {
-            var localidadcnAux = $("#procedenciaCompranet").val().split(' (');
-            obj.basicos.localidadCompraNetDesc = localidadcnAux[0];
-            var provinciacnAux = localidadcnAux[1].split(')');
-            obj.basicos.provinciaCompraNetDesc = provinciacnAux[0];
-            obj.basicos.ProvinciaCompraNet = $("#provinciacorrCompranetId").val();            
-            obj.basicos.LocalidadCompraNet = $("#localidadcorrCompranetId").val();
-        }
-        obj.contacto.direccion = $("#direccion-provcorr").val();
-        obj.contacto.codpost = $("#codpost-provcorr").val();
-        obj.Clasificacion = $("#clasificacion-proveedor-corredor option:selected").text();
-        obj.basicos.ClasificacionCompraNet = $("#clasificacion-proveedor-corredor").val();        
-        obj.ProveedorId = $("#provcorrId").val();
-        obj.ProveedorCorredorId = $("#corredorId").val();
+        } else {
+            var obj = {};
+            obj.basicos = {};
+            obj.contacto = {};
+            obj.basicos.cuit = $("#provcorr-cuit").val();
+            obj.basicos.RazonSocial = $("#provcorr-razonsocial").val();
+            if ($("#procedencia").val() !== "") {
+                var localidadAux = $("#procedencia").val().split(' (');
+                obj.contacto.localidadDesc = localidadAux[0];
+                var provinciaAux = localidadAux[1].split(')');
+                obj.contacto.provinciaDesc = provinciaAux[0];
+                obj.contacto.localidad = $("#localidadcorrId").val();
+                obj.contacto.provincia = $("#provinciacorrId").val();
+            }
+            if ($("#procedenciaCompranet").val() !== "") {
+                var localidadcnAux = $("#procedenciaCompranet").val().split(' (');
+                obj.basicos.localidadCompraNetDesc = localidadcnAux[0];
+                var provinciacnAux = localidadcnAux[1].split(')');
+                obj.basicos.provinciaCompraNetDesc = provinciacnAux[0];
+                obj.basicos.ProvinciaCompraNet = $("#provinciacorrCompranetId").val();
+                obj.basicos.LocalidadCompraNet = $("#localidadcorrCompranetId").val();
+            }
+            obj.contacto.direccion = $("#direccion-provcorr").val();
+            obj.contacto.codpost = $("#codpost-provcorr").val();
+            obj.Clasificacion = $("#clasificacion-proveedor-corredor option:selected").text();
+            obj.basicos.ClasificacionCompraNet = $("#clasificacion-proveedor-corredor").val();
+            obj.ProveedorId = $("#provcorrId").val();
+            obj.ProveedorCorredorId = $("#corredorId").val();
 
-        crearContenedoresProveedores(obj);
-        
-        limpiarCargaProveedor();
+            crearContenedoresProveedores(obj);
+
+            limpiarCargaProveedor();
+        }
     });
 }
 function crearContenedoresProveedores(obj) {
@@ -318,7 +319,15 @@ function ValidarProveedorCorredor() {
         MensErr("La Razón Social no debe estar vacia");
         return false;
     }
-    return true;
+
+  var repetidos =  !proveedorCorredorGuardado.some(function (elemento) {
+        if (elemento.basicos.cuit === $("#provcorr-cuit").val()) {
+            MensErr("No se puede ingresar dos proveedores iguales");
+        }   
+        return elemento.basicos.cuit === $("#provcorr-cuit").val();
+    });
+    
+    return repetidos;
 }
 
 function armarEditCorredor() {
@@ -357,7 +366,7 @@ function DatosCorredor() {
         || $("#concom-email1").val() !== ""
         || !$("#concom-fechanacimientodia").val()
         || !$("#concom-fechanacimientomes").val()
-        || !$("#concom-anionacimientomes").val() 
+        || !$("#concom-anionacimientomes").val()
         || $("#concom-cargo").val() !== ""
         || $("#concom-puesto").val() !== ""
         || $("#concom-cargo").val() !== "") {

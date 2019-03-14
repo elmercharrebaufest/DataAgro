@@ -247,7 +247,7 @@ function InicializarDate() {
         value: datehasta,
         format: "dd/MM/yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
-    }).kendoDatePicker().data("kendoDatePicker");
+    });
 
     $("#fechaDesde").kendoDatePicker({
         value: date,
@@ -256,7 +256,7 @@ function InicializarDate() {
         change: function () {
             $("#fechaHasta").val(ObtenerFechaHasta(this.value()));
         }
-    }).kendoDatePicker().data("kendoDatePicker");
+    });
 
 }
 function ObtenerFechaDesde(fechaBase) {
@@ -370,7 +370,7 @@ function CreateGridContratoAcuerdo() {
         columns: [
             { selectable: true, width: "50px" },
             {
-                field: "Id", title: "Acuerdo", 
+                field: "Id", title: "Acuerdo",
                 template: function (dataItem) {
                     if (dataItem.EstadoId == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Id;
@@ -381,12 +381,17 @@ function CreateGridContratoAcuerdo() {
             },
             { field: "Corredor", title: "Corredor" },
             { field: "Proveedor", title: "Proveedor" },
-            { field: "Cantidad", title: "Cantidad" },
+            {
+                field: "Cantidad", title: "Cantidad",
+                template: function (dataItem) {
+                    return kendo.toString(dataItem.Cantidad, "n0");
+                }},
             {
                 field: "Precio", title: "Precio",
-                template: function (dataItem) {                    
-                        return dataItem.Precio + " " + dataItem.Moneda;                    
-                }},
+                template: function (dataItem) {
+                    return kendo.toString(dataItem.Precio,"n2") + " " + dataItem.Moneda;
+                }
+            },
             //{ field: "Moneda", title: "Moneda" },
             { field: "Material", title: "Material" },
             { field: "Comercial", title: "Comercial" },
@@ -590,6 +595,8 @@ function Agregar() {
         MensErr(result.Errores[0].Message);
     } else {
         viewModel.ContratoAcuerdo = null;
+        $('#buscadorCorredor').val("");
+        $("#buscadorCorredor").trigger("change");
         $('#buscadorProveedor').val("");
         $("#buscadorProveedor").trigger("change");
         $("#material").data("kendoDropDownList").value(3);

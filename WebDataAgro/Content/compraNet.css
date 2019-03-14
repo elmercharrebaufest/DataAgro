@@ -920,6 +920,10 @@ body {
         color: #fff;
     }
 
+#gridIni {
+    font-size: 12px;
+    zoom: 90%
+}
 
 .floatDerecha {
     float: right;
@@ -928,4 +932,10 @@ body {
 #inputZona {
     text-align: center;
     margin: 15px;
+}
+
+.contenedor-contratoAcuerdo {
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    overflow-x:hidden;
 }

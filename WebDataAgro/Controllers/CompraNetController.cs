@@ -561,25 +561,8 @@ namespace WebDataAgro.Controllers
 
         public JsonResult BuscarGrupoDeCompras(string filtro)
         {
-            return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet); 
+            return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult BuscaDatosTablaNew(KendoGridMvcRequest request, string filtro)
-        {
-            if (request.SortObjects != null)
-            {
-                request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
-            }
-            else
-            {
-                request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
-            }
-            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
-
-            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
-
-            return Json(model);
-        }
     }
 }

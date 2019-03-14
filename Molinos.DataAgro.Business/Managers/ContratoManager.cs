@@ -300,6 +300,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
+            if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
+            {
+                var cantidadAcuerdo = contratoAcuerdoManager.TraerContratoAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
+                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value).Sum(d => d.Cantidad);
+                if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
+                {
+                    oErrorMessages.Error("", "La cantidad ingresada mas la suma los anteriores contratos asociados al acuerdo (" + (cantidadCargada + oParam.Cantidad) + ") superan la cantidad del acuerdo (" + cantidadAcuerdo + ") ");
+                }
+            }
+
             return oErrorMessages;
         }
 

@@ -78,6 +78,9 @@ namespace Molinos.DataAgro.Business
                 return oEntityErrors;
             }
 
+            oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
+            oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
+
             if (oContratoAcuerdo.Id == 0)
             {
                 if (perfil == EnumPerfil.Mesa)

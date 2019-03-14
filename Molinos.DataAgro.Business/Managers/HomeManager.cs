@@ -47,13 +47,24 @@ namespace Molinos.DataAgro.Business.Managers
             var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
                 oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
-
+         
             res.TotalContactos = queryPorEstado.Count();
             res.TotalPotencialContactos = queryPorEstado.Count(x => x.Estado == "Cliente Potencial");
             res.TotalOperandoContactos = queryPorEstado.Count(x => x.Estado == "Operando");
             res.TotalNoOperandoContactos = queryPorEstado.Count(x => x.Estado == "No operando");
             res.TotalBajaContactos = queryPorEstado.Count(x => x.Estado == "Baja");
             res.TotalSinInteresContactos = queryPorEstado.Count(x => x.Estado == "Sin interés de operar");
+
+            foreach (int comercialAmigo in corredoresComerciales)
+            {
+                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(comercialAmigo, oParam.ComercialId)));
+                res.TotalContactos += cuenta.Count();
+                res.TotalPotencialContactos += cuenta.Count(x => x.Estado == "Cliente Potencial");
+                res.TotalOperandoContactos += cuenta.Count(x => x.Estado == "Operando");
+                res.TotalNoOperandoContactos += cuenta.Count(x => x.Estado == "No operando");
+                res.TotalBajaContactos += cuenta.Count(x => x.Estado == "Baja");
+                res.TotalSinInteresContactos += cuenta.Count(x => x.Estado == "Sin interés de operar");
+            }
 
             return res;
         }
