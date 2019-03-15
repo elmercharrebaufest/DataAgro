@@ -306,7 +306,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value).Sum(d => d.Cantidad);
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
-                    oErrorMessages.Error("", "La cantidad ingresada mas la suma los anteriores contratos asociados al acuerdo (" + (cantidadCargada + oParam.Cantidad) + ") superan la cantidad del acuerdo (" + cantidadAcuerdo + ") ");
+                    oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " tn)");
                 }
             }
 

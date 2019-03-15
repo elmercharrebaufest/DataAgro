@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Business
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
-            if (oContratoAcuerdo.ProveedorId <= 0 && oContratoAcuerdo.CorredorId <= 0)
+            if ((oContratoAcuerdo.ProveedorId == null || oContratoAcuerdo.ProveedorId <= 0) && (oContratoAcuerdo.CorredorId  == null || oContratoAcuerdo.CorredorId <= 0))
             {
                 oEntityErrors.Error("", "Debe ingresar al menos proveedor o corredor");
             }
@@ -133,9 +133,9 @@ namespace Molinos.DataAgro.Business
                         Precio = x.Precio,
                         ComercialId = x.ComercialCreadorId,
                         MaterialId = x.MaterialId,
-                        Proveedor = x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")",
+                        Proveedor = (x.ProveedorId != null && x.ProveedorId > 0)? x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")": "",
                         ProveedorId = x.ProveedorId ?? 0,
-                        Corredor = x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")",
+                        Corredor = (x.CorredorId != null && x.CorredorId > 0) ? x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")": "",
                         CorredorId = x.CorredorId ?? 0,
                         DestinoId = x.DestinoId,
                         FechaHasta = x.FechaHasta,
@@ -146,6 +146,7 @@ namespace Molinos.DataAgro.Business
                         Moneda = x.Moneda.Descripcion
                     })
                         ?? new ContratoAcuerdoDto();
+            a.FechaModificacionDesde = a.FechaDesde.ToShortDateString();
             a.FechaModificacion = a.FechaHasta.ToShortDateString();
             return a;
         }

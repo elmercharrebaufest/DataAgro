@@ -36,7 +36,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where (equipo.Contains(proveedorComercial.Comercial.ComercialId)
                     || (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(proveedorComercial.Comercial.ComercialId)))  &&
                     (proveedorComercial.Proveedor.CUIT.StartsWith(filtro) ||
-                    //(contactoComercial.Apellido + " " + contactoComercial.Nombres).StartsWith(filtro) ||
                     (contactoComercial.Nombres + " " + contactoComercial.Apellido).Contains(filtro) ||
                     contactoComercial.Proveedor.RazonSocial.Contains(filtro))
 

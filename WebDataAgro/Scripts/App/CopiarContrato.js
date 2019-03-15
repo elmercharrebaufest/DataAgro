@@ -16,17 +16,18 @@ function InicializarAutocompletar() {
     });
 
     $("#contratoACopiarId").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.ContratoSap# - #: data.Material# - #: data.RazonSocial# - #: data.Fecha# - #: data.Cantidad# Kg. </p>',
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
+            }
+        },
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "ContratoSap",
         dataValueField: "Id",
         autoWidth: true,
-        change: function () {
-            //if ($("#contratoACopiarId").val().split('|').length > 1) {
-            //    $("#contratoACopiarId").val($("#contratoACopiarId").val().split('|')[1]);
-            //}
-        },
         select: function (e) {
             CargarCopiaContrato(e.dataItem.Id, "sap");
         },
@@ -60,7 +61,13 @@ function InicializarAutocompletar() {
     });
 
     $("#contratoAcuerdoId").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.Id# - #: data.Material# - #: data.RazonSocial# - #: data.Fecha# - #: data.Cantidad# Kg. </p>',
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>'
+            }
+        },
         minLength: 1,
         enforceMinLength: true,
         dataTextField: "Id",
@@ -173,8 +180,8 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     }
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialId").data("kendoDropDownList").value(contrato.ComercialId);
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialFijacionId").data("kendoDropDownList").value(contrato.ComercialId);
-    
-  
+
+
 
 
     if (contrato.Base == true) {

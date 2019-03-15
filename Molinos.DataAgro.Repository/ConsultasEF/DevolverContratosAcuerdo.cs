@@ -28,8 +28,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                              {
                                  Id = c.Id,
                                  Comercial = c.Comercial.Nombres + " " + c.Comercial.Apellido,
-                                 RazonSocial = c.Proveedor.RazonSocial,
-                                 Filtro = c.Id + " - " + c.Material.Descripcion + " - " + c.Proveedor.RazonSocial + " - " + (SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : ""),
+                                 RazonSocial = c.ProveedorId != null && c.ProveedorId > 0 ? c.Proveedor.RazonSocial : c.Corredor.RazonSocial,
+                                 Filtro = c.Id + " - " + c.Material.Descripcion + " - " + (c.ProveedorId != null && c.ProveedorId > 0 ? c.Proveedor.RazonSocial : c.Corredor.RazonSocial ) + " - " + (SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : ""),
                                  Cantidad = c.Cantidad.ToString(),
                                  Fecha = SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : "",
                                  Material = c.Material.Descripcion,

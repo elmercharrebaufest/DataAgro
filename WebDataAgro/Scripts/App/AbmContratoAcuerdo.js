@@ -297,7 +297,7 @@ function ObtenerFechaHasta(fechaBase) {
     if (dia < 10) {
         dia = "0" + dia.toString();
     }
-    return dia + '-' + mesPost + '-' + anio;
+    return dia + '/' + mesPost + '/' + anio;
 }
 
 
@@ -648,6 +648,7 @@ function Modificar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
+           
             $('#buscadorProveedor').val(viewModel.ContratoAcuerdo.Proveedor);
             $("#buscadorProveedor").trigger("change");
             $("#material").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.MaterialId);
@@ -808,14 +809,18 @@ function ModificarPorId(id) {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
+            console.log(viewModel.ContratoAcuerdo);
             $('#buscadorProveedor').val(viewModel.ContratoAcuerdo.Proveedor);
             $("#buscadorProveedor").trigger("change");
+            $('#buscadorCorredor').val(viewModel.ContratoAcuerdo.Corredor);
+            $("#buscadorCorredor").trigger("change");
             $("#material").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.MaterialId);
             $("#moneda").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.MonedaId);
             $("#destinoId").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.DestinoId);
             $("#comercialId").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.ComercialId);
             $('#Precio').val(viewModel.ContratoAcuerdo.Precio);
             $('#Cantidad').val(viewModel.ContratoAcuerdo.Cantidad);
+            $("#fechaDesde").val(viewModel.ContratoAcuerdo.FechaModificacionDesde);
             $("#fechaHasta").val(viewModel.ContratoAcuerdo.FechaModificacion);
             viewModel.set("isModifyDisabled", true);
             //InicializarBordesRojos();

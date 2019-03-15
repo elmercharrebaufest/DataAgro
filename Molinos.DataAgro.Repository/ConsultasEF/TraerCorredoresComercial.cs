@@ -23,13 +23,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var resultado =
-                from cProv in contexto.Set<CorredorProveedor>()
-                join pCom in contexto.Set<ProveedorComercial>() on cProv.CorredorId equals pCom.ProveedorId
-                join prove in contexto.Set<Proveedor>() on cProv.CorredorId equals prove.ProveedorId
+                //from cProv in contexto.Set<CorredorProveedor>()
+                from pCom in contexto.Set<ProveedorComercial>()
+                join prove in contexto.Set<Proveedor>() on pCom.ProveedorId equals prove.ProveedorId
                 join contacto in contexto.Set<ContactoComercial>() on prove.ProveedorId equals contacto.ProveedorId
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId
-                where pCom.ComercialId == comercialId && pCom.ComercialId != comercialOriginalId && contacto.EsPrincipal == true
+                where pCom.ComercialId == comercialId && contacto.EsPrincipal == true
                 select new Contactos
                 {
                     ProveedorId = pCom.ProveedorId,
@@ -47,12 +47,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Telefono4 = null,
                     FechaUltimoContacto = prove.FechaUltimoContacto,
                     Estado = est.Descripcion,
-                    EstadoCuit = contexto.Set<SISA>().Where(x =>x.CUIT == prove.CUIT).FirstOrDefault().EstadoCuit,
+                    EstadoCuit = (contexto.Set<SISA>().Where(x => x.CUIT == prove.CUIT).FirstOrDefault() != null) ? contexto.Set<SISA>().Where(x => x.CUIT == prove.CUIT).FirstOrDefault().EstadoCuit : 0,
                     FechaAlta = prove.FechaAlta,
                     GrupoDeCompras = "",
                     Segmentacion = prove.SegmentacionId,
                     RiesgoComercialSap = prove.RiesgoComercialSap,
-                    Facacop = contexto.Set<FACACOP>().Where(x => x.CUIT == prove.CUIT).Any()? 1:0                    
+                    Facacop = contexto.Set<FACACOP>().Where(x => x.CUIT == prove.CUIT).Any() ? 1 : 0
                 };
 
             return resultado.Distinct().ToList();

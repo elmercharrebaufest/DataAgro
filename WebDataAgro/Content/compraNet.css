@@ -937,5 +937,13 @@ body {
 .contenedor-contratoAcuerdo {
     padding-left: 0.5vw;
     padding-right: 0.5vw;
-    overflow-x:hidden;
+    overflow-x: hidden;
+}
+
+#contratoACopiarId-list {
+    max-width: 90vw;
+}
+
+.letra650 {
+    font-size: 10px;
 }

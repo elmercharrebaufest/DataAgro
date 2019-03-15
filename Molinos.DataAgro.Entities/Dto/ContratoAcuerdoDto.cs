@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public DateTime Fecha { get; set; }
+        public string FechaModificacionDesde { get; set; }
         public string FechaModificacion { get; set; }
         public string Estado { get; set; }
         public int EstadoId { get; set; }
