@@ -1294,7 +1294,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Importe_Sustentable = 0,
                 Moneda_Sustentable = "",
                 Fecha_DolarizadoFormateado = "",
-                Dias_Pesificado = 0,
+                Dias_Pesificado = null,
                 NoInformaSIO = null,
                 TrigoEspecial = null,
                 ClasificacionId = x.Proveedor.ClasificacionCompraNetId,
