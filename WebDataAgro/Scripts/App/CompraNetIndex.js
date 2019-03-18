@@ -1448,45 +1448,7 @@ function AvisoContratosPendientes() {
 
 
 function InicializarBuscador() {
-    //$("#buscadorFiltroZona").click(function () {
-    //    $("#buscadorFiltroZona").data("kendoAutoComplete").value("");
-    //    $("#buscadorFiltroZona").data("kendoAutoComplete").trigger("change");
-    //});
-
-
-
-    //$("#buscadorFiltroZona").kendoAutoComplete({
-    //    template: '<p class="buscar-nomb">#: data.Descripcion#</p>',
-    //    minLength: 3,
-    //    enforceMinLength: true,
-    //    dataTextField: "Descripcion",
-    //    dataValueField: "Id",
-    //    autoWidth: true,
-    //    filter: "contains",
-    //    dataSource: {
-    //        severFiltering: true,
-    //        serverPaging: true,
-    //        transport: {
-    //            read: {
-    //                type: 'post',
-    //                dataType: 'json',
-    //                url: "/CompraNet/BuscarGrupoDeCompras"
-    //            },
-    //            parameterMap: function (data, type) {
-    //                return { filtro: $("#buscadorFiltroZona").val() };
-    //            }
-    //        }
-
-    //    },
-    //    filtering: function (e) {
-    //        if (!e.filter.value) {
-    //            e.preventDefault();
-    //        }
-    //    }
-    //});
-
-
-    $("#buscadorFiltroZona").kendoDropDownList({
+        $("#buscadorFiltroZona").kendoDropDownList({
         autoWidth: true,
         optionLabel: "SELECCIONE UNA ZONA...",
         dataTextField: "Descripcion",

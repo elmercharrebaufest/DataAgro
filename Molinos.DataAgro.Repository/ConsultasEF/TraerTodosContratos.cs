@@ -33,8 +33,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) 
-                    || (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
+                where perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || 
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) : 
+                    (perfilId == (int)EnumPerfil.CorredoresComercial && 
+                    (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                    corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new BasicoContrato()
                 {
                     ContratoId = contrato.ContratoId,
@@ -123,8 +126,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) || 
-                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) || corredoresComercial.Contains(fijac.ComercialCreadorId)))
+                where perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) : 
+                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) || 
+                        corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new BasicoContrato()
                 {
                     ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,

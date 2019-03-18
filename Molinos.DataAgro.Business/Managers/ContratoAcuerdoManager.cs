@@ -65,9 +65,21 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "La Cantidad debe ser mayor o igual a 0");
             }
-            if (oContratoAcuerdo.ComercialCreadorId == 0 || oContratoAcuerdo.DestinoId == 0 || oContratoAcuerdo.MaterialId == 0)
+            if (oContratoAcuerdo.ComercialCreadorId == 0 )
             {
-                oEntityErrors.Error("", "Los campos Material, Destino y Comercial son obligatorio");
+                oEntityErrors.Error("", "El campo Comercial es obligatorio");
+            }
+            if ( oContratoAcuerdo.DestinoId == 0 )
+            {
+                oEntityErrors.Error("", "El campo Destino es obligatorio");
+            }
+            if (oContratoAcuerdo.MaterialId == 0)
+            {
+                oEntityErrors.Error("", "El campo Material es obligatorio");
+            }
+            if (oContratoAcuerdo.MonedaId == null)
+            {
+                oEntityErrors.Error("", "El campo Moneda es obligatorio");
             }
             if (oContratoAcuerdo.FechaHasta.ToString() == "1/1/0001 12:00:00 AM")
             {

@@ -385,11 +385,12 @@ function CreateGridContratoAcuerdo() {
                 field: "Cantidad", title: "Cantidad",
                 template: function (dataItem) {
                     return kendo.toString(dataItem.Cantidad, "n0");
-                }},
+                }
+            },
             {
                 field: "Precio", title: "Precio",
                 template: function (dataItem) {
-                    return kendo.toString(dataItem.Precio,"n2") + " " + dataItem.Moneda;
+                    return kendo.toString(dataItem.Precio, "n2") + " " + dataItem.Moneda;
                 }
             },
             //{ field: "Moneda", title: "Moneda" },
@@ -543,6 +544,10 @@ function AsignarBotones() {
     $("#butConfirmar").click(function () {
         ConfirmarMasivo();
     });
+
+    if ($("#perfil").val() != "Mesa") {
+        $("#butConfirmar").hide();
+    }
 }
 
 function UpdateViewModel(model) {
@@ -648,7 +653,7 @@ function Modificar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-           
+
             $('#buscadorProveedor').val(viewModel.ContratoAcuerdo.Proveedor);
             $("#buscadorProveedor").trigger("change");
             $("#material").data("kendoDropDownList").value(viewModel.ContratoAcuerdo.MaterialId);
