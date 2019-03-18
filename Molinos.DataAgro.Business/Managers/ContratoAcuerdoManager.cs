@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Business
                 oEntityErrors.Error("", "Debe ingresar al menos proveedor o corredor");
             }
 
-            if (oContratoAcuerdo.Precio <= 0)
+            if (oContratoAcuerdo.Precio < 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
             }
@@ -99,6 +99,7 @@ namespace Molinos.DataAgro.Business
                 var objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
                 objContratoAcuerdo.MaterialId = oContratoAcuerdo.MaterialId;
                 objContratoAcuerdo.DestinoId = oContratoAcuerdo.DestinoId;
+                objContratoAcuerdo.FechaDesde = oContratoAcuerdo.FechaDesde;
                 objContratoAcuerdo.FechaHasta = oContratoAcuerdo.FechaHasta;
                 objContratoAcuerdo.ComercialCreadorId = oContratoAcuerdo.ComercialCreadorId;
                 objContratoAcuerdo.Precio = oContratoAcuerdo.Precio;
