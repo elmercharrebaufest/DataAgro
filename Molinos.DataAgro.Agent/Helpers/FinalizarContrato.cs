@@ -60,22 +60,38 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
+
                 var listaCalidades = new List<ZMPES5300>();
                 foreach (var cal in calidad)
                 {
                     if (cal.StandardDeCalidadId == 2)
                     {
-                        listaCalidades.Add(new ZMPES5300
+                        if ((cal.Valor == 2 || cal.Valor == 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
                         {
-                            CODIGO = cal.CalidadEspecial.CodigoSap,
-                            VALOR = cal.Valor,
-                            PORC_DESDE = cal.PorcentajeDesde ?? 0,
-                            PORC_HASTA = cal.PorcentajeHasta ?? 0
-                        }
+                            listaCalidades.Add(new ZMPES5300
+                            {
+                                CODIGO = cal.CalidadEspecial.CodigoSap,
+                                VALOR = 0,
+                                PORC_DESDE = 1,
+                                PORC_HASTA = 1
+                            }
                         );
+                        }
+                        else
+                        {
+                            listaCalidades.Add(new ZMPES5300
+                            {
+                                CODIGO = cal.CalidadEspecial.CodigoSap,
+                                VALOR = cal.Valor,
+                                PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                                PORC_HASTA = cal.PorcentajeHasta ?? 0
+                            }
+                            );
+                        }
                     }
                 }
-                var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x=> x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+
+                var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : null;
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
@@ -87,7 +103,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
 
-                var rq = new Z_MPRFC_PRE_SLIP() {
+                var rq = new Z_MPRFC_PRE_SLIP()
+                {
                     IM_CONTRATO = new ZMPES5270
                     {
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
@@ -122,37 +139,37 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
                         BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
                         BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
-                        CARTA_OFERTA = contrato.BoletoId == 4 ? "X":"",
+                        CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "",
                         NINGUNO = contrato.BoletoId == 3 ? "X" : "",
-                        AUT_CG = contrato.Warrant == true?"X":"",
+                        AUT_CG = contrato.Warrant == true ? "X" : "",
                         AUR_CD = contrato.CD == true ? "X" : "",
                         PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",
                         ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "",
                         ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "",
-                        IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe:0,
-                        MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId: null,
+                        IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0,
+                        MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null,
                         PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
                         IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
                         MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null,
                         PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
                         MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
                         OBSERVACION_CAL1 = contrato.Observacion,
-                        CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT: "" ,
-                        PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value:0,
+                        CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT : "",
+                        PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value : 0,
                         CONTRCORR = contrato.ContratoCorredor ?? "",
                         CONTRVEND = contrato.ContratoVendedor ?? "",
-                        SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X":"",
+                        SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
                         SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
-                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre: ""
+                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre : ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
-                        FE_DESDE= contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd"):null,
-                        FE_HASTA= contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : null
+                        FE_DESDE = contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : null,
+                        FE_HASTA = contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : null
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
-                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE": contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion
+                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion
                 };
 
                 logger.Debug(rq.ToXml());
@@ -163,11 +180,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     throw new Exception(devolucion.EX_MENSAJE_ERROR);
                 }
-                
+
                 return devolucion.EX_CONTRATO_SAP;
             }
-            catch (Exception e) {
-                logger.Error("Error comunicacion SAP",e);
+            catch (Exception e)
+            {
+                logger.Error("Error comunicacion SAP", e);
                 throw e;
             }
 
@@ -175,11 +193,13 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         private string RellenarEspaciosSAP(string value, int stringLength)
         {
-            if (value != null) {
+            if (value != null)
+            {
                 int cantCeros = stringLength - value.Length;
-                for (int i = 0; i < cantCeros; i++) {
+                for (int i = 0; i < cantCeros; i++)
+                {
                     value = " " + value;
-                }                
+                }
             }
             return value;
         }

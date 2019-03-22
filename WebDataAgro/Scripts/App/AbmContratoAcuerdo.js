@@ -128,7 +128,7 @@ function InicializarElementos() {
             }
         },
         select: function (e) {
-
+            $("#buscadorProveedor").val("");
         },
         dataSource: {
             severFiltering: true,

@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
             }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
-            if (rangosPrecio.Exists(x => x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio))
+            if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
             }
