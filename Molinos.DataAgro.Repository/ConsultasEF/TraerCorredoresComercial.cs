@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join contacto in contexto.Set<ContactoComercial>() on prove.ProveedorId equals contacto.ProveedorId
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId
-                where pCom.ComercialId == comercialId && contacto.EsPrincipal == true
+                where pCom.ComercialId == comercialId
                 select new Contactos
                 {
                     ProveedorId = pCom.ProveedorId,
