@@ -84,7 +84,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.CorredoresComercial);
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.Equipo);
             }
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);

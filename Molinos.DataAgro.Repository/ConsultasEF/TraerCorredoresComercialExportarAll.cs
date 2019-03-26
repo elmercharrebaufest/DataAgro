@@ -10,26 +10,28 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerCorredoresComercialExportarAll : IConsulta<ContactoAll>
     {
-        private readonly int idComercial;
+        private readonly List<int> idComerciales;
         private readonly int comercialOriginalId;
 
-        public TraerCorredoresComercialExportarAll(int idComercial, int comercialOriginalId)
+        public TraerCorredoresComercialExportarAll(List<int> idComerciales, int comercialOriginalId)
         {
-            this.idComercial = idComercial;
+            this.idComerciales = idComerciales;
             this.comercialOriginalId = comercialOriginalId;
         }
 
-        private static List<ContactoAll> Query(DbContext contexto, int comercialId, int comercialOriginalId)
+        private static List<ContactoAll> Query(DbContext contexto, List<int> idComerciales, int comercialOriginalId)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var resultado =
-                from proveedor in contexto.Set<Proveedor>()
-                join proveedorComercial in contexto.Set<ProveedorComercial>() on proveedor.ProveedorId equals proveedorComercial.ProveedorId
+                from proveedorComercial in contexto.Set<ProveedorComercial>() 
+                join proveedor in contexto.Set<Proveedor>() on proveedorComercial.ProveedorId equals proveedor.ProveedorId
+                join ContactoComercial in contexto.Set<ContactoComercial>() on proveedor.ProveedorId equals ContactoComercial.ProveedorId into contactos
+                from con in contactos.DefaultIfEmpty()
                 join comercial in contexto.Set<Comercial>() on proveedorComercial.ComercialId equals comercial.ComercialId
-                join ContactoComercial in contexto.Set<ContactoComercial>() on proveedor.ProveedorId equals ContactoComercial.ProveedorId
-                join est in contexto.Set<Estado>() on proveedor.EstadoId equals est.EstadoId
-                where comercial.ComercialId == comercialId
+                join Estado in contexto.Set<Estado>() on proveedor.EstadoId equals Estado.EstadoId into estados
+                from ests in estados.DefaultIfEmpty()
+                where idComerciales.Contains(proveedorComercial.ComercialId)
                 select new ContactoAll
                 {
                     AreaDeInfluencia = proveedor.AreaInfluencia.Descripcion,
@@ -65,7 +67,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, idComercial, comercialOriginalId);
+                return Query(contexto, idComerciales, comercialOriginalId);
             }
         }
     }
