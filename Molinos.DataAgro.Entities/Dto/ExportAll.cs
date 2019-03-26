@@ -48,6 +48,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClienteMoa { get; set; }
         public string Zona { get; set; }
         public DateTime FechaAlta { get; set; }
+        public string Clasificacion { get; set; }
+        public string TipoBoleto { get; set; }
+        public string Bolsa { get; set; }
+        public string Consignatario { get; set; }
+
     }
 
     public class ObjetivoAll
