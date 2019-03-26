@@ -248,7 +248,7 @@ namespace Molinos.DataAgro.Business
 
             var resultado = new EquipoDto
             {
-                EquipoReal = ListarEquipo(comercial.ComercialId, comerciales)
+                EquipoReal = (comercial.PerfilId != (int)EnumPerfil.CorredoresComercial) ? ListarEquipo(comercial.ComercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.PerfilId == (int)EnumPerfil.CorredoresComercial)
             };
             resultado.Equipo = comercial.PerfilId == (int)EnumPerfil.Mesa ? comerciales.Select(x => x.ComercialId).ToList() : resultado.EquipoReal;
 

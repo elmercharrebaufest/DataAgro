@@ -320,11 +320,24 @@ namespace Molinos.DataAgro.Business.Managers
                 oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId.ToString()).ToArray(); ;
                 var idsStr = string.Join(",", ids);
 
-                exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, oComerciales.ComercialId);
-
+                if (repositorio.Obtener<Comercial>(oParam.ComercialId).PerfilId != 8)
+                {
+                    exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, oComerciales.ComercialId);
+                }
+                else
+                {
+                    var comerciales = repositorio.Listar<Comercial>(x => x.PerfilId == 8);
+                    foreach (Comercial comercialAmigo in comerciales)
+                    {
+                        var re = repositorio.ListarConsulta(new TraerCorredoresComercialExportarAll(comercialAmigo.ComercialId, oParam.ComercialId));
+                        exp.contacto.AddRange(re);
+                    }
+                }
+                
                 exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);
 
-                exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, idsStr);
+                //exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, idsStr);
+                exp.ContactosPrincipales = repositorio.ListarConsulta(new TraerExportarAllContactosComerciales(exp.contacto.Select(x => x.Cuit).ToList()));
 
                 exp.produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, idsStr);
 
