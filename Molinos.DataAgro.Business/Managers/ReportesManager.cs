@@ -635,7 +635,8 @@ namespace Molinos.DataAgro.Business.Managers
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))
-             && (centroId == 0 || x.DestinoId == centroId));
+             && (centroId == 0 || x.DestinoId == centroId)
+             && x.ContratoAcuerdoId == null);
 
             contratos.AddRange(repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -765,7 +766,7 @@ namespace Molinos.DataAgro.Business.Managers
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && (x.EstadoId == 2 )
              && x.MaterialId == materialId
-             && (!calidad.Value)
+             && (!calidad.Value || !calidad.HasValue)
              && (centroId == 0 || x.DestinoId == centroId)));
 
             return contratos;

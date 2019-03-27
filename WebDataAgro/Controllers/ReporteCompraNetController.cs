@@ -42,7 +42,7 @@ namespace WebDataAgro.Controllers
         {
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, clasificacion, int.Parse(centroId));
+            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId));
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
         public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString, string centroId = "0")
@@ -101,7 +101,7 @@ namespace WebDataAgro.Controllers
             DateTime.TryParse(fechaString, out fecha);
             DateTime fechaHasta;
             DateTime.TryParse(fechaHastaString, out fechaHasta);
-            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
+            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
         }
         public ExcelResult ExcelAgente(string fechaString)
         {
