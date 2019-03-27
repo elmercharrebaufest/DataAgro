@@ -23,14 +23,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var resultado =
                 from ContactoComercial in contexto.Set<ContactoComercial>()
-                join Proveedor in contexto.Set<Proveedor>() on ContactoComercial.ProveedorId equals Proveedor.ProveedorId
+                join proveedor in contexto.Set<Proveedor>() on ContactoComercial.ProveedorId equals proveedor.ProveedorId into provi
+                from provis in provi.DefaultIfEmpty()
                 join ContactoComercialInteres in contexto.Set<ContactoComercialInteres>() on ContactoComercial.ContactoComercialId equals ContactoComercialInteres.ContactoComercialId into ComInteres
                 from intereses in ComInteres.DefaultIfEmpty()
                 where proveedores.Contains(ContactoComercial.Proveedor.CUIT)
                 select new ContactosPrincipalesAll
                 {
                     Apellido = ContactoComercial.Apellido,
-                    Cuit = Proveedor.CUIT,
+                    Cuit = provis.CUIT,
                     Email = ContactoComercial.Email1,
                     FechaNacimiento = ContactoComercial.FechaNacimiento.HasValue ? ContactoComercial.FechaNacimiento.ToString() : "",
                     Interes = intereses.Interes.Descripcion,
@@ -39,7 +40,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Principal = ContactoComercial.EsPrincipal.HasValue && ContactoComercial.EsPrincipal.Value ? "SI" : "NO",
                     Profesion = ContactoComercial.Cargo,
                     Puesto = ContactoComercial.Puesto,
-                    RazonSocial = Proveedor.RazonSocial,
+                    RazonSocial = provis.RazonSocial,
                     Telefono = ContactoComercial.Telefono1
                 };
 

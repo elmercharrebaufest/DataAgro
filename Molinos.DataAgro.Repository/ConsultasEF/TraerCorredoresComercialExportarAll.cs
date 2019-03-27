@@ -24,39 +24,46 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var resultado =
-                from proveedorComercial in contexto.Set<ProveedorComercial>() 
-                join proveedor in contexto.Set<Proveedor>() on proveedorComercial.ProveedorId equals proveedor.ProveedorId
-                join ContactoComercial in contexto.Set<ContactoComercial>() on proveedor.ProveedorId equals ContactoComercial.ProveedorId into contactos
-                from con in contactos.DefaultIfEmpty()
-                join comercial in contexto.Set<Comercial>() on proveedorComercial.ComercialId equals comercial.ComercialId
-                join Estado in contexto.Set<Estado>() on proveedor.EstadoId equals Estado.EstadoId into estados
+                //from proveedorComercial in contexto.Set<ProveedorComercial>() 
+                //join proveedor in contexto.Set<Proveedor>() on proveedorComercial.ProveedorId equals proveedor.ProveedorId
+                //join ContactoComercial in contexto.Set<ContactoComercial>() on proveedor.ProveedorId equals ContactoComercial.ProveedorId into contactos
+                //from con in contactos.DefaultIfEmpty()
+                //join comercial in contexto.Set<Comercial>() on proveedorComercial.ComercialId equals comercial.ComercialId
+                //join Estado in contexto.Set<Estado>() on proveedor.EstadoId equals Estado.EstadoId into estados
+                //from ests in estados.DefaultIfEmpty()
+                //where idComerciales.Contains(proveedorComercial.ComercialId)
+                from pCom in contexto.Set<ProveedorComercial>()
+                join prove in contexto.Set<Proveedor>() on pCom.ProveedorId equals prove.ProveedorId
+                join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
+                join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId into estados
                 from ests in estados.DefaultIfEmpty()
-                where idComerciales.Contains(proveedorComercial.ComercialId)
+                where idComerciales.Contains(pCom.ComercialId)
+                group prove by prove into provs
                 select new ContactoAll
                 {
-                    AreaDeInfluencia = proveedor.AreaInfluencia.Descripcion,
-                    Bolsa = proveedor.BoletoCompraNet.Descripcion,
-                    Calificacion = proveedor.Calificacion,
+                    AreaDeInfluencia = provs.Key.AreaInfluencia.Descripcion,
+                    Bolsa = provs.Key.BoletoCompraNet.Descripcion,
+                    Calificacion = provs.Key.Calificacion,
                     CanalDeOperacion = "",
-                    Clasificacion = proveedor.ClasificacionCompraNet.Descripcion,
-                    ClienteMoa = (proveedor.ClienteMOA.HasValue && proveedor.ClienteMOA.Value) ? "SI" : "NO",
-                    CodPostal = proveedor.CodigoPostal,
+                    Clasificacion = provs.Key.ClasificacionCompraNet.Descripcion,
+                    ClienteMoa = (provs.Key.ClienteMOA.HasValue && provs.Key.ClienteMOA.Value) ? "SI" : "NO",
+                    CodPostal = provs.Key.CodigoPostal,
                     Comentario = "",
-                    Comercial = comercial.Apellido + " " + comercial.Nombres,
+                    Comercial = contexto.Set<ProveedorComercial>().Where(x => x.ProveedorId == provs.Key.ProveedorId).FirstOrDefault().Comercial.Apellido,
                     Condicion = "",
-                    Consignatario = proveedor.Consignatario.HasValue && proveedor.Consignatario.Value ? "SI" : "NO",
-                    Cuit = proveedor.CUIT,
+                    Consignatario = provs.Key.Consignatario.HasValue && provs.Key.Consignatario.Value ? "SI" : "NO",
+                    Cuit = provs.Key.CUIT,
                     Destinatario = "",
-                    Domicilio = proveedor.Direccion,
-                    Estado = proveedor.Estado.Descripcion,
-                    FechaAlta = proveedor.FechaAlta.HasValue ? proveedor.FechaAlta.Value : DateTime.Now,
-                    Intermediario = proveedor.Intermediario,
-                    Localidad = proveedor.LocalidadCompraNet.Nombre,
-                    Provincia = proveedor.ProvinciaCompraNet.Nombre,
-                    RazonSocial = proveedor.RazonSocial,
-                    Segmentacion = proveedor.Segmentacion.Descripcion,
-                    TipoBoleto = proveedor.BoletoCompraNet.Descripcion,
-                    Zona = proveedor.GrupoCompras
+                    Domicilio = provs.Key.Direccion,
+                    Estado = provs.Key.Estado.Descripcion,
+                    FechaAlta = provs.Key.FechaAlta.HasValue ? provs.Key.FechaAlta.Value : DateTime.Now,
+                    Intermediario = provs.Key.Intermediario,
+                    Localidad = provs.Key.LocalidadCompraNet.Nombre,
+                    Provincia = provs.Key.ProvinciaCompraNet.Nombre,
+                    RazonSocial = provs.Key.RazonSocial,
+                    Segmentacion = provs.Key.Segmentacion.Descripcion,
+                    TipoBoleto = provs.Key.BoletoCompraNet.Descripcion,
+                    Zona = provs.Key.GrupoCompras
 
                 };
 

@@ -63,12 +63,12 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(corredoresComerciales, oParam.ComercialId)));
-                res.TotalContactos += cuenta.Count();
-                res.TotalPotencialContactos += cuenta.Count(x => x.Estado == "Cliente Potencial");
-                res.TotalOperandoContactos += cuenta.Count(x => x.Estado == "Operando");
-                res.TotalNoOperandoContactos += cuenta.Count(x => x.Estado == "No operando");
-                res.TotalBajaContactos += cuenta.Count(x => x.Estado == "Baja");
-                res.TotalSinInteresContactos += cuenta.Count(x => x.Estado == "Sin interés de operar");
+                res.TotalContactos = cuenta.Count();
+                res.TotalPotencialContactos = cuenta.Count(x => x.Estado == "Cliente Potencial");
+                res.TotalOperandoContactos = cuenta.Count(x => x.Estado == "Operando");
+                res.TotalNoOperandoContactos = cuenta.Count(x => x.Estado == "No operando");
+                res.TotalBajaContactos = cuenta.Count(x => x.Estado == "Baja");
+                res.TotalSinInteresContactos = cuenta.Count(x => x.Estado == "Sin interés de operar");
             }
 
 
@@ -305,7 +305,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return new List<ContactoIni>();
         }
 
-        public ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory)
+        public ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory, List<int> equipo)
         {
             ExportAll exp = new ExportAll();
 
@@ -318,6 +318,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId.ToString()).ToArray(); ;
                 var idsStr = string.Join(",", ids);
 
+                var idProveedores = repositorio.ListarConsulta(new TraerBusquedaContactosProveedorId(oParam, equipo)).Select(x => x.ProveedorId).Distinct();
+                
+
                 if (repositorio.Obtener<Comercial>(oParam.ComercialId).PerfilId != 8)
                 {
                     exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, oComerciales.ComercialId);
@@ -328,7 +331,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                     var re = repositorio.ListarConsulta(new TraerCorredoresComercialExportarAll(comerciales, oParam.ComercialId));
                     exp.contacto.AddRange(re);
-
                 }
 
                 exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);

@@ -202,7 +202,7 @@ namespace WebDataAgro.Controllers
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = GlobalVariables.EquipoReal;
             filtro.Estado = null;
-            var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory);
+            var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo);
 
             var oLstContacto = new LstContacto(reportesManager);
 

@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Interfaces
 
         List<ContactoIni> ExportarContactos(oParamBusqueda oParam, string idActiveDirectory);
 
-        ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory);
+        ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory, List<int> equipo);
 
         PostItDto TraerTexto(int idComercial);
 

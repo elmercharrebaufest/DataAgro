@@ -30,16 +30,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var resultado =
-                from proveedorComercial in contexto.Set<ProveedorComercial>()
+                from Proveedor in contexto.Set<Proveedor>()
+                join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
                 join contactoComercial in contexto.Set<ContactoComercial>() on proveedorComercial.Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                 from contactoComercial in cons.DefaultIfEmpty()
-                where (equipo.Contains(proveedorComercial.Comercial.ComercialId)
-                    || (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(proveedorComercial.Comercial.ComercialId)))  &&
-                    (proveedorComercial.Proveedor.CUIT.StartsWith(filtro) ||
-                    (contactoComercial.Nombres + " " + contactoComercial.Apellido).Contains(filtro) ||
-                    contactoComercial.Proveedor.RazonSocial.Contains(filtro))
+                where equipo.Contains(proveedorComercial.ComercialId) &&
+                    (Proveedor.CUIT.Contains(filtro) ||
+                    contactoComercial.Nombres.Contains(filtro) ||
+                    contactoComercial.Apellido.Contains(filtro) ||
+                    contactoComercial.Proveedor.RazonSocial.Contains(filtro) ||
+                    Proveedor.RazonSocial.Contains(filtro))
 
-                group new { contactoComercial } by new
+                group new { proveedorComercial } by new
                 {
                     proveedorComercial.ProveedorId,
                     proveedorComercial.Proveedor.RazonSocial,

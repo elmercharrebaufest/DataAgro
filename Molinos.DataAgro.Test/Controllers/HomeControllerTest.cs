@@ -227,7 +227,7 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["perfil"] = 1;
             var busqueda = new oParamBusqueda();
 
-            homeManagerMock.Setup(x => x.ExportarAll(busqueda, GlobalVariables.IdActiveDirectory))
+            homeManagerMock.Setup(x => x.ExportarAll(busqueda, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo))
                 .Returns(new ExportAll
                 {
                     agenda= new List<AgendaAll>() { new AgendaAll { } },
@@ -240,7 +240,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 });
 
             var result = target.ExportarAll(busqueda) as JsonResult;
-            homeManagerMock.Verify(x => x.ExportarAll(It.IsAny<oParamBusqueda>(), It.IsAny<string>()), Times.Once);
+            homeManagerMock.Verify(x => x.ExportarAll(It.IsAny<oParamBusqueda>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.IsTrue(((ReportesModel)result.Data).DownloadKey != "");
