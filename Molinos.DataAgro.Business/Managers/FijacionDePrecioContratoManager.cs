@@ -155,6 +155,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "Precio fuera de Rango");
             }
+            if (oParam.CampanaId == 0)
+            {
+                oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
+            }
             return oErrorMessages;
         }
 
