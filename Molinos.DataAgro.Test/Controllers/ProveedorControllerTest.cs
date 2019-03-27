@@ -102,10 +102,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void DetalleTest()
         {
-            
+
             comercialManagerMock.Setup(x => x.ComercialExiste(GlobalVariables.IdActiveDirectory)).Returns(true);
             comercialManagerMock.Setup(x => x.ComercialPerteneceProveedor(GlobalVariables.Equipo, 1, (int)GlobalVariables.Perfil, GlobalVariables.CorredoresComercial)).Returns(true);
-            var result = target.Detalle(1,null);
+            var result = target.Detalle(1, null);
             Assert.NotNull(result);
         }
 
@@ -143,7 +143,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerLocalidadTest()
         {
-            proveedorManagerMock.Setup(x => x.TraerLocalidad(1)).Returns(new List<LocalidadDto>() { new LocalidadDto { LocalidadId=1,CodLocalidad="A",Nombre="A",ProvinciaId=2,Provincia_Nombre="A"} });
+            proveedorManagerMock.Setup(x => x.TraerLocalidad(1)).Returns(new List<LocalidadDto>() { new LocalidadDto { LocalidadId = 1, CodLocalidad = "A", Nombre = "A", ProvinciaId = 2, Provincia_Nombre = "A" } });
             var result = target.TraerLocalidad(1);
 
             proveedorManagerMock.Verify(x => x.TraerLocalidad(It.IsAny<int>()), Times.Once);
@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearActividadTest()
         {
-            var param = new ActividadInsetarIni { UserName = "dominio\\nombre",ComercialId = 1 };
+            var param = new ActividadInsetarIni { UserName = "dominio\\nombre", ComercialId = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
             proveedorManagerMock.Setup(x => x.GrabarRecordatorio(param)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             var result = target.CrearActividad(new ActividadInsetarIni());
@@ -200,12 +200,12 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarProveedorNuevoTest()
         {
-            var prove = new NuevoProveedor { ProveedorId = 0,basicos= new Basico { cuit="111", RazonSocial="A",} };
-            proveedorManagerMock.Setup(x => x.GrabarNuevoProveedor(prove, GlobalVariables.IdActiveDirectory)).Returns( new GrabarProveedorResult { ProveedorId=2, Errores=new List<ErrorMessage>() });
+            var prove = new NuevoProveedor { ProveedorId = 0, basicos = new Basico { cuit = "111", RazonSocial = "A", } };
+            proveedorManagerMock.Setup(x => x.GrabarNuevoProveedor(prove, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 2, Errores = new List<ErrorMessage>() });
             var result = target.GrabarProveedor(prove);
 
             proveedorManagerMock.Verify(x => x.GrabarNuevoProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Once);
-            proveedorManagerMock.Verify(x => x.UpdateProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Never);
+            proveedorManagerMock.Verify(x => x.UpdateProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Never);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -216,7 +216,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarProveedorUpdateTest()
         {
             var prove = new NuevoProveedor { ProveedorId = 1, basicos = new Basico { cuit = "111", RazonSocial = "A", } };
-            proveedorManagerMock.Setup(x => x.UpdateProveedor(prove, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
+            proveedorManagerMock.Setup(x => x.UpdateProveedor(prove, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarProveedor(prove);
 
             proveedorManagerMock.Verify(x => x.UpdateProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Once);
@@ -231,7 +231,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerCampañasActivasTest()
         {
-            campanaManagerMock.Setup(x => x.TraerCampañasActivas()).Returns(new List<CampañaDto>() { new CampañaDto {CampañaId=1,Descripcion="18-19" } });
+            campanaManagerMock.Setup(x => x.TraerCampañasActivas()).Returns(new List<CampañaDto>() { new CampañaDto { CampañaId = 1, Descripcion = "18-19" } });
             var result = target.TraerCampañasActivas();
 
             campanaManagerMock.Verify(x => x.TraerCampañasActivas(), Times.Once);
@@ -271,8 +271,8 @@ namespace Molinos.DataAgro.Test.Controllers
         public void TraerFiltrosTest()
         {
             var histo = new HistorialActiviad { ActividadId = 1, ProveedorId = 1, tipoactividad = "A" };
-            proveedorManagerMock.Setup(x => x.TraerHistorialActividad(histo, 1,"A")).Returns(new StoredHistorialResult());
-            var result = target.TraerFiltros("A",1,histo);
+            proveedorManagerMock.Setup(x => x.TraerHistorialActividad(histo, 1, "A")).Returns(new StoredHistorialResult());
+            var result = target.TraerFiltros("A", 1, histo);
 
             proveedorManagerMock.Verify(x => x.TraerHistorialActividad(It.IsAny<HistorialActiviad>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
@@ -286,7 +286,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var prov = new StoredPorProveedorResult
             {
-                BasicoProveedorTraerPorProveedores = new List<BasicoProveedor>(){ new BasicoProveedor { CUIT = "a", ProveedorId = 1, RazonSocial = "A", Estado = "b", Segmentacion = "c" } },
+                BasicoProveedorTraerPorProveedores = new List<BasicoProveedor>() { new BasicoProveedor { CUIT = "a", ProveedorId = 1, RazonSocial = "A", Estado = "b", Segmentacion = "c" } },
                 CanalesDeOperacion = new List<CanalOperacion>(),
                 DatosContacto = new DatosContacto(),
                 ProveedorDestinatario = new List<Destinatario>(),
@@ -301,7 +301,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.ImprimirReporteProveedor(1);
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
-            
+
             var model = result.Result as JsonResult;
             Assert.NotNull(result);
             Assert.IsTrue(((ReportesModel)model.Data).DownloadKey != "");
@@ -323,10 +323,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ObtenerReporteProveedorTest()
         {
-            proveedorManagerMock.Setup(x => x.ObtenerReporteProveedor("a", GlobalVariables.IdActiveDirectory)).Returns(new List<ReporteProveedor>() { new ReporteProveedor { CUIT="111" , ProveedorId=1,RazonSocial="A",Comerciales="B" } });
+            proveedorManagerMock.Setup(x => x.ObtenerReporteProveedor("a", GlobalVariables.IdActiveDirectory)).Returns(new List<ReporteProveedor>() { new ReporteProveedor { CUIT = "111", ProveedorId = 1, RazonSocial = "A", Comerciales = "B" } });
             var result = target.ObtenerReporteProveedor("a");
 
-            proveedorManagerMock.Verify(x => x.ObtenerReporteProveedor(It.IsAny<string>(),It.IsAny<string>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.ObtenerReporteProveedor(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -337,10 +337,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarCorredoresTest()
         {
-            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", true)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1,RazonSocial="Agro A.",Cuit="202",Filtro="agr|AGRO A." } });
+            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", true, GlobalVariables.Equipo)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
             var result = target.BuscarCorredores("agr", true);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), true), Times.Once);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), true, It.IsAny<List<int>>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -350,10 +350,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarProveedoresConCorredorOkSinCorredorTest()
         {
-            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", false)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
-            var result = target.BuscarProveedoresConCorredor("agr","", false);
+            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", false, GlobalVariables.Equipo)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
+            var result = target.BuscarProveedoresConCorredor("agr", "", false);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), false), Times.Once);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), false, It.IsAny<List<int>>()), Times.Once);
             proveedorManagerMock.Verify(x => x.DevolverProveedoresConCorredor(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -367,7 +367,7 @@ namespace Molinos.DataAgro.Test.Controllers
             proveedorManagerMock.Setup(x => x.DevolverProveedoresConCorredor("agr", "2011")).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
             var result = target.BuscarProveedoresConCorredor("agr", "2011", true);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), false), Times.Never);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), false, It.IsAny<List<int>>()), Times.Never);
             proveedorManagerMock.Verify(x => x.DevolverProveedoresConCorredor(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -391,7 +391,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerProveedoresCorredorTest()
         {
-            proveedorManagerMock.Setup(x => x.ListarProveedorCorredor(1)).Returns(new List<ProveedorCorredorDto> { new ProveedorCorredorDto { CUIT="A", ProveedorCorredorId=1,CodigoPostal="1",ProvinciaId=2,ClasificacionCompraNetId=1,ProveedorId=1 } });
+            proveedorManagerMock.Setup(x => x.ListarProveedorCorredor(1)).Returns(new List<ProveedorCorredorDto> { new ProveedorCorredorDto { CUIT = "A", ProveedorCorredorId = 1, CodigoPostal = "1", ProvinciaId = 2, ClasificacionCompraNetId = 1, ProveedorId = 1 } });
             var result = target.TraerProveedoresCorredor(1);
 
             proveedorManagerMock.Verify(x => x.ListarProveedorCorredor(It.IsAny<int>()), Times.Once);
@@ -404,7 +404,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerProveedorParaCorredorTest()
         {
-            proveedorManagerMock.Setup(x => x.TraerProveedorParaCorredor("201")).Returns(new TraerProveedorResult {Proveedor=new ProveedorDto { ProveedorId=1, RazonSocial="A",CUIT="201"},Errores= new List<ErrorMessage>() });
+            proveedorManagerMock.Setup(x => x.TraerProveedorParaCorredor("201")).Returns(new TraerProveedorResult { Proveedor = new ProveedorDto { ProveedorId = 1, RazonSocial = "A", CUIT = "201" }, Errores = new List<ErrorMessage>() });
             var result = target.TraerProveedorParaCorredor("201");
 
             proveedorManagerMock.Verify(x => x.TraerProveedorParaCorredor(It.IsAny<string>()), Times.Once);
@@ -418,7 +418,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarCorredorUpdateTest()
         {
             var corredor = new NuevoCorredor { CorredorId = 1, basicos = new Basico { RazonSocial = "A", cuit = "201", segmentacion = 5 }, contacto = new Contacto { provincia = 1, localidad = 2 } };
-            proveedorManagerMock.Setup(x => x.UpdateCorredor(corredor, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
+            proveedorManagerMock.Setup(x => x.UpdateCorredor(corredor, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarCorredor(corredor);
 
             proveedorManagerMock.Verify(x => x.UpdateCorredor(It.IsAny<NuevoCorredor>(), It.IsAny<string>()), Times.Once);
