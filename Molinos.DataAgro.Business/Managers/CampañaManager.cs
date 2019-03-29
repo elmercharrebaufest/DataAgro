@@ -31,10 +31,10 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Listar<Material, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.CampañaId != null);
         }
-        
+
         public List<MaterialDto> TraerMaterialPorCampaña(int campanaId)
         {
-            return repositorio.Listar<Material, MaterialDto>(x => new MaterialDto {CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.CampañaId == campanaId);
+            return repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.CampañaId == campanaId);
         }
 
         public CampañaHome TraerCampañaHome(int idComercial, List<int> equipo)
@@ -57,19 +57,20 @@ namespace Molinos.DataAgro.Business
             {
                 list.Materiales = lista.ToList();
             }
-            
+
             return list;
         }
 
         public List<CampañaDto> TraerCampañasPorGrano(int materialId)
         {
-            return repositorio.Listar<CampañaMaterialHistorico, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId,Descripcion= x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
+            return repositorio.Listar<CampañaMaterialHistorico, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Desc);
         }
 
         public List<CampañaDto> TraerCampañaPorMaterial(int materialId)
         {
             var campanaActualId = repositorio.Obtener<Material, int>(x => x.MaterialId == materialId, x => x.Campaña.CampañaId);
-            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1), 0, "CampañaId", DirOrden.Asc);
+            //&& (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1)
+            return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId, 0, "CampañaId", DirOrden.Asc);
         }
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)

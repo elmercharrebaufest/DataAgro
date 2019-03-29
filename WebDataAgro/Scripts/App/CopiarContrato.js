@@ -129,6 +129,11 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     }
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
+    if (contrato.Corredor) {
+        $('#pagoDirectoDiv').show();
+    } else {
+        $('#pagoDirectoDiv').hide();
+    }
 
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
