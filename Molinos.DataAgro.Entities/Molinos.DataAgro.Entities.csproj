@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Dto\AbmMoneda.cs" />
     <Compile Include="Dto\AgenteCompraDto.cs" />
     <Compile Include="Dto\AreaInfluenciaDto.cs" />
+    <Compile Include="Dto\AperturaPrecioDto.cs" />
+    <Compile Include="Dto\ConceptoAperturaPrecioDto.cs" />
     <Compile Include="Dto\ContratoCopiar.cs" />
     <Compile Include="Dto\BusquedaLocalidad.cs" />
     <Compile Include="Dto\CalidadEspecialDto.cs" />
@@ -143,6 +146,8 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
+    <Compile Include="Entities\AperturaPrecio.cs" />
+    <Compile Include="Entities\ConceptoAperturaPrecio.cs" />
     <Compile Include="Entities\ContratoAcuerdo.cs" />
     <Compile Include="Entities\Diferencial.cs" />
     <Compile Include="Entities\HedgeTC.cs" />

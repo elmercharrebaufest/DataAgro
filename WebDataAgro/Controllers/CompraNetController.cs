@@ -408,6 +408,17 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult TraerAperturaPrecioPorContrato(int contratoId = 0)
+        {
+            var model = mobjContratoManager.TraerAperturaDePrecioPorContrato(contratoId);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         public ActionResult TraerContratoCompleto(int id, string tipo)
         {
             return new JsonResult()

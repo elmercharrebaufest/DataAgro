@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FasonId = 0,
                     Operador = "",
                     OperadorId = 0,
-                    AgenteId = 0
+                    AgenteId = 0                    
                 };
 
             var queryFijacion =

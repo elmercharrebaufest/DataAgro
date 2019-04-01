@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaDesde { get; set; } // FechaDesde
         public string FechaHasta { get; set; } // FechaHasta
         public string Precio { get; set; } // Precio
+        public string PrecioNeto { get; set; } // PrecioBase
         public string Moneda { get; set; } // MonedaId (length: 5) 
         public string Fecha { get; set; } // Fecha
         public string Provincia { get; set; } // ProvinciaId
@@ -36,8 +37,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PlanCanje { get; set; }
         public string Pago { get; set; }
         public string CalidadEspecial { get; set; }
-        public string EstablecimientoPropio { get; set; }        
+        public string EstablecimientoPropio { get; set; }
         public string Observacion { get; set; }
+
     }
 }
 

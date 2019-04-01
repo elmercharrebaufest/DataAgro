@@ -252,6 +252,10 @@ function crearGrilladetallePosicion(href) {
                 title: "Precio",
                 width: 150
             }, {
+                field: "PrecioNeto",
+                title: "Precio Neto",
+                width: 150
+            }, {
                 field: "Moneda",
                 title: "Moneda",
                 width: 150

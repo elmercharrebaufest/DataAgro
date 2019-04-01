@@ -63,6 +63,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string ContratoMadre { get; set; }
         public int? FinDelDiaId { get; set; }
         public int? ContratoAcuerdoId { get; set; }
+        public bool? Pizarra { get; set; }
+        public decimal? PrecioNeto { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -112,6 +114,9 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("ContratoAcuerdoId")]
         public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
 
+        [InverseProperty("Contrato")]
+        public List<AperturaPrecio> AperturaPrecio { get; set; }
+
         public Contrato()
         {
             Cantidad = 0;
@@ -124,6 +129,7 @@ namespace Molinos.DataAgro.Entities.Entities
             ContratoSAP = "";
             Ampliaciones = 0;
             CantidadCamiones = 0;
+            Pizarra = false;
         }
     }
 }

@@ -243,6 +243,8 @@
     <Build Include="dbo\Tables\TipoAgenteCompra.sql" />
     <Build Include="dbo\Tables\Diferencial.sql" />
     <Build Include="dbo\Tables\ContratoAcuerdo.sql" />
+    <Build Include="dbo\Tables\AperturaPrecio.sql" />
+    <Build Include="dbo\Tables\ConceptoAperturaPrecio.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

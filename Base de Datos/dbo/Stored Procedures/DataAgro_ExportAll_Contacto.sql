@@ -21,7 +21,8 @@ RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255)
 Segmentacion  varchar(255),Domicilio  varchar(255),Localidad varchar(255),Provincia varchar(255),CodPostal varchar(255),
 CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),Intermediario varchar(255),
 AreaDeInfluencia varchar(10),Comentario varchar(MAX),Comercial varchar(255),ClienteMoa varchar(255), 
-Zona varchar(255), FechaAlta DATETIME null )
+Zona varchar(255), FechaAlta DATETIME null, Clasificacion varchar(255), TipoBoleto varchar(255), Bolsa varchar(255),
+Consignatario varchar(255))
 
 
  insert into @table 
@@ -30,7 +31,7 @@ Zona varchar(255), FechaAlta DATETIME null )
 
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Estado, Calificacion,
  Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,Comercial
- ,ClienteMoa,Zona,FechaAlta)
+ ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario)
 
  select  
 	p.ProveedorId,
@@ -70,7 +71,11 @@ Zona varchar(255), FechaAlta DATETIME null )
 	c.Apellido + ' ' + c.Nombres as ComercialACargo, 
 	case when p.ClienteMOA = 1 then 'SI' else 'NO' end,
 	gc.Descripcion,
-	p.FechaAlta
+	p.FechaAlta,
+	claCP.Descripcion,
+	boletocn.Descripcion,
+	bolsacn.Descripcion,
+	case when p.Consignatario = 1 then 'SI' else 'NO' end
 
   from Proveedor p
  inner join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
@@ -88,6 +93,10 @@ Zona varchar(255), FechaAlta DATETIME null )
  left join FACACOP f on p.CUIT = f.CUIT
  LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId and cc.EsPrincipal = 1
  LEFT JOIN AreaInfluencia ARI ON ARI.AreaInfluenciaId = P.AreaInfluenciaId
+ left join ClasificacionCompraNet claCP on claCP.Id = P.ClasificacionCompraNetId
+ left join BoletoCompraNet boletocn on boletocn.Id = p.BoletoCompraNetId
+ left join BolsaCompraNet bolsacn on bolsacn.Id = p.BolsaCompraNetId
+
  where p.ProveedorId in (select * from @table)
  order by p.RazonSocial desc
 
@@ -134,7 +143,11 @@ select
 	Comercial,
 	ClienteMoa,
 	Zona,
-	FechaAlta
+	FechaAlta,
+	Clasificacion,
+	TipoBoleto,
+	Bolsa,
+	Consignatario
 from #ProveedorAux PA
 
 drop table #ProveedorAux

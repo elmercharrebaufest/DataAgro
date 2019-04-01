@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto * y.Cantidad / 1000)
                 }).ToList();
 
             var fij = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Select(x => new PrecioCantidadDto()
                 {
                     Moneda = x.Key,
-                    Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
+                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto * y.Cantidad / 1000)
                 }).ToList();
 
             var fas = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))

@@ -202,6 +202,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.TrigoEspecial = oFijacionDePrecioSave.TrigoEspecial;
                 oFijacionDePrecioSave.FechaDesde = oFijacionDePrecio.FechaDesde;
                 oFijacionDePrecioSave.FechaHasta = oFijacionDePrecio.FechaHasta;
+                oFijacionDePrecioSave.PrecioNeto = oFijacionDePrecio.PrecioNeto;
+
+                if (oFijacionDePrecio.AperturaPrecio != null)
+                {
+                    oFijacionDePrecioSave.AperturaPrecio = oFijacionDePrecio.AperturaPrecio;
+                }
             }
             else
             {

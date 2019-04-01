@@ -6,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 
@@ -70,14 +71,19 @@ namespace Molinos.DataAgro.Business
         {
             var campanaActualId = repositorio.Obtener<Material, int>(x => x.MaterialId == materialId, x => x.Campaña.CampañaId);
             //&& (x.CampañaId == campanaActualId|| x.CampañaId == campanaActualId-1 || x.CampañaId == campanaActualId+1)
-            var campañaEnAdelante = repositorio.Obtener<Campaña, int>(x => x.Descripcion == "15-16", x => x.CampañaId);
+            var campañaConfigurada = ConfigurationManager.AppSettings["CampanaDesde"].ToString();
+            var campañaEnAdelante = repositorio.Obtener<Campaña, int>(x => x.Descripcion == campañaConfigurada, x => x.CampañaId);
             return repositorio.Listar<CampañaMaterial, CampañaDto>(x => new CampañaDto { CampañaId = x.Campaña.CampañaId, Descripcion = x.Campaña.Descripcion }, x => x.MaterialId == materialId && (x.CampañaId > campañaEnAdelante), 0, "CampañaId", DirOrden.Asc);
         }
 
         public List<CalidadEspecialDto> TraerCalidadPorMaterial(int materialId)
         {
-            return repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto {Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId, PermiteRango = x.PermiteRango }, x => x.MaterialId == materialId);
+            var calidades = new List<CalidadEspecialDto>()
+            {
+                new CalidadEspecialDto {Id=0, CodigoSap="0",Descripcion="Cámara"}
+            };
+            calidades.AddRange(repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.MaterialId == materialId));
+            return calidades;
         }
-    }
-    
+    }    
 }

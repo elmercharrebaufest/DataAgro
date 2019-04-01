@@ -255,6 +255,9 @@
   <data name="Precio" xml:space="preserve">
     <value>Precio</value>
   </data>
+  <data name="PrecioNeto" xml:space="preserve">
+    <value>Precio Neto</value>
+  </data>
   <data name="Provincia" xml:space="preserve">
     <value>Provincia</value>
   </data>

@@ -242,6 +242,15 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 19].Value = "Fecha de Alta";
             workSheet.Column(19).AutoFit();
 
+            workSheet.Cells[1, 20].Value = "Clasificacion";
+            workSheet.Column(20).AutoFit();
+
+            workSheet.Cells[1, 21].Value = "Boleto";
+            workSheet.Column(21).AutoFit();
+
+            workSheet.Cells[1, 22].Value = "Bolsa";
+            workSheet.Column(22).AutoFit();
+
             if (oDatos.objetivo.Count > 0)
             {
                 oPropRow = oDatos.objetivo[0].GetType().GetProperties();

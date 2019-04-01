@@ -97,7 +97,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DescuentoBonificacionDto> Descuentos { get; set; }
         public List<CalidadDto> Calidades { get; set; }
         public bool? MercsDeposito { get; set; }
-        public int  CorredorId { get; set; }
+        public int CorredorId { get; set; }
         public DatosFijacionDeContratoDto DatosFijacion { get; set; }
         public decimal? PorcentajeComision { get; set; }
         public string ContratoCorredor { get; set; }
@@ -113,6 +113,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Operador { get; set; }
         public int OperadorId { get; set; }
         public int AgenteId { get; set; }
+        public List<AperturaPrecioDto> AperturaPrecios { get; set; }
+        public decimal? PrecioNeto { get; set; }
     }
 
 

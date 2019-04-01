@@ -478,9 +478,15 @@ function CreateGridInformeCompraNet() {
                     }
                 }
             },
-            { field: "Precio", type: "number", width: 70, format: "{0:n2}", attributes: { "class": "mobile-xs mobile-precio" } },
+            {
+                field: "Precio", type: "number", width: 80,
+                template: function (dataItem) {
+                    return kendo.toString(dataItem.Precio, "n2") + " " + dataItem.Moneda;
+                },
+                attributes: { "class": "mobile-xs mobile-precio" }
+            },
             { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
-            { field: "Campania", type: "string", title: "Cos", width: 70, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
+            { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
                 field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
@@ -1324,6 +1330,28 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             StandardDeCalidadId: 2,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
+    });
+
+    $("#visualizar_aperturaFinanciero").text("");
+    $("#visualizar_aperturaRedespacho").text("");
+    $("#visualizar_aperturaComisiones").text("");
+    $("#visualizar_aperturaBonificaciones").text("");
+    var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: contrato });
+    $.each(aperturaPrecio, function (key, concepto) {
+        switch (concepto.ConceptoAperturaPrecioId) {
+            case 1:
+                $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
+                break;
+            case 2:
+                $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
+                break;
+            case 3:
+                $("#visualizar_aperturaComisiones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                break;
+            case 4:
+                $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                break;
+        }
     });
 }
 

@@ -52,6 +52,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ComercialCreadorId { get; set; }
         public decimal? PorcentajeComision { get; set; }
         public int? ContratoAcuerdoId { get; set; }
+        public bool? Pizarra { get; set; }
+        public decimal? PrecioNeto { get; set; }
     }
 }
 

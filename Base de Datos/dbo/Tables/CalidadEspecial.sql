@@ -4,7 +4,6 @@
     [Descripcion]       VARCHAR(50) NOT NULL,
 	[CodigoSap]			VARCHAR(40) NOT NULL,	
 	[MaterialId]		INT DEFAULT 3 NOT NULL,
-	[PermiteRango]		BIT NULL,
     CONSTRAINT [PK_CalidadEspecial] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Contrato_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId])
 )

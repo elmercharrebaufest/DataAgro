@@ -35,10 +35,10 @@
         </div>
 
     </div>
-  
+
 
     <div class="row ampliar">
-        <div >
+        <div>
             <div class="col-sm-2">
                 <label>Copiar Contrato</label>
             </div>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div>
-            <div class="col-sm-1 " >
+            <div class="col-sm-1 ">
                 <label>Acuerdo</label>
             </div>
             <div class="col-sm-4">
@@ -254,7 +254,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2 ">
+        <div class="col-sm-2" data-toggle="tooltip" data-placement="top" id="cantidadTooltip">
+
             <label>Cantidad (Kg.)</label>
         </div>
         <div class="col-sm-5 col-md-4 required-box-parent">
@@ -282,7 +283,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="row">
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio</label>
@@ -297,10 +298,16 @@
                 <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+      
         <div class="col-xs-10 col-sm-5 noFason noAgente ampliar">
+
             <span id="baseDiv" style="display:inline-block">
                 <label id="lblBase">Base</label>
                 <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
+            </span>
+            <span id="pizarraDiv" style="display:inline-block">
+                <label id="lblPizarra">Pizarra</label>
+                <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
             </span>
             <div id="pagoDirectoDiv" hidden style="float:right;">
                 <label>Pago dir. Vend.</label>
@@ -315,6 +322,27 @@
             <input id="trigoEspecialFasonId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialFasonId, disabled: isControlDisabled" type="checkbox" />
             <img id="errtrigoEspecialFasonId" src="~/Content/Images/error.png" style="display:none" />
         </div>
+    </div>
+
+    <div class="row" id="aperturaPrecioDiv">
+        <div id="LabelPrecio" class="col-sm-2 ">
+            <label>Precio Apertura</label>
+        </div>
+        <div id="DivPrecioApertura" class="col-xs-12 col-sm-5 col-md-4 ">
+            <div class="col-xs-12 col-md-12 noPadding">
+                <input id="precioTotalApertura" style="width:100%; margin:0" />
+            </div>
+
+        </div>
+        <div class="col-xs-3 col-sm-1">
+            <span  style="display:inline-block">
+                <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                    <i class="fa fa-table"></i>
+                </span>
+            </span>
+
+        </div>
+
     </div>
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente ampliar ">
@@ -653,14 +681,9 @@
     </div>
     <div class="noFason noAgente datos-calidades ampliar-adicionales" display="block">
         <div class="row">
-            <div class="col-sm-2 ">
-                <label style="width:110px">Calidad Especial</label>
-                <input id="trigoEspecialId" class="campo-input-input" data-bind="checked:Parametros.trigoEspecialId, disabled: isControlDisabled" type="checkbox" />
-                <img id="errtrigoEspecialId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
-            <div id="especialesId" class="calidadesEspecialesDatos" hidden>
+            <div id="especialesId" class="calidadesEspecialesDatos">
                 <div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-md-offset-2">
                         <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled"></select>
                         <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                     </div>
@@ -672,22 +695,22 @@
                     </div>
                 </div>
             </div>
-            <div id="agregarCalidad" class="col-sm-3 col-md-1" hidden>
-                <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
-            </div>
         </div>
         <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad row">
-            <div class="col-md-offset-2 col-md-3">
-                <span id="porcentajeDesdeDiv" hidden>
+            <div class="col-md-3 col-md-offset-2">
+                <span id="porcentajeDesdeDiv">
                     <input id="porcentajeDesdeId" placeholder="PORCENTAJE DESDE" style="width:100%" />
                     <img id="errporcentajeDesdeId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
             <div class="col-md-3">
-                <span id="porcentajeHastaDiv" hidden>
+                <span id="porcentajeHastaDiv">
                     <input id="porcentajeHastaId" placeholder="PORCENTAJE HASTA" style="width:100%" />
                     <img id="errporcentajeDesdeId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
+            </div>
+            <div id="agregarCalidad" class="col-sm-3 col-md-1">
+                <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
         </div>
         @*<div class="row">
@@ -727,3 +750,6 @@
 
     </div>
 </div>
+
+<!-- Modal Apertura Precio-->
+@Html.Partial("ModalAperturaPrecio")

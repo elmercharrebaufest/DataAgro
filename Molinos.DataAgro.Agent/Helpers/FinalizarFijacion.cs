@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -35,6 +36,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
+                    var listaApertura = new List<ZMPES5440>();
+                    foreach (AperturaPrecio apertura in fijacion.AperturaPrecio)
+                    {
+                        listaApertura.Add(new ZMPES5440
+                        {
+                            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                            IMPORTE = apertura.Importe,
+                            MONEDA = fijacion.Moneda != null ? fijacion.Moneda.MonedaId : null,
+                            PORC = apertura.Porcentaje
+                        });
+                    }
+
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
@@ -43,7 +56,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_PRECIO = fijacion.Precio,
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
-                        IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : ""
+                        IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
+                        IM_APERTURA = listaApertura.ToArray()
                     };
 
                     logger.Debug(rq.ToXml());

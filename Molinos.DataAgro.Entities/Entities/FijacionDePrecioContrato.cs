@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,6 +31,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Posicion { get; set; }
         public bool? TrigoEspecial { get; set; }
         public int? FinDelDiaId { get; set; }
+        public decimal? PrecioNeto { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]
@@ -50,6 +52,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Campaña Campana { get; set; }
         [ForeignKey("FinDelDiaId")]
         public virtual FinDelDia FinDelDia { get; set; }
+
+        [InverseProperty("FijacionDePrecioContrato")]
+        public List<AperturaPrecio> AperturaPrecio { get; set; }
     }
 }
 

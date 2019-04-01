@@ -37,5 +37,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoCopiar> TraerContratosPorSap(string nrocontratoSap);
         List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
+        List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
     }
 }

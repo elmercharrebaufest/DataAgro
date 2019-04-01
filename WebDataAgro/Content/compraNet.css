@@ -723,6 +723,10 @@ body {
         margin-right: 66px;
     }
 
+    #lblPizarra {
+        margin-right: 66px;
+    }
+
     #lblPlan {
         width: 76px;
         margin-right: 22px;
@@ -946,4 +950,60 @@ body {
 
 .letra650 {
     font-size: 10px;
+}
+
+#pizarraDiv {
+    margin-left: 0.5vw;
+}
+
+.aperturaPrecioInput {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 100%;
+}
+
+.aperturaPrecioTd {
+    margin: 0;
+    padding: 0 !important;
+}
+
+#tablaApertura td {
+    position: relative;
+}
+
+    #tablaApertura td input {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        border: none;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    #tablaApertura td span {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        border: none;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+   .fuente600{
+       font-weight: 600;
+   }
+      
+.alinear-derecha {
+    display:flex;
+    justify-content: flex-end;
 }

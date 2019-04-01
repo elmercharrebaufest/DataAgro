@@ -52,11 +52,6 @@ namespace Molinos.DataAgro.Business
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
-            if ((oContratoAcuerdo.ProveedorId == null || oContratoAcuerdo.ProveedorId <= 0) && (oContratoAcuerdo.CorredorId  == null || oContratoAcuerdo.CorredorId <= 0))
-            {
-                oEntityErrors.Error("", "Debe ingresar al menos proveedor o corredor");
-            }
-
             if (oContratoAcuerdo.Precio < 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");

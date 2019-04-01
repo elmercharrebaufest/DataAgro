@@ -214,7 +214,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
                 }
             }
-            if (oParam.Precio == 0 && oParam.TipoNegocioId != 1)
+            if (oParam.Precio == 0 && oParam.TipoNegocioId != 1 && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
             }
-            if (string.IsNullOrEmpty(oParam.MonedaId) && oParam.TipoNegocioId != 1)
+            if ((string.IsNullOrEmpty(oParam.MonedaId) && oParam.TipoNegocioId != 1) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
@@ -296,9 +296,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
-            if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
+            if (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2)
             {
-                oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
+                {
+                    oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                }
             }
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
@@ -307,6 +310,27 @@ namespace Molinos.DataAgro.Business.Managers
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " tn)");
+                }
+            }
+
+            if (oParam.AperturaPrecio != null)
+            {
+                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
+                if (concepto != null && concepto.Importe > 0)
+                {
+                    oErrorMessages.Error("", "El importe del concepto Redespacho no puede ser positivo");
+                }
+                concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones);
+                if (concepto != null && (concepto.Importe > 0 || concepto.Porcentaje > 0))
+                {
+                    if (concepto.Porcentaje > 1)
+                    {
+                        oErrorMessages.Error("", "El porcentaje del concepto Comisiones no puede ser mayor a 1%");
+                    }
+                    if (concepto.Importe > (oParam.Precio / 100))
+                    {
+                        oErrorMessages.Error("", "El importe del concepto Comisiones no puede ser mayor al 1% del precio");
+                    }
                 }
             }
 
@@ -362,6 +386,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = oContrato;
             List<DescuentoBonificacion> descuentosExistentes = null;
             List<Calidad> calidadesExistentes = null;
+            List<AperturaPrecio> aperturasExistentes = null;
             var hoy = DateTime.Now;
 
             var rangoConfirmacionAutomaticaActivo = repositorio.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(
@@ -374,6 +399,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
                 descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.ContratoId);
                 calidadesExistentes = repositorio.Listar<Calidad>(x => x.ContratoId == oContrato.ContratoId);
+                aperturasExistentes = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == oContrato.ContratoId);
                 if (oContratoSave.EstadoId == 5 || oContratoSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
@@ -440,6 +466,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.SelCargoMOA = oContrato.SelCargoMOA;
             oContratoSave.Madre = oContrato.Madre;
             oContratoSave.ContratoMadre = oContrato.ContratoMadre?.PadLeft(10, '0');
+            oContratoSave.PrecioNeto = oContrato.PrecioNeto;
 
             if (descuentosExistentes != null)
             {
@@ -467,20 +494,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (calidadesExistentes != null)
-            {
-                foreach (var calidadExistente in calidadesExistentes)
-                {
-                    if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calidadExistente.Id))
-                    {
-                        repositorio.Remover(calidadExistente);
-                        if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
-                        {
-                            oContratoSave.EstadoId = 7;
-                        }
-                    }
-                }
-            }
+
             if (oContrato.Calidad != null)
             {
                 foreach (var calidad in oContrato.Calidad.Where(x => x.Id == 0))
@@ -519,6 +533,19 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("El contrato " + oContratoSave.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
                     }
                 }
+            }
+
+            if (aperturasExistentes != null)
+            {
+                foreach (var aperturaExistente in aperturasExistentes)
+                {
+                    repositorio.Remover(aperturaExistente);
+                }
+            }
+
+            if (oContrato.AperturaPrecio != null)
+            {
+                oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
 
@@ -862,6 +889,7 @@ namespace Molinos.DataAgro.Business.Managers
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);
+            contrato.AperturaPrecios = TraerAperturaDePrecioPorContrato(contratoId);
             return contrato;
         }
 
@@ -1322,5 +1350,21 @@ namespace Molinos.DataAgro.Business.Managers
             });
             return contrato;
         }
+
+        public List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId)
+        {
+            return repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(apertura => new AperturaPrecioDto()
+            {
+                contratoId = apertura.ContratoId,
+                Id = apertura.Id,
+                ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
+                ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
+                Importe = apertura.Importe,
+                MonedaId = apertura.MonedaId,
+                Porcentaje = apertura.Porcentaje
+            },
+            x => x.ContratoId == contratoId);
+        }
+
     }
 }

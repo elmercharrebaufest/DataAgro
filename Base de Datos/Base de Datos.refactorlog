@@ -84,4 +84,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ComercialCreadorId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="dcf36124-42bf-4f51-8fd4-09ecd3480fed" ChangeDateTime="03/19/2019 14:57:23">
+    <Property Name="ElementName" Value="[dbo].[AperturaPrecio].[Concepto]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AperturaPrecio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ConceptoApertura" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="148580ac-c343-484c-ad90-6fbc4616c996" ChangeDateTime="03/19/2019 14:57:29">
+    <Property Name="ElementName" Value="[dbo].[AperturaPrecio].[ConceptoApertura]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AperturaPrecio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ConceptoAperturaPrecioId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="36fc1b81-55eb-4c72-98e4-b6605555ad03" ChangeDateTime="03/25/2019 15:36:47">
+    <Property Name="ElementName" Value="[dbo].[ConceptoAperturaPrecio].[CodigoSat]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConceptoAperturaPrecio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CodigoSap" />
+  </Operation>
 </Operations>

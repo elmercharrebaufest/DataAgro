@@ -91,6 +91,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
 
+                var listaApertura = new List<ZMPES5440>();
+                foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
+                {
+                    listaApertura.Add(new ZMPES5440
+                    {
+                        CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                        IMPORTE = apertura.Importe,
+                        MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                        PORC = apertura.Porcentaje
+                    });
+                }
+
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : null;
@@ -107,6 +119,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     IM_CONTRATO = new ZMPES5270
                     {
+
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
                         CONTR_DATAAGRO = contrato.ContratoId.ToString(),
                         COSECHA = contrato.Campana.Descripcion,
@@ -121,7 +134,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PAGO_DIFERIDO = pagoDiferidoString,
                         MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = pagoDifArpString,
-                        PRECIO = contrato.Precio,
+                        PRECIO_PIZARRA = contrato.Precio,
+                        PRECIO = (contrato.PrecioNeto.HasValue) ? contrato.PrecioNeto.Value : contrato.Precio,
                         PROVEEDOR = contrato.Proveedor.CUIT,
                         PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
@@ -169,7 +183,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
-                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion
+                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion,
+                    IM_APERTURA = listaApertura.ToArray()
+
                 };
 
                 logger.Debug(rq.ToXml());

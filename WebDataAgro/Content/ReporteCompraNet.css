@@ -3,25 +3,26 @@
     padding: 10px 0;
     text-align: center;
     border-bottom: 2px solid black;
-    width:100%;
+    width: 100%;
 }
-table tr{
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-}
+
+    table tr {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
 
 .titulos {
     border-top: 2px solid black;
     border-bottom: 2px solid black;
     background: #017940;
-    color:white;
-    font-size:12px
+    color: white;
+    font-size: 12px
 }
 
-td, th{
-    text-align:center;
+td, th {
+    text-align: center;
 }
- 
+
 .row {
     background: white;
 }
@@ -31,9 +32,10 @@ td, th{
     color: white;
     font-size: 12px
 }
+
 #MonedaKilo td {
     background: white;
-    color:black;
+    color: black;
 }
 
 #MonedaKilo {
@@ -44,15 +46,17 @@ a.Descarga {
     background: url(../Content/Images/Excel.png) no-repeat top left;
     display: block;
     width: 17px;
-    text-indent: -9999px; 
+    text-indent: -9999px;
 }
 
 #ComprasToneladasTipo {
     width: 100%;
 }
-#MonedaKilo th{
-    width:115px;
+
+#MonedaKilo th {
+    width: 115px;
 }
+
 .borde-derecho {
     border-right: 1px solid black;
 }
@@ -76,7 +80,6 @@ a.Descarga {
 
 #TrigoCámara .titulosPosicion {
     background: rgb(153, 153, 255);
-    
 }
 
 #TrigoCalidad .titulosPosicion {
@@ -94,26 +97,28 @@ a.Descarga {
 
 .container-reporte {
     margin: 0;
-    padding:0 10PX;
+    padding: 0 10PX;
 }
 
 .page-container, .page-content-wrapper .page-content {
     padding: 0;
 }
 
-.page-footer{
-    margin-top:0;
-}
-.noRightPadding{
-    padding-right:0;
-}
-.sideMargin-15{
-    margin:0 15px;
+.page-footer {
+    margin-top: 0;
 }
 
-.modal-mio{
-    width:90%;
-    margin:auto;
+.noRightPadding {
+    padding-right: 0;
+}
+
+.sideMargin-15 {
+    margin: 0 15px;
+}
+
+.modal-mio {
+    width: 90%;
+    margin: auto;
 }
 
 .scrollInside {
@@ -125,15 +130,15 @@ a.Descarga {
     background-color: #eaeaea;
 }
 
-.trTitulo{
-    font-weight:bold;
+.trTitulo {
+    font-weight: bold;
 }
 
-.tituloPosicion{
+.tituloPosicion {
     font-weight: bolder;
-    text-align:center;
+    text-align: center;
     margin: auto;
-    width:100%;
+    width: 100%;
 }
 
 .abrirModal {
@@ -147,9 +152,9 @@ a.Descarga {
     margin: 15px 0 5px 0;
 }
 
-.trTitulo td{
-    padding-right:5px;
-    padding-left:5px;
+.trTitulo td {
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 #HedgeTC td {
@@ -160,9 +165,11 @@ a.Descarga {
 .titulos.hedgemat {
     background: darkcyan;
 }
+
 .titulos.hedgeobj {
     background: plum;
 }
+
 .titulos.agente {
     background: gold;
     color: black;
@@ -175,5 +182,15 @@ a.Descarga {
 
 #grilla > .k-grid-header, #grilla .k-grid-header .k-header {
     background-color: yellowgreen;
-    font-weight:bold;
+    font-weight: bold;
+}
+
+.abrirModalDetallePosicion {
+    font-size: 23px;
+    color:black;
+}
+
+.descargarDetallePosicion {
+    font-size: 18px;
+    color: #151515;
 }

@@ -2408,6 +2408,8 @@
     <Content Include="Views\Diferencial\Index.cshtml" />
     <Content Include="Views\Diferencial\_AbmDiferencial.cshtml" />
     <Content Include="Views\ContratoAcuerdo\Index.cshtml" />
+    <Content Include="Views\CompraNet\_ModalModificarVarios.cshtml" />
+    <Content Include="Views\CompraNet\ModalAperturaPrecio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

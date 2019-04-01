@@ -580,6 +580,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
+            if (oContrato.Corredor != null)
+            {
+                htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
+                htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
+            }
             htmlBody += "<tr>" + th + "FIGURA</th>" + Td(ref linea) + oContrato.Clasificacion.Descripcion.ToUpper();
             if (oContrato.Consignatario == true)
             {
@@ -615,7 +620,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -634,7 +639,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DiasPesificado != null)
             {
-                htmlBody += "DÍAS DIFERIMIENTO " + oContrato.DiasPesificado + "<br />";
+                htmlBody += "PAGO DIFERIDO A " + oContrato.DiasPesificado + " DÍAS<br />";
             }
             if (oContrato.CD == true)
             {
@@ -648,11 +653,21 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "PAGO DIRECTO<br /> ";
             }
+            if (oContrato.MercsDeposito == true)
+            {
+                htmlBody += "PAGO DIRECTO<br /> ";
+            }
             if (objDescuento != null)
             {
                 foreach (var desc in objDescuento)
                 {
-                    htmlBody += "DESCUENTO BONIFICACION " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                    if (desc.Importe > 0 || desc.Porcentaje > 0)
+                    {
+                        htmlBody += "BONIFICACIONES " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                    }else if(desc.Importe<0 || desc.Porcentaje < 0)
+                    {
+                        htmlBody += "DESCUENTOS " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                    }
                     if (desc.Importe != 0)
                     {
                         htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
@@ -660,21 +675,19 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (desc.Porcentaje != 0)
                     {
-                        htmlBody += desc.Porcentaje + "%";
+                        htmlBody += desc.Porcentaje + "%<br />";
                     }
-
-                    htmlBody += "<br />";
                 }
             }
             if (oContrato.TrigoEspecial == true)
             {
-                htmlBody += "CALIDAD ESPECIAL <br />";
+                htmlBody += "CALIDAD ESPECIAL ";
             }
             if (objCalidad != null)
             {
                 foreach (var cal in objCalidad)
                 {
-                    htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor + "<br />";
+                    htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
                     if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
                     {
                         htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
@@ -745,8 +758,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + oFijacionDePrecioContrato.Moneda.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CAMPAÑA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Campaña.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea) + oFijacionDePrecioContrato.Observacion + "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +

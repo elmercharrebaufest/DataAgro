@@ -25,12 +25,14 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_REGISTRAR_FIJACION : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private ZMPES5440[] iM_APERTURAField;
         
         private string iM_CONTRATOField;
         
@@ -47,7 +49,20 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         private string iM_PROVEEDORField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES5440[] IM_APERTURA {
+            get {
+                return this.iM_APERTURAField;
+            }
+            set {
+                this.iM_APERTURAField = value;
+                this.RaisePropertyChanged("IM_APERTURA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
         public string IM_CONTRATO {
             get {
                 return this.iM_CONTRATOField;
@@ -59,7 +74,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public string IM_CORREDOR {
             get {
                 return this.iM_CORREDORField;
@@ -71,7 +86,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public decimal IM_KILOS {
             get {
                 return this.iM_KILOSField;
@@ -83,7 +98,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string IM_MATERIAL {
             get {
                 return this.iM_MATERIALField;
@@ -95,7 +110,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string IM_MONEDA {
             get {
                 return this.iM_MONEDAField;
@@ -107,7 +122,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public decimal IM_PRECIO {
             get {
                 return this.iM_PRECIOField;
@@ -119,7 +134,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string IM_PROVEEDOR {
             get {
                 return this.iM_PROVEEDORField;
@@ -141,7 +156,81 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES5440 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cONCEPTOField;
+        
+        private decimal iMPORTEField;
+        
+        private string mONEDAField;
+        
+        private decimal pORCField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CONCEPTO {
+            get {
+                return this.cONCEPTOField;
+            }
+            set {
+                this.cONCEPTOField = value;
+                this.RaisePropertyChanged("CONCEPTO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public decimal IMPORTE {
+            get {
+                return this.iMPORTEField;
+            }
+            set {
+                this.iMPORTEField = value;
+                this.RaisePropertyChanged("IMPORTE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string MONEDA {
+            get {
+                return this.mONEDAField;
+            }
+            set {
+                this.mONEDAField = value;
+                this.RaisePropertyChanged("MONEDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public decimal PORC {
+            get {
+                return this.pORCField;
+            }
+            set {
+                this.pORCField = value;
+                this.RaisePropertyChanged("PORC");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
