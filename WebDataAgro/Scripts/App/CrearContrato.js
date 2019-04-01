@@ -449,7 +449,7 @@ function InicializarElementos() {
                 $("#boton-ampliar").hide();
                 $("#corredorDiv").show();
                 $("#pizarraDiv").prop("checked", false);
-                $("#aperturaPrecioDiv").show();
+                //$("#aperturaPrecioDiv").show();
             } else if (this.value() == 4) {
                 $(".noFason").hide();
                 $(".fason").show();
@@ -510,7 +510,7 @@ function InicializarElementos() {
                 RemoverFondosGrises();
                 $("#boton-ampliar").trigger("click");
                 $("#boton-ampliar").trigger("click");
-                $("#aperturaPrecioDiv").show();
+                //$("#aperturaPrecioDiv").show();
                 if (this.value() == 1) {
                     if ($("#boton-ampliar").text() == "+ AMPLIAR") {
                         $(".contratoAFijar").hide();

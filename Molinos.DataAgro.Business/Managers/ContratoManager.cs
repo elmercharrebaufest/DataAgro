@@ -662,6 +662,22 @@ namespace Molinos.DataAgro.Business.Managers
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
 
+                    if (oContratoSave.AperturaPrecio == null)
+                    {
+                        var conceptos = repositorio.Listar<ConceptoAperturaPrecio>();
+                        oContratoSave.AperturaPrecio = new List<AperturaPrecio>();
+                        foreach (ConceptoAperturaPrecio concepto in conceptos)
+                        {
+                            oContratoSave.AperturaPrecio.Add(new AperturaPrecio
+                            {
+                                ConceptoAperturaPrecio = concepto,
+                                Importe = 0,
+                                Moneda = null,
+                                Porcentaje = 0
+                            });
+                        }
+                    }
+
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;

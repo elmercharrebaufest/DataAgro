@@ -104,7 +104,7 @@
                                     <i class="icon-bar-chart"></i> Negocios CompraNet
                                 </a>
                             </li>
-                            @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                            @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa || global_asax.GlobalVariables.Perfil == EnumPerfil.Jefe)
                             {
                                 <li>
                                     <a href="/ReporteCompraNet" class="nav-link misreporteslink">
