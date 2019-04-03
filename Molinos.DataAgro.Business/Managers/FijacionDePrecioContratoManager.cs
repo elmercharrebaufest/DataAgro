@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Observacion = x.Observacion
                 }, x => contratoId == 0 || x.ContratoSAP == contratoId.ToString());
         }
-    
+
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
         {
             var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.FijacionDePrecioContratoId);
@@ -115,7 +115,8 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages) {
+        private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages)
+        {
 
             if (oParam.ProveedorId == 0)
             {
@@ -300,7 +301,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
-                    if (oFijacionDePrecioSave.AperturaPrecio == null)
+                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.FijacionId == oFijacionDePrecioSave.FijacionDePrecioContratoId);
+
+                    if (objApertura == null)
                     {
                         var conceptos = repositorio.Listar<ConceptoAperturaPrecio>();
                         oFijacionDePrecioSave.AperturaPrecio = new List<AperturaPrecio>();
@@ -314,6 +317,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 Porcentaje = 0
                             });
                         }
+                    }
+                    else
+                    {
+                        oFijacionDePrecioSave.AperturaPrecio = objApertura;
                     }
 
                     string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
@@ -342,7 +349,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         logger.Error(e);
                     }//Envio de mail
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -439,7 +446,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
-                ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value:0,
+                ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
                 ProveedorId = fijac.ProveedorId,
                 ComercialId = fijac.ComercialId,
                 MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
@@ -490,10 +497,11 @@ namespace Molinos.DataAgro.Business.Managers
                 CondicionFijacionDescripcion = "",
                 ClasificacionDescripcion = "",
                 Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
-                DatosFijacion = new DatosFijacionDeContratoDto() {
+                DatosFijacion = new DatosFijacionDeContratoDto()
+                {
                     ContratoId = fijac.ContratoSAP.ToString(),
                     KilosAplicados = cantidad.ToString(),
-                    KilosPendiente = fijac.Contrato != null ? ((double?)fijac.Contrato.Cantidad - cantidad).ToString():"0",
+                    KilosPendiente = fijac.Contrato != null ? ((double?)fijac.Contrato.Cantidad - cantidad).ToString() : "0",
                     FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",
@@ -507,9 +515,10 @@ namespace Molinos.DataAgro.Business.Managers
             return contrato;
         }
 
-        public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor,int materialId, string filtro) {
+        public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro)
+        {
             var contratosParaFijacion = new ContratosParaFijacionAgent(logger, repositorio);
-            var contratos = contratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor,materialId, filtro);
+            var contratos = contratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);
             return contratos;
         }
 

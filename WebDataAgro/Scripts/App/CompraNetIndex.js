@@ -1373,7 +1373,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     for (var i = 0; i < iteracionesCalidades; i++) {
         viewModel.CalidadesVisualizar.pop();
     }
-    $("#TipoCalidad").text(trigoEspecial)
+
     var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
 
     $.each(calidadesDto, function (key, calidad) {
@@ -1398,24 +1398,28 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaRedespachoDivVisualizar").hide();
     $("#aperturaComisionesDivVisualizar").hide();
     $("#aperturaBonificacionesDivVisualizar").hide();
+    $("#aperturaDePrecioVisualizarDiv").hide();
     var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: contrato });
     $.each(aperturaPrecio, function (key, concepto) {
         switch (concepto.ConceptoAperturaPrecioId) {
             case 1:
                 if (concepto.Importe) {
                     $("#aperturaFinancieroDivVisualizar").show();
+                    $("#aperturaDePrecioVisualizarDiv").show();
                 }
                 $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 2:
                 if (concepto.Importe) {
                     $("#aperturaRedespachoDivVisualizar").show();
+                    $("#aperturaDePrecioVisualizarDiv").show();
                 }
                 $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 3:
                 if (concepto.Importe || concepto.Porcentaje) {
                     $("#aperturaComisionesDivVisualizar").show();
+                    $("#aperturaDePrecioVisualizarDiv").show();
                 }
                 $("#visualizar_aperturaComisiones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
                 break;

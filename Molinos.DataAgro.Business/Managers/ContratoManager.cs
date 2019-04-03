@@ -663,8 +663,9 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
                     var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == oContratoSave.ContratoId);
 
-                    if (oContratoSave.AperturaPrecio == null)
+                    if (objApertura == null)
                     {
                         var conceptos = repositorio.Listar<ConceptoAperturaPrecio>();
                         oContratoSave.AperturaPrecio = new List<AperturaPrecio>();
@@ -678,6 +679,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 Porcentaje = 0
                             });
                         }
+                    }
+                    else
+                    {
+                        oContratoSave.AperturaPrecio = objApertura;
                     }
 
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
