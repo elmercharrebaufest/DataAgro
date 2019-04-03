@@ -114,7 +114,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string pagoDifArpString = contrato.DiasPesificado != null && contrato.DiasPesificado.Value != 0 ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
-                string trigoEspecialString = contrato.TrigoEspecial != null && contrato.TrigoEspecial.Value ? "X" : "";
+                string trigoEspecialString = calidad.Count > 0 ? "X" : "";
 
                 string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);

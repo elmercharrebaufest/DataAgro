@@ -908,7 +908,8 @@ namespace Molinos.DataAgro.Business.Managers
                 SelCargoMOA = x.SelCargoMOA,
                 SelCargoVendedor = x.SelCargoVendedor,
                 Madre = x.Madre,
-                ContratoMadre = x.ContratoMadre
+                ContratoMadre = x.ContratoMadre,
+                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

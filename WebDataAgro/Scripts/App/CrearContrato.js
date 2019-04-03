@@ -415,6 +415,10 @@ function InicializarElementos() {
             $(".espacioPrecioMoneda").hide();
             $("#pizarraDiv").hide();
             $("#aperturaPrecioDiv").hide();
+            $("#botonAperturaDePrecio").hide();
+            $("#botonAperturaDePrecioFijacion").hide();
+            $("#precioMonedaId").data("kendoDropDownList").ul.width("100%");
+
             if (this.value() == 3) {
                 $("#fechasDiv").hide();
                 $("#fechaDesdeDiv").hide();
@@ -450,6 +454,10 @@ function InicializarElementos() {
                 $("#corredorDiv").show();
                 $("#pizarraDiv").prop("checked", false);
                 $("#aperturaPrecioDiv").show();
+                $("#botonAperturaDePrecio").show();
+                $("#precioMonedaId").data("kendoDropDownList").ul.width("65%");
+
+
             } else if (this.value() == 4) {
                 $(".noFason").hide();
                 $(".fason").show();
@@ -511,6 +519,9 @@ function InicializarElementos() {
                 $("#boton-ampliar").trigger("click");
                 $("#boton-ampliar").trigger("click");
                 $("#aperturaPrecioDiv").show();
+                $("#botonAperturaDePrecio").show();
+                $("#precioMonedaId").data("kendoDropDownList").ul.width("65%");
+
                 if (this.value() == 1) {
                     if ($("#boton-ampliar").text() == "+ AMPLIAR") {
                         $(".contratoAFijar").hide();
@@ -525,8 +536,8 @@ function InicializarElementos() {
                     $("#DivPrecioMoneda").hide();
                     $(".espacioPrecioMoneda").show();
                     InicializarFondosGrises();
-
                     $("#pizarraDiv").prop("checked", false);
+                    $("#botonAperturaDePrecioFijacion").show();
                 }
                 if (this.value() == 2) {
                     $("#CDId").prop("checked", false);
@@ -1393,6 +1404,9 @@ function InicializarElementos() {
     $("#aperturaPrecioBtn").click(function () {
         AbrirModalAperturaDePrecio();
     });
+    $("#aperturaPrecioBtnFijacion").click(function () {
+        AbrirModalAperturaDePrecio();
+    });
 
     $(".aperturaPrecioInput").change(function () {
         CalcularPrecioTotalApertura();
@@ -1409,14 +1423,12 @@ function InicializarElementos() {
     $("#aperturaPrecioImporteFinancieroId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
-        spinners: false,
-        //change: CalcularMaximoComision
+        spinners: false
     });
     $("#aperturaPrecioImporteRedespachoId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
-        spinners: false,
-        //change: CalcularMaximoComision
+        spinners: false
     });
     $("#aperturaPrecioImporteComisionesId").kendoNumericTextBox({
         culture: "es-AR",
@@ -1424,12 +1436,21 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
+
+    $("#aperturaPrecioImporteComisionesId").change(ModificarComisionesPorImporte);
+    $("#aperturaPrecioPorcentajeComisionesId").change(ModificarComisionesPorcentaje);
+
     $("#aperturaPrecioPorcentajeComisionesId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
         spinners: false,
-        min: 0
+        min: 0,
+        max: 1
     });
+
+
+
+
     $("#aperturaPrecioImporteBonificacionesId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
@@ -1443,6 +1464,8 @@ function InicializarElementos() {
         min: 0
     });
 
+
+    $("#botonAperturaDePrecioFijacion").hide();
 
     //FIN INICIALIZARELEMENTOS
 }
@@ -2327,7 +2350,7 @@ function CargarDatosEditar(contrato, hijo) {
     });
 
 
-    if (contrato.Pizarra == true) {
+    if (contrato.Pizarra) {
         $("#pizarraId").prop("checked", true);
     } else {
         $("#pizarraId").prop("checked", false);
@@ -2448,13 +2471,15 @@ function AbrirModalAperturaDePrecio() {
 }
 
 function CalcularPrecioTotalApertura() {
+    var bonificacion = Number($("#precioId").val()) + Number($("#aperturaPrecioImporteFinancieroId").val()) - Number($("#aperturaPrecioImporteRedespachoId").val());
+
     var precioOriginal = Number($("#precioId").val().replace(',', '.'));
     precioOriginal += Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.'));
     precioOriginal -= Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
     CalcularMaximoComision();
     precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
     precioOriginal += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
-    precioOriginal += Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
+    //precioOriginal += Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')) * bonificacion / 100;
     precioOriginal += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
     $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + $("#precioMonedaId").data("kendoDropDownList").text());
     $("#precioTotalApertura").data("kendoNumericTextBox").value(precioOriginal);
@@ -2470,4 +2495,15 @@ function CalcularMaximoComision() {
             comisionesTextBox.value(comisionesTextBox.max());
         }
     }
+}
+
+function ModificarComisionesPorImporte() {
+    var bonificacion = Number($("#precioId").val()) + Number($("#aperturaPrecioImporteFinancieroId").val()) - Number($("#aperturaPrecioImporteRedespachoId").val());
+    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(100 * Number($("#aperturaPrecioImporteComisionesId").val()) / bonificacion);
+    CalcularPrecioTotalApertura();
+}
+function ModificarComisionesPorcentaje() {
+    var bonificacion = Number($("#precioId").val()) + Number($("#aperturaPrecioImporteFinancieroId").val()) - Number($("#aperturaPrecioImporteRedespachoId").val());
+    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')) * bonificacion / 100);
+    CalcularPrecioTotalApertura();
 }
