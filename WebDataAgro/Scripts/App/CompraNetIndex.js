@@ -764,11 +764,8 @@ function SeleccionarElementos() {
 
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if (selectedItem.TipoNegocioId == 3) {
-            obj.push(selectedItem);
-        } else {
-            obj.push(selectedItem);
-        }
+        obj.push(selectedItem);
+
     });
     return (obj);
 }
@@ -930,11 +927,13 @@ function ModalFinalizarVarios() {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
             if (negocios[i].Estado === 2 || negocios[i].Estado === 4) {
                 if (negocios[i].TipoNegocioId === 3) {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else if (negocios[i].TipoNegocioId === 4) {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Fas&oacute;n: ' + negocios[i].FasonId + '</div>' + loader + '</div>');
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Fas&oacute;n: ' + negocios[i].FasonId + '</div>' + loader + '</div>');
+                } else if (negocios[i].TipoNegocioId === 5) {
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Agente de Compras: ' + negocios[i].AgenteId + '</div>' + loader + '</div>');
                 } else {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
+                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
             }
         }
@@ -970,6 +969,65 @@ function FinalizarVariosContratos() {
         }
         finalizacionCallBack(i, result);
     }
+}
+
+function ModalModificarVarios() {
+    $("#negocioModificar-modal").empty();
+    $("#modificarVarios").show();
+    $("#cancelarVariosModificar").show();
+    $("#cerrarVariosModificar").hide();
+
+    $("#negocioFinalizado-modal").html('');
+    $("#negocioConfirmado-modal").html('');
+
+    $("#modificarVarios").prop("disabled", false);
+    $("#modificarVarios").addClass('myBtn').removeClass('myBtn-disabled');
+    $("#spanModificar").html('<span>Se modificaran los siguientes negocios:</span>');
+
+    var negocios = SeleccionarElementos();
+    if (negocios.length > 0) {
+        for (var i in negocios) {
+            if (negocios[i].Estado !== 5 && negocios[i].Estado !== 6 && negocios[i].Estado !== 8) {
+                if (negocios[i].TipoNegocioId === 3) {
+                    $("#negocioModificar-modal").append('<div class="row"><div class="col-xs-4">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>');
+                } else if (negocios[i].TipoNegocioId === 4) {
+                    $("#negocioModificar-modal").append('<div class="row"><div class="col-xs-4">Fas&oacute;n: ' + negocios[i].FasonId + '</div>');
+                } else if (negocios[i].TipoNegocioId === 5) {
+                    $("#negocioModificar-modal").append('<div class="row"><div class="col-xs-4">Agente de Compras: ' + negocios[i].AgenteId + '</div>');
+                } else {
+                    $("#negocioModificar-modal").append('<div class="row"><div class="col-xs-4">Contrato: ' + negocios[i].ContratoId + '</div>');
+                }
+            }
+        }
+    } else {
+        $("#spanModificar").html('<div style="text-align:center"> Se debe seleccionar negocios</div>');
+        $("#modificarVarios").hide();
+        $("#cancelarVariosModificar").hide();
+        $("#cerrarVariosModificar").show();
+    }
+    $("#ModalModificarVarios").modal('show');
+}
+
+function ModificarVariosContratos() {
+    $("#ModalModificarVarios").modal('hide');
+    var negocios = SeleccionarElementos();
+    $(".loader").show();
+    var objs = [];
+    var id = 0;
+    var tipoId = 0;
+    if (negocios.length > 0) {
+        var primero = negocios.shift();
+        id = primero.Id;
+        tipoId = primero.TipoNegocioId;
+        for (var i in negocios) {
+            var obj = {};
+            obj.TipoNegocioId = negocios[i].TipoNegocioId;
+
+            obj.Id = negocios[i].Id;
+            objs.push(obj);
+        }
+    }
+    editarContrato(id, tipoId, objs);
 }
 
 function finalizacionCallBack(i, result) {
@@ -1336,16 +1394,29 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_aperturaRedespacho").text("");
     $("#visualizar_aperturaComisiones").text("");
     $("#visualizar_aperturaBonificaciones").text("");
+    $("#aperturaFinancieroDivVisualizar").hide();
+    $("#aperturaRedespachoDivVisualizar").hide();
+    $("#aperturaComisionesDivVisualizar").hide();
+    $("#aperturaBonificacionesDivVisualizar").hide();
     var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: contrato });
     $.each(aperturaPrecio, function (key, concepto) {
         switch (concepto.ConceptoAperturaPrecioId) {
             case 1:
+                if (concepto.Importe) {
+                    $("#aperturaFinancieroDivVisualizar").show();
+                }
                 $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 2:
+                if (concepto.Importe) {
+                    $("#aperturaRedespachoDivVisualizar").show();
+                }
                 $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 3:
+                if (concepto.Importe || concepto.Porcentaje) {
+                    $("#aperturaComisionesDivVisualizar").show();
+                }
                 $("#visualizar_aperturaComisiones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
                 break;
             case 4:
@@ -1476,12 +1547,12 @@ function AvisoContratosPendientes() {
 
 
 function InicializarBuscador() {
-        $("#buscadorFiltroZona").kendoDropDownList({
+    $("#buscadorFiltroZona").kendoDropDownList({
         autoWidth: true,
         optionLabel: "SELECCIONE UNA ZONA...",
         dataTextField: "Descripcion",
         dataValueField: "Descripcion",
-        dataSource:  {
+        dataSource: {
             severFiltering: true,
             serverPaging: true,
             transport: {
@@ -1493,8 +1564,8 @@ function InicializarBuscador() {
             }
 
         },
-        change: function () {            
-            
+        change: function () {
+
         }
     });
 

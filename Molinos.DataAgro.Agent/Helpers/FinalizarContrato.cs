@@ -92,15 +92,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
 
                 var listaApertura = new List<ZMPES5440>();
+
                 foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
                 {
-                    listaApertura.Add(new ZMPES5440
+                    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                     {
-                        CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                        IMPORTE = apertura.Importe,
-                        MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
-                        PORC = apertura.Porcentaje
-                    });
+                        listaApertura.Add(new ZMPES5440
+                        {
+                            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                            IMPORTE = apertura.Importe,
+                            MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                            PORC = apertura.Porcentaje
+                        });
+                    }
                 }
 
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
@@ -219,6 +223,5 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
-
     }
 }

@@ -39,13 +39,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var listaApertura = new List<ZMPES5440>();
                     foreach (AperturaPrecio apertura in fijacion.AperturaPrecio)
                     {
-                        listaApertura.Add(new ZMPES5440
+                        if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
-                            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                            IMPORTE = apertura.Importe,
-                            MONEDA = fijacion.Moneda != null ? fijacion.Moneda.MonedaId : null,
-                            PORC = apertura.Porcentaje
-                        });
+                            listaApertura.Add(new ZMPES5440
+                            {
+                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                                IMPORTE = apertura.Importe,
+                                MONEDA = fijacion.Moneda != null ? fijacion.Moneda.MonedaId : null,
+                                PORC = apertura.Porcentaje
+                            });
+                        }
                     }
 
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()

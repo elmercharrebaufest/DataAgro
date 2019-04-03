@@ -582,8 +582,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
             if (oContrato.Corredor != null)
             {
-                htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
-                htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
+                htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oContrato.Corredor.RazonSocial.ToUpper() + "</td></tr>";
+                htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oContrato.Corredor.CUIT.ToString()) + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "FIGURA</th>" + Td(ref linea) + oContrato.Clasificacion.Descripcion.ToUpper();
             if (oContrato.Consignatario == true)
@@ -620,7 +620,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
+            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -639,7 +639,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DiasPesificado != null)
             {
-                htmlBody += "PAGO DIFERIDO A " + oContrato.DiasPesificado + " DÍAS<br />";
+                htmlBody += "DÍAS DE DIFERIMIENTO " + oContrato.DiasPesificado + "<br />";
             }
             if (oContrato.CD == true)
             {
@@ -655,7 +655,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.MercsDeposito == true)
             {
-                htmlBody += "PAGO DIRECTO<br /> ";
+                htmlBody += "MERCADERIA EN DEPOSITO<br /> ";
             }
             if (objDescuento != null)
             {
@@ -663,10 +663,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (desc.Importe > 0 || desc.Porcentaje > 0)
                     {
-                        htmlBody += "BONIFICACIONES " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                        htmlBody += "BONIFICACIONES " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
                     }else if(desc.Importe<0 || desc.Porcentaje < 0)
                     {
-                        htmlBody += "DESCUENTOS " + desc.TipoPeriodoDB.Descripcion.ToUpper() + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                        htmlBody += "DESCUENTOS " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
                     }
                     if (desc.Importe != 0)
                     {

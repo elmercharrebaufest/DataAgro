@@ -294,13 +294,13 @@
                 <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-xs-4 col-md-5 noPadding" style="float:right">
+                <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:65%;"></select>
+                <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 <span style="display:inline-block">
                     <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
                         <i class="fa fa-table"></i>
                     </span>
                 </span>
-                <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:65%;"></select>
-                <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
            
         </div>
@@ -330,13 +330,13 @@
         </div>
     </div>
 
-    <div class="row" id="aperturaPrecioDiv" style="display:none">
+    <div class="row" id="aperturaPrecioDiv" >
         <div id="LabelPrecio" class="col-sm-2 ">
-            <label>Precio Apertura</label>
+            <label>Precio Neto</label>
         </div>
         <div id="DivPrecioApertura" class="col-xs-12 col-sm-5 col-md-4 ">
             <div class="col-xs-12 col-md-12 noPadding">
-                <input id="precioTotalApertura" style="width:100%; margin:0" />
+                <input id="precioTotalApertura" style="width:100%; margin:0" readonly  />
             </div>
 
         </div>

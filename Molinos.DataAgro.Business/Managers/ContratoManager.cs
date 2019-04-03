@@ -315,22 +315,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.AperturaPrecio != null)
             {
-                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
-                if (concepto != null && concepto.Importe > 0)
-                {
-                    oErrorMessages.Error("", "El importe del concepto Redespacho no puede ser positivo");
-                }
-                concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones);
+                //var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
+                //if (concepto != null && concepto.Importe > 0)
+                //{
+                //    oErrorMessages.Error("", "El importe del concepto Redespacho no puede ser positivo");
+                //}
+                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones);
                 if (concepto != null && (concepto.Importe > 0 || concepto.Porcentaje > 0))
                 {
                     if (concepto.Porcentaje > 1)
                     {
                         oErrorMessages.Error("", "El porcentaje del concepto Comisiones no puede ser mayor a 1%");
                     }
-                    if (concepto.Importe > (oParam.Precio / 100))
-                    {
-                        oErrorMessages.Error("", "El importe del concepto Comisiones no puede ser mayor al 1% del precio");
-                    }
+                    //if (concepto.Importe > (oParam.Precio / 100))
+                    //{
+                    //    oErrorMessages.Error("", "El importe del concepto Comisiones no puede ser mayor al 1% del precio");
+                    //}
                 }
             }
 
@@ -545,6 +545,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContrato.AperturaPrecio != null)
             {
+                var redespacho = oContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
+                redespacho.Importe = -1 * Math.Abs(redespacho.Importe);
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 

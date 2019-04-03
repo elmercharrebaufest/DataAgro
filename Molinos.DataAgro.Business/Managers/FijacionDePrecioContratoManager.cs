@@ -300,6 +300,22 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
+                    if (oFijacionDePrecioSave.AperturaPrecio == null)
+                    {
+                        var conceptos = repositorio.Listar<ConceptoAperturaPrecio>();
+                        oFijacionDePrecioSave.AperturaPrecio = new List<AperturaPrecio>();
+                        foreach (ConceptoAperturaPrecio concepto in conceptos)
+                        {
+                            oFijacionDePrecioSave.AperturaPrecio.Add(new AperturaPrecio
+                            {
+                                ConceptoAperturaPrecio = concepto,
+                                Importe = 0,
+                                Moneda = null,
+                                Porcentaje = 0
+                            });
+                        }
+                    }
+
                     string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
                     try
                     {
