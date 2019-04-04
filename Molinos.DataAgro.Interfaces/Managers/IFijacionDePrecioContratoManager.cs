@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Interfaces
 
         BasicoContrato TraerFijacion(int id);
         List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string Filtro);
+        List<AperturaPrecioDto> TraerAperturaDePrecioPorFijacion(int fijacionId);
     }
 }
 

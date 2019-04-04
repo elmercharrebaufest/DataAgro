@@ -6,6 +6,7 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class BasicoContrato
     {
+        public int Id { get; set; }
         public string Cuit { get; set; }
         public int ContratoId { get; set; }
         public int MaterialId { get; set; }

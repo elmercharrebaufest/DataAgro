@@ -205,7 +205,9 @@ function botonVisualizar(dataItem, icono) {
 
         "'" + dataItem.TipoFason + "'" + ',' +
         "'" + dataItem.Posicion + "'" + ',' +
-        "'" + dataItem.Operador + "'" +
+        "'" + dataItem.Operador + "'" + ',' +
+        "'" + dataItem.PrecioNeto + "'" + ',' +
+        "'" + dataItem.Id + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1202,7 +1204,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador) {
+function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1350,7 +1352,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.DescuentosVisualizar.pop();
     }
 
-    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
+    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato});
 
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
@@ -1376,6 +1378,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
 
+    if (calidadesDto.length > 0) {
+        $("#visualizar_calidad").text("Especial");
+    } else {
+        $("#visualizar_calidad").text("Camara");
+    }
+
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
             Id: calidad.Id,
@@ -1394,18 +1402,22 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_aperturaRedespacho").text("");
     $("#visualizar_aperturaComisiones").text("");
     $("#visualizar_aperturaBonificaciones").text("");
+    $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
     $("#aperturaFinancieroDivVisualizar").hide();
     $("#aperturaRedespachoDivVisualizar").hide();
     $("#aperturaComisionesDivVisualizar").hide();
     $("#aperturaBonificacionesDivVisualizar").hide();
     $("#aperturaDePrecioVisualizarDiv").hide();
-    var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: contrato });
+    $("#aperturaDePrecioVisualizarDiv").hide();
+    $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+    var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
     $.each(aperturaPrecio, function (key, concepto) {
         switch (concepto.ConceptoAperturaPrecioId) {
             case 1:
                 if (concepto.Importe) {
                     $("#aperturaFinancieroDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
+                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                 }
                 $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
@@ -1413,6 +1425,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                 if (concepto.Importe) {
                     $("#aperturaRedespachoDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
+                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                 }
                 $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
@@ -1420,6 +1433,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                 if (concepto.Importe || concepto.Porcentaje) {
                     $("#aperturaComisionesDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
+                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                 }
                 $("#visualizar_aperturaComisiones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
                 break;

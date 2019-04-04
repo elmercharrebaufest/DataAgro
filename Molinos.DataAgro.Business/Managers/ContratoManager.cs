@@ -1389,6 +1389,7 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.ContratoId == contratoId);
         }
+     
 
     }
 }

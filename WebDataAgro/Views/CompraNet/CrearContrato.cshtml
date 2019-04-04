@@ -687,14 +687,14 @@
     </div>
     <div class="noFason noAgente datos-calidades ampliar-adicionales" display="block">
         <div class="row">
-            <div id="especialesId" class="calidadesEspecialesDatos">
+            <div id="especialesId">
                 <div>
                     <div class="col-md-3 col-md-offset-2">
                         <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled"></select>
                         <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                     <div class="col-md-3">
-                        <span id="valorespecialDiv">
+                        <span class="calidadesEspecialesDatos" id="valorespecialDiv" hidden>
                             <input id="valorEspecialesId" placeholder="VALOR DE CALIDAD" style="width:100%" />
                             <img id="errvalorEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                         </span>
@@ -702,7 +702,7 @@
                 </div>
             </div>
         </div>
-        <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad row">
+        <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad row" hidden>
             <div class="col-md-3 col-md-offset-2">
                 <span id="porcentajeDesdeDiv">
                     <input id="porcentajeDesdeId" placeholder="PORCENTAJE DESDE" style="width:100%" />

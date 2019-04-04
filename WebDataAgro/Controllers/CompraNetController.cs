@@ -408,9 +408,18 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult TraerAperturaPrecioPorContrato(int contratoId = 0)
+        public ActionResult TraerAperturaPrecioPorContrato(int contratoId = 0, string tipo = "contrato")
         {
-            var model = mobjContratoManager.TraerAperturaDePrecioPorContrato(contratoId);
+            List<AperturaPrecioDto> model;
+            if (tipo.ToUpper() != "FIJACION")
+            {
+                model = mobjContratoManager.TraerAperturaDePrecioPorContrato(contratoId);
+            }
+            else
+            {
+                //cambiar a fijacion manager
+                model = mobjFijacionDePrecioContratoManager.TraerAperturaDePrecioPorFijacion(contratoId);
+            }
 
             return new JsonResult()
             {

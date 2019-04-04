@@ -445,6 +445,7 @@ namespace Molinos.DataAgro.Business.Managers
             var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoSAP && x.FijacionDePrecioContratoId != id).Sum();
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {
+                Id = fijac.FijacionDePrecioContratoId,
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
                 ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
                 ProveedorId = fijac.ProveedorId,
@@ -512,6 +513,7 @@ namespace Molinos.DataAgro.Business.Managers
             });
             contrato.DatosFijacion.KilosAplicados = (double.Parse(contrato.DatosFijacion.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+            contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
             return contrato;
         }
 
@@ -520,6 +522,21 @@ namespace Molinos.DataAgro.Business.Managers
             var contratosParaFijacion = new ContratosParaFijacionAgent(logger, repositorio);
             var contratos = contratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);
             return contratos;
+        }
+
+        public List<AperturaPrecioDto> TraerAperturaDePrecioPorFijacion(int fijacionId)
+        {
+            return repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(apertura => new AperturaPrecioDto()
+            {
+                contratoId = apertura.ContratoId,
+                Id = apertura.Id,
+                ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
+                ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
+                Importe = apertura.Importe,
+                MonedaId = apertura.MonedaId,
+                Porcentaje = apertura.Porcentaje
+            },
+            x => x.FijacionId == fijacionId);
         }
 
     }

@@ -757,7 +757,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CLASIFICACION</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
-            htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + oFijacionDePrecioContrato.Moneda.Descripcion + "</td></tr>";
+            htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + oFijacionDePrecioContrato.Moneda.Descripcion + "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +

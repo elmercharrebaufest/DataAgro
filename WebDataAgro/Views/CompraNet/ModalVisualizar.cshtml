@@ -80,6 +80,13 @@
                         <strong style="float:left">Apertura precio: </strong>
                         <span id="visualizar_aperturaPrecio"></span>
                     </div>
+                    <div class="row marginCero clearfix noFason noAgente" id="aperturaDePrecioVisualizarDivPrecioNeto" >
+                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix ">
+                            <strong style="float:left">Precio neto:</strong>
+                            <span id="visualizar_aperturaFinancieroPrecioNeto"></span>
+                        </div>
+                        
+                    </div>
                     <div class="row marginCero clearfix noFason noAgente">
                         <div id="aperturaFinancieroDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix ">
                             <strong style="float:left">Financiero:</strong>
@@ -208,33 +215,32 @@
                         <strong>Condición Fijacion:</strong>
                         <span id="visualizar_condicionFijacion" class="centrar"></span>
                     </div>
-                    <div id="calidadesDivVisualizar">
 
-                        <div class="row marginCero campo noFason noAgente noFijacion">
-                            <div id="TipoCalidad" class="row marginCero clearfix noPadding ">
-                                <strong style="float:left">Calidad:</strong>
-                            </div>
-                            
-                            <div id="tabla-calidades-visualizar" data-template="div-calidades-visualizar-template" data-bind="source:CalidadesVisualizar">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <script id="div-calidades-visualizar-template" type="text/x-kendo-template">
-                                <div>
-                                    <div class="noPadding col-xs-12 col-md-3">
-                                        <strong>
-                                            <span id="TipoCalidad" style="margin:0"> #: CalidadEspecialDesc#</span>
-                                        </strong>
-                                    </div>
-                                    <div class="col-xs-4 col-md-3"><strong>Valor: </strong>#: Valor#</div>
-                                    <div class="col-xs-4 col-md-6" data-bind="visible: PorcentajeDesde!=null">
-                                        <strong>% Desde: </strong>#: PorcentajeDesde#% -
-                                        <strong>% Hasta: </strong>#: PorcentajeHasta#%
-                                    </div>
-                                </div>
-                            </script>
+                    <div id="tipoCalidadDiv" class="row campo campoAdicionales marginCero clearfix noFason noAgente noPadding noFijacion">
+                        <strong style="float:left">Calidad:</strong>
+                        <span id="visualizar_calidad"></span>
+                    </div>
+
+                    <div id="calidadesDivVisualizar" class="row campo marginCero clearfix noFason noAgente noPadding noFijacion">
+                        <div id="tabla-calidades-visualizar" data-template="div-calidades-visualizar-template" data-bind="source:CalidadesVisualizar">
+                            <div></div>
+                            <div></div>
+                            <div></div>
                         </div>
+                        <script id="div-calidades-visualizar-template" type="text/x-kendo-template">
+                            <div>
+                                <div class="noPadding col-xs-12 col-md-3">
+                                    <strong>
+                                        <span id="TipoCalidad" style="margin:0"> #: CalidadEspecialDesc#</span>
+                                    </strong>
+                                </div>
+                                <div class="col-xs-4 col-md-3"><strong>Valor: </strong>#: Valor#</div>
+                                <div class="col-xs-4 col-md-6" data-bind="visible: PorcentajeDesde!=null">
+                                    <strong>% Desde: </strong>#: PorcentajeDesde#% -
+                                    <strong>% Hasta: </strong>#: PorcentajeHasta#%
+                                </div>
+                            </div>
+                        </script>
                     </div>
                     <div class="row marginCero">
                         <div id="contratoCorredorVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">

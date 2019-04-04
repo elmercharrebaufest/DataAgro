@@ -121,7 +121,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FasonId = 0,
                     Operador = "",
                     OperadorId = 0,
-                    AgenteId = 0                    
+                    AgenteId = 0,
+                    PrecioNeto = contrato.PrecioNeto
                 };
 
             var queryFijacion =
@@ -212,7 +213,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FasonId = 0,
                     Operador = "",
                     OperadorId = 0,
-                    AgenteId = 0
+                    AgenteId = 0,
+                    PrecioNeto = fijac.PrecioNeto
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -304,7 +306,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FasonId = fas.Id,
                         Operador = "",
                         OperadorId = 0,
-                        AgenteId = 0
+                        AgenteId = 0, 
+                        PrecioNeto = null
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -395,7 +398,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FasonId = 0,
                         Operador = age.Operador.Descripcion,
                         OperadorId = age.OperadorId,
-                        AgenteId = age.Id
+                        AgenteId = age.Id,
+                        PrecioNeto = null
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
