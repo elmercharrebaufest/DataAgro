@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new BasicoContrato()
                 {
+                    Id = contrato.ContratoId,
                     ContratoId = contrato.ContratoId,
                     ProveedorId = contrato.ProveedorId,
                     CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value: 0,
@@ -132,6 +133,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new BasicoContrato()
                 {
+                    Id =  fijac.FijacionDePrecioContratoId,
                     ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
                     ProveedorId = fijac.ProveedorId,
                     CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
@@ -225,6 +227,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     where equipo.Contains(fas.ComercialId)
                     select new BasicoContrato()
                     {
+                        Id = fas.Id,
                         ContratoId = 0,
                         ProveedorId = fas.FasoneroId,
                         CorredorId = 0,
@@ -317,6 +320,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     where equipo.Contains(age.ComercialId)
                     select new BasicoContrato()
                     {
+                        Id = age.Id,
                         ContratoId = 0,
                         ProveedorId = 0,
                         CorredorId = 0,
