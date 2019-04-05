@@ -957,6 +957,13 @@ function InicializarElementos() {
         change: function () {
             if ($("#calidadesEspecialesId").val() !== "0" && $("#calidadesEspecialesId").val() !== "10" && $("#calidadesEspecialesId").val() !== "") {
                 $(".calidadesEspecialesDatos").show();
+                if ($("#material").val() !== "3") {
+                    $("#porcentajeDesdeDiv").hide();
+                    $("#porcentajeHastaDiv").hide();
+                } else {
+                    $("#porcentajeDesdeDiv").show();
+                    $("#porcentajeHastaDiv").show();
+                }
             } else {
                 $(".calidadesEspecialesDatos").hide();
                 LimpiarCalidades();
@@ -2499,8 +2506,8 @@ function AbrirModalAperturaDePrecio() {
     if (viewModel.AperturaPrecio.length>0) {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[0].Importe);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[1].Importe);
-        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Importe);
-        $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[3].Importe);
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Porcentaje);
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(viewModel.AperturaPrecio[2].Importe);
     } else {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
