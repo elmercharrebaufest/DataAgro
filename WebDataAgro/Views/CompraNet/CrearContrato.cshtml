@@ -293,14 +293,20 @@
                 <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
                 <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-xs-4 col-md-5 noPadding" style="float:right">
-                <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:65%;"></select>
-                <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-                <span style="display:inline-block" id="botonAperturaDePrecio">
-                    <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
-                        <i class="fa fa-table"></i>
+            <div class="col-xs-4 col-md-5 noPadding" style="float:right; display:inline-flex;">
+                <div class="w70" id="ocultarAperturaMoneda">
+                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+
+                </div>
+                <div class="w30" id="ocultarAperturaBtn">
+                    <span style="display:inline-block" id="botonAperturaDePrecio">
+                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                            <i class="fa fa-table"></i>
+                        </span>
                     </span>
-                </span>
+
+                </div>
             </div>
 
         </div>
@@ -340,14 +346,7 @@
             </div>
 
         </div>
-        <div class="col-xs-3 col-sm-1">
-            <span style="display:inline-block" id="botonAperturaDePrecioFijacion">
-                <span class="k-button k-button-icontext" id="aperturaPrecioBtnFijacion" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
-                    <i class="fa fa-table"></i>
-                </span>
-            </span>
 
-        </div>
 
     </div>
 

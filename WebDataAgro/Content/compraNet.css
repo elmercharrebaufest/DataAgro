@@ -1007,3 +1007,13 @@ body {
     display:flex;
     justify-content: flex-end;
 }
+
+.w30{
+    width:30%;
+}
+.w100{
+    width: 100%;
+}
+.w70{
+    width:70%;
+}
