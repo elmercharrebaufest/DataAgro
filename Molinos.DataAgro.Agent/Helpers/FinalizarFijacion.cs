@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
-                                MONEDA = fijacion.Moneda != null ? fijacion.Moneda.MonedaId : null,
+                                MONEDA = fijacion.Moneda != null  && apertura.Porcentaje == 0? fijacion.Moneda.MonedaId : null,
                                 PORC = apertura.Porcentaje
                             });
                         }
