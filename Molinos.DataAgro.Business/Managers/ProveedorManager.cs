@@ -694,7 +694,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var cal in objCalidad)
                 {
-                    htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
+                    htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
                     if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
                     {
                         htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
