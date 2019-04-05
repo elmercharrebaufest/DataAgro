@@ -1883,7 +1883,7 @@ function ObtenerDatos() {
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     obj.AperturaPrecio = viewModel.AperturaPrecio;
-    obj.StandardDeCalidadId = $("#calidadesEspecialesId").val() === "0" ? 1 : $("#calidadesEspecialesId").val() === "10" ? 3 : $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length===0? 0:2;
+    obj.StandardDeCalidadId = $("#calidadesEspecialesId").val() === "0" && obj.MaterialId == 3 ? 4 : $("#calidadesEspecialesId").val() === "0" && obj.MaterialId != 3 ? 1 : $("#calidadesEspecialesId").val() === "10" ? 3 : $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length === 0 ? 0 : 2;
     GrabarContrato(obj);
 }
 

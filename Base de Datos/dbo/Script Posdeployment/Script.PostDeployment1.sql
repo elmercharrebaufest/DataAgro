@@ -36,9 +36,10 @@ IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Reconfirmar') B
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Eliminado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Eliminado', 8); END
 
 --StandardDeCalidad
-IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Camara') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Camara','03'); END
-IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Especial') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Especial','04'); END
-IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Fabrica') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Fabrica','01'); END
+IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Camara' AND CodigoSap = '3') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Camara','3'); END
+IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Camara' AND CodigoSap = '1') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Camara','1'); END
+IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Especial') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Especial','4'); END
+IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Fabrica') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Fabrica','2'); END
 
 --CondicionFijacion
 IF NOT EXISTS (select 1 from CondicionFijacion where Descripcion = 'HASTA 12 HS. POR PIZARRA CIEGA') BEGIN insert into CondicionFijacion(Descripcion,CodigoSap) values ('HASTA 12 HS. POR PIZARRA CIEGA', '01'); END 
