@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado_Contrato = fijac.Estado.Descripcion,
                     Estado_Order = fijac.Estado.Orden,
                     UsuarioId = "",
-                    ContratoSAP = null,
+                    ContratoSAP = fijac.FijacionSAP,
                     Ampliaciones = fijac.Ampliaciones,
                     Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
                     Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial,
@@ -221,6 +221,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PrecioNeto = fijac.PrecioNeto,
                     StandardCalidadId=null,
                     StandardDeCalidadDescripcion = ""
+                    
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
