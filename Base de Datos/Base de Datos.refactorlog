@@ -105,4 +105,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CodigoSap" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b87eca1a-b94e-4b71-add5-728c8611dd27" ChangeDateTime="04/04/2019 19:58:50">
+    <Property Name="ElementName" Value="[dbo].[Contrato].[TipoCalidad]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Contrato]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Standa" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="923db5b8-f470-429c-8ebb-485b561bed97" ChangeDateTime="04/04/2019 19:58:58">
+    <Property Name="ElementName" Value="[dbo].[Contrato].[Standa]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Contrato]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="StandardDeCalidadId" />
+  </Operation>
 </Operations>

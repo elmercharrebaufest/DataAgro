@@ -312,7 +312,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " tn)");
                 }
             }
-
+            if (oParam.StandardDeCalidadId==0 || oParam.StandardDeCalidadId == null)
+            {
+                oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
+            }
             if (oParam.AperturaPrecio != null)
             {
                 //var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
@@ -376,6 +379,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult GrabarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
+
             Validar(oContrato, oEntityErrors);
 
             if (oEntityErrors.Errores.Count > 0)
@@ -467,6 +471,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Madre = oContrato.Madre;
             oContratoSave.ContratoMadre = oContrato.ContratoMadre?.PadLeft(10, '0');
             oContratoSave.PrecioNeto = oContrato.PrecioNeto;
+            oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
+            oContratoSave.Pizarra = oContrato.Pizarra;
 
             if (descuentosExistentes != null)
             {
@@ -494,7 +500,20 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-
+            if (calidadesExistentes != null)
+            {
+                foreach (var calExistente in calidadesExistentes)
+                {
+                    if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == calExistente.Id))
+                    {
+                        repositorio.Remover(calExistente);
+                        if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        {
+                            oContratoSave.EstadoId = 7;
+                        }
+                    }
+                }
+            }
             if (oContrato.Calidad != null)
             {
                 foreach (var calidad in oContrato.Calidad.Where(x => x.Id == 0))
@@ -909,7 +928,8 @@ namespace Molinos.DataAgro.Business.Managers
                 SelCargoVendedor = x.SelCargoVendedor,
                 Madre = x.Madre,
                 ContratoMadre = x.ContratoMadre,
-                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false
+                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+                StandardCalidadId = x.StandardDeCalidadId
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

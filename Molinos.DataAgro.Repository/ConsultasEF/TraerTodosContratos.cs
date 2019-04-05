@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Id = contrato.ContratoId,
                     ContratoId = contrato.ContratoId,
                     ProveedorId = contrato.ProveedorId,
-                    CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value: 0,
+                    CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
                     ComercialId = contrato.ComercialId,
                     MaterialId = contrato.MaterialId,
                     TipoNegocioId = contrato.TipoNegocioId,
@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Moneda_Sustentable = contrato.MonedaSustentable == null ? "" : contrato.MonedaSustentable.Descripcion,
                     Fecha_Dolarizado = DbFunctions.TruncateTime(contrato.FechaDolarizado),
                     Dias_Pesificado = contrato.DiasPesificado,
-                    NoInformaSIO = contrato.NoInformaSio,                    
+                    NoInformaSIO = contrato.NoInformaSio,
                     Estado = contrato.EstadoId,
                     Estado_Contrato = contrato.Estado.Descripcion,
                     Estado_Order = contrato.Estado.Orden,
@@ -89,7 +89,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Sustentable = ((decimal)contrato.ImporteSustentable) != null && ((decimal)contrato.ImporteSustentable) > 0,
                     Dolarizado = contrato.FechaDolarizado != null,
                     Pesificado = contrato.DiasPesificado != null,
-                    Negocio = contrato.ContratoSAP!= "0" ? contrato.ContratoSAP: "" ,
+                    Negocio = contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                     DestinoId = contrato.DestinoId,
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     CantidadCamiones = contrato.CantidadCamiones,
@@ -109,21 +109,23 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CondicionFijacionDescripcion = contrato.CondicionFijacion.Descripcion,
                     ClasificacionId = contrato.ClasificacionId,
                     ClasificacionDescripcion = contrato.Clasificacion.Descripcion,
-                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial":"Cámara",
-                    MercsDeposito = contrato.MercsDeposito== true? contrato.MercsDeposito: false,
-                    ComercialCreadorId = contrato.ComercialCreadorId, 
+                    CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial" : "Cámara",
+                    MercsDeposito = contrato.MercsDeposito == true ? contrato.MercsDeposito : false,
+                    ComercialCreadorId = contrato.ComercialCreadorId,
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                     ContratoCorredor = contrato.ContratoCorredor,
                     ContratoVendedor = contrato.ContratoVendedor,
                     SelCargoMOA = contrato.SelCargoMOA,
                     SelCargoVendedor = contrato.SelCargoVendedor,
                     Posicion = "",
-                    TipoFason ="",
+                    TipoFason = "",
                     FasonId = 0,
                     Operador = "",
                     OperadorId = 0,
                     AgenteId = 0,
-                    PrecioNeto = contrato.PrecioNeto
+                    PrecioNeto = contrato.PrecioNeto,
+                    StandardCalidadId = contrato.StandardDeCalidadId,
+                    StandardDeCalidadDescripcion = contrato.StandardDeCalidad.Descripcion
                 };
 
             var queryFijacion =
@@ -216,7 +218,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Operador = "",
                     OperadorId = 0,
                     AgenteId = 0,
-                    PrecioNeto = fijac.PrecioNeto
+                    PrecioNeto = fijac.PrecioNeto,
+                    StandardCalidadId=null,
+                    StandardDeCalidadDescripcion = ""
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -310,7 +314,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Operador = "",
                         OperadorId = 0,
                         AgenteId = 0, 
-                        PrecioNeto = null
+                        PrecioNeto = null,
+                        StandardCalidadId = null,
+                        StandardDeCalidadDescripcion = ""
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -403,7 +409,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Operador = age.Operador.Descripcion,
                         OperadorId = age.OperadorId,
                         AgenteId = age.Id,
-                        PrecioNeto = null
+                        PrecioNeto = null,
+                        StandardCalidadId = null,
+                        StandardDeCalidadDescripcion = ""
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);

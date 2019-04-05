@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ContratoAcuerdoId { get; set; }
         public bool? Pizarra { get; set; }
         public decimal? PrecioNeto { get; set; }
+        public int? StandardDeCalidadId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -116,6 +117,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [InverseProperty("Contrato")]
         public List<AperturaPrecio> AperturaPrecio { get; set; }
+
+        [ForeignKey("StandardDeCalidadId")]
+        public virtual StandardDeCalidad StandardDeCalidad { get; set; }
 
         public Contrato()
         {

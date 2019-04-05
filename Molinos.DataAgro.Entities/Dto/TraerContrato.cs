@@ -117,6 +117,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<AperturaPrecioDto> AperturaPrecios { get; set; }
         public decimal? PrecioNeto { get; set; }
         public bool Pizarra { get; set; }
+        public int? StandardCalidadId { get; set; }
+        public string StandardDeCalidadDescripcion { get; set; }
     }
 
 

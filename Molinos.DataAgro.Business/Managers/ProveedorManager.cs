@@ -507,11 +507,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
-                    oMensaje.Subject = "Nueva fijación Molinos Agro S.A. – DataAgro";
+                    oMensaje.Subject = "Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
                 }
                 else
                 {
-                    oMensaje.Subject = "Mail Pruebas - Nueva fijación Molinos Agro S.A. – DataAgro";
+                    oMensaje.Subject = "Mail Pruebas - Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
                 }
                 var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
 
@@ -602,7 +602,14 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 2)
             {
-                htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                if (oContrato.Pizarra.HasValue && oContrato.Pizarra.Value)
+                {
+                    htmlBody += "Pizarra</td></tr>";
+                }
+                else
+                {
+                    htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                }
             }
             else if (oContrato.TipoNegocioId == 1)
             {
@@ -752,6 +759,11 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP.TrimStart('0') + " - " + oFijacionDePrecioContrato.FijacionSAP.Substring(oFijacionDePrecioContrato.FijacionSAP.Length - 2) + "</td></tr>";
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
+            if (oFijacionDePrecioContrato.Corredor != null)
+            {
+                htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Corredor.RazonSocial.ToUpper() + "</td></tr>";
+                htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oFijacionDePrecioContrato.Corredor.CUIT.ToString()) + "</td></tr>";
+            }
             if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null)
             {
                 htmlBody += "<tr>" + th + "CLASIFICACION</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + "</td></tr>";

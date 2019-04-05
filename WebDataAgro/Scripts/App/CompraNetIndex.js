@@ -1352,7 +1352,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.DescuentosVisualizar.pop();
     }
 
-    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato});
+    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
 
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
@@ -1378,11 +1378,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
 
-    if (calidadesDto.length > 0) {
-        $("#visualizar_calidad").text("Especial");
-    } else {
-        $("#visualizar_calidad").text("Camara");
-    }
+    $("#visualizar_calidad").text(standardDeCalidadDescripcion);
 
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
@@ -1398,10 +1394,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
 
-    $("#visualizar_aperturaFinanciero").text("");
-    $("#visualizar_aperturaRedespacho").text("");
-    $("#visualizar_aperturaComisiones").text("");
-    $("#visualizar_aperturaBonificaciones").text("");
+    $("#visualizar_aperturaFinanciero").text(null);
+    $("#visualizar_aperturaRedespacho").text(null);
+    $("#visualizar_aperturaComisiones").text(null);
+    $("#visualizar_aperturaBonificaciones").text(null);
     $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
     $("#aperturaFinancieroDivVisualizar").hide();
     $("#aperturaRedespachoDivVisualizar").hide();
@@ -1410,6 +1406,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+   
     var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
     $.each(aperturaPrecio, function (key, concepto) {
         switch (concepto.ConceptoAperturaPrecioId) {
@@ -1418,29 +1415,37 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     $("#aperturaFinancieroDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
                     $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                    $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 }
-                $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 2:
                 if (concepto.Importe) {
                     $("#aperturaRedespachoDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
                     $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                    $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 }
-                $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                 break;
             case 3:
                 if (concepto.Importe || concepto.Porcentaje) {
                     $("#aperturaComisionesDivVisualizar").show();
                     $("#aperturaDePrecioVisualizarDiv").show();
                     $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+
+                    $("#visualizar_aperturaComisiones").text(concepto.Importe ? kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda : concepto.Porcentaje + "%");
                 }
-                $("#visualizar_aperturaComisiones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
                 break;
             case 4:
-                $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                if (concepto.Importe || concepto.Porcentaje) {
+                    $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                }
+
                 break;
         }
+        visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
+        visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
+
+
     });
 }
 
