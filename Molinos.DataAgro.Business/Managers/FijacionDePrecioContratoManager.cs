@@ -207,9 +207,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
-                    oFijacionDePrecioSave.AperturaPrecio.Clear();
-
-                    oFijacionDePrecioSave.AperturaPrecio.AddRange(oFijacionDePrecio.AperturaPrecio);
+                    var aperturas = repositorio.Listar<AperturaPrecio>(x => x.FijacionId != null && x.FijacionId == oFijacionDePrecioSave.FijacionDePrecioContratoId);
+                    repositorio.RemoverTodos(aperturas);
+                    oFijacionDePrecioSave.AperturaPrecio = oFijacionDePrecio.AperturaPrecio;
                 }
             }
             else
