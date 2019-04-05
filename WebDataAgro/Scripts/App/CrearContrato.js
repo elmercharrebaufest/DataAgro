@@ -2444,7 +2444,8 @@ function InicializarAperturaDePrecios() {
     });
 
     $("#precioId").change(function () {
-        CalcularPrecioTotalApertura();
+        var total = CalcularPrecioTotalApertura();
+        $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
         SetearValoresMaximosApertura();
     });
 
