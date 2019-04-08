@@ -1470,7 +1470,11 @@ function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     viewModel.set("EspecialesCombo", calidadGrano);
 
-    if ($("#calidadesEspecialesId").data("kendoDropDownList")) $("#calidadesEspecialesId").data("kendoDropDownList").value("0");
+    if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
+        $("#calidadesEspecialesId").data("kendoDropDownList").value("10");
+    } else {
+        $("#calidadesEspecialesId").data("kendoDropDownList").value("0");
+    }
     $(".calidadesEspecialesDatos").hide();
 }
 

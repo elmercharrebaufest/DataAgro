@@ -18,13 +18,10 @@ using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-
-
     public class ProveedorManager : IProveedorManager
     {
         private IRepositorio repositorio;
         private IComercialManager mobComercial;
-
         private ILogger logger;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
@@ -399,7 +396,7 @@ namespace Molinos.DataAgro.Business.Managers
                     return;
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
-
+                var emailComerciales = "";
                 if (oContrato.Comercial.PerfilId == (int)EnumPerfil.CorredoresComercial)
                 {
                     var corredoresComerciales = mobComercial.ListarComercialesPorPerfil(EnumPerfil.CorredoresComercial);
@@ -409,8 +406,8 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
-                            emailComercial = GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
-                            oMensaje.To.Add(emailComercial);
+                            emailComerciales = GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                            oMensaje.To.Add(emailComerciales);
                         }
                         catch (Exception e) { logger.Error(e); }
                     }
@@ -727,7 +724,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.ComercialCreador != null ? oContrato.ComercialCreador.Nombres + " " + oContrato.ComercialCreador.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -2205,15 +2202,8 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var material in listMateriales)
                 {
                     Comercial comercial = null;
-                    if (ConfigurationManager.AppSettings["usuarioLaura"].ToString() == "1" && UsuarioDirectory.ToLower() == ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower())
-                    {
-                        string aux = ConfigurationManager.AppSettings["usuarioLaurastring"].ToString().ToLower();
-                        comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == aux);
-                    }
-                    else
-                    {
-                        comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
-                    }
+
+                    comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
 
                     var campaniaActual = material.Campaña.CampañaId;
                     var oCampañaMaterialAnteriorActualNueva = repositorio.Listar<CampañaMaterial>(x => x.Proveedor.ProveedorId == proveedorId && (x.Campaña.CampañaId == (campaniaActual - 1) || x.Campaña.CampañaId == campaniaActual || x.Campaña.CampañaId == (campaniaActual + 1)) && x.Material.MaterialId == material.MaterialId);
@@ -2390,7 +2380,7 @@ namespace Molinos.DataAgro.Business.Managers
             public decimal TN_COMPRADAS;
         }
 
-        public List<BasicoProveedor> TraerDatosBasicosProveedor(int proveedorId, int comercialId, List<int> equipo)
+        private List<BasicoProveedor> TraerDatosBasicosProveedor(int proveedorId, int comercialId, List<int> equipo)
         {
             return repositorio.ListarConsulta(new TraerDatosBasicosProveedor(proveedorId, comercialId, equipo));
         }
