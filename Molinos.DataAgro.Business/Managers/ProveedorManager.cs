@@ -605,7 +605,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                    if (oContrato.PrecioNeto.HasValue)
+                    {
+                        htmlBody += Split(oContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                    }
+                    else
+                    {
+                        htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                    }
                 }
             }
             else if (oContrato.TipoNegocioId == 1)
