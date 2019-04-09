@@ -2117,7 +2117,7 @@ function formatearFecha(fecha) {
 }
 
 function CargarDatosEditar(contrato, hijo) {
-    console.log(contrato)
+    console.log(contrato);
     InicializarBordesRojos();
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
@@ -2214,7 +2214,10 @@ function CargarDatosEditar(contrato, hijo) {
         $("#trigoEspecialFasonId").prop("checked", true);
     }
     LimpiarBoleto();
-    if (contrato.BoletoId == 1) {
+    if (hijo || contrato.BoletoId == 3) {
+        $("#boletoNingunoId").prop("checked", true);
+    }
+    else if (contrato.BoletoId == 1) {
         $("#boletoConfirmaId").prop("checked", true);
         $("#BolsaConfirmaDiv").show();
         $("#bolsaConfirmaId").data("kendoDropDownList").value(contrato.BolsaId);
@@ -2226,9 +2229,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#boletoCartaId").prop("checked", true);
         $("#BolsaCartaDiv").show();
         $("#bolsaCartaId").data("kendoDropDownList").value(contrato.BolsaId);
-    } else if (contrato.BoletoId == 3) {
-        $("#boletoNingunoId").prop("checked", true);
-    }
+    } 
 
     contrato.CD == true ? $("#CDId").prop("checked", true) : $("#CDId").prop("checked", false);
     contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
@@ -2316,20 +2317,21 @@ function CargarDatosEditar(contrato, hijo) {
         $("#pizarraId").prop("checked", false);
     }
     ClickEnPizarra();
+    if (!hijo) {
+        if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.length != 0) {
+            $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 1).Importe);
+            $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 2).Importe);
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").max(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Importe);
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Importe);
+            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Porcentaje);
+            $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 4).Importe);
+            $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 4).Porcentaje);
 
-    if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.length != 0) {
-        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 1).Importe);
-        $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 2).Importe);
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").max(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Importe);
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Importe);
-        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 3).Porcentaje);
-        $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 4).Importe);
-        $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(x => x.ConceptoAperturaPrecioId == 4).Porcentaje);
+        }
+        InicializarEditarContratoApertura();
 
+        GuardarAperturaDePrecio();
     }
-    InicializarEditarContratoApertura();
-
-    GuardarAperturaDePrecio();
 }
 
 
