@@ -504,7 +504,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var calExistente in calidadesExistentes)
                 {
-                    if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == calExistente.Id))
+                    if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calExistente.Id))
                     {
                         repositorio.Remover(calExistente);
                         if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
