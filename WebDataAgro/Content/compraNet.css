@@ -1060,3 +1060,62 @@ body {
 .modal-inferior {
     z-index: 1050;
 }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+
+
+    .aperturaPrecioInput {
+        display: block;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        width: 100%;
+   
+    }
+
+    .aperturaPrecioTd {
+        margin: 0;
+        padding: 0 !important;
+    }
+
+    #tablaApertura td {
+        position: relative;
+    }
+
+        #tablaApertura td input {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 167%;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #tablaApertura td span {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+}
+
+
+@media (max-width: 1024px) {
+    #gridInformeCompraNet {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    #gridInformeCompraNet td {
+        text-align:left;
+    }
+}
