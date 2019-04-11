@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Business
             {
                 EquipoReal = (comercial.PerfilId != (int)EnumPerfil.CorredoresComercial) ? ListarEquipo(comercial.ComercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.PerfilId == (int)EnumPerfil.CorredoresComercial)
             };
-            resultado.Equipo = comercial.PerfilId == (int)EnumPerfil.Mesa ? comerciales.Select(x => x.ComercialId).ToList() : resultado.EquipoReal;
+            resultado.Equipo = comercial.PerfilId == (int)EnumPerfil.Mesa|| comercial.PerfilId == (int)EnumPerfil.Jefe ? comerciales.Select(x => x.ComercialId).ToList() : resultado.EquipoReal;
 
             return resultado;
         }
