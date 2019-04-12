@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
@@ -279,8 +280,8 @@ namespace WebDataAgro.Controllers
                 request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
             }
             request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
-
-            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+            var equipo = (int)GlobalVariables.Perfil == (int)EnumPerfil.Jefe ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
         }
