@@ -171,7 +171,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
-            { field: "ComercialCreador", title: "Comercial Registra", filterable: { ui: createMultiSelectComercial } },
+            //{ field: "ComercialCreador", title: "Registro Comercial", filterable: { ui: createMultiSelectComercial } },
             {
                 field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
