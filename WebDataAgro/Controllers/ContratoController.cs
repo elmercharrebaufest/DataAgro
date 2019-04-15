@@ -2,6 +2,7 @@
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -53,8 +54,8 @@ namespace WebDataAgro.Controllers
             }
             
             var model = mobjContratoManager.TraerTodosContratos(request,(int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
-
-            return Json(model);
+            
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
         public ActionResult ListarComercial(string text = "")
