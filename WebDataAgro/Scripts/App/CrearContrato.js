@@ -2567,13 +2567,13 @@ function AbrirModalAperturaDePrecio() {
     } else {
         $(".aperturaprecioMoneda").text("");
     }
-    $("#precioAperturaOriginal").text(kendo.toString($("#precioId").val() ? Number($("#precioId").val()) : Number(0), "n2") + " " + moneda);
+    $("#precioAperturaOriginal").text(kendo.toString($("#precioId").val().replace(',', '.') ? Number($("#precioId").val().replace(',', '.')) : Number(0), "n2") + " " + moneda);
     CalcularPrecioTotalApertura();
     $("#modalAperturaPrecio").modal("show");
 }
 
 function CalcularPrecioTotalApertura() {
-    var bonificacion = Number($("#precioId").val()) + Number($("#aperturaPrecioImporteFinancieroId").val()) + Number($("#aperturaPrecioImporteRedespachoId").val());
+    var bonificacion = Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
     var precioOriginal = Number($("#precioId").val().replace(',', '.'));
     var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
 
@@ -2592,7 +2592,7 @@ function CalcularPrecioTotalApertura() {
 }
 
 function CalcularMaximoComision() {
-    var maximoBonificacion = (Number($("#precioId").val()) + Number($("#aperturaPrecioImporteFinancieroId").val()) + Number($("#aperturaPrecioImporteRedespachoId").val())) * 0.01;
+    var maximoBonificacion = (Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'))) * 0.01;
     var comisionesTextBox = $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox");
     if (comisionesTextBox) {
         comisionesTextBox.max(maximoBonificacion);
