@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly int perfilId;
         private readonly List<int> corredoresComercial;
 
-        public TraerTodosContratos(KendoGridMvcRequest request,int perfilId, List<int> equipo, List<int> corredoresComercial)
+        public TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
@@ -130,13 +130,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) : 
-                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) || 
+                where perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) ||
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new BasicoContrato()
                 {
-                    Id =  fijac.FijacionDePrecioContratoId,
-                    ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
+                    Id = fijac.FijacionDePrecioContratoId,
+                    ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
                     ProveedorId = fijac.ProveedorId,
                     CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                     ComercialId = fijac.ComercialId,
@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado_Contrato = fijac.Estado.Descripcion,
                     Estado_Order = fijac.Estado.Orden,
                     UsuarioId = "",
-                    ContratoSAP = fijac.FijacionSAP,
+                    ContratoSAP = fijac.ContratoSAP,
                     Ampliaciones = fijac.Ampliaciones,
                     Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
                     Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial,
@@ -184,7 +184,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Sustentable = false,
                     Dolarizado = false,
                     Pesificado = false,
-                    Negocio = fijac.FijacionSAP,
+                    Negocio = fijac.EstadoId == (int)EnumEstadoContrato.Finalizado ? fijac.FijacionSAP : fijac.ContratoSAP,
                     DestinoId = null,
                     DestinoDescripcion = "",
                     CantidadCamiones = null,
@@ -192,7 +192,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PlanCanje = false,
                     CD = null,
                     Warrant = null,
-                    PagoDirectoVendedor = null,                    
+                    PagoDirectoVendedor = null,
                     EstablecimientoPropio = null,
                     BoletoId = null,
                     BolsaId = null,
@@ -219,9 +219,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     OperadorId = 0,
                     AgenteId = 0,
                     PrecioNeto = fijac.PrecioNeto,
-                    StandardCalidadId=null,
+                    StandardCalidadId = null,
                     StandardDeCalidadDescripcion = ""
-                    
+
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -314,7 +314,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FasonId = fas.Id,
                         Operador = "",
                         OperadorId = 0,
-                        AgenteId = 0, 
+                        AgenteId = 0,
                         PrecioNeto = null,
                         StandardCalidadId = null,
                         StandardDeCalidadDescripcion = ""
@@ -424,7 +424,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request,perfilId, equipo, corredoresComercial);
+                return Query(contexto, request, perfilId, equipo, corredoresComercial);
             }
         }
     }
