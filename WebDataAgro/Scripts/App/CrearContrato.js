@@ -1892,8 +1892,8 @@ function ObtenerDatos() {
         obj.Calidad = viewModel.Calidades;
     } else {
         if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 4 || $("#calidadesEspecialesId").data("kendoDropDownList").value() == 5) {
-            var err=[];
-            if (viewModel.Calidades.length == 0) {
+            var err = [];
+            if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId==2)) {
                 err = AgregarCalidades();
             } else if ($("#valorEspecialesId").val() != ""){
                 LimpiarCalidades();
