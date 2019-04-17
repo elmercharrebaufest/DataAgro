@@ -164,10 +164,6 @@ function AsignarBotones() {
     $("#butPrevia").click(function () {
         VistaPrevia();
     });
-
-    $("#butCancelar").click(function () {
-        Cancelar();
-    });
 }
 
 function VistaPrevia() {

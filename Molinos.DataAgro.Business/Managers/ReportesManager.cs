@@ -21,12 +21,14 @@ namespace Molinos.DataAgro.Business.Managers
     public class ReportesManager : IReportesManager
     {
         private readonly IRepositorio repositorio;
+        private readonly IComercialManager oComercial;
         private ILogger logger;
 
         public ReportesManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.oComercial = oComercial;
         }
 
         //--------------------------------------------------
@@ -67,8 +69,10 @@ namespace Molinos.DataAgro.Business.Managers
                 }, null, 3, "CampañaId", DirOrden.Desc)
             };
 
-            var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
-            Datos.come = query.ToList().Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
+            //var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
+            //Datos.come = query.Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
+            var equipo = oComercial.ListarEquipo(idActiveDirectory).EquipoReal;
+            equipo.ForEach(x => Datos.come.Add(repositorio.Obtener<Comercial, ComercialQry>(y => y.ComercialId == x, y => new ComercialQry { ComercialId = x, Nombre = y.Apellido + ' ' + y.Nombres })));
 
             Datos.mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry
             {
@@ -119,7 +123,6 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.SelStore<ResulIndicadores>("DataAgro_IndicadoresComprasTorta", 0, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
 
-
         public List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes oParamReportes)
         {
             return repositorio.SelStore<ResultIndicadoresReportesTorta>("DataAgro_IndicadoresComprasExportacionTorta", 0, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
@@ -154,9 +157,7 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.SelStore<ResultProduccionMapaReportes>("DataAgro_IndicadoresExportacionMapaProductiva", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
-
-
-
+               
         #region Barras
         public List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes)
         {
@@ -930,7 +931,5 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return retorno;
         }
-
-
     }
 }

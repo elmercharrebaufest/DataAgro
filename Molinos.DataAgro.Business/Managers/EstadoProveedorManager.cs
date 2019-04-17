@@ -14,11 +14,13 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly IDatosProveedorAgent oDatosProveedorAgent;
 
-        public EstadoProveedorManager(ILogger logger, IRepositorio repositorio)
+        public EstadoProveedorManager(ILogger logger, IRepositorio repositorio,IDatosProveedorAgent oDatosProveedorAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.oDatosProveedorAgent = oDatosProveedorAgent;
         }
 
         public void ActualizarProveedores()
@@ -35,7 +37,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         logger.Debug("Obteniendo datos de SAP" + userSap);
 
-                        var list = new DatosProveedor(logger).ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
+                        var list = oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
                         
                         logger.Debug("Resultado: " + list.Count);
                         var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();

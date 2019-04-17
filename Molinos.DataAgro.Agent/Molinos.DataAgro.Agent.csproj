@@ -74,16 +74,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Compras.cs" />
-    <Compile Include="Helpers\DatoDelComercial.cs" />
-    <Compile Include="Helpers\DatosDelProveedor.cs" />
-    <Compile Include="Helpers\EliminarContrato.cs" />
-    <Compile Include="Helpers\FinalizarFijacion.cs" />
-    <Compile Include="Helpers\FinalizarContrato.cs" />
-    <Compile Include="Helpers\DiasHabiles.cs" />
-    <Compile Include="Helpers\ContratosParaFijacion.cs" />
-    <Compile Include="Helpers\RelacionCorredorProveedor.cs" />
-    <Compile Include="Helpers\RiesgoComercial.cs" />
+    <Compile Include="Helpers\ComprasAgent.cs" />
+    <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
+    <Compile Include="Helpers\DatoDelComercialAgent.cs" />
+    <Compile Include="Helpers\DatosProveedorAgent.cs" />
+    <Compile Include="Helpers\DiasHabilesAgent.cs" />
+    <Compile Include="Helpers\EliminarContratoAgent.cs" />
+    <Compile Include="Helpers\FinalizarContratoAgent.cs" />
+    <Compile Include="Helpers\FinalizarFijacionAgent.cs" />
+    <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
+    <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\AnulacionContratos\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -230,6 +230,10 @@
     <ProjectReference Include="..\Molinos.DataAgro.Entities\Molinos.DataAgro.Entities.csproj">
       <Project>{E940ADB2-18F1-436C-B24F-B18CEE04F6C0}</Project>
       <Name>Molinos.DataAgro.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Interfaces\Molinos.DataAgro.Interfaces.csproj">
+      <Project>{748944e7-1fa4-4c63-9f4a-12a92c0eb481}</Project>
+      <Name>Molinos.DataAgro.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
       <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>

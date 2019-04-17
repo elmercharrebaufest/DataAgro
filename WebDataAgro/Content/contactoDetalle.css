@@ -966,115 +966,11 @@
     display:none;
 }
 
-.ribbon {
-   width: 200px;
-   position: absolute;
-   text-align: center;
-   font-size: 23px!important;
-   background: #017940;
-   background: -webkit-linear-gradient(top, #017940, #028e4b);
-   background: -webkit-linear-gradient(top, #017940, #028e4b);
-   background: -moz-linear-gradient(top, #017940, #028e4b);
-   background: -ms-linear-gradient(top, #017940, #028e4b);
-   background: -o-linear-gradient(top, #017940, #028e4b);
-   background-image: -ms-linear-gradient(top, #017940 0%, #028e4b 100%);
-   -webkit-box-shadow: rgba(000,000,000,0.3) 0 1px 1px;
-   -moz-box-shadow: rgba(000,000,000,0.3) 0 1px 1px;
-   box-shadow: rgba(000,000,000,0.3) 0 1px 1px;
-   font-family: 'Helvetica Neue',Helvetica, sans-serif;
-    left: 20%;
-    top: -27px;
-}
-
-.ribbon:before, .ribbon:after {
-
-   content: '';
-
-   position: absolute;
-
-   display: block;
-
-   bottom: 0em;
-
-   border: 0.5em solid #03944f;
-
-   z-index: 1;
-
-   }
-
-.ribbon:before {
-
-   left: -1em;
-
-   border-right-width: 0.5em;
-
-   border-left-color: transparent;
-
-   -webkit-box-shadow: rgba(000,000,000,0.4) 1px 1px 1px;
-
-   -moz-box-shadow: rgba(000,000,000,0.4) 1px 1px 1px;
-
-   box-shadow: rgba(000,000,000,0.4) 1px 1px 1px;
-
-   }
-
-.ribbon:after {
-
-   right: -1em;
-
-   border-left-width: 0.5em;
-
-   border-right-color: transparent;
-
-   -webkit-box-shadow: rgba(000,000,000,0.4) -1px 1px 1px;
-
-   -moz-box-shadow: rgba(000,000,000,0.4) -1px 1px 1px;
-
-   box-shadow: rgba(000,000,000,0.4) -1px 1px 1px;
-
-   }
-
-.ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
-
-   border-color: #013a1f transparent transparent transparent;
-
-   position: absolute;
-
-   display: block;
-
-   border-style: solid;
-
-   bottom: -0.5em;
-
-   content: '';
-
-   }
-
-.ribbon .ribbon-content:before {
-
-   left: 0;
-
-   border-width: 0.5em 0 0 0.5em;
-
-   }
-
-.ribbon .ribbon-content:after {
-
-   right: 0;
-
-   border-width: 0.5em 0.5em 0 0;
-
-   }
-
 .absoluto-campaña{
     font-size: 15px;
     position: absolute;
     top: -21px;
     left: 32%;
-}
-
-.ribbon-content{
-    color:transparent;
 }
 
 .con-grupo{

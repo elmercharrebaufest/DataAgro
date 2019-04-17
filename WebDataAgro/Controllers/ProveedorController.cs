@@ -238,7 +238,7 @@ namespace WebDataAgro.Controllers
 
             if (oParam.ProveedorId != null && oParam.ProveedorId != 0)
             {
-                model = mobjProveedorManager.UpdateProveedor(oParam, GlobalVariables.IdActiveDirectory);
+                model = mobjProveedorManager.UpdateProveedor(oParam, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo,GlobalVariables.ComercialId);
             }
             else
             {
@@ -326,13 +326,13 @@ namespace WebDataAgro.Controllers
         }
         public JsonResult BuscarCorredores(string filtro, bool corredor)
         {
-            return Json(mobjProveedorManager.DevolverProveedores(filtro, corredor), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedores(filtro, corredor, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
         }
         public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, bool corredor)
         {
             if (filtro == "")
             {
-                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, corredor), JsonRequestBehavior.AllowGet);
+                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, corredor, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -359,7 +359,7 @@ namespace WebDataAgro.Controllers
 
             if (oParam.CorredorId != null && oParam.CorredorId != 0)
             {
-                model = mobjProveedorManager.UpdateCorredor(oParam, GlobalVariables.IdActiveDirectory);
+                model = mobjProveedorManager.UpdateCorredor(oParam, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId);
             }
             else
             {

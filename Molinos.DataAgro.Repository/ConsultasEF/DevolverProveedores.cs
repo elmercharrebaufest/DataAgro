@@ -11,24 +11,26 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly string filtro;
         private readonly bool corredor;
+        private readonly List<int> equipo;
 
-        public DevolverProveedores(string filtro, bool corredor)
+        public DevolverProveedores(string filtro, bool corredor, List<int> equipo)
         {
             this.filtro = filtro;
             this.corredor = corredor;
+            this.equipo = equipo;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro, bool corredor)
+        private static List<BusquedaHome> Query(DbContext contexto, string filtro, bool corredor, List<int> equipo)
         {
             var resultado = from Proveedor in contexto.Set<Proveedor>()
                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
                             from p in rgs.DefaultIfEmpty()
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
-                            where (Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
+                            where equipo.Contains(p.ComercialId) && ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
-                            (corredor.Equals(false) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7 
-                            :  (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7))
+                            (corredor.Equals(false) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
+                            : (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7)))
                             group c by Proveedor into provs
                             select new BusquedaHome
                             {
@@ -45,7 +47,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, filtro, corredor);
+                return Query(contexto, filtro, corredor, equipo);
             }
         }
     }

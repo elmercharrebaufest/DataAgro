@@ -75,31 +75,15 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        public ActionResult CrearContrato(int? id)
+        public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
         {
             ViewBag.ComercialId = GlobalVariables.ComercialId;
-            ViewBag.ContratoId = id;
+            ViewBag.Id = id;
+            ViewBag.TipoId = tipoId;
+            ViewBag.Siguientes = siguientes;
             return View();
         }
 
-        public ActionResult CrearFijacion(int? id)
-        {
-            ViewBag.ComercialId = GlobalVariables.ComercialId;
-            ViewBag.FijacionId = id;
-            return View("CrearContrato");
-        }
-        public ActionResult CrearFason(int? id)
-        {
-            ViewBag.ComercialId = GlobalVariables.ComercialId;
-            ViewBag.FasonId = id;
-            return View("CrearContrato");
-        }
-        public ActionResult CrearAgente(int? id)
-        {
-            ViewBag.ComercialId = GlobalVariables.ComercialId;
-            ViewBag.AgenteId = id;
-            return View("CrearContrato");
-        }
         public ActionResult Inicializar()
         {
             return new JsonResult()

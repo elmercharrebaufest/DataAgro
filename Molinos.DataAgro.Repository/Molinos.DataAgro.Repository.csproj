@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsultasEF\ActualizarComercialHome.cs" />
     <Compile Include="ConsultasEF\DevolverContratosAcuerdo.cs" />
     <Compile Include="ConsultasEF\DevolverProveedores.cs" />
     <Compile Include="ConsultasEF\ConsultaActividadHistoriaTraerPorProveedorId.cs" />

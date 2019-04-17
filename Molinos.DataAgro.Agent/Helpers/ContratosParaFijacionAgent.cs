@@ -1,0 +1,108 @@
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Agent.ContratosParaFijacion;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
+using System.Configuration;
+using System.Linq;
+using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Helpers;
+using System.Globalization;
+using Molinos.DataAgro.Interfaces;
+
+namespace Molinos.DataAgro.Agent
+{
+    public class ContratosParaFijacionAgent : IContratosParaFijacionAgent
+    {
+        public ContratosParaFijacionAgent(ILogger logger, IRepositorio repositorio)
+        {
+            this.logger = logger;
+            this.repositorio = repositorio;
+        }
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+
+        public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro)
+        {
+            var datosContratos = new List<DatosFijacionDeContratoDto>();
+
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+            {
+                var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (CuitCorredor != "" ? x.Corredor.CUIT == CuitCorredor : x.Corredor.CUIT == null));
+
+                foreach (var id in contratos)
+                {
+                    var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id).Sum();
+
+                    var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1 && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
+                    {
+                        ContratoId = id.ToString(),
+                        KilosAplicados = cantidad.ToString(),
+                        KilosPendiente = (x.Cantidad - cantidad).ToString(),
+                        FechaDesde = x.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                        FechaHasta = x.HastaFijacion.HasValue ? SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                        KilosContrato = x.Cantidad.ToString(),
+                        DesdeEntrega = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                        HastaEntrega = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                        Posicion = x.FechaDesde.Month.ToString() + "." + x.FechaDesde.Year.ToString(),
+                        Calidad = x.TrigoEspecial,
+                        Campana = x.Campana.Descripcion,
+                        Filtro = filtro + "|" + id
+                    });
+                    contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    contrato.KilosContrato = (double.Parse(contrato.KilosContrato)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                    datosContratos.Add(contrato);
+                }
+            }
+            else
+            {
+                try
+                {
+                    SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACIONClient agent = new SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACIONClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+                    var material = repositorio.Obtener<Material>(x => x.MaterialId == materialId);
+                    var rq = new Z_MPRFC_CONTRATO_PEND_FIJACION()
+                    {
+                        IM_CORREDOR = CuitCorredor,
+                        IM_PROVEEDOR = CuitProveedor,
+                        IM_MATERIAL = material.Codigo
+                    };
+                    logger.Debug(rq.ToXml());
+
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION(rq);
+                    logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
+                    foreach(var contrato in devolucion.EX_SALIDA)
+                    {
+                        datosContratos.Add(new DatosFijacionDeContratoDto
+                        {
+                            ContratoId = contrato.CONTRATO,
+                            KilosAplicados = contrato.KILOS_APLICADOS.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosPendiente = contrato.KILOS_PEND_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                            FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            DesdeEntrega = DateTime.Parse(contrato.ENTREGA_DESDE).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                            HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
+                            Calidad = contrato.CALIDAD == "X" ? true : false,
+                            Campana = contrato.COSECHA,
+                            Posicion = contrato.POSICION,
+                            Filtro = filtro + "|" + contrato.CONTRATO
+                        });
+                    }                    
+                }
+                catch(Exception e)
+                {
+                    logger.Error("Error comunicacion SAP", e);
+                    throw e;
+                }
+            }
+            return datosContratos;
+        }
+    }
+}

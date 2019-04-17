@@ -12,13 +12,11 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        private readonly IComercialManager oComercial;
 
-        public SISAManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
+        public SISAManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.oComercial = oComercial;
         }
 
         public int InsertarSISA(List<SISA> oDatos, List<SISA> Cuits)

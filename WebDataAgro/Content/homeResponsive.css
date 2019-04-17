@@ -1,27 +1,4 @@
 ﻿@media (min-width: 1026px) and (max-width:1281px) {
-    .contactos-baja {
-        display: inline-block;
-        width: 188px;
-        text-align: center;
-        border: 2px solid #017940;
-        margin-left: -1px;
-        color: #424242;
-        font-size: 12px;
-        font-family: "G-Open Sans-n7", Arial;
-        font-weight: bold;
-    }
-    .contactos-alta {
-        display: inline-block;
-        width: 281px;
-        text-align: center;
-        border: 2px solid #017940;
-        margin-left: 95px;
-        color: #424242;
-        font-size: 12px;
-        font-family: "G-Open Sans-n7", Arial;
-        font-weight: bold;
-    }
-
     .contenedor-principal-campanas-grano {
         display: inline-block;
         font-size: 14px;
@@ -40,8 +17,6 @@
         margin-right: 15px;
         width: 23%;
     }
-
-
 }
 
 
@@ -49,86 +24,88 @@
 /*Celular*/
 
 @media (max-width: 767px) {
-    
-    .marcador{
-        margin:0;
-        
+
+    .marcador {
+        margin: 0;
     }
 
     .contenedor-principal-miscontactos-titulo,
-    .contenedor-principal-miscontactos-subtitulo{
-        text-align:center;
-    }
-    .contenedor-principal-miscontactos-titulo{
-        margin-top:5px;
+    .contenedor-principal-miscontactos-subtitulo {
+        text-align: center;
     }
 
-    .contenedor-principal-widget{
+    .contenedor-principal-miscontactos-titulo {
+        margin-top: 5px;
+    }
+
+    .contenedor-principal-widget {
         display: block;
-        border: none!important;
-        padding:0!important;
+        border: none !important;
+        padding: 0 !important;
     }
 
     .contenedor-principal-campanas,
-    .contenedor-principal-miscontactos{
-        display:block;
-        border:0!important;
-        padding:0!important;
+    .contenedor-principal-miscontactos {
+        display: block;
+        border: 0 !important;
+        padding: 0 !important;
     }
+
     .contenedor-principal-campanas-titulo,
     .contenedor-principal-campanas-subtitulo,
-    .contenedor-principal-miscontactos-grupo{
-        text-align:center;
-    }
-    .contenedor-principal-miscontactos-detalle{
-        width:30%;
-        margin-top:5px;
+    .contenedor-principal-miscontactos-grupo {
+        text-align: center;
     }
 
-    .contenedor-principal-campanas{
-        margin-top:30px;
+    .contenedor-principal-miscontactos-detalle {
+        width: 30%;
+        margin-top: 5px;
     }
 
-    .contenedor-principal-campanas-grupo{
-        text-align:center;
+    .contenedor-principal-campanas {
+        margin-top: 30px;
     }
 
-    .contenedor-segundo-titulos{
-        display:none;
+    .contenedor-principal-campanas-grupo {
+        text-align: center;
     }
 
-    .r-relative{
-        margin:0;
-        height:auto;
-    }
-
-    .absoluto-mt20{
-        display:block;
-        width:100%;
-        position:relative!important;
-        height:auto!important;
-        text-align:center;
-    }
-
-    .lista-contactos-general{
-        display:block;
-        width:100%;
-        margin:0;
-        padding:0;
-    }
-
-    .carouselHome-contenedor{
-        max-width:250px;
-    }
-
-    #form-filtro{
+    .contenedor-segundo-titulos {
         display: none;
     }
+
+    .r-relative {
+        margin: 0;
+        height: auto;
+    }
+
+    .absoluto-mt20 {
+        display: block;
+        width: 100%;
+        position: relative !important;
+        height: auto !important;
+        text-align: center;
+    }
+
+    .lista-contactos-general {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .carouselHome-contenedor {
+        max-width: 250px;
+    }
+
+    /*#form-filtro {
+        display: none;
+    }*/
 
 
     .mostrar-filtro {
         display: block;
-        text-align: center;                
+        text-align: center;
         font-size: 15px;
         color: #26337b;
         font-weight: bold;
@@ -139,12 +116,15 @@
         display: none;
     }
 
-    .contenedor-segundo-filtro-campo div, .contenedor-segundo-filtro-campo label{
+    .contenedor-segundo-filtro-campo div, .contenedor-segundo-filtro-campo label {
         width: 130px;
         margin: 0 auto;
         text-align: left;
     }
 
+    #indicadores {
+        display: none;
+    }
 }
 /*Fin Celular*/
 
@@ -152,64 +132,66 @@
 /* TABLET */
 
 @media (min-width: 768px) and (max-width:1025px) {
-        
-    .contenedor-principal-widget{
+
+    .contenedor-principal-widget {
         display: block;
-        border: none!important;
-        padding:0!important;
+        border: none !important;
+        padding: 0 !important;
     }
 
     .contenedor-principal-miscontactos-titulo,
-    .contenedor-principal-miscontactos-subtitulo{
-        text-align:center;
+    .contenedor-principal-miscontactos-subtitulo {
+        text-align: center;
     }
 
     .contenedor-principal-campanas,
-    .contenedor-principal-miscontactos{
-        display:block;
-        border:0!important;
-        padding:0!important;
+    .contenedor-principal-miscontactos {
+        display: block;
+        border: 0 !important;
+        padding: 0 !important;
     }
+
     .contenedor-principal-campanas-titulo,
     .contenedor-principal-campanas-subtitulo,
-    .contenedor-principal-miscontactos-grupo{
+    .contenedor-principal-miscontactos-grupo {
+        text-align: center;
+    }
+
+    .contenedor-principal-campanas {
+        margin-top: 30px;
+    }
+
+    .contenedor-principal-campanas-grupo {
+        text-align: center;
+    }
+
+    .contenedor-segundo-titulos {
+        display: none;
+    }
+
+    .r-relative {
+        margin: 0;
+        height: auto;
+    }
+
+    .absoluto-mt20 {
+        display: block;
+        width: 100%;
+        position: relative !important;
+        height: auto !important;
+        text-align: center;
+    }
+
+    .lista-contactos-general {
+        display: block;
+        width: 60%;
+        margin: auto;
+        padding: 0;
         text-align:center;
     }
 
-    .contenedor-principal-campanas{
-        margin-top:30px;
-    }
-
-    .contenedor-principal-campanas-grupo{
-        text-align:center;
-    }
-
-    .contenedor-segundo-titulos{
-        display:none;
-    }
-
-    .r-relative{
-        margin:0;
-        height:auto;
-    }
-
-    .absoluto-mt20{
-        display:block;
-        width:100%;
-        position:relative!important;
-        height:auto!important;
-        text-align:center;
-    }
-
-    .lista-contactos-general{
-        display:block;
-        width:100%;
-        margin:0;
-        padding:0;
-    }
-
-    .carouselHome-contenedor{
-        max-width:250px;
+    .carouselHome-contenedor {
+        max-width: 250px;
     }
 
     .carousel-control .glyphicon-chevron-left {
@@ -219,12 +201,37 @@
     .carousel-control .icon-prev, .carousel-control .icon-next, .carousel-control .glyphicon-chevron-left, .carousel-control .glyphicon-chevron-right {
         left: -256px;
     }
-    .contenedor-segundo-filtro-campo div, .contenedor-segundo-filtro-campo label{
+
+    .contenedor-segundo-filtro-campo div, .contenedor-segundo-filtro-campo label {
         width: 130px;
         margin: 0 auto;
         text-align: left;
     }
 
+    #conAlta {
+        margin-right: 0.3%;
+        width: 47.5%;
+    }
+
+    #sinAlta {
+        margin-right: 2.3%;
+        width: 31.6%;
+    }
+
+    .contactosHome {
+       width:100%;
+    }
 }
 
 /* FIN TABLET */
+
+@media (min-width: 1025px) and (max-width: 1199px) {
+
+    #conAlta {
+        margin-right: 70px;
+    }
+
+    #sinAlta {
+        margin-right: 78px;
+    }
+}

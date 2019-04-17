@@ -7,11 +7,11 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public Basico basicos { get; set; }
         public Contacto contacto { get; set; }
-        public Produccion produccion{ get; set; }
+        public Produccion produccion { get; set; }
         public Almacenamiento almacenamiento { get; set; }
         public List<ContactosComercial> contactocomercial { get; set; }
         public int? ProveedorId { get; set; }
-        public int? ProveedorCorredorId { get; set; }        
+        public int? ProveedorCorredorId { get; set; }
     }
 
     public class Basico
@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int nocliente { get; set; }
         public int segmentacion { get; set; }
         public List<string> emails { get; set; }
-        public List<Telefono> telefonos { get; set; }       
+        public List<Telefono> telefonos { get; set; }
         public string comentario { get; set; }
         public string nomReferente { get; set; }
         public int? calificacion { get; set; }
@@ -31,12 +31,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? BoletoCompraNet { get; set; }
         public int? BolsaCompraNet { get; set; }
         public bool? Consignatario { get; set; }
+        public decimal? Comision { get; set; }
     }
 
     public class Telefono
     {
         public int? tipoTelefono { get; set; }
-        public string telefono { get; set; }       
+        public string telefono { get; set; }
     }
 
     public class Contacto
@@ -59,7 +60,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? TonsMaxAprobSojaSust { get; set; }
         public string habilitaoSojaSust { get; set; }
         public double? hasAprobSojaSust { get; set; }
-        public double? volumenAnualTotalTns { get; set; }        
+        public double? volumenAnualTotalTns { get; set; }
         public List<Objetivos> objetivos { get; set; }
         public List<Objetivos> eliminarobjetivos { get; set; }
         public int? CampoId { get; set; }
@@ -99,7 +100,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class Almacenamiento
     {
-            public List<CamposAlmacenamiento> CamposAlmacenamiento { get; set; }
+        public List<CamposAlmacenamiento> CamposAlmacenamiento { get; set; }
     }
 
     public class CamposAlmacenamiento

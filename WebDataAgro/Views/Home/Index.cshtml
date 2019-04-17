@@ -8,7 +8,7 @@
 
 <div class="row contenedor-principal">
     <div class="col-lg-3 contenedor-principal-widget">
-        
+
     </div>
 
     <div class="col-lg-6 contenedor-principal-miscontactos">
@@ -18,12 +18,12 @@
         <div class="contenedor-principal-miscontactos-subtitulo">
             Estado de mi agenda de proveedores
         </div>
-        <div class="col-lg-12 sin-padding">
-            <div class="contactos-alta">
-                CON ALTA
-            </div>
-            <div class="contactos-baja">
+        <div id="indicadores" class="row">
+            <div class="contactos col-lg-3 col-md-3 col-sm-3" id="sinAlta">
                 SIN ALTA
+            </div>
+            <div class="contactos col-lg-5 col-md-5 col-sm-5" id="conAlta">
+                CON ALTA
             </div>
         </div>
         <div class="contenedor-principal-miscontactos-grupo">
@@ -41,7 +41,7 @@
                 </div>
             </a>
             <a class="cont-op-det">
-                <div class="contenedor-principal-miscontactos-detalle">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
                     <div class="contenedor-principal-miscontactos-detalle-titulo">
                         <img src="~/Content/Images/contprinc-cont23.png" />
                         <span class="contenedor-principal-miscontactos-detalle-cantidad cont-op">
@@ -54,7 +54,7 @@
                 </div>
             </a>
             <a class="cont-no-op-det">
-                <div class="contenedor-principal-miscontactos-detalle">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
                     <div class="contenedor-principal-miscontactos-detalle-titulo">
                         <img src="~/Content/Images/contprinc-cont4.png" />
                         <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-no-op">
@@ -68,7 +68,7 @@
             </a>
 
             <a class="cont-baj-det">
-                <div class="contenedor-principal-miscontactos-detalle">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
                     <div class="contenedor-principal-miscontactos-detalle-titulo">
                         <img src="~/Content/Images/contprinc-cont4.png" />
                         <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-baj">
@@ -79,7 +79,7 @@
                         <b>Bajas</b> <i>(borrados SAP)</i>
                     </div>
                 </div>
-            </a>           
+            </a>
 
             <a class="cont-alta-det">
                 <div class="contenedor-principal-miscontactos-detalle ">
@@ -108,7 +108,6 @@
                     </div>
                 </div>
             </a>
-            
         </div>
     </div>
     <div class="col-lg-3 contenedor-principal-campanas">
@@ -120,7 +119,7 @@
         </div>
         <div class="contenedor-principal-campanas-grupo">
             <div class="contenedor-principal-campanas-detalle">
-                
+
             </div>
         </div>
     </div>
@@ -140,12 +139,12 @@
             <a id="exportarAll" class="exportar-contactos"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Export All</span></a>
         </div>
 
-        
+
     </div>
     <div class="row r-relative">
         <div class="col-md-3 absoluto-mt20">
-            <div class="col-lg-2 mostrar-filtro">
-                <span class="">Mostrar filtro +</span>
+            <div class="col-lg-12 mostrar-filtro puntero">
+                <span class="puntero">Ocultar filtro -</span>
             </div>
             <div id="form-filtro">
                 <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
@@ -197,13 +196,13 @@
                     </div>
                 </div>
                 <!--<div class="contenedor-segundo-filtro-grupo col-lg-12">
-                <div class="contenedor-segundo-filtro-titulo color-titulo">
-                    Tipo de Actividad
-                </div>
-                <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Tipo de Actividad
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
 
-                </div>
-            </div>-->
+                    </div>
+                </div>-->
 
                 <div class="contenedor-segundo-filtro-grupo col-lg-12">
                     <div class="contenedor-segundo-filtro-titulo color-titulo">
@@ -242,8 +241,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
-            <div class="lista-contactos-general"></div>
+        <div class="col-md-7 contactosHome ">
+            <div class="lista-contactos-general "></div>
             <div class="text-center">
                 <button id="verMasContactos" onclick="TraerSiguiente()" class="k-button k-button-icontext" type="button" style="display:none">Ver Más </button>
                 <div id="cargandoContactos" class="lds-roller" style="display:none"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

@@ -1,4 +1,5 @@
 ﻿
+--Repositorio: ActualizarComercialHome
 CREATE PROCEDURE [dbo].[DataAgro_ActualizarComercialHome] --42
 (
 	@ComercialId INT

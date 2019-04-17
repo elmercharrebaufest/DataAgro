@@ -1,10 +1,8 @@
 ﻿var viewModel;
 var datosIniCrearContrato;
 var contratoEdit;
-var contratoId;
-var fijacionId;
-var fasonId;
-var agenteId;
+var Id;
+var Siguientes;
 var posicionFijacion;
 var aperturaPrecio = [];
 
@@ -17,7 +15,6 @@ $(document).ready(function () {
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
-
 });
 
 function InicializarBordesRojos() {
@@ -124,7 +121,7 @@ function InicializarElementos() {
             InicializarBordesRojos();
         },
         select: function (e) {
-            if ($("#tipoId").val() != 3 && (contratoId == 0 || contratoId == null || contratoId == "")) {
+            if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                 $("#clasificacion").data("kendoDropDownList").value("");
                 $("#consignatarioId").prop("checked", false);
             }
@@ -166,6 +163,11 @@ function InicializarElementos() {
                     }
                 }
             }
+
+
+            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje ? Number(compraNet.ComisionPorcentaje) : 0);
+            InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+
         },
         dataSource: {
             severFiltering: true,
@@ -213,7 +215,7 @@ function InicializarElementos() {
         change: function () {
             if ($("#buscadorCorredor").val().split('|').length > 1) {
                 $("#buscadorCorredor").val($("#buscadorCorredor").val().split('|')[1]);
-                if ($("#tipoId").val() != 3 && (contratoId == 0 || contratoId == null || contratoId == "")) {
+                if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                     $("#clasificacion").data("kendoDropDownList").value("");
                     $("#consignatarioId").prop("checked", false);
                 }
@@ -457,6 +459,7 @@ function InicializarElementos() {
                 $("#ocultarAperturaBtn").show();
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
+                if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
             } else if (this.value() == 4) {
                 $(".noFason").hide();
@@ -554,6 +557,8 @@ function InicializarElementos() {
                     $("#ocultarAperturaBtn").show();
                     $("#ocultarAperturaMoneda").removeClass("w100");
                     $("#ocultarAperturaMoneda").addClass("w70");
+                    if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+
                 }
                 if ($("#boton-ampliar").text() == "+ AMPLIAR") {
                     $(".ampliar").hide();
@@ -610,6 +615,7 @@ function InicializarElementos() {
             }
             $("#contratoId").val("");
             $("#datosContrato").hide();
+
         }
     });
 
@@ -1635,17 +1641,25 @@ function InicializarDatos() {
             AsignarDatos();
         }
 
-        if (contratoId != undefined && contratoId) {
-            setTimeout(InicializarContratoEdit, 300);
-        } else if (fijacionId != undefined && fijacionId) {
-            setTimeout(InicializarFijacionEdit, 300);
-        } else if (fasonId != undefined && fasonId) {
-            setTimeout(InicializarFasonEdit, 300);
-        } else if (agenteId != undefined && agenteId) {
-            setTimeout(InicializarAgenteEdit, 300);
-        } else {
-            $.unblockUI();
-            InicializarBordesRojos();
+        switch (TipoId) {
+            case "1":
+                setTimeout(InicializarContratoEdit, 300);
+                break;
+            case "2":
+                setTimeout(InicializarContratoEdit, 300);
+                break;
+            case "3":
+                setTimeout(InicializarFijacionEdit, 300);
+                break;
+            case "4":
+                setTimeout(InicializarFasonEdit, 300);
+                break;
+            case "5":
+                setTimeout(InicializarAgenteEdit, 300);
+                break;
+            default:
+                $.unblockUI();
+                InicializarBordesRojos();
         }
     };
 
@@ -1777,9 +1791,9 @@ function ObtenerDatos() {
     var hora = hoy.getHours();
     var minuto = hoy.getMinutes();
 
-    obj.ContratoId = contratoId == undefined ? 0 : contratoId;
-    obj.FijacionDePrecioContratoId = fijacionId == undefined ? 0 : fijacionId;
-    obj.Id = fasonId !== undefined && fasonId !== "" ? fasonId : agenteId !== undefined && agenteId !== "" ? agenteId : 0;
+    obj.ContratoId = (TipoId == 1 || TipoId == 2) ? Id : 0;
+    obj.FijacionDePrecioContratoId = TipoId == 3 ? Id : 0;
+    obj.Id = (TipoId == 4 || TipoId == 2) ? Id : 0;
     obj.MaterialId = $("#material").val();
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Cantidad = $("#cantidadId").val();
@@ -1895,7 +1909,7 @@ function ObtenerDatos() {
             var err = [];
             if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId==2)) {
                 err = AgregarCalidades();
-            } else if ($("#valorEspecialesId").val() != ""){
+            } else if ($("#valorEspecialesId").val() != "") {
                 LimpiarCalidades();
                 err = AgregarCalidades();
             }
@@ -1949,10 +1963,20 @@ function GrabarContrato(nuevoContrato) {
             $.unblockUI();
         }
         else {
-            window.location.href = window.location.origin + "/CompraNet";
+            if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
+                var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
+                var primero = siguientesObj.shift();
+                editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
+            } else {
+                window.location.href = window.location.origin + "/CompraNet";
+            }
         }
     }
     $.unblockUI();
+}
+
+function editarContrato(id, tipoId, siguientes) {
+    window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
 }
 
 function obtenerLocalidadProvincia() {
@@ -2036,31 +2060,93 @@ function validarDescuento(descuento) {
 }
 
 function AgregarCalidades() {
-    var calidades = {
-        Id: 0,
-        CalidadEspecialDesc: $("#calidadesEspecialesId").data("kendoDropDownList").text(),
-        CalidadEspecialId: $("#calidadesEspecialesId").data("kendoDropDownList").value(),
-        Valor: $("#valorEspecialesId").val(),
-        PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
-        PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
-        StandardDeCalidadId: 2,
-        Borrar: function () {
-            viewModel.Calidades.remove(this);
-        }
-    };
+    if ($("#valorEspecialesId").val() === ""
+        && $("#porcentajeDesdeId").val() === ""
+        && $("#porcentajeHastaId").val() === "") {
+        var cal = ValorDeCalidad($("#calidadesEspecialesId").data("kendoDropDownList").value());
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 2 && (cal==undefined || cal.CalidadEspecialId != "2")) {
+            var cal1 = {
+                Id: 0,
+                CalidadEspecialDesc: "Granos verdes",
+                CalidadEspecialId: 2,
+                Valor: "0",
+                PorcentajeDesde: "0",
+                PorcentajeHasta: "5",
+                StandardDeCalidadId: 2,
+                Borrar: function () {
+                    viewModel.Calidades.remove(this);
+                }
+            };
+            viewModel.Calidades.push(cal1);
+            var cal2 = {
+                Id: 0,
+                CalidadEspecialDesc: "Granos verdes",
+                CalidadEspecialId: 2,
+                Valor: "0,2",
+                PorcentajeDesde: "5,1",
+                PorcentajeHasta: "100",
+                StandardDeCalidadId: 2,
+                Borrar: function () {
+                    viewModel.Calidades.remove(this);
+                }
+            };
+            viewModel.Calidades.push(cal2);
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 1 && (cal == undefined || cal.CalidadEspecialId != "1")) {
+            var cal3 = {
+                Id: 0,
+                CalidadEspecialDesc: "Dañados",
+                CalidadEspecialId: 1,
+                Valor: "0",
+                PorcentajeDesde: "0",
+                PorcentajeHasta: "5",
+                StandardDeCalidadId: 2,
+                Borrar: function () {
+                    viewModel.Calidades.remove(this);
+                }
+            };
+            viewModel.Calidades.push(cal3);
 
-    var err = validarCalidad(calidades);
-    if (ExistsErrorMessages(err)) {
-        MensErr(err[0]);
+            var cal4 = {
+                Id: 0,
+                CalidadEspecialDesc: "Dañados",
+                CalidadEspecialId: 1,
+                Valor: "1",
+                PorcentajeDesde: "5,1",
+                PorcentajeHasta: "100",
+                StandardDeCalidadId: 2,
+                Borrar: function () {
+                    viewModel.Calidades.remove(this);
+                }
+            };
+            viewModel.Calidades.push(cal4);
+        }
+    } else {
+        var calidades = {
+            Id: 0,
+            CalidadEspecialDesc: $("#calidadesEspecialesId").data("kendoDropDownList").text(),
+            CalidadEspecialId: $("#calidadesEspecialesId").data("kendoDropDownList").value(),
+            Valor: $("#valorEspecialesId").val(),
+            PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
+            PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
+            StandardDeCalidadId: 2,
+            Borrar: function () {
+                viewModel.Calidades.remove(this);
+            }
+        };
+
+        var err = validarCalidad(calidades);
+        if (ExistsErrorMessages(err)) {
+            MensErr(err[0]);
+        }
+        else {
+            viewModel.Calidades.push(calidades);
+            $("#calidadesEspecialesId").val("");
+            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+            $("#porcentajeDesdeId").data("kendoNumericTextBox").value("");
+            $("#porcentajeHastaId").data("kendoNumericTextBox").value("");
+        }
+        return err;
     }
-    else {
-        viewModel.Calidades.push(calidades);
-        $("#calidadesEspecialesId").val("");
-        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-        $("#porcentajeDesdeId").data("kendoNumericTextBox").value("");
-        $("#porcentajeHastaId").data("kendoNumericTextBox").value("");
-    }
-    return err;
 }
 
 function validarCalidad(calidad) {
@@ -2109,25 +2195,25 @@ function ValorDeCalidad(calidadId) {
 }
 
 function InicializarContratoEdit() {
-    var datos = { id: contratoId };
+    var datos = { id: Id };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
 }
 
 function InicializarFijacionEdit() {
-    var datos = { id: fijacionId };
+    var datos = { id: Id };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerFijacionCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();
 }
 function InicializarFasonEdit() {
-    var datos = { id: fasonId };
+    var datos = { id: Id };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerFasonCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();
 }
 function InicializarAgenteEdit() {
-    var datos = { id: agenteId };
+    var datos = { id: Id };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerAgenteCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();
@@ -2430,43 +2516,47 @@ function HabilitarEstablecimiento() {
 
 function GuardarAperturaDePrecio() {
     var total = CalcularPrecioTotalApertura();
-    if (total <= 0) {
+    if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3) && !$("#pizarraId").is(':checked')) {
         MensErr("El Precio Total no puede ser menor o igual a 0");
     } else {
-        var Financiero = {
-            Id: 0,
-            ConceptoAperturaPrecioId: 1,
-            Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value()
-        };
-        var Redespacho = {
-            Id: 0,
-            ConceptoAperturaPrecioId: 2,
-            Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value()
-        };
-        var Comisiones = {
-            Id: 0,
-            ConceptoAperturaPrecioId: 3,
-            Importe: $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(),
-            Porcentaje: Number($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value())
-        };
-        var Bonificaciones = {
-            Id: 0,
-            ConceptoAperturaPrecioId: 4,
-            Importe: $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(),
-            Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
-        };
-
-        viewModel.AperturaPrecio = [];
-        viewModel.AperturaPrecio.push(Financiero);
-        viewModel.AperturaPrecio.push(Redespacho);
-        viewModel.AperturaPrecio.push(Comisiones);
-        viewModel.AperturaPrecio.push(Bonificaciones);
-        $('#modalAperturaPrecio').modal('hide');
-
-        $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
-        $("#precioTotalApertura").trigger("change");
+        InsertarAperturasViewModel(total);
     }
 }
+
+function InsertarAperturasViewModel(total) {
+    var Financiero = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 1,
+        Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value()
+    };
+    var Redespacho = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 2,
+        Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value()
+    };
+    var Comisiones = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 3,
+        Importe: $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(),
+        Porcentaje: Number($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value())
+    };
+    var Bonificaciones = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 4,
+        Importe: $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(),
+        Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
+    };
+
+    viewModel.AperturaPrecio = [];
+    viewModel.AperturaPrecio.push(Financiero);
+    viewModel.AperturaPrecio.push(Redespacho);
+    viewModel.AperturaPrecio.push(Comisiones);
+    viewModel.AperturaPrecio.push(Bonificaciones);
+    $('#modalAperturaPrecio').modal('hide');
+
+    $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
+    $("#precioTotalApertura").trigger("change");
+};
 
 
 function InicializarAperturaDePrecios() {
@@ -2516,7 +2606,7 @@ function InicializarAperturaDePrecios() {
         min: 0
     });
 
-    $("#aperturaPrecioImporteFinancieroId").change(function () { PonerEnCeroSiEsNulo("aperturaPrecioImporteFinancieroId"); } );
+    $("#aperturaPrecioImporteFinancieroId").change(function () { PonerEnCeroSiEsNulo("aperturaPrecioImporteFinancieroId"); });
     $("#aperturaPrecioImporteComisionesId").change(ModificarComisionesPorImporte);
     $("#aperturaPrecioPorcentajeComisionesId").change(ModificarComisionesPorcentaje);
     $("#aperturaPrecioImporteRedespachoId").change(ConvertirRedespachoANegativo);
@@ -2555,7 +2645,7 @@ function AbrirModalAperturaDePrecio() {
     } else {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
-        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(0);
     }
 

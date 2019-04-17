@@ -15,11 +15,13 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly IComprasAgent oComprasAgent;
 
-        public ComprasManager(ILogger logger, IRepositorio repositorio)
+        public ComprasManager(ILogger logger, IRepositorio repositorio, IComprasAgent oComprasAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.oComprasAgent = oComprasAgent;
         }
 
         public void ActualizarComprasAyer()
@@ -69,8 +71,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         private void ActualizarComprasProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
-        {
-            var SapCompras = new ComprasAgent();
+        {            
             var histActual = repositorio.Listar<CampañaMaterialPorMes>();
             var campaniaMaterialActual = repositorio.Listar<CampañaMaterial>();
             var proveedores = repositorio.Listar(x => new { x.ProveedorId, x.CUIT }, (Proveedor x) => true).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
@@ -84,7 +85,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var contadorActualizacion = 0;
                 foreach (var item in listProve)
                 {
-                    var hist = SapCompras.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
+                    var hist = oComprasAgent.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
                     logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT + ": " + hist.Count);
                     if (hist.Count > 0)
                     {

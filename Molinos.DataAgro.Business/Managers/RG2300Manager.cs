@@ -11,13 +11,11 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        private readonly IComercialManager oComercial;
 
-        public RG2300Manager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial)
+        public RG2300Manager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            this.oComercial = oComercial;
         }
 
         public bool InsetarRG2300(List<RG2300> oDatos)

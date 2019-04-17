@@ -21,8 +21,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ClasificacionCompraNetId { get; set; }
         public string ClasificacionDescripcion { get; set; }
         public int ProveedorCorredorId { get; set; }
+        public bool? Consignatario { get; set; }
     }
 }
-   
+
 
 

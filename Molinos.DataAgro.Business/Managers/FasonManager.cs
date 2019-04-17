@@ -16,8 +16,8 @@ namespace Molinos.DataAgro.Business.Managers
     public class FasonManager : IFasonManager
     {
         private readonly IRepositorio repositorio;
-        private IProveedorManager mobjProveedorManager;
-        private ILogger logger;
+        private readonly IProveedorManager mobjProveedorManager;
+        private readonly ILogger logger;
 
         public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager)
         {
@@ -25,10 +25,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
         }
-
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
 
         private Resultado Validar(Fason oParam, Resultado oErrorMessages) {
 
@@ -186,6 +182,7 @@ namespace Molinos.DataAgro.Business.Managers
                 catch (Exception ex)
                 {
                     logger.Error(ex);
+                    oEntityErrors.Error("", "Fasón no se puede rechazar");
                 }
             }
             else
@@ -241,6 +238,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 catch (Exception ex)
                 {
+                    oEntityErrors.Error("", "El Contrato Fasón no se puede modificar");
                     logger.Error(ex);
                     throw;
                 }

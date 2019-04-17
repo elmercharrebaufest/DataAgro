@@ -571,6 +571,7 @@ function armarContacto() {
     $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].ProvinciaCompraNet);
     $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].LocalidadCompraNet);
     $("#daco-consigcomnet").html((basico[0].Consignatario == 1) ? "Si" : "No");
+    $("#daco-comisioncomnet").html(basico[0].Comision);
 
     if ($("#daco-clascomnet").html() != 'Acopiador') {
         $("#rowConsignatario").hide();

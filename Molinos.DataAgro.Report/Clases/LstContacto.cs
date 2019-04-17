@@ -436,44 +436,45 @@ namespace Molinos.DataAgro.Report
                         }
                         workSheet6.Column(i).AutoFit();
                     };
+
+
+                    j = 1;
+                    while (workSheet6.Cells[1, j].Value != null)
+                    {
+                        workSheet6.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                        workSheet6.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                        workSheet6.Cells[1, j].Style.Font.Bold = true;
+
+                        j++;
+                    }
+
+
+                    workSheet6.Cells[1, 1].Value = "CUIT";
+                    workSheet6.Column(1).AutoFit();
+
+                    workSheet6.Cells[1, 2].Value = "Razón Social";
+                    workSheet6.Column(2).AutoFit();
+
+                    workSheet6.Cells[1, 3].Value = "Tipo de Actividad";
+                    workSheet6.Column(3).AutoFit();
+
+                    workSheet6.Cells[1, 4].Value = "Detalle";
+                    workSheet6.Column(4).AutoFit();
+
+                    workSheet6.Cells[1, cantColumns - 3].Value = "Fecha Desde";
+                    workSheet6.Column(cantColumns - 3).AutoFit();
+
+                    workSheet6.Cells[1, cantColumns - 2].Value = "Hora Desde";
+                    workSheet6.Column(cantColumns - 2).AutoFit();
+
+                    workSheet6.Cells[1, cantColumns - 1].Value = "Fecha Hasta";
+                    workSheet6.Column(cantColumns - 1).AutoFit();
+
+                    workSheet6.Cells[1, cantColumns].Value = "Hora Hasta";
+                    workSheet6.Column(cantColumns).AutoFit();
                 }
-
-                j = 1;
-                while (workSheet6.Cells[1, j].Value != null)
-                {
-                    workSheet6.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet6.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet6.Cells[1, j].Style.Font.Bold = true;
-
-                    j++;
-                }
-
-
-                workSheet6.Cells[1, 1].Value = "CUIT";
-                workSheet6.Column(1).AutoFit();
-
-                workSheet6.Cells[1, 2].Value = "Razón Social";
-                workSheet6.Column(2).AutoFit();
-
-                workSheet6.Cells[1, 3].Value = "Tipo de Actividad";
-                workSheet6.Column(3).AutoFit();
-
-                workSheet6.Cells[1, 4].Value = "Detalle";
-                workSheet6.Column(4).AutoFit();
-
-                workSheet6.Cells[1, cantColumns - 3].Value = "Fecha Desde";
-                workSheet6.Column(cantColumns - 3).AutoFit();
-
-                workSheet6.Cells[1, cantColumns - 2].Value = "Hora Desde";
-                workSheet6.Column(cantColumns - 2).AutoFit();
-
-                workSheet6.Cells[1, cantColumns - 1].Value = "Fecha Hasta";
-                workSheet6.Column(cantColumns - 1).AutoFit();
-
-                workSheet6.Cells[1, cantColumns].Value = "Hora Hasta";
-                workSheet6.Column(cantColumns).AutoFit();
             }
 
             if (oDatos.compras.Count > 0)
@@ -530,7 +531,7 @@ namespace Molinos.DataAgro.Report
             return identif;
         }
     }
-    }
+}
 
 
 

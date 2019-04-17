@@ -88,6 +88,10 @@ $(document).ready(function () {
         $(".modal").modal('hide');
         recargarGrilla();
     });
+    $("#cerrarVariosModificar").click(function () {
+        $(".modal").modal('hide');
+        recargarGrilla();
+    });
 });
 
 $("#confirmarVariosDiv").ready(function () {
@@ -118,12 +122,8 @@ function formatearFecha(fecha) {
 
 function botonPendiente(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
-        "'" + dataItem.ContratoId + "'" + ',' +
-        "'" + dataItem.TipoNegocioId + "'" + ',' +
-        "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-        "'" + dataItem.FasonId + "'" + ',' +
-        "'" + dataItem.AgenteId + "'" +
-        ')"><i class="fa ' + icono + '"></i></button>';
+        "'" + dataItem.Id + "'" + ',' +
+        "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
 }
 
 function botonConfirmadoTilde(dataItem, icono) {
@@ -509,6 +509,9 @@ function CreateGridInformeCompraNet() {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
             },
             {
+                field: "ComercialCreador", type: "string", title: "Creador", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
+            },
+            {
                 field: "DestinoDescripcion", type: "string", title: "Destino", attributes: { "class": "mobile-xs mobile-md" }
             },
             {
@@ -769,19 +772,11 @@ function SeleccionarElementos() {
         obj.push(selectedItem);
 
     });
-    return (obj);
+    return obj;
 }
 
-function editarContrato(contratoId, tipoId, fijacionDePrecioContratoId, fasonId, agenteId) {
-    if (tipoId === "3") {
-        window.location.href = window.location.origin + "/CompraNet/CrearFijacion?id=" + fijacionDePrecioContratoId;
-    } else if (tipoId === "4") {
-        window.location.href = window.location.origin + "/CompraNet/CrearFason?id=" + fasonId;
-    } else if (tipoId === "5") {
-        window.location.href = window.location.origin + "/CompraNet/CrearAgente?id=" + agenteId;
-    } else {
-        window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + contratoId;
-    }
+function editarContrato(id, tipoId, siguientes) {
+    window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
 }
 
 function ModalFinalizado(contratoId, tipoId, fijacionDePrecioContratoId, fasonId, agenteId) {
@@ -872,7 +867,7 @@ function ModalConfirmadoVarios() {
     if (negocios.length > 0) {
         for (var i in negocios) {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
-            if (negocios[i].Estado === 1 || negocios[i].Estado === 3) {
+            if (negocios[i].Estado === 1 || negocios[i].Estado === 3 || negocios[i].Estado === 7) {
                 if (negocios[i].TipoNegocioId === 3) {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else {
@@ -1055,10 +1050,11 @@ function ObtenerDatosModalConfirmado() {
 }
 
 function Confirmar(confirmarContratoFijacion) {
+    var result = null;
     if ($("#tipoNegocioModalConTilde").val() === '3') {
-        var result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
+        result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
     } else {
-        var result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
+        result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
     }
 
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
@@ -1366,13 +1362,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             Importe: descuento.Importe,
             MonedaId: descuento.MonedaId,
             Porcentaje: descuento.Porcentaje,
-            ContratoId: descuento.contratoId,
+            ContratoId: descuento.contratoId
         };
         viewModel.DescuentosVisualizar.push(descuentoKendo);
     });
 
     var iteracionesCalidades = viewModel.CalidadesVisualizar.length;
-    for (var i = 0; i < iteracionesCalidades; i++) {
+    for (var j = 0; j < iteracionesCalidades; j++) {
         viewModel.CalidadesVisualizar.pop();
     }
 
@@ -1389,7 +1385,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             ContratoId: calidad.ContratoId,
             PorcentajeDesde: calidad.PorcentajeDesde,
             PorcentajeHasta: calidad.PorcentajeHasta,
-            StandardDeCalidadId: 2,
+            StandardDeCalidadId: 2
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });

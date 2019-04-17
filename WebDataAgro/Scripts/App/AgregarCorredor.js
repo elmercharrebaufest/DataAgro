@@ -166,6 +166,10 @@ function buscarProveedor() {
             $("#localidadcorrId").val(result.Proveedor.LocalidadId);
             $("#provinciacorrCompranetId").val(result.Proveedor.ProvinciaCompraNetId);
             $("#localidadcorrCompranetId").val(result.Proveedor.LocalidadCompraNetId);
+            MostrarConsignatarioEnBuscarProveedor(result.Proveedor.ClasificacionCompraNetId);
+            console.log(result.Proveedor.Consignatario);
+            $("#consignatario-proveedor-compranet").prop("checked", result.Proveedor.Consignatario);
+
         }
     } else {
         limpiarCargaProveedor();
@@ -186,10 +190,22 @@ function limpiarCargaProveedor() {
     $("#provinciacorrCompranetId").val("");
     $("#localidadcorrCompranetId").val("");
     $("#imgOperableCorr").attr("src", "");
+    MostrarConsignatarioEnBuscarProveedor(0);
+    $("#consignatario-proveedor-compranet").prop("checked", false);
     $(".campo-estadoafip-corredor").css({
         'background-color': 'rgba(150, 235, 198, 0.45)'
     });
 }
+
+function MostrarConsignatarioEnBuscarProveedor(clasificacionId) {
+    console.log(clasificacionId);
+    if (clasificacionId != 2) {
+        $("#consignatarioProveedorDiv").hide();
+    } else {
+        $("#consignatarioProveedorDiv").show();
+    }
+}
+
 function guardarProveedorCorredor() {
     $("#GuardarProveedorCorredor").click(function () {
         if (!ValidarProveedorCorredor()) {
@@ -222,6 +238,7 @@ function guardarProveedorCorredor() {
             obj.basicos.ClasificacionCompraNet = $("#clasificacion-proveedor-corredor").val();
             obj.ProveedorId = $("#provcorrId").val();
             obj.ProveedorCorredorId = $("#corredorId").val();
+            obj.basicos.Consignatario = $("#consignatario-proveedor-compranet").is(":checked");
 
             crearContenedoresProveedores(obj);
 
@@ -269,6 +286,10 @@ function crearContenedoresProveedores(obj) {
         '<span class="contenedor-contacto-comercial-posicion-der">' +
         'Clasificacion: ' + (obj.Clasificacion ? obj.Clasificacion : "no especifica") +
         '</span>' +
+        '<div class="">' +
+        '<span class="contenedor-contacto-comercial-posicion-der">' +
+        'Consignatario: ' + (obj.basicos.Consignatario ? "SI" : "NO") +
+        '</span>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -291,6 +312,8 @@ function editarProveedorComercial(id) {
     obj.basicos.LocalidadCompraNet ? $("#procedenciaCompranet").val(obj.basicos.localidadCompraNetDesc + " (" + obj.basicos.provinciaCompraNetDesc + ")") : "";
     $("#provcorrId").val(obj.ProveedorId);
     $("#clasificacion-proveedor-corredor").val(obj.basicos.ClasificacionCompraNet);
+    $("#consignatario-proveedor-compranet").prop('checked', obj.basicos.Consignatario);
+    mostrarConsignatarioProveedor();
     $("#direccion-provcorr").val(obj.contacto.direccion);
     $("#codpost-provcorr").val(obj.contacto.codpost);
     $("#corredorId").val(obj.ProveedorCorredorId);
@@ -320,13 +343,13 @@ function ValidarProveedorCorredor() {
         return false;
     }
 
-  var repetidos =  !proveedorCorredorGuardado.some(function (elemento) {
+    var repetidos = !proveedorCorredorGuardado.some(function (elemento) {
         if (elemento.basicos.cuit === $("#provcorr-cuit").val()) {
             MensErr("No se puede ingresar dos proveedores iguales");
-        }   
+        }
         return elemento.basicos.cuit === $("#provcorr-cuit").val();
     });
-    
+
     return repetidos;
 }
 
@@ -352,6 +375,7 @@ function armarEditCorredor() {
             proveedor.basicos.localidadCompraNetDesc = proveedores[i].LocalidadCompraNet;
             proveedor.basicos.provinciaCompraNetDesc = proveedores[i].ProvinciaCompraNet;
             proveedor.basicos.ClasificacionCompraNet = proveedores[i].ClasificacionCompraNetId;
+            proveedor.basicos.Consignatario = proveedores[i].Consignatario;
             proveedor.Clasificacion = proveedores[i].ClasificacionDescripcion;
             proveedor.ProveedorId = proveedores[i].ProveedorId;
             proveedor.ProveedorCorredorId = proveedores[i].ProveedorCorredorId;
@@ -401,6 +425,7 @@ function DatosCorredor() {
     obj.basicos.ProvinciaCompraNet = $("#provincia-compranet").val();
     obj.basicos.LocalidadCompraNet = $("#localidad-compranet").val();
     obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
+    obj.basicos.Comision = Number($("#comision-compranet").val().replace(',', '.'));
     obj.basicos.comentario = $("#comentario").val();
 
     obj.contacto.provincia = $("#provincia").val();

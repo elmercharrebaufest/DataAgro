@@ -21,15 +21,29 @@ namespace Molinos.DataAgro.Business.Managers
         private IProveedorManager mobjProveedorManager;
         private IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
+        private readonly IFinalizarFijacionAgent oFinalizarFijacionAgent;
+        private readonly IContratosParaFijacionAgent oContratosParaFijacionAgent;
+        private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private ILogger logger;
 
-        public FijacionDePrecioContratoManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager, IComercialManager oMSComercialManager, IPushNotificationManager oMSNotification)
+        public FijacionDePrecioContratoManager(
+            ILogger logger,
+            IRepositorio repositorio,
+            IProveedorManager oMSProveedorManager,
+            IComercialManager oMSComercialManager,
+            IPushNotificationManager oMSNotification,
+            IFinalizarFijacionAgent oFinalizarFijacionAgent,
+            IContratosParaFijacionAgent oContratosParaFijacionAgent,
+            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
             mobjComercialManager = oMSComercialManager;
             mobjNotification = oMSNotification;
+            this.oFinalizarFijacionAgent = oFinalizarFijacionAgent;
+            this.oContratosParaFijacionAgent = oContratosParaFijacionAgent;
+            this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
         }
 
         //--------------------------------------------------
@@ -285,8 +299,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        var relacionCorredor = new RelacionCorredorProveedorAgent(repositorio);
-                        if (!relacionCorredor.ObtenerRelacionCorredorProveedor(oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT))
+
+                        if (!oRelacionCorredorProveedorAgent.ObtenerRelacionCorredorProveedor(oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT))
                         {
                             throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT));
                         }
@@ -380,8 +394,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string SAPFinalizarFijacion(FijacionDePrecioContrato fijacion)
         {
-            var SapFinalizarFijacion = new FinalizarFijacionAgent(logger, repositorio);
-            return SapFinalizarFijacion.Finalizar(fijacion);
+            return oFinalizarFijacionAgent.Finalizar(fijacion);
         }
         public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
@@ -521,8 +534,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro)
         {
-            var contratosParaFijacion = new ContratosParaFijacionAgent(logger, repositorio);
-            var contratos = contratosParaFijacion.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);
+            var contratos = oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);
             return contratos;
         }
 

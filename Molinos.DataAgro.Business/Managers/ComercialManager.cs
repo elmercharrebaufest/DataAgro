@@ -20,11 +20,13 @@ namespace Molinos.DataAgro.Business
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly IDatoDelComercialAgent oDatoDelComercialAgent;
 
-        public ComercialManager(ILogger logger, IRepositorio repositorio)
+        public ComercialManager(ILogger logger, IRepositorio repositorio,IDatoDelComercialAgent oDatoDelComercialAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.oDatoDelComercialAgent = oDatoDelComercialAgent;
         }
 
         //--------------------------------------------------
@@ -128,10 +130,8 @@ namespace Molinos.DataAgro.Business
             }
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "0")
-            {
-                var dat = new DatoDelComercial(logger);
-
-                var comercial = dat.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
+            {                
+                var comercial = oDatoDelComercialAgent.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
 
                 if (comercial != null)
                 {

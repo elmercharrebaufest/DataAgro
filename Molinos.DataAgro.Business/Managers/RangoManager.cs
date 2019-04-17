@@ -133,6 +133,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Precio", "El valor mínimo no puede ser mayor que el máximo");
             }
+            if (oRango.MaterialId == 0)
+            {
+                oEntityErrors.Error("Material", "El campo Material no puede estar vacío");
+            }
             if (rangosExistentes.Exists(x=> x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId))
             {
                 oEntityErrors.Error("Rango", "Ya existe un rango para el grano y moneda elegidos");

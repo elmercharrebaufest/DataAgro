@@ -62,7 +62,7 @@ function armarBasico(basico) {
     $("#canopera").multiselect("refresh");
 
     var entregaAId = [];
-    for (var ii in resultEdit.ProveedorDestinatario) {
+    for (ii in resultEdit.ProveedorDestinatario) {
         (function (i) {
             entregaAId.push(resultEdit.ProveedorDestinatario[i].DestinatarioId);
         })(ii);
@@ -72,7 +72,7 @@ function armarBasico(basico) {
     $("#entregaA").multiselect("refresh");
 
     var condPreferenteId = [];
-    for (var ii in resultEdit.ProveedorCondicion) {
+    for (ii in resultEdit.ProveedorCondicion) {
         (function (i) {
             condPreferenteId.push(resultEdit.ProveedorCondicion[i].CondicionId);
         })(ii);
@@ -112,6 +112,11 @@ function armarBasico(basico) {
 
     if (basico.Consignatario) {
         $("#consignatario-compranet").prop("checked", true);
+    }
+    if (basico.Comision) {
+        $("#comision-compranet").val(basico.Comision);
+    } else {
+        $("#comision-compranet").val(1);
     }
 }
 
@@ -237,7 +242,7 @@ function armarComercial(comerciales) {
                 '</div>' +
                 '<div class="col-lg-6">' +
                 '<span class="contenedor-contacto-comercial-extras-value">' +
-                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "")) +
+                (comerciales[i].Interes ? comerciales[i].Interes.split(",").join("<br>") + "<br>" + (comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") : comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "") +
                 '</span>' +
                 '</div>' +
                 '</div>' +
@@ -287,7 +292,7 @@ function armarProduccion(campoacopio) {
     }
     grupocampoacopio = [grupocampoacopio];
 
-    for (var ii in grupocampoacopio[0]) {
+    for (ii in grupocampoacopio[0]) {
         (function (i) {
             var obj = {};
 
@@ -328,7 +333,7 @@ function armarProduccion(campoacopio) {
                 + '</div>'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                + '(Has ' + (grupocampoacopio[0][i].ArrendadoPropio == true ? "Propias" : (grupocampoacopio[0][i].ArrendadoPropio === false ? "Arrendadas" : "no especificadas")) + ')'
+                + '(Has ' + (grupocampoacopio[0][i].ArrendadoPropio == true ? "Propias" : grupocampoacopio[0][i].ArrendadoPropio === false ? "Arrendadas" : "no especificadas") + ')'
                 + '</div>'
                 + '<div class="granos-contenedor">';
 
@@ -352,7 +357,7 @@ function armarProduccion(campoacopio) {
                         + '<div class="granos-contenedor-has-tns">'
                         + '<b>' + (grupocampoacopio[0][i].Granos[j].HectareasPorcentaje ? grupocampoacopio[0][i].Granos[j].HectareasPorcentaje : "No especifica") + "</b> Has - <b>" + (grupocampoacopio[0][i].Granos[j].Toneladas ? grupocampoacopio[0][i].Granos[j].Toneladas : "No especifica") + "</b> TNs"
                         + '</div>'
-                        + '</div>'
+                        + '</div>';
                 })(jj);
             }
 
@@ -408,7 +413,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
         })(ii);
     }
 
-    for (var ii in acopiomaterial) {
+    for (ii in acopiomaterial) {
         (function (i) {
             grupoacopio["Acopio" + acopiomaterial[i].AcopioId] = grupoacopio["Acopio" + acopiomaterial[i].AcopioId] || {};
             grupoacopio["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento = grupoacopio["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento || [];
@@ -427,7 +432,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
 
     console.log("GURpo", grupoacopio);
 
-    for (var ii in grupoacopio[0]) {
+    for (ii in grupoacopio[0]) {
         (function (i) {
             var obj = {};
 
@@ -485,12 +490,12 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                             + '<div class="granos-contenedor-has-tns">'
                             + '<b>' + grupoacopio[0][i].Granos[j].Toneladas + "</b> Tns - " + (grupoacopio[0][i].Granos[j].hasArrendadas == 1 ? "Alquiladas" : "Propias")
                             + '</div>'
-                            + '</div>'
+                            + '</div>';
                     }
                 })(jj);
             }
 
-            for (var jj in grupoacopio[0][i].GranosAlmacenamiento) {
+            for (jj in grupoacopio[0][i].GranosAlmacenamiento) {
                 (function (j) {
                     if (grupoacopio[0][i].GranosAlmacenamiento[j].campañaId) {
                         obj.granosAlmacenamientoGrano.push({
@@ -498,7 +503,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                             granoAlmacenamiento: grupoacopio[0][i].GranosAlmacenamiento[j].granoAlmacenamiento,
                             campañaId: grupoacopio[0][i].GranosAlmacenamiento[j].campañaId,
                             campaña: grupoacopio[0][i].GranosAlmacenamiento[j].campaña,
-                            toneladasAlmacenamiento: grupoacopio[0][i].GranosAlmacenamiento[j].toneladasAlmacenamiento,
+                            toneladasAlmacenamiento: grupoacopio[0][i].GranosAlmacenamiento[j].toneladasAlmacenamiento
                         });
                         console.log("grupoacopio[0][i].GranosAlmacenamiento[j]", grupoacopio[0][i].GranosAlmacenamiento[j]);
                         html += '<div class="granos-contenedor-grupo">'
@@ -508,7 +513,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                             + '<div class="granos-contenedor-has-tns">'
                             + '<b>' + (grupoacopio[0][i].GranosAlmacenamiento[j].granoId ? grupoacopio[0][i].GranosAlmacenamiento[j].grano + " - " : "No especifica material - ") + (grupoacopio[0][i].GranosAlmacenamiento[j].toneladasAlmacenamiento ? grupoacopio[0][i].GranosAlmacenamiento[j].toneladasAlmacenamiento : "No especifica ") + "</b> Tns"
                             + '</div>'
-                            + '</div>'
+                            + '</div>';
                     }
                 })(jj);
             }
@@ -540,7 +545,7 @@ function armarObjetivos(objetivo) {
         if (z < objetivo.length - 1) {
             cantGranoObjetivo++;
 
-            var htmlCampañaGranoObjetivo = "";
+            htmlCampañaGranoObjetivo = "";
 
             htmlCampañaGranoObjetivo += '<div class="lineaObjetivos' + cantGranoObjetivo + ' ObjetivoGranos" style="position:relative;">'
                 + '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo' + cantGranoObjetivo + '">'
@@ -595,7 +600,7 @@ function eliminarObjetivo(elem) {
     } else {
         $("#granoObjetivo" + val).val("null"),
             $("#campañaObjetivo" + val).val("null"),
-            $("#toneladasObjetivo" + val).val("")
+            $("#toneladasObjetivo" + val).val("");
     }
 }
 

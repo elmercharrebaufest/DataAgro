@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaHoraRecordatorioFin { get; set; }
         public string TipoActividad { get; set; }
         public string ContactoComercial { get; set; }
-        public int? ContactoComercialId { get; set; } 
+        public int? ContactoComercialId { get; set; }
         public int ComercialId { get; set; }
         public string Asunto { get; set; }
     }
@@ -43,33 +43,33 @@ namespace Molinos.DataAgro.Entities.Dto
     public class BasicoProveedor
     {
         public string RazonSocial { get; set; }
-		public string CUIT { get; set; }
-		public string Estado { get; set; }
-		public int Facacop { get; set; }
-		public string RiesgoComercialSap { get; set; }
-		public int EstadoCuit { get; set; }
-		public string Segmentacion { get; set; }
+        public string CUIT { get; set; }
+        public string Estado { get; set; }
+        public int Facacop { get; set; }
+        public string RiesgoComercialSap { get; set; }
+        public int EstadoCuit { get; set; }
+        public string Segmentacion { get; set; }
         public string GrupoSegmentacion { get; set; }
         public string Email1 { get; set; }
-		public string Email2 { get; set; }
-		public string Email3 { get; set; }
-		public string Email4 { get; set; }
-		public string Telefono1 { get; set; }
-		public string Telefono2 { get; set; }
-		public string Telefono3 { get; set; }
-		public string Telefono4 { get; set; }
-		public string Observaciones { get; set; }
-		public Nullable<DateTime> FechaUltimoContacto { get; set; }
+        public string Email2 { get; set; }
+        public string Email3 { get; set; }
+        public string Email4 { get; set; }
+        public string Telefono1 { get; set; }
+        public string Telefono2 { get; set; }
+        public string Telefono3 { get; set; }
+        public string Telefono4 { get; set; }
+        public string Observaciones { get; set; }
+        public Nullable<DateTime> FechaUltimoContacto { get; set; }
         public string Nombres { get; set; }
         public string Apellido { get; set; }
-        public string Direccion { get; set; }                                      
-        public string Localidad { get; set; }                                      
-        public string Provincia { get; set; }                                      
-        public string CanalOperacion { get; set; }                                 
+        public string Direccion { get; set; }
+        public string Localidad { get; set; }
+        public string Provincia { get; set; }
+        public string CanalOperacion { get; set; }
         public string Destinatario { get; set; }
-		public string Condicion { get; set; }
-		public string AreaInfluencia { get; set; }
-		public string Intermediario { get; set; }
+        public string Condicion { get; set; }
+        public string AreaInfluencia { get; set; }
+        public string Intermediario { get; set; }
         public Nullable<int> Calificacion { get; set; }
         public string GrupoDeCompras { get; set; }
         public string CodigoPostal { get; set; }
@@ -89,6 +89,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string BoletoCompraNet { get; set; }
         public string BolsaCompraNet { get; set; }
         public bool? Consignatario { get; set; }
+        public decimal? Comision { get; set; }
 
     }
 
@@ -100,24 +101,24 @@ namespace Molinos.DataAgro.Entities.Dto
     public class ContactosComerciales
     {
         public string Nombres { get; set; }
-		public string Apellido { get; set; }
-		public string Puesto { get; set; }
-		public string Cargo { get; set; }
-		public string Telefono1 { get; set; }
-		public string Telefono2 { get; set; }
-		public string Telefono3 { get; set; }
-		public string Email1 { get; set; }
-		public string Email2 { get; set; }
-		public string Email3 { get; set; }
-		public DateTime? FechaNacimiento { get; set; }
-		public string InteresId { get; set; }
-		public string Interes { get; set; }
+        public string Apellido { get; set; }
+        public string Puesto { get; set; }
+        public string Cargo { get; set; }
+        public string Telefono1 { get; set; }
+        public string Telefono2 { get; set; }
+        public string Telefono3 { get; set; }
+        public string Email1 { get; set; }
+        public string Email2 { get; set; }
+        public string Email3 { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
+        public string InteresId { get; set; }
+        public string Interes { get; set; }
         public string OtrosIntereses { get; set; }
         public int? TipoTelefono1Id { get; set; }
-		public Nullable<int> TipoTelefono2Id { get; set; }
-		public Nullable<int> TipoTelefono3Id { get; set; }
-		public int ContactoComercialId { get; set; }
-		public bool? EsPrincipal { get; set; }
+        public Nullable<int> TipoTelefono2Id { get; set; }
+        public Nullable<int> TipoTelefono3Id { get; set; }
+        public int ContactoComercialId { get; set; }
+        public bool? EsPrincipal { get; set; }
         public bool? CompraNet { get; set; }
         public Nullable<int> ProveedorId { get; set; }
     }
@@ -138,7 +139,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public Nullable<double> Toneladas { get; set; }
         public string Material { get; set; }
         public int LocalidadId { get; set; }
-		public string Localidad { get; set; }
+        public string Localidad { get; set; }
         public int ProvinciaId { get; set; }
         public string Provincia { get; set; }
     }
@@ -187,8 +188,8 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ObjetivoId { get; set; }
         public int? CampañaId { get; set; }
-		public string Campaña { get; set; }
-		public int? MaterialId { get; set; }
+        public string Campaña { get; set; }
+        public int? MaterialId { get; set; }
         public string Material { get; set; }
         public int? NroItem { get; set; }
         public int? ProveedorId { get; set; }
@@ -214,7 +215,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public StoredPorProveedorResult()
         {
-        
+
         }
 
     }
@@ -223,23 +224,23 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         //Datos Contacto
         public string Direccion { get; set; }
-        public string CodigoPostal { get; set; }    
+        public string CodigoPostal { get; set; }
         public string Intermediario { get; set; }
 
         //Basico Proveedor
         public string RazonSocial { get; set; }
         public string CUIT { get; set; }
-        public string Estado { get; set; }      
+        public string Estado { get; set; }
         public string Segmentacion { get; set; }
         public string Email1P { get; set; }
-        public string Telefono1P { get; set; }              
+        public string Telefono1P { get; set; }
         public string Localidad { get; set; }
         public string Provincia { get; set; }
         public string CanalOperacion { get; set; }
         public string Destinatario { get; set; }
         public string Condicion { get; set; }
         public string AreaInfluencia { get; set; }
-        public string Calificacion { get; set; }    
+        public string Calificacion { get; set; }
         public string NombreReferente { get; set; }
         public string Comentarios { get; set; }
 
@@ -277,19 +278,19 @@ namespace Molinos.DataAgro.Entities.Dto
         //Produccion
         public string ProvinciaProd { get; set; }
         public string LocalidadProd { get; set; }
-        public string ArrendadoPropio { get; set; }       
+        public string ArrendadoPropio { get; set; }
         public string Material { get; set; }
         public double HectareasPorcentaje { get; set; }
-        public double? Toneladas { get; set; }     
+        public double? Toneladas { get; set; }
         public string Campaña { get; set; }
         public Nullable<double> AlmacVolAnualTotal { get; set; }
         //public Nullable<double> AlmacCapacidadPropia { get; set; }
         public Nullable<bool> AlmacHabilitadoSojaSust { get; set; }
         public Nullable<double> AlmacTonsMaxSojaSust { get; set; }
         public Nullable<double> AlmacHectSojaSust { get; set; }
-        public string EsCampoProduccion { get; set; }      
+        public string EsCampoProduccion { get; set; }
         public Nullable<bool> HasArrendadas { get; set; }
-        public string TieneProduccion{ get; set; }
+        public string TieneProduccion { get; set; }
     }
 
     public class RptAlmacenamientoInfo
@@ -298,12 +299,12 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string ProvinciaAlm { get; set; }
         public string LocalidadAlm { get; set; }
-        public string ArrendadoPropioAlm { get; set; }  
+        public string ArrendadoPropioAlm { get; set; }
         public string MaterialAlm { get; set; }
         public double HectareasPorcentajeAlm { get; set; }
         public double? ToneladasAlm { get; set; }
         public int CampañaId { get; set; }
-        public string CampañaAlm { get; set; }   
+        public string CampañaAlm { get; set; }
         public Nullable<double> AlmacVolAnualTotalAlm { get; set; }
         //public Nullable<double> AlmacCapacidadPropia { get; set; }
         public Nullable<bool> AlmacHabilitadoSojaSustAlm { get; set; }
@@ -352,20 +353,23 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Consignatario { get; set; }
     }
 
-    public class DatosLocalidadProvinciaFiltro {
+    public class DatosLocalidadProvinciaFiltro
+    {
 
         public string CUIT { get; set; }
         public int MaterialId { get; set; }
         public int CampanaId { get; set; }
 
-        public DatosLocalidadProvinciaFiltro() {
+        public DatosLocalidadProvinciaFiltro()
+        {
             this.CUIT = "";
             this.MaterialId = 0;
             this.CampanaId = 0;
         }
     }
 
-    public class DatosLocalidadProvincia {
+    public class DatosLocalidadProvincia
+    {
 
         public int ProveedorId { get; set; }
         public string CUIT { get; set; }
@@ -379,7 +383,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int BoletoId { get; set; }
         public int BolsaId { get; set; }
         public bool Corredor { get; set; }
-        public DatosLocalidadProvincia() {
+        public DatosLocalidadProvincia()
+        {
             this.ProveedorId = 0;
             this.CUIT = "";
             this.RazonSocial = "";
@@ -391,7 +396,7 @@ namespace Molinos.DataAgro.Entities.Dto
             this.Consignatario = false;
             this.BoletoId = 0;
             this.BolsaId = 0;
-        }       
+        }
     }
 
     public class MsHistorial

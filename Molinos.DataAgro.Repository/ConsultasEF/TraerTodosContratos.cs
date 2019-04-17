@@ -33,9 +33,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) || 
-                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) : 
-                    (perfilId == (int)EnumPerfil.CorredoresComercial && 
+                where perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
+                    (perfilId == (int)EnumPerfil.CorredoresComercial &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new BasicoContrato()
@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 select new BasicoContrato()
                 {
                     Id = fijac.FijacionDePrecioContratoId,
-                    ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
+                    ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
                     ProveedorId = fijac.ProveedorId,
                     CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                     ComercialId = fijac.ComercialId,

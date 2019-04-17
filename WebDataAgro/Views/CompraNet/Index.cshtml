@@ -76,27 +76,41 @@
                         <div id="inputZona" class="col-xs-6 col-md-6">
                             <input id="buscadorFiltroZona" style="width:100%; padding:0px" type="text" placeholder="Buscar por Zona" />
                         </div>
-                        <div id="buscarDiv" class="col-xs-4 col-md-4" data-toggle="tooltip" onclick="filtrarZona()">
-                            <span class="botonVarios">
-                                <i class="fa fa-search varios" aria-hidden="true"></i>
-                            </span>
-                            <span>Buscar</span>
+                        <div class="col-xs-6 col-md-4">
+                            <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-search varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Buscar</span>
+                            </div>
                         </div>
                     </div>
-                    <div id="variosDiv" class="col-xs-12 col-md-7">
-                      
-                        <div id="confirmarVariosDiv" class="col-xs-3 col-md-3 floatDerecha" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
-                            <span class="botonVarios">
-                                <i class="fa fa-check varios" aria-hidden="true"></i>
-                            </span>
-                            <span>Confirmar</span>
+                    <div id="variosDiv" class="col-xs-12 col-md-7 alinear-derecha">
+                        <div class="col-xs-12 col-md-3">
+                            <div id="modificarVariosDiv" data-toggle="tooltip" onclick="ModalModificarVarios()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-pencil varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Modificar </span>
+                            </div>
                         </div>
-                        <div id="finalizarVariosDiv" class="col-xs-3 col-md-3 floatDerecha" data-toggle="tooltip" onclick="ModalFinalizarVarios()">
-                            <span class="botonVarios">
-                                <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
-                            </span>
-                            <span>Finalizar </span>
+                        <div class="col-xs-12 col-md-3">
+                            <div id="confirmarVariosDiv" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-check varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Confirmar</span>
+                            </div>
                         </div>
+                        <div class="col-xs-12 col-md-3">
+                            <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="ModalFinalizarVarios()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Finalizar </span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="row" id="nuevotab">
@@ -137,4 +151,7 @@
 
     <!-- Modal Finalizar Varios-->
     @Html.Partial("_ModalFinalizarVarios")
+
+    <!-- Modal Modificar Varios-->
+    @Html.Partial("_ModalModificarVarios")
 }

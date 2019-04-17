@@ -51,6 +51,16 @@ function CargarProveedores(datos) {
                 (obj.ClasificacionDescripcion ? obj.ClasificacionDescripcion : "no especifica") +
                 '</span>' +
                 '</div>' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-3 clearLeft">' +
+                '<span class="contenedor-contacto-comercial-posicion-izq">' +
+                'Consignatario:' +
+                '</span>' +
+                '</div>' +
+                '<div class="contenedor-contacto-comercial-posicion col-lg-3">' +
+                '<span class="contenedor-contacto-comercial-posicion-der contacto-proveedor-corredor">' +
+                (obj.Consignatario ? "SI" : "NO") +
+                '</span>' +
+                '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';

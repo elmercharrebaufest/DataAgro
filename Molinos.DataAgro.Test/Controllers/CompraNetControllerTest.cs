@@ -73,44 +73,12 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            var result = target.CrearContrato(1) as ViewResult;
+            var result = target.CrearContrato(1,1,"") as ViewResult;
 
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
-        [Test]
-        public void CrearFijacionOk()
-        {
-            HttpContext.Current.Session["perfil"] = 1;
-            HttpContext.Current.Session["comercialId"] = 1;
-            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            var result = target.CrearFijacion(1) as ViewResult;
-
-            Assert.NotNull(result);
-            Assert.That(result.ViewName, Is.Not.Null.Or.Empty);
-        }
-        [Test]
-        public void CrearFasonOk()
-        {
-            HttpContext.Current.Session["perfil"] = 1;
-            HttpContext.Current.Session["comercialId"] = 1;
-            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            var result = target.CrearFason(1) as ViewResult;
-
-            Assert.NotNull(result);
-            Assert.That(result.ViewName, Is.Not.Null.Or.Empty);
-        }
-        [Test]
-        public void CrearAgenteOk()
-        {
-            HttpContext.Current.Session["perfil"] = 1;
-            HttpContext.Current.Session["comercialId"] = 1;
-            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            var result = target.CrearAgente(1) as ViewResult;
-
-            Assert.NotNull(result);
-            Assert.That(result.ViewName, Is.Not.Null.Or.Empty);
-        }
+        
         [Test]
         public void InicializarTest()
         {
@@ -484,7 +452,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -620,7 +588,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCompraNet(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"LocalidadId\":1,\"Localidad\":\"a\",\"ProvinciaId\":1,\"Provincia\":\"b\",\"ClasificacionCompraNetId\":1,\"Consignatario\":true,\"BoletoCompraNetId\":1,\"BolsaCompraNetId\":1},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"LocalidadId\":1,\"Localidad\":\"a\",\"ProvinciaId\":1,\"Provincia\":\"b\",\"ClasificacionCompraNetId\":1,\"Consignatario\":true,\"BoletoCompraNetId\":1,\"BolsaCompraNetId\":1,\"ComisionPorcentaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

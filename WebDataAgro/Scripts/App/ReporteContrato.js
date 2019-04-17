@@ -15,7 +15,7 @@ function CreateGridInformeCompraNet() {
             read: {
                 type: 'post',
                 dataType: 'json',
-                url: '/Contrato/BuscaDatosTabla',
+                url: '/Contrato/BuscaDatosTabla'
             },
             parameterMap: function (options, operation) {
                 if (options.filter) {
@@ -47,7 +47,7 @@ function CreateGridInformeCompraNet() {
                     TrigoEspecial: { type: "boolean" },
                     DesdeFijacion: { type: "date" },
                 }
-            },
+            }
         },
 
         serverPaging: true,
@@ -62,7 +62,7 @@ function CreateGridInformeCompraNet() {
         toolbar: ["excel"],
         excel: {
             fileName: "Reporte Contratos.xlsx",
-            allPages: true,
+            allPages: true
         },
         dataSource: ds,
         dataBound: function () {
@@ -171,7 +171,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
-            //{ field: "ComercialCreador", title: "Registro Comercial", filterable: { ui: createMultiSelectComercial } },
+            { field: "ComercialCreador", title: "Registro Comercial", filterable: { ui: createMultiSelectComercial } },
             {
                 field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
@@ -215,28 +215,28 @@ function CreateGridInformeCompraNet() {
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var templateSustentable = kendo.template(this.columns[14].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[15].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[16].columns[0].template);
-            var templateSIO = kendo.template(this.columns[17].template);
-            var templateTrigoEsp = kendo.template(this.columns[18].template);
+            var templateSustentable = kendo.template(this.columns[15].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[16].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[17].columns[0].template);
+            var templateSIO = kendo.template(this.columns[18].template);
+            var templateTrigoEsp = kendo.template(this.columns[19].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
-                    Sustentable: row.cells[15].value,
-                    Dolarizado: row.cells[18].value,
-                    Pesificado: row.cells[20].value,
-                    NoInformaSIO: row.cells[22].value,
-                    TrigoEspecial: row.cells[23].value,
+                    Sustentable: row.cells[16].value,
+                    Dolarizado: row.cells[19].value,
+                    Pesificado: row.cells[21].value,
+                    NoInformaSIO: row.cells[23].value,
+                    TrigoEspecial: row.cells[24].value,
                 };
 
-                row.cells[15].value = templateSustentable(dataItem);
-                row.cells[18].value = templateDolarizado(dataItem);
-                row.cells[20].value = templatePesificado(dataItem);
-                row.cells[22].value = templateSIO(dataItem);
-                row.cells[23].value = templateTrigoEsp(dataItem);
+                row.cells[16].value = templateSustentable(dataItem);
+                row.cells[19].value = templateDolarizado(dataItem);
+                row.cells[21].value = templatePesificado(dataItem);
+                row.cells[23].value = templateSIO(dataItem);
+                row.cells[24].value = templateTrigoEsp(dataItem);
             }
         },
         pageable: {

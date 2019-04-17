@@ -42,6 +42,7 @@
 	[Consignatario]				BIT				NULL
 
     CONSTRAINT [PK_Contacto] PRIMARY KEY CLUSTERED ([ProveedorId] ASC),
+    [ComisionPorcentaje] DECIMAL(11, 2) NULL, 
     CONSTRAINT [FK_Contacto_AreaInfluencia] FOREIGN KEY ([AreaInfluenciaId]) REFERENCES [dbo].[AreaInfluencia] ([AreaInfluenciaId]),
     CONSTRAINT [FK_Contacto_Estado] FOREIGN KEY ([EstadoId]) REFERENCES [dbo].[Estado] ([EstadoId]),
     CONSTRAINT [FK_Contacto_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [dbo].[Localidad] ([LocalidadId]),

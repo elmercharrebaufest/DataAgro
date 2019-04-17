@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            var estadosDisponibles = contexto.Set< ProveedorEstado>().Where(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId)).Select(x => x.Estado.EstadoId).ToList();
+            var estadosDisponibles = contexto.Set<ProveedorEstado>().Where(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId)).Select(x => x.Estado.EstadoId).ToList();
             var estado = estadosDisponibles.Contains(4) ? 4 : estadosDisponibles.Contains(5) ? 5 : estadosDisponibles.Contains(1) ? 1 : estadosDisponibles.Contains(2) ? 2 : estadosDisponibles.Contains(3) ? 3 : 0;
             var resultado =
                 from prove in contexto.Set<Proveedor>()
@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 from est in ests.DefaultIfEmpty()
                 join fac in contexto.Set<FACACOP>() on prove.CUIT equals fac.CUIT into facs
                 from fac in facs.DefaultIfEmpty()
-                join rg in contexto.Set<SISA>().GroupBy(x=> x.CUIT).Select(x=>new {CUIT = x.Key, EstadoCUIT = x.FirstOrDefault().EstadoCuit }) on prove.CUIT equals rg.CUIT  into rgs 
+                join rg in contexto.Set<SISA>().GroupBy(x => x.CUIT).Select(x => new { CUIT = x.Key, EstadoCUIT = x.FirstOrDefault().EstadoCuit }) on prove.CUIT equals rg.CUIT into rgs
                 from rg in rgs.DefaultIfEmpty()
                 join con in contexto.Set<ContactoComercial>() on prove.ProveedorId equals con.Proveedor.ProveedorId into cons
                 from con in cons.DefaultIfEmpty()
@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado = est.Descripcion,
                     Facacop = (fac.CUIT == null) ? 0 : 1,
                     RiesgoComercialSap = prove.RiesgoComercialSap,
-                    EstadoCuit = rg != null ? rg.EstadoCUIT: 0,
+                    EstadoCuit = rg != null ? rg.EstadoCUIT : 0,
                     Segmentacion = prove.Segmentacion.Descripcion,
                     GrupoSegmentacion = prove.Segmentacion.Grupo,
                     Email1 = con.Email1,
@@ -92,7 +92,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ClasificacionCompraNet = prove.ClasificacionCompraNet.Descripcion,
                     BoletoCompraNet = prove.BoletoCompraNet.Descripcion,
                     BolsaCompraNet = prove.BolsaCompraNet.Descripcion,
-                    Consignatario = prove.Consignatario
+                    Consignatario = prove.Consignatario,
+                    Comision = prove.ComisionPorcentaje
 
                 };
 

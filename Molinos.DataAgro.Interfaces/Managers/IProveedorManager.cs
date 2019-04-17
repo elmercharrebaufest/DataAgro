@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Interfaces
 
         StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string ActividadId);
 
-        GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory);
+        GrabarProveedorResult UpdateProveedor(NuevoProveedor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
 
 
         List<ReporteProveedor> ObtenerReporteProveedor(string Valor, string idActiveDirectory);
@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Interfaces
 
         ProveedorDto TraerProveedor(int? proveedorId);
 
-        List<BusquedaHome> DevolverProveedores(string filtroProveedor, bool corredor);
+        List<BusquedaHome> DevolverProveedores(string filtroProveedor, bool corredor, List<int> equipo);
 
         List<BusquedaHome> DevolverProveedoresConCorredor(string filtroProveedor, string filtro);
 
@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarEmail(Contrato oContrato,List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar);
         string GetEmailUserActiveDirectory(string UserName);        
         GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);
-        GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory);
+        GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
         bool ValidarProveedorEsCorredor(int idproveedor);
     }
 }

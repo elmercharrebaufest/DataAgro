@@ -244,7 +244,7 @@ function armarSelects(result) {
             })(ii);
         }
     }
-    for (var ii in grupos) {
+    for (ii in grupos) {
         (function (i) {
             if (i != "null") {
                 htmlSegmentacion += '<optgroup label="' + i + '">';
@@ -261,7 +261,7 @@ function armarSelects(result) {
 
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
-            CrearCorredor();
+        CrearCorredor();
     });
     CrearCorredor();
 
@@ -273,7 +273,7 @@ function armarSelects(result) {
     htmlTipoTelefonocc += '<select  class="campo-input-select" id="concom-TipoTelefono1">';
     htmlTipoTelefonocc += '<option value = "null">Seleccione...</option>';
 
-    for (var ii in result.tiptel) {
+    for (ii in result.tiptel) {
         (function (i) {
             htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
             if (result.tiptel[i].Descripcion != "Otros" && result.tiptel[i].Descripcion != "Emergencia") {
@@ -307,7 +307,7 @@ function armarSelects(result) {
         var textB = b.Nombre.toUpperCase();
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
-    for (var ii in result.prov) {
+    for (ii in result.prov) {
         (function (i) {
             htmlProvincia += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
         })(ii);
@@ -318,7 +318,7 @@ function armarSelects(result) {
     var htmlLocalidad = "";
     htmlLocalidad += '<select   class="campo-input-select campo-sin-span" id="localidad">';
     htmlLocalidad += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.loc) {
+    for (ii in result.loc) {
         (function (i) {
             htmlLocalidad += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
         })(ii);
@@ -328,7 +328,7 @@ function armarSelects(result) {
 
     var htmlCanalOperacion = "";
     htmlCanalOperacion += '<select multiple class="campo-input-select" id="canopera">';
-    for (var ii in result.cope) {
+    for (ii in result.cope) {
         (function (i) {
             htmlCanalOperacion += '<option value="' + result.cope[i].CanalOperacionId + '">' + result.cope[i].Descripcion + '</option>';
         })(ii);
@@ -338,7 +338,7 @@ function armarSelects(result) {
 
     var htmlDestinatario = "";
     htmlDestinatario += '<select multiple class="campo-input-select"  id="entregaA">';
-    for (var ii in result.dest) {
+    for (ii in result.dest) {
         (function (i) {
             htmlDestinatario += '<option value="' + result.dest[i].DestinatarioId + '">' + result.dest[i].Descripcion + '</option>';
         })(ii);
@@ -348,7 +348,7 @@ function armarSelects(result) {
 
     var htmlCondicion = "";
     htmlCondicion += '<select multiple class="campo-input-select"  id="condPrefer">';
-    for (var ii in result.cond) {
+    for (ii in result.cond) {
         (function (i) {
             htmlCondicion += '<option value="' + result.cond[i].CondicionId + '">' + result.cond[i].Descripcion + '</option>';
         })(ii);
@@ -361,7 +361,7 @@ function armarSelects(result) {
     var htmlCampañaGrano = "";
     htmlCampañaGrano += '<select class="campo-input-select campo-sin-span grano" id="grano0">';
     htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.gran) {
+    for (ii in result.gran) {
         (function (i) {
             htmlCampañaGrano += '<option value="' + result.gran[i].MaterialId + '">' + result.gran[i].Descripcion + '</option>';
         })(ii);
@@ -385,7 +385,7 @@ function armarSelects(result) {
     var htmlProvinciaProduccion = "";
     htmlProvinciaProduccion += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-produccion">';
     htmlProvinciaProduccion += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.prov) {
+    for (ii in result.prov) {
         (function (i) {
             htmlProvinciaProduccion += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
         })(ii);
@@ -396,7 +396,7 @@ function armarSelects(result) {
     var htmlLocalidadProduccion = "";
     htmlLocalidadProduccion += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-produccion">';
     htmlLocalidadProduccion += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.loc) {
+    for (ii in result.loc) {
         (function (i) {
             htmlLocalidadProduccion += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
         })(ii);
@@ -407,7 +407,7 @@ function armarSelects(result) {
     var htmlCampañaGranoAlmacenamiento = "";
     htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamiento0">';
     htmlCampañaGranoAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    for (var ii in resultCampaña) {
+    for (ii in resultCampaña) {
         (function (i) {
             htmlCampañaGranoAlmacenamiento += '<option value="' + resultCampaña[i].CampañaId + '">' + resultCampaña[i].Descripcion + '</option>';
         })(ii);
@@ -437,7 +437,7 @@ function armarSelects(result) {
     var htmlCampañaGranoAlmacenamientoGrano = "";
     htmlCampañaGranoAlmacenamientoGrano += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos0">';
     htmlCampañaGranoAlmacenamientoGrano += '<option value = "null">Seleccione...</option>';
-    for (var ii in resultInit.gran) {
+    for (ii in resultInit.gran) {
         (function (i) {
             htmlCampañaGranoAlmacenamientoGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
         })(ii);
@@ -510,7 +510,7 @@ function armarSelects(result) {
     var htmlProvinciaAlmacenamiento = "";
     htmlProvinciaAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-almacenamiento">';
     htmlProvinciaAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.prov) {
+    for (ii in result.prov) {
         (function (i) {
             htmlProvinciaAlmacenamiento += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
         })(ii);
@@ -521,7 +521,7 @@ function armarSelects(result) {
     var htmlLocalidadAlmacenamiento = "";
     htmlLocalidadAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="localidad-almacenamiento">';
     htmlLocalidadAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.loc) {
+    for (ii in result.loc) {
         (function (i) {
             htmlLocalidadAlmacenamiento += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
         })(ii);
@@ -532,7 +532,7 @@ function armarSelects(result) {
     var htmlProvinciaCompraNet = "";
     htmlProvinciaCompraNet += '<select class="campo-input-select" id="provincia-compranet">';
     htmlProvinciaCompraNet += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.prov) {
+    for (ii in result.prov) {
         (function (i) {
             htmlProvinciaCompraNet += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
         })(ii);
@@ -543,7 +543,7 @@ function armarSelects(result) {
     var htmlLocalidadCompraNet = "";
     htmlLocalidadCompraNet += '<select class="campo-input-select" id="localidad-compranet">';
     htmlLocalidadCompraNet += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.loc) {
+    for (ii in result.loc) {
         (function (i) {
             htmlLocalidadCompraNet += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
         })(ii);
@@ -554,7 +554,7 @@ function armarSelects(result) {
     var htmlClasificacionCompraNet = "";
     htmlClasificacionCompraNet += '<select class="campo-input-select" id="clasificacion-compranet">';
     htmlClasificacionCompraNet += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.ClasComNet) {
+    for (ii in result.ClasComNet) {
         (function (i) {
             htmlClasificacionCompraNet += '<option value="' + result.ClasComNet[i].Id + '">' + result.ClasComNet[i].Descripcion + '</option>';
         })(ii);
@@ -565,7 +565,7 @@ function armarSelects(result) {
     var htmlClasificacionCorredorProveedor = "";
     htmlClasificacionCorredorProveedor += '<select class="campo-input-select" id="clasificacion-proveedor-corredor" style="width:100%">';
     htmlClasificacionCorredorProveedor += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.ClasComNet) {
+    for (ii in result.ClasComNet) {
         (function (i) {
             htmlClasificacionCorredorProveedor += '<option value="' + result.ClasComNet[i].Id + '">' + result.ClasComNet[i].Descripcion + '</option>';
         })(ii);
@@ -573,10 +573,17 @@ function armarSelects(result) {
     htmlClasificacionCorredorProveedor += '</select>';
     $(".campo-clasificacion-proveedor").append(htmlClasificacionCorredorProveedor);
 
+    var htmlConsignatarioProveedor = "";
+    htmlConsignatarioProveedor += '<input class="campo-input-text check-compranet" type="checkbox" id="consignatario-proveedor-compranet">';
+    $(".campo-consignatario-proveedor").append(htmlConsignatarioProveedor);
+
+    //se oculta/muestra el consignatario proveedor
+    $("#clasificacion-proveedor-corredor").change(function () { mostrarConsignatarioProveedor(); });
+
     var htmlBoletoCompraNet = "";
     htmlBoletoCompraNet += '<select class="campo-input-select" id="boleto-compranet">';
     htmlBoletoCompraNet += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.BoleComNet) {
+    for (ii in result.BoleComNet) {
         (function (i) {
             htmlBoletoCompraNet += '<option value="' + result.BoleComNet[i].Id + '">' + result.BoleComNet[i].Descripcion + '</option>';
         })(ii);
@@ -587,7 +594,7 @@ function armarSelects(result) {
     var htmlBolsaCompraNet = "";
     htmlBolsaCompraNet += '<select class="campo-input-select" id="bolsa-compranet">';
     htmlBolsaCompraNet += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.BolsComNet) {
+    for (ii in result.BolsComNet) {
         (function (i) {
             htmlBolsaCompraNet += '<option value="' + result.BolsComNet[i].Id + '">' + result.BolsComNet[i].Descripcion + '</option>';
         })(ii);
@@ -600,6 +607,11 @@ function armarSelects(result) {
     $(".campo-consignatario-compranet").append(htmlConsignatarioCompraNet);
     //se oculta/muestra el consignatario
     $("#clasificacion-compranet").change(function () { mostrarConsignatario(); });
+
+
+    var htmlComisionCompraNet = "";
+    htmlComisionCompraNet += '<input class="campo-input-text " type="number" id="comision-compranet" value="1">';
+    $(".campo-comision-compranet").append(htmlComisionCompraNet);
 
     $("#agregarTelefono").click(function () {
         if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
@@ -632,10 +644,10 @@ function armarSelects(result) {
                 return false;
             }
 
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
+            htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono3">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
+            for (ii in resultInit.tiptel) {
                 (function (i) {
                     htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
                 })(ii);
@@ -656,10 +668,10 @@ function armarSelects(result) {
                 return false;
             }
 
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
+            htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="TipoTelefono4">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
+            for (ii in resultInit.tiptel) {
                 (function (i) {
                     htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
                 })(ii);
@@ -712,10 +724,10 @@ function armarSelects(result) {
                 return false;
             }
 
-            var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
+            htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
             htmlTipoTelefono += '<select  class="campo-input-select" id="concom-TipoTelefono3">';
             htmlTipoTelefono += '<option value = "null">Seleccione...</option>';
-            for (var ii in resultInit.tiptel) {
+            for (ii in resultInit.tiptel) {
                 (function (i) {
                     if (result.tiptel[i].Descripcion != "Otros" && result.tiptel[i].Descripcion != "Emergencia") {
                         htmlTipoTelefono += '<option value="' + result.tiptel[i].TipoTelefonoId + '">' + result.tiptel[i].Descripcion + '</option>';
@@ -739,7 +751,7 @@ function armarSelects(result) {
 
     var htmlInteres = "";
     htmlInteres += '<select multiple class="" id="concom-intereses">';
-    for (var ii in result.inte) {
+    for (ii in result.inte) {
         (function (i) {
             htmlInteres += '<option value="' + result.inte[i].InteresId + '">' + result.inte[i].Descripcion + '</option>';
         })(ii);
@@ -750,12 +762,12 @@ function armarSelects(result) {
     var htmlCampañaObjetivo = "";
     htmlCampañaObjetivo += '<select class="campo-input-select campo-sin-span grano" id="granoObjetivo0">';
     htmlCampañaObjetivo += '<option value = "null">Seleccione...</option>';
-    for (var ii in result.gran) {
+    for (ii in result.gran) {
         (function (i) {
             htmlCampañaObjetivo += '<option value="' + result.gran[i].MaterialId + '">' + result.gran[i].Descripcion + '</option>';
         })(ii);
     }
-    htmlCampañaObjetivo += '</select>'
+    htmlCampañaObjetivo += '</select>';
     htmlCampañaObjetivo += '<select class="campo-input-select campo-sin-span grano" id="campañaObjetivo0">';
     htmlCampañaObjetivo += '<option value = "null">Seleccione...</option>';
 
@@ -781,25 +793,25 @@ function armarSelects(result) {
     $("#canopera").multiselect({
         header: false,
         selectedList: 1,
-        noneSelectedText: "Canal Operacion",
+        noneSelectedText: "Canal Operacion"
     });
 
     $("#entregaA").multiselect({
         header: false,
         selectedList: 1,
-        noneSelectedText: "Entrega A",
+        noneSelectedText: "Entrega A"
     });
 
     $("#condPrefer").multiselect({
         header: false,
         selectedList: 1,
-        noneSelectedText: "CondicionPreferente",
+        noneSelectedText: "CondicionPreferente"
     });
 
     $("#concom-intereses").multiselect({
         header: false,
         selectedList: 1,
-        noneSelectedText: "Interes",
+        noneSelectedText: "Interes"
     });
 
     $("#guardarCapProd").click(function () {
@@ -904,7 +916,7 @@ function armarSelects(result) {
                     + '<div class="granos-contenedor-has-tns">'
                     + '<b>' + (obj.granos[j].hectareas ? obj.granos[j].hectareas : "No especifica ") + "</b> Has - <b>" + (obj.granos[j].toneladas ? obj.granos[j].toneladas : "No especifica ") + "</b> TNs"
                     + '</div>'
-                    + '</div>'
+                    + '</div>';
             })(jj);
         }
 
@@ -917,7 +929,7 @@ function armarSelects(result) {
         $("#hectareas-arrendadas").prop('checked', false);
         $("#hectareas-propias").prop('checked', false);
         $("#campoid").val(0);
-        for (var i = cantGrano; i > 0; i--) {
+        for (i = cantGrano; i > 0; i--) {
             $(".linea" + i).remove();
         }
 
@@ -987,7 +999,7 @@ function armarSelects(result) {
         }
 
         obj.granosAlmacenamientoGrano = [];
-        for (var i = 0; i < (cantGranoAlmacenamientoGrano + 1); i++) {
+        for (i = 0; i < (cantGranoAlmacenamientoGrano + 1); i++) {
             if ($("#campañaAlmacenamientoGranos" + i).val() && $("#campañaAlmacenamientoGranos" + i).val() != "null") {
                 obj.granosAlmacenamientoGrano.push({
                     campañaId: $("#campañaAlmacenamientoGranos" + i).val(),
@@ -1049,7 +1061,7 @@ function armarSelects(result) {
             })(jj);
         }
 
-        for (var jj in obj.granosAlmacenamientoGrano) {
+        for (jj in obj.granosAlmacenamientoGrano) {
             (function (j) {
                 html += '<div class="granos-contenedor-grupo">'
                     + '<div class="granos-contenedor-titulo">'
@@ -1067,10 +1079,10 @@ function armarSelects(result) {
         $("#coordenadas-almacenamiento").val("");
         $("#provincia-almacenamiento").val("null");
         $("#localidad-almacenamiento").val("null");
-        for (var i = cantGranoAlmacenamiento; i > 0; i--) {
+        for (i = cantGranoAlmacenamiento; i > 0; i--) {
             $(".lineaAlmacenamiento" + i).remove();
         }
-        for (var i = cantGranoAlmacenamientoGrano; i > 0; i--) {
+        for (i = cantGranoAlmacenamientoGrano; i > 0; i--) {
             $(".lineaAlmacenamientoGranos" + i).remove();
         }
 
@@ -1316,10 +1328,10 @@ function editarAlmacenamiento(id) {
     $("#campañaAlmacenamientoGranos0").val(obj.granosAlmacenamientoGrano.length > 0 ? obj.granosAlmacenamientoGrano[0].campañaId : "null");
     $("#toneladasAlmacenamientoGrano0").val(obj.granosAlmacenamientoGrano.length > 0 ? obj.granosAlmacenamientoGrano[0].toneladasAlmacenamiento : "");
 
-    for (var i = 1; i < cantGranosAlmacenamientoGranos; i++) {
+    for (i = 1; i < cantGranosAlmacenamientoGranos; i++) {
         cantGranoAlmacenamientoGrano++;
 
-        var htmlCampañaGrano = "";
+        htmlCampañaGrano = "";
 
         htmlCampañaGrano += '<div class="lineaAlmacenamientoGranos' + i + ' campo-granos-almacenamientograno" style="position:relative;">';
         htmlCampañaGrano += '<select class="campo-input-select campo-sin-span grano" id="granoAlmacenamientoGranos' + i + '">';
@@ -1329,7 +1341,7 @@ function editarAlmacenamiento(id) {
                 htmlCampañaGrano += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
             })(ii);
         }
-        htmlCampañaGrano += '</select>'
+        htmlCampañaGrano += '</select>';
         htmlCampañaGrano += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamientoGranos' + i + '">';
         htmlCampañaGrano += '<option value = "null">Seleccione...</option>';
 
@@ -1463,7 +1475,7 @@ function armarFuncionalidades() {
     $("#contacto").click(function () {
         limpiarSelected();
         $("#contacto").addClass("whc-selected");
-        
+
         esconderForms("formulario-contacto");
 
         $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
@@ -1475,7 +1487,7 @@ function armarFuncionalidades() {
         $("#contactocomercial").addClass("whc-selected");
 
         esconderForms("formulario-contactocomercial");
-                
+
         $(".formulario-footer-guardar-contacto").html("Guardar").removeClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").show();
     });
@@ -1508,7 +1520,7 @@ function armarFuncionalidades() {
         $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").removeClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").hide();
     });
-    function limpiarSelected() {       
+    function limpiarSelected() {
         $("#contacto").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
@@ -1536,7 +1548,7 @@ function armarFuncionalidades() {
             $("#formulario-proveedorescorredor").fadeOut("slow", function () {
                 $("#" + form).fadeIn("slow");
             });
-        }    
+        }
     }
 
     $("#agregarMail").click(function () {
@@ -1562,7 +1574,7 @@ function armarFuncionalidades() {
                 return false;
             }
 
-            var div = "";
+            div = "";
             div += '<div class="formulario-campo">'
                 + '<input type="text" class="campo-input-text" id="Email3" style="margin-right:0px;" />'
                 + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail3" />'
@@ -1578,7 +1590,7 @@ function armarFuncionalidades() {
                 return false;
             }
 
-            var div = "";
+            div = "";
             div += '<div class="formulario-campo">'
                 + '<input type="text" class="campo-input-text" id="Email4" style="margin-right:0px;" />'
                 + '<img src="../Content/Images/eliminar-tel-mail.png" id="eliminarMail4" />'
@@ -1860,7 +1872,7 @@ function armarFuncionalidades() {
     });
 
     $(".formulario-footer-guardar-contacto").click(function () {
-        if($(this).hasClass("guardar-proveedor")){ 
+        if ($(this).hasClass("guardar-proveedor")) {
             if (comprobarInputs()) {
                 if (validar()) {
                     ObtenerDatos();
@@ -1869,7 +1881,7 @@ function armarFuncionalidades() {
         } else if ($(this).hasClass("guardar-corredor")) {
             DatosCorredor();
         }
-        
+
     });
 
     $("#concom-agregarMail").click(function () {
@@ -1894,7 +1906,7 @@ function armarFuncionalidades() {
                 MensErr("El segundo Email no es válido");
                 return false;
             }
-            var div = "";
+            div = "";
             div += '<div class="formulario-campo">'
                 + '<input type="text" class="campo-input-text" id="concom-email3" style="margin-right: 50px;margin-top: 5px;" />'
                 + '<img src="../Content/Images/eliminar-tel-mail.png" id="concom-eliminarMail3" />'
@@ -2239,7 +2251,7 @@ function editarContactoComercial(id) {
     var cantTelefonos = obj.telefonos.length;
     $("#concom-TipoTelefono1").val(obj.telefonos[0].tipoTelefono);
     $("#concom-Telefono1").val(obj.telefonos[0].telefono);
-    for (var i = 2; i <= cantTelefonos; i++) {
+    for (i = 2; i <= cantTelefonos; i++) {
         if (obj.telefonos[i - 1].TipoTelefono != null && obj.telefonos[i - 1].telefono) {
             if (!($("#concom-Telefono" + i + "") && $("#concom-Telefono" + i + "").length > 0)) {
                 var htmlTipoTelefono = '<div class="formulario-campo campo-tiptelefono">';
@@ -2320,6 +2332,7 @@ function ObtenerDatos() {
     obj.basicos.ProvinciaCompraNet = $("#provincia-compranet").val();
     obj.basicos.LocalidadCompraNet = $("#localidad-compranet").val();
     obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
+    obj.basicos.Comision = Number($("#comision-compranet").val().replace(',', '.'));
 
     obj.basicos.comentario = $("#comentario").val();
 
@@ -2382,13 +2395,13 @@ function ObtenerDatos() {
         obj.produccion.habilitaoSojaSust = null;
     }
     obj.almacenamiento.CamposAlmacenamiento = aGuardarAlmacenamiento;
-    for (var ii in obj.almacenamiento.CamposAlmacenamiento) {
+    for (ii in obj.almacenamiento.CamposAlmacenamiento) {
         (function (i) {
             obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult = (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader ? obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader.result : null);
         })(ii);
     }
     obj.contactocomercial = aGuardarContactoComercial;
-    
+
     GrabarProveedor(obj);
 }
 
@@ -2417,8 +2430,7 @@ function armarSelectGrano(obj) {
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
         var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
-        if (resultGrano.Errores) {
-        } else {
+        if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
                 (function (i) {
                     var esta = 0;
@@ -2447,8 +2459,7 @@ function armarSelectGranoAlmacenamiento(obj) {
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
         var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
-        if (resultGrano.Errores) {
-        } else {
+        if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
                 (function (i) {
                     var esta = 0;
@@ -2477,8 +2488,7 @@ function armarSelectGranoAlmacenamientoGrano(obj) {
     }));
     if (obj.MaterialId && obj.MaterialId !== "null") {
         var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
-        if (resultGrano.Errores) {
-        } else {
+        if (!resultGrano.Errores) {
             for (var ii in resultGrano) {
                 (function (i) {
                     var esta = 0;
@@ -2506,8 +2516,7 @@ function armarSelectGranoObjetivo(obj) {
         text: "Seleccione..."
     }));
     var resultGrano = MSExecuteOnServer('/Proveedor/TraerCampañaPorMaterial', { MaterialId: obj.MaterialId });
-    if (resultGrano.Errores) {
-    } else {
+    if (!resultGrano.Errores) {
         for (var ii in resultGrano) {
             (function (i) {
                 var esta = 0;
@@ -2706,5 +2715,15 @@ function mostrarConsignatario() {
     }
     else {
         $("#consignatarioCompraNet").show();
+    }
+}
+
+function mostrarConsignatarioProveedor() {
+    if ($("#clasificacion-proveedor-corredor").val() != 2) {
+        $("#consignatarioProveedorDiv").hide();
+        $("#consignatario-proveedor-compranet").prop("checked", false);
+    }
+    else {
+        $("#consignatarioProveedorDiv").show();
     }
 }

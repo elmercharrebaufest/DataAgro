@@ -146,6 +146,14 @@
     <Compile Include="Controllers\CentroControllerTest.cs" />
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
+    <Compile Include="Managers\ProveedorManagerTest.cs" />
+    <Compile Include="Managers\ContratoManagerTest.cs" />
+    <Compile Include="Managers\ReportesManagerTest.cs" />
+    <Compile Include="Managers\RG2300ManagerTest.cs" />
+    <Compile Include="Managers\FasonManagerTest.cs" />
+    <Compile Include="Managers\SISAManagerTest.cs" />
+    <Compile Include="Managers\RiesgoComercialManagerTest.cs" />
+    <Compile Include="Managers\TipoNegocioManagerTest.cs" />
     <Compile Include="Mock\FakeHttpContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -182,9 +190,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Managers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

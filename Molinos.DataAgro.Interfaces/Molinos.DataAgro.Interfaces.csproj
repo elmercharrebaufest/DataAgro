@@ -112,6 +112,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IComprasAgent.cs" />
+    <Compile Include="Agent\IContratosParaFijacionAgent.cs" />
+    <Compile Include="Agent\IDatoDelComercialAgent.cs" />
+    <Compile Include="Agent\IDatosProveedorAgent.cs" />
+    <Compile Include="Agent\IDiasHabilesAgent.cs" />
+    <Compile Include="Agent\IEliminarContratoAgent.cs" />
+    <Compile Include="Agent\IFinalizarContratoAgent.cs" />
+    <Compile Include="Agent\IFinalizarFijacionAgent.cs" />
+    <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
+    <Compile Include="Agent\IRiesgoComercialAgent.cs" />
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />
     <Compile Include="Managers\ICampaniaActualManager.cs" />
@@ -158,9 +168,12 @@
       <Project>{E940ADB2-18F1-436C-B24F-B18CEE04F6C0}</Project>
       <Name>Molinos.DataAgro.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
+      <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>
+      <Name>Molinos.DataAgro.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

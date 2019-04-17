@@ -1,4 +1,8 @@
-﻿body {
+﻿*{
+    font-family: "G-Open Sans-n4", Arial;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
     background-color: #f0f0f0;
@@ -34,18 +38,35 @@ li {
 }
 .logoheader-nav {
     font-size: 18px;
-    font-family: "G-Open Sans-n8", Arial;
     margin-bottom: 0;
     font-weight: 900;
     font-style: italic;
     color: white;
+}
+
+#imgLogo {
+    transition: all .2s ease-in-out;
+}
+
+    #imgLogo:hover {
+        transform: scale(1.2);
+    }
+
+.background-hover:hover {
+    background-color: #017940 !important;
+}
+
+.background-hover:focus {
+    background-color: #017940 !important;
+}
+.navbar-inverse .navbar-nav > .open > a {
+    background-color: #017940 !important;
 }
 .no-margin{
     margin:0;
 }
 .navbar-nav a span{
     font-size:16px;
-    font-family: "G-Open Sans-n4", Arial;
 }
 .miscontactos-nav,
 .miscontactos-nav-link{
@@ -114,7 +135,6 @@ li {
 
 .usuario-nav-nombre{
     font-size:13px; 
-    font-family: "G-Open Sans-n6", Arial;
 }
 
 .usuario-nav-tipo{
@@ -333,14 +353,12 @@ input::-ms-input-placeholder {
 
 .notificacion-hora{
     color:#757575;
-    font-family: "G-Open Sans-n4", Arial;
     font-size:11px;
     font-style:italic;
 }
 
 .notificacion-detalle-contacto{
     color:#424242;
-    font-family: "G-Open Sans-n4", Arial;
     font-size:12px;
     font-weight:bold;
     margin-left: 20px;
@@ -348,7 +366,6 @@ input::-ms-input-placeholder {
 
 .notificacion-detalle-titulo{
     color:#363636;
-    font-family: "G-Open Sans-n4", Arial;
     font-size:11px;
     font-style:italic;
     margin-left: 20px;
@@ -362,7 +379,6 @@ input::-ms-input-placeholder {
 }*/
 .notificacion-detalle-descripcion{
     color:#757575;
-    font-family: "G-Open Sans-n4", Arial;
     font-size:14px;
     margin-left: 20px;
     width:135px;
@@ -427,7 +443,6 @@ input::-ms-input-placeholder {
     display:inline-block;
     color:#26337b;
     font-size:13px;
-    font-family: "G-Open Sans-n4", Arial;
     font-weight:500;
     text-transform:uppercase;
 }
@@ -459,23 +474,19 @@ div div div ul li.li-contacto .float-right {
         opacity:1;
     }
 
-/*
-*::-webkit-scrollbar {
-    width: 5px;
-    height: 2px;
+.opacidad {
+    animation: opac 0.4s;
 }
-*::-webkit-scrollbar-button {
-    background: #777;
-    height:0px;
+
+@keyframes opac {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
 }
-*::-webkit-scrollbar-track-piece {
-    background: #eee;
-}
-*::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius:50px;
-}
-*/
 
 .reporte-detalle,
 .informe-detalle{
@@ -544,7 +555,6 @@ div div div ul li.li-contacto .float-right {
 
 
 ul.ui-multiselect-checkboxes.ui-helper-reset span{
-    font-family: "G-Open Sans-n4", Arial !important;
     color:#757575;
     font-size:13px;
 }
@@ -590,7 +600,6 @@ li.mis-postit.postit-mobile {
 .formulario-footer-cancelar{
     color:#26337b;
     font-size:12px;
-    font-family: "G-Open Sans-n4", Arial;
 }
 
 .modal-salir-sin-guardar:hover,
@@ -694,4 +703,8 @@ li.mis-postit.postit-mobile {
     #texto-postit {
         min-height: 200px;
     }
+}
+
+.puntero {
+    cursor: pointer;
 }

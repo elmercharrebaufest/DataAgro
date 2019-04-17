@@ -43,6 +43,10 @@ namespace WebDataAgro
                    .Where(t => t.Name.EndsWith("Manager"))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Agent"))
+                   .Where(t => t.Name.EndsWith("Agent"))
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
             builder.RegisterModule<NLogModule>();
             var container = builder.Build();
 

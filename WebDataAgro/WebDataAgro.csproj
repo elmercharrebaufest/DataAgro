@@ -325,6 +325,7 @@
     <Content Include="Content\font-awesome-4.7.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\hedge.css" />
+    <Content Include="Content\agenda.css" />
     <Content Include="Content\homeResponsive.css" />
     <Content Include="Content\Images\1estr.png" />
     <Content Include="Content\Images\2estr.png" />
@@ -2408,6 +2409,7 @@
     <Content Include="Views\Diferencial\Index.cshtml" />
     <Content Include="Views\Diferencial\_AbmDiferencial.cshtml" />
     <Content Include="Views\ContratoAcuerdo\Index.cshtml" />
+    <Content Include="Views\CompraNet\_ModalModificarVarios.cshtml" />
     <Content Include="Views\CompraNet\ModalAperturaPrecio.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -2425,6 +2427,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Molinos.DataAgro.Agent\Molinos.DataAgro.Agent.csproj">
+      <Project>{fe1ca20e-e24a-4781-be45-390fa7185581}</Project>
+      <Name>Molinos.DataAgro.Agent</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Molinos.DataAgro.Business\Molinos.DataAgro.Business.csproj">
       <Project>{93eb5467-f12e-4953-a02d-c250757eed29}</Project>
       <Name>Molinos.DataAgro.Business</Name>

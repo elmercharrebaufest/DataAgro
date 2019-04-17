@@ -67,20 +67,20 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="~/Home" id="logo">
-                    <span class="logoheader-nav "><img src="~/Content/Images/agro2.png" alt="DataAgro" style="height:50px" /></span>
+                    <span class="logoheader-nav "><img src="~/Content/Images/agro2.png" id="imgLogo" alt="DataAgro" style="height:50px" /></span>
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav left">
-                    <li class="mis-contactos-li">
-                        <a href="~/Home" class="nav-no-padding">
+                    <li class="mis-contactos">
+                        <a href="~/Home" class="nav-no-padding background-hover">
                             <span> Mis Contactos</span>
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
-                        <ul class="dropdown-menu" id="reportes">
+                        <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
+                        <ul class="dropdown-menu opacidad" id="reportes">
                             <li>
                                 <a href="/Cubproveedores" class="nav-link misreporteslink">
                                     <i class="icon-bar-chart font-color"></i> Reporte Dinámico
@@ -126,12 +126,9 @@
                     <li class="buscar-mobile">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </li>
-                    @*<li class="mis-postit postit-mobile">
-                            <img src="~/Content/Images/postit.png" style="width:16px;" />
-                        </li>*@
-                    <li class="dropdown ">
-                        <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
-                        <ul class="dropdown-menu" id="informes">
+                    <li class="dropdown">
+                        <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
+                        <ul class="dropdown-menu opacidad" id="informes">
 
                             @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                             {
@@ -159,9 +156,9 @@
 
                     @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
                     {
-                        <li class="dropdown ">
-                            <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
-                            <ul class="dropdown-menu" id="tablas">
+                        <li class="dropdown">
+                            <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
+                            <ul class="dropdown-menu opacidad" id="tablas">
 
                                 @if (global_asax.GlobalVariables.EsAdministrador)
                                 {
@@ -223,30 +220,30 @@
                         </li>
                     }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-                    {                       
-                            <li class="dropdown ">
-                                <a onclick="return false" id="negocios-a" class="dropdown-toggle nav-text4 padding-left nav-no-padding" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
-                                <ul class="dropdown-menu" id="negocios">
+                    {
+                        <li class="dropdown">
+                            <a onclick="return false" id="negocios-a" class="dropdown-toggle nav-text4 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
+                            <ul class="dropdown-menu opacidad" id="negocios">
+                                <li>
+                                    <a href="/CompraNet" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Negocios
+                                    </a>
+                                </li>
+                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                {
                                     <li>
-                                        <a href="/CompraNet" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Negocios
+                                        <a href="/Hedge" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Otros Negocios
                                         </a>
                                     </li>
-                                    @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
-                                    {
-                                        <li>
-                                            <a href="/Hedge" class="nav-link misreporteslink">
-                                                <i class="icon-bar-chart"></i> Otros Negocios
-                                            </a>
-                                        </li>
-                                    }
-                                    <li>
-                                        <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Contrato Acuerdo
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>                        
+                                }
+                                <li>
+                                    <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Contrato Acuerdo
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     }
                 </ul>
                 <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">

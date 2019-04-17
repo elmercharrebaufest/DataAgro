@@ -456,6 +456,16 @@ label {
     opacity: 0.2;
     background: none !important;
     text-indent: 0;
+ 
+}
+
+.modal .modal-header .cerrar {
+    margin-top: 0.8rem !important;
+    margin-right: 0.5rem;
+}
+.blancoCerrarModalFinalizar{
+    color:white!important;
+    opacity: 1 !important;
 }
 
 .panelflotante {
@@ -494,7 +504,7 @@ textarea.k-textbox {
 
 #gridInformeCompraNet {
     font-size: 12px;
-    zoom: 90%
+    overflow-x:scroll;
 }
 
 .modal-dialog-pendiente {
@@ -607,57 +617,9 @@ body {
     }
 }
 
-
-
-@media (max-width: 1220px) {
-    .k-header[data-field*="Campania"],
-    .k-header[data-field*="Negocio"],
-    .mobile-md {
-        display: none;
-    }
-}
-
 @media (max-width: 1023px) {
-    .k-header[data-field*="Ampliaciones"],
-    .k-header[data-field*="FechaDesde"],
-    .k-header[data-field*="FechaHasta"],
-    .k-header[data-field*="TipoNegocio"],
-    .k-header[data-field*="GrupoCompraDescripcion"],
-    .k-header[data-field*="DestinoDescripcion"],
-    .mobile-sm {
-        display: none;
-    }
-
     .k-filter-row th, .k-grid-header th.k-header {
         padding: .5em .6em 0em .0em;
-    }
-
-    #border-orange {
-        border-bottom: none;
-    }
-
-    #border-green {
-        border-bottom: none;
-    }
-
-    #border-blue {
-        border-bottom: none;
-    }
-
-    #border-red {
-        border-bottom: none;
-    }
-
-    #border-black {
-        border-bottom: none;
-    }
-
-    #border-grey {
-        border-bottom: none;
-    }
-
-    #gridInformeCompraNet {
-        display: inherit;
     }
 }
 
@@ -669,24 +631,6 @@ body {
     .k-header[data-field*="PrecioPlazo"],
     .mobile-precioPlazo {
         display: table-cell !important;
-    }
-
-    .k-header[data-field*="Precio"],
-    .mobile-precio {
-        display: none;
-    }
-}
-
-@media(max-width: 500px) {
-    .k-header[data-field*="Material"],
-    .k-header[data-field*="Cantidad"],
-    .k-header[data-field*="Fecha"],
-    .k-header[data-field*="Precio"],
-    .k-header[data-field*="Comercial"],
-    .k-header[data-field*="GrupoCompraDescripcion"],
-    .k-header[data-field*="DestinoDescripcion"],
-    .mobile-xs {
-        display: none;
     }
 }
 
@@ -817,20 +761,20 @@ body {
     float: right;
 }
 
-#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv {
+#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv, #modificarVariosDiv {
     border: 1px solid #848484;
     border-radius: 5px !important;
     background: white;
     text-align: center;
-    margin: 10px;
+    margin: 0 0 15px 0;
     cursor: pointer;
 }
 
-    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span {
+    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span {
         vertical-align: middle;
     }
 
-    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover {
+    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover {
         background: #ccc;
         border: 1px solid #017940;
     }
@@ -926,7 +870,7 @@ body {
 
 #gridIni {
     font-size: 12px;
-    zoom: 90%
+    zoom: 90%;
 }
 
 .floatDerecha {
@@ -935,7 +879,6 @@ body {
 
 #inputZona {
     text-align: center;
-    margin: 11.5px 15px 15px 15px;
 }
 
 .contenedor-contratoAcuerdo {
@@ -972,6 +915,113 @@ body {
 #tablaApertura td {
     position: relative;
 }
+
+    #tablaApertura td input {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        border: none;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    #tablaApertura td span {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        border: none;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+.fuente600 {
+    font-weight: 600;
+}
+
+.alinear-derecha {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.w30 {
+    width: 30%;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.w70 {
+    width: 70%;
+}
+
+#modalVisualizar .dobleColumna {
+    color: #787878;
+    border-color: #dbdbdb;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none !important;
+    text-align: right;
+    padding: 3px 5px;
+    color: #333 !important;
+    border-bottom: 0px;
+    border-right: 0px;
+}
+
+    #modalVisualizar .dobleColumna span {
+        margin: 0 10px;
+    }
+
+#modalVisualizar .dobleColumna {
+    text-align: left;
+}
+
+#modalVisualizar .bordeSeccionVisualizar {
+    border: 1px solid #dbdbdb;
+}
+
+.pointerEventDesabilitado {
+    pointer-events: none;
+}
+
+.modal-superior {
+    z-index: 1250;
+}
+
+.modal-inferior {
+    z-index: 1050;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+
+
+    .aperturaPrecioInput {
+        display: block;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        width: 100%;
+    }
+
+    .aperturaPrecioTd {
+        margin: 0;
+        padding: 0 !important;
+    }
+
+    #tablaApertura td {
+        position: relative;
+    }
 
     #tablaApertura td input {
         position: absolute;
