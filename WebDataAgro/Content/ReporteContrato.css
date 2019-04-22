@@ -38,3 +38,7 @@ div > label {
 .k-filter-menu .k-button {
     width: auto!important;
 }
+
+.resultado{
+    overflow-x:scroll;
+}

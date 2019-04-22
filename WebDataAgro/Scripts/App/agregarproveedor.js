@@ -184,7 +184,7 @@ function buscarLocalidadCompraNet(val) {
     var result = MSExecuteOnServer('/Proveedor/TraerLocalidad', data);
     $(".campo-localidad-compranet").empty();
     var buscarLocalidadCompraNet = "";
-    buscarLocalidadCompraNet += '<span class="campo-span">Localidad CompraNet</span> <select  class="campo-input-select" id="localidad-compranet">';
+    buscarLocalidadCompraNet += '<span class="campo-span">Localidad</span> <select  class="campo-input-select" id="localidad-compranet">';
     buscarLocalidadCompraNet += '<option value = "null">Seleccione...</option>';
     for (var ii in result) {
         (function (i) {

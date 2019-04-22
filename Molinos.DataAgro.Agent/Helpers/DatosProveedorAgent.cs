@@ -33,21 +33,27 @@ namespace Molinos.DataAgro.Agent
             {
                 var CUIT = new List<String>();
                 List<ZMPES5150> valor = new List<ZMPES5150>();
-
+                var users = new List<string>();
                 foreach (var item in datos)
                 {
-                    ZMPES5150 us = new ZMPES5150();
-                    us.USUARIO = item.UsuarioDirectory;
-                    valor.Add(us);
+                    if (!users.Contains(item.UsuarioDirectory))
+                    {
+                        users.Add(item.UsuarioDirectory);
+                    }        
                     CUIT.Add(item.CUIT);
                 }
-
+                foreach(var user in users)
+                {
+                    ZMPES5150 us = new ZMPES5150();
+                    us.USUARIO = user;
+                    valor.Add(us);
+                }
                 SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient agent = new SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORClient();
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
 
                 agent.ClientCredentials.UserName.Password = PassSap;
-
+                valor = valor.Distinct().ToList();
                 var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray() , IM_USUARIO = valor.ToArray() };
                 logger.Debug(rq.ToXml());
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR(rq);
