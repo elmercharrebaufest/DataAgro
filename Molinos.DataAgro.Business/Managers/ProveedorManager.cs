@@ -1370,8 +1370,15 @@ namespace Molinos.DataAgro.Business.Managers
                 if (ConfigurationManager.AppSettings["SinConexionSap"].ToString() != "1")
                 {
                     //var listaDeCuit = repositorio.SelStore<Datos>("DataAgro_ActualizarComercialHome", 0, comercial.ComercialId).Where(x => x.CUIT == oParam.basicos.cuit).ToList();
-                    var listaDeCuit = repositorio.ListarConsulta(new ActualizarComercialHome(equipo, comercialId));
-                   
+                    
+                    var cuit = repositorio.Obtener<Proveedor, string>(x=>x.CUIT == oParam.basicos.cuit, x=>x.CUIT);
+                    List<string> comerciales = repositorio.Listar<Comercial,string>(y => y.IdActiveDirectory, y => equipo.Contains(y.ComercialId));
+                    var listaDeCuit = new List<Datos>();
+                    foreach(var com in comerciales)
+                    {
+                        listaDeCuit.Add(new Datos { CUIT= cuit, UsuarioDirectory = com});
+                    }
+                    
                     var list = oDatosProveedorAgent.ObtenerDatosDeProveedor(listaDeCuit);
 
                     if (list.Count > 0)
