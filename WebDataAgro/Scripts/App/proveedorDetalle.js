@@ -4,6 +4,7 @@ var produccionCampoGuardar = [];
 var resultDatos = {};
 var grupoacopio = {};
 var grupocampoacopio = {};
+var campaniaSeleccionada;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -20,6 +21,18 @@ $(document).ready(function () {
     $("#ExportarPdf").click(function () {
         ExportarPdf();
     });
+
+    $(window).resize(function () {
+        if ($("#campaña").val() && $("#campaña").val() !== "null") {
+            if ($("#campaña").val() != "-1") {
+                inicializarGrafico(val[$("#campaña").val()], $("#campaña").val());
+            } else {
+                
+                inicializarGrafico(campaniaSeleccionada);
+            }
+        }
+    });
+
 });
 
 function createChart(val) {
@@ -414,7 +427,7 @@ function armarContacto() {
     var objetivos = result.ObjetivosTraerPorProveedorId;
     var acopiomaterial = result.AcopioMaterialPorProveedores;
     armarSelectHeader(historial);
-    
+
     $(".detalle-contacto-header-estado-span").html(basico[0].Estado);
     var estrellas = "";
     for (var i = 0; i < basico[0].Calificacion; i++) {
@@ -631,7 +644,7 @@ function armarContacto() {
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-mails">' +
                     (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ") : "") +
-                    (comerciales[i].CompraNet == true ? " &#10004;" : "" ) + 
+                    (comerciales[i].CompraNet == true ? " &#10004;" : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-extras">' +
                     '<div class="row">' +
@@ -1374,7 +1387,7 @@ function armarEstilosyFuncionesDetalle() {
     });
     $("#proveedoresCorredor").click(function () {
         $("#proveedoresCorredor").removeClass("whc-selected");
-        $("#contacto").removeClass("whc-selected");        
+        $("#contacto").removeClass("whc-selected");
         $("#proveedoresCorredor").addClass("whc-selected");
         if ($("#datos-contacto").is(":visible")) {
             $("#datos-contacto").fadeOut("slow", function () {
@@ -2622,6 +2635,7 @@ function actualizarCampaña(val) {
                 if ($("#campaña").val() != "-1") {
                     inicializarGrafico(val[$("#campaña").val()], $("#campaña").val());
                 } else {
+                    campaniaSeleccionada = val;
                     inicializarGrafico(val);
                 }
             }
@@ -2664,3 +2678,4 @@ function ExportarPdf() {
         }
     }
 }
+

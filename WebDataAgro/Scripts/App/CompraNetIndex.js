@@ -119,7 +119,10 @@ function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
 }
-
+function FormatearString(string, moneda) {
+    var numero = (parseFloat(string)).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ' ' + moneda;
+    return numero;
+}
 function botonPendiente(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
         "'" + dataItem.Id + "'" + ',' +
@@ -481,13 +484,14 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Precio", type: "number", width: 80,
-                template: function (dataItem) {
-                    return kendo.toString(dataItem.Precio, "n2") + " " + dataItem.Moneda;
-                },
-                attributes: { "class": "mobile-xs mobile-precio" }
+                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, filterable: false, sortable: false, template: function (dataItem) {
+                    if (dataItem.TipoNegocioId !== 1) {
+                        return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
+                    } else {
+                        return dataItem.PrecioPlazo;
+                    }
+                }
             },
-            { field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, hidden: true, filterable: false, sortable: false, attributes: { "class": "mobile-precioPlazo" } },
             { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
                 field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
