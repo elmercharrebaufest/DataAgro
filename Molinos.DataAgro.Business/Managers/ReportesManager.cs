@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Business.Managers
             //var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
             //Datos.come = query.Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
             var equipo = oComercial.ListarEquipo(idActiveDirectory).EquipoReal;
-            equipo.ForEach(x => Datos.come.Add(repositorio.Obtener<Comercial, ComercialQry>(y => y.ComercialId == x, y => new ComercialQry { ComercialId = x, Nombre = y.Apellido + ' ' + y.Nombres })));
+            equipo.ForEach(x => Datos.come.Add(repositorio.Obtener<Comercial, ComercialQry>(y => y.ComercialId == x, y => new ComercialQry { ComercialId = x, Nombre = y.Apellido + " " + y.Nombres })));
 
             Datos.mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry
             {
@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.SelStore<ResultProduccionMapaReportes>("DataAgro_IndicadoresExportacionMapaProductiva", 0, oParamReportes.Provincia, oParamReportes.Segmentacion, oParamReportes.Grano, oParamReportes.Cosecha, oParamReportes.Comercial, oParamReportes.ComercialActual);
         }
         #endregion
-               
+
         #region Barras
         public List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes)
         {
@@ -598,7 +598,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Mes = x.Key.Mes,
                             Kilos = x.Sum(y => Math.Ceiling(y.Kilos / 1000)),
                             PrecioPonderado = x.Sum(y => y.PrecioPonderado / (decimal)x.Sum(f => f.Kilos))
-                            }).ToList();
+                        }).ToList();
             return posicionKilos;
         }
         private List<DetalleContratoDto> TraerDetallePosicion(int materialId, int mes, int anio, DateTime fechaDesdeFiltro, DateTime fechaHastaFiltro, bool? calidad, int centroId = 0)
@@ -642,7 +642,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
-                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString(): x.Precio.ToString()
+                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)

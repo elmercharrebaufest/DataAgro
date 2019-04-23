@@ -518,20 +518,38 @@ namespace Molinos.DataAgro.Business.Managers
                     ContratoId = fijac.ContratoSAP.ToString(),
                     KilosAplicados = cantidad.ToString(),
                     KilosPendiente = fijac.Contrato != null ? ((double?)fijac.Contrato.Cantidad - cantidad).ToString() : "0",
-                    FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                    FechaDesde = fijac.Contrato.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.DesdeFijacion).Trim() + "/" +
+                                           SqlFunctions.StringConvert((double)fijac.Contrato.DesdeFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",
-                    FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "-" +
+                    FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "/" +
+                                           SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : ""
                 }
             });
+            contrato.DatosFijacion = FechaString(contrato.DatosFijacion);
             contrato.DatosFijacion.KilosAplicados = (double.Parse(contrato.DatosFijacion.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
             return contrato;
         }
-
+        private DatosFijacionDeContratoDto FechaString(DatosFijacionDeContratoDto datos)
+        {
+            datos.FechaDesde = FechaConCeros(datos.FechaDesde.Split('/'));
+            datos.FechaHasta = FechaConCeros(datos.FechaHasta.Split('/'));
+            return datos;
+        }
+        private string FechaConCeros(string[] numero)
+        {
+            for (var i = 0; i < 2; i++)
+            {
+                if (int.Parse(numero[i]) < 10)
+                {
+                    numero[i] = '0' + numero[i];
+                }
+            }
+            var fecha = numero[0] + '/' + numero[1] + '/' + numero[2];
+            return fecha;
+        }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro)
         {
             var contratos = oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);

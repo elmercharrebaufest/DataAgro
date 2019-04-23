@@ -29,7 +29,7 @@ var DescargarElementos = function () {
         Cuit: $("#txtcuit").val(),
         MaterialID: $("#txtgrano").val(),
         EstadoId: $("#txtestado").val()
-    }
+    };
 
     var funcReturn = function (data) {
         if (data != null) {
@@ -48,15 +48,15 @@ var DescargarElementos = function () {
             MensErr("No se encontraron resultados para los filtros elegidos.");
             return false;
         }
-    }
+    };
 
     MSExecuteOnServerAsync('/InformeComercial/GenerarExcelIA', obj, funcReturn, true);
-}
+};
 
 function cargarCombos() {
     function funcReturn(datos) {
         if (datos.come.length > 1) {
-            var comercial = $("#txtcomercial")
+            var comercial = $("#txtcomercial");
             comercial.empty();
             $("<option>").text('- Elegir').val('null').appendTo(comercial);
             for (var ii in datos.come) {
@@ -71,7 +71,7 @@ function cargarCombos() {
         var granos = $("#txtgrano");
         granos.empty();
         $("<option>").text('- Elegir').val('null').appendTo(granos);
-        for (var ii in datos.mat) {
+        for (ii in datos.mat) {
             (function (i) {
                 $("<option>").text(datos.mat[i].Descripcion).val("" + datos.mat[i].MaterialId).appendTo(granos);
             })(ii);
@@ -81,7 +81,7 @@ function cargarCombos() {
         estados.empty();
         $("<option>").text('- Elegir').val('null').appendTo(estados);
         $("<option>").text('Pendiente de Generación').val('-1').appendTo(estados);
-        for (var ii in datos.estic) {
+        for (ii in datos.estic) {
             (function (i) {
                 $("<option>").text(datos.estic[i].Descripcion).val("" + datos.estic[i].EstadoInformeId).appendTo(estados);
             })(ii);
@@ -161,7 +161,7 @@ function CreateGridReporte() {
                     gte: "Después o igual a",
                     gt: "Después",
                     lte: "Antes o igual a",
-                    lt: "Antes",
+                    lt: "Antes"
                 },
                 number: {
                     eq: "Igual a",
@@ -184,7 +184,7 @@ function filtrar() {
         Cuit: $("#txtcuit").val(),
         MaterialID: $("#txtgrano").val(),
         EstadoId: $("#txtestado").val()
-    }
+    };
 
     function funcReturn(datos) {
         var grid = $("#grilla-informes").data("kendoGrid");

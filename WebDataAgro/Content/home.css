@@ -335,10 +335,8 @@ contenedor-principal-miscontactos-grupo{
 }
 
 
-.lista-contacto-no-operable {
-    position: absolute;
-    right: 30px;
-    top: 45px;
+.lista-contacto-no-operable {    
+    float:right;
     background-color: rgb(247, 247, 247);
     border-color: rgb(235, 235, 235);
     border-width: 1px;

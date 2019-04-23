@@ -98,6 +98,7 @@ function InicializarElementos() {
     $(".datos-descuentos").hide();
 
     $("#buscadorProveedor").click(function () {
+        SetearComisionCorredor();
         $("#buscadorProveedor").data("kendoAutoComplete").value("");
         $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
     });
@@ -164,8 +165,7 @@ function InicializarElementos() {
                 }
             }
 
-
-            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje ? Number(compraNet.ComisionPorcentaje) : 0);
+            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 
         },
@@ -200,6 +200,7 @@ function InicializarElementos() {
 
 
     $("#buscadorCorredor").click(function () {
+        SetearComisionCorredor();
         $("#buscadorCorredor").data("kendoAutoComplete").value("");
         $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
     });
@@ -1907,7 +1908,7 @@ function ObtenerDatos() {
     } else {
         if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 4 || $("#calidadesEspecialesId").data("kendoDropDownList").value() == 5) {
             var err = [];
-            if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId==2)) {
+            if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
                 err = AgregarCalidades();
             } else if ($("#valorEspecialesId").val() != "") {
                 LimpiarCalidades();
@@ -2064,14 +2065,14 @@ function AgregarCalidades() {
         && $("#porcentajeDesdeId").val() === ""
         && $("#porcentajeHastaId").val() === "") {
         var cal = ValorDeCalidad($("#calidadesEspecialesId").data("kendoDropDownList").value());
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 2 && (cal==undefined || cal.CalidadEspecialId != "2")) {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").value() == 2 && (cal == undefined || cal.CalidadEspecialId != "2")) {
             var cal1 = {
                 Id: 0,
                 CalidadEspecialDesc: "Granos verdes",
                 CalidadEspecialId: 2,
                 Valor: "0",
                 PorcentajeDesde: "0",
-                PorcentajeHasta: "5",
+                PorcentajeHasta: "20",
                 StandardDeCalidadId: 2,
                 Borrar: function () {
                     viewModel.Calidades.remove(this);
@@ -2083,7 +2084,7 @@ function AgregarCalidades() {
                 CalidadEspecialDesc: "Granos verdes",
                 CalidadEspecialId: 2,
                 Valor: "0,2",
-                PorcentajeDesde: "5,1",
+                PorcentajeDesde: "20,1",
                 PorcentajeHasta: "100",
                 StandardDeCalidadId: 2,
                 Borrar: function () {
@@ -2112,7 +2113,7 @@ function AgregarCalidades() {
                 CalidadEspecialId: 1,
                 Valor: "1",
                 PorcentajeDesde: "5,1",
-                PorcentajeHasta: "100",
+                PorcentajeHasta: "51",
                 StandardDeCalidadId: 2,
                 Borrar: function () {
                     viewModel.Calidades.remove(this);
@@ -2729,4 +2730,10 @@ function SetearValoresMaximosApertura() {
 function InicializarEditarContratoApertura() {
     SetearValoresMaximosApertura();
     CalcularPrecioTotalApertura();
+}
+
+function SetearComisionCorredor() {
+    $("#aperturaPrecioPorcentajeComisionesId").val(0);
+    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 }

@@ -5,22 +5,7 @@ var htmlaux = "";
 var filtro = {};
 var pagina = 1;
 
-var mostrarTooltip = function (el) {
-    $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
-    $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
-};
-var ocultarTooltip = function (el) {
-    $(el).parent().find($(".lista-contacto-no-operable-tooltip")).hide();
-    $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).hide();
-};
 
-var mostrarTooltipClick = function (el) {
-    if ($(el).parent().find($(".lista-contacto-no-operable-tooltip")).is(":visible")) {
-    } else {
-        $(el).parent().find($(".lista-contacto-no-operable-tooltip")).show();
-        $(el).parent().find($(".lista-contacto-no-operable-tooltip-arrow")).show();
-    }
-}
 
 var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
@@ -37,8 +22,19 @@ $(document).ready(function () {
     $(".navbarsegundo-bread").html("Inicio");
     $("#GuardarCambios").hide();
     armarCarouselHome();
+    $('[data-toggle="tooltip"]').tooltip();
+    
 });
-
+function MostrarTooltip(e) {
+    $(e + '[data-toggle="tooltip"]').click(function () {
+        $(e +"[data-toggle='tooltip']").on('shown.bs.tooltip', function () {
+            $(e + '[data-toggle="tooltip"]').tooltip("hide");
+        });
+        $(e +"[data-toggle='tooltip']").on('hidden.bs.tooltip', function () {
+            $(e + '[data-toggle="tooltip"]').tooltip("show");
+        });
+    });
+}
 function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
 
@@ -392,8 +388,7 @@ function ArmarContactos(contactos) {
             for (var j = 0; j < contactos[i].Calificacion; j++) {
                 var url = MSGetUrl("/Content/Images/estrellacalificacion.png");
                 htmlaux += '<img src="..' + url + '" />';
-            }
-            
+            }            
             var url2 = MSGetUrl("/Content/Images/listcont.png");
 
             var telefonos = (contactos[i].Telefono ? contactos[i].Telefono : "Ninguno");
@@ -422,8 +417,16 @@ function ArmarContactos(contactos) {
                 mailaux = "Ninguno";
             }
 
-            htmlaux += "</span>"
-                + '</div>'
+            htmlaux += "</span>";
+            if (contactos[i].NoOperable) {
+                var url3 = MSGetUrl("/Content/Images/no-operable.png");
+                htmlaux += '<div class="lista-contacto-no-operable"' +
+                    'data-toggle="tooltip" title="' + contactos[i].TooltipNoOperable + '" click="MostrarTooltip(this)">'
+                    + '<img class="img-contacto-no-operable" src="..' + url3 + '" />'
+                    + '<span class="span-contacto-no-operable">No operable</span>'
+                    + '</div>';
+            }
+            htmlaux += '</div>'
                 + '<div class="lista-contactos-datos">'
                 + '<div>'
                 + '<img class="img-contactos-datos" src="..' + url2 + '" />'
@@ -444,17 +447,7 @@ function ArmarContactos(contactos) {
                 + '<span><em><b>Último Contacto</b> ' + contactos[i].UltimoContacto + '</em></span>'
                 + '</div>'
                 + '</div>';
-            if (contactos[i].NoOperable) {
-                var url3 = MSGetUrl("/Content/Images/no-operable.png");
-                htmlaux += '<div class="lista-contacto-no-operable" onmouseclick="mostrarTooltipClick(this)" onclick="mostrarTooltipClick(this)" onmouseover="mostrarTooltip(this)" onmouseout="ocultarTooltip(this)">'
-                    + '<img class="img-contacto-no-operable" src="..' + url3 + '" />'
-                    + '<span class="span-contacto-no-operable">No operable</span>'
-                    + '</div>'
-                    + '<div class="lista-contacto-no-operable-tooltip">'
-                    + '<span class="span-contacto-no-operable-tooltip">' + contactos[i].TooltipNoOperable + '</span>'
-                    + '</div>'
-                    + '<div class="lista-contacto-no-operable-tooltip-arrow"></div>'
-            }
+            
             htmlaux += '</div></a>';
         })(ii);
     }

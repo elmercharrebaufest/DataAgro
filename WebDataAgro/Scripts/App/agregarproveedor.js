@@ -610,9 +610,26 @@ function armarSelects(result) {
 
 
     var htmlComisionCompraNet = "";
-    htmlComisionCompraNet += '<input class="campo-input-text " type="number" id="comision-compranet" value="1">';
+    htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet" value="1" max="100">';
     $(".campo-comision-compranet").append(htmlComisionCompraNet);
 
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                }
+            });
+        };
+    }(jQuery));
+    $("#comision-compranet").inputFilter(function (value) {
+        return /^-?\d*[.,]?\d{0,2}$/.test(value) && (value === "" || parseFloat(value.replace(',', '.')) <= 100);
+    });
     $("#agregarTelefono").click(function () {
         if (!($("#Telefono2") && $("#Telefono2").length > 0)) {
             if (!validateNumber($("#Telefono1").val())) {
