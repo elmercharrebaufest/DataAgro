@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from p in rgs.DefaultIfEmpty()
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
-                            where equipo.Contains(p.ComercialId) && ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
+                            where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
                             (corredor.Equals(false) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
                             : (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7)))
