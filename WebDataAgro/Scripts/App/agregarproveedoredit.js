@@ -116,7 +116,7 @@ function armarBasico(basico) {
     if (basico.Comision) {
         $("#comision-compranet").val(basico.Comision);
     } else {
-        $("#comision-compranet").val(1);
+        $("#comision-compranet").val("");
     }
 }
 

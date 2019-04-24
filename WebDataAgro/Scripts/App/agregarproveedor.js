@@ -610,7 +610,7 @@ function armarSelects(result) {
 
 
     var htmlComisionCompraNet = "";
-    htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet" value="1" max="100">';
+    htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet">';
     $(".campo-comision-compranet").append(htmlComisionCompraNet);
 
     (function ($) {
