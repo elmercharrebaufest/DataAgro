@@ -146,6 +146,7 @@
     <Compile Include="Controllers\CentroControllerTest.cs" />
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
+    <Compile Include="Managers\FijacionDePrecioContratoManagerTest.cs" />
     <Compile Include="Managers\ProveedorManagerTest.cs" />
     <Compile Include="Managers\ContratoManagerTest.cs" />
     <Compile Include="Managers\ReportesManagerTest.cs" />

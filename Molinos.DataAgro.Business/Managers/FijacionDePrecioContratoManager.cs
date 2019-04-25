@@ -18,8 +18,8 @@ namespace Molinos.DataAgro.Business.Managers
     public class FijacionDePrecioContratoManager : IFijacionDePrecioContratoManager
     {
         private readonly IRepositorio repositorio;
-        private IProveedorManager mobjProveedorManager;
-        private IComercialManager mobjComercialManager;
+        private readonly IProveedorManager mobjProveedorManager;
+        private readonly IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
         private readonly IFinalizarFijacionAgent oFinalizarFijacionAgent;
         private readonly IContratosParaFijacionAgent oContratosParaFijacionAgent;
@@ -526,9 +526,12 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : ""
                 }
             });
-            contrato.DatosFijacion = FechaString(contrato.DatosFijacion);
-            contrato.DatosFijacion.KilosAplicados = (double.Parse(contrato.DatosFijacion.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-            contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+            if (contrato.ContratoId!=0)
+            {
+                contrato.DatosFijacion = FechaString(contrato.DatosFijacion);           
+                contrato.DatosFijacion.KilosAplicados = (double.Parse(contrato.DatosFijacion.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+            }
             contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
             return contrato;
         }
