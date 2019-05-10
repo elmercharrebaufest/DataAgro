@@ -57,11 +57,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
                         IM_MATERIAL = fijacion.Material.Codigo,
                         IM_KILOS = (decimal)fijacion.Cantidad,
-                        IM_PRECIO = fijacion.PrecioNeto ?? fijacion.Precio,
-                        IM_MONEDA = fijacion.MonedaId.TrimEnd(),
+                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.PrecioNeto ?? fijacion.Precio : 0 : 0,
+                        IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
-                        IM_APERTURA = listaApertura.ToArray()
+                        IM_APERTURA = listaApertura.ToArray(),
+                        IM_PAGO_DIF_ARP = fijacion.DiasPesificado.HasValue ? "X" : "",
+                        IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue? fijacion.DiasPesificado.Value.ToString():""
                     };
 
                     logger.Debug(rq.ToXml());

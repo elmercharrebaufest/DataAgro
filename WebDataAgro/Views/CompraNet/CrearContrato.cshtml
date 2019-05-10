@@ -311,7 +311,7 @@
 
         </div>
 
-        <div class="col-xs-10 col-sm-5 noFason noAgente ampliar">
+        <div class="col-xs-10 col-sm-5 noFason noAgente ampliar ampliar-fijacion">
 
             <span id="baseDiv" style="display:inline-block">
                 <label id="lblBase">Base</label>
@@ -321,11 +321,22 @@
                 <label id="lblPizarra">Pizarra</label>
                 <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
             </span>
+
+            <div id="pagoDiferidoFijacionDiv" class="pagoFijacion" hidden>
+                    <label style="width:100px">Pago diferido</label>
+                    <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
+                    <div id="diasDiferidoFijacionDiv" class="pagoFijacion" hidden>
+                        <input id="diasDiferidoFijacionId" placeholder="Días" />
+                    </div>
+            </div>
+
             <div id="pagoDirectoDiv" hidden style="float:right;">
                 <label>Pago dir. Vend.</label>
                 <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                 <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
+
         </div>
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>

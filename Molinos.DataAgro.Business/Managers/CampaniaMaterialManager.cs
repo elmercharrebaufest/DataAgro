@@ -111,7 +111,7 @@ namespace Molinos.DataAgro.Business
         }
 
 
-        public void GuardarMes(int CampañaMaterialId, string Mes, double Toneladas, int Año, int ComercialId)
+        private void GuardarMes(int CampañaMaterialId, string Mes, double Toneladas, int Año, int ComercialId)
         {
             int MesId = DevolverIdMes(Mes);
             var oCampañaMaterialPorMesSave = repositorio.Obtener<CampañaMaterialPorMes>(x => x.CampañaMaterialId == CampañaMaterialId
@@ -135,7 +135,7 @@ namespace Molinos.DataAgro.Business
             }
         }
 
-        public CampañaMaterial ObtenerCampañaIdMaterial(int? proveedorId, int? MaterialId, int? CampañaId, double? total, string Mes, int Año)
+        private CampañaMaterial ObtenerCampañaIdMaterial(int? proveedorId, int? MaterialId, int? CampañaId, double? total, string Mes, int Año)
         {
             int MesId = DevolverIdMes(Mes);
             
@@ -166,7 +166,6 @@ namespace Molinos.DataAgro.Business
         {
             switch (mES.ToLower())
             {
-
                 case "enero":
                     return 1;
                 case "febrero":

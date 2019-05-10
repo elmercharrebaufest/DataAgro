@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port7" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
+    <endpoint name="HTTP_Port7" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
@@ -306,7 +306,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port5" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding1">
+    <endpoint name="HTTPS_Port5" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>

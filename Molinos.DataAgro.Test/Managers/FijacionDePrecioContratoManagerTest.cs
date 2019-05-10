@@ -313,7 +313,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = null,
                 ComercialId = 0,
                 ContratoSAP = "",
-                CampanaId = 0
+                CampanaId = 0,               
             };
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))

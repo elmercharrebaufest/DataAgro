@@ -139,7 +139,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("FechaDesde", "El campo Fecha Desde no puede estar vacío");
             }
-
+            if (oRango.MaterialId == 0)
+            {
+                oEntityErrors.Error("Material", "El campo Material no puede estar vacío");
+            }
             var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
             if (rangosExistentes.Exists(x => x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId && x.FechaDesde == oRango.FechaDesde))
             {

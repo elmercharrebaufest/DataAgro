@@ -160,6 +160,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION.wsdl" />
+    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION1.wsdl" />
     <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -188,6 +189,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION.wsdl" />
+    <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION11.wsdl" />
     <None Include="Service References\RelacionCorredorProveedor\Molinos.DataAgro.Agent.RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RPResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

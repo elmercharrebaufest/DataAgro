@@ -210,7 +210,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Posicion + "'" + ',' +
         "'" + dataItem.Operador + "'" + ',' +
         "'" + dataItem.PrecioNeto + "'" + ',' +
-        "'" + dataItem.Id + "'" +
+        "'" + dataItem.Id + "'" + ',' +
+        "'" + dataItem.Pizarra + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1204,7 +1205,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id) {
+function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda, campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO, trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId, cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion, clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion, contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1280,7 +1281,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_comercial_AFijar").text(comercial);
     $("#visualizar_material").text(material);
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
-    (precio != 0) ? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
+    (precio != 0) ? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : pizarra ? $("#visualizar_precio").text("Pizarra") : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
 
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
@@ -1398,7 +1399,6 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_aperturaRedespacho").text(null);
     $("#visualizar_aperturaComisiones").text(null);
     $("#visualizar_aperturaBonificaciones").text(null);
-    $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
     $("#aperturaFinancieroDivVisualizar").hide();
     $("#aperturaRedespachoDivVisualizar").hide();
     $("#aperturaComisionesDivVisualizar").hide();
@@ -1406,47 +1406,49 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
-   
+
+    if (precioNeto != 0) {
+    $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
     var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
-    $.each(aperturaPrecio, function (key, concepto) {
-        switch (concepto.ConceptoAperturaPrecioId) {
-            case 1:
-                if (concepto.Importe) {
-                    $("#aperturaFinancieroDivVisualizar").show();
-                    $("#aperturaDePrecioVisualizarDiv").show();
-                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
-                    $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
-                }
-                break;
-            case 2:
-                if (concepto.Importe) {
-                    $("#aperturaRedespachoDivVisualizar").show();
-                    $("#aperturaDePrecioVisualizarDiv").show();
-                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
-                    $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
-                }
-                break;
-            case 3:
-                if (concepto.Importe || concepto.Porcentaje) {
-                    $("#aperturaComisionesDivVisualizar").show();
-                    $("#aperturaDePrecioVisualizarDiv").show();
-                    $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+        $.each(aperturaPrecio, function (key, concepto) {
+            switch (concepto.ConceptoAperturaPrecioId) {
+                case 1:
+                    if (concepto.Importe) {
+                        $("#aperturaFinancieroDivVisualizar").show();
+                        $("#aperturaDePrecioVisualizarDiv").show();
+                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
+                    }
+                    break;
+                case 2:
+                    if (concepto.Importe) {
+                        $("#aperturaRedespachoDivVisualizar").show();
+                        $("#aperturaDePrecioVisualizarDiv").show();
+                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
+                    }
+                    break;
+                case 3:
+                    if (concepto.Importe || concepto.Porcentaje) {
+                        $("#aperturaComisionesDivVisualizar").show();
+                        $("#aperturaDePrecioVisualizarDiv").show();
+                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
 
-                    $("#visualizar_aperturaComisiones").text(concepto.Importe ? kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda : concepto.Porcentaje + "%");
-                }
-                break;
-            case 4:
-                if (concepto.Importe || concepto.Porcentaje) {
-                    $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
-                }
+                        $("#visualizar_aperturaComisiones").text(concepto.Importe ? kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda : concepto.Porcentaje + "%");
+                    }
+                    break;
+                case 4:
+                    if (concepto.Importe || concepto.Porcentaje) {
+                        $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                    }
 
-                break;
+                    break;
+            }
+            visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
+            visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
         }
-        visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
-        visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
-
-
-    });
+            )
+    };
 }
 
 function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {

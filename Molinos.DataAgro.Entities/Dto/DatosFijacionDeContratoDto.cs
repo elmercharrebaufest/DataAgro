@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Posicion { get; set; }
         public bool? Calidad { get; set; }
         public string Campana { get; set; }
+        public bool? PagoDiferido { get; set; }
 
     }
 }

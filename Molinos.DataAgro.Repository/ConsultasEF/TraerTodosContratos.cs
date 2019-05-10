@@ -125,7 +125,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     AgenteId = 0,
                     PrecioNeto = contrato.PrecioNeto,
                     StandardCalidadId = contrato.StandardDeCalidadId,
-                    StandardDeCalidadDescripcion = contrato.StandardDeCalidad.Descripcion
+                    StandardDeCalidadDescripcion = contrato.StandardDeCalidad.Descripcion,
+                    Pizarra = contrato.Pizarra ?? null
                 };
 
             var queryFijacion =
@@ -162,7 +163,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MonedaId_Sustentable = "",
                     Moneda_Sustentable = "",
                     Fecha_Dolarizado = null,
-                    Dias_Pesificado = null,
+                    Dias_Pesificado = fijac.DiasPesificado,
                     NoInformaSIO = null,
                     Estado = fijac.EstadoId,
                     Estado_Contrato = fijac.Estado.Descripcion,
@@ -220,8 +221,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     AgenteId = 0,
                     PrecioNeto = fijac.PrecioNeto,
                     StandardCalidadId = null,
-                    StandardDeCalidadDescripcion = ""
-
+                    StandardDeCalidadDescripcion = "",
+                    Pizarra= fijac.Pizarra??null
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -317,7 +318,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         AgenteId = 0,
                         PrecioNeto = null,
                         StandardCalidadId = null,
-                        StandardDeCalidadDescripcion = ""
+                        StandardDeCalidadDescripcion = "",
+                        Pizarra=null
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -412,7 +414,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         AgenteId = age.Id,
                         PrecioNeto = null,
                         StandardCalidadId = null,
-                        StandardDeCalidadDescripcion = ""
+                        StandardDeCalidadDescripcion = "",
+                        Pizarra=null
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);

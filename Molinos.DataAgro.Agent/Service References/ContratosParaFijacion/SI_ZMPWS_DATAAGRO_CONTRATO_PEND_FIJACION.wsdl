@@ -48,6 +48,11 @@
           <xsd:maxLength value="5" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
@@ -82,6 +87,8 @@
           <xsd:element name="POSICION" type="rfc:char7" />
           <xsd:element name="COSECHA" type="rfc:char5" />
           <xsd:element name="CALIDAD" type="rfc:char1" />
+          <xsd:element name="PAGO_DIF_ARP" type="rfc:char1" />
+          <xsd:element name="CENTRO" type="rfc:char4" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7910">

@@ -762,15 +762,20 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
 
-            htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea); 
-            if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
+            htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
+            if(oFijacionDePrecioContrato.Pizarra.HasValue && oFijacionDePrecioContrato.Pizarra.Value)
             {
-                htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper() + "</td></tr></table>";
+                htmlBody += "Pizarra";
+            }
+            else if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
+            {
+                htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
             else
             {
-                htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper() + "</td></tr></table>";
+                htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
+            htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +

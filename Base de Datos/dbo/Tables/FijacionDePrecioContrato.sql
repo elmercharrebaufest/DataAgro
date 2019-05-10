@@ -4,9 +4,9 @@
 	[ContratoId] INT NULL, 
 	[ProveedorId] INT NOT NULL,
     [MaterialId] INT NULL,
-	[MonedaId] CHAR(5) NOT NULL, 
+	[MonedaId] CHAR(5) NULL, 
     [ComercialId] INT NOT NULL, 
-    [Precio] DECIMAL(18, 2) NOT NULL, 
+    [Precio] DECIMAL(18, 2) NULL, 
     [Cantidad] FLOAT NOT NULL, 
     [Fecha] DATETIME NOT NULL, 
     [Ampliaciones] INT NULL, 
@@ -21,7 +21,11 @@
     [CampanaId] INT NOT NULL DEFAULT 6,	
 	[Posicion] NVARCHAR(10) NULL,
     [TrigoEspecial] BIT NULL,
-	[FinDelDiaId] INT NULL 
+	[FinDelDiaId] INT NULL,
+    [Pizarra] BIT NULL,
+	
+	[PagoDiferidoContrato] BIT NULL,
+	[DiasPesificado] INT NULL,
 
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     [PrecioNeto] DECIMAL(11, 2) NULL, 

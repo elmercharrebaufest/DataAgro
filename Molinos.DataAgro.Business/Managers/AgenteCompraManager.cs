@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oAgente.Id != 0)
             {
                 var oFasonSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
-                if (oFasonSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
+                if (oFasonSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
                     return oEntityErrors;
@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarAgenteResult();
             var oFasonSave = repositorio.Obtener<AgenteCompra>(agenteId);
 
-            if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
+            if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.EstadoId == (int)EnumEstadoContrato.Con_Error)
             {
                 try
                 {
@@ -151,11 +151,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
+                if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
                     oEntityErrors.Error("", "Agente de Compras ya se encuentra Finalizadao");
                 }
-                else if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Rechazado)
+                else if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
                 {
                     oEntityErrors.Error("", "Agente de Compras ya ha sido Rechazado");
                 }
@@ -167,7 +167,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarAgenteResult();
             var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
 
-            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
+            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 
@@ -217,7 +217,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El Día de Operación ya se ha cerrado");
                 return oEntityErrors;
             }
-            if (oAgenteSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
+            if (oAgenteSave.EstadoId <= (int)EnumEstadoContrato.Con_Error)
             {
                 oAgenteSave.Ampliaciones = oAgente.Ampliaciones.Value;
                 try

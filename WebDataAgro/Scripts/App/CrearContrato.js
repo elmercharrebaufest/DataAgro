@@ -306,7 +306,8 @@ function InicializarElementos() {
             $("#fechaDesdeId").val(e.dataItem.DesdeEntrega);
             $("#fechaHastaId").val(e.dataItem.HastaEntrega);
             $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
-            e.dataItem.Calidad === true ? $("#trigoEspecialId").prop("checked", true) : $("#trigoEspecialId").prop("checked", false);
+            e.dataItem.Calidad === true ? $("#pesificadoId").prop("checked", true) : $("#pesificadoId").prop("checked", false);
+            e.dataItem.PagoDiferido === true ? $("#pesificadoId").prop("checked", true) : $("#pesificadoId").prop("checked", false);
         },
         dataSource: {
             severFiltering: true,
@@ -419,6 +420,9 @@ function InicializarElementos() {
             $("#pizarraDiv").hide();
             $("#aperturaPrecioDiv").hide();
             $("#ocultarAperturaBtn").hide();
+            $("#pagoDiferidoFijacionDiv").removeClass("inline");
+            $("#diasDiferidoFijacionDiv").removeClass("inline");
+            $("#diasDiferidoId").prop("checked", false);
             $("#ocultarAperturaMoneda").removeClass("w70");
             $("#ocultarAperturaMoneda").addClass("w100");
 
@@ -455,11 +459,15 @@ function InicializarElementos() {
                 RemoverFondosGrises();
                 $("#boton-ampliar").hide();
                 $("#corredorDiv").show();
-                $("#pizarraDiv").prop("checked", false);
+                $("#pizarraDiv").show();
+                $(".ampliar").hide();
+                $(".ampliar-fijacion").show();
                 $("#aperturaPrecioDiv").show();
                 $("#ocultarAperturaBtn").show();
+                $("#pagoDiferidoFijacionDiv").addClass("inline");
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
+
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
             } else if (this.value() == 4) {
@@ -1032,7 +1040,12 @@ function InicializarElementos() {
         min: 0
     });
 
-
+    $("#diasDiferidoFijacionId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
 
     $("#contMadreId").change(function () {
         var sap = $("#contMadreId").val();
@@ -1206,6 +1219,16 @@ function InicializarElementos() {
         else {
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+        }
+    });
+
+    $("#diasDiferidoId").click(function () {
+        if ($(this).is(':checked')) {
+            $("#diasDiferidoFijacionDiv").addClass("inline");
+        }
+        else {
+            $("#diasDiferidoFijacionDiv").removeClass("inline");
+            $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
         }
     });
 
@@ -1414,13 +1437,16 @@ function ClickEnPizarra() {
         $("#precioId").data("kendoNumericTextBox").enable(false);
         $("#precioMonedaId").data("kendoDropDownList").enable(false);
         $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        $("#precioId").data("kendoNumericTextBox").value("");
+        $("#precioId").trigger('change');
+        $("#precioMonedaId").data("kendoDropDownList").value(0);
         precioRojo.removeClass("required-border");
-
     }
     else {
         $("#precioId").data("kendoNumericTextBox").enable(true);
         $("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         precioRojo.addClass("required-border");
     }
 }
@@ -1817,7 +1843,8 @@ function ObtenerDatos() {
     obj.ImporteSustentable = $("#sustentablePrecioId").val();
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
-    obj.DiasPesificado = $("#pesificadoDiasId").val();
+    obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
+    obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.EstadoId = $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 ? "1" : "2";
@@ -2298,9 +2325,15 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.Dias_Pesificado !== null && contrato.Dias_Pesificado !== undefined && contrato.Dias_Pesificado !== "") {
-        $("#pesificadoId").prop("checked", true);
-        $("#pesificadoDiv").show();
-        $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
+        if (contrato.TipoNegocioId != 3) {
+            $("#pesificadoId").prop("checked", true);
+            $("#pesificadoDiv").show();
+            $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
+        } else {
+            $("#diasDiferidoId").prop("checked", true);
+            $("#diasDiferidoFijacionDiv").addClass("inline");
+            $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
+        }
     }
 
     if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {

@@ -99,6 +99,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MonedaId = x.MonedaId,
                     Ampliaciones = x.Ampliaciones,
                     Estado = x.Estado.Descripcion,
+                    Pizarra = x.Pizarra ?? false,
                     Observacion = x.Observacion
                 }, x => contratoId == 0 || x.ContratoSAP == contratoId.ToString());
         }
@@ -149,11 +150,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
             }
-            if (oParam.Precio == 0)
+            if (oParam.Precio == 0 && oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            if (oParam.MonedaId == null)
+            if (oParam.MonedaId == null && oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
             {
                 oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
@@ -173,6 +174,16 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
+            }
+            if (oParam.PagoDiferidoContrato.HasValue && !oParam.PagoDiferidoContrato.Value 
+                && oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value!=0)
+            {
+                oErrorMessages.Error("pagoDiferido", "El contrato no corresponde a Pago diferido");
+            }
+            if ( oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0 && 
+                oParam.MonedaId!= "ARP  " )
+            {
+                oErrorMessages.Error("pagoDiferido", "La Fijación de pago diferido siempre es en ARP");
             }
             return oErrorMessages;
         }
@@ -218,6 +229,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.FechaDesde = oFijacionDePrecio.FechaDesde;
                 oFijacionDePrecioSave.FechaHasta = oFijacionDePrecio.FechaHasta;
                 oFijacionDePrecioSave.PrecioNeto = oFijacionDePrecio.PrecioNeto;
+                oFijacionDePrecioSave.Pizarra = oFijacionDePrecio.Pizarra;
+                oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
+                oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -497,7 +511,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Provincia = "",
                 TipoNegocio = "FIJACION",
                 Localidad = "",
-                Observacion = fijac.Observacion != null ? fijac.Observacion : "",
+                Observacion = fijac.Observacion ?? "",
                 FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
                 Sustentable = false,
                 Dolarizado = false,
@@ -513,6 +527,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CondicionFijacionDescripcion = "",
                 ClasificacionDescripcion = "",
                 Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
+                Pizarra = fijac.Pizarra ?? false,
+                Dias_Pesificado = fijac.DiasPesificado,
                 DatosFijacion = new DatosFijacionDeContratoDto()
                 {
                     ContratoId = fijac.ContratoSAP.ToString(),
@@ -523,7 +539,8 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", fijac.Contrato.DesdeFijacion) : "",
                     FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "/" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
-                                           SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : ""
+                                           SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
+                    PagoDiferido = fijac.PagoDiferidoContrato
                 }
             });
             if (contrato.ContratoId!=0)

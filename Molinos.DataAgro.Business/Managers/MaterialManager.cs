@@ -25,9 +25,9 @@ namespace Molinos.DataAgro.Business
 
         public ResultIniMaterial TraerFiltroMaterial(ParamAbmMaterial oParam)
         {
-            var oResult = new ResultIniMaterial();
-
-            oResult.Material = repositorio.Listar<Material, MaterialIni>
+            var oResult = new ResultIniMaterial
+            {
+                Material = repositorio.Listar<Material, MaterialIni>
                        (x => new MaterialIni()
                        {
                            MaterialId = x.MaterialId,
@@ -35,8 +35,8 @@ namespace Molinos.DataAgro.Business
                            Descripcion = x.Descripcion
                        },
                        x => (oParam.Codigo.Trim() == "" || x.Codigo.Contains(oParam.Codigo.Trim())) &&
-                                   (oParam.Descripcion.Trim() == "" || x.Descripcion.Contains(oParam.Descripcion.Trim())), 500, "Descripcion");
-
+                                   (oParam.Descripcion.Trim() == "" || x.Descripcion.Contains(oParam.Descripcion.Trim())), 500, "Descripcion")
+            };
             return oResult;
         }
 

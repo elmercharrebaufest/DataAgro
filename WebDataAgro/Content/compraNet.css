@@ -668,7 +668,7 @@ body {
     }
 
     #lblPizarra {
-        margin-right: 66px;
+        margin-right: 30px;
     }
 
     #lblPlan {
@@ -1165,7 +1165,12 @@ body {
         overflow-x: auto;
         white-space: nowrap;
     }
-    #gridInformeCompraNet td {
-        text-align:left;
-    }
+
+        #gridInformeCompraNet td {
+            text-align: left;
+        }
+}
+
+.inline {
+    display: inline !important;
 }

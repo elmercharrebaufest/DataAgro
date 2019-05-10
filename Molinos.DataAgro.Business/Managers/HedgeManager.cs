@@ -274,8 +274,8 @@ namespace Molinos.DataAgro.Business
                                                             AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
                                                                 archivo,
                                                                     "Cierre del dia.xls");
-                    repositorio.GuardarCambios();
                 }
+                repositorio.GuardarCambios();
             }
             catch (Exception ex)
             {

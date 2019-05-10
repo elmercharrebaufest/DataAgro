@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -113,6 +113,10 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private string cOSECHAField;
         
         private string cALIDADField;
+        
+        private string pAGO_DIF_ARPField;
+        
+        private string cENTROField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -246,6 +250,30 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public string PAGO_DIF_ARP {
+            get {
+                return this.pAGO_DIF_ARPField;
+            }
+            set {
+                this.pAGO_DIF_ARPField = value;
+                this.RaisePropertyChanged("PAGO_DIF_ARP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
+        public string CENTRO {
+            get {
+                return this.cENTROField;
+            }
+            set {
+                this.cENTROField = value;
+                this.RaisePropertyChanged("CENTRO");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -257,7 +285,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

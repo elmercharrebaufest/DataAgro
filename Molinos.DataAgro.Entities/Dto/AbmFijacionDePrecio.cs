@@ -48,6 +48,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Fecha { get; set; }
         public int? Ampliaciones { get; set; }
         public string Estado { get; set; }
+        public bool Pizarra { get; set; }
         public string Observacion { get; set; }
     }
 
