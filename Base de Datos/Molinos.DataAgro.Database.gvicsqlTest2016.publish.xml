@@ -4,7 +4,7 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseName>Dataagro</TargetDatabaseName>
     <DeployScriptFileName>Base de Datos.sql</DeployScriptFileName>
-    <TargetConnectionString>Data Source=Data Source=GVICSQLTest2016.molinosagro.ad;Integrated Security=True;Pooling=False</TargetConnectionString>
+    <TargetConnectionString>Data Source=GVICSQLTest2016.molinosagro.ad;Integrated Security=True;Pooling=False</TargetConnectionString>
     <ProfileVersionNumber>1</ProfileVersionNumber>
     <ScriptDatabaseOptions>True</ScriptDatabaseOptions>
     <BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
