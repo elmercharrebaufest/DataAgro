@@ -250,13 +250,15 @@ function InicializarElementos() {
                     $("#BolsaCartaDiv").show();
                     $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
                     $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                } else if (compraNet.BoletoCompraNetId === 3) {
+                } else if (compraNet.BoletoCompraNetId != "3") {
                     $("#boletoNingunoId").prop("checked", true);
                 }
             }
             $('#porcentajeComisionDiv').show();
             $('#contCorredorDiv').show();
-            $('#pagoDirectoDiv').show();
+            if ($("#tipoId").val() != 3) {
+                $('#pagoDirectoDiv').show();
+            }
         },
         dataSource: {
             severFiltering: true,
@@ -420,8 +422,8 @@ function InicializarElementos() {
             $("#pizarraDiv").hide();
             $("#aperturaPrecioDiv").hide();
             $("#ocultarAperturaBtn").hide();
-            $("#pagoDiferidoFijacionDiv").removeClass("inline");
-            $("#diasDiferidoFijacionDiv").removeClass("inline");
+            $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
+            $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
             $("#diasDiferidoId").prop("checked", false);
             $("#ocultarAperturaMoneda").removeClass("w70");
             $("#ocultarAperturaMoneda").addClass("w100");
@@ -464,10 +466,10 @@ function InicializarElementos() {
                 $(".ampliar-fijacion").show();
                 $("#aperturaPrecioDiv").show();
                 $("#ocultarAperturaBtn").show();
-                $("#pagoDiferidoFijacionDiv").addClass("inline");
+                $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
-
+                $('#pagoDirectoDiv').hide();
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
             } else if (this.value() == 4) {
