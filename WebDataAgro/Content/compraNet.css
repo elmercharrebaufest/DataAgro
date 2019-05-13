@@ -1166,9 +1166,9 @@ body {
         white-space: nowrap;
     }
 
-        #gridInformeCompraNet td {
-            text-align: left;
-        }
+    #gridInformeCompraNet td {
+        text-align: left;
+    }
 }
 
 .inline-fijacion {
