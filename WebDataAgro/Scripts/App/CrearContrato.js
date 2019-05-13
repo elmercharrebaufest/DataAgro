@@ -424,6 +424,8 @@ function InicializarElementos() {
             $("#ocultarAperturaBtn").hide();
             $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
             $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
+            $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
+            $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
             $("#diasDiferidoId").prop("checked", false);
             $("#ocultarAperturaMoneda").removeClass("w70");
             $("#ocultarAperturaMoneda").addClass("w100");
@@ -466,6 +468,7 @@ function InicializarElementos() {
                 $(".ampliar-fijacion").show();
                 $("#aperturaPrecioDiv").show();
                 $("#ocultarAperturaBtn").show();
+                $("#pagoDiferidoFijacionDiv").removeClass("hide-fijacion");
                 $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
