@@ -499,6 +499,10 @@ namespace Molinos.DataAgro.Test.Managers
                         ConceptoAperturaPrecioId = 3,
                         Porcentaje = 2,
                         Importe = 0
+                    },
+                    new AperturaPrecio{
+                        ConceptoAperturaPrecioId = 1,                        
+                        Importe = 0
                     }
                 }
             };
@@ -514,7 +518,8 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(25, resultado.ListaErrores.Count);
         }
 
         [Test]
@@ -562,15 +567,12 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, decimal>>>())).Returns(-3000);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
             contratoAcuerdoManagerMock.Setup(y => y.TraerContratoAcuerdo(It.IsAny<int>())).Returns(new ContratoAcuerdoDto { Cantidad = 1 });
-
-
+            
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 
         }
-
-
 
 
         [Test]
@@ -606,8 +608,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
         }
-
-
 
 
         [Test]

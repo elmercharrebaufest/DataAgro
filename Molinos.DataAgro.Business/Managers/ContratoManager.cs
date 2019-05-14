@@ -339,7 +339,18 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-
+            if (oParam.AperturaPrecio != null)
+            {
+                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero);
+                if ((concepto != null && (concepto.Importe != 0 || concepto.Porcentaje != 0)) && (!oParam.DiasPesificado.HasValue || oParam.DiasPesificado.Value == 0))
+                {
+                    oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                }
+            }
+            if (oParam.DestinoId != 1 && oParam.TipoNegocioId==2 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x=>x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe !=0 ||x.Porcentaje!=0)))
+            {
+                oErrorMessages.Error("", "El concepto de Redespacho no debe estar vacio cuando el centro no es San Lorenzo");
+            } 
             return oErrorMessages;
         }
 

@@ -100,6 +100,8 @@ function CreateGridInformeCompraNet() {
 
             {
                 field: "Proveedor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor },
+            }, {
+                field: "Corredor", type: "string", width: 300, filterable: { ui: createMultiSelectProveedor },
             },
             {
                 field: "Negocio", width: 90, filterable: {
@@ -112,13 +114,26 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Fecha", title: "Operacion", filterable: { extra: true }, width: 80, format: _DefaultDateTemplate },
             {
+                field: "Hora", value: "Hora", title: "Hora", template:
+                    function (dataItem) {
+                        var numeros = dataItem.Hora.split(":");
+                        if (numeros[0] < 10) {
+                            numeros[0] = "0" + numeros[0];
+                        }
+                        if (numeros[1] < 10) {
+                            numeros[1] = "0" + numeros[1];
+                        }
+                        return numeros[0] + ":" + numeros[1];
+                    }, filterable: { multi: true }
+            },
+            {
                 field: "TipoNegocio", title: "Tipo", filterable: {
                     multi: true, dataSource: [{
-                        TipoNegocio: "A FIJAR",
+                        TipoNegocio: "A FIJAR"
                     }, {
-                        TipoNegocio: "A PRECIO",
+                        TipoNegocio: "A PRECIO"
                     }, {
-                        TipoNegocio: "FIJACION",
+                        TipoNegocio: "FIJACION"                    
                     }]
                 }, width: 70
             },
@@ -170,6 +185,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 }
                 ]
             },
+            
             { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
             { field: "ComercialCreador", title: "Registro Comercial", filterable: { ui: createMultiSelectComercial } },
             {
@@ -197,17 +213,17 @@ function CreateGridInformeCompraNet() {
                 field: "Estado_Contrato", title: "Estado", width: 90, sortable: false, filterable: {
                     multi: true,
                     dataSource: [{
-                        Estado_Contrato: "Pendiente",
+                        Estado_Contrato: "Pendiente"
                     }, {
-                        Estado_Contrato: "Confirmado",
+                        Estado_Contrato: "Confirmado"
                     }, {
-                        Estado_Contrato: "Con Error",
+                        Estado_Contrato: "Con Error"
                     }, {
-                        Estado_Contrato: "Oferta",
+                        Estado_Contrato: "Oferta"
                     }, {
-                        Estado_Contrato: "Finalizado",
+                        Estado_Contrato: "Finalizado"
                     }, {
-                        Estado_Contrato: "Rechazado",
+                        Estado_Contrato: "Rechazado"
                     },]
                 }
             },
@@ -215,28 +231,30 @@ function CreateGridInformeCompraNet() {
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var templateSustentable = kendo.template(this.columns[15].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[16].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[17].columns[0].template);
-            var templateSIO = kendo.template(this.columns[18].template);
-            var templateTrigoEsp = kendo.template(this.columns[19].template);
+            var templateHora = kendo.template(this.columns[5].template);
+            var templateSustentable = kendo.template(this.columns[17].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[18].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[19].columns[0].template);
+            var templateSIO = kendo.template(this.columns[20].template);
+            var templateTrigoEsp = kendo.template(this.columns[21].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
-                    Sustentable: row.cells[16].value,
-                    Dolarizado: row.cells[19].value,
-                    Pesificado: row.cells[21].value,
-                    NoInformaSIO: row.cells[23].value,
-                    TrigoEspecial: row.cells[24].value,
+                    Hora: row.cells[5].value,
+                    Sustentable: row.cells[18].value,
+                    Dolarizado: row.cells[21].value,
+                    Pesificado: row.cells[23].value,
+                    NoInformaSIO: row.cells[25].value,
+                    TrigoEspecial: row.cells[26].value,
                 };
-
-                row.cells[16].value = templateSustentable(dataItem);
-                row.cells[19].value = templateDolarizado(dataItem);
-                row.cells[21].value = templatePesificado(dataItem);
-                row.cells[23].value = templateSIO(dataItem);
-                row.cells[24].value = templateTrigoEsp(dataItem);
+                row.cells[5].value = templateHora(dataItem);
+                row.cells[18].value = templateSustentable(dataItem);
+                row.cells[21].value = templateDolarizado(dataItem);
+                row.cells[23].value = templatePesificado(dataItem);
+                row.cells[25].value = templateSIO(dataItem);
+                row.cells[26].value = templateTrigoEsp(dataItem);
             }
         },
         pageable: {
@@ -366,7 +384,7 @@ function CreateGridInformeCompraNet() {
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
     };
-
+        
     //Con definir un método de estos para cada columna multiselect estamos,
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");

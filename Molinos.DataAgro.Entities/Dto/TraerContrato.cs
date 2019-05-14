@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Moneda { get; set; }
         public DateTime? Fecha { get; set; }
         public string FechaFormateado { get; set; }
+        public string Hora { get; set; }
         public int GrupoCompra { get; set; }
         public string GrupoCompraDescripcion { get; set; }
         public int? ComercialId { get; set; }
