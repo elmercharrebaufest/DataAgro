@@ -2338,6 +2338,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#pesificadoDiv").show();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
         } else {
+            $("#pesificadoId").prop("checked", true);
             $("#diasDiferidoId").prop("checked", true);
             $("#diasDiferidoFijacionDiv").addClass("inline-fijacion");
             $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");

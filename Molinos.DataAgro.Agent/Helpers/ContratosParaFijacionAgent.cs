@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Agent
                         Posicion = x.FechaDesde.Month.ToString() + "." + x.FechaDesde.Year.ToString(),
                         Calidad = x.TrigoEspecial,
                         Campana = x.Campana.Descripcion,
-                        PagoDiferido = x.DiasPesificado != 0 && x.DiasPesificado != null ? true:false,
+                        PagoDiferido = x.PagoDiferido?? false,
                         Filtro = filtro + "|" + id
                     });
                     contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
