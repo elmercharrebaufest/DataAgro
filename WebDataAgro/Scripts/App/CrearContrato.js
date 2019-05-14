@@ -1229,10 +1229,12 @@ function InicializarElementos() {
 
     $("#diasDiferidoId").click(function () {
         if ($(this).is(':checked')) {
-            $("#diasDiferidoFijacionDiv").addClass("inline");
+            $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");
+            $("#diasDiferidoFijacionDiv").addClass("inline-fijacion");
         }
         else {
-            $("#diasDiferidoFijacionDiv").removeClass("inline");
+            $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
+            $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
         }
     });
