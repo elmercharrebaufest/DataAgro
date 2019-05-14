@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
                         IM_APERTURA = listaApertura.ToArray(),
-                        IM_PAGO_DIF_ARP = fijacion.DiasPesificado.HasValue ? "X" : "",
+                        IM_PAGO_DIF_ARP = fijacion.PagoDiferido.HasValue && fijacion.PagoDiferido.Value ? "X" : "",
                         IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue? fijacion.DiasPesificado.Value.ToString():""
                     };
 

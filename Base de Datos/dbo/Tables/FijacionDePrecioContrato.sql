@@ -25,7 +25,8 @@
     [Pizarra] BIT NULL,
 	
 	[PagoDiferidoContrato] BIT NULL,
-	[DiasPesificado] INT NULL,
+	[DiasPesificado] INT NULL,	
+	[PagoDiferido] BIT NULL,
 
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     [PrecioNeto] DECIMAL(11, 2) NULL, 

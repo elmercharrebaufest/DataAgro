@@ -120,6 +120,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Pizarra { get; set; }
         public int? StandardCalidadId { get; set; }
         public string StandardDeCalidadDescripcion { get; set; }
+        public bool? PagoDiferido { get; set; }
     }
 
 

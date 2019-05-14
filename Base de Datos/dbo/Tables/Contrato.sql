@@ -58,6 +58,7 @@
     [Pizarra] BIT NULL DEFAULT 0, 
     [PrecioNeto] DECIMAL(11, 2) NULL, 
     [StandardDeCalidadId] INT NULL, 
+	[PagoDiferido] BIT NULL,
 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 

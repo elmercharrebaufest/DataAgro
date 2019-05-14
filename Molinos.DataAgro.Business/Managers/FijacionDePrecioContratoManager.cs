@@ -185,7 +185,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("pagoDiferido", "El contrato no corresponde a Pago diferido");
             }
             if ( oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0 && 
-                oParam.MonedaId!= "ARP  " )
+                oParam.MonedaId!= "ARP  " &&
+                oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)
             {
                 oErrorMessages.Error("pagoDiferido", "La Fijación de pago diferido siempre es en ARP");
             }
@@ -533,6 +534,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial + " " + "(" + fijac.Corredor.CUIT + ")",
                 Pizarra = fijac.Pizarra ?? false,
                 Dias_Pesificado = fijac.DiasPesificado,
+                PagoDiferido = fijac.PagoDiferido,
                 DatosFijacion = new DatosFijacionDeContratoDto()
                 {
                     ContratoId = fijac.ContratoSAP.ToString(),

@@ -1851,6 +1851,7 @@ function ObtenerDatos() {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
+    obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false; 
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
@@ -2331,14 +2332,15 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoFechaId").val(contrato.Fecha_DolarizadoFormateado);
     }
 
-    if (contrato.Dias_Pesificado !== null && contrato.Dias_Pesificado !== undefined && contrato.Dias_Pesificado !== "") {
+    if (contrato.PagoDiferido) {
         if (contrato.TipoNegocioId != 3) {
             $("#pesificadoId").prop("checked", true);
             $("#pesificadoDiv").show();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
         } else {
             $("#diasDiferidoId").prop("checked", true);
-            $("#diasDiferidoFijacionDiv").addClass("inline");
+            $("#diasDiferidoFijacionDiv").addClass("inline-fijacion");
+            $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
         }
     }

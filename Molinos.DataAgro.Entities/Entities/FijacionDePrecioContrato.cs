@@ -35,6 +35,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Pizarra { get; set; }
         public int? DiasPesificado { get; set; }
         public bool? PagoDiferidoContrato { get; set; }
+        public bool? PagoDiferido { get; set; }
+
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]

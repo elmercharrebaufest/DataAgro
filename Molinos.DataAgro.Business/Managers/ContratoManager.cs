@@ -487,6 +487,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrecioNeto = oContrato.PrecioNeto;
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
             oContratoSave.Pizarra = oContrato.Pizarra;
+            oContratoSave.PagoDiferido = oContrato.PagoDiferido;
 
             if (descuentosExistentes != null)
             {
@@ -934,7 +935,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Madre = x.Madre,
                 ContratoMadre = x.ContratoMadre,
                 Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
-                StandardCalidadId = x.StandardDeCalidadId
+                StandardCalidadId = x.StandardDeCalidadId,
+                PagoDiferido= x.PagoDiferido
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

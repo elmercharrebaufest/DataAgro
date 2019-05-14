@@ -127,7 +127,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PrecioNeto = contrato.PrecioNeto,
                     StandardCalidadId = contrato.StandardDeCalidadId,
                     StandardDeCalidadDescripcion = contrato.StandardDeCalidad.Descripcion,
-                    Pizarra = contrato.Pizarra ?? null
+                    Pizarra = contrato.Pizarra ?? null,
+                    PagoDiferido = contrato.PagoDiferido ?? null,
                 };
 
             var queryFijacion =
@@ -224,7 +225,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PrecioNeto = fijac.PrecioNeto,
                     StandardCalidadId = null,
                     StandardDeCalidadDescripcion = "",
-                    Pizarra= fijac.Pizarra??null
+                    Pizarra= fijac.Pizarra??null,
+                    PagoDiferido = fijac.PagoDiferido?? null
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -322,7 +324,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNeto = null,
                         StandardCalidadId = null,
                         StandardDeCalidadDescripcion = "",
-                        Pizarra=null
+                        Pizarra=null,
+                        PagoDiferido = null
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -419,7 +422,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNeto = null,
                         StandardCalidadId = null,
                         StandardDeCalidadDescripcion = "",
-                        Pizarra=null
+                        Pizarra= null,
+                        PagoDiferido = null
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
