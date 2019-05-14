@@ -907,6 +907,14 @@ body {
     width: 100%;
 }
 
+.inline-fijacion {
+    display: inline !important;
+}
+
+.hide-fijacion {
+    display: none !important;
+}
+
 .aperturaPrecioTd {
     margin: 0;
     padding: 0 !important;
@@ -1169,11 +1177,4 @@ body {
     #gridInformeCompraNet td {
         text-align: left;
     }
-}
-
-.inline-fijacion {
-    display: inline !important;
-}
-.hide-fijacion {
-    display: none !important;
 }
