@@ -192,7 +192,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.AperturaPrecio != null)
             {
                 var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero);
-                if (concepto != null && (concepto.Importe != 0 || concepto.Porcentaje != 0) && (!oParam.DiasPesificado.HasValue || oParam.DiasPesificado.Value == 0 || !oParam.PagoDiferido.HasValue || !oParam.PagoDiferido.Value))
+                if (concepto != null && (concepto.Importe != 0 || concepto.Porcentaje != 0) && ((!oParam.DiasPesificado.HasValue || oParam.DiasPesificado.Value == 0) || (!oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)))
                 {
                     oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
                 }
