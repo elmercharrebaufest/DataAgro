@@ -986,7 +986,7 @@ function InicializarElementos() {
                 $(".calidadesEspecialesDatos").hide();
                 LimpiarCalidades();
             }
-            if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Grado")
+            if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado")
             {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
             }
