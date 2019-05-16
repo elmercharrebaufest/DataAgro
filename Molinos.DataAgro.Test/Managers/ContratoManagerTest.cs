@@ -314,7 +314,8 @@ namespace Molinos.DataAgro.Test.Managers
                     {
                         ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
                         Importe = 300
-                    }
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 } 
                 }
             };
             var oContratoBase = new Contrato()
@@ -521,7 +522,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(26, resultado.ListaErrores.Count);
+            Assert.AreEqual(25, resultado.ListaErrores.Count);
         }
 
         [Test]
