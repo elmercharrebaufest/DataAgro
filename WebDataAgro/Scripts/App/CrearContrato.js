@@ -1453,6 +1453,7 @@ function ClickEnPizarra() {
         $("#precioId").trigger('change');
         $("#precioMonedaId").data("kendoDropDownList").value(0);
         precioRojo.removeClass("required-border");
+        LimpiarApertura()
     }
     else {
         $("#precioId").data("kendoNumericTextBox").enable(true);
@@ -2498,6 +2499,12 @@ function CargarDatosEditar(contrato, hijo) {
     }
 }
 
+function LimpiarApertura(){
+    var iteraciones = viewModel.AperturaPrecio.length;
+    for (i = 0; i < iteraciones; i++) {
+        viewModel.AperturaPrecio.pop();
+    }
+}
 
 function AutocompleteProcedencia() {
     $("#LocalidadCrearContrato").click(function () {

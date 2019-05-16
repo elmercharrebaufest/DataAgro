@@ -180,7 +180,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
             }
             if (oParam.PagoDiferidoContrato.HasValue && !oParam.PagoDiferidoContrato.Value 
-                && oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value!=0)
+                && oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value)
             {
                 oErrorMessages.Error("pagoDiferido", "El contrato no corresponde a Pago diferido");
             }
@@ -189,12 +189,17 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("pagoDiferido", "La Fijación de pago diferido siempre es en ARP");
             }
+
             if (oParam.AperturaPrecio != null)
             {
-                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero);
-                if (concepto != null && (concepto.Importe != 0 || concepto.Porcentaje != 0) && ((!oParam.DiasPesificado.HasValue || oParam.DiasPesificado.Value == 0) || (!oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)))
+                if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
                 {
-                    oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                    var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
+                        (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
+                    {
+                        oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                    }
                 }
             }
             return oErrorMessages;
