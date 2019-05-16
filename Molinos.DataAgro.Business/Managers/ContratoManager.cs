@@ -220,7 +220,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
-                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oParam.ContratoId).Select(x => x.Cantidad).Sum();
+                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oParam.ContratoId && (x.EstadoId <= 5 || x.EstadoId == 7)).Select(x => x.Cantidad).Sum();
                 if (cantidadMadre - sumaContratosHijos < oParam.Cantidad)
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
