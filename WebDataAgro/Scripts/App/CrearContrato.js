@@ -1474,6 +1474,14 @@ function ClickEnPizarra() {
         $("#precioId").trigger('change');
         $("#precioTotalApertura").data("kendoNumericTextBox").value("");
         $("#precioMonedaId").data("kendoDropDownList").value(0);
+
+        $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
+        $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
+        $("#pagoDiferidoDiv").hide();
+        $("#pesificadoDiv").hide();
+        $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
+        $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
         precioRojo.removeClass("required-border");
     }
     else {
@@ -1481,8 +1489,16 @@ function ClickEnPizarra() {
         $("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(true);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
+        $("#diasDiferidoId").prop("checked", false);
+        $("#pesificadoId").prop("checked", false);
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
         $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        if ($("#tipoId").val() == 3) {
+            $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
+            $("#pagoDiferidoFijacionDiv").removeClass("hide-fijacion");
+        } else {
+            $("#pagoDiferidoDiv").show(); 
+        }
         precioRojo.addClass("required-border");
     }
 }

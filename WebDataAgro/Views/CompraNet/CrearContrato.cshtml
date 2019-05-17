@@ -514,9 +514,11 @@
         </div>
         <div class="row">
             <div class="col-sm-2 ">
-                <label style="width:120px">Pago diferido</label>
-                <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
-                <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
+                <div id="pagoDiferidoDiv">
+                    <label style="width:120px">Pago diferido</label>
+                    <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
             <div class="col-md-4 col-sm-9">
                 <div id="pesificadoDiv" hidden>
