@@ -1446,18 +1446,25 @@ function InicializarElementos() {
 function ClickEnPizarra() {
     var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
     if ($("#pizarraId").is(':checked')) {
+        LimpiarApertura();
         $("#precioId").data("kendoNumericTextBox").enable(false);
         $("#precioMonedaId").data("kendoDropDownList").enable(false);
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false); 
+        $("#pesificadoDiasId").data("kendoNumericTextBox").enable(false);
         $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         $("#precioId").data("kendoNumericTextBox").value("");
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+        $("#pesificadoDiasId").data("kendoNumericTextBox").value(""); 
         $("#precioId").trigger('change');
+        $("#precioTotalApertura").data("kendoNumericTextBox").value("");
         $("#precioMonedaId").data("kendoDropDownList").value(0);
         precioRojo.removeClass("required-border");
-        LimpiarApertura()
     }
     else {
         $("#precioId").data("kendoNumericTextBox").enable(true);
         $("#precioMonedaId").data("kendoDropDownList").enable(true);
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(true);
+        $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
         $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         precioRojo.addClass("required-border");
