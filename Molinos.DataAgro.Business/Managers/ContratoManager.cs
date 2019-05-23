@@ -159,6 +159,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
             var sisa = new SISA();
+            if (proveedor.EstadoId == 4)
+            {
+                oErrorMessages.Error("Estado", "Proveedor no Operable por Estado BAJA");
+            }
             if (oParam.ClasificacionId == 1)
             {
                 sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");

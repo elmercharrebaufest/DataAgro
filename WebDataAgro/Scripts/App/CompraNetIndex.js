@@ -1,6 +1,7 @@
 var viewModel;
 var datosIniCrearContrato;
 var filasSeleccionadas = {};
+var comercialId;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -252,7 +253,20 @@ function filtrarZona() {
     }
     recargarGrilla();
 }
-
+function filtrarMesa() {
+    //FILTRO MANUAL
+    var grilla = $('#gridInformeCompraNet').data("kendoGrid");
+    if (!$("#negociosPropiosDiv").hasClass("selected")) {
+        addOrRemoveFilter(grilla, "ComercialId", "eq", comercialId);
+        $("#negociosPropiosDiv").addClass("selected");
+        $("#negociosPropios").addClass("selected").removeClass("varios");
+    } else {
+        addOrRemoveFilter(grilla, "ComercialId", "eq", "");
+        $("#negociosPropiosDiv").removeClass("selected");
+        $("#negociosPropios").addClass("varios").removeClass("selected");
+    }
+    recargarGrilla();
+}
 
 function addOrRemoveFilter(grid, field, operator, value) {
 

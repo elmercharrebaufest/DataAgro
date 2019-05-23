@@ -250,7 +250,7 @@ function InicializarElementos() {
                     $("#BolsaCartaDiv").show();
                     $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
                     $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                } else if (compraNet.BoletoCompraNetId != "3") {
+                } else if (compraNet.BoletoCompraNetId === 3) {
                     $("#boletoNingunoId").prop("checked", true);
                 }
             }
@@ -1554,11 +1554,13 @@ function CargarCalidadPorMaterial(value) {
     viewModel.set("EspecialesCombo", calidadGrano);
 
     if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-        $("#calidadesEspecialesId").data("kendoDropDownList").value("10");
+        $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
+        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
     } else {
         $("#calidadesEspecialesId").data("kendoDropDownList").value("0");
     }
-    $(".calidadesEspecialesDatos").hide();
+    $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
 }
 
 function LimpiarCalidades() {
@@ -2338,7 +2340,8 @@ function CargarDatosEditar(contrato, hijo) {
     $("#cantidadId").trigger("change");
 
     $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
-    $("#precioId").trigger("change");
+    $("#precioId").trigger('change');
+
     $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
     $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
     $("#precioMonedaId").data("kendoDropDownList").trigger("change");
@@ -2501,25 +2504,26 @@ function CargarDatosEditar(contrato, hijo) {
         };
         viewModel.Calidades.push(calidadKendo);
     });
-    var cal = contrato.StandardCalidadId === 1 ? 0 : contrato.StandardCalidadId === 3 ? 10 : contrato.MaterialId === 3 ? 1 : contrato.MaterialId === 2 ? 5 : 4;
+    var cal = contrato.StandardCalidadId === 1 ? "Cámara" : contrato.StandardCalidadId === 3 ? "Fabrica" : contrato.MaterialId === 3 ? "Dañados" : "Grado";
     if (contrato.StandardCalidadId == 2) {
         $(".calidadesEspecialesDatos").show();
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    $("#calidadesEspecialesId").data("kendoDropDownList").value(cal);
-    if (cal == 5 || cal == 4) {
+    $("#calidadesEspecialesId").data("kendoDropDownList").text(cal);
+    if (cal == "Grado") {
         $(".calidad-no-grado").hide();
     } else {
         $(".calidad-no-grado").show();
     }
+    $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
 
-    if (contrato.Pizarra) {
+    if (contrato.Pizarra=== true) {
         $("#pizarraId").prop("checked", true);
+        ClickEnPizarra();
     } else {
         $("#pizarraId").prop("checked", false);
     }
-    ClickEnPizarra();
     if (!hijo) {
 
         if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.length != 0) {

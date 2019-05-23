@@ -740,7 +740,15 @@ body {
 .varios {
     color: #017940;
 }
-
+#negociosPropiosDiv.selected {
+    color: white;
+    background-color: #017940;
+}
+#negociosPropiosDiv.selected:hover {
+    color: #ccc;
+    border: 1px solid #ccc;
+    background-color: #017940;
+}
 .k-radio, input.k-checkbox {
     display: inherit;
 }
@@ -761,7 +769,7 @@ body {
     float: right;
 }
 
-#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv, #modificarVariosDiv {
+#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv, #modificarVariosDiv, #negociosPropiosDiv {
     border: 1px solid #848484;
     border-radius: 5px !important;
     background: white;
@@ -770,14 +778,14 @@ body {
     cursor: pointer;
 }
 
-    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span {
-        vertical-align: middle;
-    }
+#confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span, #negociosPropiosDiv > span {
+    vertical-align: middle;
+}
 
-    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover {
-        background: #ccc;
-        border: 1px solid #017940;
-    }
+#confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover, #negociosPropiosDiv:hover {
+    background: #ccc;
+    border: 1px solid #017940;
+}
 
 .myBtn-disabled {
     width: 100%;

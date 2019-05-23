@@ -178,7 +178,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CONTRVEND = contrato.ContratoVendedor ?? "",
                         SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
                         SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
-                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre : ""
+                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre : "",
+                        CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

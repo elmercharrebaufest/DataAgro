@@ -72,6 +72,7 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
+            ViewBag.comercialId = GlobalVariables.ComercialId; 
             return View();
         }
 

@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
+            HttpContext.Current.Session["comercialId"] = 1;
             var result = target.Index() as ViewResult;
 
             Assert.NotNull(result);
