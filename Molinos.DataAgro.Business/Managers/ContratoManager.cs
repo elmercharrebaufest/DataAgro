@@ -358,7 +358,23 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.DestinoId != 1 && oParam.TipoNegocioId==2 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x=>x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe !=0 ||x.Porcentaje!=0)))
             {
                 oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
-            } 
+            }
+
+            if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
+            {
+
+                oErrorMessages.Error("", "Se debe completar el campo Valor de Calidad");
+            }
+
+            if (oParam.Calidad == null && oParam.Calidad.Where(x => x.CalidadEspecialId == 1) != null && (oParam.Calidad.Where(x => x.CalidadEspecialId == 1).Last().PorcentajeHasta < 51))
+            {
+                oErrorMessages.Error("", "Falta completar el rango de Dañados");
+            }
+
+            if (oParam.Calidad == null && oParam.Calidad.Where(x => x.CalidadEspecialId == 2) != null && (oParam.Calidad.Where(x => x.CalidadEspecialId == 2).Last().PorcentajeHasta < 100))
+            {
+                oErrorMessages.Error("", "Falta completar el rango de Granos Verdes");
+            }
             return oErrorMessages;
         }
 

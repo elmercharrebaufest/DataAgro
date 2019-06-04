@@ -2261,6 +2261,7 @@ function validarCalidad(calidad) {
     if (ultimaCalidad !== undefined && ultimaCalidad.PorcentajeHasta + ",1" != calidad.PorcentajeDesde) {
         errores.push("El Porcentaje Desde debe ser el último Porcentaje Hasta más 0,10");
     }
+  
 
     return errores;
 }

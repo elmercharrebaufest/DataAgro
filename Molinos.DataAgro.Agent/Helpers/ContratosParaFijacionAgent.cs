@@ -11,6 +11,7 @@ using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Helpers;
 using System.Globalization;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -36,7 +37,8 @@ namespace Molinos.DataAgro.Agent
 
                 foreach (var id in contratos)
                 {
-                    var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id).Sum();
+                    var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
+                    && (x.EstadoId != (int)EnumEstadoContrato.Finalizado || x.EstadoId != (int)EnumEstadoContrato.Eliminado || x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
 
                     var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1 && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
                     {
@@ -80,11 +82,13 @@ namespace Molinos.DataAgro.Agent
                     logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
                     foreach(var contrato in devolucion.EX_SALIDA)
                     {
+                        var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == contrato.CONTRATO 
+                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado || x.EstadoId != (int)EnumEstadoContrato.Eliminado || x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         datosContratos.Add(new DatosFijacionDeContratoDto
                         {
                             ContratoId = contrato.CONTRATO,
-                            KilosAplicados = contrato.KILOS_APLICADOS.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
-                            KilosPendiente = contrato.KILOS_PEND_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosAplicados = ((double)contrato.KILOS_APLICADOS + cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
