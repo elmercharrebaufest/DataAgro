@@ -175,6 +175,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Calidad = new List<Calidad>()
 
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -211,6 +212,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Calidad = new List<Calidad>()
 
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -251,6 +253,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Calidad = new List<Calidad>()
 
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -497,6 +500,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = null,
                 StandardDeCalidadId = null,
+                Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
                     new AperturaPrecio{
@@ -549,6 +553,7 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 4,
                 BolsaId = 0,
                 StandardDeCalidadId = null,
+                Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
                     new AperturaPrecio{
