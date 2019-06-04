@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent
                 foreach (var id in contratos)
                 {
                     var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
-                    && (x.EstadoId != (int)EnumEstadoContrato.Finalizado || x.EstadoId != (int)EnumEstadoContrato.Eliminado || x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
+                    && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
 
                     var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1 && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
                     {
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Agent
                     foreach(var contrato in devolucion.EX_SALIDA)
                     {
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == contrato.CONTRATO 
-                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado || x.EstadoId != (int)EnumEstadoContrato.Eliminado || x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
+                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         datosContratos.Add(new DatosFijacionDeContratoDto
                         {
                             ContratoId = contrato.CONTRATO,
