@@ -221,7 +221,6 @@
     <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Controllers\TareaProgramadaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
-    <Compile Include="Controllers\ZonaController.cs" />
     <Compile Include="Core\Atributes.cs" />
     <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
@@ -262,7 +261,6 @@
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\ReporteCompraNetModel.cs" />
     <Compile Include="Models\TareaProgramadaModel.cs" />
-    <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\Compras\Reference.cs">
       <AutoGen>True</AutoGen>
