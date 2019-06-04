@@ -2249,6 +2249,10 @@ function validarCalidad(calidad) {
     if (ultimaCalidad == undefined && porcDesde > 0) {
         errores.push("El Porcentaje Desde no puede ser mayor a 0");
     }
+    if ((calidad.CalidadEspecialId == 1 || calidad.CalidadEspecialId == 2) &&
+        ( calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
+        errores.push('El Porcentaje es obligatorio');
+    }
     if (calidad.PorcentajeHasta > 51 && calidad.CalidadEspecialId == 1) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 51% para "Dañados"');
     }
