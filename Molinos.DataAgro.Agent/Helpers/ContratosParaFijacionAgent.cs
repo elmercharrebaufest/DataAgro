@@ -108,6 +108,10 @@ namespace Molinos.DataAgro.Agent
                             PagoDiferido = contrato.PAGO_DIF_ARP == "X"? true:false,
                             Filtro = filtro + "|" + contrato.CONTRATO
                         };
+                        if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
+                        {
+                            datosContratos.Add(contratoParaFijacion);
+                        }
                     }                    
                 }
                 catch (Exception e)
