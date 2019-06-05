@@ -335,7 +335,8 @@ function InicializarElementos() {
                     else {
                         cuitC = cuitCorr;
                     }
-                    return { CuitProveedor: cuitP[0], CuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val() };
+                    Id = Id != "" ? Id : 0;
+                    return { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id };
                 }
             }
 
@@ -2250,7 +2251,7 @@ function validarCalidad(calidad) {
         errores.push("El Porcentaje Desde no puede ser mayor a 0");
     }
     if ((calidad.CalidadEspecialId == 1 || calidad.CalidadEspecialId == 2) &&
-        ( calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
+        (  calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
         errores.push('El Porcentaje es obligatorio');
     }
     if (calidad.PorcentajeHasta > 51 && calidad.CalidadEspecialId == 1) {

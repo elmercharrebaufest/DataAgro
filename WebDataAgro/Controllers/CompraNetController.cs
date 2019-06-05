@@ -467,11 +467,11 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult ObtenerFijacionesAutomaticas(string CuitProveedor, string CuitCorredor, int materialId, string Filtro)
+        public ActionResult ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro,int fijacionId)
         {
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(CuitProveedor, CuitCorredor, materialId, Filtro),
+                Data = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

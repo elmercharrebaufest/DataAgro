@@ -51,5 +51,6 @@ namespace Molinos.DataAgro.Interfaces
         GrabarProveedorResult GrabarNuevoCorredor(NuevoCorredor oParam, string idActiveDirectory);
         GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
         bool ValidarProveedorEsCorredor(int idproveedor);
+        string TraerCuit(int id);
     }
 }

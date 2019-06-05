@@ -2605,5 +2605,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<Proveedor>(x => x.ProveedorId == idproveedor).Segmentacion.Grupo == "Corredores";
         }
+
+        public string TraerCuit(int id)
+        {
+            return repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == id, x=>x.CUIT);
+        }
     }
 }

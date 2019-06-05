@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IFinalizarFijacionAgent oFinalizarFijacionAgent;
         private readonly IContratosParaFijacionAgent oContratosParaFijacionAgent;
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -154,6 +154,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
             }
+            var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value):"";
+            var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId);
+            var cantidadContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "",oParam.FijacionDePrecioContratoId)
+                .FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP).KilosContrato;
+            if (double.Parse(cantidadContrato) - oParam.Cantidad < 0)
+            {
+                oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
+            }
+            if (oParam.Cantidad < 0)
+            {
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+            }
             if (oParam.Precio == 0 && oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
@@ -239,7 +251,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
                 oFijacionDePrecioSave.CorredorId = oFijacionDePrecio.CorredorId;
-                oFijacionDePrecioSave.ContratoSAP = oFijacionDePrecio.ContratoSAP;
+                oFijacionDePrecioSave.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecioSave.CampanaId = oFijacionDePrecio.CampanaId;
                 oFijacionDePrecioSave.Posicion = oFijacionDePrecio.Posicion;
                 oFijacionDePrecioSave.TrigoEspecial = oFijacionDePrecioSave.TrigoEspecial;
@@ -561,6 +573,7 @@ namespace Molinos.DataAgro.Business.Managers
                     PagoDiferido = fijac.PagoDiferidoContrato
                 }
             });
+            contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId!=0)
             {
                 contrato.DatosFijacion = FechaString(contrato.DatosFijacion);           
@@ -588,9 +601,9 @@ namespace Molinos.DataAgro.Business.Managers
             var fecha = numero[0] + '/' + numero[1] + '/' + numero[2];
             return fecha;
         }
-        public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro)
+        public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
-            var contratos = oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro);
+            var contratos = oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro, fijacionId);
             return contratos;
         }
 
