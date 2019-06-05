@@ -527,7 +527,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(26, resultado.ListaErrores.Count);
+            Assert.AreEqual(25, resultado.ListaErrores.Count);
         }
 
         [Test]

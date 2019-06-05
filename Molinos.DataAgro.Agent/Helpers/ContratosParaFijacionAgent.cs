@@ -107,7 +107,7 @@ namespace Molinos.DataAgro.Agent
                             Posicion = contrato.POSICION,
                             PagoDiferido = contrato.PAGO_DIF_ARP == "X"? true:false,
                             Filtro = filtro + "|" + contrato.CONTRATO
-                        });
+                        };
                     }                    
                 }
                 catch (Exception e)
