@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Business.Managers
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value):"";
             var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId);
             var cantidadContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "",oParam.FijacionDePrecioContratoId)
-                .FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosContrato;
+                .FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosPendiente;
             if (double.Parse(cantidadContrato) - oParam.Cantidad < 0)
             {
                 oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
