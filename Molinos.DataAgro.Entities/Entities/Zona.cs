@@ -5,8 +5,9 @@ namespace Molinos.DataAgro.Entities.Entities
     public partial class Zona
     {
         [Key]
-        public int ZonaId { get; set; }
+        public int Id { get; set; }
         public string Descripcion { get; set; }
+        public string CodigoSap { get; set; }
     }
 }
    

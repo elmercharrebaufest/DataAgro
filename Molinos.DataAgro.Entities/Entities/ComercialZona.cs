@@ -13,8 +13,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
-        [ForeignKey("ZonaId")]
-        public virtual Zona Zona { get; set; }
 
     }
 }

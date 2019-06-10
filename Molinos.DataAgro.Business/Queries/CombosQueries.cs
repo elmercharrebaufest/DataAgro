@@ -116,7 +116,22 @@ namespace Molinos.DataAgro.Business
             }
             return null;
         }
-
+        public List<ZonaCombo> GetAbmZonaCombo()
+        {
+            try
+            {
+                return repositorio.Listar<Zona, ZonaCombo>(x => new ZonaCombo()
+                {
+                    CodigoSap = x.CodigoSap,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
         public List<OperadorCombo> GetAbmOperadorCombo()
         {
             try

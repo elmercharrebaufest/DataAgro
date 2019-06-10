@@ -36,6 +36,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? DiasPesificado { get; set; }
         public bool? PagoDiferidoContrato { get; set; }
         public bool? PagoDiferido { get; set; }
+        public int? DestinoId { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
@@ -60,6 +61,8 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [InverseProperty("FijacionDePrecioContrato")]
         public List<AperturaPrecio> AperturaPrecio { get; set; }
+        [ForeignKey("DestinoId")]
+        public virtual Centro Destino { get; set; }
     }
 }
 

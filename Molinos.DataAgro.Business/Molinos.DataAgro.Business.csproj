@@ -146,6 +146,7 @@
     <Compile Include="Managers\CampañaManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\AgenteCompraManager.cs" />
+    <Compile Include="Managers\ZonaManager.cs" />
     <Compile Include="Managers\ContratoAcuerdoManager.cs" />
     <Compile Include="Managers\MailManager.cs" />
     <Compile Include="Managers\HedgeManager.cs" />

@@ -6,18 +6,16 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business
 {
 
     public class ContratoAcuerdoManager : IContratoAcuerdoManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
         public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio)
@@ -26,29 +24,34 @@ namespace Molinos.DataAgro.Business
             this.repositorio = repositorio;
         }
 
-        public Resultado EliminarContratoAcuerdo(int id)
+        public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
         {
+            var oEntityErrors = new GrabarAcuerdoResult();
+            var oContratoSave = repositorio.Obtener<AgenteCompra>(oAcuerdo.Id);
 
-            var oEntityErrors = new Resultado();
-
-            repositorio.Remover<ContratoAcuerdo>(id);
-
-            logger.Debug("Eliminando el ContratoAcuerdo:" + id);
-            try
+            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
             {
-                repositorio.GuardarCambios();
+                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                logger.Error(ex);
-                throw;
+                oEntityErrors.Error("", "El Contrato Acuerdo no se puede rechazar");
             }
             return oEntityErrors;
         }
 
-        public Resultado GrabarContratoAcuerdo(ContratoAcuerdo oContratoAcuerdo, EnumPerfil perfil)
+        public GrabarAcuerdoResult GrabarAcuerdo(ContratoAcuerdo oContratoAcuerdo)
         {
-            var oEntityErrors = new Resultado();
+            var oEntityErrors = new GrabarAcuerdoResult();
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
@@ -82,6 +85,7 @@ namespace Molinos.DataAgro.Business
             }
             if (oEntityErrors.HayErrores)
             {
+
                 return oEntityErrors;
             }
 
@@ -90,24 +94,18 @@ namespace Molinos.DataAgro.Business
 
             if (oContratoAcuerdo.Id == 0)
             {
-                if (perfil == EnumPerfil.Mesa)
-                {
-                    oContratoAcuerdo.EstadoId = 2;
-                }
-                else
-                {
-                    oContratoAcuerdo.EstadoId = 1;
-                }
                 oContratoAcuerdo.Fecha = DateTime.Now;
                 repositorio.Agregar(oContratoAcuerdo);
             }
             else
             {
                 var objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
+
                 objContratoAcuerdo.MaterialId = oContratoAcuerdo.MaterialId;
                 objContratoAcuerdo.DestinoId = oContratoAcuerdo.DestinoId;
                 objContratoAcuerdo.FechaDesde = oContratoAcuerdo.FechaDesde;
                 objContratoAcuerdo.FechaHasta = oContratoAcuerdo.FechaHasta;
+                objContratoAcuerdo.EstadoId = oContratoAcuerdo.EstadoId;
                 objContratoAcuerdo.ComercialCreadorId = oContratoAcuerdo.ComercialCreadorId;
                 objContratoAcuerdo.Precio = oContratoAcuerdo.Precio;
                 objContratoAcuerdo.Cantidad = oContratoAcuerdo.Cantidad;
@@ -131,32 +129,37 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
-        public ContratoAcuerdoDto TraerContratoAcuerdo(int id)
+        public BasicoContrato TraerAcuerdo(int id)
         {
-            var a = repositorio.Obtener<ContratoAcuerdo, ContratoAcuerdoDto>(x => x.Id == id,
-                    x => new ContratoAcuerdoDto
-                    {
-                        Id = x.Id,
-                        Cantidad = x.Cantidad,
-                        Precio = x.Precio,
-                        ComercialId = x.ComercialCreadorId,
-                        MaterialId = x.MaterialId,
-                        Proveedor = (x.ProveedorId != null && x.ProveedorId > 0)? x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")": "",
-                        ProveedorId = x.ProveedorId ?? 0,
-                        Corredor = (x.CorredorId != null && x.CorredorId > 0) ? x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")": "",
-                        CorredorId = x.CorredorId ?? 0,
-                        DestinoId = x.DestinoId,
-                        FechaHasta = x.FechaHasta,
-                        FechaDesde = x.FechaDesde,
-                        EstadoId = x.EstadoId,
-                        Estado = x.Estado.Descripcion,
-                        MonedaId = x.MonedaId,
-                        Moneda = x.Moneda.Descripcion
-                    })
-                        ?? new ContratoAcuerdoDto();
-            a.FechaModificacionDesde = a.FechaDesde.ToShortDateString();
-            a.FechaModificacion = a.FechaHasta.ToShortDateString();
-            return a;
+            var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == id, x => new BasicoContrato
+            {                
+                Id = x.Id,
+                Cantidad = x.Cantidad,
+                Precio = x.Precio,
+                ComercialId = x.ComercialCreadorId,
+                MaterialId = x.MaterialId,
+                FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.Fecha),
+                FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHasta),
+                Proveedor = (x.ProveedorId != null && x.ProveedorId > 0) ? x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")" : "",
+                ProveedorId = x.ProveedorId ?? 0,
+                Corredor = (x.CorredorId != null && x.CorredorId > 0) ? x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")" : "",
+                CorredorId = x.CorredorId ?? 0,
+                DestinoId = x.DestinoId,
+                TipoNegocioId = 6,
+                FechaHasta = x.FechaHasta,
+                FechaDesde = x.FechaDesde,
+                Estado = x.EstadoId,
+                MonedaId = x.MonedaId,
+                Moneda = x.Moneda.Descripcion
+            });
+            return contrato;            
         }
 
         public DatosIniAbmContratoAcuerdo TraerDatosIniciales()
@@ -165,12 +168,13 @@ namespace Molinos.DataAgro.Business
         }
         public DatosIniComboContratoAcuerdo TraerDatosCombo(int perfilId)
         {
-            var datosCombo = new DatosIniComboContratoAcuerdo();
-
-            datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
-            datosCombo.destino = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion });
-            datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido });
-            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
+            var datosCombo = new DatosIniComboContratoAcuerdo
+            {
+                material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion }),
+                destino = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion }),
+                comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }),
+                moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion })
+            };
 
             return datosCombo;
         }
@@ -225,8 +229,7 @@ namespace Molinos.DataAgro.Business
                                     Corredor = x.Corredor.RazonSocial,
                                     EstadoId = x.EstadoId,
                                     Estado = x.Estado.Descripcion
-                                }
-                                );
+                                });
         }
 
         public Resultado ConfirmarContratoAcuerdo(int id)
@@ -245,6 +248,40 @@ namespace Molinos.DataAgro.Business
             {
                 logger.Error(ex);
                 throw;
+            }
+            return oEntityErrors;
+        }
+
+        public GrabarAcuerdoResult FinalizarAcuerdo(int acuerdoId)
+        {
+            var oEntityErrors = new GrabarAcuerdoResult();
+            var oAcuerdoSave = repositorio.Obtener<ContratoAcuerdo>(acuerdoId);
+
+            if (oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Con_Error)
+            {
+                try
+                {
+                    oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
+                    repositorio.GuardarCambios();
+                    oEntityErrors.Error("", ex.Message);
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                if (oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
+                {
+                    oEntityErrors.Error("", "El Acuerdo ya se encuentra Finalizadao");
+                }
+                else if (oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
+                {
+                    oEntityErrors.Error("", "El Acuerdo ya ha sido Rechazado");
+                }
             }
             return oEntityErrors;
         }

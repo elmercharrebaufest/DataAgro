@@ -66,6 +66,9 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
+    <Compile Include="Dto\AbmZona.cs" />
+    <Compile Include="Dto\GrabarAcuerdoResult.cs" />
+    <Compile Include="Dto\ZonaDto.cs" />
     <Compile Include="Dto\DatosComercialAgentDto.cs" />
     <Compile Include="Dto\DatosProveedorAgentDto.cs" />
     <Compile Include="Dto\CompraAgentDto.cs" />

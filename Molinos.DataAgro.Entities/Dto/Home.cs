@@ -156,7 +156,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ZonaQry
     {
-        public int ZonaId { get; set; }
+        public int Id { get; set; }
         public string Descripcion { get; set; }
     }
 }

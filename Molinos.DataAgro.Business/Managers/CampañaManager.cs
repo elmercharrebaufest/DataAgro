@@ -80,11 +80,11 @@ namespace Molinos.DataAgro.Business
         {
             var calidades = new List<CalidadEspecialDto>()
             {
-                new CalidadEspecialDto {Id=0, CodigoSap="3",Descripcion="Cámara"}
+                new CalidadEspecialDto {Id=0, CodigoSap="3",Descripcion="Camara"}
             };
             if(materialId== 3)
             {
-                calidades.Add(new CalidadEspecialDto { Id = 10, CodigoSap = "1", Descripcion = "Fabrica" });
+                calidades.Add(new CalidadEspecialDto { Id = 0, CodigoSap = "1", Descripcion = "Fabrica" });
             }
             calidades.AddRange(repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.MaterialId == materialId));
             return calidades;

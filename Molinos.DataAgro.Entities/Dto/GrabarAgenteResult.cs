@@ -1,7 +1,7 @@
 ﻿namespace Molinos.DataAgro.Entities.Dto
 {
-    public class GrabarAgenteResult : Resultado
+    public class GrabarAcuerdoResult : Resultado
     {
-        public int? AgenteId { get; set; }
+        public int? AcuerdoId { get; set; }
     }
 }

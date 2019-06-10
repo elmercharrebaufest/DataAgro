@@ -33,24 +33,7 @@ namespace WebDataAgro.Controllers
 
             return View(ActionView);
         }
-
-        public ActionResult Buscar()
-        {
-            var model = new ResultIniContratoAcuerdoModel();
-
-            var result = mobjContratoAcuerdoManager.TraerTodoContratoAcuerdo();
-
-            if (result != null)
-            {
-                model.Datos = result.ContratoAcuerdo;
-            }
-
-            return new JsonResult()
-            {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
+        
         public ActionResult Cancelar()
         {
             return new JsonResult()
@@ -72,11 +55,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult Eliminar(AbmOperadorParam oParam)
+        public ActionResult Eliminar(ContratoAcuerdo oParam)
         {
             return new JsonResult()
             {
-                Data = mobjContratoAcuerdoManager.EliminarContratoAcuerdo(oParam.Id),
+                Data = mobjContratoAcuerdoManager.BorrarAcuerdo(oParam),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -92,42 +75,13 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public ActionResult ContratoAcuerdoCombo(AbmContratoAcuerdoParam oParam)
-        {
-            return new JsonResult()
-            {
-                Data = new DataAbmContratoAcuerdo
-                {
-                    ContratoAcuerdo = mobjContratoAcuerdoManager.TraerContratoAcuerdo(oParam.Id)
-
-                },
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
-        public ActionResult Aplicar(AbmContratoAcuerdoParam oParam)
-        {
-            return new JsonResult()
-            {
-                Data = new AbmContratoAcuerdoResult
-                {
-                    ContratoAcuerdo = mobjContratoAcuerdoManager.TraerContratoAcuerdo(oParam.Id)
-                },
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
 
         public ActionResult Grabar(ContratoAcuerdo oContratoAcuerdo)
         {
             var model = new AbmContratoAcuerdoResult();
 
-            var entityErrors = mobjContratoAcuerdoManager.GrabarContratoAcuerdo(oContratoAcuerdo, GlobalVariables.Perfil);
-            model.Errores = entityErrors.Errores;
-            //if (model.HayErrores)
-            //{
-            //    model.ContratoAcuerdo = new ContratoAcuerdoDto { Cantidad = oContratoAcuerdo.Cantidad, Comercial = oContratoAcuerdo.Comercial.ToString(), Destino = oContratoAcuerdo.Destino.ToString() };
-            //}
+            var entityErrors = mobjContratoAcuerdoManager.GrabarAcuerdo(oContratoAcuerdo);
+            model.Errores = entityErrors.Errores;           
 
             return new JsonResult()
             {

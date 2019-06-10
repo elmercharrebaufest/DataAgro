@@ -1,14 +1,9 @@
 ﻿var viewModel;
-//var _DefaultDateTemplate = "{0:dd/MM/yyyy}";
 var datosIniAbmContratoAcuerdo;
 kendo.culture("es-AR");
 
 
 $(document).ready(function () {
-    $('#rootwizard').bootstrapWizard({
-        'withVisible': false
-    });
-
     InicializarElementos();
     InicializarDatos();
     InicializarDate();
@@ -18,32 +13,8 @@ $(document).ready(function () {
     InicializarBusquedaInicial();
 });
 
-function InicializarBordesRojos() {
-    //$("select.required-box, input.required-box").on("change", function (e) {
-    //    var padre = $(this).hasClass("required-box-parent") ? $(this) : $(this).parent().parent();
-
-    //    if ($(this).val() == "") {
-    //        padre.addClass("required-border");
-    //    } else {
-    //        padre.removeClass("required-border");
-    //    }
-    //});
-
-    //$("select.required-box, input.required-box").trigger("change");
-}
-
 function InicializarElementos() {
-
-    //InicializarBordesRojos();
-
-    $("#butAgregar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Agregar.png")
-    });
-
-    $("#butModificar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Modificar.png")
-    });
-
+    
     $("#butEliminar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Eliminar.png")
     });
@@ -108,7 +79,6 @@ function InicializarElementos() {
         }
     });
 
-
     $("#buscadorCorredor").click(function () {
         $("#buscadorCorredor").data("kendoAutoComplete").value("");
         $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
@@ -152,9 +122,7 @@ function InicializarElementos() {
         }
 
     });
-
-
-
+       
     $("#comercialId").kendoDropDownList({
         optionLabel: "SELECCIONE UN COMERCIAL...",
         dataTextField: "Comercial",
@@ -235,7 +203,6 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-    InicializarBordesRojos();
 }
 
 function InicializarDate() {
@@ -571,22 +538,6 @@ function LimpiarValidaciones() {
     $("#errCodigoSap").css("display", "none");
 }
 
-function HabilitarInicio() {
-    $('#rootwizard').bootstrapWizard('show', 'tab1');
-}
-
-function HabilitarAgregar() {
-    var grid = $("#gridIni").data("kendoGrid");
-
-    grid.clearSelection();
-
-    $('#rootwizard').bootstrapWizard('show', 'tab2');
-}
-
-function HabilitarEdicion() {
-    $('#rootwizard').bootstrapWizard('show', 'tab2');
-}
-
 function HabilitarCancelar() {
     viewModel.set("isFilterDisabled", false);
     viewModel.set("isAddNewDisabled", false);
@@ -664,7 +615,6 @@ function Modificar() {
             $('#Cantidad').val(viewModel.ContratoAcuerdo.Cantidad);
             $("#fechaHasta").val(viewModel.ContratoAcuerdo.FechaModificacion);
             viewModel.set("isModifyDisabled", true);
-            //InicializarBordesRojos();
             HabilitarEdicion();
             LimpiarValidaciones();
         }
@@ -828,7 +778,6 @@ function ModificarPorId(id) {
             $("#fechaDesde").val(viewModel.ContratoAcuerdo.FechaModificacionDesde);
             $("#fechaHasta").val(viewModel.ContratoAcuerdo.FechaModificacion);
             viewModel.set("isModifyDisabled", true);
-            //InicializarBordesRojos();
             HabilitarEdicion();
             LimpiarValidaciones();
         }

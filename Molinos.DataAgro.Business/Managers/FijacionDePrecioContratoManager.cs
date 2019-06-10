@@ -84,26 +84,6 @@ namespace Molinos.DataAgro.Business.Managers
             };
         }
 
-        private List<FijacionDePrecioContratoIni> BasicoFijacionPrecioContratoTraerPorFiltro(int contratoId)
-        {
-            return repositorio.Listar<FijacionDePrecioContrato, FijacionDePrecioContratoIni>(
-                x => new FijacionDePrecioContratoIni
-                {
-                    FijacionDePrecioContratoId = x.FijacionDePrecioContratoId,
-                    ContratoId = Convert.ToInt32(x.ContratoSAP),
-                    Proveedor = x.Proveedor.RazonSocial,
-                    Fecha = x.Fecha.ToString(),
-                    Comercial = x.Comercial.Nombres,
-                    Material = x.Material.Descripcion,
-                    Cantidad = x.Cantidad,
-                    MonedaId = x.MonedaId,
-                    Ampliaciones = x.Ampliaciones,
-                    Estado = x.Estado.Descripcion,
-                    Pizarra = x.Pizarra ?? false,
-                    Observacion = x.Observacion
-                }, x => contratoId == 0 || x.ContratoSAP == contratoId.ToString());
-        }
-
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
         {
             var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.FijacionDePrecioContratoId);
@@ -241,7 +221,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oFijacionDePrecioSave.EstadoId = 7;
                 }
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
-                oFijacionDePrecioSave.Fecha = oFijacionDePrecio.Fecha;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
                 oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
@@ -261,7 +240,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Pizarra = oFijacionDePrecio.Pizarra;
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
-
+                oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
                     var aperturas = repositorio.Listar<AperturaPrecio>(x => x.FijacionId != null && x.FijacionId == oFijacionDePrecioSave.FijacionDePrecioContratoId);
@@ -271,6 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                oFijacionDePrecio.Fecha = DateTime.Now;
                 if (oContratoId == 0)
                 {
                     oFijacionDePrecio.ContratoId = null;
@@ -547,7 +527,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Pesificado = false,
                 TrigoEspecial = fijac.TrigoEspecial,
                 Posicion = fijac.Posicion,
-                DestinoDescripcion = "",
+                DestinoId = fijac.DestinoId,
+                DestinoDescripcion = fijac.Destino.Descripcion,
                 Consignatario = false,
                 PlanCanje = false,
                 EstablecimientoPropio = false,
@@ -570,7 +551,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "/" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
-                    PagoDiferido = fijac.PagoDiferidoContrato
+                    PagoDiferido = fijac.PagoDiferidoContrato,
                 }
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');

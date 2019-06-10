@@ -229,7 +229,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 come = repositorio.Listar<Comercial, ComercialQry>(s => new ComercialQry() { ComercialId = s.ComercialId, IdActiveDirectory = s.IdActiveDirectory }, x => equipo.Contains(x.ComercialId)),
 
-                zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { ZonaId = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId) && x.GrupoDeCompras != null, 0, "Descripcion")
+                zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { Id = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId) && x.GrupoDeCompras != null, 0, "Descripcion")
             };
             return DatosIni;
 

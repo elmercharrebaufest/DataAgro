@@ -54,6 +54,7 @@ namespace Molinos.DataAgro.Agent
                         Calidad = x.TrigoEspecial,
                         Campana = x.Campana.Descripcion,
                         PagoDiferido = x.PagoDiferido?? false,
+                        Centro= x.DestinoId,
                         Filtro = filtro + "|" + id
                     });
                     contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
@@ -105,7 +106,8 @@ namespace Molinos.DataAgro.Agent
                             Calidad = contrato.CALIDAD == "X" ? true : false,
                             Campana = contrato.COSECHA,
                             Posicion = contrato.POSICION,
-                            PagoDiferido = contrato.PAGO_DIF_ARP == "X"? true:false,
+                            PagoDiferido = contrato.PAGO_DIF_ARP == "X" ? true : false,
+                            Centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contrato.CENTRO, x => x.Id),
                             Filtro = filtro + "|" + contrato.CONTRATO
                         };
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)

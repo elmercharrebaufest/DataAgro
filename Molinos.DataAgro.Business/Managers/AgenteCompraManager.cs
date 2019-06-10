@@ -97,7 +97,6 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
                 oFasonSave.Precio = oAgente.Precio;
-                oFasonSave.Fecha = oAgente.Fecha;
                 oFasonSave.Cantidad = oAgente.Cantidad;
                 oFasonSave.EstadoId = 2;
                 oFasonSave.OperadorId = oAgente.OperadorId;
@@ -109,6 +108,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                oAgente.Fecha = DateTime.Now;
                 repositorio.Agregar(oAgente);
             }
 

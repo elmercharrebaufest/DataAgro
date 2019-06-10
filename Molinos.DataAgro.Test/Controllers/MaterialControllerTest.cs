@@ -28,33 +28,7 @@ namespace Molinos.DataAgro.Test.Controllers
             materialManagerMock = new Mock<IMaterialManager>();
             target = new MaterialController(materialManagerMock.Object);
         }
-
-        [Test]
-        public void FiltrarMaterialTest()
-        {
-            var materialFiltro = new ParamAbmMaterial() { Codigo = "A", Descripcion = "A" };
-            materialManagerMock.Setup(x => x.TraerFiltroMaterial(materialFiltro)).Returns(new ResultIniMaterial
-            {
-                Material = new List<MaterialIni>()
-                {
-                    new MaterialIni()
-                    {
-                        MaterialId = 1,
-                        Codigo= "A",
-                        Descripcion="A",
-                        CampañaIdActual = 1
-                    }
-                }
-            });
-            var result = target.Filtrar(materialFiltro);
-
-            Assert.NotNull(result);
-
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"MaterialId\":1,\"Codigo\":\"A\",\"Descripcion\":\"A\",\"CampañaIdActual\":1}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
-        }
+               
 
         [Test]
         public void AplicarCondicionTest()
@@ -78,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
         }
 
         [Test]
-        public void GrabarCondicionTest()
+        public void GrabarmaterialnTest()
         {
             var material = new Material
             {
@@ -94,7 +68,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":\"\",\"Descripcion\":\"\",\"CampañaId\":null,\"Campaña\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -121,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":\"\",\"Descripcion\":\"\",\"CampañaId\":null,\"Campaña\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

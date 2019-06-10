@@ -98,6 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 5));
+                datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 6));
             }
             datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
 
@@ -119,6 +120,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.TipoFason = repositorio.Listar<TipoFason, TipoFasonQry>(x => new TipoFasonQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.TipoAgenteCompra = repositorio.Listar<TipoAgenteCompra, TipoAgenteCompraQry>(x => new TipoAgenteCompraQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Operador = repositorio.Listar<Operador, OperadorQry>(x => new OperadorQry() { Id = x.Id, Descripcion = x.Descripcion });
+            datosCombo.Zona= repositorio.Listar<Zona, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion });
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues)
@@ -320,7 +322,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
-                var cantidadAcuerdo = contratoAcuerdoManager.TraerContratoAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
+                var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
                 var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value).Sum(d => d.Cantidad);
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
@@ -330,6 +332,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.StandardDeCalidadId == 0 || oParam.StandardDeCalidadId == null)
             {
                 oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
+            }
+            if (oParam.StandardDeCalidadId == 6 && oParam.MaterialId == 5 && (oParam.ZonaId == 0 || oParam.ZonaId == null))
+            {
+                oErrorMessages.Error("", "Zona es obligatoria para Materia Extraña");
             }
             if (oParam.AperturaPrecio != null)
             {
@@ -458,6 +464,9 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContrato.EstadoId = oContratoSave.EstadoId;
                 }
+            } else
+            {
+                oContrato.Fecha = hoy;
             }
 
             oContratoSave.MaterialId = oContrato.MaterialId;
@@ -515,6 +524,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
             oContratoSave.Pizarra = oContrato.Pizarra;
             oContratoSave.PagoDiferido = oContrato.PagoDiferido;
+            oContratoSave.ZonaId = oContrato.ZonaId;
 
             if (descuentosExistentes != null)
             {
@@ -567,10 +577,6 @@ namespace Molinos.DataAgro.Business.Managers
                         oContratoSave.EstadoId = 7;
                     }
                 }
-            }
-            if (oContratoSave.Fecha.Date != oContrato.Fecha.Date)
-            {
-                oContratoSave.Fecha = oContrato.Fecha;
             }
 
             if (oContratoSave.ContratoSAP != null)
@@ -963,7 +969,10 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoMadre = x.ContratoMadre,
                 Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
                 StandardCalidadId = x.StandardDeCalidadId,
-                PagoDiferido= x.PagoDiferido
+                StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
+                PagoDiferido= x.PagoDiferido,
+                ZonaId = x.ZonaId,
+                ZonaDescripcion = x.Zona.Descripcion
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);

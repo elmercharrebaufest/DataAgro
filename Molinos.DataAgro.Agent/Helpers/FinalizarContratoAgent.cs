@@ -123,7 +123,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     IM_CONTRATO = new ZMPES5270
                     {
-
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
                         CONTR_DATAAGRO = contrato.ContratoId.ToString(),
                         COSECHA = contrato.Campana.Descripcion,
@@ -133,13 +132,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                         FECHA_LIMITE = fechaDolarizadoString,
                         GRUPO_COMPRAS = "",
-                        MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                        MONEDA = contrato.Moneda?.MonedaId,
                         NO_INFORMAR_SIO = noInformaSioString,
                         PAGO_DIFERIDO = pagoDiferidoString,
                         MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = contrato.PagoDiferido.HasValue&& contrato.PagoDiferido.Value? "X":"",
                         PRECIO_PIZARRA = contrato.Precio,
-                        PRECIO = (contrato.PrecioNeto.HasValue) ? contrato.PrecioNeto.Value : contrato.Precio,
+                        PRECIO = contrato.PrecioNeto ?? contrato.Precio,
                         PROVEEDOR = contrato.Proveedor.CUIT,
                         PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
@@ -152,7 +151,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CLASIFICACION = contrato.Clasificacion.Descripcion,
                         IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
                         CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
-                        COND_FIJACION = contrato.CondicionFijacion != null ? contrato.CondicionFijacion.CodigoSap : null,
+                        COND_FIJACION = contrato.CondicionFijacion?.CodigoSap,
                         CAMIONES = cantidadCamiones,
                         CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
                         BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
@@ -178,13 +177,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CONTRVEND = contrato.ContratoVendedor ?? "",
                         SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
                         SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
-                        CONTRATO_MADRE = contrato.ContratoMadre != null ? contrato.ContratoMadre : "",
-                        CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : ""
+                        CONTRATO_MADRE = contrato.ContratoMadre ?? "",
+                        CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "",
+                        ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap:""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
-                        FE_DESDE = contrato.DesdeFijacion != null ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : null,
-                        FE_HASTA = contrato.HastaFijacion != null ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : null
+                        FE_DESDE = contrato.DesdeFijacion?.ToString("yyyy-MM-dd"),
+                        FE_HASTA = contrato.HastaFijacion?.ToString("yyyy-MM-dd")
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),

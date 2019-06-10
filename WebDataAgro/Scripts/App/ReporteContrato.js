@@ -133,7 +133,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "A PRECIO"
                     }, {
-                        TipoNegocio: "FIJACION"                    
+                        TipoNegocio: "FIJACION"
                     }]
                 }, width: 70
             },
@@ -176,6 +176,13 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, title: "Moneda"
             },
+            { field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}" },
+            { field: "ImporteRedespacho", title: "Importe Redespacho", type: "number", format: "{0:n2}" },
+            { field: "PorcentajeComision", title: "Porcentaje Comision", type: "number", format: "{0:n2}" },
+            { field: "ImporteComision", title: "Importe Comision", type: "number", format: "{0:n2}" },
+            { field: "ImporteBonificacion", title: "Importe Bonificacion", type: "number", format: "{0:n2}" },
+            { field: "PorcentajeBonificacion", title: "Porcentaje Bonificacion", type: "number", format: "{0:n2}" },
+
             { field: "Provincia", filterable: { ui: createMultiSelectProvincia } },
             { field: "Localidad", filterable: { ui: createMultiSelectLocalidad } },
             { field: "Campania", value: "Campania", title: "Campaña", filterable: { multi: true } },
@@ -185,7 +192,7 @@ function CreateGridInformeCompraNet() {
                     { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 }
                 ]
             },
-            
+
             { field: "Comercial", title: "Comercial", filterable: { ui: createMultiSelectComercial } },
             { field: "ComercialCreador", title: "Registro Comercial", filterable: { ui: createMultiSelectComercial } },
             {
@@ -232,29 +239,48 @@ function CreateGridInformeCompraNet() {
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var templateHora = kendo.template(this.columns[5].template);
-            var templateSustentable = kendo.template(this.columns[17].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[18].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[19].columns[0].template);
-            var templateSIO = kendo.template(this.columns[20].template);
-            var templateTrigoEsp = kendo.template(this.columns[21].template);
+            var templateSustentable = kendo.template(this.columns[23].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[24].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[25].columns[0].template);
+            var templateSIO = kendo.template(this.columns[26].template);
+            var templateTrigoEsp = kendo.template(this.columns[27].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
                     Hora: row.cells[5].value,
-                    Sustentable: row.cells[18].value,
-                    Dolarizado: row.cells[21].value,
-                    Pesificado: row.cells[23].value,
-                    NoInformaSIO: row.cells[25].value,
-                    TrigoEspecial: row.cells[26].value,
+                    Sustentable: row.cells[24].value,
+                    Dolarizado: row.cells[27].value,
+                    Pesificado: row.cells[29].value,
+                    NoInformaSIO: row.cells[31].value,
+                    TrigoEspecial: row.cells[32].value,
                 };
+
+                var operacionFecha = row.cells[4].value;
+                operacionFecha.setHours(operacionFecha.getHours() + 1);
+                row.cells[4].value = operacionFecha;
+
+                var fechaHasta = row.cells[20].value;
+                var fechaDesde = row.cells[21].value;
+
+                if (fechaHasta != null) {
+
+                    fechaHasta.setHours(fechaHasta.getHours() + 1);
+                    row.cells[20].value = fechaHasta;
+                }
+                if (fechaDesde != null) {
+                    fechaDesde.setHours(fechaDesde.getHours() + 1);
+                    row.cells[21].value = fechaDesde;
+                }
+
                 row.cells[5].value = templateHora(dataItem);
-                row.cells[18].value = templateSustentable(dataItem);
-                row.cells[21].value = templateDolarizado(dataItem);
-                row.cells[23].value = templatePesificado(dataItem);
-                row.cells[25].value = templateSIO(dataItem);
-                row.cells[26].value = templateTrigoEsp(dataItem);
+                row.cells[24].value = templateSustentable(dataItem);
+                row.cells[27].value = templateDolarizado(dataItem);
+                row.cells[29].value = templatePesificado(dataItem);
+                row.cells[31].value = templateSIO(dataItem);
+                row.cells[32].value = templateTrigoEsp(dataItem);
+
             }
         },
         pageable: {
@@ -384,7 +410,7 @@ function CreateGridInformeCompraNet() {
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
     };
-        
+
     //Con definir un método de estos para cada columna multiselect estamos,
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");

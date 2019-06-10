@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Test.Managers
                .Returns(new List<ComercialQry>() { new ComercialQry { ComercialId = 1, Comercial = "MARCO ANTONIO" } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<TipoNegocio, TipoNegocioQry>>>(), It.IsAny<Expression<Func<TipoNegocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<TipoNegocioQry>() { new TipoNegocioQry { TipoNegocioId = 1, Descripcion = "A PRECIO" }, new TipoNegocioQry { TipoNegocioId = 4, Descripcion = "FASON" }, new TipoNegocioQry { TipoNegocioId = 5, Descripcion = "AGENTE" } });
+               .Returns(new List<TipoNegocioQry>() { new TipoNegocioQry { TipoNegocioId = 1, Descripcion = "A PRECIO" }, new TipoNegocioQry { TipoNegocioId = 4, Descripcion = "FASON" }, new TipoNegocioQry { TipoNegocioId = 5, Descripcion = "AGENTE" }, new TipoNegocioQry { TipoNegocioId = 6, Descripcion = "ACUERDO" } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ClasificacionCompraNet, ClasificacionCompraNetQry>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<ClasificacionCompraNetQry>() { new ClasificacionCompraNetQry { Id = 1, Descripcion = "PRODUCTOR" } });
@@ -520,7 +520,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, decimal>>>())).Returns(-3000);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
-            contratoAcuerdoManagerMock.Setup(y => y.TraerContratoAcuerdo(It.IsAny<int>())).Returns(new ContratoAcuerdoDto { Cantidad = 1 });
+            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1 });
 
 
             var resultado = target.GrabarContrato(oContrato);
@@ -575,7 +575,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, decimal>>>())).Returns(-3000);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
-            contratoAcuerdoManagerMock.Setup(y => y.TraerContratoAcuerdo(It.IsAny<int>())).Returns(new ContratoAcuerdoDto { Cantidad = 1 });
+            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1 });
             
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);

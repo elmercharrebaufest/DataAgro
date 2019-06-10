@@ -120,6 +120,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ZonaControllerTest.cs" />
     <Compile Include="Controllers\OperadorControllerTest.cs" />
     <Compile Include="Controllers\ErrorControllerTest.cs" />
     <Compile Include="Controllers\FijacionDePrecioControllerTest.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Managers\CampaniaActualManagerTest.cs" />
     <Compile Include="Managers\AgenteCompraManagerTest.cs" />
     <Compile Include="Managers\AreaInfluenciaManagerTest.cs" />
+    <Compile Include="Managers\ZonaManagerTest.cs" />
     <Compile Include="Managers\DestinatarioManagerTest.cs" />
     <Compile Include="Managers\CondicionManagerTest.cs" />
     <Compile Include="Managers\CanalOperacionManagerTest.cs" />

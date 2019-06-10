@@ -41,6 +41,7 @@ namespace WebDataAgro.Controllers
 
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
+        private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
 
 
 
@@ -48,7 +49,11 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager, IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager)
+        public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager,
+            IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, 
+            IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, 
+            ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, 
+            ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -62,6 +67,7 @@ namespace WebDataAgro.Controllers
             mobjLogger = oLogger;
             mobjFasonManager = oFasonManager;
             mobjAgenteManager = oAgenteManager;
+            mobjContratoAcuerdoManager = oContratoAcuerdoManager;
         }
 
         //-----------------------------------------------------
@@ -198,7 +204,15 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        public ActionResult BorrarAcuerdo(ContratoAcuerdo oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoAcuerdoManager.BorrarAcuerdo(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
 
+        }
         public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
@@ -499,6 +513,15 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public ActionResult GrabarAcuerdo(ContratoAcuerdo oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoAcuerdoManager.GrabarAcuerdo(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult TraerFasonCompleto(int id)
         {
             return new JsonResult()
@@ -515,6 +538,14 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult TraerAcuerdoCompleto(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoAcuerdoManager.TraerAcuerdo(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult FinalizarFason(int fasonId)
         {
             return new JsonResult()
@@ -528,6 +559,14 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjAgenteManager.FinalizarAgente(agenteId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult FinalizarAcuerdo(int acuerdoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoAcuerdoManager.FinalizarAcuerdo(acuerdoId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -569,6 +608,6 @@ namespace WebDataAgro.Controllers
         {
             return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet);
         }
-
+        
     }
 }

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Zona] (
-    [ZonaId]      INT           IDENTITY (1, 1) NOT NULL,
-    [Descripcion] VARCHAR (100) NOT NULL,
-    CONSTRAINT [PK_Zona] PRIMARY KEY CLUSTERED ([ZonaId] ASC)
+    [Id]	INT IDENTITY (1, 1) NOT NULL,
+    [Descripcion]         VARCHAR(50) NOT NULL,
+    [CodigoSap]           VARCHAR(20) NOT NULL
+    CONSTRAINT [PK_Zona] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
-

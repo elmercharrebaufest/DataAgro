@@ -121,6 +121,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? StandardCalidadId { get; set; }
         public string StandardDeCalidadDescripcion { get; set; }
         public bool? PagoDiferido { get; set; }
+        public int? ZonaId { get; set; }
+        public string ZonaDescripcion { get; set; }
+        public int? AcuerdoId { get; set; }
+        public decimal? ImporteFinanciero { get; set; }
+        public decimal? ImporteRedespacho { get; set; }
+        public decimal? ImporteComision { get; set; }
+        public decimal? ImporteBonificacion { get; set; }
+        public decimal? PorcentajeBonificacion { get; set; }
     }
 
 

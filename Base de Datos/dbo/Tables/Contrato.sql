@@ -60,6 +60,8 @@
     [StandardDeCalidadId] INT NULL, 
 	[PagoDiferido] BIT NULL,
 
+	[ZonaId] INT NULL,
+
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
     CONSTRAINT [FK_Contrato_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
@@ -77,5 +79,6 @@
     CONSTRAINT [FK_Contrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
 	CONSTRAINT [FK_Contrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
 	CONSTRAINT [FK_Contrato_ContratoAcuerdo] FOREIGN KEY (ContratoAcuerdoId) REFERENCES [ContratoAcuerdo]([Id]),
-	CONSTRAINT [FK_Contrato_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad]([Id])
+	CONSTRAINT [FK_Contrato_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad]([Id]),
+	CONSTRAINT [FK_Contrato_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id])
 )

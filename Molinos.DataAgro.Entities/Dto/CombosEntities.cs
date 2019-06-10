@@ -209,7 +209,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion;
         public string CodigoSap;
     }
-
+    public class ZonaCombo
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+    }
     public class OperadorCombo
     {
         public int Id;

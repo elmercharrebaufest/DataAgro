@@ -23,13 +23,13 @@
     [TrigoEspecial] BIT NULL,
 	[FinDelDiaId] INT NULL,
     [Pizarra] BIT NULL,
-	
 	[PagoDiferidoContrato] BIT NULL,
 	[DiasPesificado] INT NULL,	
 	[PagoDiferido] BIT NULL,
+    [PrecioNeto] DECIMAL(11, 2) NULL, 
+	[DestinoId] INT NULL,
 
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
-    [PrecioNeto] DECIMAL(11, 2) NULL, 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Comercial] FOREIGN KEY (ComercialId) REFERENCES Comercial(ComercialId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_ToTable] FOREIGN KEY (ProveedorId) REFERENCES Proveedor(ProveedorId),
@@ -38,5 +38,6 @@
     CONSTRAINT [FK_FijacionDePrecioContrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
     CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Contrato]([ContratoId]),
     CONSTRAINT [FK_FijacioDePrecioContrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),
-	CONSTRAINT [FK_FijacioDePrecioContrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id])
+	CONSTRAINT [FK_FijacioDePrecioContrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
+    CONSTRAINT [FK_FijacioDePrecioContrato_Centro] FOREIGN KEY ([DestinoId]) REFERENCES [Centro]([Id])
 )

@@ -56,6 +56,8 @@ IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Granos verdes'
 --IF NOT EXISTS (select 1 from CalidadEspecial where Descripcion = 'Cuerpos extraños') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Cuerpos extraños','MPSOJCEX',3); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPMAZGRA') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Grado','MPMAZGRA',1); END
 IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPTRPGRA') BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Grado','MPTRPGRA',2); END
+IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPGIRCEX'AND MaterialId=4) BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Materia Extraña','MPGIRCEX',4); END
+IF NOT EXISTS (select 1 from CalidadEspecial where CodigoSap = 'MPGIRCEX' AND MaterialId=5) BEGIN insert into CalidadEspecial (Descripcion, CodigoSap, MaterialId) values ('Materia Extraña','MPGIRCEX',5); END
 
 --TipoDB
 IF NOT EXISTS (select 1 from TipoDB where Descripcion = 'Sobre el precio') BEGIN insert into TipoDB (Descripcion, CodigoSap) values ('Sobre el precio','S'); END
@@ -69,6 +71,7 @@ IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Generales') BEGI
 --Tipo Negocio
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'FASON') BEGIN insert into TipoNegocio (Descripcion) values ('FASON'); END
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'AGENTE DE COMPRAS') BEGIN insert into TipoNegocio (Descripcion) values ('AGENTE DE COMPRAS'); END
+IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'CONTRATO ACUERDO') BEGIN insert into TipoNegocio (Descripcion) values ('CONTRATO ACUERDO'); END
 
 --Tipo Fason
 IF NOT EXISTS (select 1 from TipoFason where Descripcion = 'FAS') BEGIN insert into TipoFason (Descripcion) values ('FAS'); END
