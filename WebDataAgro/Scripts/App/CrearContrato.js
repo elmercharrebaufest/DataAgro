@@ -442,7 +442,7 @@ function InicializarElementos() {
                 $("#campanaDiv").hide();
                 $("#procedenciaDiv").hide();
                 $("#clasificacionDiv").hide();
-                $("#destinoDiv").hide();
+                $("#destinoDiv").show();
                 $("#CantidadCamionesDiv").hide();
                 $("#planCanjeConsignatarioIdDiv").hide();
                 $("#DatosBoleto").hide();
@@ -542,15 +542,16 @@ function InicializarElementos() {
                 $("#guardarBtn").append("Guardar Negocio");
                 $("#boton-ampliar").show();
                 $("#mercsDepositoDiv").show();
-                
+
                 RemoverFondosGrises();
                 $("#boton-ampliar").trigger("click");
                 $("#boton-ampliar").trigger("click");
 
                 if (this.value() == 1) {
                     $(".fechasAFijar").show();
+                   
                     if ($("#boton-ampliar").text() == "+ AMPLIAR") {
-                        $(".contratoAFijar").hide();
+                        $(".contratoAFijar").show();
                     }
                     else {
                         $(".contratoAFijar").show();
@@ -1526,10 +1527,9 @@ function CambioCalidades(calidades) {
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }        
-    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+    } if ($("#material").val() == 5) {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").show();
-        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
     } else {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
@@ -2072,11 +2072,11 @@ function ObtenerDatos() {
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
     obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;
-    obj.ZonaId = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" && obj.MaterialId == 5 ?
+    obj.ZonaId = obj.MaterialId == 5 ?
         $("#zonasGirasolAltoId").val() : null;
     if (obj.MaterialId === "3") {
         obj.Calidad = viewModel.Calidades;
-    } else if (obj.MaterialId !== "5") {
+    } else {
         if ($("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" || $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Materia Extraña") {
             var err = [];
             if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
@@ -2612,7 +2612,7 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    var descripcion = contrato.ZonaId != 0 || contrato.ZonaId != null ? "Materia Extraña" : contrato.Calidades[0].CalidadEspecialDesc;
+    var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
     $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
     CambioCalidades(contrato.Calidades);
     $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);

@@ -333,9 +333,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
             }
-            if (oParam.StandardDeCalidadId == 6 && oParam.MaterialId == 5 && (oParam.ZonaId == 0 || oParam.ZonaId == null))
+            if (oParam.MaterialId == 5 && (oParam.ZonaId == 0 || oParam.ZonaId == null))
             {
-                oErrorMessages.Error("", "Zona es obligatoria para Materia Extraña");
+                oErrorMessages.Error("", "Zona es obligatoria para Girasol Alto Oleico");
             }
             if (oParam.AperturaPrecio != null)
             {
@@ -368,7 +368,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
             {
-
                 oErrorMessages.Error("", "Se debe completar el campo Valor de Calidad");
             }
             if (oParam.Calidad != null)

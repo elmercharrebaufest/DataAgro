@@ -240,7 +240,14 @@ namespace Molinos.DataAgro.Business
             //// Trigo
             var TonTrigo = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 2));
 
-            datos.ToneladasTodo = "Maiz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") + " Tn. ";
+            //// Girasol
+            var TonGira = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 4));
+
+            //// Girasol Alto
+            var TonGiraAlto = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 5));
+
+            datos.ToneladasTodo = "Maiz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
+                " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol Alto Oleico " + TonGiraAlto.ToString("N2") + " Tn. ";
 
             var oRptAlmacenamientoInfo = repositorio.Listar<InformeComercialAlmacenamiento, InformeComercialAcopiadores>(x => new InformeComercialAcopiadores()
             {

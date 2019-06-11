@@ -1446,11 +1446,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
+
     if (zona !== "undefined" && zona !=="") {
-        $("#calidadesDivVisualizar").hide();
         $("#visualizar-zona-girasol").text(zona);
     } else {
-        $("#calidadesDivVisualizar").show();
         $("#visualizar-zona-girasol").text("");
     }
     $("#visualizar_aperturaFinanciero").text(null);
