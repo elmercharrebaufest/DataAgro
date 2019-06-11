@@ -35,12 +35,13 @@ namespace Molinos.DataAgro.Agent
             {
                 var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (CuitCorredor != "" ? x.Corredor.CUIT == CuitCorredor : x.Corredor.CUIT == null));
 
-                foreach (var id in contratos)
+                var listaContratos = contratos.Where(x=>x.StartsWith("000" + filtro));
+                foreach (var id in listaContratos)
                 {
                     var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
                     && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                     var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == idFijacion && x.ContratoSAP == id , x => x.Cantidad):0;
-                    var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1 && x.ContratoSAP.ToString().Contains(filtro), x => new DatosFijacionDeContratoDto()
+                    var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1, x => new DatosFijacionDeContratoDto()
                     {
                         ContratoId = id.ToString(),
                         KilosAplicados = cantidad.ToString(),
@@ -86,7 +87,8 @@ namespace Molinos.DataAgro.Agent
 
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION(rq);
                     logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
-                    foreach (var contrato in devolucion.EX_SALIDA)
+                    var listaContratos = devolucion.EX_SALIDA.Where(x => x.CONTRATO.StartsWith("000" + filtro));
+                    foreach (var contrato in listaContratos)
                     {
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == contrato.CONTRATO
                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
