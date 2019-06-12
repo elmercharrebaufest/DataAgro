@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Business
             {
                 inf = repositorio.Agregar(inf);
             }
-            oEntityErrors.InformeId = inf.InformeComercialId;
+            
             #endregion
 
             // 2 - Tiene que grabar en informe Comercial Produccion
@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Business
                 throw;
             }
 
-
+            oEntityErrors.InformeId = inf.InformeComercialId;
             return oEntityErrors;
         }
 
@@ -247,7 +247,7 @@ namespace Molinos.DataAgro.Business
             var TonGiraAlto = repositorio.ObtenerConsultaEscalar(new ObtenerToneladasPorMaterial(InformeId, 5));
 
             datos.ToneladasTodo = "Maiz " + TonMaiz.ToString("N2") + " Tn. / Soja " + TonSoja.ToString("N2") + " Tn. / Trigo " + TonTrigo.ToString("N2") +
-                " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol Alto Oleico " + TonGiraAlto.ToString("N2") + " Tn. ";
+                " Tn. / Girasol " + TonGira.ToString("N2") + " Tn. / Girasol A. O. " + TonGiraAlto.ToString("N2") + " Tn. ";
 
             var oRptAlmacenamientoInfo = repositorio.Listar<InformeComercialAlmacenamiento, InformeComercialAcopiadores>(x => new InformeComercialAcopiadores()
             {
