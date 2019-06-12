@@ -1493,40 +1493,6 @@ function CambioCalidades(calidades) {
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }        
-    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
-        $(".no-girasol-alto").hide();
-        $(".girasol-alto").show();
-        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-    } else {
-        $(".girasol-alto").hide();
-        $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
-    }
-}
-
-function CambioCalidades(calidades) {
-    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara" && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica" && $("#calidadesEspecialesId").val() !== "") {
-        $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
-            $(".calidad-no-grado").hide();
-            LimpiarCalidades();
-        } else {
-            $(".calidad-no-grado").show();
-        }
-    } else {
-        $(".calidadesEspecialesDatos").hide();
-        LimpiarCalidades();
-    }
-    if (calidades !== undefined && calidades.length == 1) {
-        $("#valorEspecialesId").data("kendoNumericTextBox").value(calidades[0].Valor);
-    } else  {
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
-        } else {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-        }        
     } if ($("#material").val() == 5) {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").show();
