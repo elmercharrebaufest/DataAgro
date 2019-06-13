@@ -82,7 +82,16 @@ namespace Molinos.DataAgro.Business
             {
                 inf = repositorio.Agregar(inf);
             }
-            
+            try
+            {
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+            oEntityErrors.InformeId = inf.InformeComercialId;
             #endregion
 
             // 2 - Tiene que grabar en informe Comercial Produccion
@@ -95,12 +104,12 @@ namespace Molinos.DataAgro.Business
                     var informeProduccion = new InformeComercialProduccion()
                     {
                         InformeComercial = produ.InformeComercial,
-                        Hectareas = produ.Hectareas,
+                        Hectareas = produ.Hectareas != null ? produ.Hectareas : 0,
                         Localidad = produ.Localidad,
                         Material = produ.Material,
                         Propio = produ.Propio,
                         Alquilado = produ.Alquilado,
-                        Toneladas = produ.Toneladas                                               
+                        Toneladas = produ.Toneladas != null ? produ.Toneladas : 0
                     };
                     repositorio.Agregar(informeProduccion);
                 }
@@ -115,7 +124,7 @@ namespace Molinos.DataAgro.Business
                 {
                     InformeComercial = produ.InformeComercial,
                     Localidad = produ.Localidad,
-                    Toneladas = produ.Toneladas,
+                    Toneladas = produ.Toneladas != null ? produ.Toneladas : 0,
                     Propia = produ.Propia,
                     Alquilada = produ.Alquilada
                 };
@@ -175,7 +184,7 @@ namespace Molinos.DataAgro.Business
                     Cargo = x.Puesto,
                     Telefono1 = x.Telefono1,
                     Email1 = x.Email1,
-                    EsPrincipal = x.EsPrincipal== true? "X":""
+                    EsPrincipal = x.EsPrincipal == true ? "X" : ""
                 }, x => x.ProveedorId == informe.ProveedorId, 2, "EsPrincipal", DirOrden.Desc);
 
             if (contactos.Count >= 1)
@@ -433,7 +442,7 @@ namespace Molinos.DataAgro.Business
 
                 var oInformeComercialProduccionSave = repositorio.Obtener<InformeComercialProduccion>(x => x.InformeComercial.EstadoId == (int)EnumEstadoInforme.Enviado && x.InformeComercial.ProveedorId == proveedorId
                     && x.InformeComercial.CampañaId == Mat.CampañaId && x.MaterialId == Mat.MateriaId);
-                
+
                 if (oInformeComercialProduccionSave == null)
                 {
                     error.Errores.Add(new ErrorMessage($"No se encontro un informe comercial produccion con proveedor {proveedorId}, estado {(int)EnumEstadoInforme.Enviado}, campania {Mat.CampañaId}, material {Mat.MateriaId}"));
