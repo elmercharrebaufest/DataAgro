@@ -140,11 +140,15 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Material", filterable: {
                     multi: true, dataSource: [{
-                        Material: "Maiz Duro Dentado",
+                        Material: "Maiz Duro Dentado"
                     }, {
-                        Material: "Trigo Pan",
+                        Material: "Trigo Pan"
                     }, {
-                        Material: "Semilla de Soja",
+                        Material: "Semilla de Soja"
+                    }, {
+                        Material: "Girasol"
+                    }, {
+                        Material: "Girasol Alto Oleico"
                     }]
                 }, width: 130, template: "#=Material#"
             },

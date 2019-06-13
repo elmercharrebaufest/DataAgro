@@ -474,9 +474,13 @@ function CreateGridInformeCompraNet() {
                         Material: "Maiz Duro Dentado"
                     }, {
                         Material: "Trigo Pan"
-                    }, {
-                        Material: "Semilla de Soja"
-                    }]
+                        }, {
+                            Material: "Semilla de Soja"
+                        }, {
+                            Material: "Girasol"
+                        }, {
+                            Material: "Girasol Alto Oleico"
+                        }]
                 }, width: 95, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
