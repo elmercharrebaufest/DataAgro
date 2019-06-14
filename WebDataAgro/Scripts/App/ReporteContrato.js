@@ -281,7 +281,7 @@ function CreateGridInformeCompraNet() {
 
                 row.cells[5].value = templateHora(dataItem);
                 row.cells[25].value = templateSustentable(dataItem);
-                row.cells[26].value = templateDolarizado(dataItem);
+                row.cells[28].value = templateDolarizado(dataItem);
                 row.cells[30].value = templatePesificado(dataItem);
                 row.cells[32].value = templateSIO(dataItem);
                 row.cells[33].value = templateTrigoEsp(dataItem);

@@ -517,7 +517,7 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
-                field: "Negocio", type: "number", title: "N&deg; SAP", width: 70, attributes: { "class": "mobile-md" },
+                field: "Negocio", type: "number", title: "N&deg; Negocio", width: 70, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
                     if (dataItem.Negocio !== "" && dataItem.Negocio !== null) {
                         return kendo.parseInt(dataItem.Negocio);

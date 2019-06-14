@@ -286,7 +286,7 @@ function InicializarElementos() {
     $("#contratoId").kendoAutoComplete({
         template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> - ' +
             'Kgs Contrato: #: data.KilosContrato# - Kgs Pendientes: #: data.KilosPendiente# - Kgs Aplicados: #: data.KilosAplicados#' +
-            ' - Hasta: #: data.FechaHasta# - #: data.CentroDescripcion# </p> ',
+            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> </p> ',
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,
@@ -2063,7 +2063,7 @@ function ObtenerDatos() {
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     obj.AperturaPrecio = viewModel.AperturaPrecio;
     obj.StandardDeCalidadId = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 3 ? 4 :
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 4 ? 5 :
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 4 || obj.MaterialId == 5 ? 5 :
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId != 3 ? 1 :
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :

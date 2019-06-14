@@ -518,7 +518,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Sustentable = false,
                         Dolarizado = false,
                         Pesificado = false,
-                        Negocio = null,
+                        Negocio = acu.Id.ToString(),
                         DestinoId = acu.DestinoId,
                         DestinoDescripcion = acu.Destino != null ? acu.Destino.Descripcion:"",
                         CantidadCamiones = null,
