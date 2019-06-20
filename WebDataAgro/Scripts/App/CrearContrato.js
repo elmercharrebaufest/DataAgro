@@ -442,7 +442,7 @@ function InicializarElementos() {
                 $("#campanaDiv").hide();
                 $("#procedenciaDiv").hide();
                 $("#clasificacionDiv").hide();
-                $("#destinoDiv").show();
+                $("#destinoDiv").hide();
                 $("#CantidadCamionesDiv").hide();
                 $("#planCanjeConsignatarioIdDiv").hide();
                 $("#DatosBoleto").hide();

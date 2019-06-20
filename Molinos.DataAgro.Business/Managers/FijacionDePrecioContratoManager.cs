@@ -250,6 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                oFijacionDePrecio.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecio.Fecha = DateTime.Now;
                 if (oContratoId == 0)
                 {
