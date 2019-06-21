@@ -1327,8 +1327,8 @@ function InicializarElementos() {
             $("#boton-ampliar").text("- OCULTAR");
             $(".ampliar").show();
             if ($('#tipoId').val() == 1) {
-                $(".contratoAFijar").show();
                 $(".contratoAPrecio").hide();
+                $(".contratoAFijar").show();
                 $("#pagosDiv").hide();
                 if ($("#madreId").is(':checked')) {
                     $("#pagosDiv").show();
