@@ -549,15 +549,8 @@ function InicializarElementos() {
 
                 if (this.value() == 1) {
                     $(".fechasAFijar").show();
-                   
-                    if ($("#boton-ampliar").text() == "+ AMPLIAR") {
-                        $(".contratoAFijar").show();
-                    }
-                    else {
-                        $(".contratoAFijar").show();
-                    }
-                    $(".contratoAFijar").show();
                     $(".contratoAPrecio").hide();
+                    $(".contratoAFijar").show();
                     $("#CDId").prop("checked", false);
                     $("#WarrantId").prop("checked", false);
                     $("#LabelPrecio").hide();
