@@ -207,10 +207,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
+            var hoy = DateTime.Now;
+            var rangoConfirmacionAutomaticaActivo = repositorio.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(
+                                    x => x.FechaDesde <= hoy && x.MaterialId == oFijacionDePrecio.MaterialId && x.MonedaId == oFijacionDePrecio.MonedaId,
+                                    x => x.FechaDesde);
+            var oFijacionDePrecioSave = oFijacionDePrecio;
             var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.ContratoId);
             if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
             {
-                var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
+                oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
                 if (oFijacionDePrecioSave.EstadoId == 5 || oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
@@ -254,15 +259,25 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecio.Fecha = DateTime.Now;
                 if (oContratoId == 0)
                 {
-                    oFijacionDePrecio.ContratoId = null;
+                    oFijacionDePrecioSave.ContratoId = null;
                 }
                 else
                 {
-                    oFijacionDePrecio.ContratoId = oContratoId;
+                    oFijacionDePrecioSave.ContratoId = oContratoId;
                 }
-                repositorio.Agregar(oFijacionDePrecio);
+                repositorio.Agregar(oFijacionDePrecioSave);
             }
-
+            if (rangoConfirmacionAutomaticaActivo != null)
+            {
+                if (rangoConfirmacionAutomaticaActivo.MaterialId == oFijacionDePrecioSave.MaterialId && rangoConfirmacionAutomaticaActivo.MonedaId == oFijacionDePrecioSave.MonedaId)
+                {
+                    if (rangoConfirmacionAutomaticaActivo.PrecioMinimo <= oFijacionDePrecioSave.Precio && rangoConfirmacionAutomaticaActivo.PrecioMaximo >= oFijacionDePrecioSave.Precio)
+                    {
+                        oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        logger.Debug("El contrato " + oFijacionDePrecioSave.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
+                    }
+                }
+            }
             try
             {
                 repositorio.GuardarCambios();

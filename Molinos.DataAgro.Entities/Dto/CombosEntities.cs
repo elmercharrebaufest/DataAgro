@@ -17,6 +17,17 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int MaterialId { get; set; }
         public string Descripcion { get; set; }
+
+        public string Codigo { get; set; }
+
+        public string Campaña { get; set; }
+    }
+
+    public class CampaniaCombo
+    {
+        public int CampaniaId { get; set; }
+        public string Descripcion { get; set; }
+    
     }
 
 

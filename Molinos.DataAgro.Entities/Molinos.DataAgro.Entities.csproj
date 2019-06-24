@@ -61,6 +61,7 @@
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
     <Compile Include="Common\Enums\EnumMeses.cs" />
+    <Compile Include="Common\Enums\EnumClasificacionNegocio.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\GrabarAcuerdoResult.cs" />
+    <Compile Include="Dto\TotalPesosDolares.cs" />
     <Compile Include="Dto\ZonaDto.cs" />
     <Compile Include="Dto\DatosComercialAgentDto.cs" />
     <Compile Include="Dto\DatosProveedorAgentDto.cs" />

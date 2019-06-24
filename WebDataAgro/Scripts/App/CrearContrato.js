@@ -542,11 +542,9 @@ function InicializarElementos() {
                 $("#guardarBtn").append("Guardar Negocio");
                 $("#boton-ampliar").show();
                 $("#mercsDepositoDiv").show();
-
                 RemoverFondosGrises();
                 $("#boton-ampliar").trigger("click");
                 $("#boton-ampliar").trigger("click");
-
                 if (this.value() == 1) {
                     $(".fechasAFijar").show();
                     $(".contratoAPrecio").hide();
@@ -1225,6 +1223,10 @@ function InicializarElementos() {
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
+
+            $("#pesificadoId").prop("checked", false);
+            $("#pesificadoDiv").hide();
+            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         }
         else {
             $("#dolarizadoDiv").hide();
@@ -1235,6 +1237,10 @@ function InicializarElementos() {
     $("#pesificadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#pesificadoDiv").show();
+
+            $("#dolarizadoId").prop("checked", false);
+            $("#dolarizadoDiv").hide();
+            $("#dolarizadoFechaId").val("");
         }
         else {
             $("#pesificadoDiv").hide();
@@ -1459,7 +1465,43 @@ function InicializarElementos() {
         spinners: false,
         change: function () { ConvertirDescuentoANegativo(); }
     });
+
+
     //FIN INICIALIZARELEMENTOS
+}
+
+function CambioCalidades(calidades) {
+    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara" && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica" && $("#calidadesEspecialesId").val() !== "") {
+        $(".calidadesEspecialesDatos").show();
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+            $(".calidad-no-grado").hide();
+            LimpiarCalidades();
+        } else {
+            $(".calidad-no-grado").show();
+        }
+    } else {
+        $(".calidadesEspecialesDatos").hide();
+        LimpiarCalidades();
+    }
+    if (calidades !== undefined && calidades.length == 1) {
+        $("#valorEspecialesId").data("kendoNumericTextBox").value(calidades[0].Valor);
+    } else  {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
+        } else {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+        }        
+    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+        $(".no-girasol-alto").hide();
+        $(".girasol-alto").show();
+        $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+    } else {
+        $(".girasol-alto").hide();
+        $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
+    }
 }
 
 function CambioCalidades(calidades) {
@@ -2770,7 +2812,7 @@ function InicializarAperturaDePrecios() {
         format: "n2",
         spinners: false,
         min: 0,
-        max: 1
+        max: 100
     });
 
 
@@ -2824,13 +2866,15 @@ function CalcularPrecioTotalApertura() {
     precioOriginal += Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
     precioOriginal += Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
     CalcularMaximoComision();
-    precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
-    precioOriginal += porcentajeComision * bonificacion / 100;
-
     precioOriginal += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
+
     precioOriginal += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
 
-    $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
+    porcentajeComision = porcentajeComision / 100;
+    precioOriginal += precioOriginal * porcentajeComision;
+    precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
+
+     $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
 
     return precioOriginal;
 }

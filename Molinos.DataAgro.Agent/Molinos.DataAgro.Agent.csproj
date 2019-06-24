@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\TipoDeCambioAgent.cs" />
     <Compile Include="Helpers\ComprasAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
     <Compile Include="Helpers\DatoDelComercialAgent.cs" />
@@ -126,6 +127,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\RiesgoComercial\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\TipoDeCambio\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -204,6 +210,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" />
+    <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.Z_MPRFC_TIPO_DE_CAMBIOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
@@ -215,6 +228,7 @@
     <WCFMetadataStorage Include="Service References\FinalizarFijacion\" />
     <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
+    <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -334,6 +348,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\AnulacionContratos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

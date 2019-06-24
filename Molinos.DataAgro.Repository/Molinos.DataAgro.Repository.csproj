@@ -108,6 +108,7 @@
     <Compile Include="ConsultasEF\TraerCorredoresComercial.cs" />
     <Compile Include="ConsultasEF\TraerPosicionMaterialMes.cs" />
     <Compile Include="ConsultasEF\TraerMonedaKilo.cs" />
+    <Compile Include="ConsultasEF\TraerTotalesPesosDolares.cs" />
     <Compile Include="ConsultasEF\TraerToneladasSojaSustentable.cs" />
     <Compile Include="ConsultasEF\TraerToneladasPorGrano.cs" />
     <Compile Include="ConsultasEF\TraerAgenda.cs" />

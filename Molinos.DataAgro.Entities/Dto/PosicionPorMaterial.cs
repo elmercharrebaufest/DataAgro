@@ -14,5 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaHasta { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
+        public decimal PrecioPesificado { get; set; }
+        public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
     }
 }

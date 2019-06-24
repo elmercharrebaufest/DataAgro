@@ -756,10 +756,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Corredor.RazonSocial.ToUpper() + "</td></tr>";
                 htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oFijacionDePrecioContrato.Corredor.CUIT.ToString()) + "</td></tr>";
             }
-            if (oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet != null)
-            {
-                htmlBody += "<tr>" + th + "CLASIFICACION</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.ClasificacionCompraNet.Descripcion + "</td></tr>";
-            }
+            
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
 
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);

@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
+        TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
 
     }
 }

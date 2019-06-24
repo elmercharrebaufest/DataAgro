@@ -58,7 +58,14 @@ a.Descarga {
 }
 
 .borde-derecho {
-    border-right: 1px solid black;
+    border-right: 1px solid black !important; 
+}
+.borde-izq-der {
+    border-right: 1px solid black !important;
+    border-left: 1px solid black !important;
+}
+.borde-izquierdo {
+    border-left: 2px solid black !important;
 }
 
 .borde-derecho-oscuro,
@@ -85,13 +92,26 @@ a.Descarga {
 #TrigoCalidad .titulosPosicion {
     background: rgb(153, 204, 255);
 }
+table#Soja th, table#Soja td,
+table#Maíz th, table#Maíz td,
+table#TrigoCámara th, table#TrigoCámara td,
+table#TrigoCalidad th, table#TrigoCalidad td {
+    vertical-align: middle;
+}
+
+.table thead > tr > th,
+.table tbody > tr > th,
+.table tfoot > tr > th,
+.table thead > tr > td,
+.table tbody > tr > td,
+.table tfoot > tr > td{
+    border-top:1px solid #000
+}
 
 /*#TrigoCalidadTable, #TrigoCámaraTable {
     float: right;
 }*/
-
 #ComprasToneladasTipo td, #ComprasToneladasTipo th {
-    border-right: 1px solid black;
     border-left: 1px solid black;
 }
 
@@ -193,4 +213,12 @@ a.Descarga {
 .descargarDetallePosicion {
     font-size: 18px;
     color: #151515;
+}
+
+.espacio {
+    background-color: white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-right: 2px solid black;
+    border-left:  1px solid  black;
 }

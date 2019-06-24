@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PorcentajeComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje,
                     ImporteComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe,
                     ImporteBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
-                    PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje
+                    PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                 };
 
             var queryFijacion =
@@ -199,7 +199,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Pesificado = false,
                     Negocio = fijac.EstadoId == (int)EnumEstadoContrato.Finalizado ? fijac.FijacionSAP : fijac.ContratoSAP,
                     DestinoId = fijac.DestinoId,
-                    DestinoDescripcion = fijac.Destino!= null ? fijac.Destino.Descripcion:"",
+                    DestinoDescripcion = fijac.Destino != null ? fijac.Destino.Descripcion : "",
                     CantidadCamiones = null,
                     Consignatario = false,
                     PlanCanje = false,
@@ -234,9 +234,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PrecioNeto = fijac.PrecioNeto,
                     StandardCalidadId = null,
                     StandardDeCalidadDescripcion = "",
-                    Pizarra= fijac.Pizarra??null,
-                    PagoDiferido = fijac.PagoDiferido?? null,
-                    ZonaId= null,
+                    Pizarra = fijac.Pizarra ?? null,
+                    PagoDiferido = fijac.PagoDiferido ?? null,
+                    ZonaId = null,
                     ZonaDescripcion = "",
                     AcuerdoId = null,
                     ImporteFinanciero = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Importe,
@@ -244,7 +244,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PorcentajeComision = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje,
                     ImporteComision = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe,
                     ImporteBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
-                    PorcentajeBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje
+                    PorcentajeBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -342,7 +342,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNeto = null,
                         StandardCalidadId = null,
                         StandardDeCalidadDescripcion = "",
-                        Pizarra=null,
+                        Pizarra = null,
                         PagoDiferido = null,
                         ZonaId = null,
                         ZonaDescripcion = "",
@@ -352,7 +352,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeComision = null,
                         ImporteComision = null,
                         ImporteBonificacion = null,
-                        PorcentajeBonificacion = null
+                        PorcentajeBonificacion = null,
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -449,17 +449,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNeto = null,
                         StandardCalidadId = null,
                         StandardDeCalidadDescripcion = "",
-                        Pizarra= null,
+                        Pizarra = null,
                         PagoDiferido = null,
                         ZonaId = null,
                         ZonaDescripcion = "",
-                        AcuerdoId=null,
+                        AcuerdoId = null,
                         ImporteFinanciero = null,
                         ImporteRedespacho = null,
                         PorcentajeComision = null,
                         ImporteComision = null,
                         ImporteBonificacion = null,
-                        PorcentajeBonificacion = null
+                        PorcentajeBonificacion = null,
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
@@ -520,7 +520,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Pesificado = false,
                         Negocio = acu.Id.ToString(),
                         DestinoId = acu.DestinoId,
-                        DestinoDescripcion = acu.Destino != null ? acu.Destino.Descripcion:"",
+                        DestinoDescripcion = acu.Destino != null ? acu.Destino.Descripcion : "",
                         CantidadCamiones = null,
                         Consignatario = false,
                         PlanCanje = false,

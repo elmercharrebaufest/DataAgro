@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
     <setParameter name="IIS Web Application Name" value="dataagro" />
-    <setParameter name="DataAgro-Web.config Connection String" value="Data Source=bfdev226;Initial Catalog=dataagro2;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
+    <setParameter name="DataAgro-Web.config Connection String" value="Data Source=bfdev226;Initial Catalog=dataagro2;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"/>
     <setParameter name="SmtpServer Key" value="smtp.gmail.com" />
     <setParameter name="SmtpServerPort Key" value="587" />
     <setParameter name="EnableSSL Key" value="S" />
@@ -28,4 +28,5 @@
   <setParameter name="HTTP_Port5 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="HTTP_Port6 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="HTTP_Port7 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
+  <setParameter name="HTTP_Port9 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro"/>
 </parameters>

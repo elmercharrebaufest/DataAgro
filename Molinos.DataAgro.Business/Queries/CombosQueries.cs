@@ -116,6 +116,41 @@ namespace Molinos.DataAgro.Business
             }
             return null;
         }
+
+        public List<MaterialCombo> GetAbmMaterialCombo()
+        {
+            try
+            {
+                return repositorio.Listar<Material, MaterialCombo>(x => new MaterialCombo()
+                {
+                    Codigo = x.Codigo,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
+
+        public List<CampaniaCombo> GetAbmCampaniaCombo()
+        {
+            try
+            {
+                return repositorio.Listar<Campaña, CampaniaCombo>(x => new CampaniaCombo()
+                {
+                    CampaniaId = x.CampañaId,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
+
         public List<ZonaCombo> GetAbmZonaCombo()
         {
             try

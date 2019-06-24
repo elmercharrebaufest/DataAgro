@@ -361,14 +361,18 @@ function CreateGridInformeCompraNet() {
                     DesdeFijacion: { type: "date" },
                     HastaFijacion: { type: "date" }
                 }
-            },
+            }
         },
+        //aggregate: [
+        //    { field: "TotalPesos", aggregate: "sum" },
+        //    { field: "TotalDolares", aggregate: "sum" }
+        //],
         serverPaging: true,
         serverSorting: true,
         sort: [{ field: "Fecha", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20,
-        filter: defaultFilter,
+        filter: defaultFilter
     };
 
     $("#gridInformeCompraNet").kendoGrid({
@@ -385,7 +389,6 @@ function CreateGridInformeCompraNet() {
             if (($("#perfil").val() !== "Mesa")) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("GrupoCompraDescripcion");
-
             }
             var grid = $("#gridInformeCompraNet").data("kendoGrid");
             var view = grid.dataSource.view();
@@ -403,8 +406,8 @@ function CreateGridInformeCompraNet() {
                         .addClass("otroDestino");
                 }
             }
-            filasSeleccionadas = {};
-
+            filasSeleccionadas = {};     
+            BuscarTotales();
         },
 
         columns: [
@@ -463,6 +466,8 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "FASON"
                     }, {
                         TipoNegocio: "AGENTE COMPRAS"
+                    }, {
+                        TipoNegocio: "CONTRATO ACUERDO"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -715,6 +720,8 @@ function CreateGridInformeCompraNet() {
 
 
     });
+    
+
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -790,7 +797,72 @@ function CreateGridInformeCompraNet() {
     }
     AvisoContratosPendientes();
 }
+function BuscarTotales() {
+    var grid = $("#gridInformeCompraNet").data("kendoGrid");
+    var filter = grid.dataSource.filter();
+    var filtros = [];
+    if (filter!= null) {
+        for (i = 0; i < filter.filters.length; i++) {
+            var valor;
+            if (filter.filters[i].filters == undefined) {
+                if (isValidDate(filter.filters[i].value)) {
+                    valor = kendo.toString(filter.filters[i].value, _DefaultDateFormat);
+                } else {
+                    valor = filter.filters[i].value;
+                }
+                var filtroSimple = {
+                    Field1: filter.filters[i].field,
+                    Operator1: filter.filters[i].operator,
+                    Value1: valor
+                };
+                filtros.push(filtroSimple);
+            } else if (filter.filters[i].filters.length == 2) {
+                if (isValidDate(filter.filters[i].filters[0].value)) {
+                    valor1 = kendo.toString(filter.filters[i].filters[0].value, _DefaultDateFormat);
+                } else {
+                    valor1 = filter.filters[i].filters[0].value;
+                }
+                if (isValidDate(filter.filters[i].filters[1].value)) {
+                    valor2 = kendo.toString(filter.filters[i].filters[1].value, _DefaultDateFormat);
+                } else {
+                    valor2 = filter.filters[i].filters[1].value;
+                }
+                var filtroCompuesto = {
+                    Field1: filter.filters[i].filters[0].field,
+                    Operator1: filter.filters[i].filters[0].operator,
+                    Value1: valor1,
+                    Field2: filter.filters[i].filters[1].field,
+                    Operator2: filter.filters[i].filters[1].operator,
+                    Value2: valor2,
+                    Logic: "or"
+                };
+                filtros.push(filtroCompuesto);
+            } else if (filter.filters[i].filters.length > 2) {
+                if (isValidDate(filter.filters[i].filters[0].value)) {
+                    valor = kendo.toString(filter.filters[i].filters[0].value, _DefaultDateFormat);
+                } else {
+                    valor = filter.filters[i].filters[0].value;
+                }
+                var filtro = {
+                    Field1: filter.filters[i].filters[0].field,
+                    Operator1: filter.filters[i].filters[0].operator,
+                    Value1: valor
+                };
+                filtros.push(filtro);
+            }
+        }
+    }
 
+    var totales = MSExecuteOnServer('/CompraNet/BuscarTotales', filtros);
+
+    if (totales != null) {
+        $("#totalPesos").text(kendo.toString(totales.TotalPesos, "n2"));
+        $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n2"));
+    }
+}
+function isValidDate(date) {
+    return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+}
 function SeleccionarElementos() {
     var grid = $("#gridInformeCompraNet").data("kendoGrid");
     var selectedRows = grid.select();

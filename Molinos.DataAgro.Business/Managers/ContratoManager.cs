@@ -1444,7 +1444,10 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.ContratoId == contratoId);
         }
-
-
+        public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
+        {
+            var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, perfilId, listComercialesId, corredoresComercial));
+            return new TotalPesosDolares { TotalDolares = resultados.Data.Sum(x => x.TotalDolares),TotalPesos = resultados.Data.Sum(x => x.TotalPesos) };
+        }
     }
 }

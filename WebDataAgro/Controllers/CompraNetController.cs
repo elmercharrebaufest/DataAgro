@@ -608,6 +608,17 @@ namespace WebDataAgro.Controllers
         {
             return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet);
         }
-        
+        public ActionResult BuscarTotales(FilterObject[] filtros)
+        {
+            var request = new KendoGridMvcRequest();
+            request.Take = 0;
+            request.PageSize = 0;
+            request.SortObjects = null;
+            request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and",FilterObjects=filtros.AsEnumerable()}: null; 
+            var model = mobjContratoManager.TraerTotalesPesosDolares(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+             
+            return Json(model);
+        }
+
     }
 }

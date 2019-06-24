@@ -1,7 +1,5 @@
 ﻿var viewModel;
 
-var datosIniAbmMaterial;
-
 $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
@@ -15,78 +13,17 @@ $(document).ready(function () {
 
     AsignarBotones();
 
-    LlenarGrilla(false);
+    InicializarBusquedaInicial();
+
+    InicializarCombos();
 });
 
-function InicializarElementos() {
-    kendo.culture("es-AR");
-
-    $("#butFiltrar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Find.png")
-    });
-
-    $("#butAgregar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Agregar.png")
-    });
-
-    $("#butModificar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Modificar.png")
-    });
-
-    $("#butEliminar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Eliminar.png")
-    });
-
-    $("#butAceptar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Aceptar.png")
-    });
-
-    $("#butCancelar").kendoButton({
-        imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
-    });
-}
-
-function CrearResultadosDataSource(datos) {
-    var ds = new kendo.data.DataSource({
-        data: datos,
-        schema: {
-            model: {
-                fields: {
-                    MaterialId: { type: "number", editable: false },
-                    Codigo: { type: "string", editable: false },
-                    Descripcion: { type: "string", editable: false },
-                }
-            }
-        },
-        change: function (e) {
-            var mens = ""; var tot = this.data().length;
-            var cant = this.view().length;
-
-            viewModel.set("recordMessage", "");
-
-            if (tot >= 500) {
-                mens = "Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.";
-            }
-
-            if (tot > 0) {
-                if (cant == 1) {
-                    viewModel.set("recordMessage", cant.toString() + " Registro. " + mens);
-                }
-                else {
-                    viewModel.set("recordMessage", cant.toString() + " Registros. " + mens);
-                }
-            }
-        }
-    });
-
-    return ds;
-}
-
 function CreateGridMaterial() {
-    $("#gridIniMaterial").kendoGrid({
+    $("#gridIni").kendoGrid({
         columns: [
-            { field: "Codigo", title: "Código", width: "150px" },
-            { field: "Descripcion", title: "Descripción" },
+            { field: "Descripcion", title: "Material",  filterable: false },
+            { field: "Codigo", title: "Codigo", filterable: false },
+            { field: "CampaniaActual", title: "Campaña", filterable: false }
         ],
 
         sortable: true,
@@ -133,6 +70,47 @@ function CreateGridMaterial() {
     });
 }
 
+function CrearViewModel() {
+    var ResultadosDataSource = CrearResultadosDataSource([]);
+
+    viewModel = kendo.observable({
+        Resultados: ResultadosDataSource,
+
+        isReadOnly: true,
+        isFilterDisabled: true,
+        isControlDisabled: false,
+        isModifyDisabled: false,
+        isAddNewDisabled: true,
+        isDeleteDisabled: true,
+
+        Material: null,
+
+        CampaniaCombo: []
+    });
+
+    kendo.bind($("#Abm"), viewModel);
+}
+
+function InicializarCombos() {
+    var funcReturn = function (data) {
+        if (ExistsErrorMessages(data.Errores)) {
+            ShowErrorMessages(data.Errores);
+        }
+        else {
+            datosIniAbmMaterial = data;
+            AsignarCombos();
+            InicializarBusquedaInicial();
+        }
+    }
+
+    MSExecuteURLOnServerAsync('/Material/Inicializar', funcReturn, '');
+}
+
+function AsignarCombos() {
+    viewModel.set("CampaniaCombo", datosIniAbmMaterial.Datos.Campania);
+    
+}
+
 function onChangeGridInicial() {
     var row = this.select();
 
@@ -146,39 +124,80 @@ function onChangeGridInicial() {
     }
 }
 
-function CrearViewModel() {
-    var param = {
-        "Codigo": "",
-        "Descripcion": "",
-    };
+function CrearResultadosDataSource(datos) {
+    var ds = new kendo.data.DataSource({
+        data: datos,
+        schema: {
+            model: {
+                fields: {
+                    MaterialId: { type: "number", editable: false },
+                    Descripcion: { type: "string", editable: false },
+                    Codigo: { type: "string", editable: false },
+                    CampaniaActual: { type: "string", editable: false }
 
-    var ResultadosDataSource = CrearResultadosDataSource([]);
+                }
+            }
+        },
+    });
+    return ds;
+}
 
-    viewModel = kendo.observable({
-        Parametros: param,
+function InicializarElementos() {
+    kendo.culture("es-AR");
 
-        Resultados: ResultadosDataSource,
-
-        recordMessage: "",
-
-        isReadOnly: true,
-        isFilterDisabled: true,
-        isControlDisabled: false,
-        isModifyDisabled: false,
-        isAddNewDisabled: true,
-        isDeleteDisabled: true,
-
-        Material: null,
+    $("#CampaniaId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "CampaniaId",
     });
 
-    kendo.bind($("#Abm"), viewModel);
+    $("#CampaniaId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#CampaniaId").data("kendoDropDownList").text("");
+        }
+    });
+
+    $("#butAgregar").kendoButton({
+        imageUrl: MSGetUrl("/Content/Images/Agregar.png")
+    });
+
+    $("#butModificar").kendoButton({
+        imageUrl: MSGetUrl("/Content/Images/Modificar.png")
+    });
+
+    $("#butEliminar").kendoButton({
+        imageUrl: MSGetUrl("/Content/Images/Eliminar.png")
+    });
+
+    $("#butAceptar").kendoButton({
+        imageUrl: MSGetUrl("/Content/Images/Aceptar.png")
+    });
+
+    $("#butCancelar").kendoButton({
+        imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
+    });
+}
+
+function InicializarBusquedaInicial() {
+    var funcReturn = function (data) {
+        if (ExistsErrorMessages(data.Errores)) {
+            ShowErrorMessages(data.Errores);
+        }
+        else {
+            viewModel.set("Resultados", CrearResultadosDataSource(data.Datos));
+            HabilitarCancelar();
+        }
+    }
+
+    MSExecuteURLOnServerAsync('/Material/Buscar', funcReturn, '');
+}
+
+function HabilitarCancelar() {
+    viewModel.set("isFilterDisabled", false);
+    viewModel.set("isAddNewDisabled", false);
+    viewModel.set("isDeleteDisabled", true);
 }
 
 function AsignarBotones() {
-    $("#butFiltrar").click(function () {
-        LlenarGrilla(true);
-    });
-
     $("#butAgregar").click(function () {
         Agregar();
     });
@@ -187,7 +206,7 @@ function AsignarBotones() {
         Modificar();
     });
 
-    $("#gridIniMaterial").on("dblclick", "tr.k-state-selected", function () {
+    $("#gridIni").on("dblclick", "tr.k-state-selected", function () {
         Modificar();
     });
 
@@ -204,62 +223,6 @@ function AsignarBotones() {
     });
 }
 
-function LimpiarValidacionesParam() {
-    $("#errParamCodigo").css("display", "none");
-    $("#errParamDescripcion").css("display", "none");
-}
-
-function LlenarGrilla(showMessage) {
-    LimpiarValidacionesParam();
-
-    viewModel.set("recordMessage", "");
-
-    var errores = [];
-
-    if (errores.length > 0) {
-        AddIncorectMessage(errores);
-        ShowTooltipMessages("err", errores);
-        return;
-    }
-
-    var param = {
-        "Codigo": viewModel.get("Parametros.Codigo"),
-        "Descripcion": viewModel.get("Parametros.Descripcion"),
-    };
-
-    var result = MSExecuteOnServer('/Material/Filtrar', param);
-
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            viewModel.set("Resultados", CrearResultadosDataSource([]));
-            ShowTooltipMessages("errParam", result.Errores);
-        }
-        else if (result.Datos.length > 0) {
-            viewModel.set("Resultados", CrearResultadosDataSource(result.Datos));
-
-            if (result.Datos.length >= 500) {
-                viewModel.set("recordMessage", result.Datos.length.toString() + " Registros. Es posible que existan mas registros, ajuste los parámetros de busqueda, para reducir el número de resultados.");
-            }
-            else if (result.Datos.length > 1) {
-                viewModel.set("recordMessage", result.Datos.length.toString() + " Registros.");
-            }
-            else {
-                viewModel.set("recordMessage", result.Datos.length.toString() + " Registro.");
-            }
-
-            HabilitarCancelar();
-        }
-        else {
-            viewModel.set("Resultados", CrearResultadosDataSource([]));
-            HabilitarCancelar();
-
-            if (showMessage) {
-                MensInfo("No se encontraron datos que cumplan con el filtro indicado");
-            }
-        }
-    }
-}
-
 function UpdateViewModel(model) {
     if (model.Material.ObjectState == 0) {
         viewModel.set("isDeleteDisabled", true);
@@ -270,16 +233,23 @@ function UpdateViewModel(model) {
 
     var material = {
         "MaterialId": model.Material.MaterialId,
-        "Codigo": model.Material.Codigo,
         "Descripcion": model.Material.Descripcion,
+        "Codigo": model.Material.Codigo,
+        "CampaniaId": model.Material.CampañaIdActual,
     };
 
     viewModel.set("Material", material);
+
+    viewModel.Material.CampaniaId = $("#CampaniaId").data("kendoDropDownList").dataItem();
+
 }
 
 function LimpiarValidaciones() {
-    $("#errCodigo").css("display", "none");
+    //completar
     $("#errDescripcion").css("display", "none");
+    $("#errCodigo").css("display", "none");
+    $("#errCampaña").css("display", "none");
+
 }
 
 function HabilitarInicio() {
@@ -287,7 +257,7 @@ function HabilitarInicio() {
 }
 
 function HabilitarAgregar() {
-    var grid = $("#gridIniMaterial").data("kendoGrid");
+    var grid = $("#gridIni").data("kendoGrid");
 
     grid.clearSelection();
 
@@ -316,7 +286,7 @@ function Agregar() {
 }
 
 function Modificar() {
-    var grid = $("#gridIniMaterial").data("kendoGrid");
+    var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
 
@@ -326,11 +296,24 @@ function Modificar() {
         return;
     }
 
-    var param = {
-        "MaterialId": data.MaterialId,
+    var oParam = {
+        "Id": data.MaterialId,
     };
 
-    var result = MSExecuteOnServer('/Material/Aplicar', param);
+    if (data.MaterialId > 0) {
+        var datosMaterial = MSExecuteOnServer('/Material/MaterialCombo', oParam);
+
+        if (datosMaterial != null) {
+            if (ExistsErrorMessages(datosMaterial.Errores)) {
+                ShowTooltipMessages("err", datosMaterial.Errores);
+            }
+            else {
+                viewModel.set("Material", datosMaterial.Material);
+            }
+        }
+    }
+
+    var result = MSExecuteOnServer('/Material/Aplicar', oParam);
 
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
@@ -354,33 +337,32 @@ function Eliminar() {
 }
 
 function EjecutarEliminar() {
-    var grid = $("#gridIniMaterial").data("kendoGrid");
+    var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
 
     var data = grid.dataItem(row);
 
-    var param = {
-        "MaterialId": data.MaterialId,
+    var oParam = {
+        "Id": data.MaterialId,
     };
 
-    var result = MSExecuteOnServer('/Material/Eliminar', param);
+    var result = MSExecuteOnServer('/Material/Eliminar', oParam);
 
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
             LimpiarValidaciones();
             HabilitarInicio();
-            LlenarGrilla(false);
+            InicializarBusquedaInicial();
         }
     }
 }
 
 function Grabar() {
-    var grid = $("#gridIniMaterial").data("kendoGrid");
+    var grid = $("#gridIni").data("kendoGrid");
 
     var row = grid.select();
 
@@ -397,8 +379,10 @@ function Grabar() {
     var datos = {
         "ObjectState": objectstate,
         "MaterialId": viewModel.get("Material.MaterialId"),
-        "Codigo": viewModel.get("Material.Codigo"),
         "Descripcion": viewModel.get("Material.Descripcion"),
+        "Codigo": viewModel.get("Material.Codigo"),
+        "CampañaId": GetDropDownValue(viewModel, "Material.CampaniaId.CampaniaId"),
+        
     };
 
     var result = MSExecuteOnServer('/Material/Grabar', datos);
@@ -409,7 +393,7 @@ function Grabar() {
         }
         else {
             UpdateViewModel(result);
-            LlenarGrilla(false);
+            InicializarBusquedaInicial();
             MensInfo("Grabación Realizada Correctamente");
             HabilitarInicio();
         }

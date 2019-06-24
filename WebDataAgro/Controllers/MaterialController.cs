@@ -1,102 +1,109 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using WebDataAgro.Core;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
     public class MaterialController : Controller
     {
-        private IMaterialManager mobjMaterialManager;
+        private readonly IMaterialManager materialManager;
 
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
-
-        public MaterialController(IMaterialManager oMaterialManager)
+        public MaterialController(IMaterialManager materialManager) 
         {
-            mobjMaterialManager = oMaterialManager;              
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
+            this.materialManager = materialManager;
         }
-
-        //-----------------------------------------------------
-        // Metodos Publicos
-        //-----------------------------------------------------
-
+        // GET: Material
         public ActionResult Index()
         {
             return View();
         }
-
-        public ActionResult Filtrar(ParamAbmMaterial oParam)
-        {
-            var model = new ResultIniMaterialModel();
-
-            oParam.Codigo = oParam.Codigo ?? "";
-            oParam.Descripcion = oParam.Descripcion ?? "";
-
-            var result = mobjMaterialManager.TraerFiltroMaterial(oParam);
-
-            if (result != null)
-            {
-                model.Datos = result.Material;
-            }
-            return new JsonResult()
-            {
-                Data = model,
-                MaxJsonLength = Int32.MaxValue
-            };
-        }
-
-
-        public ActionResult Aplicar(AbmMaterialParam oParam)
+        public ActionResult Inicializar()
         {
             return new JsonResult()
             {
-                Data = new AbmMaterialCrearResult
+                Data = new DatosIniAbmMaterialModel
                 {
-                    Material = mobjMaterialManager.TraerMaterial(oParam.MaterialId)
+                    Datos = materialManager.TraerDatosIniciales()
                 },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-
-        public ActionResult Grabar(Material oMaterial)
+        public ActionResult Buscar()
         {
-            var model = new AbmMaterialResult();
-            var entityErrors = mobjMaterialManager.GrabarMaterial(oMaterial);
-            model.Errores = entityErrors.Errores;
+            var model = new ResultIniMaterialModel();
 
-            if (model.HayErrores)
+            var result = materialManager.TraerTodoMaterial();
+
+            if (result != null)
             {
-                model.Material = oMaterial;
+                model.Datos = result.Material;
             }
+
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
+        public ActionResult MaterialCombo(AbmMaterialParam oParam)
+        {
+            return new JsonResult()
+            {
+                Data = new DataAbmMaterial
+                {
+                    Material = materialManager.TraerMaterial(oParam.Id)
+                },
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+        public ActionResult Aplicar(AbmMaterialParam oParam)
+        {
+            return new JsonResult()
+            {
+                Data = new AbmMaterialResult
+                {
+                    Material = materialManager.TraerMaterial(oParam.Id)
+                },
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult Grabar(Material oMaterial)
+        {
+            var model = new AbmMaterialResult();
+
+            var entityErrors = materialManager.GrabarMaterial(oMaterial);
+            model.Errores = entityErrors.Errores;
+            if (model.HayErrores)
+            {
+                model.Material = new MaterialDto { Codigo = oMaterial.Codigo, Descripcion = oMaterial.Descripcion, MaterialId = oMaterial.MaterialId };
+            }
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         public ActionResult Eliminar(AbmMaterialParam oParam)
         {
             return new JsonResult()
             {
-                Data = mobjMaterialManager.EliminarMaterial(oParam.MaterialId),
+                Data = materialManager.EliminarMaterial(oParam.Id),
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
         public ActionResult Cancelar()
         {
             return new JsonResult()
@@ -107,5 +114,3 @@ namespace WebDataAgro.Controllers
         }
     }
 }
-
-

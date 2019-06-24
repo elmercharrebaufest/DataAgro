@@ -12,13 +12,30 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<MaterialIni> Material { get; set; }
     }
-    
+
+    public class DatosIniAbmMaterial
+    {
+        public List<MaterialCombo> Material { get; set; }
+        public List<CampaniaCombo> Campania { get; set; }
+    }
+
     public class MaterialIni
     {
         public int MaterialId { get; set; }                  
         public string Codigo { get; set; }                  
         public string Descripcion { get; set; }        
-        public int CampañaIdActual { get; set; }          
+        public int CampaniaIdActual { get; set; }      
+        public string CampaniaActual { get; set; }
+    }
+
+    public class DataAbmMaterial : Resultado
+    {
+        public MaterialDto Material { get; set; }
+
+        public DataAbmMaterial()
+        {
+            Material = new MaterialDto();
+        }
     }
 
 }

@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Business
                 var oMaterialSave = repositorio.Obtener<Material>(oMaterial.MaterialId);
                 oMaterialSave.Codigo = oMaterial.Codigo;
                 oMaterialSave.Descripcion = oMaterial.Descripcion;
+                oMaterialSave.CampañaId = oMaterial.CampañaId;
             }
             else
             {
@@ -99,9 +100,30 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
+        public DatosIniAbmMaterial TraerDatosIniciales()
+        {
+            var qry = new CombosQueries(logger, repositorio);
+            return new DatosIniAbmMaterial()
+            {
+                Material = qry.GetAbmMaterialCombo(),
+                Campania = qry.GetAbmCampaniaCombo()
+            };
+        }
 
-
-
+        public ResultIniMaterial TraerTodoMaterial()
+        {
+            return new ResultIniMaterial
+            {
+                Material = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni()
+                {
+                    MaterialId = x.MaterialId,
+                    Descripcion = x.Descripcion,
+                    Codigo = x.Codigo,
+                    CampaniaActual = x.Campaña.Descripcion,
+                    CampaniaIdActual = x.CampañaId ?? 0
+                }, null, 0, "Descripcion")
+            };
+        }
     }
 }
 

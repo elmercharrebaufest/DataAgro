@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\ITipoDeCambioAgent.cs" />
     <Compile Include="Agent\IComprasAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionAgent.cs" />
     <Compile Include="Agent\IDatoDelComercialAgent.cs" />

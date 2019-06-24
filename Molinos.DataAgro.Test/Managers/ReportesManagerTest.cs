@@ -23,6 +23,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IComercialManager> comercialManagerMock;
+        private Mock<ITipoDeCambioAgent> tipoDeCambioMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -32,7 +33,9 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             comercialManagerMock = new Mock<IComercialManager>();
-            target = new ReportesManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object);
+            tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
+            target = new ReportesManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object, tipoDeCambioMock.Object);
+            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio()).Returns(45);
         }
 
         [Test]

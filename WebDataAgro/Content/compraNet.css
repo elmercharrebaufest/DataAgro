@@ -1185,3 +1185,10 @@ body {
         text-align: left;
     }
 }
+.noRightPadding{
+    padding-right: 0;
+}
+
+.totales{
+    display:inline-block;
+}

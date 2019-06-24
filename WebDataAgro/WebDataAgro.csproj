@@ -194,7 +194,6 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
-    <Compile Include="Controllers\ZonaController.cs" />
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
     <Compile Include="Controllers\OperadorController.cs" />
@@ -222,6 +221,7 @@
     <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Controllers\TareaProgramadaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
+    <Compile Include="Controllers\ZonaController.cs" />
     <Compile Include="Core\Atributes.cs" />
     <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
@@ -241,7 +241,6 @@
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
     <Compile Include="Models\AgenteCompraModel.cs" />
-    <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
@@ -263,6 +262,7 @@
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\ReporteCompraNetModel.cs" />
     <Compile Include="Models\TareaProgramadaModel.cs" />
+    <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\Compras\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -896,7 +896,6 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
-    <Content Include="Scripts\App\AbmZona.js" />
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
@@ -910,6 +909,7 @@
     <Content Include="Scripts\App\AbmLocalidad.js" />
     <Content Include="Scripts\App\AbmMaterial.js" />
     <Content Include="Scripts\App\AbmProvincia.js" />
+    <Content Include="Scripts\App\AbmZona.js" />
     <Content Include="Scripts\App\Agenda.js" />
     <Content Include="Scripts\App\AgregarCorredor.js" />
     <Content Include="Scripts\App\agregarproveedor.js" />

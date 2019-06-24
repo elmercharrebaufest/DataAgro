@@ -263,9 +263,7 @@ namespace WebDataAgro.Helpers.Excel
                 j++;
             }
             #endregion
-
-
-
+            
             #region PosicionCompras
             var col = 0;
             row = sheet.CreateRow(7);
@@ -386,8 +384,6 @@ namespace WebDataAgro.Helpers.Excel
             #region Hedge
             if (incluirHedge)
             {
-
-
                 CrearTablaHedge(sheet, colores[5], estiloCeldasColumnTitles, model, colores[6]);
                 CrearTablaAgenteDeCompras(sheet, colores[7], estiloCeldasColumnTitles, model);
             }
@@ -468,9 +464,9 @@ namespace WebDataAgro.Helpers.Excel
                 celda = row.CreateCell(6);
                 celda.SetCellValue(material.Comercial);
                 celda = row.CreateCell(7);
-                celda.SetCellValue(material.Cantidad.ToString("N0"));
+                celda.SetCellValue(material.Cantidad);
                 celda = row.CreateCell(8);
-                celda.SetCellValue(material.CantidadCamiones.ToString("N0"));
+                celda.SetCellValue(material.CantidadCamiones);
                 celda = row.CreateCell(9);
                 celda.SetCellValue(material.Campana);
                 celda = row.CreateCell(10);
@@ -478,7 +474,7 @@ namespace WebDataAgro.Helpers.Excel
                 celda = row.CreateCell(11);
                 celda.SetCellValue(material.FechaHasta);
                 celda = row.CreateCell(12);
-                celda.SetCellValue(material.Precio.ToString("N2"));
+                celda.SetCellValue((double)material.Precio);
                 celda = row.CreateCell(13);
                 celda.SetCellValue(material.Moneda);
                 celda = row.CreateCell(14);
@@ -534,7 +530,15 @@ namespace WebDataAgro.Helpers.Excel
         private static void CrearCelda(IRow row, int posicion, string valor, ICellStyle estilo)
         {
             var celda = row.CreateCell(posicion);
-            celda.SetCellValue(valor);
+            double v;
+            double.TryParse(valor, out v);
+            if (v != 0)
+            {
+                celda.SetCellValue(v);
+            }else
+            {
+                celda.SetCellValue(valor);
+            }
             celda.CellStyle = estilo;
         }
 

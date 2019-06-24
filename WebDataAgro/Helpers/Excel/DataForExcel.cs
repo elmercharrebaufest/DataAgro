@@ -46,7 +46,15 @@ namespace WebDataAgro.Helpers.Excel
             cell.RemoveAllChildren();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                cell.DataType = CellValues.InlineString;
+                if (text.Remove('.', ',').All(char.IsDigit))
+                {
+                    cell.DataType = CellValues.Number;
+                }
+                else
+                {
+                    cell.DataType = CellValues.InlineString;
+                }
+
                 cell.AppendChild(new InlineString { Text = new Text(text) });
             }
 
@@ -321,36 +329,41 @@ namespace WebDataAgro.Helpers.Excel
                     new Cell(
                         new CellFormula(
                             string.Format("TEXT(\"{0}\",\"{1}\")", text, string.Empty.PadLeft(text.Length, '0'))))
-                        {
-                            DataType
-                                =
-                                CellValues
-                                .String,
-                            CellValue
-                                =
-                                new CellValue
-                                    {
-                                        Text
-                                            =
-                                            text
-                                    },
-                            CellReference
-                                =
-                                header
-                                + index
-                        };
-            }
-
-            return new Cell(
-                new CellValue
                     {
-                        Text = i.ToString()
+                        DataType = CellValues.String,
+                        CellValue = new CellValue
+                        {
+                            Text = text
+                        },
+                        CellReference = header + index
+                    };
+            }
+            if (text.Replace(",", "").Replace(".", "").Replace(" ", "").All(char.IsDigit))
+            {
+                return new Cell(
+                    new CellValue
+                    {
+                        Text = text == "0.00" ? " " : text
                     })
-                       {
-                           // Cell properties
-                           DataType = CellValues.SharedString,
-                           CellReference = header + index
-                       };
+                {
+                    // Cell properties
+                    DataType = CellValues.Number,
+                    CellReference = header + index
+                };
+            }
+            else
+            {
+                return new Cell(
+                   new CellValue
+                   {
+                       Text = i.ToString()
+                   })
+                {
+                    // Cell properties
+                    DataType = CellValues.SharedString,
+                    CellReference = header + index
+                };
+            }
 
             // create Cell with InlineString as a child, which has Text as a child
         }
