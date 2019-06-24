@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 CampañaId = 1
             }
             );
-            var result = target.Aplicar(new AbmMaterialParam { MaterialId = 1 });
+            var result = target.Aplicar(new AbmMaterialParam { Id = 1 });
 
             Assert.NotNull(result);
 
@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":\"\",\"Descripcion\":\"\",\"CampañaId\":null,\"Campaña\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -76,7 +76,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarCondicionTest()
         {
             materialManagerMock.Setup(x => x.EliminarMaterial(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmMaterialParam { MaterialId = 1});
+            var result = target.Eliminar(new AbmMaterialParam { Id = 1});
 
             Assert.NotNull(result);
 
@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":\"\",\"Descripcion\":\"\",\"CampañaId\":null,\"Campaña\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Material\":{\"MaterialId\":0,\"Codigo\":null,\"Descripcion\":null,\"CampañaId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

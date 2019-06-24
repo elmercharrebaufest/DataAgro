@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\"}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}]},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"Material\":null,\"Moneda\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}]},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"Material\":null,\"Moneda\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
