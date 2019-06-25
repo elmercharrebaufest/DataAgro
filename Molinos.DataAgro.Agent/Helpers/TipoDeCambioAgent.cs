@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Agent
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    throw;
+                    return 1;
                 }
             }
         }

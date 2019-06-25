@@ -56,8 +56,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Negocio = contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
-                    TotalDolares = (contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value * ((decimal)((int)(contrato.Cantidad * 100)) / 100) : contrato.Precio : 0) * ((decimal)((int)(contrato.Cantidad * 100)) / 100),
-                    TotalPesos = (contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value * ((decimal)((int)(contrato.Cantidad * 100)) / 100) : contrato.Precio : 0) * ((decimal)((int)(contrato.Cantidad * 100)) / 100),
+                    TotalDolares = contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value  : contrato.Precio : 0,
+                    TotalPesos = contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value  : contrato.Precio : 0
                 };
 
             var queryFijacion =
@@ -83,8 +83,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Negocio = fijac.EstadoId == (int)EnumEstadoContrato.Finalizado ? fijac.FijacionSAP : fijac.ContratoSAP,
                     DestinoDescripcion = fijac.Destino != null ? fijac.Destino.Descripcion : "",
                     ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
-                    TotalDolares = (fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value * ((decimal)((int)(fijac.Cantidad * 100)) / 100) : fijac.Precio : 0) * ((decimal)((int)(fijac.Cantidad * 100)) / 100),
-                    TotalPesos = (fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value * ((decimal)((int)(fijac.Cantidad * 100)) / 100) : fijac.Precio : 0) * ((decimal)((int)(fijac.Cantidad * 100)) / 100),
+                    TotalDolares = fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
+                    TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -111,8 +111,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Negocio = null,
                         DestinoDescripcion = "",                        
                         ComercialCreador = fas.ComercialCreador == null ? fas.Comercial.Nombres + " " + fas.Comercial.Apellido : fas.ComercialCreador.Nombres + " " + fas.ComercialCreador.Apellido,                        
-                        TotalDolares = (fas.MonedaId == "USDM " ? fas.Precio : 0) * ((decimal)((int)(fas.Cantidad * 100)) / 100),
-                        TotalPesos = (fas.MonedaId == "ARP  " ? fas.Precio : 0) * ((decimal)((int)(fas.Cantidad * 100)) / 100),
+                        TotalDolares =fas.MonedaId == "USDM " ? fas.Precio : 0,
+                        TotalPesos = fas.MonedaId == "ARP  " ? fas.Precio : 0,
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -138,8 +138,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Negocio = null,
                         DestinoDescripcion = "",
                         ComercialCreador = age.ComercialCreador == null ? age.Comercial.Nombres + " " + age.Comercial.Apellido : age.ComercialCreador.Nombres + " " + age.ComercialCreador.Apellido,
-                        TotalDolares = (age.MonedaId == "USDM " ? age.Precio : 0) * ((decimal)((int)(age.Cantidad * 100)) / 100),
-                        TotalPesos = (age.MonedaId == "ARP  " ? age.Precio : 0) * ((decimal)((int)(age.Cantidad * 100)) / 100),
+                        TotalDolares = age.MonedaId == "USDM " ? age.Precio : 0,
+                        TotalPesos = age.MonedaId == "ARP  " ? age.Precio : 0,
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
