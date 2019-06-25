@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO() { DATE = DateTime.Now.Date.ToString("dd.MM.yyyy"), FOREIGN_AMOUNT = 1, FOREIGN_CURRENCY = "USDM ", LOCAL_CURRENCY = "ARP  " };
+                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO() { DATE = DateTime.Now.Date.ToString("yyyy-MM-dd"), FOREIGN_AMOUNT = 1, FOREIGN_CURRENCY = "USDM ", LOCAL_CURRENCY = "ARP  " };
                     logger.Debug(rq.ToXml());
 
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO(rq);
