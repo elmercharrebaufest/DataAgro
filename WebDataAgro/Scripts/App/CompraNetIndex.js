@@ -106,8 +106,10 @@ $("#confirmarVariosDiv").ready(function () {
 $("#buscadorZonaDiv").ready(function () {
     if ($("#perfil").val() == "Mesa") {
         $("#buscadorZonaDiv").show();
+        $("#totalesPesosDolares").show();
     } else {
         $("#buscadorZonaDiv").hide();
+        $("#totalesPesosDolares").hide();
     }
 }
 );
