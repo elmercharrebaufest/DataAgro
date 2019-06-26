@@ -858,8 +858,8 @@ function BuscarTotales() {
     var totales = MSExecuteOnServer('/CompraNet/BuscarTotales', filtros);
 
     if (totales != null) {
-        $("#totalPesos").text(kendo.toString(totales.TotalPesos, "n2"));
-        $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n2"));
+        $("#totalPesos").text(kendo.toString(totales.TotalPesos, "n0"));
+        $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n0"));
     }
 }
 function isValidDate(date) {

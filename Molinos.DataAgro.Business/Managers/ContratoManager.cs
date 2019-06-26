@@ -1447,7 +1447,7 @@ namespace Molinos.DataAgro.Business.Managers
         public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
         {
             var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, perfilId, listComercialesId, corredoresComercial));
-            return new TotalPesosDolares { TotalDolares = resultados.Data.Sum(x => x.TotalDolares*(decimal)x.Cantidad),TotalPesos = resultados.Data.Sum(x => x.TotalPesos * (decimal)x.Cantidad) };
+            return new TotalPesosDolares { TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*((decimal)x.Cantidad/1000),0)),TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * ((decimal)x.Cantidad / 1000),0)) };
         }
     }
 }
