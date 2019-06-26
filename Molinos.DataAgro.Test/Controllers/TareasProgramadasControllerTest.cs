@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private TareasProgramadasController target;
         private Mock<ILogger> loggerMock;
         private Mock<IContratoManager> contratoManagerMock;
+        private Mock<IFijacionDePrecioContratoManager> fijacionManagerMock;
         private JavaScriptSerializer serializer;
 
 
@@ -30,8 +31,9 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             loggerMock = new Mock<ILogger>();
             contratoManagerMock = new Mock<IContratoManager>();
+            fijacionManagerMock = new Mock<IFijacionDePrecioContratoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new TareasProgramadasController(loggerMock.Object, contratoManagerMock.Object);
+            target = new TareasProgramadasController(loggerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object);
         }
 
         [Test]
@@ -48,6 +50,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void FinalizacionContratoTest()
         {
             contratoManagerMock.Setup(x => x.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory));
+            fijacionManagerMock.Setup(x => x.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory));
             var result = target.FinalizacionContratos() as ContentResult;
 
             Assert.NotNull(result);

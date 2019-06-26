@@ -9,11 +9,13 @@ namespace WebDataAgro.Controllers
     {
         private readonly ILogger logger;
         private readonly IContratoManager contratoManager;
+        private readonly IFijacionDePrecioContratoManager fijacionManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager)
         {
             this.logger = logger;
             this.contratoManager = contratoManager;
+            this.fijacionManager = fijacionManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -28,6 +30,7 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"Finalización Automatica - Iniciando");
             contratoManager.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory);
+            fijacionManager.FinalizacionAutomatica(GlobalVariables.IdActiveDirectory);
             logger.Info($"Finalización Automatica - Finalizado");
             return Content("ok");
         }

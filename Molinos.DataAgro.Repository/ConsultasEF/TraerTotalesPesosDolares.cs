@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                where (contrato.EstadoId == 2|| contrato.EstadoId == 4|| contrato.EstadoId == 5) && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
                     (perfilId == (int)EnumPerfil.CorredoresComercial &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
                         (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) ||
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new TotalPesosDolares()
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             {
                 var queryFason =
                     from fas in contexto.Set<Fason>()
-                    where equipo.Contains(fas.ComercialId)
+                    where (fas.EstadoId == 2 || fas.EstadoId == 4 || fas.EstadoId == 5) && equipo.Contains(fas.ComercialId)
                     select new TotalPesosDolares()
                     {
                         Cantidad = fas.Cantidad,
@@ -119,7 +119,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                 var queryAgente =
                     from age in contexto.Set<AgenteCompra>()
-                    where equipo.Contains(age.ComercialId)
+                    where (age.EstadoId == 2 || age.EstadoId == 4 || age.EstadoId == 5) && equipo.Contains(age.ComercialId)
                     select new TotalPesosDolares()
                     {                       
                         Cantidad = age.Cantidad,
@@ -145,7 +145,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 queryContratos = queryContratos.Union(queryAgente);
                 var queryAcuerdo =
                     from acu in contexto.Set<ContratoAcuerdo>()
-                    where equipo.Contains(acu.ComercialCreadorId)
+                    where (acu.EstadoId == 2 || acu.EstadoId == 4 || acu.EstadoId == 5) && equipo.Contains(acu.ComercialCreadorId)
                     select new TotalPesosDolares()
                     {
                         

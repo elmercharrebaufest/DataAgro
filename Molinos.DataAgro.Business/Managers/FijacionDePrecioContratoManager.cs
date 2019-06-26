@@ -618,7 +618,24 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.FijacionId == fijacionId);
         }
-
+        public void FinalizacionAutomatica(string idActiveDirectory)
+        {
+            var fijacioneConfirmados = repositorio.Listar<FijacionDePrecioContrato>(x => x.EstadoId == 2 || x.EstadoId == 4);
+            logger.Debug("Fijaciones a Finalizar: " + fijacioneConfirmados.Count);
+            var oEntityErrors = new GrabarContratoResult();
+            foreach (var fijacion in fijacioneConfirmados)
+            {
+                try
+                {
+                    var error = FinalizarFijacion(fijacion.FijacionDePrecioContratoId, idActiveDirectory);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    oEntityErrors.Error("", ex.Message);
+                }
+            }
+        }
     }
 }
 
