@@ -1189,6 +1189,9 @@ body {
     padding-right: 0;
 }
 
-.totales{
-    display:inline-block;
+.totales {
+    display: inline-block;
+    border: 1px solid black;
+    background-color: #fff;
+    border-radius: 5px !important;
 }
