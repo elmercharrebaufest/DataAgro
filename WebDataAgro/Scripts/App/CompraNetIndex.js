@@ -505,7 +505,7 @@ function CreateGridInformeCompraNet() {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + "," + "'" + dataItem.FasonId + "'" + "," + "'" + dataItem.AgenteId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else if (dataItem.Estado == 1 || dataItem.Estado == 3 || dataItem.Estado == 7) {
-                        return dataItem.Ampliaciones;
+                        return kendo.toString(dataItem.Ampliaciones, "n0");
                     } else {
                         return '';
                     }
