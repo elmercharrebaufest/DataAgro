@@ -1,4 +1,15 @@
-﻿.formulario-footer-cancelar {
+﻿.noRightPadding {
+    padding-right: 0;
+}
+
+.totales {
+    display: inline-block;
+    border: 1px solid #848484;
+    background-color: #fff;
+    border-radius: 5px !important;
+}
+
+.formulario-footer-cancelar {
     font-family: "G-Open Sans-n4", Arial;
     color: #787878;
     font-size: 100%;
@@ -43,8 +54,6 @@
 .btnVerde {
     background-color: #017940;
     color: #fff;
-    /*padding: 8px;
-    border-radius: 5px!important;*/
 }
 
 #boton-ampliar {
@@ -456,15 +465,15 @@ label {
     opacity: 0.2;
     background: none !important;
     text-indent: 0;
- 
 }
 
 .modal .modal-header .cerrar {
     margin-top: 0.8rem !important;
     margin-right: 0.5rem;
 }
-.blancoCerrarModalFinalizar{
-    color:white!important;
+
+.blancoCerrarModalFinalizar {
+    color: white !important;
     opacity: 1 !important;
 }
 
@@ -504,7 +513,7 @@ textarea.k-textbox {
 
 #gridInformeCompraNet {
     font-size: 12px;
-    overflow-x:scroll;
+    overflow-x: scroll;
 }
 
 .modal-dialog-pendiente {
@@ -740,15 +749,18 @@ body {
 .varios {
     color: #017940;
 }
+
 #negociosPropiosDiv.selected {
     color: white;
     background-color: #017940;
 }
-#negociosPropiosDiv.selected:hover {
-    color: #ccc;
-    border: 1px solid #ccc;
-    background-color: #017940;
-}
+
+    #negociosPropiosDiv.selected:hover {
+        color: #ccc;
+        border: 1px solid #ccc;
+        background-color: #017940;
+    }
+
 .k-radio, input.k-checkbox {
     display: inherit;
 }
@@ -778,14 +790,14 @@ body {
     cursor: pointer;
 }
 
-#confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span, #negociosPropiosDiv > span {
-    vertical-align: middle;
-}
+    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span, #negociosPropiosDiv > span {
+        vertical-align: middle;
+    }
 
-#confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover, #negociosPropiosDiv:hover {
-    background: #ccc;
-    border: 1px solid #017940;
-}
+    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover, #negociosPropiosDiv:hover {
+        background: #ccc;
+        border: 1px solid #017940;
+    }
 
 .myBtn-disabled {
     width: 100%;
@@ -918,6 +930,7 @@ body {
 .inline-fijacion {
     display: inline !important;
 }
+
 .hide-fijacion {
     display: none !important;
 }
@@ -1181,17 +1194,7 @@ body {
         white-space: nowrap;
     }
 
-    #gridInformeCompraNet td {
-        text-align: left;
-    }
-}
-.noRightPadding{
-    padding-right: 0;
-}
-
-.totales {
-    display: inline-block;
-    border: 1px solid black;
-    background-color: #fff;
-    border-radius: 5px !important;
+        #gridInformeCompraNet td {
+            text-align: left;
+        }
 }
