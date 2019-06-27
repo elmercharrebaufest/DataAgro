@@ -136,8 +136,18 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value):"";
             var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId);
-            var cantidadContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "",oParam.FijacionDePrecioContratoId)
-                .FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosPendiente;
+            var listaContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "", oParam.FijacionDePrecioContratoId);
+            if (oParam.ContratoSAP == "")
+            {
+                oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
+                return oErrorMessages;
+            }
+            if (!listaContrato.Select(x => x.ContratoId.TrimStart('0')).Contains(oParam.ContratoSAP.TrimStart('0')))
+            {
+                oErrorMessages.Error("ContratoId", "El Contrato no existe");
+                return oErrorMessages;
+            }
+            var cantidadContrato = listaContrato.FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosPendiente;
             if (double.Parse(cantidadContrato) - oParam.Cantidad < 0)
             {
                 oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
@@ -157,11 +167,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ComercialId == 0)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
-            }
-            if (oParam.ContratoSAP == "")
-            {
-                oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
-            }
+            }            
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
             {
