@@ -86,10 +86,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalDolares = fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
                     TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0
                 };
-
             queryContratos = queryContratos.Union(queryFijacion);
-            if (perfilId == 7)
-            {
+            
                 var queryFason =
                     from fas in contexto.Set<Fason>()
                     where (fas.EstadoId == 2 || fas.EstadoId == 4 || fas.EstadoId == 5) && equipo.Contains(fas.ComercialId)
@@ -117,32 +115,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                 queryContratos = queryContratos.Union(queryFason);
 
-                var queryAgente =
-                    from age in contexto.Set<AgenteCompra>()
-                    where (age.EstadoId == 2 || age.EstadoId == 4 || age.EstadoId == 5) && equipo.Contains(age.ComercialId)
-                    select new TotalPesosDolares()
-                    {                       
-                        Cantidad = age.Cantidad,
-                        FechaDesde = null,
-                        FechaHasta = null,
-                        Fecha = DbFunctions.TruncateTime(age.Fecha),
-                        GrupoCompraDescripcion = null,
-                        Estado_Contrato = age.Estado.Descripcion,
-                        Ampliaciones = age.Ampliaciones,
-                        Proveedor = age.Operador.Descripcion,
-                        Corredor = "",
-                        Comercial = age.Comercial == null ? "" : age.Comercial.Nombres + " " + age.Comercial.Apellido,
-                        Material = age.Material == null ? "" : age.Material.Descripcion,
-                        Campania = "",
-                        TipoNegocio = "AGENTE COMPRAS",
-                        Negocio = null,
-                        DestinoDescripcion = "",
-                        ComercialCreador = age.ComercialCreador == null ? age.Comercial.Nombres + " " + age.Comercial.Apellido : age.ComercialCreador.Nombres + " " + age.ComercialCreador.Apellido,
-                        TotalDolares = age.MonedaId == "USDM " ? age.Precio : 0,
-                        TotalPesos = age.MonedaId == "ARP  " ? age.Precio : 0,
-                    };
-
-                queryContratos = queryContratos.Union(queryAgente);
                 var queryAcuerdo =
                     from acu in contexto.Set<ContratoAcuerdo>()
                     where (acu.EstadoId == 2 || acu.EstadoId == 4 || acu.EstadoId == 5) && equipo.Contains(acu.ComercialCreadorId)
@@ -170,7 +142,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);
-            }
+            
             return new KendoGrid<TotalPesosDolares>(request, queryContratos);
         }
 
