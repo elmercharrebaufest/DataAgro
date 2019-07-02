@@ -2613,11 +2613,12 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
-    $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
-    CambioCalidades(contrato.Calidades);
-    $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);
-   
+    if (contrato.Calidades !== null) {
+        var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
+        $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+        CambioCalidades(contrato.Calidades);
+        $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);
+    }
     if (contrato.Pizarra=== true) {
         $("#pizarraId").prop("checked", true);
         ClickEnPizarra();
