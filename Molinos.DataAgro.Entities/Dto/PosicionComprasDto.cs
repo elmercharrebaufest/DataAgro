@@ -30,5 +30,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double NewFijac { get; set; }
         public int? Anio { get; set; }
         public decimal? PrecioPonderado { get; set; }
+        public double? CantidadPonderada { get; set; }
     }
 }
