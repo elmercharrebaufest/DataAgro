@@ -7,7 +7,9 @@ namespace Molinos.DataAgro.Entities.Dto
     public class TotalPesosDolares
     {
         public string Proveedor { get; set; }
+        public int? ProveedorId { get; set; }
         public string Corredor { get; set; }
+        public int? CorredorId { get; set; }
         public DateTime? FechaDesde { get; set; }
         public DateTime? FechaHasta { get; set; }
         public string TipoNegocio { get; set; }
@@ -21,6 +23,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
         public string DestinoDescripcion { get; set; }
+        public int? ComercialId { get; set; }
         public string Estado_Contrato { get; set; }
         public decimal TotalPesos { get; set; }
         public decimal TotalDolares { get; set; }
