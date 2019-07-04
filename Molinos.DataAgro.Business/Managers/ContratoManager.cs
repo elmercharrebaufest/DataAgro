@@ -21,8 +21,6 @@ using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-
-
     public class ContratoManager : IContratoManager
     {
         private readonly IRepositorio repositorio;
@@ -373,7 +371,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.Calidad != null)
             {
                 var calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
-                if (calidad != null && calidad.PorcentajeHasta < 51)
+                if (calidad != null && calidad.PorcentajeHasta < 40)
                 {
                     oErrorMessages.Error("", "Falta completar el rango de Dañados");
                 }

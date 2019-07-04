@@ -2287,7 +2287,7 @@ function AgregarCalidades() {
                 CalidadEspecialId: 1,
                 Valor: "1",
                 PorcentajeDesde: "5,1",
-                PorcentajeHasta: "51",
+                PorcentajeHasta: "40",
                 StandardDeCalidadId: 2,
                 Borrar: function () {
                     viewModel.Calidades.remove(this);
@@ -2346,8 +2346,8 @@ function validarCalidad(calidad) {
         (  calidad.PorcentajeHasta == null || calidad.PorcentajeDesde == null)) {
         errores.push('El Porcentaje es obligatorio');
     }
-    if (calidad.PorcentajeHasta > 51 && calidad.CalidadEspecialId == 1) {
-        errores.push('El Porcentaje Hasta no debe ser mayor a 51% para "Dañados"');
+    if (calidad.PorcentajeHasta > 40 && calidad.CalidadEspecialId == 1) {
+        errores.push('El Porcentaje Hasta no debe ser mayor a 40% para "Dañados"');
     }
     if (calidad.PorcentajeHasta > 100 && calidad.CalidadEspecialId == 2) {
         errores.push('El Porcentaje Hasta no debe ser mayor a 100% para "Granos verdes"');

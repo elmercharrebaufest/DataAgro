@@ -23,4 +23,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public double NewFason { get; set; }
         public double Total { get; set; }
     }
+
+    public class NegocioToneladasPosicionDto
+    {
+        public int Id { get; set; }
+        public DateTime Fecha { get; set; }
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public DateTime Posicion { get; set; }
+        public int TipoNegocioId { get; set; }
+        public int MaterialCampanaId { get; set; }
+        public int CampanaId { get; set; }
+        public double Cantidad { get; set; }
+    }
 }

@@ -80,14 +80,28 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                         else
                         {
-                            listaCalidades.Add(new ZMPES5300
+                            if (cal.CalidadEspecialId == 1 && cal.PorcentajeHasta == 40)
                             {
-                                CODIGO = cal.CalidadEspecial.CodigoSap,
-                                VALOR = cal.Valor,
-                                PORC_DESDE = cal.PorcentajeDesde ?? 0,
-                                PORC_HASTA = cal.PorcentajeHasta ?? 0
+                                listaCalidades.Add(new ZMPES5300
+                                {
+                                    CODIGO = cal.CalidadEspecial.CodigoSap,
+                                    VALOR = cal.Valor,
+                                    PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                                    PORC_HASTA = 51
+                                }
+                                );
                             }
-                            );
+                            else
+                            {
+                                listaCalidades.Add(new ZMPES5300
+                                {
+                                    CODIGO = cal.CalidadEspecial.CodigoSap,
+                                    VALOR = cal.Valor,
+                                    PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                                    PORC_HASTA = cal.PorcentajeHasta ?? 0
+                                }
+                                );
+                            }
                         }
                     }
                 }
