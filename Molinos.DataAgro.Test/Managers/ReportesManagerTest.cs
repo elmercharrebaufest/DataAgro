@@ -652,7 +652,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha } });
+                .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,Posicion = "02.2019" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha2, FechaHasta = fecha2 } });
 
