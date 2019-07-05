@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? CampanaMaterialId { get; set; }
         public int? CampanaId { get; set; }
         public decimal PrecioPesificado { get; set; }
+        public string Posicion { get; set; }
         public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
     }
 }

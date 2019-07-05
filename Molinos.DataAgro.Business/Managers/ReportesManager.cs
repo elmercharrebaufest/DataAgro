@@ -532,6 +532,7 @@ namespace Molinos.DataAgro.Business.Managers
             var standard = calidad.HasValue && calidad.Value?2:1;
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
+            var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1);
             var posicionKilos = new List<PosicionKilos>();
             var contratos = repositorio.Listar<Contrato, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
@@ -543,7 +544,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = x.TipoNegocioId,
                 CampanaMaterialId = x.Material.CampañaId,
                 CampanaId = x.CampanaId,
-                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,                
+                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
                 PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -568,10 +569,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
-                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
-                cont.TipoNegocioId == 2 && ((new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) < posicion ? EnumClasificacionNegocio.ForwardAFijar :
-                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
+                cont.TipoNegocioId == 2 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
+                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
@@ -593,7 +594,6 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))
                 && (centroId == 0 || centroId == 1));
-
             foreach (var cont in fijaciones)
             {
                 var posicion = new DateTime();
@@ -609,12 +609,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
-                cont.ClasificacionNegocio =(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :                
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) < posicion ? EnumClasificacionNegocio.ForwardFijacion :                
+                cont.ClasificacionNegocio =(fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :                
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :                
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(fijaciones);
-            contratos.AddRange(repositorio.Listar<Fason, PosicionPorMaterial>(x => new PosicionPorMaterial
+
+            var fason = repositorio.Listar<Fason, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.Id,
                 FechaDesde = x.FechaDesde,
@@ -622,6 +623,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
+                CampanaId =x.CampanaId,
+                CampanaMaterialId = x.Material.CampañaId,
+                Posicion = x.Posicion,
                 PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -629,9 +633,19 @@ namespace Molinos.DataAgro.Business.Managers
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.Especial == calidad))
-                && (centroId == 0 || centroId == 1)));
+                && (centroId == 0 || centroId == 1));
+            foreach(var cont in fason)
+            {
+                var mes = int.Parse(cont.Posicion.Substring(0, 2));
+                var anio = int.Parse(cont.Posicion.Substring(3, 4));
+                var posicion = new DateTime(anio, mes, 1);
 
-            contratos.AddRange(repositorio.Listar<ContratoAcuerdo, PosicionPorMaterial>(x => new PosicionPorMaterial
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                EnumClasificacionNegocio.NewCropFijacion;
+            }
+            contratos.AddRange(fason);
+            var acuerdos = repositorio.Listar<ContratoAcuerdo, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.Id,
                 FechaDesde = x.FechaDesde,
@@ -646,7 +660,28 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.EstadoId == 2 || x.EstadoId == 5)
                && x.MaterialId == materialId
                && (calidad == null || !calidad.Value)
-               && (centroId == 0 || x.DestinoId == centroId)));
+               && (centroId == 0 || x.DestinoId == centroId));
+
+            foreach (var cont in acuerdos )
+            {
+                var posicion = new DateTime();
+                if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                {
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                {
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.AddMonths(+1).Month, 1);
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                {
+                    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
+                }
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                EnumClasificacionNegocio.NewCropFijacion;
+            }
+            contratos.AddRange(acuerdos);
 
             foreach (var cont in contratos)
             {

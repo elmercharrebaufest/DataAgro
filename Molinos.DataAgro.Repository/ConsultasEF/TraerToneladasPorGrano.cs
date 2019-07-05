@@ -3,6 +3,7 @@ using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
@@ -59,9 +60,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.NewAPrecio = posicion.Where(x => x.TipoNegocioId == 2 && x.MaterialCampanaId < x.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
 
 
-            posicion = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (centroId == 0 || centroId == 1))
+            var fijaciones = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (centroId == 0 || centroId == 1))
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.FijacionDePrecioContratoId, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 3, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad }).ToList();
-            foreach (var pos in posicion)
+            foreach (var pos in fijaciones)
             {
                 if ((DateTime.DaysInMonth(pos.FechaDesde.Year, pos.FechaDesde.Month) - pos.FechaDesde.Day) >= 10)
                 {
@@ -76,34 +77,26 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
                 }
             }
-            toneladasPorGrano.DispFijac = posicion.Where(x => x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
-            toneladasPorGrano.FrwFijac = posicion.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
-            toneladasPorGrano.NewFijac = posicion.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.DispFijac = fijaciones.Where(x => x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.FrwFijac = fijaciones.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.NewFijac = fijaciones.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
 
-            posicion = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
-                    .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad }).ToList();
-            foreach (var pos in posicion)
+            var fason = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
+                    .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad, PosicionString= x.Posicion }).ToList();
+            foreach(var pos in fason)
             {
-                if ((DateTime.DaysInMonth(pos.FechaDesde.Year, pos.FechaDesde.Month) - pos.FechaDesde.Day) >= 10)
-                {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1);
-                }
-                else if (pos.FechaDesde.AddMonths(1).Month <= pos.FechaHasta.Month)
-                {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.AddMonths(+1).Month, 1);
-                }
-                else if (pos.FechaDesde.AddMonths(1).Month > pos.FechaHasta.Month)
-                {
-                    pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
-                }
+                var mes = int.Parse(pos.PosicionString.Substring(0, 2));
+                var anio = int.Parse(pos.PosicionString.Substring(3, 4));
+                pos.Posicion = new DateTime(anio, mes, 1);
             }
-            toneladasPorGrano.DispFason = posicion.Where(x => x.MaterialCampanaId > x.CampanaId||( x.MaterialCampanaId == x.CampanaId && new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) >= x.Posicion)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
-            toneladasPorGrano.FrwFason = posicion.Where(x => x.MaterialCampanaId == x.CampanaId && new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1) < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
-            toneladasPorGrano.NewFason = posicion.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
 
-            posicion = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2) && x.MaterialId == materialId && (calidad == null || !calidad.Value) && (0 == centroId || x.DestinoId == centroId))
+            toneladasPorGrano.DispFason = fason.Where(x => x.MaterialCampanaId > x.CampanaId||( x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.FrwFason = fason.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.NewFason = fason.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+
+            var acuerdos = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2) && x.MaterialId == materialId && (calidad == null || !calidad.Value) && (0 == centroId || x.DestinoId == centroId))
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, Cantidad = x.Cantidad }).ToList();
-            foreach (var pos in posicion)
+            foreach (var pos in acuerdos)
             {
                 if ((DateTime.DaysInMonth(pos.FechaDesde.Year, pos.FechaDesde.Month) - pos.FechaDesde.Day) >= 10)
                 {
@@ -118,8 +111,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
                 }
             }
-            toneladasPorGrano.DispFason = posicion.Where(x => fechaPosicion >= x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
-            toneladasPorGrano.FrwFason = posicion.Where(x => fechaPosicion < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.DispFijac += acuerdos.Where(x => fechaPosicion >= x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
+            toneladasPorGrano.FrwFijac += acuerdos.Where(x => fechaPosicion < x.Posicion).Select(y => Math.Ceiling(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum();
             
 
             toneladasPorGrano.Total = toneladasPorGrano.DispAFijar + toneladasPorGrano.DispAPrecio + toneladasPorGrano.DispFijac + toneladasPorGrano.DispFason +

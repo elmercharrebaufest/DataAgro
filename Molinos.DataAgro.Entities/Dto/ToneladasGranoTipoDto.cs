@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public DateTime Posicion { get; set; }
+        public string PosicionString { get; set; }
         public int TipoNegocioId { get; set; }
         public int MaterialCampanaId { get; set; }
         public int CampanaId { get; set; }

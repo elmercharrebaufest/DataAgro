@@ -183,35 +183,35 @@
                         @foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                         {
                             int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
-                            <tr>
-                                <td> @mes.Mes - @mes.Anio</td>
-                                <td class="@(dispFijacion? "":"hide") borde-izq-der">@mes.DispFijac</td>
-                                <td class="@(forwFijacion? "":"hide") borde-izq-der">@mes.FrwFijac</td>
-                                <td class="@(newcFijacion? "":"hide") borde-izq-der">@mes.NewFijac</td>
-                                <td class="@(dispAFijar? "":"hide") borde-izq-der">@mes.DispAFijar</td>
-                                <td class="@(forwAFijar? "":"hide") borde-izq-der">@mes.FrwAFijar</td>
-                                <td class="@(newcAFijar? "":"hide") borde-izq-der">@mes.NewAFijar</td>
-                                <td class="@(dispAPrecio? "":"hide") borde-izq-der">@mes.DispAPrecio</td>
-                                <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio</td>
-                                <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio</td>
-                                <td> @(mes.Kilos.ToString("N0"))</td>
-                                <td> @(mes.PrecioPonderado.Value.ToString("N0"))</td>
-                                <td>
-                                    <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
-                                        <span>
-                                            <i class="fa fa-file-excel-o"></i>
-                                        </span>
-                                    </a>
-                                    @*@Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") }, new { @class = "Descarga" })*@
-                                </td>
-                                <td>
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="abrirModalDetallePosicion" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()')">
-                                        <span>
-                                            <i class="fa fa-eye"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
+                    <tr>
+                        <td> @mes.Mes - @mes.Anio</td>
+                        <td class="@(dispFijacion? "":"hide") borde-izq-der">@mes.DispFijac.ToString("N0")</td>
+                        <td class="@(forwFijacion? "":"hide") borde-izq-der">@mes.FrwFijac.ToString("N0")</td>
+                        <td class="@(newcFijacion? "":"hide") borde-izq-der">@mes.NewFijac.ToString("N0")</td>
+                        <td class="@(dispAFijar? "":"hide") borde-izq-der">@mes.DispAFijar.ToString("N0")</td>
+                        <td class="@(forwAFijar? "":"hide") borde-izq-der">@mes.FrwAFijar.ToString("N0")</td>
+                        <td class="@(newcAFijar? "":"hide") borde-izq-der">@mes.NewAFijar.ToString("N0")</td>
+                        <td class="@(dispAPrecio? "":"hide") borde-izq-der">@mes.DispAPrecio.ToString("N0")</td>
+                        <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio.ToString("N0")</td>
+                        <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio.ToString("N0")</td>
+                        <td> @(mes.Kilos.ToString("N0"))</td>
+                        <td> @(mes.PrecioPonderado.Value.ToString("N0"))</td>
+                        <td>
+                            <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
+                                <span>
+                                    <i class="fa fa-file-excel-o"></i>
+                                </span>
+                            </a>
+                            @*@Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") }, new { @class = "Descarga" })*@
+                        </td>
+                        <td>
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="abrirModalDetallePosicion" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()')">
+                                <span>
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
                         }
                     <tr class="titulosPosicion total">
                         <td class="@(dispFijacion? "":"hide")"></td>
