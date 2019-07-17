@@ -585,11 +585,18 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 2 && ($("#perfil").val() == "Mesa")) { //confirmado
-                        return '<div class="status confirmado">Confirmado</div>' +
-                            botonPendiente(dataItem, 'fa-pencil conf') +
-                            botonFinalizado(dataItem, 'fa-flag-checkered conf') +
-                            botonVisualizar(dataItem, 'fa-eye conf') +
-                            botonBorrar(dataItem, 'fa-trash conf');
+                        if (dataItem.TipoNegocioId == 6) {
+                            return '<div class="status confirmado">Confirmado</div>' +
+                                botonPendiente(dataItem, 'fa-pencil conf') +                         
+                                botonVisualizar(dataItem, 'fa-eye conf') +
+                                botonBorrar(dataItem, 'fa-trash conf');
+                        } else {
+                            return '<div class="status confirmado">Confirmado</div>' +
+                                botonPendiente(dataItem, 'fa-pencil conf') +
+                                botonFinalizado(dataItem, 'fa-flag-checkered conf') +
+                                botonVisualizar(dataItem, 'fa-eye conf') +
+                                botonBorrar(dataItem, 'fa-trash conf');
+                        }
                     } else if (dataItem.Estado == 2) {
                         return '<div class="status confirmado">Confirmado</div>' +
                             botonPendiente(dataItem, 'fa-pencil conf') +
@@ -610,11 +617,18 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 4 && ($("#perfil").val() == "Mesa")) { //error
-                        return '<div class="status error">Con Error</div>' +
-                            botonPendiente(dataItem, 'fa-pencil err') +
-                            botonFinalizado(dataItem, 'fa-flag-checkered err') +
-                            botonVisualizar(dataItem, 'fa-eye err') +
-                            botonBorrar(dataItem, 'fa-trash err');
+                        if (dataItem.TipoNegocioId == 6) {
+                            return '<div class="status error">Con Error</div>' +
+                                botonPendiente(dataItem, 'fa-pencil err') +                         
+                                botonVisualizar(dataItem, 'fa-eye err') +
+                                botonBorrar(dataItem, 'fa-trash err');
+                        } else {
+                            return '<div class="status error">Con Error</div>' +
+                                botonPendiente(dataItem, 'fa-pencil err') +
+                                botonFinalizado(dataItem, 'fa-flag-checkered err') +
+                                botonVisualizar(dataItem, 'fa-eye err') +
+                                botonBorrar(dataItem, 'fa-trash err');
+                        }
                     } else if (dataItem.Estado == 4) {
                         return '<div class="status error">Con Error</div>' +
                             botonPendiente(dataItem, 'fa-pencil err') +
