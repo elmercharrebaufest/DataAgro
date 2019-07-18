@@ -80,17 +80,26 @@ a.Descarga {
 #Soja .titulosPosicion {
     background: rgb(153, 204, 0);
 }
-
+#Soja{
+    z-index:200;
+}
 #Maíz .titulosPosicion {
     background: rgb(255, 204, 153);
 }
-
+#Maíz {
+    z-index: 150;
+}
 #TrigoCámara .titulosPosicion {
     background: rgb(153, 153, 255);
 }
-
+#TrigoCámara {
+    z-index: 100;
+}
 #TrigoCalidad .titulosPosicion {
     background: rgb(153, 204, 255);
+}
+#TrigoCalidad {
+    z-index: 50;
 }
 table#Soja th, table#Soja td,
 table#Maíz th, table#Maíz td,
