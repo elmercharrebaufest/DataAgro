@@ -2427,7 +2427,6 @@
     <Content Include="Views\CompraNet\_ModalModificarVarios.cshtml" />
     <Content Include="Views\CompraNet\ModalAperturaPrecio.cshtml" />
     <Content Include="Views\Zona\Index.cshtml" />
-    <Content Include="Views\ZonaCupo\Index.cshtml" />
     <Content Include="Views\Research\_AvanceSiembra.cshtml" />
     <Content Include="Views\Research\Index.cshtml" />
     <Content Include="Views\Research\_ListaAvanceSiembra.cshtml" />
