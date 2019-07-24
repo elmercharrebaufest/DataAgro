@@ -21,21 +21,36 @@ function ArmarNotificaciones() {
             for (var ii in notificaciones) {
                 (function (i) {
                     var url = MSGetUrl("/Content/Images/notificaciones-reloj.png");
-                    htmlnotifaux += '<div class="notificacion-detalle">'
-                        + '<div class="notificacion-detalle-horario">'
-                        + '<img class="notificacion-reloj" src="..' + url + '" />'
-                        + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + " " + notificaciones[i].Hora + '</span>'
-                        + '</div>'
-                        + '<div class="notificacion-detalle-contacto">'
-                        + notificaciones[i].Contacto
-                        + '</div>'
-                        + '<div class="notificacion-detalle-titulo">'
-                        + notificaciones[i].Tema
-                        + '</div>'
-                        + '<div class="notificacion-detalle-descripcion">'
-                        + notificaciones[i].Comentarios
-                        + '</div>'
-                        + '</div>';
+                    if (notificaciones[i].ProveedorId != 0) {
+                        htmlnotifaux += '<div class="notificacion-detalle">'
+                            + '<div class="notificacion-detalle-horario">'
+                            + '<img class="notificacion-reloj" src="..' + url + '" />'
+                            + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + " " + notificaciones[i].Hora + '</span>'
+                            + '</div>'
+                            + '<div class="notificacion-detalle-contacto">'
+                            + notificaciones[i].Contacto
+                            + '</div>'
+                            + '<div class="notificacion-detalle-titulo">'
+                            + notificaciones[i].Tema
+                            + '</div>'
+                            + '<div class="notificacion-detalle-descripcion">'
+                            + notificaciones[i].Comentarios
+                            + '</div>'
+                            + '</div>';
+                    } else {
+                        htmlnotifaux += '<div class="notificacion-detalle">'
+                            + '<div class="notificacion-detalle-horario">'
+                            + '<img class="notificacion-reloj" src="..' + url + '" />'
+                            + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + '</span>'
+                            + '</div>'
+                            + '<div class="notificacion-detalle-titulo">'
+                            + notificaciones[i].Tema
+                            + '</div>'
+                            + '<div class="notificacion-detalle-descripcion">'
+                            + notificaciones[i].Comentarios
+                            + '</div>'
+                            + '</div>';
+                    }
                 })(ii);
             }
 

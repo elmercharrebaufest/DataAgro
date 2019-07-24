@@ -1,0 +1,61 @@
+﻿@model WebDataAgro.Models.ResearchSituacionCultivoModel
+
+@Html.AntiForgeryToken()
+
+<div id="formulario" class="table-container">
+
+    @if (Model.Resultado != null && Model.Resultado.HayError)
+    {
+        if (Model.Resultado.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0]
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0]
+            </div>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-xs-10 m-grid-col-xs-offset-1">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialSituacionCultivo" onclick="mostrarocultar('#mostrarSituacionCultivo')">
+            <span class="historial">Historial</span> <span id="mostrarSituacionCultivo" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialSituacionCultivo" class="collapse">
+            <table class="tabla-historial table">
+                <tr>
+                    <th>Material</th>
+                    <th>Localidad</th>
+                    <th>Comercial</th>
+                    <th>Situacion</th>
+                    <th>Estadío</th>
+                    <th>Fecha/Hora</th>
+
+                </tr>
+                @foreach (var mat in Model.HistorialSituacionCultivo)
+                {
+            <tr>
+                <td>@Html.DisplayFor(model => mat.Material)</td>
+                <td>@Html.DisplayFor(model => mat.Localidad)</td>
+                <td>@Html.DisplayFor(model => mat.Comercial)</td>
+                <td>@Html.DisplayFor(model => mat.Estadio)</td>
+                <td>@Html.DisplayFor(model => mat.Situacion)</td>
+                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm");}
+                <td>@Html.DisplayFor(model => fecha)</td>
+                <td>
+                    @Ajax.ActionLink(" ", "EliminarSituacionCultivo", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaSituacionCultivo", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                </td>
+            </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Reporte Research";
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/hedge.css" rel="stylesheet" />
+    <link href="~/Content/research.css" rel="stylesheet" />
+}
+@section Scripts{
+    @Scripts.Render("~/bundles/Research")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+<div class="">
+    <div class="row">
+        <div class="col-xs-6 wizard-header-group col-md-3" id="AvanceSiembraTab">
+            <div class="wizard-header-contenedor whc-selected">
+                Avance Siembra
+            </div>
+        </div>
+        <div class="col-xs-6 wizard-header-group col-md-3" id="AvanceCosechaTab">
+            <div class="wizard-header-contenedor">
+                Avance Cosecha
+            </div>
+        </div>
+
+        <div class="col-xs-6 wizard-header-group col-md-3" id="SituacionCultivoTab">
+            <div class="wizard-header-contenedor">
+                Situación de Cultivos
+            </div>
+        </div>
+        <div class="col-xs-6 wizard-header-group col-md-3" id="VentaStockTab">
+            <div class="wizard-header-contenedor">
+                Venta/Stock
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div id="AvanceSiembra">
+        @Html.Action("AvanceSiembraPartial")
+    </div>
+    <div id="AvanceCosecha" hidden>
+        @Html.Action("ReporteAvanceCosechaPartial")
+    </div>
+    <div id="SituacionCultivo" hidden>
+        @Html.Action("ReporteSituacionCultivoPartial")
+    </div>
+    <div id="VentaStock" hidden>
+        @Html.Action("ReporteVentaStockPartial")
+    </div>
+</div>
+

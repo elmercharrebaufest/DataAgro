@@ -414,12 +414,12 @@ function CreateGridInformeCompraNet() {
             $(".k-multiselect").parent().children(".k-dropdown").remove();
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
-    };
+    }
 
     //Con definir un método de estos para cada columna multiselect estamos,
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/Contrato/ListarComercial");
-    };
+    }
 
     function createMultiSelectProvincia(element) {
         return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
@@ -431,5 +431,5 @@ function CreateGridInformeCompraNet() {
 
     function createMultiSelectProveedor(element) {
         return createMultiSelect(element, "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
-    };
+    }
 }

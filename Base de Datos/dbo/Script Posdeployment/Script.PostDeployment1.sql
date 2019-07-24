@@ -89,3 +89,8 @@ IF NOT EXISTS (select 1 from TipoObjetivo where Descripcion = 'A Remitir') BEGIN
 --Tipo Agente de Compra
 IF NOT EXISTS (select 1 from TipoAgenteCompra where Descripcion = 'MAT') BEGIN insert into TipoAgenteCompra (Descripcion) values ('MAT'); END
 IF NOT EXISTS (select 1 from TipoAgenteCompra where Descripcion = 'Rofex') BEGIN insert into TipoAgenteCompra (Descripcion) values ('Rofex'); END
+--Tipo Research
+IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Avance Siembra') BEGIN insert into TipoResearch (Descripcion) values ('Avance Siembra'); END
+IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Avance Cosecha') BEGIN insert into TipoResearch (Descripcion) values ('Avance Cosecha'); END
+IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Situación de cultivos') BEGIN insert into TipoResearch (Descripcion) values ('Situación de cultivos'); END
+IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Ventas y Stock') BEGIN insert into TipoResearch (Descripcion) values ('Ventas y Stock'); END

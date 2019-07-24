@@ -69,6 +69,11 @@
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\GrabarAcuerdoResult.cs" />
+    <Compile Include="Dto\NotificacionResearchDto.cs" />
+    <Compile Include="Dto\ResearchAvanceCosechaDto.cs" />
+    <Compile Include="Dto\ResearchAvanceSiembraDto.cs" />
+    <Compile Include="Dto\ResearchSituacionCultivoDto.cs" />
+    <Compile Include="Dto\ResearchVentaStockDto.cs" />
     <Compile Include="Dto\TotalPesosDolares.cs" />
     <Compile Include="Dto\ZonaDto.cs" />
     <Compile Include="Dto\DatosComercialAgentDto.cs" />
@@ -155,12 +160,19 @@
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
     <Compile Include="Entities\AperturaPrecio.cs" />
+    <Compile Include="Entities\TipoResearch.cs" />
+    <Compile Include="Entities\NotificacionResearch.cs" />
     <Compile Include="Entities\ConceptoAperturaPrecio.cs" />
     <Compile Include="Entities\ContratoAcuerdo.cs" />
     <Compile Include="Entities\Diferencial.cs" />
     <Compile Include="Entities\HedgeTC.cs" />
     <Compile Include="Entities\HedgeObjetivo.cs" />
     <Compile Include="Entities\FinDelDia.cs" />
+    <Compile Include="Entities\Partido.cs" />
+    <Compile Include="Entities\ResearchAvanceCosecha.cs" />
+    <Compile Include="Entities\ResearchAvanceSiembra.cs" />
+    <Compile Include="Entities\ResearchSituacionCultivo.cs" />
+    <Compile Include="Entities\ResearchVentaStock.cs" />
     <Compile Include="Entities\TipoAgenteCompra.cs" />
     <Compile Include="Entities\TipoObjetivo.cs" />
     <Compile Include="Entities\TipoHedgeMaterial.cs" />
@@ -294,6 +306,7 @@
     <EmbeddedResource Include="Resources\Text.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

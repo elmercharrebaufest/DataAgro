@@ -255,7 +255,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Contacto = x.ContactoComercial.Nombres + " " + x.ContactoComercial.Apellido,
                 ProveedorId = x.ContactoComercial.Proveedor.ProveedorId
             }, x => x.ComercialId == ComercialId && x.FechaHoraRecordatorio.HasValue && x.FechaHoraRecordatorio.Value > DateTime.Now).OrderBy(x => x.FechaRecordatorio);
-
+            
             foreach (var item in result)
             {
                 list.Add(new ActividadRecordatorio
@@ -269,7 +269,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ProveedorId = item.ProveedorId
                 });
             }
-
+            list.AddRange(repositorio.ListarConsulta(new ConsultarActividadResearch(ComercialId)));
             return list;
         }
 

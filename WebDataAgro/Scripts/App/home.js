@@ -99,20 +99,34 @@ function armarCarouselHome() {
                         '<div class="carouselHome-contacto-contenedor">';
                     for (var jj in notificacionesAux[i]) {
                         (function (j) {
-                            htmlCarouselHome +=
-                                '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '&Agenda=true">' +
-                                '<div class="linea-carouselHome">' +
-                                '<div class="carouselHome-hora">' +
-                                '<span>' + notificacionesAux[i][j].Hora + '</span>' +
-                                '</div>' +
-                                '<div class="carouselHome-contacto">' +
-                                '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
-                                '</div>' +
-                                '<div class="carouselHome-descripcion">' +
-                                '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</a>';
+                            if (notificacionesAux[i][j].ProveedorId != 0) {
+                                htmlCarouselHome +=
+                                    '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '&Agenda=true">' +
+                                    '<div class="linea-carouselHome">' +
+                                    '<div class="carouselHome-hora">' +
+                                    '<span>' + notificacionesAux[i][j].Hora + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-contacto">' +
+                                    '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-descripcion">' +
+                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>';
+                            } else {
+                                htmlCarouselHome +=
+                                '<a>' +
+                                    '<div class="linea-carouselHome">' +
+                                    '<div>' +
+                                    '<span>' + notificacionesAux[i][j].Tema + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-descripcion">' +
+                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>';
+                            }
                         })(jj);
                     }
                     htmlCarouselHome += '</div>' +
@@ -128,20 +142,34 @@ function armarCarouselHome() {
                         '<div class="carouselHome-contacto-contenedor">';
                     for (var jj in notificacionesAux[i]) {
                         (function (j) {
-                            htmlCarouselHome +=
-                                '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '">' +
-                                '<div class="linea-carouselHome">' +
-                                '<div class="carouselHome-hora">' +
-                                '<span>' + notificacionesAux[i][j].Hora + '</span>' +
-                                '</div>' +
-                                '<div class="carouselHome-contacto">' +
-                                '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
-                                '</div>' +
-                                '<div class="carouselHome-descripcion">' +
-                                '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</a>';
+                            if (notificacionesAux[i][j].ProveedorId != 0) {
+                                htmlCarouselHome +=
+                                    '<a target="_blank" href="' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + notificacionesAux[i][j].ProveedorId) + '&Agenda=true">' +
+                                    '<div class="linea-carouselHome">' +
+                                    '<div class="carouselHome-hora">' +
+                                    '<span>' + notificacionesAux[i][j].Hora + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-contacto">' +
+                                    '<span>' + notificacionesAux[i][j].Contacto + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-descripcion">' +
+                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>';
+                            } else {
+                                htmlCarouselHome +=
+                                    '<a>' +
+                                    '<div class="linea-carouselHome">' +
+                                    '<div>' +
+                                    '<span>' + notificacionesAux[i][j].Tema + '</span>' +
+                                    '</div>' +
+                                    '<div class="carouselHome-descripcion">' +
+                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>';
+                            }
                         })(jj);
                     }
                     htmlCarouselHome += '</div>' +

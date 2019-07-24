@@ -249,10 +249,36 @@
                                     </li>
                                 }
                                 @*<li>
-                                    <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Contrato Acuerdo
+                        <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
+                            <i class="icon-bar-chart"></i> Contrato Acuerdo
+                        </a>
+                    </li>*@
+                            </ul>
+                        </li>
+                    }
+                    @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+                    {
+                        <li class="dropdown">
+                            <a onclick="return false" id="research-a" class="dropdown-toggle nav-text4 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Research <span class="caret"></span></a>
+                            <ul class="dropdown-menu opacidad" id="research">
+                                <li>
+                                    <a href="/Research" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Datos Research
                                     </a>
-                                </li>*@
+                                </li>
+                                <li>
+                                    <a href="/ReporteResearch" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Reporte Research
+                                    </a>
+                                </li>
+                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                {
+                                    <li>
+                                        <a href="/NotificacionResearch" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuración Research
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }

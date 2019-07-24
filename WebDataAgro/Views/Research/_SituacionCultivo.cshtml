@@ -1,0 +1,70 @@
+﻿@model WebDataAgro.Models.ResearchSituacionCultivoModel
+<br />
+<br />
+
+<div class="container">
+    @using (Ajax.BeginForm("GrabarSituacionCultivo", null, new AjaxOptions { UpdateTargetId = "listaSituacionCultivo", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Procedencia</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                <input class="w100" id="LocalidadSituacionCultivo" placeholder="Buscar por Localidad" />
+                @Html.HiddenFor(x => x.LocalidadId, new { @Id = "LocalidadIdSituacionCultivo" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Partido</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBox("Partido", "", new { disabled = "disabled", @id = "PartidoSituacionCultivo", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Cultivo</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"),"Seleccione Material", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Estadio</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.Estadio, new SelectList(ViewBag.Estadio, "Value", "Text"),"Seleccione Estadio", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Situacion</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.Situacion, new SelectList(ViewBag.Situacion, "Value", "Text"),"Seleccione Situacion", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Observaciones</label>
+            </div>
+            <div class="col-sm-8 col-md-10">
+                @Html.TextBoxFor(m => m.Observaciones, new { @class = "k-input w100" })
+            </div>
+        </div>
+        <br />
+
+        <div id="row-botones-material">
+            <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            @Ajax.ActionLink("Cancelar", "SituacionCultivoPartial", null, new AjaxOptions { UpdateTargetId = "SituacionCultivo", InsertionMode = InsertionMode.Replace, OnSuccess = "Input" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+
+        </div>
+    }
+    <div id="listaSituacionCultivo">
+        @Html.Partial("_ListaSituacionCultivo", Model)
+    </div>
+</div>
+
+

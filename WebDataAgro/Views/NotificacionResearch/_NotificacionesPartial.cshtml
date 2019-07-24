@@ -1,0 +1,110 @@
+﻿@model WebDataAgro.Models.NotificacionModel
+
+<script src="~/Scripts/App/NotificacionResearch.js"></script>
+@using (Ajax.BeginForm("GrabarNotificacion", null, new AjaxOptions { UpdateTargetId = "notificaciones", InsertionMode = InsertionMode.Replace }, new { }))
+{
+    if (Model.Resultado != null && Model.Resultado.HayError)
+    {
+        if (Model.Resultado.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0].Message
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0]
+            </div>
+            <script>LimpiarForm()</script>
+        }
+    }
+
+    <div class="container">
+        <div class="row">
+            @Html.HiddenFor(x => x.Id)
+            <div class="col-sm-2 col-md-2">
+                <label>Material</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Campaña</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.CampanaId, new SelectList(ViewBag.Campana, "Value", "Text"), "Seleccione Campaña", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Research</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.TipoResearchId, new SelectList(ViewBag.Research, "Value", "Text"), "Seleccione Tipo Research", new { @class = "form-control" })
+            </div>
+        <div class="col-sm-2 col-md-2">
+            <label>Desde/Hasta</label>
+        </div>
+        <div class="col-sm-3 col-md-4">
+            <div class="col-xs-6 noLeftPadding">
+                @Html.TextBoxFor(m => m.FechaDesde, new { @class = "w100 " })
+            </div>
+            <div class="col-xs-6 noRightPadding">
+                @Html.TextBoxFor(m => m.FechaHasta, new { @class = "w100 " })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <label>Mensaje</label>
+        </div>
+        <div class="col-sm-8 col-md-10">
+            @Html.TextAreaFor(m => m.Mensaje, new { @class = "w100 form-control" })
+        </div>
+    </div>
+    <br />
+
+    <div id="row-botones-material">
+        <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+        @Ajax.ActionLink("Cancelar", "NotificacionesPartial", null, new AjaxOptions { UpdateTargetId = "notificaciones", InsertionMode = InsertionMode.Replace }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+
+    </div>
+    <br />
+    <div class="row">
+        <div>
+            <div class="historial-desplegable" data-toggle="collapse" data-target="#historial">
+                <span class="historial">Historial</span><span id="mostrar" class="mostrar-historial">Mostrar</span>
+            </div>
+            <div id="historial" class="collapse">
+                <table class="tabla-historial table">
+                    <tr>
+                        <th>Material</th>
+                        <th>Cosecha</th>
+                        <th>Research</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Mensaje</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var not in Model.Notificaciones)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => not.MaterialDescripcion)</td>
+                            <td>@Html.DisplayFor(model => not.CampanaDescripcion)</td>
+                            <td>@Html.DisplayFor(model => not.TipoResearchDescripcion)</td>
+                            <td>@Html.DisplayFor(model => not.FechaDesde)</td>
+                            <td>@Html.DisplayFor(model => not.FechaHasta)</td>
+                            <td>@Html.DisplayFor(model => not.Mensaje)</td>
+                            <td>@Ajax.ActionLink(" ", "EliminarNotificacion", new { id = not.Id }, new AjaxOptions { UpdateTargetId = "notificaciones", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+}

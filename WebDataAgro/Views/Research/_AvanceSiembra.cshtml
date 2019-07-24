@@ -1,0 +1,75 @@
+﻿@model WebDataAgro.Models.ResearchAvanceSiembraModel
+
+<br />
+<br />
+
+<div class="container">
+    @using (Ajax.BeginForm("GrabarAvanceSiembra", null, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Procedencia</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                <input style="width:100%" id="Localidad" placeholder="Buscar por Localidad" />
+                @Html.HiddenFor(x => x.LocalidadId, new { @Id = "LocalidadId" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Partido</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBox("Partido", "", new { disabled = "disabled", @id = "Partido", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Cultivo</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"),"Seleccione Material", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Avance</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.Avance, new { @class = "number-input w100  required-box required-box-parent" })
+             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Intencion Siembra</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.IntencionSiembra, new { @class = "number-input w100"})
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Cambio vs AA</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.CambioAA, new { @class = "number-input w100"})
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Observaciones</label>
+            </div>
+            <div class="col-sm-8 col-md-10">
+                @Html.TextBoxFor(m => m.Observaciones, new { @class = "w100 k-input"})
+            </div>
+        </div>
+        <br />
+       
+        <div id="row-botones-material">
+            <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            @Ajax.ActionLink("Cancelar", "AvanceSiembraPartial", null, new AjaxOptions { UpdateTargetId = "AvanceSiembra", InsertionMode = InsertionMode.Replace, OnSuccess = "Input" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+
+        </div>
+    }
+    <div id="listaAvanceSiembra">
+        @Html.Partial("_ListaAvanceSiembra", Model)
+    </div>
+</div>

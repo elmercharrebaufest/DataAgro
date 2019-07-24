@@ -196,6 +196,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
+    <Compile Include="Controllers\NotificacionResearchController.cs" />
     <Compile Include="Controllers\OperadorController.cs" />
     <Compile Include="Controllers\DiferencialController.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaController.cs" />
@@ -218,6 +219,8 @@
     <Compile Include="Controllers\ProvinciaController.cs" />
     <Compile Include="Controllers\ReporteCompraNetController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\ReporteResearchController.cs" />
+    <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Controllers\TareaProgramadaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
@@ -242,6 +245,7 @@
     <Compile Include="Models\CanalOperacionModel.cs" />
     <Compile Include="Models\AgenteCompraModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
+    <Compile Include="Models\NotificacionModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
     <Compile Include="Models\RangoModel.cs" />
@@ -261,6 +265,7 @@
     <Compile Include="Models\HedgeModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\ReporteCompraNetModel.cs" />
+    <Compile Include="Models\ResearchModel.cs" />
     <Compile Include="Models\TareaProgramadaModel.cs" />
     <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -876,6 +881,7 @@
     <Content Include="Content\reporteProveedor.css" />
     <Content Include="Content\reportes.css" />
     <Content Include="Content\reportesResponsive.css" />
+    <Content Include="Content\research.css" />
     <Content Include="Content\SiteResponsive.css" />
     <Content Include="parameters.xml">
       <SubType>Designer</SubType>
@@ -924,14 +930,20 @@
     <Content Include="Scripts\App\hedge.js" />
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
+    <Content Include="Scripts\App\NotificacionResearch.js" />
     <Content Include="Scripts\App\PCFToken.js" />
     <Content Include="Scripts\App\proveedorDetalle.js" />
     <Content Include="Scripts\App\home.js" />
     <Content Include="Scripts\App\layout.js" />
+    <Content Include="Scripts\App\ReporteResearchVentaStock.js" />
+    <Content Include="Scripts\App\ReporteSituacionCultivoParcial.js" />
     <Content Include="Scripts\App\ReporteComercial.js" />
     <Content Include="Scripts\App\ReporteCompranet.js" />
+    <Content Include="Scripts\App\ReporteAvanceCosecha.js" />
     <Content Include="Scripts\App\ReporteContrato.js" />
     <Content Include="Scripts\App\reporteProveedor.js" />
+    <Content Include="Scripts\App\ReporteResearchAvanceSiembra.js" />
+    <Content Include="Scripts\App\Research.js" />
     <Content Include="Scripts\App\ValidacionProveedor.js" />
     <Content Include="Scripts\bootstrap-dialog.min.js" />
     <Content Include="Scripts\bootstrap-switch.min.js" />
@@ -2415,6 +2427,24 @@
     <Content Include="Views\CompraNet\_ModalModificarVarios.cshtml" />
     <Content Include="Views\CompraNet\ModalAperturaPrecio.cshtml" />
     <Content Include="Views\Zona\Index.cshtml" />
+    <Content Include="Views\ZonaCupo\Index.cshtml" />
+    <Content Include="Views\Research\_AvanceSiembra.cshtml" />
+    <Content Include="Views\Research\Index.cshtml" />
+    <Content Include="Views\Research\_ListaAvanceSiembra.cshtml" />
+    <Content Include="Views\Research\_AvanceCosecha.cshtml" />
+    <Content Include="Views\Research\_ListaAvanceCosecha.cshtml" />
+    <Content Include="Views\Research\_SituacionCultivo.cshtml" />
+    <Content Include="Views\Research\_ListaSituacionCultivo.cshtml" />
+    <Content Include="Views\Research\_ListaAvanceSiembra.cshtml" />
+    <Content Include="Views\Research\_VentaStock.cshtml" />
+    <Content Include="Views\Research\_ListaVentaStock.cshtml" />
+    <Content Include="Views\ReporteResearch\_ReporteAvanceSiembra.cshtml" />
+    <Content Include="Views\ReporteResearch\Index.cshtml" />
+    <Content Include="Views\ReporteResearch\_ReporteAvanceCosecha.cshtml" />
+    <Content Include="Views\ReporteResearch\_ReporteSituacionCultivo.cshtml" />
+    <Content Include="Views\ReporteResearch\_ReporteVentaStock.cshtml" />
+    <Content Include="Views\NotificacionResearch\Index.cshtml" />
+    <Content Include="Views\NotificacionResearch\_NotificacionesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

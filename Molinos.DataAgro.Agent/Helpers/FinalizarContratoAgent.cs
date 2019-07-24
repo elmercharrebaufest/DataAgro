@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-
+                logger.Debug("Finalizando Contrato Nro: " + contrato.ContratoId);
                 var listaDescuentos = new List<ZMPES5290>();
                 foreach (var descBon in descuentoBonificacion)
                 {
@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
-
+                logger.Debug("Descuentos: " + descuentoBonificacion);
                 var listaCalidades = new List<ZMPES5300>();
                 foreach (var cal in calidad)
                 {
@@ -105,7 +105,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
-
+                logger.Debug("Calidades: " + calidad);
                 var listaApertura = new List<ZMPES5440>();
 
                 foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         });
                     }
                 }
-
+                logger.Debug("Apertura: " + contrato.AperturaPrecio);
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : null;
@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
-
+                logger.Debug("Cargando contrato");
                 var rq = new Z_MPRFC_PRE_SLIP()
                 {
                     IM_CONTRATO = new ZMPES5270

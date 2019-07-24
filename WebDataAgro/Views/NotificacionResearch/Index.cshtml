@@ -1,0 +1,20 @@
+﻿@model WebDataAgro.Models.NotificacionModel
+@{
+    ViewBag.Title = "Notificacion Research";
+}
+
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/hedge.css" rel="stylesheet" />
+    <link href="~/Content/research.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+<h3>Notificaciones Research</h3>
+<div id="notificaciones">
+    @Html.Action("NotificacionesPartial", "NotificacionResearch", new { hedgeMaterial = Model })
+</div>
+
