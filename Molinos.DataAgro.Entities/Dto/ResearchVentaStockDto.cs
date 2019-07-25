@@ -15,6 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaHora { get; set; }
         public int MaterialId { get; set; }
         public int LocalidadId { get; set; }
+        public string Provincia { get; set; }
         public string Partido { get; set; }
         public string Comercial { get; set; }
         public string Localidad { get; set; }

@@ -16,6 +16,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public int LocalidadId { get; set; }
         public string Comercial { get; set; }
+        public string Provincia { get; set; }
         public string Localidad { get; set; }
         public string Partido { get; set; }
         public string Material { get; set; }

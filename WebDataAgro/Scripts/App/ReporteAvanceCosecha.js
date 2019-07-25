@@ -5,10 +5,6 @@
 
 function CreateGridInformeCompraNet() {
 
-    kendo.ui.FilterMultiCheck.prototype.options.messages =
-        $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
-            "selectedItemsFormat": ""
-        });
     var ds = {
         transport: {
             read: {
@@ -29,13 +25,11 @@ function CreateGridInformeCompraNet() {
             model: {
                 id: 'Id',
                 fields: {
-                    Avance: { type: "number" },
-                    FechaHora: { type: "date" },
-                    LocalidadId: { type: "number" },
-                    MaterialId: { type: "number" },
                     RangoDesde: { type: "number" },
                     RangoHasta: { type: "number" },
-                    Rendimiento: { type: "number" }
+                    Rendimiento: { type: "number" },
+                    Avance: { type: "number" },
+                    FechaHora: { type: "date" }
                 }
             }
         },
@@ -44,23 +38,23 @@ function CreateGridInformeCompraNet() {
         serverSorting: true,
         sort: [{ field: "FechaHora", dir: "desc" }],
         serverFiltering: true,
-        pageSize: 20
+        pageSize: 20,
     };
 
     $("#gridAvanceCosecha").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Avance Cosecha.xlsx",
+            fileName: "Reporte Avance Siembra.xlsx",
             allPages: true
         },
         dataSource: ds,
-        dataBound: function () {
-
-        },
         columns: [
-            { field: "Localidad", type: "string", width: 300, filterable: true },
-            { field: "Partido", type: "string", width: 300, filterable: true },
-            { field: "Material", title: "Cultivo", type: "string", width: 300, filterable: { multi: true, dataSource: [{
+            { field: "Localidad", type: "string" },
+            { field: "Provincia", type: "string", width: 300, filterable: true },
+            { field: "Partido", type: "string" },
+            {
+                field: "Material", title: "Cultivo", filterable: {
+                    multi: true, dataSource: [{
                         Material: "Maiz Duro Dentado"
                     }, {
                         Material: "Trigo Pan"
@@ -71,16 +65,16 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol Alto Oleico"
                     }]
-            } },
+                }, width: 130, template: "#=Material#"
+            },
             { field: "Avance", title: "Avance %" },
-            { field: "RangoDesde", format: "{0:n0}" },
-            { field: "RangoHasta", format: "{0:n0}" },
-            { field: "Rendimiento", format: "{0:n0}" },
-            { field: "Comercial", type: "string", width: 300, filterable: true },
-            { field: "FechaHora", title: "Fecha", filterable: { extra: true }, format: _DefaultDateTemplate },
+            { field: "Rendimiento"},
+            { field: "RangoDesde", title: "Rango Desde" },
+            { field: "RangoHasta", title: "Rango Hasta" },
+            { field: "Comercial", title: "Comercial" },
+            { field: "FechaHora", type: "date", title: "Fecha", format: _DefaultDateTemplate, width: 80 },
             { field: "Observaciones", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
         ],
-
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -134,13 +128,6 @@ function CreateGridInformeCompraNet() {
                     gte: "Mayor que o igual a",
                     lte: "Menor que o igual a",
                 }
-            }
-        },
-        filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field == "Localidad") {
-                $(e.container).css("width", "300px");
-            } else {
-                $(e.container).css("width", "150px");
             }
         }
     });

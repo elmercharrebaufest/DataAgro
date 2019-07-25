@@ -2,26 +2,27 @@
 
 @Html.AntiForgeryToken()
 
-<div id="formulario" class="table-container">
+    <div id="formulario" class="table-container">
 
-    @if (Model.Resultado != null && Model.Resultado.HayError)
-    {
-        if (Model.Resultado.Errores[0].ErrorCode != 200)
+        @if (Model.Resultado != null && Model.Resultado.HayError)
         {
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                @Model.Resultado.Errores[0]
-            </div>
+            if (Model.Resultado.Errores[0].ErrorCode != 200)
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+                <script>LimpiarForm()</script>
+            }
         }
-        else
-        {
-            <div class="alert alert-success alert-dismissible" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                @Model.Resultado.Errores[0]
-            </div>
-        }
-    }
-</div>
+    </div>
 <div class="row">
     <div class="col-xs-10 m-grid-col-xs-offset-1">
         <div class="historial-desplegable" data-toggle="collapse" data-target="#historialSituacionCultivo" onclick="mostrarocultar('#mostrarSituacionCultivo')">

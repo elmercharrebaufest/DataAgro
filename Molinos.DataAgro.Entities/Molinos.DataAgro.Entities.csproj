@@ -70,6 +70,7 @@
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\GrabarAcuerdoResult.cs" />
     <Compile Include="Dto\NotificacionResearchDto.cs" />
+    <Compile Include="Dto\LogDto.cs" />
     <Compile Include="Dto\ResearchAvanceCosechaDto.cs" />
     <Compile Include="Dto\ResearchAvanceSiembraDto.cs" />
     <Compile Include="Dto\ResearchSituacionCultivoDto.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Entities\HedgeTC.cs" />
     <Compile Include="Entities\HedgeObjetivo.cs" />
     <Compile Include="Entities\FinDelDia.cs" />
+    <Compile Include="Entities\Log.cs" />
     <Compile Include="Entities\Partido.cs" />
     <Compile Include="Entities\ResearchAvanceCosecha.cs" />
     <Compile Include="Entities\ResearchAvanceSiembra.cs" />

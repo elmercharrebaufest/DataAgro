@@ -51,6 +51,7 @@ function CreateGrid() {
         dataSource: ds,
         columns: [
             { field: "Localidad", type: "string" },
+            { field: "Provincia", type: "string", width: 300, filterable: true },
             { field: "Partido", type: "string" },
             { field: "Material", title: "Cultivo", filterable: {
                     multi: true, dataSource: [{

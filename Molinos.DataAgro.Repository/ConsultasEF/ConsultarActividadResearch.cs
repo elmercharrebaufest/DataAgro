@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 !(from siembra in contexto.Set<ResearchAvanceSiembra>()
                  where siembra.ComercialId == comercialId && siembra.MaterialId == notif.MaterialId && (notif.FechaDesde < siembra.FechaHora && siembra.FechaHora<notif.FechaHasta) select 1 ).Any()
                 select new ActividadRecordatorio {
-                    Tema = notif.TipoResearch.Descripcion,
+                    Tema = "  "+notif.TipoResearch.Descripcion,
                     ActividadId = notif.Id,
                     Comentarios = notif.Mensaje,
                     Dia = SqlFunctions.DateName("day", notif.FechaHasta) + "/" + SqlFunctions.DatePart("month", notif.FechaHasta) + "/" + SqlFunctions.DateName("year", notif.FechaHasta) ,

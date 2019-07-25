@@ -198,4 +198,7 @@ span.k-edit {
    color: black !important; 
 }
 
-
+.notificacion-hora {
+    font-size: 14px !important;
+    margin-left: 20px !important;
+}

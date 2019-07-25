@@ -39,15 +39,13 @@ function ArmarNotificaciones() {
                             + '</div>';
                     } else {
                         htmlnotifaux += '<div class="notificacion-detalle">'
-                            + '<div class="notificacion-detalle-horario">'
-                            + '<img class="notificacion-reloj" src="..' + url + '" />'
-                            + '<span class="notificacion-hora"> ' + notificaciones[i].Dia + '</span>'
-                            + '</div>'
-                            + '<div class="notificacion-detalle-titulo">'
+                            + '<div class="notificacion-detalle-horario class="notificacion-detalle-titulo">'
+                            + '<img class="notificacion-reloj" src="..' + url + ' " />'
                             + notificaciones[i].Tema
-                            + '</div>'
                             + '<div class="notificacion-detalle-descripcion">'
                             + notificaciones[i].Comentarios
+                            + '</div>'
+                            + '<span class="notificacion-hora"> Hasta el: ' + notificaciones[i].Dia + '</span>'
                             + '</div>'
                             + '</div>';
                     }

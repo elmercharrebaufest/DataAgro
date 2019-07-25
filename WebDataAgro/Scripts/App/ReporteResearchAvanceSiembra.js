@@ -49,11 +49,14 @@ function CreateGridAvanceSiembra() {
             fileName: "Reporte Avance Siembra.xlsx",
             allPages: true
         },
-        dataSource: ds,       
+        dataSource: ds,
         columns: [
-            { field: "Localidad", type: "string"},
+            { field: "Localidad", type: "string" },
+            { field: "Provincia", type: "string", width: 300, filterable: true },
             { field: "Partido", type: "string" },
-            { field: "Material", title: "Cultivo", filterable: { multi: true, dataSource: [{
+            {
+                field: "Material", title: "Cultivo", filterable: {
+                    multi: true, dataSource: [{
                         Material: "Maiz Duro Dentado"
                     }, {
                         Material: "Trigo Pan"
@@ -63,11 +66,13 @@ function CreateGridAvanceSiembra() {
                         Material: "Girasol"
                     }, {
                         Material: "Girasol Alto Oleico"
-                    }]}, width: 130, template: "#=Material#" },
-            { field: "IntencionSiembra", title: "Intencion Siembra" },            
-            { field: "CambioAA", title: "Cambio vs AA(%)" },            
+                    }]
+                }, width: 130, template: "#=Material#"
+            },
+            { field: "IntencionSiembra", title: "Intencion Siembra (Has)" },
+            { field: "CambioAA", title: "Cambio vs AA (%)" },
             { field: "Avance", title: "Avance %" },
-            { field: "Comercial", title: "Comercial"},
+            { field: "Comercial", title: "Comercial" },
             { field: "FechaHora", type: "date", title: "Fecha", format: _DefaultDateTemplate, width: 80 },
             { field: "Observaciones", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
         ],
@@ -125,7 +130,6 @@ function CreateGridAvanceSiembra() {
                     lte: "Menor que o igual a",
                 }
             }
-        }        
-    })
-
+        }
+    });
 }

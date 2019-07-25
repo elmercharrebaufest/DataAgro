@@ -17,23 +17,72 @@ function mostrarocultar(element) {
     }
 }
 
+$(".alert").ready(function () {
+    setTimeout(function () { $(".alert").hide(); }, 5000);
+});
+
+function LimpiarForm () {
+    $(".limpiar").val("");
+    $("#LocalidadCosecha").data("kendoAutoComplete").value("");
+    $("#Localidad").data("kendoAutoComplete").value("");
+    $("#LocalidadSituacionCultivo").data("kendoAutoComplete").value("");
+    $("#LocalidadVentaStock").data("kendoAutoComplete").value("");
+    $("#PartidoCosecha").val("");
+    $("#MaterialAvanceCosechaId").val("");
+    $("#MaterialAvanceSiembraId").val("");
+    $("#MaterialVentaStockId").val("");
+    $("#MaterialSituacionCultivoId").val("");
+    $("#SituacionId").val("");
+    $("#EstadioId").val("");
+
+}
+
+$(".cancelar").click(function () {
+    LimpiarForm();
+});
+
 $("#AvanceSiembraTab").click(function () {
     DeseleccionarForms();
+    LimpiarForm();
     $("#AvanceSiembraTab").children().addClass("whc-selected");
     $("#AvanceSiembra").show();
 });
 $("#AvanceCosechaTab").click(function () {
     DeseleccionarForms();
+    LimpiarForm();
     $("#AvanceCosechaTab").children().addClass("whc-selected");
     $("#AvanceCosecha").show();
 });
 $("#SituacionCultivoTab").click(function () {
     DeseleccionarForms();
+    LimpiarForm();
     $("#SituacionCultivoTab").children().addClass("whc-selected");
     $("#SituacionCultivo").show();
 });
 $("#VentaStockTab").click(function () {
     DeseleccionarForms();
+    LimpiarForm();
+    $("#VentaStockTab").children().addClass("whc-selected");
+    $("#VentaStock").show();
+});
+
+$("#ReporteAvanceSiembraTab").click(function () {
+    DeseleccionarForms();
+    $("#AvanceSiembraTab").children().addClass("whc-selected");
+    $("#AvanceSiembra").show();
+});
+$("#ReporteAvanceCosechaTab").click(function () {
+    DeseleccionarForms();
+    $("#AvanceCosechaTab").children().addClass("whc-selected");
+    $("#AvanceCosecha").show();
+});
+$("#ReporteSituacionCultivoTab").click(function () {
+    DeseleccionarForms();
+    $("#SituacionCultivoTab").children().addClass("whc-selected");
+    $("#SituacionCultivo").show();
+});
+$("#ReporteVentaStockTab").click(function () {
+    DeseleccionarForms();    
     $("#VentaStockTab").children().addClass("whc-selected");
     $("#VentaStock").show();
 });
@@ -104,8 +153,9 @@ function InicializarElementos() {
 
     $(".number-input").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
-        decimals: 0,
+        format: "n1",
+        decimals: 1,
+        value: " ",
         restrictDecimals: true,
         spinners: false,
         min: 0,
@@ -114,6 +164,7 @@ function InicializarElementos() {
     $(".number").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
+        value: " ",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,

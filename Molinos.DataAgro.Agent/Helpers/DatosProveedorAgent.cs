@@ -2,8 +2,10 @@
 using Molinos.DataAgro.Agent.DatosDelProveedor;
 using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,12 +16,14 @@ namespace Molinos.DataAgro.Agent
     public class DatosProveedorAgent : IDatosProveedorAgent
     {
         private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
 
-        public DatosProveedorAgent(ILogger logger)
+        public DatosProveedorAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
 
         public List<DatosProveedorAgentDto> ObtenerDatosDeProveedor(List<Datos> datos)
@@ -56,8 +60,22 @@ namespace Molinos.DataAgro.Agent
                 valor = valor.Distinct().ToList();
                 var rq = new Z_MPRFC_DATOS_PROVEEDOR() { IM_CUIT = CUIT.ToArray() , IM_USUARIO = valor.ToArray() };
                 logger.Debug(rq.ToXml());
+
+                var log = new Log
+                {
+                    Fecha = DateTime.Now.Date,
+                    Xml = rq.ToXml()
+                };
+
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR(rq);
                 logger.Debug(valor1.ToXml());
+
+                log = repositorio.Obtener<Log>(logId.Id);
+                log.Xml += valor1.ToXml();
+                repositorio.GuardarCambios();
 
                 var respuesta = new List<DatosProveedorAgentDto>();
                 if (valor1.EX_DATOS != null)

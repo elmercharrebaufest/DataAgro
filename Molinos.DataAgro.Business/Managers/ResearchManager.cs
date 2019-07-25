@@ -167,6 +167,11 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarAvanceSiembra(ResearchAvanceSiembra researchAvanceSiembra)
         {
             var error = new Resultado();
+            if (researchAvanceSiembra.MaterialId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+
+            }
             if (researchAvanceSiembra.LocalidadId <= 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
             if (researchAvanceSiembra.IntencionSiembra == 0 && researchAvanceSiembra.Avance == 0 && researchAvanceSiembra.CambioAA == 0)
@@ -183,6 +188,12 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarAvanceCosecha(ResearchAvanceCosecha researchAvanceCosecha)
         {
             var error = new Resultado();
+
+            if (researchAvanceCosecha.MaterialId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+
+            }
             if (researchAvanceCosecha.LocalidadId <= 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
             if (researchAvanceCosecha.RangoDesde == 0 && researchAvanceCosecha.RangoHasta == 0 && researchAvanceCosecha.Rendimiento == 0 && researchAvanceCosecha.Avance == 0)
@@ -203,6 +214,11 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarSituacionCultivo(ResearchSituacionCultivo researchSituacionCultivo)
         {
             var error = new Resultado();
+            if (researchSituacionCultivo.MaterialId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+
+            }
             if (researchSituacionCultivo.LocalidadId <= 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
 
@@ -211,6 +227,11 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarVentaStock(ResearchVentaStock researchVentaStock)
         {
             var error = new Resultado();
+            if (researchVentaStock.MaterialId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+               
+            }
             if (researchVentaStock.LocalidadId <= 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
             if (researchVentaStock.Almacenado == 0 && researchVentaStock.VendidoAPrecio == 0)

@@ -1,0 +1,42 @@
+﻿@model WebDataAgro.Models.LogModel
+
+@{
+    ViewBag.Title = "Log";
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/Log")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script type="text/javascript" src="~/Scripts/Chart.js"></script>
+}
+
+<div class="Titulo">
+
+    @using (Ajax.BeginForm("ListaLogPartial", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Log" }, null))
+    {
+        @Html.AntiForgeryToken();
+        <div class="container-log">
+            <div id="fecha-buscador-log" class="row">
+                <div class="col-sm-1 noRightPadding">
+                    <label>Fecha</label>
+                </div>
+                <div class="col-sm-4 col-md-2">
+                    <span id="fechaLog">
+                        <input id="fecha" name="fechaString" type="date" style="width: 100%" />
+                    </span>
+                </div>
+                <button type="submit" id="buscar" class="k-button k-button-icontext sideMargin-15">Buscar</button>
+            </div>
+
+        </div>
+    }
+
+    <div id="Log" class="container-log">
+        @Html.Action("ListaLogPartial", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy")})
+    </div>
+
+</div>
+
+
+
+

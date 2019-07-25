@@ -197,6 +197,7 @@
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
     <Compile Include="Controllers\NotificacionResearchController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\OperadorController.cs" />
     <Compile Include="Controllers\DiferencialController.cs" />
     <Compile Include="Controllers\RangoConfirmacionAutomaticaController.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="Models\AgenteCompraModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
     <Compile Include="Models\NotificacionModel.cs" />
+    <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
     <Compile Include="Models\RangoConfirmacionAutomaticaModel.cs" />
     <Compile Include="Models\RangoModel.cs" />
@@ -931,6 +933,7 @@
     <Content Include="Scripts\App\InformeAdministrativo.js" />
     <Content Include="Scripts\App\InformeComercial.js" />
     <Content Include="Scripts\App\NotificacionResearch.js" />
+    <Content Include="Scripts\App\log.js" />
     <Content Include="Scripts\App\PCFToken.js" />
     <Content Include="Scripts\App\proveedorDetalle.js" />
     <Content Include="Scripts\App\home.js" />
@@ -2444,6 +2447,8 @@
     <Content Include="Views\ReporteResearch\_ReporteVentaStock.cshtml" />
     <Content Include="Views\NotificacionResearch\Index.cshtml" />
     <Content Include="Views\NotificacionResearch\_NotificacionesPartial.cshtml" />
+    <Content Include="Views\Log\Index.cshtml" />
+    <Content Include="Views\Log\_ListaLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

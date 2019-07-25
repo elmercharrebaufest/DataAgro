@@ -1,0 +1,32 @@
+﻿@model WebDataAgro.Models.LogModel
+
+<table class="table table-striped table-bordered table-small" style="white-space: nowrap; table-layout: fixed;" id="tablaLogs">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Xml</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.Log)
+    {
+        <tbody>
+            <tr>
+
+                @{var fecha = item.Fecha.ToString("dd/MM/yyyy");}
+                <td>@item.Fecha</td>
+                <td style="overflow: hidden; text-overflow: ellipsis" data-toggle="tooltip" title="@item.Xml">
+                    @if ((item.Xml != null) && (item.Xml.Length > 14))
+                    {
+                        <button class="btn" onclick="copia_portapapeles(`@item.Xml`)">Copiar</button>
+                        @item.Xml
+                    }
+                    else
+                    {
+                        @item.Xml
+                    }
+                </td>
+
+            </tr>
+        </tbody>
+    }
+</table>

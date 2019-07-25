@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,9 +14,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class FinalizarContratoAgent : IFinalizarContratoAgent
     {
-        public FinalizarContratoAgent(ILogger logger)
+        private readonly IRepositorio repositorio;
+        public FinalizarContratoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -206,10 +209,23 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_APERTURA = listaApertura.ToArray()
 
                 };
-
                 logger.Debug(rq.ToXml());
+
+                var log = new Log
+                {
+                    Fecha = DateTime.Now,
+                    Xml = rq.ToXml()
+                };
+
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_PRE_SLIP(rq);
                 logger.Debug(devolucion.ToXml());
+
+                log = repositorio.Obtener<Log>(logId.Id);
+                log.Xml += devolucion.ToXml();
+                repositorio.GuardarCambios();
 
                 if (devolucion.EX_MENSAJE_ERROR != null && devolucion.EX_MENSAJE_ERROR != "")
                 {

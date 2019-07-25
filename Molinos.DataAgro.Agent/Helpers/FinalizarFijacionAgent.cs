@@ -66,10 +66,24 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_PAGO_DIF_ARP = fijacion.PagoDiferido.HasValue && fijacion.PagoDiferido.Value ? "X" : "",
                         IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue? fijacion.DiasPesificado.Value.ToString():""
                     };
-
                     logger.Debug(rq.ToXml());
+
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now.Date,
+                        Xml = rq.ToXml()
+                    };
+
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION(rq);
                     logger.Debug(devolucion.ToXml());
+
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += devolucion.ToXml();
+                    repositorio.GuardarCambios();
+
                     if (devolucion.EX_MENSAJE != null && devolucion.EX_MENSAJE != "")
                     {
                         throw new Exception(devolucion.EX_MENSAJE);

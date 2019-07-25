@@ -27,7 +27,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 select new ResearchAvanceSiembraDto()
                 {
                     Id = research.Id,
-                    Localidad = research.Localidad.Nombre + " ("+research.Localidad.Provincia.Nombre+")",
+                    Localidad = research.Localidad.Nombre,
+                    Provincia = research.Localidad.Provincia.Nombre,
                     Partido = research.Localidad.Partido.Descripcion,
                     Material = research.Material.Descripcion,
                     IntencionSiembra = research.IntencionSiembra,
