@@ -227,6 +227,20 @@
                                         <i class="icon-bar-chart"></i> Material
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a href="~/Log" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Logs
+                                    </a>
+                                </li>
+                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                {
+                                    <li>
+                                        <a href="/NotificacionResearch" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Notificaciones Research
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }
@@ -271,14 +285,7 @@
                                         <i class="icon-bar-chart"></i> Reporte Research
                                     </a>
                                 </li>
-                                @if (global_asax.GlobalVariables.EsAdministrador)
-                                {
-                                    <li>
-                                        <a href="/NotificacionResearch" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Configuración Research
-                                        </a>
-                                    </li>
-                                }
+                                
                             </ul>
                         </li>
                     }

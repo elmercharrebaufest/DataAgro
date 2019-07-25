@@ -30,7 +30,7 @@
                 @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material",new { @class = "form-control" })
             </div>
             <div class="col-sm-2 col-md-2">
-                <label>Almacenado</label>
+                <label>Almacenado %</label>
             </div>
             <div class="col-sm-3 col-md-4">
                 @Html.TextBoxFor(m => m.Almacenado, new { @class = "number-input w100  required-box required-box-parent" })
@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col-sm-2 col-md-2">
-                <label>Vendido a Precio</label>
+                <label>Vendido a Precio %</label>
             </div>
             <div class="col-sm-3 col-md-4">
                 @Html.TextBoxFor(m => m.VendidoAPrecio, new { @class = "number-input w100" })
@@ -51,7 +51,7 @@
                 <label>Observaciones</label>
             </div>
             <div class="col-sm-8 col-md-10">
-                @Html.TextBoxFor(m => m.Observaciones, new { @class = "w100 k-input" })
+                @Html.TextBoxFor(m => m.Observaciones, new { @class = "w100 form-control" })
             </div>
         </div>
         <br />

@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 else
                                 {
+                                    logger.Debug("Creando nuevo estado para " + comercial.ComercialId + " y " + proveedor.ProveedorId);
                                     crearEstadoProvedor.Add(new ProveedorEstado
                                     {
                                         ComercialId = comercial.ComercialId,
