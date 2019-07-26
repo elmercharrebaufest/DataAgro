@@ -68,7 +68,7 @@ function CreateGridAvanceSiembra() {
                     }]
                 }, width: 130, template: "#=Material#"
             },
-            { field: "IntencionSiembra", title: "Intencion Siembra (Has)" },
+            { field: "IntencionSiembra", title: "Intención Siembra (Has)" },
             { field: "CambioAA", title: "Cambio vs AA (%)" },
             { field: "Avance", title: "Avance %" },
             { field: "Comercial", title: "Comercial" },
@@ -98,8 +98,6 @@ function CreateGridAvanceSiembra() {
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
-
         filterable: {
             height: 350,
             extra: false,
@@ -131,7 +129,7 @@ function CreateGridAvanceSiembra() {
             }
         },
         excelExport: function (e) {
-            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy");
             e.workbook.fileName = "Reporte Avance Siembra " + stringFecha + ".xlsx";
         }
     });

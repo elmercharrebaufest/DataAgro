@@ -36,6 +36,7 @@ function LimpiarForm() {
     fecha = new Date();
     $("#Id").val(0);
     $("#MaterialId").val("");
+    $("#TipoResearchId").val("");
     $("#CampanaId").val("");
     $("#FechaDesde").data("kendoDatePicker").value(fecha);
     $("#FechaHasta").data("kendoDatePicker").value(fecha.addDays(7));

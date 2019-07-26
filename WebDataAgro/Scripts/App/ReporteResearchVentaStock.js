@@ -96,8 +96,6 @@ function CreateGrid() {
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
-
         filterable: {
             height: 350,
             extra: false,
@@ -129,7 +127,7 @@ function CreateGrid() {
             }
         },
         excelExport: function (e) {
-            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy");
             e.workbook.fileName = "Reporte Venta Stock " + stringFecha + ".xlsx";
         }
     });

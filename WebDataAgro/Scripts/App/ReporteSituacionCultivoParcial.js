@@ -69,7 +69,7 @@ function CreateGridInformeCompraNetSituacion() {
                     }]
                 }, width: 130, template: "#=Material#" },
             { field: "Estadio", type: "string", width: 300, filterable: true },
-            { field: "Situación", type: "string", width: 300, filterable: true },
+            { field: "Situacion", title: "Situación" , type: "string", width: 300, filterable: true },
             { field: "Comercial", type: "string", width: 300, filterable: true },
             { field: "FechaHora", title: "Fecha", filterable: { extra: true }, format: _DefaultDateTemplate },
             { field: "Observaciones", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
@@ -97,8 +97,6 @@ function CreateGridInformeCompraNetSituacion() {
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
-
         filterable: {
             height: 350,
             extra: false,
@@ -130,7 +128,7 @@ function CreateGridInformeCompraNetSituacion() {
             }
         },
         excelExport: function (e) {
-            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy");
             e.workbook.fileName = "Reporte Situacion Cultivo " + stringFecha + ".xlsx";
         },
         filterMenuInit: function (e) {

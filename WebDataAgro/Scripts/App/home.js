@@ -122,7 +122,7 @@ function armarCarouselHome() {
                                     '<span>' + notificacionesAux[i][j].Tema + '</span>' +
                                     '</div>' +
                                     '<div class="carouselHome-descripcion">' +
-                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '<span class="span-display">' + notificacionesAux[i][j].Comentarios + '</span>' +
                                     
                                     '<div class="carouselHome-hora ">' +
                                     '<span class="notificacion-hora sinMargen"> Hasta el: ' + notificacionesAux[i][j].Dia + '</span>'+
@@ -163,13 +163,17 @@ function armarCarouselHome() {
                                     '</a>';
                             } else {
                                 htmlCarouselHome +=
-                                    '<a>' +
+                                '<a>' +
                                     '<div class="linea-carouselHome">' +
                                     '<div>' +
                                     '<span>' + notificacionesAux[i][j].Tema + '</span>' +
                                     '</div>' +
                                     '<div class="carouselHome-descripcion">' +
-                                    '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
+                                    '<span class="span-display">' + notificacionesAux[i][j].Comentarios + '</span>' +
+
+                                    '<div class="carouselHome-hora ">' +
+                                    '<span class="notificacion-hora sinMargen"> Hasta el: ' + notificacionesAux[i][j].Dia + '</span>' +
+                                    '</div>' +
                                     '</div>' +
                                     '</div>' +
                                     '</a>';

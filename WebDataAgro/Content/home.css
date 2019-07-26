@@ -794,3 +794,7 @@ span.glyphicon.glyphicon-chevron-right {
         transform: rotate(360deg);
     }
 }
+
+.span-display{
+    display:inline-block;
+}

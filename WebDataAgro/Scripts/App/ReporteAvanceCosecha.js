@@ -97,8 +97,6 @@ function CreateGridInformeCompraNet() {
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
-
         filterable: {
             height: 350,
             extra: false,
@@ -130,7 +128,7 @@ function CreateGridInformeCompraNet() {
             }
         },
         excelExport: function (e) {
-            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy");
             e.workbook.fileName = "Reporte Avance Cosecha " + stringFecha + ".xlsx";
         }
     });

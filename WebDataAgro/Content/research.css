@@ -41,3 +41,7 @@
 .k-input, .k-autocomplete{
     font-size:14px;
 }
+
+#gridAvanceCosecha, #gridAvanceSiembra, #gridSituacionCultivoParcial, #gridReporteVentaStock, .tabla-research {
+    overflow: auto;
+}
