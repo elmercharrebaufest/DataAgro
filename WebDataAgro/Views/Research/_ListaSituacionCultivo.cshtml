@@ -47,7 +47,7 @@
                 <td>@Html.DisplayFor(model => mat.Comercial)</td>
                 <td>@Html.DisplayFor(model => mat.Estadio)</td>
                 <td>@Html.DisplayFor(model => mat.Situacion)</td>
-                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm");}
+                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm tt");}
                 <td>@Html.DisplayFor(model => fecha)</td>
                 <td>
                     @Ajax.ActionLink(" ", "EliminarSituacionCultivo", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaSituacionCultivo", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })

@@ -42,11 +42,9 @@ function CreateGridInformeCompraNetSituacion() {
         serverFiltering: true,
         pageSize: 20
     };
-
     $("#gridSituacionCultivoParcial").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Situacion Cultivo Parcial.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -71,7 +69,7 @@ function CreateGridInformeCompraNetSituacion() {
                     }]
                 }, width: 130, template: "#=Material#" },
             { field: "Estadio", type: "string", width: 300, filterable: true },
-            { field: "Situacion", type: "string", width: 300, filterable: true },
+            { field: "Situación", type: "string", width: 300, filterable: true },
             { field: "Comercial", type: "string", width: 300, filterable: true },
             { field: "FechaHora", title: "Fecha", filterable: { extra: true }, format: _DefaultDateTemplate },
             { field: "Observaciones", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
@@ -130,6 +128,10 @@ function CreateGridInformeCompraNetSituacion() {
                     lte: "Menor que o igual a",
                 }
             }
+        },
+        excelExport: function (e) {
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            e.workbook.fileName = "Reporte Situacion Cultivo " + stringFecha + ".xlsx";
         },
         filterMenuInit: function (e) {
             if (e.field === "Proveedor" || e.field === "Comercial" || e.field === "Provincia" || e.field === "Localidad") {

@@ -44,7 +44,6 @@ function CreateGridInformeCompraNet() {
     $("#gridAvanceCosecha").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Avance Siembra.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -116,19 +115,23 @@ function CreateGridInformeCompraNet() {
             },
             operators: {
                 string: {
-                    eq: "Igual",
+                    eq: "Igual"
                 },
                 date: {
                     eq: "Igual",
                     gte: "Despu&eacute;s o igual a",
-                    lte: "Antes o igual a",
+                    lte: "Antes o igual a"
                 },
                 number: {
                     eq: "Igual a",
                     gte: "Mayor que o igual a",
-                    lte: "Menor que o igual a",
+                    lte: "Menor que o igual a"
                 }
             }
+        },
+        excelExport: function (e) {
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            e.workbook.fileName = "Reporte Avance Cosecha " + stringFecha + ".xlsx";
         }
     });
 }

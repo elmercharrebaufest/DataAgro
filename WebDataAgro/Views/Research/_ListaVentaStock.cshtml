@@ -47,7 +47,7 @@
                         <td>@Html.DisplayFor(model => mat.Comercial)</td>
                         <td>@Html.DisplayFor(model => mat.VendidoAPrecio)</td>
                         <td>@Html.DisplayFor(model => mat.Almacenado)</td>
-                        @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm");}
+                        @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm tt");}
                         <td>@Html.DisplayFor(model => fecha)</td>
                         <td>
                             @Ajax.ActionLink(" ", "EliminarVentaStock", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaVentaStock", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })

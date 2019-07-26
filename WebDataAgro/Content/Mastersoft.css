@@ -202,3 +202,7 @@ span.k-edit {
     font-size: 14px !important;
     margin-left: 20px !important;
 }
+
+.sinMargen {
+    margin-left: 0 !important;
+}

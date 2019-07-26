@@ -48,7 +48,7 @@
                 <td class="text-right">@Html.DisplayFor(model => mat.CambioAA)</td>
                 <td class="text-right">@Html.DisplayFor(model => mat.IntencionSiembra)</td>
                 <td>@Html.DisplayFor(model => mat.Comercial)</td>
-                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm");}
+                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm tt");}
                 <td>@Html.DisplayFor(model => fecha)</td>
                 <td class="fin-dia">
                     @Ajax.ActionLink(" ", "EliminarAvanceSiembra",  new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace } , new { @class = "fa fa-minus-circle danger" } )

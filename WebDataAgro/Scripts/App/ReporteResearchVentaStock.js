@@ -45,7 +45,6 @@ function CreateGrid() {
     $("#gridReporteVentaStock").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Venta Stock.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -53,7 +52,8 @@ function CreateGrid() {
             { field: "Localidad", type: "string" },
             { field: "Provincia", type: "string", width: 300, filterable: true },
             { field: "Partido", type: "string" },
-            { field: "Material", title: "Cultivo", filterable: {
+            {
+                field: "Material", title: "Cultivo", filterable: {
                     multi: true, dataSource: [{
                         Material: "Maiz Duro Dentado"
                     }, {
@@ -65,7 +65,8 @@ function CreateGrid() {
                     }, {
                         Material: "Girasol Alto Oleico"
                     }]
-                }, width: 130, template: "#=Material#" },
+                }, width: 130, template: "#=Material#"
+            },
             { field: "VendidoAPrecio", title: "Vendido a Precio" },
             { field: "Almacenado", title: "Almacenado" },
             { field: "Comercial", title: "Comercial" },
@@ -113,20 +114,24 @@ function CreateGrid() {
             },
             operators: {
                 string: {
-                    eq: "Igual",
+                    eq: "Igual"
                 },
                 date: {
                     eq: "Igual",
                     gte: "Despu&eacute;s o igual a",
-                    lte: "Antes o igual a",
+                    lte: "Antes o igual a"
                 },
                 number: {
                     eq: "Igual a",
                     gte: "Mayor que o igual a",
-                    lte: "Menor que o igual a",
+                    lte: "Menor que o igual a"
                 }
             }
+        },
+        excelExport: function (e) {
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            e.workbook.fileName = "Reporte Venta Stock " + stringFecha + ".xlsx";
         }
-    })
+    });
 
 }

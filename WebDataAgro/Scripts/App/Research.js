@@ -67,23 +67,23 @@ $("#VentaStockTab").click(function () {
 });
 
 $("#ReporteAvanceSiembraTab").click(function () {
-    DeseleccionarForms();
-    $("#AvanceSiembraTab").children().addClass("whc-selected");
+    DeseleccionarFormsReporte();
+    $("#ReporteAvanceSiembraTab").children().addClass("whc-selected");
     $("#AvanceSiembra").show();
 });
 $("#ReporteAvanceCosechaTab").click(function () {
-    DeseleccionarForms();
-    $("#AvanceCosechaTab").children().addClass("whc-selected");
+    DeseleccionarFormsReporte();
+    $("#ReporteAvanceCosechaTab").children().addClass("whc-selected");
     $("#AvanceCosecha").show();
 });
 $("#ReporteSituacionCultivoTab").click(function () {
-    DeseleccionarForms();
-    $("#SituacionCultivoTab").children().addClass("whc-selected");
+    DeseleccionarFormsReporte();
+    $("#ReporteSituacionCultivoTab").children().addClass("whc-selected");
     $("#SituacionCultivo").show();
 });
 $("#ReporteVentaStockTab").click(function () {
-    DeseleccionarForms();    
-    $("#VentaStockTab").children().addClass("whc-selected");
+    DeseleccionarFormsReporte();    
+    $("#ReporteVentaStockTab").children().addClass("whc-selected");
     $("#VentaStock").show();
 });
 
@@ -147,6 +147,16 @@ function DeseleccionarForms() {
     $("#SituacionCultivoTab").children().removeClass("whc-selected");
     $("#SituacionCultivo").hide();
     $("#VentaStockTab").children().removeClass("whc-selected");
+    $("#VentaStock").hide();
+}
+function DeseleccionarFormsReporte() {
+    $("#ReporteAvanceSiembraTab").children().removeClass("whc-selected");
+    $("#AvanceSiembra").hide();
+    $("#ReporteAvanceCosechaTab").children().removeClass("whc-selected");
+    $("#AvanceCosecha").hide();
+    $("#ReporteSituacionCultivoTab").children().removeClass("whc-selected");
+    $("#SituacionCultivo").hide();
+    $("#ReporteVentaStockTab").children().removeClass("whc-selected");
     $("#VentaStock").hide();
 }
 function InicializarElementos() {

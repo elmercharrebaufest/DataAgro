@@ -46,8 +46,7 @@ function CreateGridAvanceSiembra() {
     $("#gridAvanceSiembra").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Avance Siembra.xlsx",
-            allPages: true
+             allPages: true
         },
         dataSource: ds,
         columns: [
@@ -130,6 +129,10 @@ function CreateGridAvanceSiembra() {
                     lte: "Menor que o igual a",
                 }
             }
+        },
+        excelExport: function (e) {
+            var stringFecha = kendo.toString(new Date, "dd/MM/yyyy HH:mm");
+            e.workbook.fileName = "Reporte Avance Siembra " + stringFecha + ".xlsx";
         }
     });
 }

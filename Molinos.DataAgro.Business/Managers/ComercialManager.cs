@@ -52,9 +52,10 @@ namespace Molinos.DataAgro.Business
             var qry = new CombosQueries(logger, repositorio);
             var empleadorId = repositorio.Obtener<Comercial, int?>(x => x.ComercialId == comercialId, x => x.EmpleadorACargoId) ?? 0;
             var list = qry.GetAbmComercialCombo();
-
-            list.RemoveAll(x => !equipo.Any(z => z == x.ComercialId) && x.ComercialId != empleadorId);
-
+            var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+            var subordinados = ListarEquipo(comercialId,lista);
+            list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
+            //Por lo pronto se van a mostrar todos los usurios hasta arreglar la query para los comerciales subordinados.
             return list;
         }
 

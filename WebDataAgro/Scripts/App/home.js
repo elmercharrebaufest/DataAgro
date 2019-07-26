@@ -123,7 +123,11 @@ function armarCarouselHome() {
                                     '</div>' +
                                     '<div class="carouselHome-descripcion">' +
                                     '<span>' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                    '</div>' +
+                                    
+                                    '<div class="carouselHome-hora ">' +
+                                    '<span class="notificacion-hora sinMargen"> Hasta el: ' + notificacionesAux[i][j].Dia + '</span>'+
+                                '</div>' +
+                                '</div>' +
                                     '</div>' +
                                     '</a>';
                             }
