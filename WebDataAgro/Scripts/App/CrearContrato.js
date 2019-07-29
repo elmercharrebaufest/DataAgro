@@ -1214,13 +1214,7 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             $(".sustentableDiv").show();
             if ($("#mercsDepositoId").is(':checked')) {
-                $("#fechaTooltip").tooltip({ title: 'Revisar la fecha desde de entrega' });
-                $("#fechaTooltip").tooltip('show');
-                $("#fechaTooltip").click(function () {
-                    $("#fechaTooltip").tooltip('destroy');
-                });
-            } else {
-                $("#fechaTooltip").tooltip('destroy');
+                MensInfo('Revisar la fecha desde de entrega');
             }
         }
         else {
@@ -1230,15 +1224,10 @@ function InicializarElementos() {
     });
     $("#mercsDepositoId").click(function () {
         if ($(this).is(':checked') && $("#sustentableId").is(':checked')) {
-            $("#fechaTooltip").tooltip({ title: 'Revisar la fecha desde de entrega' });
-            $("#fechaTooltip").tooltip('show');
-            $("#fechaTooltip").click(function () {
-                $("#fechaTooltip").tooltip('destroy');
-            });
-        } else {
-            $("#fechaTooltip").tooltip('destroy');
+            MensInfo('Revisar la fecha desde de entrega');
         }
     });
+
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
