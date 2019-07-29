@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class ResearchSituacionCultivoDto
     {
         public int Id { get; set; }
-        public string Estadio { get; set; }
+        public int EstadioId { get; set; }
         public string Observaciones { get; set; }
         public string Situacion { get; set; }
         public DateTime FechaHora { get; set; }
@@ -20,5 +20,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Localidad { get; set; }
         public string Partido { get; set; }
         public string Material { get; set; }
+        public string Estadio { get; set; }
     }
 }

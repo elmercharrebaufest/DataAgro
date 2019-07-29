@@ -492,7 +492,7 @@ function armarSelects(result) {
             hasArrendadas: $("#hectareas-propias" + val).is(":checked") ? 0 : ($("#hectareas-arrendadas" + val).is(":checked") ? 1 : null),
             hasArrendadasNombre: $("#hectareas-propias" + val).is(":checked") ? "Propias" : ($("#hectareas-arrendadas" + val).is(":checked") ? "Alquiladas" : "no especifica"),
             CampoId: $("#campoid").val()
-        }
+        };
 
         aEliminarGranosAlmacenamiento.push(obj);
 

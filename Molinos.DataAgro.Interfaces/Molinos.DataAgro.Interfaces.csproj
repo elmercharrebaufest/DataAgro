@@ -130,6 +130,7 @@
     <Compile Include="Managers\ICampañaManager.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
     <Compile Include="Managers\IAgenteCompraManager.cs" />
+    <Compile Include="Managers\IEstadioManager.cs" />
     <Compile Include="Managers\ILogManager.cs" />
     <Compile Include="Managers\IResearchManager.cs" />
     <Compile Include="Managers\IZonaManager.cs" />

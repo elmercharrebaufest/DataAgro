@@ -33,7 +33,12 @@ function LimpiarForm () {
     $("#MaterialVentaStockId").val("");
     $("#MaterialSituacionCultivoId").val("");
     $("#SituacionId").val("");
-    $("#EstadioId").val("");
+    var estadioSelect = $("#EstadioId")
+    estadioSelect.empty();
+    estadioSelect.append($('<option/>', {
+        value: null,
+        text: "Seleccione Estadío"
+    }));
 
 }
 
@@ -178,9 +183,30 @@ function InicializarElementos() {
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0,        
-    });   
+        min: 0,
+    });
 }
+
+$("#MaterialSituacionCultivoId").change(function () {
+    var materialId = $("#MaterialSituacionCultivoId").val();
+    var estadioSelect = $("#EstadioId");
+    estadioSelect.empty();
+    if (materialId != null && materialId != '') {
+        var estadio = MSExecuteOnServer('/Research/TraerEstadio', { materialId: materialId });
+        estadioSelect.append($('<option/>', {
+            value: null,
+            text: "Seleccione Estadío"
+        }));
+        if (estadio != null && !jQuery.isEmptyObject(estadio)) {            
+            $.each(estadio, function (index, estadio) {
+                estadioSelect.append($('<option/>', {
+                    value: estadio.Value,
+                    text: estadio.Text
+                }));
+            });
+        }
+    }
+});   
 
 function AutocompleteProcedenciaCosecha() {
     $("#LocalidadCosecha").click(function () {

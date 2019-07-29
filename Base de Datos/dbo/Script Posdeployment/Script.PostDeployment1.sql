@@ -94,3 +94,52 @@ IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Avance Siembra') 
 IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Avance Cosecha') BEGIN insert into TipoResearch (Descripcion) values ('Avance Cosecha'); END
 IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Situación de cultivos') BEGIN insert into TipoResearch (Descripcion) values ('Situación de cultivos'); END
 IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Ventas y Stock') BEGIN insert into TipoResearch (Descripcion) values ('Ventas y Stock'); END
+
+--Nivel Tarifa
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado provisorio') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado provisorio','Z01'); END
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado confirmado') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado confirmado','Z02'); END
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Real') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Real','Z03'); END
+
+--Estadío
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 2 ) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Desarrollo de hojas' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Desarrollo de hojas', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Desarrollo de hojas' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Desarrollo de hojas', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Desarrollo de hojas' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Desarrollo de hojas', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Desarrollo de hojas' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Desarrollo de hojas', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Desarrollo de hojas' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Desarrollo de hojas', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Macollaje' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Macollaje', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Panojamiento' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Panojamiento', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Inicio de Floración' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Inicio de Floración', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Boton Floral' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Boton Floral', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Boton Floral' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Boton Floral', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Encañación' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Encañación', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Floración' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Floración', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Floración' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Floración', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Floración' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Floración', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Floración' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Floración', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Espiga Embuchada' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Espiga Embuchada', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de Granos' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Llenado de Granos', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Formacion de Vainas (R3)' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Formación de Vainas (R3)', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de Granos' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Llenado de Granos', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de Granos' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Llenado de Granos', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Floración' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Floración', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de Granos (R5)' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Llenado de Granos (R5)', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de Granos' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Llenado de Granos', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 2) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 2); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 4) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 4); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 5); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 1); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 3) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 3); END
+IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 1); END
+
+
+
+

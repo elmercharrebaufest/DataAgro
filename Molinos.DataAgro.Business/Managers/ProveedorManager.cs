@@ -946,7 +946,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return proveedor;
         }
-        public void TraerEstado(ProveedorNuevo prov)
+        private void TraerEstado(ProveedorNuevo prov)
         {
             var oFacacop = repositorio.Existe<FACACOP>(x => x.CUIT == prov.CUIT);
 
@@ -982,7 +982,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors = ValidarProveedor(oParam, oEntityErrors);
+            oEntityErrors = ValidarProveedor(oParam, oEntityErrors,false);
             if (oEntityErrors.HayError)
             {
                 return oEntityErrors;
@@ -1302,27 +1302,30 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
 
         }
-        private GrabarProveedorResult ValidarProveedor(NuevoProveedor oParam, GrabarProveedorResult oEntityErrors)
+        private GrabarProveedorResult ValidarProveedor(NuevoProveedor oParam, GrabarProveedorResult oEntityErrors, bool paraCorredor)
         {
-            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId != 5 && x.SegmentacionId != 7)) && (oParam.basicos.segmentacion != 5 && oParam.basicos.segmentacion != 7))
+            if (!paraCorredor )
             {
-                oEntityErrors.Error("Proveedor", "Ya existe un proveedor con ese CUIT");
-                return oEntityErrors;
-            }
-            if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7)) && (oParam.basicos.segmentacion == 5 || oParam.basicos.segmentacion == 7))
-            {
-                oEntityErrors.Error("Proveedor", "Ya existe un corredor con ese CUIT");
-                return oEntityErrors;
+                if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId != 5 && x.SegmentacionId != 7)) && (oParam.basicos.segmentacion != 5 && oParam.basicos.segmentacion != 7))
+                {
+                    oEntityErrors.Error("Proveedor", "Ya existe un proveedor con CUIT " + oParam.basicos.cuit);
+                    return oEntityErrors;
+                }
+                if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7)) && (oParam.basicos.segmentacion == 5 || oParam.basicos.segmentacion == 7))
+                {
+                    oEntityErrors.Error("Proveedor", "Ya existe un corredor con CUIT " + oParam.basicos.cuit);
+                    return oEntityErrors;
+                }
             }
             if (!repositorio.Existe<SISA>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Error("SISA", "No existe el CUIT");
+                oEntityErrors.Error("SISA", "No existe el CUIT" + oParam.basicos.cuit);
                 return oEntityErrors;
             }
 
             if (repositorio.Existe<FACACOP>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Error("FACACOP", "El CUIT es Apocrifo");
+                oEntityErrors.Error("FACACOP", "El CUIT " + oParam.basicos.cuit + " es Apocrifo" );
                 return oEntityErrors;
             }
             return oEntityErrors;
@@ -2323,7 +2326,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId)
         {
-            return repositorio.Listar<CorredorProveedor, ProveedorCorredorDto>(x => new ProveedorCorredorDto
+            var proveedores = repositorio.Listar<CorredorProveedor, ProveedorCorredorDto>(x => new ProveedorCorredorDto
             {
                 CUIT = x.Proveedor.CUIT,
                 ProveedorId = x.ProveedorId,
@@ -2341,8 +2344,48 @@ namespace Molinos.DataAgro.Business.Managers
                 Direccion = x.Proveedor.Direccion,
                 CodigoPostal = x.Proveedor.CodigoPostal,
                 ProveedorCorredorId = x.Id,
-                Consignatario = x.Proveedor.Consignatario
-            }, x => x.CorredorId == corredorId);
+                Consignatario = x.Proveedor.Consignatario,
+                RiesgoComercialSap = x.Proveedor.RiesgoComercialSap,
+            }, x => x.CorredorId == corredorId); ;
+
+            foreach (var aux in proveedores)
+            {
+                aux.NoOperable = false;
+                aux.Operando = true;
+                aux.EstadoCuit = repositorio.Obtener<SISA, int>(y => y.CUIT == aux.CUIT, y => y.EstadoCuit);
+                aux.Facacop = repositorio.Existe<FACACOP>(x => x.CUIT == aux.CUIT);
+
+                if (!String.IsNullOrEmpty(aux.RiesgoComercialSap))
+                {
+                    if (aux.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
+                    {
+                        aux.NoOperable = true;
+                        aux.Operando = false;
+                        aux.TooltipNoOperable = "Riesgo Comercial Alto";
+                    }
+                }
+
+                if (aux.EstadoCuit == 0)
+                {
+                    aux.NoOperable = true;
+                    aux.Operando = false;
+                    aux.TooltipNoOperable = "Inactivo";
+                }
+                if (aux.EstadoCuit == 3)
+                {
+                    aux.NoOperable = true;
+                    aux.Operando = false;
+                    aux.TooltipNoOperable = "Estado 3";
+                }
+                if (aux.Facacop)
+                {
+                    aux.Operando = false;
+                    aux.NoOperable = true;
+                    aux.TooltipNoOperable = "Apocrifos";
+                }
+            }
+
+            return proveedores;
         }
         public TraerProveedorResult TraerProveedorParaCorredor(string cuit)
         {
@@ -2406,11 +2449,20 @@ namespace Molinos.DataAgro.Business.Managers
                 produccion = new Produccion(),
                 almacenamiento = new Almacenamiento(),
             }, idActiveDirectory);
-
+            int provId;
+            if (result.HayError)
+            {
+                return result;
+            }
+            else
+            {
+                provId = result.ProveedorId.Value;
+            }
             if (oParam.proveedorCorredor != null)
             {
-                UpdateProveedorCorredor(oParam.proveedorCorredor, result.ProveedorId.Value, idActiveDirectory);
+                result = UpdateProveedorCorredor(oParam.proveedorCorredor, result.ProveedorId.Value, idActiveDirectory);
             }
+            result.ProveedorId = provId;
             return result;
         }
         public GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId)
@@ -2429,27 +2481,32 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (resultado.HayErrores)
             {
+                resultado.ProveedorId = oParam.CorredorId;
                 return resultado;
             }
             resultado = UpdateDatosContacto(corredor);
 
             if (resultado.HayErrores)
             {
+                resultado.ProveedorId = oParam.CorredorId;
                 return resultado;
             }
             resultado = UpdateContactoComerciales(corredor);
 
             if (resultado.HayErrores)
             {
+                resultado.ProveedorId = oParam.CorredorId;
                 return resultado;
             }
             resultado = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
             if (resultado.HayErrores)
             {
+                resultado.ProveedorId = oParam.CorredorId;
                 return resultado;
             }
             try
             {
+                resultado.ProveedorId = oParam.CorredorId;
                 repositorio.GuardarCambios();
             }
             catch (Exception ex)
@@ -2466,33 +2523,14 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarProveedorResult UpdateProveedorCorredor(List<NuevoProveedor> proveedores, int corredorId, string idActiveDirectory)
         {
             var resultado = new GrabarProveedorResult();
+            var sinError = new List<NuevoProveedor>();
             if (proveedores != null)
             {
                 foreach (var proveedor in proveedores)
                 {
                     try
                     {
-                        var nuevoProveedor = new NuevoProveedor()
-                        {
-                            ProveedorId = proveedor.ProveedorId,
-                            basicos = new Basico()
-                            {
-                                cuit = proveedor.basicos.cuit,
-                                ClasificacionCompraNet = proveedor.basicos.ClasificacionCompraNet,
-                                RazonSocial = proveedor.basicos.RazonSocial,
-                                Consignatario = proveedor.basicos.Consignatario
-                            },
-                            contacto = new Contacto()
-                            {
-                                codpost = proveedor.contacto.codpost,
-                                localidad = proveedor.contacto.localidad,
-                                provincia = proveedor.contacto.provincia,
-                                direccion = proveedor.contacto.direccion
-                            },
-                            produccion = new Produccion(),
-                            almacenamiento = new Almacenamiento(),
-                            contactocomercial = new List<ContactosComercial>()
-                        };
+                        
                         var nuevoProveedorParaCorredor = new Proveedor
                         {
                             CUIT = proveedor.basicos.cuit,
@@ -2511,8 +2549,19 @@ namespace Molinos.DataAgro.Business.Managers
                             EstadoId = 1,
                             FechaAlta = DateTime.Now
                         };
-                        if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
+                        var res= new GrabarProveedorResult();
+                        res = ValidarProveedor(proveedor, res, true);
+                        if (res.HayError)
                         {
+                            resultado.Errores.AddRange(res.Errores);
+                            continue;
+                        }
+                        else
+                        {
+                            sinError.Add(proveedor);
+                        }
+                        if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
+                        {                            
                             var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
                             proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
                             proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
@@ -2528,9 +2577,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         }
                         else
-                        {
-                            resultado = ValidarProveedor(nuevoProveedor, resultado);
-
+                        {                            
                             var entidad = repositorio.Agregar(nuevoProveedorParaCorredor);
                             repositorio.GuardarCambios();
                             proveedor.ProveedorId = entidad.ProveedorId;
@@ -2560,9 +2607,9 @@ namespace Molinos.DataAgro.Business.Managers
                 #endregion
 
                 #region Agregar
-                if (proveedores != null)
+                if (sinError != null)
                 {
-                    foreach (var cor in proveedores)
+                    foreach (var cor in sinError)
                     {
                         if (cor.ProveedorCorredorId == null)
                         {

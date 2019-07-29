@@ -454,7 +454,31 @@ function GrabarCorredor(nuevoCorredor) {
     var result = MSExecuteOnServer('/Proveedor/GrabarCorredor', nuevoCorredor);
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
-            MensErr(result.Errores[0].Message);
+            if (result.CorredorId !== null || result.CorredorId !== 0) {
+                BootstrapDialog.show({
+                    title: 'Error !!!',
+                    cssClass: 'error-dialog modal-superior',
+                    message: "Corredor grabado correctamente. Revisar Proveedores: <br/>" + result.Errores[0].Message,
+                    draggable: true,
+                    buttons: [{
+                        label: 'Cerrar',
+                        cssClass: 'k-button',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
+                    }],
+                    onhide: function (dialogRef) {
+                        window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                    }
+                });
+                
+                setTimeout(function () {
+                    window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                }, 5000);
+                
+            } else {
+                MensErr(result.Errores[0].Message);
+            }            
         }
         else {
             MensInfo("Se ha realizado la operacion con exito");

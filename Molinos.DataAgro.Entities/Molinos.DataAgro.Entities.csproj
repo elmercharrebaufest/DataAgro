@@ -68,6 +68,7 @@
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmZona.cs" />
+    <Compile Include="Dto\EstadioDto.cs" />
     <Compile Include="Dto\GrabarAcuerdoResult.cs" />
     <Compile Include="Dto\NotificacionResearchDto.cs" />
     <Compile Include="Dto\LogDto.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
     <Compile Include="Entities\AperturaPrecio.cs" />
+    <Compile Include="Entities\Estadio.cs" />
     <Compile Include="Entities\TipoResearch.cs" />
     <Compile Include="Entities\NotificacionResearch.cs" />
     <Compile Include="Entities\ConceptoAperturaPrecio.cs" />

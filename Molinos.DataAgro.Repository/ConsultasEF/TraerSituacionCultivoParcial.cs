@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Material = situacion.Material.Descripcion,
                     MaterialId = situacion.MaterialId,
                     Observaciones = situacion.Observaciones,
-                    Estadio = situacion.Estadio,
+                    Estadio = situacion.Estadio.Descripcion,
                     Situacion = situacion.Situacion
                 };
 

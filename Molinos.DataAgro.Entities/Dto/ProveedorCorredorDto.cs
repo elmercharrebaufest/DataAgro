@@ -22,6 +22,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ClasificacionDescripcion { get; set; }
         public int ProveedorCorredorId { get; set; }
         public bool? Consignatario { get; set; }
+        public bool? NoOperable { get; set; }
+        public bool? Operando { get;set;}
+        public string TooltipNoOperable { get; set; }
+        public int? EstadoCuit { get; set; }
+        public string RiesgoComercialSap { get; set; }
+        public bool Facacop { get; set; }
     }
 }
 

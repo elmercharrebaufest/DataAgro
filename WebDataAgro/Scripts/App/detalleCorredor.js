@@ -2,6 +2,18 @@
     $(".noCorredor").hide();
     $("#proveedoresCorredor").show();
     CargarProveedores(datos);
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
+function MostrarTooltip(e) {
+    $(e + '[data-toggle="tooltip"]').click(function () {
+        $(e + "[data-toggle='tooltip']").on('shown.bs.tooltip', function () {
+            $(e + '[data-toggle="tooltip"]').tooltip("hide");
+        });
+        $(e + "[data-toggle='tooltip']").on('hidden.bs.tooltip', function () {
+            $(e + '[data-toggle="tooltip"]').tooltip("show");
+        });
+    });
 }
 
 function CargarProveedores(datos) {
@@ -16,9 +28,17 @@ function CargarProveedores(datos) {
                 '<div class="contenedor-proveedor-corredor-titulo">' +
                 '<img class="img-contacto-comercial" src="../Content/Images/contprinc-cont4.png" /> ' +
                 '<span class="span-contacto-comercial"> ' +
-                obj.RazonSocial + ' (' + obj.CUIT + ')</span>' +                
-                '</div>' +
-                '<div class="row">'+
+                obj.RazonSocial + ' (' + obj.CUIT + ')</span>' +
+                '</div>';
+            if (obj.NoOperable) {
+                var url3 = MSGetUrl("/Content/Images/no-operable.png");
+                htmlProveedores += '<div class="lista-contacto-no-operable"' +
+                    'data-toggle="tooltip" title="' + obj.TooltipNoOperable + '" click="MostrarTooltip(this)">'
+                    + '<img class="img-contacto-no-operable" src="..' + url3 + '" />'
+                    + '<span class="span-contacto-no-operable">No operable</span>'
+                    + '</div>';
+            }
+            htmlProveedores += '<div class="row">'+
                 '<div class="contenedor-contacto-comercial-posicion col-md-5">' +
                 '<span class="contenedor-contacto-comercial-posicion-izq">' +
                 (obj.Direccion ? obj.Direccion + ' (' + obj.CodigoPostal + ')' : "No se especifica dirección") +

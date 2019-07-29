@@ -253,6 +253,7 @@
     <Build Include="dbo\Tables\NotificacionResearch.sql" />
     <Build Include="dbo\Tables\TipoResearch.sql" />
     <Build Include="dbo\Tables\Log.sql" />
+    <Build Include="dbo\Tables\Estadio.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

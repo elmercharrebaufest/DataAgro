@@ -18,10 +18,13 @@ namespace WebDataAgro.Controllers
     {
         private readonly IResearchManager oResearchManager;
         private readonly IMaterialManager oMaterialManager;
-        public ResearchController(IResearchManager oResearchManager, IMaterialManager oMaterialManager)
+        private readonly IEstadioManager oEstadioManager;
+
+        public ResearchController(IResearchManager oResearchManager, IMaterialManager oMaterialManager, IEstadioManager oEstadioManager)
         {
             this.oResearchManager = oResearchManager;
             this.oMaterialManager = oMaterialManager;
+            this.oEstadioManager = oEstadioManager;
         }
         // GET: ResearchAvanceSiembra
         public ActionResult Index()
@@ -199,7 +202,7 @@ namespace WebDataAgro.Controllers
             {
                 MaterialId = researchSituacionCultivoModel.MaterialId,
                 LocalidadId = researchSituacionCultivoModel.LocalidadId,
-                Estadio = researchSituacionCultivoModel.Estadio,
+                EstadioId = researchSituacionCultivoModel.EstadioId,
                 Situacion = researchSituacionCultivoModel.Situacion,
                 Observaciones = researchSituacionCultivoModel.Observaciones,
                 FechaHora = researchSituacionCultivoModel.FechaHora
@@ -311,6 +314,18 @@ namespace WebDataAgro.Controllers
 
             return lista;
         }
+        public ActionResult TraerEstadio(int materialId)
+        {
+            var estadios = oEstadioManager.TraerTodoEstadioPorMaterial(materialId);
+            var listaEstadios = estadios.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            return Json(listaEstadios, JsonRequestBehavior.AllowGet);
+        }
 
         private void FillViewBag()
         {
@@ -324,13 +339,9 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x=>x.Value);
             ViewBag.Material = materialesListItems;
 
-            var estadio = new List<SelectListItem>() {
-                new SelectListItem { Text= "Emergencia", Value= "Emergencia", Selected = false },
-                new SelectListItem { Text = "Macollaje", Value = "Macollaje", Selected = false },
-                new SelectListItem { Text = "Floracion", Value = "Floracion", Selected = false },
-                new SelectListItem { Text = "Llenado", Value = "Llenado", Selected = false }
-                };
-            ViewBag.Estadio = estadio;
+            var estadiosListItems = new List<SelectListItem>();
+            ViewBag.Estadio = estadiosListItems;
+
             var situacion = new List<SelectListItem>() {
                 new SelectListItem { Text= "Malo", Value= "Malo", Selected = false },
                 new SelectListItem { Text = "Regular", Value = "Regular", Selected = false },

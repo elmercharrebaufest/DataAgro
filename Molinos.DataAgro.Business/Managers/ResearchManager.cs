@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        public ResearchManager(ILogger logger, IRepositorio repositorio, IReportesManager reportesManager)
+        public ResearchManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -249,7 +249,8 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Listar<ResearchSituacionCultivo, ResearchSituacionCultivoDto>(x => new ResearchSituacionCultivoDto
             {
                 Id = x.Id,
-                Estadio = x.Estadio,
+                Estadio = x.Estadio.Descripcion + "",
+                EstadioId = x.EstadioId,
                 Situacion = x.Situacion,
                 LocalidadId = x.LocalidadId,
                 Observaciones = x.Observaciones,

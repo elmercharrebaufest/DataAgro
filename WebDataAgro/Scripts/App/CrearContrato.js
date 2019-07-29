@@ -1213,13 +1213,32 @@ function InicializarElementos() {
     $("#sustentableId").click(function () {
         if ($(this).is(':checked')) {
             $(".sustentableDiv").show();
+            if ($("#mercsDepositoId").is(':checked')) {
+                $("#fechaTooltip").tooltip({ title: 'Revisar la fecha desde de entrega' });
+                $("#fechaTooltip").tooltip('show');
+                $("#fechaTooltip").click(function () {
+                    $("#fechaTooltip").tooltip('destroy');
+                });
+            } else {
+                $("#fechaTooltip").tooltip('destroy');
+            }
         }
         else {
             $(".sustentableDiv").hide();
             $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         }
     });
-
+    $("#mercsDepositoId").click(function () {
+        if ($(this).is(':checked') && $("#sustentableId").is(':checked')) {
+            $("#fechaTooltip").tooltip({ title: 'Revisar la fecha desde de entrega' });
+            $("#fechaTooltip").tooltip('show');
+            $("#fechaTooltip").click(function () {
+                $("#fechaTooltip").tooltip('destroy');
+            });
+        } else {
+            $("#fechaTooltip").tooltip('destroy');
+        }
+    });
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
