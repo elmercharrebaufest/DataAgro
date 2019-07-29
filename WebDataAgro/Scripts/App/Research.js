@@ -185,6 +185,14 @@ function InicializarElementos() {
         spinners: false,
         min: 0,
     });
+    $(".number-negativo").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        value: " ",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+    });
 }
 
 $("#MaterialSituacionCultivoId").change(function () {

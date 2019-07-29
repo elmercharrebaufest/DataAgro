@@ -67,7 +67,7 @@ function CreateGridInformeCompraNet() {
                 }, width: 130, template: "#=Material#"
             },
             { field: "Avance", title: "Avance %" },
-            { field: "Rendimiento"},
+            { field: "Rendimiento", title: "Rendimiento (Tn)"},
             { field: "RangoDesde", title: "Rango Desde" },
             { field: "RangoHasta", title: "Rango Hasta" },
             { field: "Comercial", title: "Comercial" },
