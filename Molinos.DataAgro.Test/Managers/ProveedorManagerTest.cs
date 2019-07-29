@@ -1599,9 +1599,7 @@ namespace Molinos.DataAgro.Test.Managers
                 {
                     basicos = new Basico() { cuit = "1", RazonSocial = "1", segmentacion = 1, calificacion = 1 },
                     contacto = new Contacto() { canalesOperacion = new List<int>(), entregaA = new List<int>(), condPreferentes = new List<int>(), },
-                    contactocomercial = new List<ContactosComercial>(),
-                    ProveedorCorredorId = 0,
-                    ProveedorId = 0
+                    contactocomercial = new List<ContactosComercial>()
                 } },
                 CorredorId = 0
             };
@@ -1613,11 +1611,15 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<FACACOP, bool>>>()))
                 .Returns(false);
+            repositorioMock.Setup(y => y.Agregar(It.IsAny<Proveedor>()))
+                .Returns(new Proveedor { ProveedorId = 1 });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
                 .Returns(new Comercial { IdActiveDirectory = "a", ComercialId = 1, PerfilId = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<Estado>() { new Estado { Descripcion = "a", EstadoId = 1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+               .Returns(new List<CorredorProveedor>());
 
             datosProveedorMock.Setup(y => y.ObtenerDatosDeProveedor(It.IsAny<List<Datos>>()))
                 .Returns(new List<DatosProveedorAgentDto>() { new DatosProveedorAgentDto { USUARIO = "a", CLIENTE_MOA = "X", CUIT = "a", STATUS = "1" } });
@@ -1625,13 +1627,13 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.GrabarNuevoCorredor(corredor, "1");
 
-            repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Exactly(4));
+            repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<SISA, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<FACACOP, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Proveedor>()), Times.Exactly(2));
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(3));
             Assert.NotNull(result);
             Assert.IsFalse(result.HayErrores);
         }
@@ -1664,7 +1666,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(),It.IsAny<Expression<Func< Proveedor, string>>>()))
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()))
                 .Returns("111111");
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<string>() { "a" });
@@ -1694,10 +1696,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ContactoComercial>());
             //listar Corredor
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<SISA, bool>>>()))
+                .Returns(true);
+            repositorioMock.Setup(y => y.Agregar(It.IsAny<Proveedor>()))
+                .Returns(new Proveedor { ProveedorId = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<CorredorProveedor>() { new CorredorProveedor { CorredorId = 1, ProveedorId = 2 } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>()))
-                            .Returns( new CorredorProveedor { CorredorId = 1, ProveedorId = 2 } );
+                            .Returns(new CorredorProveedor { CorredorId = 1, ProveedorId = 2 });
 
             var result = target.UpdateCorredor(corredor, "a", new List<int>() { 1, 2, 3 }, 1);
 
