@@ -96,9 +96,9 @@ IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Situación de cul
 IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Ventas y Stock') BEGIN insert into TipoResearch (Descripcion) values ('Ventas y Stock'); END
 
 --Nivel Tarifa
-IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado provisorio') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado provisorio','Z01'); END
-IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado confirmado') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado confirmado','Z02'); END
-IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Real') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Real','Z03'); END
+--IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado provisorio') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado provisorio','Z01'); END
+--IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado confirmado') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado confirmado','Z02'); END
+--IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Real') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Real','Z03'); END
 
 --Estadío
 IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 1); END
