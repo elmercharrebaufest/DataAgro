@@ -323,7 +323,7 @@ namespace WebDataAgro.Controllers
                         Text = x.Descripcion,
                         Value = x.Id.ToString(),
                         Selected = false
-                    }).OrderBy(x => x.Value);
+                    });
             return Json(listaEstadios, JsonRequestBehavior.AllowGet);
         }
 
