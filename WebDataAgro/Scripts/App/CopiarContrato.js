@@ -118,6 +118,9 @@ function modificarContrato(contratoCopia) {
 
 function CargarDatosCopiar(contrato, hijo, tipo) {
     InicializarBordesRojos();
+
+    $("#material").data("kendoDropDownList").value(contrato.MaterialId);
+    $("#material").data("kendoDropDownList").trigger("change");
     if (tipo == "acuerdo") {
         CargarCampaniaPorMaterial($("#material").val());
         $("#contratoACopiarId").data("kendoAutoComplete").value("");
@@ -155,8 +158,6 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         }
         $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
     }
-    $("#material").data("kendoDropDownList").value(contrato.MaterialId);
-    $("#material").data("kendoDropDownList").trigger("change");
 
     $("#observacionId").val(contrato.Observacion);
     $("#cantidadId").data("kendoNumericTextBox").value(contrato.Cantidad);
