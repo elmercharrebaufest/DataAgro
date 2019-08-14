@@ -6,6 +6,7 @@
         public string Codigo { get; set; }
         public string Descripcion { get; set; }
         public int? CampañaId { get; set; }
+        public string Campana { get; set; }
     }
 }
    

@@ -68,6 +68,7 @@ function CreateGridAvanceSiembra() {
                     }]
                 }, width: 130, template: "#=Material#"
             },
+            { field: "Campania", title: "Campaña"},
             { field: "IntencionSiembra", title: "Intención Siembra (Has)" },
             { field: "CambioAA", title: "Cambio vs AA (%)" },
             { field: "Avance", title: "Avance %" },

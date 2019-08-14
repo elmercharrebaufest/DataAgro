@@ -20,6 +20,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal RangoDesde { get; set; }
         public decimal RangoHasta { get; set; }
         public string Observaciones { get; set; }
+        public int CampaniaId { get; set; }
+        [ForeignKey("CampaniaId")]
+        public virtual Campaña Campania { get; set; }
         public DateTime FechaHora { get; set; }
         [ForeignKey("ComercialId")]
         public Comercial Comercial { get; set; }

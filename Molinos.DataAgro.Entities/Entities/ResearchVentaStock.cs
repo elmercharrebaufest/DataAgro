@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public int LocalidadId { get; set; }
+        public int CampaniaId { get; set; }
         public int ComercialId { get; set; }
         public decimal Almacenado { get; set; }
         public decimal VendidoAPrecio{ get; set; }
@@ -24,6 +25,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("LocalidadId")]
         public virtual Localidad Localidad { get; set; }
         [ForeignKey("MaterialId")]
-        public virtual Material Material { get; set; }
+        public virtual Material Material { get; set; }       
+        [ForeignKey("CampaniaId")]
+        public virtual Campaña Campania { get; set; }
     }
 }

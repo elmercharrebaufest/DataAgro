@@ -32,6 +32,7 @@
             <table class="tabla-historial table">
                 <tr>
                     <th>Cultivo</th>
+                    <th>Campaña</th>
                     <th>Localidad</th>
                     <th>Avance %</th>
                     <th>Rango Desde</th>
@@ -44,6 +45,7 @@
                 {
             <tr>
                 <td>@Html.DisplayFor(model => mat.Material)</td>
+                <td>@Html.DisplayFor(model => mat.Campania)</td>
                 <td>@Html.DisplayFor(model => mat.Localidad)</td>
                 <td class="text-right">@Html.DisplayFor(model => mat.Avance)</td>
                 <td class="text-right">@Html.DisplayFor(model => mat.RangoDesde)</td>

@@ -67,7 +67,9 @@ function CreateGridInformeCompraNetSituacion() {
                     }, {
                         Material: "Girasol Alto Oleico"
                     }]
-                }, width: 130, template: "#=Material#" },
+            }, width: 130, template: "#=Material#"
+            },
+            { field: "Campania", title: "Campaña" },
             { field: "Estadio", type: "string", width: 300, filterable: true },
             { field: "Situacion", title: "Situación" , type: "string", width: 300, filterable: true },
             { field: "Comercial", type: "string", width: 300, filterable: true },

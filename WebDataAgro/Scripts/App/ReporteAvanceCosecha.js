@@ -66,6 +66,7 @@ function CreateGridInformeCompraNet() {
                     }]
                 }, width: 130, template: "#=Material#"
             },
+            { field: "Campania", title: "Campaña"},
             { field: "Avance", title: "Avance %" },
             { field: "Rendimiento", title: "Rendimiento (Tn)"},
             { field: "RangoDesde", title: "Rango Desde" },

@@ -204,6 +204,10 @@ table#TrigoCalidad th, table#TrigoCalidad td {
     color: black;
 }
 
+.titulos.pricing {
+    background: mediumvioletred;
+}
+
 #grillaAgente > .k-grid-header, #grillaAgente .k-grid-header .k-header {
     background-color: yellow;
     font-weight: bold;
@@ -230,4 +234,8 @@ table#TrigoCalidad th, table#TrigoCalidad td {
     border-bottom: 2px solid white;
     border-right: 2px solid black;
     border-left:  1px solid  black;
+}
+
+#agenteCompras td{
+    font-size:12px;
 }

@@ -91,7 +91,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHora = x.FechaHora,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                 Material = x.Material.Descripcion + "",
-                Localidad = x.Localidad.Nombre + ""
+                Localidad = x.Localidad.Nombre + "",
+                Campania = x.Campania.Descripcion + "",
+                CampaniaId = x.CampaniaId 
             }, x => DbFunctions.TruncateTime(x.FechaHora) == hoy);
         }
         public List<ResearchAvanceCosechaDto> TraerTodoResearchAvanceCosecha()
@@ -110,7 +112,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHora = x.FechaHora,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                 Material = x.Material.Descripcion + "",
-                Localidad = x.Localidad.Nombre + ""
+                Localidad = x.Localidad.Nombre + "",
+                Campania = x.Campania.Descripcion + "",
+                CampaniaId = x.CampaniaId
             }, x => DbFunctions.TruncateTime(x.FechaHora) == hoy);
         }
 
@@ -182,6 +186,11 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Errores.Add(new ErrorMessage(400, "El campo Avance no debe estar vacío"));
             else if (researchAvanceSiembra.CambioAA == 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Cambio vs AA no debe estar vacío"));
+            else if (researchAvanceSiembra.CampaniaId <= 0)
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
+            }
             return error;
         }
 
@@ -208,12 +217,18 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Errores.Add(new ErrorMessage(400, "El campo Avance no debe estar vacío"));
             if (researchAvanceCosecha.Rendimiento == 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Rendimiento no debe estar vacío"));
+            if (researchAvanceCosecha.CampaniaId <= 0)
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
+            }
             return error;
         }
 
         private Resultado ValidarSituacionCultivo(ResearchSituacionCultivo researchSituacionCultivo)
         {
             var error = new Resultado();
+            
             if (researchSituacionCultivo.MaterialId == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
@@ -221,6 +236,23 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (researchSituacionCultivo.LocalidadId <= 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
+            if (String.IsNullOrEmpty(researchSituacionCultivo.Situacion))
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Situacion no debe estar vacío"));
+            }
+            if (researchSituacionCultivo.EstadioId <= 0)
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Estadío no debe estar vacío"));
+            }
+            if (researchSituacionCultivo.CampaniaId <= 0)
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
+            }
+            
+            
 
             return error;
         }
@@ -240,6 +272,11 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Errores.Add(new ErrorMessage(400, "El campo Almacenado no debe estar vacío"));
             if (researchVentaStock.VendidoAPrecio == 0)
                 error.Errores.Add(new ErrorMessage(400, "El campo Vendido a Precio no debe estar vacío"));
+            if (researchVentaStock.CampaniaId <= 0)
+            {
+
+                error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
+            }
             return error;
         }
 
@@ -258,7 +295,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHora = x.FechaHora,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                 Material = x.Material.Descripcion + "",
-                Localidad = x.Localidad.Nombre + ""
+                Localidad = x.Localidad.Nombre + "",
+                Campania = x.Campania.Descripcion + "",
+                CampaniaId = x.CampaniaId
             }, x => DbFunctions.TruncateTime(x.FechaHora) == hoy);
         }
 
@@ -325,7 +364,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHora = x.FechaHora,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                 Material = x.Material.Descripcion + "",
-                Localidad = x.Localidad.Nombre + ""
+                Localidad = x.Localidad.Nombre + "",
+                Campania = x.Campania.Descripcion + "",
+                CampaniaId = x.CampaniaId
             }, x => DbFunctions.TruncateTime(x.FechaHora) == hoy);
         }
 

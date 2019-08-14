@@ -72,6 +72,7 @@
     <Compile Include="Dto\GrabarAcuerdoResult.cs" />
     <Compile Include="Dto\NotificacionResearchDto.cs" />
     <Compile Include="Dto\LogDto.cs" />
+    <Compile Include="Dto\PricingCampaniaDto.cs" />
     <Compile Include="Dto\ResearchAvanceCosechaDto.cs" />
     <Compile Include="Dto\ResearchAvanceSiembraDto.cs" />
     <Compile Include="Dto\ResearchSituacionCultivoDto.cs" />

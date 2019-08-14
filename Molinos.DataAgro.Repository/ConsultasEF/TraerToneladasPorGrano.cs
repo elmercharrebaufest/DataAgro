@@ -83,7 +83,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var fason = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad, PosicionString= x.Posicion }).ToList();
-            foreach(var pos in fason)
+
+            foreach (var pos in fason)
             {
                 var mes = int.Parse(pos.PosicionString.Substring(0, 2));
                 var anio = int.Parse(pos.PosicionString.Substring(3, 4));
@@ -118,6 +119,27 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             toneladasPorGrano.Total = toneladasPorGrano.DispAFijar + toneladasPorGrano.DispAPrecio + toneladasPorGrano.DispFijac + toneladasPorGrano.DispFason +
             toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
             toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
+
+            var agente = contexto.Set<AgenteCompra>().Where(x => DbFunctions.TruncateTime(x.Fecha) == fechaHoy && DbFunctions.TruncateTime(x.Fecha) == fechaManana && (x.EstadoId == 2) && x.MaterialId == materialId && (centroId == 0 || centroId == 1) && calidad == null || (calidad == false))
+                .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, TipoNegocioId = 5, Cantidad = x.Cantidad, PosicionString = x.Posicion }).ToList();
+            foreach(var age in agente)
+            {
+                var pos = age.PosicionString.Split('.');
+                var fecha = new DateTime(int.Parse(pos[1]), int.Parse(pos[0]), 1);
+                var fechaNewCrop = new DateTime(DateTime.Now.AddYears(1).Year, materialId == 3 ? 4 : materialId == 1 ? 3 : 11, 1);
+
+                if (fecha >= fechaNewCrop)
+                {
+                    toneladasPorGrano.NewAgente += Math.Ceiling(age.Cantidad / 1000);
+                }
+                else if ((fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)) || (fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)) || (fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)))
+                {
+                    toneladasPorGrano.DispAgente += Math.Ceiling(age.Cantidad / 1000);
+                }
+                else { toneladasPorGrano.FrwAgente += Math.Ceiling(age.Cantidad / 1000); }
+            }
+
+            toneladasPorGrano.Total += toneladasPorGrano.NewAgente + toneladasPorGrano.DispAgente + toneladasPorGrano.FrwAgente;
 
             return toneladasPorGrano;
         }

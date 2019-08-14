@@ -13,6 +13,8 @@ namespace WebDataAgro.Models
         public int MaterialId { get; set; }
         public string MaterialDescripcion { get; set; }
         public int LocalidadId { get; set; }
+        public int CampaniaId { get; set; }
+        public string CampaniaDescripcion { get; set; }
         public string LocalidadNombre { get; set; }
         public int ComercialId { get; set; }
         public decimal IntencionSiembra { get; set; }
@@ -31,6 +33,8 @@ namespace WebDataAgro.Models
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public string MaterialDescripcion { get; set; }
+        public int CampaniaId { get; set; }
+        public string CampaniaDescripcion { get; set; }
         public int LocalidadId { get; set; }
         public string LocalidadNombre { get; set; }
         public int ComercialId { get; set; }
@@ -51,6 +55,8 @@ namespace WebDataAgro.Models
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public string MaterialDescripcion { get; set; }
+        public int CampaniaId { get; set; }
+        public string CampaniaDescripcion { get; set; }
         public string Estadio { get; set; }
         public int LocalidadId { get; set; }
         public string LocalidadNombre { get; set; }
@@ -70,6 +76,8 @@ namespace WebDataAgro.Models
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public string MaterialDescripcion { get; set; }
+        public int CampaniaId { get; set; }
+        public string CampaniaDescripcion { get; set; }
         public int LocalidadId { get; set; }
         public string LocalidadNombre { get; set; }
         public int ComercialId { get; set; }

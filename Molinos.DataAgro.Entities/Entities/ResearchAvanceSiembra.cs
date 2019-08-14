@@ -14,18 +14,20 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public int LocalidadId { get; set; }
+        public int CampaniaId { get; set; }
         public int ComercialId { get; set; }
         public decimal IntencionSiembra { get; set; }
         public decimal Avance { get; set; }
         public decimal CambioAA { get; set; }
         public string Observaciones { get; set; }
         public DateTime FechaHora { get; set; }
-
         [ForeignKey("ComercialId")]
         public Comercial Comercial { get; set; }
         [ForeignKey("LocalidadId")]
         public virtual Localidad Localidad { get; set; }
         [ForeignKey("MaterialId")]
-        public virtual Material Material { get; set; }
+        public virtual Material Material { get; set; }       
+        [ForeignKey("CampaniaId")]
+        public virtual Campaña Campania { get; set; }
     }
 }

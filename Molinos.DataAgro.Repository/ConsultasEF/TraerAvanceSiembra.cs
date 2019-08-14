@@ -36,7 +36,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Avance = research.Avance,
                     Comercial = research.Comercial.Nombres + " " + research.Comercial.Apellido,
                     FechaHora = DbFunctions.TruncateTime(research.FechaHora).Value,
-                    Observaciones = research.Observaciones
+                    Observaciones = research.Observaciones,
+                    Campania = research.Campania.Descripcion,
+                    CampaniaId = research.CampaniaId
                 };
             
             return new KendoGrid<ResearchAvanceSiembraDto>(request, query);

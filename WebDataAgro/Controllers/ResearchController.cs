@@ -19,12 +19,14 @@ namespace WebDataAgro.Controllers
         private readonly IResearchManager oResearchManager;
         private readonly IMaterialManager oMaterialManager;
         private readonly IEstadioManager oEstadioManager;
+        private readonly ICampañaManager oCampañaManager;
 
-        public ResearchController(IResearchManager oResearchManager, IMaterialManager oMaterialManager, IEstadioManager oEstadioManager)
+        public ResearchController(IResearchManager oResearchManager, IMaterialManager oMaterialManager, IEstadioManager oEstadioManager, ICampañaManager oCampañaManager)
         {
             this.oResearchManager = oResearchManager;
             this.oMaterialManager = oMaterialManager;
             this.oEstadioManager = oEstadioManager;
+            this.oCampañaManager = oCampañaManager;
         }
         // GET: ResearchAvanceSiembra
         public ActionResult Index()
@@ -175,7 +177,9 @@ namespace WebDataAgro.Controllers
                 Avance = researchAvanceSiembraModel.Avance,
                 CambioAA = researchAvanceSiembraModel.CambioAA,
                 Observaciones = researchAvanceSiembraModel.Observaciones,
-                FechaHora = researchAvanceSiembraModel.FechaHora
+                FechaHora = researchAvanceSiembraModel.FechaHora,
+                CampaniaId = researchAvanceSiembraModel.CampaniaId
+                
             };
             return researchAvanceSiembra;
         }
@@ -191,7 +195,8 @@ namespace WebDataAgro.Controllers
                 RangoDesde = researchAvanceCosechaModel.RangoDesde,
                 RangoHasta = researchAvanceCosechaModel.RangoHasta,
                 Observaciones = researchAvanceCosechaModel.Observaciones,
-                FechaHora = researchAvanceCosechaModel.FechaHora
+                FechaHora = researchAvanceCosechaModel.FechaHora,
+                CampaniaId = researchAvanceCosechaModel.CampaniaId
             };
             return researchAvanceCosecha;
         }
@@ -205,7 +210,9 @@ namespace WebDataAgro.Controllers
                 EstadioId = researchSituacionCultivoModel.EstadioId,
                 Situacion = researchSituacionCultivoModel.Situacion,
                 Observaciones = researchSituacionCultivoModel.Observaciones,
-                FechaHora = researchSituacionCultivoModel.FechaHora
+                FechaHora = researchSituacionCultivoModel.FechaHora,
+                CampaniaId = researchSituacionCultivoModel.CampaniaId
+
             };
             return researchSituacionCultivo;
         }
@@ -218,7 +225,8 @@ namespace WebDataAgro.Controllers
                 Almacenado = researchVentaStockModel.Almacenado,
                 VendidoAPrecio = researchVentaStockModel.VendidoAPrecio,
                 Observaciones = researchVentaStockModel.Observaciones,
-                FechaHora = researchVentaStockModel.FechaHora
+                FechaHora = researchVentaStockModel.FechaHora,
+                CampaniaId = researchVentaStockModel.CampaniaId
             };
             return researchVentaStock;
         }
@@ -238,7 +246,10 @@ namespace WebDataAgro.Controllers
                     Avance = i.Avance,
                     CambioAA = i.CambioAA,
                     Observaciones = i.Observaciones,
-                    FechaHora = i.FechaHora
+                    FechaHora = i.FechaHora,
+                    CampaniaId = i.CampaniaId,
+                    CampaniaDescripcion = i.Campania
+                     
                 };
                 lista.Add(researchAvanceSiembraModel);
 
@@ -260,7 +271,9 @@ namespace WebDataAgro.Controllers
                     Situacion = i.Situacion,
                     Estadio = i.Estadio,
                     Observaciones = i.Observaciones,
-                    FechaHora = i.FechaHora
+                    FechaHora = i.FechaHora,
+                    CampaniaId = i.CampaniaId,
+                    CampaniaDescripcion = i.Campania
                 };
                 lista.Add(researchSituacionCultivoModel);
 
@@ -284,7 +297,9 @@ namespace WebDataAgro.Controllers
                     RangoDesde = i.RangoDesde,
                     RangoHasta = i.RangoHasta,
                     Observaciones = i.Observaciones,
-                    FechaHora = i.FechaHora
+                    FechaHora = i.FechaHora,
+                    CampaniaId = i.CampaniaId,
+                    CampaniaDescripcion = i.Campania
                 };
                 lista.Add(researchAvanceCosechaModel);
 
@@ -306,7 +321,9 @@ namespace WebDataAgro.Controllers
                     Almacenado = i.Almacenado,
                     VendidoAPrecio = i.VendidoAPrecio,
                     Observaciones = i.Observaciones,
-                    FechaHora = i.FechaHora
+                    FechaHora = i.FechaHora,
+                    CampaniaId = i.CampaniaId,
+                    CampaniaDescripcion = i.Campania
                 };
                 lista.Add(researchVentaStockModel);
 
@@ -327,8 +344,22 @@ namespace WebDataAgro.Controllers
             return Json(listaEstadios, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult TraerCampañaPorMaterial(int materialId)
+        {
+            var campania = oCampañaManager.TraerCampañaPorMaterial(materialId);
+            var listaCampanias = campania.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.CampañaId.ToString(),
+                        Selected = false
+                    });
+            return new JsonResult { Data = listaCampanias, MaxJsonLength = Int32.MaxValue };
+        }
+
         private void FillViewBag()
         {
+            
             var material = oMaterialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
@@ -341,6 +372,9 @@ namespace WebDataAgro.Controllers
 
             var estadiosListItems = new List<SelectListItem>();
             ViewBag.Estadio = estadiosListItems;
+
+            var campaniaListItems = new List<SelectListItem>();
+            ViewBag.Campania = campaniaListItems;
 
             var situacion = new List<SelectListItem>() {
                 new SelectListItem { Text= "Malo", Value= "Malo", Selected = false },

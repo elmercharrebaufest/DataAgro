@@ -32,6 +32,7 @@
             <table class="tabla-historial table">
                 <tr>
                     <th>Cultivo</th>
+                    <th>Campaña</th>
                     <th>Localidad</th>
                     <th>Avance %</th>
                     <th>Cambio vs AA(%)</th>
@@ -43,6 +44,7 @@
                 {
             <tr>
                 <td>@Html.DisplayFor(model => mat.Material)</td>
+                <td>@Html.DisplayFor(model => mat.Campania)</td>
                 <td>@Html.DisplayFor(model => mat.Localidad)</td>
                 <td class="text-right">@Html.DisplayFor(model => mat.Avance)</td>
                 <td class="text-right">@Html.DisplayFor(model => mat.CambioAA)</td>
@@ -51,7 +53,7 @@
                 @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm tt");}
                 <td>@Html.DisplayFor(model => fecha)</td>
                 <td class="fin-dia">
-                    @Ajax.ActionLink(" ", "EliminarAvanceSiembra",  new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace } , new { @class = "fa fa-minus-circle danger" } )
+                    @Ajax.ActionLink(" ", "EliminarAvanceSiembra", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
                 </td>
             </tr>
                 }

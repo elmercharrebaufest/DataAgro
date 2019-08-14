@@ -20,5 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string Localidad { get; set; }
         public string Material { get; set; }
+        public int CampaniaId { get; set; }
+        public string Campania { get; set; }
     }
 }

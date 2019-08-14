@@ -404,6 +404,80 @@ namespace Molinos.DataAgro.Business.Managers
             };
             return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, posicionTrigoCalidad };
         }
+        public List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, int centroId)
+        {
+            var negocio = repositorio.Listar<Contrato, PricingCampaniaDto>(x => new PricingCampaniaDto
+            {
+                Id = x.ContratoId,
+                Campania = x.Campana.Descripcion,
+                CampaniaId = x.CampanaId,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Pricing = x.Cantidad
+            }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 && 
+            (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId==0 || centroId==x.DestinoId));
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
+            {
+                Id = x.FijacionDePrecioContratoId,
+                Campania = x.Campana.Descripcion,
+                CampaniaId = x.CampanaId,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId.Value,
+                Pricing = x.Cantidad
+            }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
+                && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
+            var fasones = repositorio.Listar<Fason, PricingCampaniaDto>(x => new PricingCampaniaDto
+            {
+                Id = x.Id,
+                Campania = x.Campana.Descripcion,
+                CampaniaId = x.CampanaId,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Pricing = x.Cantidad
+            }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
+                    && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+            var agentes = repositorio.Listar<AgenteCompra, PricingCampaniaDto>(x => new PricingCampaniaDto
+            {
+                Id = x.Id,
+                Campania = x.Posicion,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Pricing = x.Cantidad
+            }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
+                && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+            var pricing = new List<PricingCampaniaDto>();
+            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Descripcion = x.Descripcion,Campana=x.Campaña.Descripcion });
+
+            negocio.Concat(fijaciones).Concat(fasones);
+            foreach (var neg in negocio)
+            {
+                var campania = materiales.FirstOrDefault(x => x.MaterialId == neg.MaterialId);
+                neg.Campania = campania.CampañaId < neg.CampaniaId ? "New Crop" : campania.Campana;
+            }
+            foreach (var agente in agentes)
+            {
+                var campania = materiales.FirstOrDefault(x => x.MaterialId == agente.MaterialId);
+                var fechaNewCrop = new DateTime(DateTime.Now.AddYears(1).Year, agente.MaterialId == 3 ? 4 : agente.MaterialId == 1 ? 3 : 11, 1);
+                var posicion = agente.Campania.Split('.');
+                agente.Campania = fechaNewCrop < new DateTime(int.Parse(posicion[1]), int.Parse(posicion[0]),1)? "New Crop" : campania.Campana;
+            }
+            var group = negocio.Concat(agentes).GroupBy(x => new { x.Campania, x.Material });
+            foreach (var e in group)
+            {
+                var price = new PricingCampaniaDto
+                {
+                    Id= (e.Key.Campania=="New Crop"?20:10) + e.Select(x => x.MaterialId).FirstOrDefault(),
+                    Campania = e.Key.Campania,
+                    CampaniaId = e.Select(x=>x.CampaniaId).FirstOrDefault(),
+                    Material = e.Key.Material,
+                    MaterialId = e.Select(x=>x.MaterialId).FirstOrDefault(),
+                    Pricing = Math.Ceiling(e.Sum(x => x.Pricing)/1000)
+                };
+                pricing.Add(price);
+            }
+            return pricing.OrderBy(x=>x.Id).ToList();
+        }
+
         public List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
         {
             var moneda = repositorio.ListarConsulta(new TraerMonedaKilo(fechaDesde, fechaHasta, centroId));
@@ -477,6 +551,7 @@ namespace Molinos.DataAgro.Business.Managers
             var listaAgentes = new List<AgenteCompraDto>();
             if (fechaDesde == fechaHasta)
             {
+                var precioDolar = tipoDeCambio.TraerTipoDeCambio();
                 fechaDesde = fechaDesde.Date;
                 var agentes = repositorio.Listar<AgenteCompra>(x => DbFunctions.TruncateTime(x.Fecha) == fechaDesde && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, x.TipoAgenteCompraId });
                 foreach (var agentesPorPosicionYMaterial in agentes)
@@ -496,6 +571,7 @@ namespace Molinos.DataAgro.Business.Managers
                         agenteTemp.MaterialDesc = agente.Material.Descripcion;
                         agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
                         agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
+                        agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x =>(x.MonedaId.Contains("ARP")? x.Precio/precioDolar:x.Precio )* (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
                     }
                     listaAgentes.Add(agenteTemp);
                 }

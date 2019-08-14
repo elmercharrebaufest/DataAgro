@@ -40,7 +40,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MaterialId = ventaStock.MaterialId,
                     Observaciones = ventaStock.Observaciones,
                     Almacenado = ventaStock.Almacenado,
-                    VendidoAPrecio = ventaStock.VendidoAPrecio
+                    VendidoAPrecio = ventaStock.VendidoAPrecio,
+                    Campania = ventaStock.Campania.Descripcion,
+                    CampaniaId = ventaStock.CampaniaId
                 };
 
 

@@ -40,7 +40,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MaterialId = situacion.MaterialId,
                     Observaciones = situacion.Observaciones,
                     Estadio = situacion.Estadio.Descripcion,
-                    Situacion = situacion.Situacion
+                    Situacion = situacion.Situacion,
+                    Campania = situacion.Campania.Descripcion,
+                    CampaniaId = situacion.CampaniaId
+
                 };
 
 

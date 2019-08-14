@@ -21,5 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Partido { get; set; }
         public string Material { get; set; }
         public string Estadio { get; set; }
+        public int CampaniaId { get; set; }
+        public string Campania { get; set; }
     }
 }

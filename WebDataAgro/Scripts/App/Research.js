@@ -39,7 +39,31 @@ function LimpiarForm () {
         value: null,
         text: "Seleccione Estadío"
     }));
-
+    var campaniaAvanceSiembraSelect = $("#CampaniaAvanceSiembraId");
+    campaniaAvanceSiembraSelect.empty();
+    campaniaAvanceSiembraSelect.append($('<option/>', {
+        value: null,
+        text: "Seleccione Campaña"
+    }));
+    var campaniaSituacionCultivoSelect = $("#CampaniaSituacionCultivoId");
+    campaniaSituacionCultivoSelect.empty();
+    campaniaSituacionCultivoSelect.append($('<option/>', {
+        value: null,
+        text: "Seleccione Campaña"
+    }));
+    var campaniaVentaStockSelect = $("#CampaniaVentaStockId");
+    campaniaVentaStockSelect.empty();
+    campaniaVentaStockSelect.append($('<option/>', {
+        value: null,
+        text: "Seleccione Campaña"
+    }));
+    var campaniaAvanceCosechaSelect = $("#CampaniaAvanceCosechaId");
+    campaniaAvanceCosechaSelect.empty();
+    campaniaAvanceCosechaSelect.append($('<option/>', {
+        value: null,
+        text: "Seleccione Campaña"
+    }));
+    
 }
 
 $(".cancelar").click(function () {
@@ -197,14 +221,24 @@ function InicializarElementos() {
 
 $("#MaterialSituacionCultivoId").change(function () {
     var materialId = $("#MaterialSituacionCultivoId").val();
+    var campaniaSelect = $("#CampaniaSituacionCultivoId");
     var estadioSelect = $("#EstadioId");
+    campaniaSelect.empty();
     estadioSelect.empty();
+
     if (materialId != null && materialId != '') {
         var estadio = MSExecuteOnServer('/Research/TraerEstadio', { materialId: materialId });
         estadioSelect.append($('<option/>', {
             value: null,
             text: "Seleccione Estadío"
         }));
+
+        var campania = MSExecuteOnServer('/Research/TraerCampañaPorMaterial', { materialId: materialId });
+        campaniaSelect.append($('<option/>', {
+            value: null,
+            text: "Seleccione Campaña"
+        }));
+
         if (estadio != null && !jQuery.isEmptyObject(estadio)) {            
             $.each(estadio, function (index, estadio) {
                 estadioSelect.append($('<option/>', {
@@ -213,8 +247,89 @@ $("#MaterialSituacionCultivoId").change(function () {
                 }));
             });
         }
+
+        if (campania != null && !jQuery.isEmptyObject(campania)) {
+            $.each(campania, function (index, campania) {
+                campaniaSelect.append($('<option/>', {
+                    value: campania.Value,
+                    text: campania.Text
+                }));
+            });
+        }
     }
 });   
+
+$("#MaterialAvanceCosechaId").change(function () {
+    var materialId = $("#MaterialAvanceCosechaId").val();
+    var campaniaSelect = $("#CampaniaAvanceCosechaId");
+    
+    campaniaSelect.empty();
+    
+    if (materialId != null && materialId != '') {
+        var campaniaAvance = MSExecuteOnServer('/Research/TraerCampañaPorMaterial', { materialId: materialId });
+        campaniaSelect.append($('<option/>', {
+            value: null,
+            text: "Seleccione Campaña"
+        }));
+
+        if (campaniaAvance != null && !jQuery.isEmptyObject(campaniaAvance)) {
+            $.each(campaniaAvance, function (index, campaniaAvance) {
+                campaniaSelect.append($('<option/>', {
+                    value: campaniaAvance.Value,
+                    text: campaniaAvance.Text
+                }));
+            });
+        }
+    }
+});  
+
+$("#MaterialAvanceSiembraId").change(function () {
+    var materialId = $("#MaterialAvanceSiembraId").val();
+    var campaniaSelect = $("#CampaniaAvanceSiembraId");
+
+    campaniaSelect.empty();
+
+    if (materialId != null && materialId != '') {
+        var campania = MSExecuteOnServer('/Research/TraerCampañaPorMaterial', { materialId: materialId });
+        campaniaSelect.append($('<option/>', {
+            value: null,
+            text: "Seleccione Campaña"
+        }));
+
+        if (campania != null && !jQuery.isEmptyObject(campania)) {
+            $.each(campania, function (index, campania) {
+                campaniaSelect.append($('<option/>', {
+                    value: campania.Value,
+                    text: campania.Text
+                }));
+            });
+        }
+    }
+});  
+
+$("#MaterialVentaStockId").change(function () {
+    var materialId = $("#MaterialVentaStockId").val();
+    var campaniaSelect = $("#CampaniaVentaStockId");
+
+    campaniaSelect.empty();
+
+    if (materialId != null && materialId != '') {
+        var campania = MSExecuteOnServer('/Research/TraerCampañaPorMaterial', { materialId: materialId });
+        campaniaSelect.append($('<option/>', {
+            value: null,
+            text: "Seleccione Campaña"
+        }));
+
+        if (campania != null && !jQuery.isEmptyObject(campania)) {
+            $.each(campania, function (index, campania) {
+                campaniaSelect.append($('<option/>', {
+                    value: campania.Value,
+                    text: campania.Text
+                }));
+            });
+        }
+    }
+}); 
 
 function AutocompleteProcedenciaCosecha() {
     $("#LocalidadCosecha").click(function () {

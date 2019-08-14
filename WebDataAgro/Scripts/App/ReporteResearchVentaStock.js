@@ -67,6 +67,7 @@ function CreateGrid() {
                     }]
                 }, width: 130, template: "#=Material#"
             },
+            { field: "Campania", title: "Campaña" },
             { field: "VendidoAPrecio", title: "Vendido a Precio" },
             { field: "Almacenado", title: "Almacenado" },
             { field: "Comercial", title: "Comercial" },

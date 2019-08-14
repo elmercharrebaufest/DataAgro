@@ -9,6 +9,7 @@ namespace WebDataAgro.Models
         public ReporteSojaSustDto SojaSustentable { get; set; }
         public List<PosicionComprasDto> PosicionCompras { get; set; }
         public List<PrecioCantidadDto> PrecioCantidad { get; set; }
+        public List<PricingCampaniaDto> PricingCampania { get; set; }
         public List<HedgeMaterialModel> HedgeMaterial { get; set; }
         public HedgeCargaObjetivoDto HedgeObjetivo { get; set; }
         public HedgeTCPromedioDto TCPromedioDto { get; set; }

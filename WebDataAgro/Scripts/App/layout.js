@@ -92,6 +92,10 @@ function mobile() {
         $(".nav-text4").removeClass("dropdown-toggle");
         $(".nav-text4").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#negocios");
         $("#negocios").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
+
+        $(".nav-text5").removeClass("dropdown-toggle");
+        $(".nav-text5").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#research");
+        $("#research").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
     } else {
         $(".nav-text1").addClass("dropdown-toggle");
         $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
@@ -108,6 +112,10 @@ function mobile() {
         $(".nav-text4").addClass("dropdown-toggle");
         $(".nav-text4").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
         $("#negocios").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
+
+        $(".nav-text5").addClass("dropdown-toggle");
+        $(".nav-text5").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
+        $("#research").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
 
     }
     if (window.innerWidth < 768) {

@@ -42,7 +42,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Observaciones = avance.Observaciones,
                     RangoDesde = avance.RangoDesde,
                     RangoHasta = avance.RangoHasta,
-                    Rendimiento = avance.Rendimiento
+                    Rendimiento = avance.Rendimiento,
+                    Campania = avance.Campania.Descripcion,
+                    CampaniaId = avance.CampaniaId
                 };
 
 
