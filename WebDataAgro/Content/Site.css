@@ -102,16 +102,7 @@ li {
     border-radius:50px!important;
     vertical-align: text-top;
 }
-.nav-text1 {
-    font-size:16px;
-}
-.nav-text2 {
-    font-size: 16px;
-}
-.nav-text3 {
-    font-size: 16px;
-}
-.nav-text4 {
+.nav-text1, .nav-text2, .nav-text3, .nav-text4, .nav-text5, .nav-text6 {
     font-size: 16px;
 }
 .left {
