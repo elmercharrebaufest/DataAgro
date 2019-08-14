@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Molinos.DataAgro.Business.Managers
 {
     public partial class EstadioManager : IEstadioManager
+
     {
         private readonly IRepositorio repositorio;
         public EstadioManager(IRepositorio repositorio)

@@ -21,20 +21,6 @@
                 @Html.TextBox("Partido", "", new { disabled = "disabled", @id = "PartidoVentaStock", @class = "form-control limpiar" })
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-2 col-md-2">
-                <label>Vendido a Precio %</label>
-            </div>
-            <div class="col-sm-3 col-md-4">
-                @Html.TextBoxFor(m => m.VendidoAPrecio, new { @class = "number-input w100 limpiar" })
-            </div>
-            <div class="col-sm-2 col-md-2">
-                <label>Almacenado %</label>
-            </div>
-            <div class="col-sm-3 col-md-4">
-                @Html.TextBoxFor(m => m.Almacenado, new { @class = "number-input w100  required-box required-box-parent limpiar" })
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-sm-2 col-md-2">
@@ -50,7 +36,22 @@
                 @Html.DropDownListFor(m => m.CampaniaId, new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione Campaña", new { @class = "form-control", @id = "CampaniaVentaStockId" })
             </div>
         </div>
-    
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Vendido a Precio %</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.VendidoAPrecio, new { @class = "number-input w100 limpiar" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Almacenado %</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.Almacenado, new { @class = "number-input w100  required-box required-box-parent limpiar" })
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-2 col-md-2">
                 <label>Observaciones</label>

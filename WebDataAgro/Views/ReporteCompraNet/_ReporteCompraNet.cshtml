@@ -272,12 +272,12 @@
                 <tr class="titulos agente">
                     <th>Producto</th>
                     <th>Posición</th>
+                    <th>Total</th>
+                    <th>Precio Ponderado</th>
                     @foreach (var op in Model.AgenteCompras.ListaOperadores)
                     {
                         <th>@op.OperadorDesc</th>
                     }
-                    <th>Total</th>
-                    <th>Precio Ponderado</th>
                 </tr>
                 @foreach (var agente in Model.AgenteCompras.ListaAgenteCompras)
                 {
@@ -286,13 +286,15 @@
                 <td>@agente.MaterialDesc</td>
 
                 <td>@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])</td>
+                <td>@agente.Operador.Sum(x => x.Cantidad).ToString("N0")</td>
+                <td>@agente.PrecioPonderado.ToString("N2")</td>
+
                 @foreach (var op in Model.AgenteCompras.ListaOperadores)
                 {
                     var cantidad = agente.Operador.Where(x => x.OperadorId == op.OperadorId).Select(x => x.Cantidad.ToString("N0")).FirstOrDefault();
                     <td> @(cantidad != null ? cantidad : "0") </td>
                 }
-                <td>@agente.Operador.Sum(x => x.Cantidad).ToString("N0")</td>
-                <td>@agente.PrecioPonderado.ToString("N2")</td>
+
             </tr>
                 }
             </table>

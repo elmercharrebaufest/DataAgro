@@ -20,26 +20,7 @@
                 @Html.TextBox("Partido", "", new { disabled = "disabled", @id = "PartidoCosecha", @class = "form-control limpiar partido" })
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-2 col-md-2">
-                <label>Rendimiento (Tn)</label>
-            </div>
-            <div class="col-sm-3 col-md-4">
-                @Html.TextBoxFor(m => m.Rendimiento, new { @class = "number-input w100 limpiar" })
-            </div>
-            <div class="col-sm-2 col-md-2">
-                <label>Rango Desde/Hasta</label>
-            </div>
-            <div class="col-sm-3 col-md-4">
-                <div class="col-xs-6" style="padding-left:0">
-                    @Html.TextBoxFor(m => m.RangoDesde, new { @class = "number w100 limpiar" })
-                </div>
-                <div class="col-xs-6" style="padding-right:0">
-                    @Html.TextBoxFor(m => m.RangoHasta, new { @class = "number w100 limpiar" })
-                </div>
-            </div>
-        </div>
-        
+
         <div class="row">
             <div class="col-sm-2 col-md-2">
                 <label>Cultivo</label>
@@ -53,14 +34,35 @@
             <div class="col-sm-3 col-md-4">
                 @Html.DropDownListFor(m => m.CampaniaId, new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione Campaña", new { @class = "form-control", @id = "CampaniaAvanceCosechaId" })
             </div>
-            
         </div>
+
         <div class="row">
             <div class="col-sm-2 col-md-2">
                 <label>Avance %</label>
             </div>
             <div class="col-sm-3 col-md-4">
                 @Html.TextBoxFor(m => m.Avance, new { @id = "AvanceCosecha", @class = "number-input w100  required-box required-box-parent limpiar" })
+            </div>
+
+            <div class="col-sm-2 col-md-2">
+                <label>Rendimiento (Tn)</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.Rendimiento, new { @class = "number-input w100 limpiar" })
+            </div>            
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Rango Desde/Hasta</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                <div class="col-xs-6" style="padding-left:0">
+                    @Html.TextBoxFor(m => m.RangoDesde, new { @class = "number w100 limpiar" })
+                </div>
+                <div class="col-xs-6" style="padding-right:0">
+                    @Html.TextBoxFor(m => m.RangoHasta, new { @class = "number w100 limpiar" })
+                </div>
             </div>
             <div class="col-sm-2 col-md-2">
                 <label>Observaciones</label>
@@ -74,12 +76,12 @@
         <div id="row-botones-material">
             <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
             <button type="button" class="formulario-footer-cancelar k-button k-button-icontext cancelar">Cancelar</button>
-           
+
 
         </div>
-        
+
     }
-   
+
     <div id="listaAvanceCosecha">
         @Html.Partial("_ListaAvanceCosecha", Model)
     </div>

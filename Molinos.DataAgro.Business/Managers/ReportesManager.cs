@@ -459,14 +459,14 @@ namespace Molinos.DataAgro.Business.Managers
                 var campania = materiales.FirstOrDefault(x => x.MaterialId == agente.MaterialId);
                 var fechaNewCrop = new DateTime(DateTime.Now.AddYears(1).Year, agente.MaterialId == 3 ? 4 : agente.MaterialId == 1 ? 3 : 11, 1);
                 var posicion = agente.Campania.Split('.');
-                agente.Campania = fechaNewCrop < new DateTime(int.Parse(posicion[1]), int.Parse(posicion[0]),1)? "New Crop" : campania.Campana;
+                agente.Campania = fechaNewCrop <= new DateTime(int.Parse(posicion[1]), int.Parse(posicion[0]),1)? "New Crop" : campania.Campana;
             }
             var group = negocio.Concat(agentes).GroupBy(x => new { x.Campania, x.Material });
             foreach (var e in group)
             {
                 var price = new PricingCampaniaDto
                 {
-                    Id= (e.Key.Campania=="New Crop"?20:10) + e.Select(x => x.MaterialId).FirstOrDefault(),
+                    Id= e.Select(x => x.MaterialId).FirstOrDefault()*10+(e.Key.Campania=="New Crop"?2:1),
                     Campania = e.Key.Campania,
                     CampaniaId = e.Select(x=>x.CampaniaId).FirstOrDefault(),
                     Material = e.Key.Material,

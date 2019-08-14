@@ -147,7 +147,6 @@
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\AgenteCompraManager.cs" />
     <Compile Include="Managers\EstadioManager.cs" />
-    <Compile Include="Managers\IEstadioManger.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\ResearchManager.cs" />
     <Compile Include="Managers\ZonaManager.cs" />
