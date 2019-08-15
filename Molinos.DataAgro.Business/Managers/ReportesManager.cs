@@ -469,7 +469,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Id= e.Select(x => x.MaterialId).FirstOrDefault()*10+(e.Key.Campania=="New Crop"?2:1),
                     Campania = e.Key.Campania,
                     CampaniaId = e.Select(x=>x.CampaniaId).FirstOrDefault(),
-                    Material = e.Key.Material,
+                    Material = e.Key.Material== "Semilla de Soja"? "Soja" : e.Key.Material == "Maiz Duro Dentado" ? "Maiz":e.Key.Material,
                     MaterialId = e.Select(x=>x.MaterialId).FirstOrDefault(),
                     Pricing = Math.Ceiling(e.Sum(x => x.Pricing)/1000)
                 };

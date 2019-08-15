@@ -132,12 +132,12 @@ function CreateGridInformeCompraNetSituacion() {
         excelExport: function (e) {
             var stringFecha = kendo.toString(new Date, "dd/MM/yyyy");
             e.workbook.fileName = "Reporte Situacion Cultivo " + stringFecha + ".xlsx";
-        },
-        filterMenuInit: function (e) {
-            if (e.field === "Proveedor" || e.field === "Comercial" || e.field === "Provincia" || e.field === "Localidad") {
-                $(e.container).css("width", "300px");
-            } else {
-                $(e.container).css("width", "150px");
+            var sheet = e.workbook.sheets[0];
+            for (var i = 1; i < sheet.rows.length; i++) {
+                var row = sheet.rows[i];
+                var operacionFecha = row.cells[8].value;
+                operacionFecha.setHours(operacionFecha.getHours() + 1);
+                row.cells[8].value = operacionFecha;
             }
         }
     });
