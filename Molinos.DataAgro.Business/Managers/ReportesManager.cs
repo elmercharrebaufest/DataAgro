@@ -414,8 +414,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = x.Cantidad
-            }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 && 
-            (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId==0 || centroId==x.DestinoId));
+            }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 &&
+            (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.FijacionDePrecioContratoId,
@@ -446,9 +446,10 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
                 && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
-            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Descripcion = x.Descripcion,Campana=x.Campaña.Descripcion });
+            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Descripcion = x.Descripcion, Campana = x.Campaña.Descripcion });
 
-            negocio.Concat(fijaciones).Concat(fasones);
+            negocio.AddRange(fijaciones);
+            negocio.AddRange(fasones);
             foreach (var neg in negocio)
             {
                 var campania = materiales.FirstOrDefault(x => x.MaterialId == neg.MaterialId);
@@ -459,23 +460,24 @@ namespace Molinos.DataAgro.Business.Managers
                 var campania = materiales.FirstOrDefault(x => x.MaterialId == agente.MaterialId);
                 var fechaNewCrop = new DateTime(DateTime.Now.AddYears(1).Year, agente.MaterialId == 3 ? 4 : agente.MaterialId == 1 ? 3 : 11, 1);
                 var posicion = agente.Campania.Split('.');
-                agente.Campania = fechaNewCrop <= new DateTime(int.Parse(posicion[1]), int.Parse(posicion[0]),1)? "New Crop" : campania.Campana;
+                agente.Campania = fechaNewCrop <= new DateTime(int.Parse(posicion[1]), int.Parse(posicion[0]), 1) ? "New Crop" : campania.Campana;
             }
-            var group = negocio.Concat(agentes).GroupBy(x => new { x.Campania, x.Material });
+            negocio.AddRange(agentes);
+            var group = negocio.GroupBy(x => new { x.Campania, x.Material });
             foreach (var e in group)
             {
                 var price = new PricingCampaniaDto
                 {
-                    Id= e.Select(x => x.MaterialId).FirstOrDefault()*10+(e.Key.Campania=="New Crop"?2:1),
+                    Id = e.Select(x => x.MaterialId).FirstOrDefault() * 10 + (e.Key.Campania == "New Crop" ? 2 : 1),
                     Campania = e.Key.Campania,
-                    CampaniaId = e.Select(x=>x.CampaniaId).FirstOrDefault(),
-                    Material = e.Key.Material== "Semilla de Soja"? "Soja" : e.Key.Material == "Maiz Duro Dentado" ? "Maiz":e.Key.Material,
-                    MaterialId = e.Select(x=>x.MaterialId).FirstOrDefault(),
-                    Pricing = Math.Ceiling(e.Sum(x => x.Pricing)/1000)
+                    CampaniaId = e.Select(x => x.CampaniaId).FirstOrDefault(),
+                    Material = e.Key.Material == "Semilla de Soja" ? "Soja" : e.Key.Material == "Maiz Duro Dentado" ? "Maiz" : e.Key.Material,
+                    MaterialId = e.Select(x => x.MaterialId).FirstOrDefault(),
+                    Pricing = Math.Ceiling(e.Sum(x => x.Pricing) / 1000)
                 };
                 pricing.Add(price);
             }
-            return pricing.OrderBy(x=>x.Id).ToList();
+            return pricing.OrderBy(x => x.Id).ToList();
         }
 
         public List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
