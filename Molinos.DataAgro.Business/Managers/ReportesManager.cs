@@ -415,7 +415,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = x.Cantidad
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 &&
-            (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
+            (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId==null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.FijacionDePrecioContratoId,
@@ -443,13 +443,23 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = x.Cantidad
-            }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
+            }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
+                && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+            var acuerdo = repositorio.Listar<ContratoAcuerdo, PricingCampaniaDto>(x => new PricingCampaniaDto
+            {
+                Id = x.Id,
+                Campania = "17-18",
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Pricing = x.Cantidad
+            }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
                 && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Descripcion = x.Descripcion, Campana = x.Campaña.Descripcion });
 
             negocio.AddRange(fijaciones);
             negocio.AddRange(fasones);
+            negocio.AddRange(acuerdo);
             foreach (var neg in negocio)
             {
                 var campania = materiales.FirstOrDefault(x => x.MaterialId == neg.MaterialId);
@@ -688,7 +698,7 @@ namespace Molinos.DataAgro.Business.Managers
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
                 cont.ClasificacionNegocio =(fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :                
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :                
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :                
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(fijaciones);
@@ -719,7 +729,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var posicion = new DateTime(anio, mes, 1);
 
                 cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(fason);
