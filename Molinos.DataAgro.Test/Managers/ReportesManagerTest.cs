@@ -989,6 +989,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "a", Pricing = 1000, Material = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId=1, CampañaId=1,Campana="a",Descripcion="a"} });
 
