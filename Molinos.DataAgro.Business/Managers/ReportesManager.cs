@@ -381,7 +381,7 @@ namespace Molinos.DataAgro.Business.Managers
             var kilosPosicionMaiz = TraerPosicionMaterial(1, fechaDesde, fechaHasta, null, centroId);
             var posicionMaiz = new PosicionComprasDto
             {
-                Material = "Maíz",
+                Material = "Maiz",
                 MaterialId = 1,
                 PosicionKilos = kilosPosicionMaiz,
                 Total = kilosPosicionMaiz.Sum(x => x.Kilos)
@@ -413,7 +413,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampaniaId = x.CampanaId,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
-                Pricing = x.Cantidad
+                Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 &&
             (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId==null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -423,7 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampaniaId = x.CampanaId,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId.Value,
-                Pricing = x.Cantidad
+                Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
             var fasones = repositorio.Listar<Fason, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -433,7 +433,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampaniaId = x.CampanaId,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
-                Pricing = x.Cantidad
+                Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
                     && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var agentes = repositorio.Listar<AgenteCompra, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -442,7 +442,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Campania = x.Posicion,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
-                Pricing = x.Cantidad
+                Pricing = Math.Round(x.Cantidad / 1000)
             }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
                 && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var acuerdo = repositorio.Listar<ContratoAcuerdo, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -483,7 +483,7 @@ namespace Molinos.DataAgro.Business.Managers
                     CampaniaId = e.Select(x => x.CampaniaId).FirstOrDefault(),
                     Material = e.Key.Material == "Semilla de Soja" ? "Soja" : e.Key.Material == "Maiz Duro Dentado" ? "Maiz" : e.Key.Material,
                     MaterialId = e.Select(x => x.MaterialId).FirstOrDefault(),
-                    Pricing = Math.Ceiling(e.Sum(x => x.Pricing) / 1000)
+                    Pricing = Math.Round(e.Sum(x => x.Pricing) / 1000)
                 };
                 pricing.Add(price);
             }
@@ -681,7 +681,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))
-                && (centroId == 0 || centroId == 1));
+                && (centroId == 0 || centroId == x.DestinoId));
             foreach (var cont in fijaciones)
             {
                 var posicion = new DateTime();
@@ -835,16 +835,16 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             Anio = x.Key.Anio,
                             Mes = x.Key.Mes,
-                            Kilos = x.Sum(y => Math.Ceiling(y.Kilos / 1000)),
-                            DispAFijar = x.Sum(y => Math.Ceiling(y.DispAFijar / 1000)),
-                            DispAPrecio = x.Sum(y => Math.Ceiling(y.DispAPrecio / 1000)),
-                            DispFijac = x.Sum(y => Math.Ceiling(y.DispFijac / 1000)),
-                            FrwAFijar = x.Sum(y => Math.Ceiling(y.FrwAFijar / 1000)),
-                            FrwAPrecio = x.Sum(y => Math.Ceiling(y.FrwAPrecio / 1000)),
-                            FrwFijac = x.Sum(y => Math.Ceiling(y.FrwFijac / 1000)),
-                            NewAFijar = x.Sum(y => Math.Ceiling(y.NewAFijar / 1000)),
-                            NewAPrecio = x.Sum(y => Math.Ceiling(y.NewAPrecio / 1000)),
-                            NewFijac = x.Sum(y => Math.Ceiling(y.NewFijac / 1000)),
+                            Kilos = Math.Round( x.Sum(y => y.Kilos / 1000)),
+                            DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
+                            DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
+                            DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),
+                            FrwAFijar = Math.Round(x.Sum(y => y.FrwAFijar / 1000)),
+                            FrwAPrecio = Math.Round(x.Sum(y => y.FrwAPrecio / 1000)),
+                            FrwFijac = Math.Round(x.Sum(y => y.FrwFijac / 1000)),
+                            NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
+                            NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
+                            NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
                             PrecioPonderado = x.Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderado / (decimal)x.Sum(f => f.CantidadPonderada)) : 0
                         }).ToList();
             return posicionKilos;
