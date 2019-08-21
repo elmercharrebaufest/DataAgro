@@ -159,7 +159,9 @@
                     </tr>
                     @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
                     {
-                        if (toneladaPrecio.Total > 0)
+                        if ((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente > 0)
+                            ||((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + toneladaPrecio.FrwAgente>0 ))
+                            ||((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + toneladaPrecio.NewAgente>0)))
                         {
                             <tr>
                                 <th class="borde-izquierdo">@toneladaPrecio.Material</th>

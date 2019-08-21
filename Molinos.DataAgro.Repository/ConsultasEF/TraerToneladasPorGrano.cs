@@ -52,12 +52,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
 
 
-            toneladasPorGrano.DispAFijar =Math.Floor( posicion.Where(x => x.TipoNegocioId == 1 && (x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion))).Sum(y => y.Cantidad/1000));
-            toneladasPorGrano.DispAPrecio = Math.Floor(posicion.Where(x => x.TipoNegocioId == 2 && (x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion))).Select(y => y.Cantidad/1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.FrwAFijar = Math.Floor(posicion.Where(x => x.TipoNegocioId == 1 && x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.FrwAPrecio = Math.Floor(posicion.Where(x => x.TipoNegocioId == 2 && x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.NewAFijar = Math.Floor(posicion.Where(x => x.TipoNegocioId == 1 && x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.NewAPrecio = Math.Floor(posicion.Where(x => x.TipoNegocioId == 2 && x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.DispAFijar =Math.Round( posicion.Where(x => x.TipoNegocioId == 1 && (x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion))).Sum(y => y.Cantidad/1000));
+            toneladasPorGrano.DispAPrecio = Math.Round(posicion.Where(x => x.TipoNegocioId == 2 && (x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion))).Select(y => y.Cantidad/1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.FrwAFijar = Math.Round(posicion.Where(x => x.TipoNegocioId == 1 && x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.FrwAPrecio = Math.Round(posicion.Where(x => x.TipoNegocioId == 2 && x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.NewAFijar = Math.Round(posicion.Where(x => x.TipoNegocioId == 1 && x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.NewAPrecio = Math.Round(posicion.Where(x => x.TipoNegocioId == 2 && x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
 
 
             var fijaciones = contexto.Set<FijacionDePrecioContrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.TrigoEspecial == calidad)) && (centroId == 0 || centroId == x.DestinoId))
@@ -77,9 +77,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
                 }
             }
-            toneladasPorGrano.DispFijac = Math.Floor(fijaciones.Where(x => x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.FrwFijac = Math.Floor(fijaciones.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.NewFijac = Math.Floor(fijaciones.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.DispFijac = Math.Round(fijaciones.Where(x => x.MaterialCampanaId > x.CampanaId || (x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.FrwFijac = Math.Round(fijaciones.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.NewFijac = Math.Round(fijaciones.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
 
             var fason = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || (calidad != null && x.Especial == calidad)) && (centroId == 0 || centroId == 1))
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad, PosicionString= x.Posicion }).ToList();
@@ -91,9 +91,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 pos.Posicion = new DateTime(anio, mes, 1);
             }
 
-            toneladasPorGrano.DispFason = Math.Floor(fason.Where(x => x.MaterialCampanaId > x.CampanaId||( x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.FrwFason = Math.Floor(fason.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.NewFason = Math.Floor(fason.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.DispFason = Math.Round(fason.Where(x => x.MaterialCampanaId > x.CampanaId||( x.MaterialCampanaId == x.CampanaId && fechaPosicion >= x.Posicion)).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.FrwFason = Math.Round(fason.Where(x => x.MaterialCampanaId == x.CampanaId && fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.NewFason = Math.Round(fason.Where(x => x.MaterialCampanaId < x.CampanaId).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
 
             var acuerdos = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 5) && x.MaterialId == materialId && (calidad == null || !calidad.Value) && (0 == centroId || x.DestinoId == centroId))
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 4, Cantidad = x.Cantidad }).ToList();
@@ -112,8 +112,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
                 }
             }
-            toneladasPorGrano.DispFijac += Math.Floor(acuerdos.Where(x => fechaPosicion >= x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
-            toneladasPorGrano.FrwFijac += Math.Floor(acuerdos.Where(x => fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.DispFijac += Math.Round(acuerdos.Where(x => fechaPosicion >= x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
+            toneladasPorGrano.FrwFijac += Math.Round(acuerdos.Where(x => fechaPosicion < x.Posicion).Select(y => y.Cantidad / 1000).DefaultIfEmpty(0).Sum());
             
 
             toneladasPorGrano.Total = toneladasPorGrano.DispAFijar + toneladasPorGrano.DispAPrecio + toneladasPorGrano.DispFijac + toneladasPorGrano.DispFason +
@@ -138,9 +138,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }
                 else { toneladasPorGrano.FrwAgente += age.Cantidad; }
             }
-            toneladasPorGrano.NewAgente = Math.Floor(toneladasPorGrano.NewAgente / 1000);
-            toneladasPorGrano.FrwAgente = Math.Floor(toneladasPorGrano.FrwAgente / 1000);
-            toneladasPorGrano.DispAgente = Math.Floor(toneladasPorGrano.DispAgente / 1000);
+            toneladasPorGrano.NewAgente = Math.Round(toneladasPorGrano.NewAgente / 1000);
+            toneladasPorGrano.FrwAgente = Math.Round(toneladasPorGrano.FrwAgente / 1000);
+            toneladasPorGrano.DispAgente = Math.Round(toneladasPorGrano.DispAgente / 1000);
             toneladasPorGrano.Total += toneladasPorGrano.NewAgente + toneladasPorGrano.DispAgente + toneladasPorGrano.FrwAgente;
 
             return toneladasPorGrano;
