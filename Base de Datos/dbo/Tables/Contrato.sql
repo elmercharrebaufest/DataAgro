@@ -61,7 +61,7 @@
 	[PagoDiferido] BIT NULL,
 
 	[ZonaId] INT NULL,
-
+    [Dolarizado] BIT NULL, 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
     CONSTRAINT [FK_Contrato_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 

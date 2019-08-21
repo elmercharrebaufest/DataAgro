@@ -15,10 +15,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public double Cantidad { get; set; }
         public double CantidadPonderada { get; set; }
         public decimal Precio { get; set; }
+        public string MonedaId { get; set; }
         public int? TipoNegocioId { get; set; }
         public int? CampanaMaterialId { get; set; }
         public int? CampanaId { get; set; }
-        public decimal PrecioPesificado { get; set; }
         public string Posicion { get; set; }
         public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
     }

@@ -381,6 +381,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "Falta completar el rango de Granos Verdes");
                 }
             }
+            if(oParam.Dolarizado.HasValue&& oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
+            {
+                oErrorMessages.Error("dolarizado", "Se debe completar la fecha dolarizado cuando esta marcado dolarizado");
+            }
             return oErrorMessages;
         }
 

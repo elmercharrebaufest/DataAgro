@@ -210,18 +210,21 @@
             var aFijar = 3 - (dispAFijar ? 0 : 1) - (forwAFijar ? 0 : 1) - (newcAFijar ? 0 : 1);
             var aPrecio = 3 - (dispAPrecio ? 0 : 1) - (forwAPrecio ? 0 : 1) - (newcAPrecio ? 0 : 1);
             var suma = fix + aFijar + aPrecio;
-
+            var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos > 0) ? 1 : 0;
+            var pondDolares =material.PosicionKilos.Any(x => x.PrecioPonderadoDolares > 0) ? 1 : 0;
+            var pond = pondPesos + pondDolares;
             <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 @(suma <= 5? "col-md-6":"col-md-12") @(material.Total > 0? "":"hide")">
                 <table id="@material.Material.Replace(" ", "")" class="table table-condensed">
                     <tbody>
-                        <tr class="titulosPosicion"><th colspan="@(suma + 5)">@material.Material.ToUpper()</th></tr>
+                        <tr class="titulosPosicion"><th colspan="@(suma + pond + 4)">@material.Material.ToUpper()</th></tr>
                         <tr class="titulosPosicion @(suma>0?"":"hide")">
                             <th rowspan="2">Posición</th>
                             <th colspan="@fix" class="@(fix>0?"" :"hide") borde-izq-der">Fix</th>
                             <th colspan="@aFijar" class="@(aFijar>0?"" :"hide") borde-izq-der">A Fijar</th>
                             <th colspan="@aPrecio" class="@(aPrecio>0?"" :"hide") borde-izq-der">A Precio</th>
                             <th rowspan="2">Ton.</th>
-                            <th rowspan="2">$ Pond.</th>
+                            <th rowspan="2" class="@(pondPesos>0?"":"hide")">$ Pond.</th>
+                            <th rowspan="2" class="@(pondDolares>0?"":"hide")">USD Pond</th>
                             <th rowspan="2"></th>
                             <th rowspan="2"></th>
                         </tr>
@@ -240,52 +243,53 @@
                         @foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                         {
                             int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
-                            <tr>
-                                <td> @mes.Mes - @mes.Anio</td>
-                                <td class="@(dispFijacion? "":"hide") borde-izq-der">@mes.DispFijac.ToString("N0")</td>
-                                <td class="@(forwFijacion? "":"hide") borde-izq-der">@mes.FrwFijac.ToString("N0")</td>
-                                <td class="@(newcFijacion? "":"hide") borde-izq-der">@mes.NewFijac.ToString("N0")</td>
-                                <td class="@(dispAFijar? "":"hide") borde-izq-der">@mes.DispAFijar.ToString("N0")</td>
-                                <td class="@(forwAFijar? "":"hide") borde-izq-der">@mes.FrwAFijar.ToString("N0")</td>
-                                <td class="@(newcAFijar? "":"hide") borde-izq-der">@mes.NewAFijar.ToString("N0")</td>
-                                <td class="@(dispAPrecio? "":"hide") borde-izq-der">@mes.DispAPrecio.ToString("N0")</td>
-                                <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio.ToString("N0")</td>
-                                <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio.ToString("N0")</td>
-                                <td> @(mes.Kilos.ToString("N0"))</td>
-                                <td> @(mes.PrecioPonderado.Value.ToString("N0"))</td>
-                                <td>
-                                    <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
-                                        <span>
-                                            <i class="fa fa-file-excel-o"></i>
-                                        </span>
-                                    </a>
-                                    @*@Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") }, new { @class = "Descarga" })*@
-                                </td>
-                                <td>
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="abrirModalDetallePosicion" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()')">
-                                        <span>
-                                            <i class="fa fa-eye"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
+                    <tr>
+                        <td> @mes.Mes - @mes.Anio</td>
+                        <td class="@(dispFijacion? "":"hide") borde-izq-der">@mes.DispFijac.ToString("N0")</td>
+                        <td class="@(forwFijacion? "":"hide") borde-izq-der">@mes.FrwFijac.ToString("N0")</td>
+                        <td class="@(newcFijacion? "":"hide") borde-izq-der">@mes.NewFijac.ToString("N0")</td>
+                        <td class="@(dispAFijar? "":"hide") borde-izq-der">@mes.DispAFijar.ToString("N0")</td>
+                        <td class="@(forwAFijar? "":"hide") borde-izq-der">@mes.FrwAFijar.ToString("N0")</td>
+                        <td class="@(newcAFijar? "":"hide") borde-izq-der">@mes.NewAFijar.ToString("N0")</td>
+                        <td class="@(dispAPrecio? "":"hide") borde-izq-der">@mes.DispAPrecio.ToString("N0")</td>
+                        <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio.ToString("N0")</td>
+                        <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio.ToString("N0")</td>
+                        <td> @(mes.Kilos.ToString("N0"))</td>
+                        <td class="@(pondPesos>0?"":"hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
+                        <td class="@(pondDolares>0?"":"hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
+                        <td>
+                            <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
+                                <span>
+                                    <i class="fa fa-file-excel-o"></i>
+                                </span>
+                            </a>
+                            @*@Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") }, new { @class = "Descarga" })*@
+                        </td>
+                        <td>
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="abrirModalDetallePosicion" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()')">
+                                <span>
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
                         }
-                        <tr class="titulosPosicion total">
-                            <td class="@(dispFijacion? "":"hide")"></td>
-                            <td class="@(forwFijacion? "":"hide")"></td>
-                            <td class="@(newcFijacion? "":"hide")"></td>
-                            <td class="@(dispAFijar? "":"hide")"></td>
-                            <td class="@(forwAFijar? "":"hide")"></td>
-                            <td class="@(newcAFijar? "":"hide")"></td>
-                            <td class="@(dispAPrecio? "":"hide")"></td>
-                            <td class="@(forwAPrecio? "":"hide")"></td>
-                            <td class="@(newcAPrecio? "":"hide")"></td>
-                            <th>Total</th>
-                            <th>@material.Total.ToString("N0")</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                    <tr class="titulosPosicion total">
+                        <td class="@(dispFijacion? "":"hide")"></td>
+                        <td class="@(forwFijacion? "":"hide")"></td>
+                        <td class="@(newcFijacion? "":"hide")"></td>
+                        <td class="@(dispAFijar? "":"hide")"></td>
+                        <td class="@(forwAFijar? "":"hide")"></td>
+                        <td class="@(newcAFijar? "":"hide")"></td>
+                        <td class="@(dispAPrecio? "":"hide")"></td>
+                        <td class="@(forwAPrecio? "":"hide")"></td>
+                        <td class="@(newcAPrecio? "":"hide")"></td>
+                        <th>Total</th>
+                        <th>@material.Total.ToString("N0")</th>
+                        <td></td>
+                        <td colspan="@pond"></td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

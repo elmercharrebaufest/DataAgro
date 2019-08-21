@@ -616,7 +616,6 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad, int centroId = 0)
         {
-            var precioDolar = tipoDeCambio.TraerTipoDeCambio();
             var standard = calidad.HasValue && calidad.Value?2:1;
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
@@ -633,7 +632,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaMaterialId = x.Material.CampañaId,
                 CampanaId = x.CampanaId,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
+                MonedaId = x.MonedaId
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -674,7 +673,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampañaId,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
+                MonedaId = x.MonedaId
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -714,7 +713,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaId =x.CampanaId,
                 CampanaMaterialId = x.Material.CampañaId,
                 Posicion = x.Posicion,
-                PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
+                MonedaId = x.MonedaId
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -741,7 +740,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                PrecioPesificado = x.MonedaId == "ARP  " ? x.Precio : x.Precio * precioDolar
+                MonedaId = x.MonedaId
             },
                x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -789,7 +788,8 @@ namespace Molinos.DataAgro.Business.Managers
                     posKil.NewFijac= cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
                     posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
                     posKil.Anio = cont.FechaDesde.Year;
-                    posKil.PrecioPonderado = cont.PrecioPesificado * (decimal)cont.CantidadPonderada;
+                    posKil.PrecioPonderadoPesos =cont.MonedaId=="ARP  "? cont.Precio * (decimal)cont.CantidadPonderada:0;
+                    posKil.PrecioPonderadoDolares =cont.MonedaId== "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada:0;
                     posKil.CantidadPonderada = cont.CantidadPonderada;
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
@@ -807,7 +807,8 @@ namespace Molinos.DataAgro.Business.Managers
                     posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
                     posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
                     posKil.Anio = cont.FechaDesde.Year;
-                    posKil.PrecioPonderado = cont.PrecioPesificado * (decimal)cont.CantidadPonderada;
+                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
                     posKil.CantidadPonderada = cont.CantidadPonderada;
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
@@ -824,7 +825,8 @@ namespace Molinos.DataAgro.Business.Managers
                     posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
                     posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
                     posKil.Anio = cont.FechaHasta.Year;
-                    posKil.PrecioPonderado = cont.PrecioPesificado * (decimal)cont.CantidadPonderada;
+                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
                     posKil.CantidadPonderada = cont.CantidadPonderada;
                 }
                 posicionKilos.Add(posKil);

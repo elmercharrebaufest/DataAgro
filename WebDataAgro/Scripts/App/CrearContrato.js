@@ -1995,6 +1995,7 @@ function ObtenerDatos() {
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false; 
+    obj.Dolarizado = $("#dolarizadoId").is(":checked") ? true : false;
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
