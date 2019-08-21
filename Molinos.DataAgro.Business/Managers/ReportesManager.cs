@@ -847,7 +847,8 @@ namespace Molinos.DataAgro.Business.Managers
                             NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
                             NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
                             NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
-                            PrecioPonderado = x.Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderado / (decimal)x.Sum(f => f.CantidadPonderada)) : 0
+                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0
                         }).ToList();
             return posicionKilos;
         }
