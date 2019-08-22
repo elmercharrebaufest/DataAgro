@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month <= pos.FechaHasta.Month)
                 {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.AddMonths(+1).Month, 1);
+                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month > pos.FechaHasta.Month)
                 {
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month <= pos.FechaHasta.Month)
                 {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.AddMonths(+1).Month, 1);
+                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month > pos.FechaHasta.Month)
                 {
@@ -130,7 +130,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month <= pos.FechaHasta.Month)
                 {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.AddMonths(+1).Month, 1);
+                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (pos.FechaDesde.AddMonths(1).Month > pos.FechaHasta.Month)
                 {

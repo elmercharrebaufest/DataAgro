@@ -650,7 +650,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
                 {
-                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.AddMonths(+1).Month, 1);
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
                 {
@@ -690,7 +690,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
                 {
-                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.AddMonths(+1).Month, 1);
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
                 {
@@ -758,7 +758,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
                 {
-                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.AddMonths(+1).Month, 1);
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
                 {
@@ -946,7 +946,7 @@ namespace Molinos.DataAgro.Business.Managers
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == calidad))
-             && (centroId == 0 || centroId == 1)));
+             && (centroId == 0 || centroId == x.DestinoId)));
 
             contratos.AddRange(repositorio.Listar<Fason, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1167,16 +1167,21 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var fechaDesde = DateTime.Parse(cont.FechaDesde);
                 var fechaHasta = DateTime.Parse(cont.FechaHasta);
+                var posicion = new DateTime();
+                if ((DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) >= 10)
+                {
+                    posicion = new DateTime(fechaDesde.Year, fechaDesde.Month, 1);
+                }
+                else if (fechaDesde.AddMonths(1).Month <= fechaHasta.Month)
+                {
+                    posicion = new DateTime(fechaDesde.Year, fechaDesde.Month, 1).AddMonths(+1);
+                }
+                else if (fechaDesde.AddMonths(1).Month > fechaHasta.Month)
+                {
+                    posicion = new DateTime(fechaHasta.Year, fechaHasta.Month, 1);
+                }
                 var dato = new string[34];
-                if ((DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) >= 10 && fechaDesde.Month == mes && fechaDesde.Year == anio)
-                {
-                    retorno.Add(cont);
-                }
-                else if (fechaDesde.AddMonths(1).Month <= fechaHasta.Month && fechaDesde.AddMonths(1).Month == mes && fechaDesde.Year == anio && (DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) < 10)
-                {
-                    retorno.Add(cont);
-                }
-                else if (fechaDesde.AddMonths(1).Month > fechaHasta.Month && fechaHasta.Month == mes && fechaDesde.Year == anio && (DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) < 10)
+                if (posicion.Month == mes && posicion.Year == anio)
                 {
                     retorno.Add(cont);
                 }
