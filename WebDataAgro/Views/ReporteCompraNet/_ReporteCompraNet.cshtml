@@ -159,31 +159,34 @@
                     </tr>
                     @foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
                     {
-                        if ((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente > 0)
-                            ||((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + toneladaPrecio.FrwAgente>0 ))
-                            ||((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + toneladaPrecio.NewAgente>0)))
+                        var posicion = Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower());
+                        var totalDisp = posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente;
+                        var totalForw = posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + toneladaPrecio.FrwAgente;
+                        var totalNewC = posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + toneladaPrecio.NewAgente;
+
+                        if (totalDisp > 0 || totalForw > 0 || totalNewC > 0)
                         {
                             <tr>
                                 <th class="borde-izquierdo">@toneladaPrecio.Material</th>
-                                <td class="@(dispAFijar ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0"))</td>
-                                <td class="@(dispAPrecio ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0"))</td>
-                                <td class="@(dispFijacion ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0"))</td>
+                                <td class="@(dispAFijar ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0"))</td>
+                                <td class="@(dispAPrecio ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0"))</td>
+                                <td class="@(dispFijacion ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0"))</td>
                                 <td class="@(dispAgente ? "" : "hide")">@toneladaPrecio.DispAgente.ToString("N0")</td>
-                                <td class="@(disp==0?"hide":"") borde-derecho-oscuro">@(((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente).ToString("N0")))</td>
+                                <td class="@(totalDisp == 0 ? "hide" : "") borde-derecho-oscuro">@totalDisp.ToString("N0")</td>
 
-                                <td class="espacio @(disp==0?"hide":"")"></td>
-                                <td class="@(forwAFijar ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0"))</td>
-                                <td class="@(forwAPrecio ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0"))</td>
-                                <td class="@(forwFijacion ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0"))</td>
+                                <td class="espacio @(disp == 0 ? "hide" : "")"></td>
+                                <td class="@(forwAFijar ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0"))</td>
+                                <td class="@(forwAPrecio ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0"))</td>
+                                <td class="@(forwFijacion ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0"))</td>
                                 <td class="@(forwAgente ? "" : "hide")">@toneladaPrecio.FrwAgente.ToString("N0")</td>
-                                <td class="@(forw==0?"hide":"") borde-derecho-oscuro">@(((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + toneladaPrecio.FrwAgente).ToString("N0")))</td>
+                                <td class="@(totalForw == 0 ? "hide" : "") borde-derecho-oscuro">@totalForw.ToString("N0")</td>
 
-                                <td class="espacio @(forw==0?"hide":"")"> </td>
-                                <td class="@(newcAFijar ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0"))</td>
-                                <td class="@(newcAPrecio ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0"))</td>
-                                <td class="@(newcFijacion ? "" : "hide")">@(Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0"))</td>
+                                <td class="espacio @(forw == 0 ? "hide" : "")"> </td>
+                                <td class="@(newcAFijar ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0"))</td>
+                                <td class="@(newcAPrecio ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0"))</td>
+                                <td class="@(newcFijacion ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0"))</td>
                                 <td class="@(newcAgente ? "" : "hide")">@toneladaPrecio.NewAgente.ToString("N0")</td>
-                                <td class="@(newc==0?"hide":"") borde-derecho-oscuro">@(((Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower()).Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + toneladaPrecio.NewAgente).ToString("N0")))</td>
+                                <td class="@(totalNewC == 0 ? "hide" : "") borde-derecho-oscuro">@totalNewC.ToString("N0")</td>
 
                             </tr>
                         }
