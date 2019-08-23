@@ -28,6 +28,7 @@ namespace Molinos.DataAgro.Interfaces
         EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId);
 
         bool EsAdministrador(string activeDirectoryId);
+        bool EsCupera(string activeDirectoryId);
 
         EquipoDto ListarEquipo(string idActiveDirectory);
 

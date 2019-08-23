@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -237,6 +237,87 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string DiasPesificado {
             get {
                 return ResourceManager.GetString("DiasPesificado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La Cantidad no debe estar vacia.
+        /// </summary>
+        public static string Error_CantidadCupoRequerido {
+            get {
+                return ResourceManager.GetString("Error_CantidadCupoRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El Centro no debe estar vacio.
+        /// </summary>
+        public static string Error_CentroRequerido {
+            get {
+                return ResourceManager.GetString("Error_CentroRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La Fecha de Ingreso no debe estar vacio.
+        /// </summary>
+        public static string Error_FechaEntregaRequerido {
+            get {
+                return ResourceManager.GetString("Error_FechaEntregaRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Soporte correspondiente al mes de Julio 2019.
+        /// </summary>
+        public static string Error_FechaRequerido {
+            get {
+                return ResourceManager.GetString("Error_FechaRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debe elegir Flete.
+        /// </summary>
+        public static string Error_FleteRequerido {
+            get {
+                return ResourceManager.GetString("Error_FleteRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El Material no debe estar vacio.
+        /// </summary>
+        public static string Error_MaterialRequerido {
+            get {
+                return ResourceManager.GetString("Error_MaterialRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La Planta no debe estar vacia.
+        /// </summary>
+        public static string Error_PlantaRequerido {
+            get {
+                return ResourceManager.GetString("Error_PlantaRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El Proveedor no debe estar vacio.
+        /// </summary>
+        public static string Error_ProveedorRequerido {
+            get {
+                return ResourceManager.GetString("Error_ProveedorRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La Zona no debe estar vacia.
+        /// </summary>
+        public static string Error_ZonaRequerido {
+            get {
+                return ResourceManager.GetString("Error_ZonaRequerido", resourceCulture);
             }
         }
         

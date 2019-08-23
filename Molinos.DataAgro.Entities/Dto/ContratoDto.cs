@@ -5,6 +5,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class ContratoDto
     {
         public int ContratoId { get; set; } // ContratoId (Primary key)
+        public int NivelTarifaId { get; set; }
         public int MaterialId { get; set; } // MaterialId
         public int TipoNegocioId { get; set; } // TipoNegocioId
         public double Cantidad { get; set; } // Cantidad
@@ -54,6 +55,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ContratoAcuerdoId { get; set; }
         public bool? Pizarra { get; set; }
         public decimal? PrecioNeto { get; set; }
+        public int TarifaFlete { get; set; }
     }
 }
 

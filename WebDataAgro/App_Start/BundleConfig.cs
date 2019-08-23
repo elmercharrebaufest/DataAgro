@@ -116,6 +116,9 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/AbmZona").Include(
                                        "~/Scripts/App/AbmZona.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/AbmZonaCupo").Include(
+                                      "~/Scripts/App/AbmZonaCupo.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/AbmOperador").Include(
                                        "~/Scripts/App/AbmOperador.js"));
 
@@ -151,6 +154,10 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/ContratoIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/ReporteContrato.js"));
+            bundles.Add(new ScriptBundle("~/bundles/Cupos").Include(
+                             "~/Scripts/KendoExtensions.js",
+                             "~/Scripts/App/Cupo.js", 
+                             "~/Scripts/jquery.unobtrusive-ajax.js"));
             //------------------------
             bundles.Add(new ScriptBundle("~/bundles/Research").Include(
                                        "~/Scripts/KendoExtensions.js",
@@ -159,6 +166,10 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/Log").Include(
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/App/log.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/PrecioPizarra").Include(
+                                      "~/Scripts/KendoExtensions.js",
+                                      "~/Scripts/App/PrecioPizarra.js"));
             bundles.IgnoreList.Clear();
         }
     }

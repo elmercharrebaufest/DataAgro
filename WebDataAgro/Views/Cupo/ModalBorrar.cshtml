@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            </div>
+            <div id="BorrarDivVisualizar" class="campo clearfix">
+                <h3 class="espaciolineas">¿Está seguro que desea eliminar el cupo <span id="cupo_a_borrar"></span>?</h3>
+            </div>
+            <input type="hidden" id="cupoBorrar" />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="finalizarBorrar" class="myBtn btnSubmit" data-dismiss="modal">Si</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="cancelarBorrar" class="myBtn " data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

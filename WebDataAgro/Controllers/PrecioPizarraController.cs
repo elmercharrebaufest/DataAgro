@@ -1,0 +1,140 @@
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebDataAgro.Models;
+
+namespace WebDataAgro.Controllers
+{
+    public class PrecioPizarraController : Controller
+    {
+        private readonly IPrecioPizarraManager oPrecioPizarraManager;
+        private readonly IMaterialManager oMaterialManager;
+        private readonly IPizarraManager oPizarraManager;
+        private readonly IRepositorio repositorio;
+
+        public PrecioPizarraController(IRepositorio repositorio, IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
+        {
+            this.oPrecioPizarraManager = oPrecioPizarraManager;
+            this.oMaterialManager = oMaterialManager;
+            this.oPizarraManager = oPizarraManager;
+            this.repositorio = repositorio;
+        }
+        // GET: PrecioPizarra
+        public ActionResult Index()
+        {
+            FillViewBag();
+            return View("Index", new PrecioPizarraModel
+            {
+                Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
+                HistorialPrecioPizarra = new List<PrecioPizarraDto>()
+
+            });
+        }
+
+        [HttpPost]
+        public ActionResult GrabarPrecioPizarra(PrecioPizarraModel precioPizarraModel)
+        {
+           var precioPizarra = TransformarAEntidad(precioPizarraModel);
+           var resultado = oPrecioPizarraManager.GrabarPrecioPizarra((precioPizarra));
+
+           return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
+            {
+                Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
+                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId).OrderBy(x => x.FechaHasta).ToList(),
+                Resultado = resultado
+            }); 
+        }
+
+       
+        private PrecioPizarra TransformarAEntidad(PrecioPizarraModel precioPizarraModel)
+        {
+            var precioPizarra = new PrecioPizarra
+            {
+                Id = precioPizarraModel.Id,
+                MaterialId = precioPizarraModel.MaterialId,
+                FechaDesde = DateTime.ParseExact(precioPizarraModel.FechaDesde.ToString(), "dd-MM-yyyy", CultureInfo.InvariantCulture),
+                FechaHasta = DateTime.ParseExact(precioPizarraModel.FechaHasta.ToString(), "dd-MM-yyyy", CultureInfo.InvariantCulture),
+                PizarraId = precioPizarraModel.PizarraId,
+                Precio = precioPizarraModel.Precio,
+                MonedaId = precioPizarraModel.MonedaId,
+                UnidadMedida = precioPizarraModel.UnidadMedida
+
+            };
+            return precioPizarra;
+        }
+
+        private List<PrecioPizarraModel> TransformarAModel(List<PrecioPizarraDto> precioPizarra)
+        {
+            var lista = new List<PrecioPizarraModel>();
+            foreach (var i in precioPizarra)
+            {
+                var precioPizarraModel = new PrecioPizarraModel
+                {
+                    MaterialId = i.MaterialId,
+                    Id = i.Id,
+                    FechaDesde = i.FechaDesde.ToString(),
+                    FechaHasta = i.FechaHasta.ToString(),
+                    MonedaId = i.MonedaId,
+                    PizarraId = i.PizarraId,
+                    Precio = i.Precio,
+                    UnidadMedida = i.UnidadMedida
+
+                };
+                lista.Add(precioPizarraModel);
+
+            }
+            return lista;
+        }
+        public ActionResult BuscarPorPizarraYMaterial(int materialId, int pizarraId)
+        {
+            return new JsonResult()
+            {
+                Data = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(materialId, pizarraId).OrderBy(x => x.FechaHasta).ToList(),
+            };
+        }
+        private void FillViewBag()
+        {
+            var material = oMaterialManager.TraerTodoMaterial();
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+
+            var pizarra = oPizarraManager.TraerTodoPizarra();
+            var pizarraListItems = pizarra.Select(
+                x => new SelectListItem
+                {
+                    Text = x.Descripcion,
+                    Value = x.Id.ToString(),
+                    Selected = x.Codigo !="ROS" ?false :true
+                }).OrderBy(x => x.Value);
+            ViewBag.Pizarra = pizarraListItems;
+
+            var moneda = oPrecioPizarraManager.TraerTodoMoneda();
+
+            var monedaListItems = moneda.Select(
+                x => new SelectListItem
+                {
+                Text = x.Descripcion,
+                    Value = x.MonedaId.ToString(),
+                    Selected = false
+
+                }).OrderBy(x => x.Value);
+            ViewBag.Moneda = monedaListItems;
+        }
+
+    }
+}
+

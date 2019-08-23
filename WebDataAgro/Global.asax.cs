@@ -61,6 +61,7 @@ namespace WebDataAgro
             var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
             GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
+            GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
             GlobalVariables.Equipo = equipo.Equipo;
             GlobalVariables.EquipoReal = equipo.EquipoReal;
             GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
@@ -107,7 +108,17 @@ namespace WebDataAgro
                     HttpContext.Current.Session["esAdministrador"] = value;
                 }
             }
-
+            public static bool EsCupera
+            {
+                get
+                {
+                    return HttpContext.Current.Session["EsCupera"] as bool? ?? false;
+                }
+                set
+                {
+                    HttpContext.Current.Session["EsCupera"] = value;
+                }
+            }
             public static int ComercialId
             {
                 get
@@ -165,6 +176,7 @@ namespace WebDataAgro
                 get
                 {
                     return HttpContext.Current.User.Identity.Name;
+                    //return "molinosagro\\nunezml";
                 }
             }
 

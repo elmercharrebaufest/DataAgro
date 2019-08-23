@@ -74,6 +74,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EliminarCupoAgent.cs" />
+    <Compile Include="Helpers\CrearCupoAgent.cs" />
     <Compile Include="Helpers\TipoDeCambioAgent.cs" />
     <Compile Include="Helpers\ComprasAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
@@ -91,12 +93,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\AnularCupo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\Compras\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ContratosParaFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CrearCupo\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -152,6 +164,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AnulacionContratos\SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO.wsdl" />
+    <None Include="Service References\AnularCupo\Molinos.DataAgro.Agent.AnularCupo.SI_ZMPWS_DATAAGRO_ANULAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnularCupo\Molinos.DataAgro.Agent.AnularCupo.Z_MPRFC_ANULAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnularCupo\SI_ZMPWS_DATAAGRO_ANULAR_CUPOS1.wsdl" />
     <None Include="Service References\Compras\Molinos.DataAgro.Agent.Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -167,6 +186,13 @@
     </None>
     <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION.wsdl" />
     <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION1.wsdl" />
+    <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.SI_ZMPWS_DATAAGRO_CREAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.Z_MPRFC_CREAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrearCupo\SI_ZMPWS_DATAAGRO_CREAR_CUPOS1.wsdl" />
     <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -220,8 +246,10 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
+    <WCFMetadataStorage Include="Service References\AnularCupo\" />
     <WCFMetadataStorage Include="Service References\Compras\" />
     <WCFMetadataStorage Include="Service References\ContratosParaFijacion\" />
+    <WCFMetadataStorage Include="Service References\CrearCupo\" />
     <WCFMetadataStorage Include="Service References\DatosDelComercial\" />
     <WCFMetadataStorage Include="Service References\DatosDelProveedor\" />
     <WCFMetadataStorage Include="Service References\FinalizarContrato\" />
@@ -360,6 +388,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\TipoDeCambio\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

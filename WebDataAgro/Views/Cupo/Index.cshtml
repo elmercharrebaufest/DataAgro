@@ -1,0 +1,45 @@
+﻿@using Molinos.DataAgro.Entities.Common.Enums
+
+@{
+    ViewBag.Title = "Cupos";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/Cupos")
+}
+
+<script>
+    comercialId = '@ViewBag.comercialId';
+</script>
+@section Styles {
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+}
+
+@if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+{
+
+    <input type="hidden" id="perfil" value="@ViewBag.perfil" />
+    <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
+    <!--container-->
+    <div class="panelflotante">
+        <div class="row">
+            <div class="float-left">
+                <span id="crearCupo" class="btnAzul btn-block" type="button">
+                    <i class="fa fa-file-o"></i>
+                    Crear Nuevo Cupo
+                </span>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div id="cupos">
+        <div class="row" id="nuevotab">
+            <div class="col-xs-12">
+                <div id="gridCupo"></div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal Borrar-->
+@Html.Partial("ModalBorrar")

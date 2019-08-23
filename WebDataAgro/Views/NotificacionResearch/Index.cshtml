@@ -12,9 +12,10 @@
 @section Scripts{
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 }
-
-<h3>Notificaciones Research</h3>
-<div id="notificaciones">
-    @Html.Action("NotificacionesPartial", "NotificacionResearch", new { hedgeMaterial = Model })
+<div class="container">
+    <h3>Notificaciones Research</h3>
+    <br />
+    <div id="notificaciones">
+        @Html.Action("NotificacionesPartial", "NotificacionResearch", new { hedgeMaterial = Model })
+    </div>
 </div>
-

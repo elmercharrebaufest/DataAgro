@@ -448,41 +448,38 @@ function ShowModalAgente() {
 function CargarComboCentro() {
     var href = window.location.href;
     href = href + "/ObtenerCentros";
-    $.get(href, function (data) { CrearCombo(data, "centroId"); });
-    return false;
-}
+    $.get(href, function (data) {
+        $("#centroId").kendoDropDownList({
+            dataSource: {
+                data: JSON.parse(data),
+                type: JSON,
+                schema: {
+                    data: "data"
+                }
+            },
+            optionLabel: {
+                Descripcion: "TODOS",
+                Id: "0"
+            },
+            dataTextField: "Descripcion",
+            dataValueField: "Id",
+            change: function (e) {
+                var fechaString = $("#fecha").val();
+                var fechaHastaString = $("#fechaHasta").val();
+                $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId());
+            },
+            dataBound: setearValoresComboDeInicio
+        });
 
-
-function CrearCombo(data, idElemento) {
-    $("#" + idElemento).kendoDropDownList({
-        dataSource: {
-            data: JSON.parse(data),
-            type: JSON,
-            schema: {
-                data: "data"
+        $("#centroId").closest('.k-dropdown.k-widget').keydown(function (e) {
+            if (e.keyCode == 46) {
+                var dropdownlist = $("#centroId").data("kendoDropDownList");
+                dropdownlist.text("");
             }
-        },
-        optionLabel: {
-            Descripcion: "TODOS",
-            Id: "0"
-        },
-        dataTextField: "Descripcion",
-        dataValueField: "Id",
-        change: function (e) {
-            var fechaString = $("#fecha").val();
-            var fechaHastaString = $("#fechaHasta").val();
-            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId());
-        },
-        dataBound: setearValoresComboDeInicio
-    });
-
-    $("#" + idElemento).closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#" + idElemento).data("kendoDropDownList");
-            dropdownlist.text("");
-        }
+        });
     });
 }
+
 
 function setearValoresComboDeInicio() {
     url = $('#descargaReporte').attr('href');

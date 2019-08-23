@@ -33,7 +33,7 @@ function LimpiarForm () {
     $("#MaterialVentaStockId").val("");
     $("#MaterialSituacionCultivoId").val("");
     $("#SituacionId").val("");
-    var estadioSelect = $("#EstadioId")
+    var estadioSelect = $("#EstadioId");
     estadioSelect.empty();
     estadioSelect.append($('<option/>', {
         value: null,
@@ -207,7 +207,7 @@ function InicializarElementos() {
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0,
+        min: 0
     });
     $(".number-negativo").kendoNumericTextBox({
         culture: "es-AR",
@@ -215,7 +215,7 @@ function InicializarElementos() {
         value: " ",
         decimals: 0,
         restrictDecimals: true,
-        spinners: false,
+        spinners: false
     });
 }
 

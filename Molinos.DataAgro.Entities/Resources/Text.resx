@@ -177,6 +177,33 @@
   <data name="DiasPesificado" xml:space="preserve">
     <value>Días Pesificado</value>
   </data>
+  <data name="Error_CantidadCupoRequerido" xml:space="preserve">
+    <value>La Cantidad no debe estar vacia</value>
+  </data>
+  <data name="Error_CentroRequerido" xml:space="preserve">
+    <value>El Centro no debe estar vacio</value>
+  </data>
+  <data name="Error_FechaEntregaRequerido" xml:space="preserve">
+    <value>La Fecha de Ingreso no debe estar vacio</value>
+  </data>
+  <data name="Error_FechaRequerido" xml:space="preserve">
+    <value>Soporte correspondiente al mes de Julio 2019</value>
+  </data>
+  <data name="Error_FleteRequerido" xml:space="preserve">
+    <value>Debe elegir Flete</value>
+  </data>
+  <data name="Error_MaterialRequerido" xml:space="preserve">
+    <value>El Material no debe estar vacio</value>
+  </data>
+  <data name="Error_PlantaRequerido" xml:space="preserve">
+    <value>La Planta no debe estar vacia</value>
+  </data>
+  <data name="Error_ProveedorRequerido" xml:space="preserve">
+    <value>El Proveedor no debe estar vacio</value>
+  </data>
+  <data name="Error_ZonaRequerido" xml:space="preserve">
+    <value>La Zona no debe estar vacia</value>
+  </data>
   <data name="EstablecimientoPropio" xml:space="preserve">
     <value>Establecimiento</value>
   </data>

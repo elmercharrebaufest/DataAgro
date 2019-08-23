@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
         {
             var oEntityErrors = new GrabarAcuerdoResult();
-            var oContratoSave = repositorio.Obtener<AgenteCompra>(oAcuerdo.Id);
+            var oContratoSave = repositorio.Obtener<ContratoAcuerdo>(oAcuerdo.Id);
 
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
             {
@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "El campo Moneda es obligatorio");
             }
-            if (oContratoAcuerdo.FechaHasta.ToString() == "1/1/0001 12:00:00 AM")
+            if (oContratoAcuerdo.FechaHasta == new DateTime())
             {
                 oEntityErrors.Error("", "La fecha es obligatoria");
             }
@@ -234,11 +234,11 @@ namespace Molinos.DataAgro.Business
 
         public Resultado ConfirmarContratoAcuerdo(int id)
         {
-
             var oEntityErrors = new Resultado();
 
             var contrato = repositorio.Obtener<ContratoAcuerdo>(id);
             contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
+
             logger.Debug("Confirmando el ContratoAcuerdo:" + id);
             try
             {
@@ -276,7 +276,7 @@ namespace Molinos.DataAgro.Business
             {
                 if (oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
-                    oEntityErrors.Error("", "El Acuerdo ya se encuentra Finalizadao");
+                    oEntityErrors.Error("", "El Acuerdo ya se encuentra Finalizado");
                 }
                 else if (oAcuerdoSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
                 {

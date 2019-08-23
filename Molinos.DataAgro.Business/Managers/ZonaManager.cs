@@ -81,7 +81,7 @@ namespace Molinos.DataAgro.Business
                 throw;
             }
 
-            logger.Debug("Guardando el centro:" + oZona.Descripcion);
+            logger.Debug("Guardando:" + oZona.Descripcion);
 
             return oEntityErrors;
         }
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Business
 
             repositorio.Remover<Zona>(id);
 
-            logger.Debug("Eliminando el centro:" + id);
+            logger.Debug("Eliminando:" + id);
             try
             {
                 repositorio.GuardarCambios();

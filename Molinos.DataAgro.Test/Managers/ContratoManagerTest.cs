@@ -260,15 +260,13 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
-            repositorioMock.Setup(y => y.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<Expression<Func<RangoConfirmacionAutomatica, DateTime>>>()))
+            repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<Expression<Func<RangoConfirmacionAutomatica, DateTime>>>()))
                     .Returns(new RangoConfirmacionAutomatica() { MaterialId = 1, MonedaId = "ARS ", PrecioMinimo = 1, PrecioMaximo = 2000 });
 
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-
         }
-
 
         [Test]
         public void UpdateContratoOk()

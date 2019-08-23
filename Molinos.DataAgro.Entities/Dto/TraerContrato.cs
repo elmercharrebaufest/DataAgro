@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Cuit { get; set; }
         public int ContratoId { get; set; }
         public int MaterialId { get; set; }
+        public int? NivelTarifaId { get; set; }
         public int TipoNegocioId { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
@@ -26,6 +27,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? Fecha { get; set; }
         public string FechaFormateado { get; set; }
         public string Hora { get; set; }
+
+        public string NivelTarifa { get; set; }
+        public decimal? TarifaFlete { get; set; }
         public int GrupoCompra { get; set; }
         public string GrupoCompraDescripcion { get; set; }
         public int? ComercialId { get; set; }
@@ -51,6 +55,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
         public string Material { get; set; }
+        
         public string Campania { get; set; }
         public string Provincia { get; set; }
         public string Localidad { get; set; }
@@ -128,7 +133,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ImporteRedespacho { get; set; }
         public decimal? ImporteComision { get; set; }
         public decimal? ImporteBonificacion { get; set; }
-        public decimal? PorcentajeBonificacion { get; set; }        
+        public decimal? PorcentajeBonificacion { get; set; }     
+        public bool? Compensacion { get; set; }
     }
 
     public class StoredPorContratoResult

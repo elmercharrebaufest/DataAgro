@@ -120,6 +120,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />
+    <Compile Include="Controllers\ContratoAcuerdoControllerTest.cs" />
+    <Compile Include="Controllers\PrecioPizarraControllerTest.cs" />
+    <Compile Include="Controllers\ResearchControllerTest.cs" />
     <Compile Include="Controllers\ZonaControllerTest.cs" />
     <Compile Include="Controllers\OperadorControllerTest.cs" />
     <Compile Include="Controllers\ErrorControllerTest.cs" />
@@ -147,11 +151,20 @@
     <Compile Include="Controllers\CentroControllerTest.cs" />
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
+    <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
     <Compile Include="Managers\CampañaManagerTest.cs" />
     <Compile Include="Managers\CampaniaMaterialManagerTest.cs" />
     <Compile Include="Managers\CampaniaActualManagerTest.cs" />
     <Compile Include="Managers\AgenteCompraManagerTest.cs" />
     <Compile Include="Managers\AreaInfluenciaManagerTest.cs" />
+    <Compile Include="Managers\ComercialManagerTest.cs" />
+    <Compile Include="Managers\EstadioManagerTest.cs" />
+    <Compile Include="Managers\CupoManagerTest.cs" />
+    <Compile Include="Managers\ConfiguracionCupoManagerTest.cs" />
+    <Compile Include="Managers\ContratoAcuerdoManagerTest.cs" />
+    <Compile Include="Managers\PrecioPizarraManagerTest.cs" />
+    <Compile Include="Managers\ResearchManagerTest.cs" />
+    <Compile Include="Managers\ZonaCupoManagerTest.cs" />
     <Compile Include="Managers\ZonaManagerTest.cs" />
     <Compile Include="Managers\DestinatarioManagerTest.cs" />
     <Compile Include="Managers\CondicionManagerTest.cs" />

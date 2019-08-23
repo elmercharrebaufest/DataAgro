@@ -173,7 +173,7 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new Resultado();
             if (researchAvanceSiembra.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
 
             }
             if (researchAvanceSiembra.LocalidadId <= 0)
@@ -200,7 +200,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (researchAvanceCosecha.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
 
             }
             if (researchAvanceCosecha.LocalidadId <= 0)
@@ -231,7 +231,7 @@ namespace Molinos.DataAgro.Business.Managers
             
             if (researchSituacionCultivo.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
 
             }
             if (researchSituacionCultivo.LocalidadId <= 0)
@@ -261,7 +261,7 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new Resultado();
             if (researchVentaStock.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El Material no puede estar vacio"));
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
                
             }
             if (researchVentaStock.LocalidadId <= 0)

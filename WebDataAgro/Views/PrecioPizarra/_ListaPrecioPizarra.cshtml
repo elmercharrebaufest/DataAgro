@@ -1,0 +1,61 @@
+﻿@model WebDataAgro.Models.PrecioPizarraModel
+
+
+
+<div id="formulario" class="table-container">
+
+    @if (Model.Resultado != null && Model.Resultado.HayError)
+    {
+        if (Model.Resultado.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0]
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.Resultado.Errores[0]
+            </div>
+            <script>LimpiarForm()</script>
+        }
+    }
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialCosecha" onclick="mostrarocultar('#mostrarPrecioPizarra')">
+            <span class="historial">Historial</span> <span id="mostrarPrecioPizarra" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialCosecha" class="collapse tabla-research table-responsive">
+            <table id="historico-pizarra" class="tabla-historial table table-striped centrar">
+                @if (Model.HistorialPrecioPizarra.Count > 0)
+                {
+                    <tr>
+                        <th>Pizarra</th>
+                        <th>Fecha Desde</th>
+                        <th>Fecha Hasta</th>
+                        <th>Precio</th>
+                        <th>Moneda</th>
+                        <th>Unidad de Medida</th>
+                        <th>Material</th>
+                    </tr>
+                    foreach (var mat in Model.HistorialPrecioPizarra)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => mat.Pizarra)</td>
+                            <td>@Html.DisplayFor(model => mat.FechaDesde)</td>
+                            <td>@Html.DisplayFor(model => mat.FechaHasta)</td>
+                            <td>@Html.DisplayFor(model => mat.Precio)</td>
+                            <td>@Html.DisplayFor(model => mat.Moneda)</td>
+                            <td>@Html.DisplayFor(model => mat.UnidadMedida)</td>
+                            <td>@Html.DisplayFor(model => mat.Material)</td>
+                        </tr>
+                    }}
+            </table>
+        </div>
+    </div>
+</div>
+

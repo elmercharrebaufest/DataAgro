@@ -28,6 +28,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<TipoAgenteCompraQry> TipoAgenteCompra { get; set; }
         public List<OperadorQry> Operador { get; set; }
         public List<ZonaQry> Zona { get; set; }
+        public List<NivelTarifaQry> NivelTarifa { get; set; }
 
 
         public DatosIniContrato()
@@ -52,6 +53,7 @@ namespace Molinos.DataAgro.Entities.Dto
             TipoFason = new List<TipoFasonQry>();
             TipoAgenteCompra = new List<TipoAgenteCompraQry>();
             Zona = new List<ZonaQry>();
+            NivelTarifa = new List<NivelTarifaQry>();
         }
     }
 

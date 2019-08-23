@@ -59,8 +59,10 @@
     [PrecioNeto] DECIMAL(11, 2) NULL, 
     [StandardDeCalidadId] INT NULL, 
 	[PagoDiferido] BIT NULL,
-
 	[ZonaId] INT NULL,
+	[NivelTarifaId] INT NULL,
+	[TarifaFlete] DECIMAL(11,2) NULL,
+	[Compensacion] BIT NULL,
     [Dolarizado] BIT NULL, 
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
@@ -80,5 +82,6 @@
 	CONSTRAINT [FK_Contrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
 	CONSTRAINT [FK_Contrato_ContratoAcuerdo] FOREIGN KEY (ContratoAcuerdoId) REFERENCES [ContratoAcuerdo]([Id]),
 	CONSTRAINT [FK_Contrato_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad]([Id]),
-	CONSTRAINT [FK_Contrato_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id])
+	CONSTRAINT [FK_Contrato_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id]),
+	CONSTRAINT [FK_Contrato_NivelTarifa] FOREIGN KEY (NivelTarifaId) REFERENCES [NivelTarifa]([Id])
 )

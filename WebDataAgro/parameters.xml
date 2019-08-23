@@ -166,6 +166,19 @@
                            /endpoint[@name='HTTP_Port9']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port10 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port10']
+                           /@address" />
+  </parameter>
+  <parameter name="HTTP_Port11 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port11']
+                           /@address" />
+  </parameter>
+  
   <parameter name="ServiceUser Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServiceUser']

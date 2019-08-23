@@ -218,7 +218,7 @@
                                 }
                                 <li>
                                     <a href="~/Zona" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Zona
+                                        <i class="icon-bar-chart"></i> Zona Calidad Girasol
                                     </a>
                                 </li>
 
@@ -237,6 +237,19 @@
                                     <li>
                                         <a href="/NotificacionResearch" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Notificaciones Research
+                                        </a>
+                                    </li>
+                                }
+                                @if (global_asax.GlobalVariables.EsCupera)
+                                {
+                                    <li>
+                                        <a href="~/ZonaCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Zona Cupos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/ConfiguracionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuracion Cupos
                                         </a>
                                     </li>
                                 }
@@ -269,6 +282,19 @@
                             </ul>
                         </li>
                     }
+                    @if (global_asax.GlobalVariables.EsCupera)
+                    {
+                        <li class="dropdown">
+                            <a onclick="return false" id="cupos-a" class="dropdown-toggle nav-text6 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Cupos <span class="caret"></span></a>
+                            <ul class="dropdown-menu opacidad" id="cupos">
+                                <li>
+                                    <a href="~/Cupo" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Cupos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
                     @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
                     {
                         <li class="dropdown">
@@ -284,7 +310,7 @@
                                         <i class="icon-bar-chart"></i> Reporte Research
                                     </a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                     }

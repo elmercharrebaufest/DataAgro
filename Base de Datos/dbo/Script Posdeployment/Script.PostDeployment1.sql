@@ -96,9 +96,9 @@ IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Situación de cul
 IF NOT EXISTS (select 1 from TipoResearch where Descripcion = 'Ventas y Stock') BEGIN insert into TipoResearch (Descripcion) values ('Ventas y Stock'); END
 
 --Nivel Tarifa
---IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado provisorio') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado provisorio','Z01'); END
---IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado confirmado') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado confirmado','Z02'); END
---IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Real') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Real','Z03'); END
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado provisorio') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado provisorio','Z01'); END
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Estimado confirmado') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Estimado confirmado','Z02'); END
+IF NOT EXISTS (select 1 from NivelTarifa where Descripcion = 'Real') BEGIN insert into NivelTarifa (Descripcion,CodigoSap) values ('Real','Z03'); END
 
 --Estadío
 IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Emergencia' AND MaterialId = 1) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Emergencia', 1); END
@@ -144,6 +144,27 @@ IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Llenado de granos' AND
 IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Madurez' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Madurez', 5); END
 IF NOT EXISTS (select 1 from Estadio where Descripcion = 'Cosecha' AND MaterialId = 5) BEGIN insert into Estadio (Descripcion, MaterialId) values ('Cosecha', 5); END
 
+--Zona Cupo
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'CBA' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('CORREDOR BS AS', 'CBA'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'CRO' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('CORREDOR ROSARIO', 'CRO'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'FAS' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('Fasones CAGSA/MOLCA, YPF y AMAGGI', 'FAS'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'MAT' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('MAT-ROFEX', 'MAT'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'OIC' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('ORIG INTERIOR CENTRO', 'OIC'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'OIN' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('ORIG INTERIOR NORTE', 'OIN'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'OIS' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('ORIG INTERIOR SUR', 'OIS'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'PPR' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('PRODUCCION PROPIA', 'PPR'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'RED' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('REDESPACHOS', 'RED'); END
+IF NOT EXISTS (select 1 from ZonaCupo where CodigoSap = 'SOL' ) BEGIN insert into ZonaCupo (Descripcion, CodigoSap) values ('SOLIDARIDAD', 'SOL'); END
+--Pizarra
 
+IF NOT EXISTS (select 1 from Pizarra where Descripcion = 'ROSARIO') BEGIN insert into Pizarra(Descripcion, Codigo) values ('ROSARIO', 'ROS'); END
+IF NOT EXISTS (select 1 from Pizarra where Descripcion = 'BAHIA BLANCA') BEGIN insert into Pizarra(Descripcion, Codigo) values ('BAHIA BLANCA', 'BBA'); END
+IF NOT EXISTS (select 1 from Pizarra where Descripcion = 'DARSENA') BEGIN insert into Pizarra(Descripcion, Codigo) values ('DARSENA', 'DAR'); END
+IF NOT EXISTS (select 1 from Pizarra where Descripcion = 'QUEQUEN') BEGIN insert into Pizarra(Descripcion, Codigo) values ('QUEQUEN', 'QQ'); END
 
-
+--EstadoContrato
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin CTG') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Sin CTG', 1); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Activado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Activado', 2); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Arribado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Arribado', 3); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Descargado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Descargado', 4); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Anulado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Anulado', 5); END

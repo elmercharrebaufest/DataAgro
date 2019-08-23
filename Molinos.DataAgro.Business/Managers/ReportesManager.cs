@@ -837,7 +837,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             Anio = x.Key.Anio,
                             Mes = x.Key.Mes,
-                            Kilos = Math.Round( x.Sum(y => y.Kilos / 1000)),
+                            Kilos = Math.Round(x.Sum(y => y.Kilos / 1000)),
                             DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
                             DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
                             DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),

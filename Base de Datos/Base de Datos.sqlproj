@@ -245,6 +245,8 @@
     <Build Include="dbo\Tables\ContratoAcuerdo.sql" />
     <Build Include="dbo\Tables\AperturaPrecio.sql" />
     <Build Include="dbo\Tables\ConceptoAperturaPrecio.sql" />
+    <Build Include="dbo\Tables\ZonaCupo.sql" />
+    <Build Include="dbo\Tables\Cupo.sql" />
     <Build Include="dbo\Tables\Partido.sql" />
     <Build Include="dbo\Tables\ResearchAvanceSiembra.sql" />
     <Build Include="dbo\Tables\ResearchAvanceCosecha.sql" />
@@ -253,7 +255,13 @@
     <Build Include="dbo\Tables\NotificacionResearch.sql" />
     <Build Include="dbo\Tables\TipoResearch.sql" />
     <Build Include="dbo\Tables\Log.sql" />
+    <Build Include="dbo\Tables\NivelTarifa.sql" />
     <Build Include="dbo\Tables\Estadio.sql" />
+    <Build Include="dbo\Tables\Pizarra.sql" />
+    <Build Include="dbo\Tables\PrecioPizarra.sql" />
+    <Build Include="dbo\Tables\ConfiguracionCupo.sql" />
+    <Build Include="dbo\Tables\LimiteCupo.sql" />
+    <Build Include="dbo\Tables\EstadoCupo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

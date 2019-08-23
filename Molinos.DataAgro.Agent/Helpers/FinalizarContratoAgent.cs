@@ -196,7 +196,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
                         CONTRATO_MADRE = contrato.ContratoMadre ?? "",
                         CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "",
-                        ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap:""
+                        ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap:"",
+                        COMPENSACION = contrato.Compensacion == true ? "X" : "",
+                        FLETE_NIVEL = contrato.NivelTarifa!= null? contrato.NivelTarifa.CodigoSap : "" ,
+                        FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

@@ -268,6 +268,7 @@ function UpdateViewModel(model) {
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         "Administrador": model.Comercial.Administrador,
+        "Cupera":model.Comercial.Cupera
     };
 
     viewModel.set("Comercial", comercial);
@@ -428,6 +429,7 @@ function Grabar() {
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
         "Administrador": viewModel.get("Comercial.Administrador"),
+        "Cupera": viewModel.get("Comercial.Cupera")
     };
 
     var result = MSExecuteOnServer('/Comercial/Grabar', datos);

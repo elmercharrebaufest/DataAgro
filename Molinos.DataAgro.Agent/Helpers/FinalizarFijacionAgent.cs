@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var log = new Log
                     {
-                        Fecha = DateTime.Now.Date,
+                        Fecha = DateTime.Now,
                         Xml = rq.ToXml()
                     };
 

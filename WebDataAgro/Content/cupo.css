@@ -1,0 +1,132 @@
+﻿.cupo-input {
+    background-color: #fff;
+    color: #787878;
+    width: 100%;
+    height: 1.94em;
+    padding: .167em 0;
+    text-indent: .8em;
+}
+.form-control {
+    margin-bottom: 6px;
+    display: inline-block;
+    color: #787878;
+    font-size: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    text-indent: .8em;
+}
+.w100 {
+    width:100%
+}
+.w95 {
+    width: 95%;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
+}
+.close {
+    width: 20px;
+    height: 20px;
+    background-image: url('images/cancelar.png') !important;
+}
+.alert {
+    border-radius: 5px !important;
+}
+#gridCupo {
+    font-size: 12px;
+    overflow-x: auto;
+}
+
+.pend { /*icons*/
+    color: #ffc100;
+}
+
+#gridCupo td button {
+    border: 0;
+    margin: 5px;
+    padding: 0;
+    background-color: transparent;
+    color: #aaa;
+    font-size: 23px;
+}
+
+.flete-procedencia {
+    background-color: #ffe5aa;
+}
+.btnAzul {
+    background-color: #26337B;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px !important;
+}
+.btnAzul:hover {
+    background-color: #151f52;
+    cursor: pointer;
+}
+
+.myBtn {
+    width: 100%;
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400 !important;
+    background-color: #fff;
+}
+    .myBtn:hover, .myBtn:active {
+        color: #FFF;
+        background: #017940;
+        border-color: #017940;
+    }
+
+.espaciolineas {
+    line-height: 1.6;
+}
+
+.campo h3 {
+    float: left;
+    margin: 0;
+    font-weight: 700;
+    padding-top: 3px;
+    font-size: 14px;
+    margin: 5px 0 0;
+}
+.modal-content {
+    border-radius: 0 !important;
+    padding: 10px 15px 15px 15px;
+}
+
+#gridCupo td .status,
+#gridCupo td .status:hover {
+    /*background:#787878;*/
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 1px 5px 1px 8px;
+    /*border-right: 6px solid;*/
+    font-weight: 700;
+    text-align: right;
+    /*color: #4c4b4b;*/
+    margin-bottom: 3px;
+    line-height: 1.2em;
+}
+
+.status.sinctg {
+    background-color: #ffc100;
+    color: #000000;
+}
+.status.anulado {
+    background-color: #848484;
+    color: #fff;
+}
+.anu { /*icons*/
+    color: #848484;
+}

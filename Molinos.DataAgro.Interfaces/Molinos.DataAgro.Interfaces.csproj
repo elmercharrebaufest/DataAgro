@@ -112,6 +112,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IEliminarCupoAgent.cs" />
+    <Compile Include="Agent\ICrearCupoAgent.cs" />
     <Compile Include="Agent\ITipoDeCambioAgent.cs" />
     <Compile Include="Agent\IComprasAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionAgent.cs" />
@@ -132,7 +134,12 @@
     <Compile Include="Managers\IAgenteCompraManager.cs" />
     <Compile Include="Managers\IEstadioManager.cs" />
     <Compile Include="Managers\ILogManager.cs" />
+    <Compile Include="Managers\IPizarraManager.cs" />
+    <Compile Include="Managers\IPrecioPizarraManager.cs" />
+    <Compile Include="Managers\IConfiguracionCupoManager.cs" />
     <Compile Include="Managers\IResearchManager.cs" />
+    <Compile Include="Managers\ICupoManager.cs" />
+    <Compile Include="Managers\IZonaCupoManager.cs" />
     <Compile Include="Managers\IZonaManager.cs" />
     <Compile Include="Managers\IContratoAcuerdoManager.cs" />
     <Compile Include="Managers\IFasonManager.cs" />

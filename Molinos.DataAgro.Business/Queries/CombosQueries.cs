@@ -54,6 +54,16 @@ namespace Molinos.DataAgro.Business
             }, null, 15, "Descripcion");
         }
 
+        public List<NivelTarifaCombo> GetNivelTarifaCombo()
+        {
+            return repositorio.Listar<NivelTarifa, NivelTarifaCombo>(x => new NivelTarifaCombo()
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion,
+                CodigoSap = x.CodigoSap
+            }, null, 15, "Descripcion");
+        }
+
         public List<TipoActividadCombo> GetTipoActividadCombo()
         {
             return repositorio.Listar<TipoActividad, TipoActividadCombo>(x => new TipoActividadCombo()
@@ -105,6 +115,23 @@ namespace Molinos.DataAgro.Business
             try
             {
                 return repositorio.Listar<Centro, CentroCombo>(x => new CentroCombo()
+                {
+                    CodigoSap = x.CodigoSap,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
+
+        public List<ZonaCupoCombo> GetAbmZonaCupo()
+        {
+            try
+            {
+                return repositorio.Listar<ZonaCupo, ZonaCupoCombo>(x => new ZonaCupoCombo()
                 {
                     CodigoSap = x.CodigoSap,
                     Descripcion = x.Descripcion

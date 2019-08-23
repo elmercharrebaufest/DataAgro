@@ -114,6 +114,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
+            datosCombo.NivelTarifa = repositorio.Listar<NivelTarifa, NivelTarifaQry>(x => new NivelTarifaQry() { Id = x.Id, Descripcion = x.Descripcion, CodigoSap = x.CodigoSap });
+
             datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             datosCombo.TipoFason = repositorio.Listar<TipoFason, TipoFasonQry>(x => new TipoFasonQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.TipoAgenteCompra = repositorio.Listar<TipoAgenteCompra, TipoAgenteCompraQry>(x => new TipoAgenteCompraQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -526,6 +528,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Pizarra = oContrato.Pizarra;
             oContratoSave.PagoDiferido = oContrato.PagoDiferido;
             oContratoSave.ZonaId = oContrato.ZonaId;
+            oContratoSave.Compensacion = oContrato.Compensacion;
+            oContratoSave.TarifaFlete = oContrato.TarifaFlete;
+            oContratoSave.NivelTarifaId = oContrato.NivelTarifaId == 0 ? null : oContrato.NivelTarifaId;
 
             if (descuentosExistentes != null)
             {
@@ -973,7 +978,11 @@ namespace Molinos.DataAgro.Business.Managers
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido= x.PagoDiferido,
                 ZonaId = x.ZonaId,
-                ZonaDescripcion = x.Zona.Descripcion
+                ZonaDescripcion = x.Zona.Descripcion,
+                Compensacion=x.Compensacion,
+                NivelTarifaId = x.NivelTarifaId,
+                TarifaFlete = x.TarifaFlete
+                
             });
             contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
             contrato.Calidades = TraerCalidadesPorContrato(contratoId);
@@ -1427,7 +1436,8 @@ namespace Molinos.DataAgro.Business.Managers
                 SelCargoMOA = null,
                 SelCargoVendedor = null,
                 Madre = null,
-                ContratoMadre = null
+                ContratoMadre = null,
+
             });
             return contrato;
         }

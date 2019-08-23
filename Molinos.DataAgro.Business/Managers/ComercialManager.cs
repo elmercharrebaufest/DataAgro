@@ -55,7 +55,6 @@ namespace Molinos.DataAgro.Business
             var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
             var subordinados = ListarEquipo(comercialId,lista);
             list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
-            //Por lo pronto se van a mostrar todos los usurios hasta arreglar la query para los comerciales subordinados.
             return list;
         }
 
@@ -86,7 +85,8 @@ namespace Molinos.DataAgro.Business
                     ComercialId = x.ComercialId,
                     EmpleadorACargoId = x.EmpleadorACargoId,
                     Nombres = x.Nombres,
-                    PerfilId = x.PerfilId
+                    PerfilId = x.PerfilId,
+                    Cupera=x.Cupera                    
                 }) ?? new ComercialDto();
         }
 
@@ -160,6 +160,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;
                 oComercialSave.PerfilId = oComercial.PerfilId;
+                oComercialSave.Cupera = oComercial.Cupera;
             }
             else
             {
@@ -234,9 +235,12 @@ namespace Molinos.DataAgro.Business
 
         public bool EsAdministrador(string activeDirectoryId)
         {
-            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Administrador.HasValue ? x.Administrador.Value : false);
+            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Administrador ?? false);
         }
-
+        public bool EsCupera(string activeDirectoryId)
+        {
+            return repositorio.Obtener<Comercial, bool>(x => x.IdActiveDirectory == activeDirectoryId, x => x.Cupera.HasValue ? x.Cupera.Value : false);
+        }
         public EquipoDto ListarEquipo(string idActiveDirectory)
         {
 
@@ -279,7 +283,7 @@ namespace Molinos.DataAgro.Business
         }
         private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
         {
-            var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId);
+            var comercial = repositorio.Obtener<Comercial>(comercialId);
             if (comercial.PerfilId == 7)
             {
                 listaSuperiores.Add(comercial.ComercialId);

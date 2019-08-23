@@ -102,6 +102,8 @@
     <Compile Include="ConsultasEF\DevolverProveedoresConCorredor.cs" />
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
+    <Compile Include="ConsultasEF\TraerConfiguracionesCupo.cs" />
+    <Compile Include="ConsultasEF\TraerTodosCupos.cs" />
     <Compile Include="ConsultasEF\TraerVentaStock.cs" />
     <Compile Include="ConsultasEF\TraerSituacionCultivoParcial.cs" />
     <Compile Include="ConsultasEF\TraerBusquedaContactos.cs" />

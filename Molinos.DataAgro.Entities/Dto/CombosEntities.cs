@@ -22,7 +22,14 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string Campaña { get; set; }
     }
+    public class NivelTarifaCombo
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
 
+        public string CodigoSap { get; set; }
+
+    }
     public class CampaniaCombo
     {
         public int CampaniaId { get; set; }
@@ -215,6 +222,13 @@ namespace Molinos.DataAgro.Entities.Dto
         }
     }
     public class CentroCombo
+    {
+        public int Id;
+        public string Descripcion;
+        public string CodigoSap;
+    }
+
+    public class ZonaCupoCombo
     {
         public int Id;
         public string Descripcion;

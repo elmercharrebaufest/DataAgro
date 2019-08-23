@@ -68,6 +68,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? StandardDeCalidadId { get; set; }
         public bool? PagoDiferido { get; set; }
         public int? ZonaId { get; set; }
+        public bool? Compensacion { get; set; }
+        public int? NivelTarifaId { get;  set; }
+        public decimal? TarifaFlete { get; set; }
         public bool? Dolarizado { get; set; }
 
         [ForeignKey("EstadoId")]
@@ -125,6 +128,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual StandardDeCalidad StandardDeCalidad { get; set; }
         [ForeignKey("ZonaId")]
         public virtual Zona Zona { get; set; }
+
+        [ForeignKey("NivelTarifaId")]
+        public virtual NivelTarifa NivelTarifa { get; set; }
 
         public Contrato()
         {

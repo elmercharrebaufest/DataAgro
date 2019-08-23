@@ -990,7 +990,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-               .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
+                .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId=1, CampañaId=1,Campana="a",Descripcion="a"} });
 
@@ -1000,6 +1000,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);

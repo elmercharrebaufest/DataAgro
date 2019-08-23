@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string IdActiveDirectory { get; set; }
         public int? GrupoDeComprasId { get; set; }        
         public bool? Administrador { get; set; }
+        public bool? Cupera { get; set; }
 
         [ForeignKey("PerfilId")]
         public virtual Perfil Perfil { get; set; }

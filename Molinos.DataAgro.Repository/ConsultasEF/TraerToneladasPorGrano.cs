@@ -151,13 +151,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             {
                 var pos = age.PosicionString.Split('.');
                 var fecha = new DateTime(int.Parse(pos[1]), int.Parse(pos[0]), 1);
-                var fechaNewCrop = new DateTime(DateTime.Now.AddYears(1).Year, materialId == 3 ? 4 : materialId == 1 ? 3 : 11, 1);
+                var fechaAñoSiguiente = new DateTime(DateTime.Now.AddYears(1).Year, materialId == 3 ? 4 : materialId == 1 ? 3 : 11, 1);
+                var fechaMesSiguiente = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1);
 
-                if (fecha >= fechaNewCrop)
+                if (fecha >= fechaAñoSiguiente)
                 {
                     toneladasPorGrano.NewAgente +=age.Cantidad;
                 }
-                else if ((fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)) || (fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)) || (fecha < fechaNewCrop && (DateTime.Now.Month == fecha.Month || DateTime.Now.AddMonths(1).Month == fecha.Month)))
+                else if (fecha < fechaAñoSiguiente && (fechaMesSiguiente >= fecha))                    
                 {
                     toneladasPorGrano.DispAgente += age.Cantidad;
                 }

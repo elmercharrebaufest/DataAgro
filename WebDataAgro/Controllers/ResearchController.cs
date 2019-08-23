@@ -37,40 +37,44 @@ namespace WebDataAgro.Controllers
         public ActionResult AvanceSiembraPartial()
         {
             FillViewBag();
+            var researchAvanceSiembra = oResearchManager.TraerTodoResearchAvanceSiembra();
             return PartialView("_AvanceSiembra", new ResearchAvanceSiembraModel
             {
-                AvanceSiembra = TransformarAModel(oResearchManager.TraerTodoResearchAvanceSiembra()),
-                HistorialAvanceSiembra = oResearchManager.TraerTodoResearchAvanceSiembra().OrderByDescending(x => x.FechaHora).ToList()
+                AvanceSiembra = TransformarAModel(researchAvanceSiembra),
+                HistorialAvanceSiembra = researchAvanceSiembra.OrderByDescending(x => x.FechaHora).ToList()
 
             });
         }
         public ActionResult AvanceCosechaPartial()
         {
             FillViewBag();
+            var researchAvanceCosecha = oResearchManager.TraerTodoResearchAvanceCosecha();
             return PartialView("_AvanceCosecha", new ResearchAvanceCosechaModel
             {
-                AvanceCosecha = TransformarAModel(oResearchManager.TraerTodoResearchAvanceCosecha()),
-                HistorialAvanceCosecha = oResearchManager.TraerTodoResearchAvanceCosecha().OrderByDescending(x => x.FechaHora).ToList()
+                AvanceCosecha = TransformarAModel(researchAvanceCosecha),
+                HistorialAvanceCosecha = researchAvanceCosecha.OrderByDescending(x => x.FechaHora).ToList()
 
             });
         }
         public ActionResult SituacionCultivoPartial()
         {
             FillViewBag();
+            var situacionCultivo = oResearchManager.TraerTodoResearchSituacionCultivo();
             return PartialView("_SituacionCultivo", new ResearchSituacionCultivoModel
             {
-                SituacionCultivo = TransformarAModel(oResearchManager.TraerTodoResearchSituacionCultivo()),
-                HistorialSituacionCultivo = oResearchManager.TraerTodoResearchSituacionCultivo().OrderByDescending(x => x.FechaHora).ToList()
+                SituacionCultivo = TransformarAModel(situacionCultivo),
+                HistorialSituacionCultivo = situacionCultivo.OrderByDescending(x => x.FechaHora).ToList()
 
             });
         }
         public ActionResult VentaStockPartial()
         {
             FillViewBag();
+            var ventaStock = oResearchManager.TraerTodoResearchVentaStock();
             return PartialView("_VentaStock", new ResearchVentaStockModel
             {
-                VentaStock = TransformarAModel(oResearchManager.TraerTodoResearchVentaStock()),
-                HistorialVentaStock = oResearchManager.TraerTodoResearchVentaStock().OrderByDescending(x => x.FechaHora).ToList()
+                VentaStock = TransformarAModel(ventaStock),
+                HistorialVentaStock = ventaStock.OrderByDescending(x => x.FechaHora).ToList()
 
             });
         }
@@ -80,10 +84,11 @@ namespace WebDataAgro.Controllers
             var comercialId = GlobalVariables.ComercialId;
             var researchAvanceSiembra = TransformarAEntidad(researchAvanceSiembraModel);
             var resultado = oResearchManager.GrabarResearchAvanceSiembra(researchAvanceSiembra, comercialId);
+            var lstResearchAvance = oResearchManager.TraerTodoResearchAvanceSiembra();
             return PartialView("_ListaAvanceSiembra", new ResearchAvanceSiembraModel
             {
-                AvanceSiembra = TransformarAModel(oResearchManager.TraerTodoResearchAvanceSiembra()),
-                HistorialAvanceSiembra = oResearchManager.TraerTodoResearchAvanceSiembra().OrderByDescending(x => x.FechaHora).ToList(),
+                AvanceSiembra = TransformarAModel(lstResearchAvance),
+                HistorialAvanceSiembra = lstResearchAvance.OrderByDescending(x => x.FechaHora).ToList(),
                 Resultado = resultado
             });
         }
@@ -94,10 +99,11 @@ namespace WebDataAgro.Controllers
             var comercialId = GlobalVariables.ComercialId;
             var researchAvanceCosecha = TransformarAEntidad(researchAvanceCosechaModel);
             var resultado = oResearchManager.GrabarResearchAvanceCosecha(researchAvanceCosecha, comercialId);
+            var lstCosecha = oResearchManager.TraerTodoResearchAvanceCosecha();
             return PartialView("_ListaAvanceCosecha", new ResearchAvanceCosechaModel
             {
-                AvanceCosecha = TransformarAModel(oResearchManager.TraerTodoResearchAvanceCosecha()),
-                HistorialAvanceCosecha = oResearchManager.TraerTodoResearchAvanceCosecha().OrderByDescending(x => x.FechaHora).ToList(),
+                AvanceCosecha = TransformarAModel(lstCosecha),
+                HistorialAvanceCosecha = lstCosecha.OrderByDescending(x => x.FechaHora).ToList(),
                 Resultado = resultado
             });
         }
@@ -107,10 +113,11 @@ namespace WebDataAgro.Controllers
             var comercialId = GlobalVariables.ComercialId;
             var researchSituacionCultivo = TransformarAEntidad(researchSituacionCultivoModel);
             var resultado = oResearchManager.GrabarResearchSituacionCultivo(researchSituacionCultivo, comercialId);
+            var lstSituacion = oResearchManager.TraerTodoResearchSituacionCultivo();
             return PartialView("_ListaSituacionCultivo", new ResearchSituacionCultivoModel
             {
-                SituacionCultivo = TransformarAModel(oResearchManager.TraerTodoResearchSituacionCultivo()),
-                HistorialSituacionCultivo = oResearchManager.TraerTodoResearchSituacionCultivo().OrderByDescending(x => x.FechaHora).ToList(),
+                SituacionCultivo = TransformarAModel(lstSituacion),
+                HistorialSituacionCultivo = lstSituacion.OrderByDescending(x => x.FechaHora).ToList(),
                 Resultado = resultado
             });
         }
@@ -120,10 +127,11 @@ namespace WebDataAgro.Controllers
             var comercialId = GlobalVariables.ComercialId;
             var researchVentaStock = TransformarAEntidad(researchVentaStockModel);
             var resultado = oResearchManager.GrabarResearchVentaStock(researchVentaStock, comercialId);
+            var lstVentaStock = oResearchManager.TraerTodoResearchVentaStock();
             return PartialView("_ListaVentaStock", new ResearchVentaStockModel
             {
-                VentaStock = TransformarAModel(oResearchManager.TraerTodoResearchVentaStock()),
-                HistorialVentaStock = oResearchManager.TraerTodoResearchVentaStock().OrderByDescending(x => x.FechaHora).ToList(),
+                VentaStock = TransformarAModel(lstVentaStock),
+                HistorialVentaStock = lstVentaStock.OrderByDescending(x => x.FechaHora).ToList(),
                 Resultado = resultado
             });
         }
@@ -167,7 +175,7 @@ namespace WebDataAgro.Controllers
             });
         }
 
-        public ResearchAvanceSiembra TransformarAEntidad(ResearchAvanceSiembraModel researchAvanceSiembraModel)
+        private ResearchAvanceSiembra TransformarAEntidad(ResearchAvanceSiembraModel researchAvanceSiembraModel)
         {
             var researchAvanceSiembra = new ResearchAvanceSiembra
             {
@@ -184,7 +192,7 @@ namespace WebDataAgro.Controllers
             return researchAvanceSiembra;
         }
 
-        public ResearchAvanceCosecha TransformarAEntidad(ResearchAvanceCosechaModel researchAvanceCosechaModel)
+        private ResearchAvanceCosecha TransformarAEntidad(ResearchAvanceCosechaModel researchAvanceCosechaModel)
         {
             var researchAvanceCosecha = new ResearchAvanceCosecha
             {
@@ -201,7 +209,7 @@ namespace WebDataAgro.Controllers
             return researchAvanceCosecha;
         }
 
-        public ResearchSituacionCultivo TransformarAEntidad(ResearchSituacionCultivoModel researchSituacionCultivoModel)
+        private ResearchSituacionCultivo TransformarAEntidad(ResearchSituacionCultivoModel researchSituacionCultivoModel)
         {
             var researchSituacionCultivo = new ResearchSituacionCultivo
             {
@@ -216,7 +224,7 @@ namespace WebDataAgro.Controllers
             };
             return researchSituacionCultivo;
         }
-        public ResearchVentaStock TransformarAEntidad(ResearchVentaStockModel researchVentaStockModel)
+        private ResearchVentaStock TransformarAEntidad(ResearchVentaStockModel researchVentaStockModel)
         {
             var researchVentaStock = new ResearchVentaStock
             {
@@ -231,7 +239,7 @@ namespace WebDataAgro.Controllers
             return researchVentaStock;
         }
 
-        public List<ResearchAvanceSiembraModel> TransformarAModel(List<ResearchAvanceSiembraDto> researchAvanceSiembra)
+        private List<ResearchAvanceSiembraModel> TransformarAModel(List<ResearchAvanceSiembraDto> researchAvanceSiembra)
         {
             var lista = new List<ResearchAvanceSiembraModel>();
             foreach (var i in researchAvanceSiembra)
@@ -257,7 +265,7 @@ namespace WebDataAgro.Controllers
 
             return lista;
         }
-        public List<ResearchSituacionCultivoModel> TransformarAModel(List<ResearchSituacionCultivoDto> researchSituacionCultivo)
+        private List<ResearchSituacionCultivoModel> TransformarAModel(List<ResearchSituacionCultivoDto> researchSituacionCultivo)
         {
             var lista = new List<ResearchSituacionCultivoModel>();
             foreach (var i in researchSituacionCultivo)
@@ -281,7 +289,7 @@ namespace WebDataAgro.Controllers
 
             return lista;
         }
-        public List<ResearchAvanceCosechaModel> TransformarAModel(List<ResearchAvanceCosechaDto> researchAvanceCosecha)
+        private List<ResearchAvanceCosechaModel> TransformarAModel(List<ResearchAvanceCosechaDto> researchAvanceCosecha)
         {
             var lista = new List<ResearchAvanceCosechaModel>();
             foreach (var i in researchAvanceCosecha)
@@ -307,7 +315,7 @@ namespace WebDataAgro.Controllers
 
             return lista;
         }
-        public List<ResearchVentaStockModel> TransformarAModel(List<ResearchVentaStockDto> researchVentaStock)
+        private List<ResearchVentaStockModel> TransformarAModel(List<ResearchVentaStockDto> researchVentaStock)
         {
             var lista = new List<ResearchVentaStockModel>();
             foreach (var i in researchVentaStock)
@@ -341,7 +349,7 @@ namespace WebDataAgro.Controllers
                         Value = x.Id.ToString(),
                         Selected = false
                     });
-            return Json(listaEstadios, JsonRequestBehavior.AllowGet);
+            return new JsonResult { Data = listaEstadios, MaxJsonLength = Int32.MaxValue };
         }
 
         public ActionResult TraerCampañaPorMaterial(int materialId)
@@ -389,7 +397,9 @@ namespace WebDataAgro.Controllers
         public ActionResult BuscaAvanceSiembra(KendoGridMvcRequest request)
         {
             var model = oResearchManager.TraerAvanceSiembra(request);
-            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+            return new JsonResult() {
+                Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue
+            };
         }
     }
 
