@@ -148,7 +148,6 @@
     <Compile Include="Managers\AgenteCompraManager.cs" />
     <Compile Include="Managers\CupoManager.cs" />
     <Compile Include="Managers\EstadioManager.cs" />
-    <Compile Include="Managers\IEstadioManger.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Managers\PizarraManager.cs" />
     <Compile Include="Managers\PrecioPizarraManager.cs" />
