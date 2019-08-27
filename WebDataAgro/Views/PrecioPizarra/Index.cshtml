@@ -38,59 +38,53 @@
                 @Html.DropDownListFor(m => m.PizarraId, new SelectList(ViewBag.Pizarra, "Value", "Text"), new { @class = "form-control", @id = "PizarraId" })
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="historial-desplegable">
-                    <span class="historial">Alta</span>
-                </div>
-            </div>
-        </div>
-                <div class="row">
-                    <div class="col-sm-2">
-                        <label>Desde-Hasta</label>
-                    </div>
-                    <div class="col-sm-5 col-md-2">
-                        <span id="fechaD">
-                            @Html.TextBoxFor(x => x.FechaDesde, new { @id = "fechaDesde", @class = "w100 limpiar" })
-                        </span>
-                    </div>
-                    <div class="col-sm-5 col-md-2">
-                        <span id="fechaH">
-                            @Html.TextBoxFor(x => x.FechaHasta, new { @id = "fechaHasta", @class = "w100 limpiar" })
-                        </span>
-                    </div>
-                    <div class="col-sm-2 col-md-2">
-                        <label>Precio</label>
-                    </div>
-                    <div class="col-sm-3 col-md-4">
-                        @Html.TextBoxFor(m => m.Precio, new { @id = "PrecioId", @class = "number required-box required-box-parent limpiar w100" })
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-ms-2 col-md-2">
-                        <label>Moneda</label>
-                    </div>
-                    <div class="col-sm-3 col-md-4">
-                        @Html.DropDownListFor(m => m.MonedaId, new SelectList(ViewBag.Moneda, "Value", "Text"), new { @class = "form-control", @id = "MonedaId" })
-                    </div>
-                    <div class="col-ms-2 col-md-2">
-                        <label>Unidad de Medida</label>
-                    </div>
-                    <div class="col-sm-3 col-md-4">
-                        @Html.TextBox("Unidad de Medida", "TON", new { disabled = "disabled", @id = "UnidadMedida", @class = "form-control medida" })
-                    </div>
-                </div>
-               <br />
-               <div id="row-botones-material">
-                    <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
-                    <button type="button" class="formulario-footer-cancelar k-button k-button-icontext cancelar">Cancelar</button>
-                </div>
-           
-            }
 
-            <div id="listaPrecioPizarra">
-                @Html.Partial("_ListaPrecioPizarra", Model)
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Desde-Hasta</label>
+            </div>
+            <div class="col-sm-5 col-md-2">
+                <span id="fechaD">
+                    @Html.TextBoxFor(x => x.FechaDesde, new { @id = "fechaDesde", @class = "w100 limpiar" })
+                </span>
+            </div>
+            <div class="col-sm-5 col-md-2">
+                <span id="fechaH">
+                    @Html.TextBoxFor(x => x.FechaHasta, new { @id = "fechaHasta", @class = "w100 limpiar" })
+                </span>
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Precio</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBoxFor(m => m.Precio, new { @id = "PrecioId", @class = "number required-box required-box-parent limpiar w100" })
             </div>
         </div>
+        <div class="row">
+            <div class="col-ms-2 col-md-2">
+                <label>Moneda</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.MonedaId, new SelectList(ViewBag.Moneda, "Value", "Text"), new { @class = "form-control", @id = "MonedaId" })
+            </div>
+            <div class="col-ms-2 col-md-2">
+                <label>Unidad de Medida</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBox("Unidad de Medida", "TON", new { disabled = "disabled", @id = "UnidadMedida", @class = "form-control medida" })
+            </div>
+        </div>
+        <br />
+        <div id="row-botones-material">
+            <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            <button type="button" class="formulario-footer-cancelar k-button k-button-icontext cancelar">Cancelar</button>
+        </div>
+
+    }
+
+    <div id="listaPrecioPizarra">
+        @Html.Partial("_ListaPrecioPizarra", Model)
+    </div>
+</div>
 
 

@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
                             MATNR = cupo.Material.Codigo,
-                            PROVEEDOR = cupo.Proveedor.CUIT,
+                            PROVEEDOR = cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0,2),
                             DESCPROV = cupo.Proveedor.RazonSocial,
                             PLANTA = cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,

@@ -130,3 +130,7 @@
 .anu { /*icons*/
     color: #848484;
 }
+
+.noRightPadding{
+    padding-right:0;
+}

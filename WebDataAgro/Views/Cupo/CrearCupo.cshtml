@@ -1,6 +1,7 @@
 ﻿@model WebDataAgro.Models.CupoModel
 @{
     ViewBag.Title = "Cupo";
+    var zonas = (List<SelectListItem>)ViewBag.Zona;
 }
 
 <script>
@@ -85,15 +86,15 @@
                 
                 <div class="col-sm-4">
                     <div>
-                        @Html.DropDownListFor(x => x.Zona, new SelectList(ViewBag.Zona,"Value", "Text" ), new { @class = "form-control", @id = "zona" })
+                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control" })
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div>
-                <div class="col-sm-2 ">
-                    <label>Flete Procedencia</label>
+                <div class="col-sm-2 noRightPadding">
+                    <label>Flete procedencia/Acarreo </label>
                 </div>
                     <div class="col-sm-4 ">
                         @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })

@@ -66,13 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado Validar(Cupo cupo,int cantidadCupos)
         {
             var error = new Resultado();
-            var limiteCupo = repositorio.Obtener<LimiteCupo>(x => x.ConfiguracionCupo.CentroId == cupo.CentroId && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
-            && x.ZonaCupoId == cupo.ZonaCupoId && x.ConfiguracionCupo.Fecha == cupo.FechaIngreso);
-            if(limiteCupo== null)
-            {
-                error.Errores.Add(new ErrorMessage(400, "La Zona no esta dada de alta en Administracion de Cupos"));
-                return error;
-            }
+           
             if (cupo.ProveedorId != 0)
             {
                 var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);
@@ -81,11 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     error.Errores.Add(new ErrorMessage(400, "Proveedor con CUIT en estado No Operable"));
                 }
-            }
-            if (cantidadCupos == 0)
-            {
-                error.Errores.Add(new ErrorMessage(400, "La Cantidad no debe estar vacia"));
-            }                        
+            }                                   
             if (cupo.MaterialId == 3 && (cupo.Calidad == ""|| cupo.Calidad == null))
             {
                 error.Errores.Add(new ErrorMessage(400, "La calidad no debe estar vacia para Soja"));
@@ -94,7 +84,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacio cuando elige Fasón"));
             }
-            
+            var limiteCupo = repositorio.Obtener<LimiteCupo>(x => x.ConfiguracionCupo.CentroId == cupo.CentroId && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
+           && x.ZonaCupoId == cupo.ZonaCupoId && x.ConfiguracionCupo.Fecha == cupo.FechaIngreso);
+            if (limiteCupo == null)
+            {
+                error.Errores.Add(new ErrorMessage(400, "La Zona no esta dada de alta en Administracion de Cupos"));
+            }
             var cuposOtorgados = repositorio.Contar<Cupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso && x.ZonaCupoId == cupo.ZonaCupoId);
             if (limiteCupo!= null && limiteCupo.CantidadCupo < cantidadCupos + cuposOtorgados)
             {

@@ -53,7 +53,9 @@ namespace WebDataAgro.Controllers
         public ActionResult CrearCupo()
         {
             CargarViewBag();
-            return View(new CupoModel());
+            int zona;
+            int.TryParse(ViewBag.ZonaSeleccionada, out zona);
+            return View(new CupoModel() { ZonaId = zona});
         }
         
         [HttpPost]
@@ -62,17 +64,9 @@ namespace WebDataAgro.Controllers
             var cupoGrabado = cupoManager.GrabarCupo(TransformarAEntidad(cupo), cupo.CantidadCupos);
             if (cupoGrabado.HayError)
             {
-                if (cupoGrabado.Errores.Any(x => x.Message == "La Zona no esta dada de alta en Administracion de Cupos"))
+                foreach (var e in cupoGrabado.Errores)
                 {
-                    ModelState.Clear();
-                    ModelState.AddModelError(cupoGrabado.Errores[0].ErrorCode.ToString(), cupoGrabado.Errores[0].Message);
-                }
-                else
-                {
-                    foreach (var e in cupoGrabado.Errores)
-                    {
-                        ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
-                    }
+                    ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
                 }
                 CargarViewBag();
                 return View(cupo);
@@ -117,7 +111,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower()?true:false
+                    Selected = comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
                 });
             }
             ViewBag.Zona = listaZona;
@@ -135,7 +129,7 @@ namespace WebDataAgro.Controllers
                 FechaIngreso = cupo.FechaEntrega,
                 CentroId = cupo.Planta,
                 FleteProcedencia = cupo.FleteAcarreo,
-                ZonaCupoId = cupo.Zona,
+                ZonaCupoId = cupo.ZonaId,
                 Calidad = cupo.Calidad == 1 ? "Camara" : cupo.Calidad == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,
                 Fason = cupo.Fason,

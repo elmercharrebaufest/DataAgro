@@ -183,7 +183,8 @@ function AbrirModal(id) {
         value: "0",
         decimals: 0,
         restrictDecimals: true,
-        spinners: false
+        spinners: false,
+        min:0
     });
     CargarLimites(id);
 

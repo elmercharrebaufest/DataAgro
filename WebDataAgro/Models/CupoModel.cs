@@ -19,9 +19,13 @@ namespace WebDataAgro.Models
         public int Material { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaEntregaRequerido")]
         public DateTime FechaEntrega { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
         public int CantidadCupos {get;set;}
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ZonaRequerido")]
-        public int Zona { get; set; }
+        //public int Zona { get; set; }
+        public int ZonaId { get; set; }
+
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FleteRequerido")]
         public bool FleteAcarreo { get; set; }        
         public int? Calidad { get; set; }

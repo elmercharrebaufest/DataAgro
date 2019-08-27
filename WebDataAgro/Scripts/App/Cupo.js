@@ -249,10 +249,7 @@ function InicializarCargaCupos() {
     $("#material").change(function () {
         checkSoja();
     });
-    $("#zona").val(zonaSeleccionada);
-    if ($("#buscadorProveedor").val() != null) {
-        $("#buscadorProveedor").trigger('change');
-    }
+    
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {

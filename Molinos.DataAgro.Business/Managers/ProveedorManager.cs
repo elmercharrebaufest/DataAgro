@@ -715,12 +715,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.Compensacion == true)
             {
-                htmlBody += " Negocio Compensación " + "<br />";
+                htmlBody += " NEGOCIO COMPENSACIÓN " + "<br />";
             }
             if ((oContrato.NivelTarifa!= null)&&oContrato.TarifaFlete>0)
             {
-                htmlBody += " Nivel de Tarifa: " + oContrato.NivelTarifa.Descripcion + "<br />" +
-                    "Tarifa de Flete: " + oContrato.TarifaFlete + "<br />";
+                htmlBody += " NIVEL DE TARIFA: " + oContrato.NivelTarifa.Descripcion.ToUpper() + "<br />" +
+                    "TARIFA DE FLETE: " + oContrato.TarifaFlete + "<br />";
             }
             if (oContrato.Observacion != null)
             {
