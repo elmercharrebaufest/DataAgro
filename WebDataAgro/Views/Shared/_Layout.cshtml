@@ -154,7 +154,7 @@
                         </ul>
                     </li>
 
-                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa||global_asax.GlobalVariables.EsCupera)
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
@@ -216,22 +216,20 @@
                                         </a>
                                     </li>
                                 }
-                                <li>
-                                    <a href="~/Zona" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Zona Calidad Girasol
-                                    </a>
-                                </li>
+                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                {
+                                    <li>
+                                        <a href="~/Zona" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Zona Calidad Girasol
+                                        </a>
+                                    </li>
 
-                                <li>
-                                    <a href="~/Material" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Material
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/PrecioPizarra" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Precio Pizarra
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a href="~/Material" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Material
+                                        </a>
+                                    </li>
+                                }
                                 @if (global_asax.GlobalVariables.EsAdministrador)
                                 {
                                     <li>
@@ -286,10 +284,10 @@
                                     </a>
                                 </li>
                                 @*<li>
-            <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
-                <i class="icon-bar-chart"></i> Contrato Acuerdo
-            </a>
-        </li>*@
+                                        <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Contrato Acuerdo
+                                        </a>
+                                    </li>*@
                             </ul>
                         </li>
                     }
