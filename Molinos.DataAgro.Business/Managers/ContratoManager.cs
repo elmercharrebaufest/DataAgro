@@ -387,6 +387,14 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
+            if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null|| oParam.NivelTarifaId == 0))
+            {
+                oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");
+            }
+            if (oParam.NivelTarifaId!= null && oParam.NivelTarifaId!= 0 && oParam.TarifaFlete == null)
+            {
+                oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
+            }
             return oErrorMessages;
         }
 

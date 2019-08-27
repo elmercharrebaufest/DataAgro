@@ -254,7 +254,7 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
                 Calidad = new List<Calidad>()
-
+                
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });

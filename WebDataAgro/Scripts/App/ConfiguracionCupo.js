@@ -236,7 +236,7 @@ function Editar(id) {
 
 function LimpiarConfiguracion() {
     $("#Id").val(0);
-    $("#CentroId").val("");
+    $('#CentroId>option:eq(0)').prop('selected', true);
     $("#MaterialId").val("");
     var fecha = kendo.toString(kendo.parseDate(new Date()), "dd-MM-yyyy");
     $("#Fecha").val(fecha);

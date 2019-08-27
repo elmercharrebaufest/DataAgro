@@ -11,6 +11,7 @@ namespace WebDataAgro.Models
     {
         public string ProveedorDescripcion { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
         public int Proveedor { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_PlantaRequerido")]
         public int Planta { get; set; }
@@ -22,7 +23,7 @@ namespace WebDataAgro.Models
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ZonaRequerido")]
         public int Zona { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FleteRequerido")]
-        public int FleteAcarreo { get; set; }        
+        public bool FleteAcarreo { get; set; }        
         public int? Calidad { get; set; }
         public string Observacion { get; set; }
         public bool Fason { get; set; }

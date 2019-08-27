@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
 
-            var cont = contexto.Set<Contrato>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId) && x.ContratoAcuerdo == null)
+            var cont = contexto.Set<Contrato>().Where(x => x.TipoNegocioId == 2 && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId) && x.ContratoAcuerdo == null)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {

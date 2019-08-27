@@ -9,6 +9,7 @@
         public int? EmpleadorACargoId { get; set; }        
         public string IdActiveDirectory { get; set; }
         public int? GrupoDeComprasId { get; set; }        
+        public string GrupoDeCompras { get; set; }        
         public bool? Administrador { get; set; }
         public bool? Cupera { get; set; }
     }

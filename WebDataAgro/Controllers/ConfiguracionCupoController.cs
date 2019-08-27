@@ -101,7 +101,7 @@ namespace WebDataAgro.Controllers
                     {
                         Text = x.Descripcion,
                         Value = x.Id.ToString(),
-                        Selected = false
+                        Selected = x.CodigoSap == "1029" ? true : false
                     }).OrderBy(x => x.Value);
             ViewBag.Centro = centroListItems;
         }

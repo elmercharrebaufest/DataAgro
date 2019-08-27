@@ -713,6 +713,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += " Sellado 100% a Cargo vendedor " + "<br />";
             }
+            if (oContrato.Compensacion == true)
+            {
+                htmlBody += " Negocio Compensación " + "<br />";
+            }
+            if ((oContrato.NivelTarifa!= null)&&oContrato.TarifaFlete>0)
+            {
+                htmlBody += " Nivel de Tarifa: " + oContrato.NivelTarifa.Descripcion + "<br />" +
+                    "Tarifa de Flete: " + oContrato.TarifaFlete + "<br />";
+            }
             if (oContrato.Observacion != null)
             {
                 htmlBody += oContrato.Observacion + "<br />";

@@ -10,7 +10,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/Cupos")
 }
-
+<script> zonaSeleccionada=@ViewBag.ZonaSeleccionada</script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-sm-4">
                     @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder="Buscar por CUIT, razón social", @id="buscadorProveedor",@class="w100"})
-                    @Html.HiddenFor(x => x.Proveedor,new { @Value = "" })
+                    @Html.HiddenFor(x => x.Proveedor)
                 </div>
             </div>
             <div>
@@ -43,7 +43,7 @@
                     <label>Planta</label>
                 </div>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(x => x.Planta, new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione Planta", new { @class = "form-control", @id = "planta" })
+                    @Html.DropDownListFor(x => x.Planta, new SelectList(ViewBag.Centro, "Value", "Text"),  new { @class = "form-control", @id = "planta" })
                 </div>
             </div>
         </div>
@@ -82,9 +82,10 @@
                 <div class="col-sm-2 ">
                     <label>Zona</label>
                 </div>
+                
                 <div class="col-sm-4">
                     <div>
-                        @Html.DropDownListFor(x => x.Zona, new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione Zona", new { @class = "form-control", @id = "zona" })
+                        @Html.DropDownListFor(x => x.Zona, new SelectList(ViewBag.Zona,"Value", "Text" ), new { @class = "form-control", @id = "zona" })
                     </div>
                 </div>
             </div>
@@ -92,13 +93,11 @@
         <div class="row">
             <div>
                 <div class="col-sm-2 ">
-                    <label>Flete/Acarreo</label>
+                    <label>Flete Procedencia</label>
                 </div>
-                <div class="col-sm-4">
-                    <div>
-                        @Html.DropDownListFor(x => x.FleteAcarreo, new SelectList(ViewBag.Flete, "Value", "Text"), "Seleccione Flete", new { @class = "form-control", @id = "flete" })
+                    <div class="col-sm-4 ">
+                        @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
                     </div>
-                </div>
             </div>
             <div id="calidadDiv" hidden>
                 <div class="col-sm-2">
@@ -126,7 +125,7 @@
             <div class="col-sm-4">
                 <span style="height:34px"></span>
                 @Html.CheckBoxFor(x => x.Fason, new { @id = "fason" })
-                @Html.TextBoxFor(x => x.CUIT, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
+                @Html.TextBoxFor(x => x.CUIT, new { @class = "w95", @style = "display:none;", @id = "cuit" })
             </div>
         </div>
     </div>

@@ -2499,7 +2499,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#NivelTarifaId").data("kendoDropDownList").value(contrato.NivelTarifaId);
     $("#NivelTarifaId").data("kendoDropDownList").trigger("change");
 
-    $("#TarifaFleteId").val(contrato.TarifaFlete);
+    $("#TarifaFleteId").data('kendoNumericTextBox').value(contrato.TarifaFlete);
 
     $("#observacionId").val(contrato.Observacion);
     $("#cantidadId").data("kendoNumericTextBox").value(contrato.Cantidad);
@@ -2596,17 +2596,21 @@ function CargarDatosEditar(contrato, hijo) {
         $("#bolsaCartaId").data("kendoDropDownList").value(contrato.BolsaId);
     }
 
-    contrato.CD == true ? $("#CDId").prop("checked", true)  : $("#CDId").prop("checked", false);
-    contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
+    if(contrato.CD){
+        $("#CDId").prop("checked", true);
+        $(".ocultar").show();
+    } else {
+        $("#CDId").prop("checked", false);
+    }
+    if (contrato.Warrant) {
+        $("#WarrantId").prop("checked", true);
+        $(".ocultar").show();
+    } else {
+        $("#WarrantId").prop("checked", false);
+    }
+
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
 
-    if (contrato.CD) {
-        $(".ocultar").show()
-    } else $(".ocultar").hide();
-
-    if (contrato.Warrant) {
-        $(".ocultar").show()
-    } else $(".ocultar").hide();
 
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
     if (contrato.TipoNegocioId == 3) {

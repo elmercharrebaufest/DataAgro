@@ -24,17 +24,20 @@ namespace WebDataAgro.Controllers
         private readonly IZonaCupoManager zonaCupoManager;
         private readonly IProveedorManager proveedorManager;
         private readonly ICupoManager cupoManager;
+        private readonly IComercialManager comercialManager;
+
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, ICupoManager cupoManager)
+        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, ICupoManager cupoManager, IComercialManager comercialManager)
         {
             this.centroManager = centroManager;
             this.materialManager = materialManager;
             this.zonaCupoManager = zonaCupoManager;
             this.proveedorManager = proveedorManager;
             this.cupoManager = cupoManager;
+            this.comercialManager = comercialManager;
         }
 
         //-----------------------------------------------------
@@ -59,9 +62,17 @@ namespace WebDataAgro.Controllers
             var cupoGrabado = cupoManager.GrabarCupo(TransformarAEntidad(cupo), cupo.CantidadCupos);
             if (cupoGrabado.HayError)
             {
-                foreach(var e in cupoGrabado.Errores)
+                if (cupoGrabado.Errores.Any(x => x.Message == "La Zona no esta dada de alta en Administracion de Cupos"))
                 {
-                    ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
+                    ModelState.Clear();
+                    ModelState.AddModelError(cupoGrabado.Errores[0].ErrorCode.ToString(), cupoGrabado.Errores[0].Message);
+                }
+                else
+                {
+                    foreach (var e in cupoGrabado.Errores)
+                    {
+                        ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
+                    }
                 }
                 CargarViewBag();
                 return View(cupo);
@@ -81,7 +92,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = false
+                    Selected = i.CodigoSap == "1029" ? true : false
                 });
             }
             ViewBag.Centro = listaCentro.OrderBy(x => x.Value);
@@ -98,19 +109,20 @@ namespace WebDataAgro.Controllers
             }
             ViewBag.Material = listaMaterial.OrderBy(x => x.Value);
             var zona = zonaCupoManager.TraerTodoZonaCupo();
-            var listaZona = new List<SelectListItem>();
+            var listaZona = new List<SelectListItem>() { new SelectListItem { Value= "0", Text= "Seleccione Zona",Selected= false} };
+            var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
             foreach (var i in zona.ZonaCupo)
             {
                 listaZona.Add(new SelectListItem
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = false
+                    Selected = comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower()?true:false
                 });
             }
-            ViewBag.Zona = listaZona.OrderBy(x => x.Value);
-            ViewBag.Flete = new List<SelectListItem>() { new SelectListItem { Text = "Si", Value = "1",Selected =false},
-                new SelectListItem { Text = "No", Value = "2",Selected =false } };
+            ViewBag.Zona = listaZona;
+            ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
+            
             ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
                 new SelectListItem { Text = "Fabrica", Value = "2",Selected =false } };
         }
@@ -122,7 +134,7 @@ namespace WebDataAgro.Controllers
                 MaterialId = cupo.Material,
                 FechaIngreso = cupo.FechaEntrega,
                 CentroId = cupo.Planta,
-                FleteProcedencia = cupo.FleteAcarreo == 1 ? true : false,
+                FleteProcedencia = cupo.FleteAcarreo,
                 ZonaCupoId = cupo.Zona,
                 Calidad = cupo.Calidad == 1 ? "Camara" : cupo.Calidad == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,

@@ -1,5 +1,5 @@
 ﻿var viewModel;
-
+var zonaSeleccionada;
     $(document).ready(function () {
         kendo.culture("es-AR");
         $('#menuproveedor').hide();
@@ -242,13 +242,17 @@ function InicializarCargaCupos() {
         spinners: false,
         min:0
     });
-
+    $("#cuit").mask("00000000000");
     $("#fason").click(function () {
         checkFason();
     });
     $("#material").change(function () {
         checkSoja();
     });
+    $("#zona").val(zonaSeleccionada);
+    if ($("#buscadorProveedor").val() != null) {
+        $("#buscadorProveedor").trigger('change');
+    }
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {

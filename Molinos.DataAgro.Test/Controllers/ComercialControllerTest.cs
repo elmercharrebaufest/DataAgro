@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"Administrador\":false,\"Cupera\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

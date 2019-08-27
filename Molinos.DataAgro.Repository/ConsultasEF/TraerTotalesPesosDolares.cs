@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where (contrato.EstadoId == 2|| contrato.EstadoId == 4|| contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                where contrato.TipoNegocioId==2 && (contrato.EstadoId == 2|| contrato.EstadoId == 4|| contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
                     (perfilId == (int)EnumPerfil.CorredoresComercial &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||

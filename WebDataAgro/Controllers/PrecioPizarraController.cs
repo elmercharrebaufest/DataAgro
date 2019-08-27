@@ -127,10 +127,9 @@ namespace WebDataAgro.Controllers
             var monedaListItems = moneda.Select(
                 x => new SelectListItem
                 {
-                Text = x.Descripcion,
+                    Text = x.Descripcion,
                     Value = x.MonedaId.ToString(),
-                    Selected = false
-
+                    Selected = x.Descripcion== "ARP" ? true:false
                 }).OrderBy(x => x.Value);
             ViewBag.Moneda = monedaListItems;
         }

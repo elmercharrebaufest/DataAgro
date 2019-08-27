@@ -5,18 +5,20 @@
 
 function InicializarDate() {
     kendo.culture("es-AR");
-    var dateDesde = ObtenerFecha();
-    var dateHasta = ObtenerFecha();
+    var date = ObtenerFecha();
 
     $("#fechaDesde").kendoDatePicker({
-        value: dateDesde,
+        value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"],
+        change: function () {
+            $("#fechaHasta").data('kendoDatePicker').value($("#fechaDesde").val());
+        }
     });
     fechaDesdeString = $("#fechaDesde").val();
 
     $("#fechaHasta").kendoDatePicker({
-        value: dateHasta,
+        value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
     });

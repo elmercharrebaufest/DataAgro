@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Business
                 {
                     IdActiveDirectory = x.IdActiveDirectory,
                     GrupoDeComprasId = x.GrupoDeComprasId,
+                    GrupoDeCompras= x.GrupoDeCompras.Descripcion,
                     Administrador = x.Administrador,
                     Apellido = x.Apellido,
                     ComercialId = x.ComercialId,

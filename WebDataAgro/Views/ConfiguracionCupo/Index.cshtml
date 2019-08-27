@@ -51,7 +51,7 @@
                                 <span>Centro</span>
                             </div>
                             <div class="col-sm-4">
-                                @Html.DropDownListFor(x => x.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione Centro", new { @class = "form-control" })
+                                @Html.DropDownListFor(x => x.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control" })
                             </div>
                             <div class="col-xs-2">
                                 <span>Material</span>
