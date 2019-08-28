@@ -154,7 +154,7 @@
                         </ul>
                     </li>
 
-                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa || global_asax.GlobalVariables.EsCupera)
+                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
@@ -290,7 +290,7 @@
                                     </li>*@
                             </ul>
                         </li>
-                    }@if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa||global_asax.GlobalVariables.Perfil == EnumPerfil.Comercial||global_asax.GlobalVariables.Perfil == EnumPerfil.CorredoresComercial)
+                    }@if (global_asax.GlobalVariables.EsCupera)
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="cupos-a" class="dropdown-toggle nav-text6 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Cupos <span class="caret"></span></a>

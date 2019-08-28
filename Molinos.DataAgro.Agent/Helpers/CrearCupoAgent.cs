@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         log.Xml += devolucion.ToXml();
                         repositorio.GuardarCambios();
 
-                        if (devolucion.EX_MENSAJE_ERROR != null)
+                        if (devolucion.EX_MENSAJE_ERROR != "")
                         {
                             throw new Exception(devolucion.EX_MENSAJE_ERROR);
                         }
