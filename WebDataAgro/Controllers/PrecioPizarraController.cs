@@ -18,14 +18,12 @@ namespace WebDataAgro.Controllers
         private readonly IPrecioPizarraManager oPrecioPizarraManager;
         private readonly IMaterialManager oMaterialManager;
         private readonly IPizarraManager oPizarraManager;
-        private readonly IRepositorio repositorio;
 
-        public PrecioPizarraController(IRepositorio repositorio, IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
+        public PrecioPizarraController( IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
         {
             this.oPrecioPizarraManager = oPrecioPizarraManager;
             this.oMaterialManager = oMaterialManager;
             this.oPizarraManager = oPizarraManager;
-            this.repositorio = repositorio;
         }
         // GET: PrecioPizarra
         public ActionResult Index()
@@ -35,7 +33,6 @@ namespace WebDataAgro.Controllers
             {
                 Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
                 HistorialPrecioPizarra = new List<PrecioPizarraDto>()
-
             });
         }
 
@@ -45,14 +42,13 @@ namespace WebDataAgro.Controllers
            var precioPizarra = TransformarAEntidad(precioPizarraModel);
            var resultado = oPrecioPizarraManager.GrabarPrecioPizarra((precioPizarra));
 
-           return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
+            return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
             {
                 Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
-                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId).OrderBy(x => x.FechaHasta).ToList(),
+                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
                 Resultado = resultado
-            }); 
+            });
         }
-
        
         private PrecioPizarra TransformarAEntidad(PrecioPizarraModel precioPizarraModel)
         {
@@ -97,8 +93,19 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(materialId, pizarraId).OrderBy(x => x.FechaHasta).ToList(),
+                Data = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(materialId, pizarraId)
             };
+        }
+        public ActionResult EliminarPrecio(int id)
+        {
+            var precioPizarra = oPrecioPizarraManager.TraerPrecioPizarraPorId(id);
+            var resultado = oPrecioPizarraManager.EliminarPizarra(id);
+            return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
+            {
+                Precios = TransformarAModel(oPrecioPizarraManager.TraerTodoPrecioPizarra()),
+                HistorialPrecioPizarra = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(precioPizarra.MaterialId, precioPizarra.PizarraId),
+                Resultado = resultado
+            });
         }
         private void FillViewBag()
         {

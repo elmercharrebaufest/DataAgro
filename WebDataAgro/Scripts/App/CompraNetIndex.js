@@ -217,7 +217,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Id + "'" + ',' +
         "'" + dataItem.Pizarra + "'" + ',' +
 
-        "'" + dataItem.ZonaDescripcion + "'" +
+        "'" + dataItem.ZonaDescripcion + "'" + ',' +
+        "'" + dataItem.NivelTarifa + "'" + ',' +
+        "'" + dataItem.TarifaFlete + "'" + 
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
@@ -1349,7 +1351,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
-    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona) {
+    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona,nivelTarifa, tarifaFlete) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1496,7 +1498,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
     }
-
+    if (nivelTarifa == "" && tarifaFlete == null) {
+        $("#fleteDivVisualizar").hide();
+    } else {
+        $("#fleteDivVisualizar").show();
+        $("#visualizar_nivelFlete").text(nivelTarifa);
+        $("#visualizar_tarifaFlete").text(tarifaFlete);
+    }
     var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
 
     $.each(descuentosDto, function (key, descuento) {

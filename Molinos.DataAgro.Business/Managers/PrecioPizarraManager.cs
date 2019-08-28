@@ -98,7 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Moneda = x.Moneda.Descripcion + "",
                 UnidadMedida = x.UnidadMedida + "TON"
 
-            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId);
+            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId,0, "FechaHasta",Entities.Helpers.DirOrden.Desc);
         }
 
         public List<MonedaDto> TraerTodoMoneda()
@@ -108,6 +108,31 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 Descripcion = x.Descripcion
 
+            });
+        }
+        public Resultado EliminarPizarra(int id)
+        {
+            var result = new Resultado();
+            try
+            {
+                repositorio.Remover<PrecioPizarra>(id);
+                repositorio.GuardarCambios();
+                result.Errores.Add(new ErrorMessage(200, "Se elimino correctamente"));
+            }
+            catch(Exception e)
+            {
+                logger.Error(e.Message);
+                result.Error("", e.Message);
+            }
+            return result;
+        }
+        public PrecioPizarraDto TraerPrecioPizarraPorId(int id)
+        {
+            return repositorio.Obtener<PrecioPizarra, PrecioPizarraDto>(x => x.Id == id, x => new PrecioPizarraDto
+            {
+                Id = x.Id,
+                MaterialId = x.MaterialId,
+                PizarraId = x.PizarraId
             });
         }
     }

@@ -169,11 +169,11 @@ function AbrirModal(id) {
     $("#configuracionCupoId").val(id);
     $("#tablaLimite").empty();
     var zonas = MSExecuteOnServer("/ConfiguracionCupo/TraerZonaCupo");
-    $("#tablaLimite").append('<tr><th>Zona</th><th>Cupos</th></tr>');
+    $("#tablaLimite").append('<tr><th colspan="2">Zona</th><th>Cupos</th></tr>');
     if (zonas.ZonaCupo) {
         cantidadZonas = zonas.ZonaCupo.length;
         for (var i = 0; i < cantidadZonas; i++) {
-            var fila = '<tr><td>' + zonas.ZonaCupo[i].CodigoSap + '<input id="zonaId' + i + '" value="' + zonas.ZonaCupo[i].Id+'" hidden></td><td><input id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input"/><input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden/></td></tr>';
+            var fila = '<tr><td>' + zonas.ZonaCupo[i].CodigoSap + '<input id="zonaId' + i + '" value="' + zonas.ZonaCupo[i].Id + '" hidden></td>' + '<td>' + zonas.ZonaCupo[i].Descripcion +'</td><td><input id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input"/><input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden/></td></tr>';
             $("#tablaLimite").append(fila);
         }
     }

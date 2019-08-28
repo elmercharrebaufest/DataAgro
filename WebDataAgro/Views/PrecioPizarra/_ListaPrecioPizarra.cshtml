@@ -41,6 +41,7 @@
                         <th>Moneda</th>
                         <th>Unidad de Medida</th>
                         <th>Material</th>
+                        <th></th>
                     </tr>
                     foreach (var mat in Model.HistorialPrecioPizarra)
                     {
@@ -52,6 +53,7 @@
                             <td>@Html.DisplayFor(model => mat.Moneda)</td>
                             <td>@Html.DisplayFor(model => mat.UnidadMedida)</td>
                             <td>@Html.DisplayFor(model => mat.Material)</td>
+                            <td>@Ajax.ActionLink(" ", "EliminarPrecio", new { id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaPrecioPizarra", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })</td>
                         </tr>
                     }}
             </table>

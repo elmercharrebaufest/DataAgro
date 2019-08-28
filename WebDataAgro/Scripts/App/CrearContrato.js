@@ -405,7 +405,7 @@ function InicializarElementos() {
     $("#NivelTarifaId").kendoDropDownList({
         optionLabel: "SELECCIONE UN NIVEL DE TARIFA...",
         dataTextField: "Descripcion",
-        dataValueField: "Id",
+        dataValueField: "Id"
     });
     $("#NivelTarifaId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
@@ -1078,8 +1078,7 @@ function InicializarElementos() {
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0,
-       
+        min: 0       
     });  
 
     $("#sustentablePrecioId").kendoNumericTextBox({
@@ -1212,8 +1211,6 @@ function InicializarElementos() {
         } else {
             document.querySelector(".datos-adicionales").style.display = "none";
         }
-       
-        
     });
 
     $("#DatosBoleto").click(function () {
@@ -1362,8 +1359,7 @@ function InicializarElementos() {
 
     $("#pagoDirectoId").click(function () {
         $("#CDId").prop("checked", false);
-        $("#WarrantId").prop("checked", false);
-        
+        $("#WarrantId").prop("checked", false);        
     });
 
     $("#establecimientoPropioId").click(function () {
@@ -1376,6 +1372,7 @@ function InicializarElementos() {
     $('#campanaId').change(function () {
         obtenerLocalidadProvincia();
     });
+
     $("#boton-ampliar").click(function () {
         $(".tooltip").tooltip('toggle');
         if ($("#boton-ampliar").text() == "+ AMPLIAR") {
@@ -1392,9 +1389,7 @@ function InicializarElementos() {
             } else if ($('#tipoId').val() == 2) {
                 $(".contratoAFijar").hide();
                 $(".contratoAPrecio").show();
-                $("#pagosDiv").show();
-                
-                
+                $("#pagosDiv").show();                
             }
         }
         else if ($("#boton-ampliar").text() == "- OCULTAR") {
@@ -1405,7 +1400,6 @@ function InicializarElementos() {
                 $(".contratoAFijar").hide();
                 $(".contratoAPrecio").hide();
             }
-          
         }
     });
 
@@ -1421,6 +1415,7 @@ function InicializarElementos() {
         }
         if ($("#tipoId").val() == 1 && $("#destinoId").val() != 1) {
             LimpiarDescuentos();
+            LimpiarApertura();
             $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
             $("#PorcentajeDescuentoId").val("");
         }
@@ -1520,6 +1515,18 @@ function InicializarElementos() {
 
     $("#TarifaFleteId").change(function () {
         $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
+        if ($(this).val() > 0) {
+            $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        } else {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
+    });
+    $("#NivelTarifaId").change(function () {
+        if ($(this).val() > 0) {
+            $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        } else {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
     });
     //FIN INICIALIZARELEMENTOS
 }
@@ -2155,6 +2162,7 @@ function ObtenerDatos() {
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     obj.AperturaPrecio = viewModel.AperturaPrecio;
+    
     obj.StandardDeCalidadId = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 3 ? 4 :
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 4 || obj.MaterialId == 5 ? 5 :
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId != 3 ? 1 :
@@ -2829,7 +2837,15 @@ function InsertarAperturasViewModel(total) {
 
     $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
     $("#precioTotalApertura").trigger("change");
-};
+
+    if (Financiero.Importe != 0 || Redespacho.Importe != 0 || Financiero.Importe != 0 || Comisiones.Importe != 0 || Bonificaciones.Importe != 0 || Comisiones.Porcentaje != 0 || Bonificaciones.Porcentaje != 0) {
+        $("#NivelTarifaId").data("kendoDropDownList").enable(false);
+        $("#TarifaFleteId").data("kendoNumericTextBox").enable(false);
+    } else {
+        $("#NivelTarifaId").data("kendoDropDownList").enable(true);
+        $("#TarifaFleteId").data("kendoNumericTextBox").enable(true);
+    }
+}
 
 
 function InicializarAperturaDePrecios() {

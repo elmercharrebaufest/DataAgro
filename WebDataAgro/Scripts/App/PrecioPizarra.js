@@ -27,8 +27,7 @@ function InicializarDate() {
 
 function LimpiarForm() {
     $(".limpiar").val("");
-    $("#MaterialId").val("");
-    $("#MonedaId").val("");
+    $("#MonedaId").val("ARP  ");
     InicializarDate();
    
 }
@@ -67,7 +66,7 @@ $(".number").kendoNumericTextBox({
     decimals: 2,
     restrictDecimals: true,
     spinners: false,
-    min: 0,
+    min: 0
 });
 
 $("#MaterialId").change(CargarPizarraHistorico);  
@@ -82,7 +81,7 @@ function CargarPizarraHistorico() {
         if (data) {
             tabla.empty();
             tabla.append('<tr><th> Pizarra</th ><th>Fecha Desde</th><th>Fecha Hasta</th><th>Precio</th>' +
-                '<th>Moneda</th><th>Unidad de Medida</th><th>Material</th></tr>');
+                '<th>Moneda</th><th>Unidad de Medida</th><th>Material</th><th></th></tr>');
             for (var i = 0; i < data.length; i++) {
                 var linea = '<tr><td>' + data[i].Pizarra + '</td>';
                 linea += '<td>' + kendo.toString(data[i].FechaDesde, "dd/MM/yyyy hh:mm tt") + '</td>';
@@ -90,7 +89,8 @@ function CargarPizarraHistorico() {
                 linea += '<td>' + data[i].Precio + '</td>';
                 linea += '<td>' + data[i].Moneda + '</td>';
                 linea += '<td>' + data[i].UnidadMedida + '</td>';
-                linea += '<td>' + data[i].Material + '</td></tr>';
+                linea += '<td>' + data[i].Material + '</td>';
+                linea += '<td> <a class="fa fa-minus-circle danger" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#listaPrecioPizarra" href="/PrecioPizarra/EliminarPrecio/' + data[i].Id +'"> </a></td></tr>';
                 tabla.append(linea);
             }
         }

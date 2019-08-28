@@ -1021,6 +1021,7 @@ body {
 
 .pointerEventDesabilitado {
     pointer-events: none;
+    background-color: #eee;
 }
 
 .modal-superior {
@@ -1198,3 +1199,5 @@ body {
             text-align: left;
         }
 }
+
+

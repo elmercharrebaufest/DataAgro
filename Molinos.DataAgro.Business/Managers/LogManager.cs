@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha,
                 Xml = x.Xml
                
-            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy);
+            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy, 0, "Fecha");
         }
     }
 }
