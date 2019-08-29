@@ -37,9 +37,8 @@ namespace Molinos.DataAgro.Test.Controllers
             precioPizarraManagerMock = new Mock<IPrecioPizarraManager>();
             materialManagerMock = new Mock<IMaterialManager>();
             pizarraManagerMock = new Mock<IPizarraManager>();
-            repositorioMock = new Mock<IRepositorio>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new PrecioPizarraController(repositorioMock.Object, precioPizarraManagerMock.Object, materialManagerMock.Object, pizarraManagerMock.Object);
+            target = new PrecioPizarraController(precioPizarraManagerMock.Object, materialManagerMock.Object, pizarraManagerMock.Object);
         }
 
         [Test]
