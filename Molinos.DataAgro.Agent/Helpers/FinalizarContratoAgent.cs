@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.Password = PassSap;
                 logger.Debug("Finalizando Contrato Nro: " + contrato.ContratoId);
                 var listaDescuentos = new List<ZMPES5290>();
+                
                 foreach (var descBon in descuentoBonificacion)
                 {
                     if (descBon.TipoPeriodoDBId != 1)
@@ -110,18 +111,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 logger.Debug("Calidades: " + calidad);
                 var listaApertura = new List<ZMPES5440>();
-
-                foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
+                if (contrato.TipoNegocioId == 2)
                 {
-                    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
+                    foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
                     {
-                        listaApertura.Add(new ZMPES5440
+                        if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
-                            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                            IMPORTE = apertura.Importe,
-                            MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
-                            PORC = apertura.Porcentaje
-                        });
+                            listaApertura.Add(new ZMPES5440
+                            {
+                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                                IMPORTE = apertura.Importe,
+                                MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                                PORC = apertura.Porcentaje
+                            });
+                        }
                     }
                 }
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
@@ -210,7 +213,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_CALIDAD = listaCalidades.ToArray(),
                     IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion,
                     IM_APERTURA = listaApertura.ToArray()
-
                 };
                 logger.Debug(rq.ToXml());
 
