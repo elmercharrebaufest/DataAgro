@@ -324,15 +324,15 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public JsonResult BuscarCorredores(string filtro, bool corredor)
+        public JsonResult BuscarCorredores(string filtro, int corredor)
         {
-            return Json(mobjProveedorManager.DevolverProveedores(filtro, corredor, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedores(filtro, 1, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
         }
-        public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, bool corredor)
+        public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro)
         {
             if (filtro == "")
             {
-                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, corredor, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 0, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
             }
             else
             {

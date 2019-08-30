@@ -136,7 +136,11 @@ namespace Molinos.DataAgro.Business.Managers
             var config = repositorio.Obtener<ConfiguracionCupo>(limite[0].ConfiguracionCupoId);
             if (limite.Sum(x=>x.CantidadCupo)> config.LimiteCupo)
             {
-                resultado.Error("cantidad", "La cantidad de cupos excede el limite");
+                resultado.Error("cantidad", "La cantidad de cupos excede el limite cargado");
+            }
+            if (limite.Sum(x => x.CantidadCupo) < config.LimiteCupo)
+            {
+                resultado.Error("cantidad", "La cantidad de cupos no alcanza el limite cargado");
             }
             return resultado;
         }

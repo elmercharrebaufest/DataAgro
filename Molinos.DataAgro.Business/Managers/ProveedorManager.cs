@@ -2318,10 +2318,17 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultado;
         }
-        public List<BusquedaHome> DevolverProveedores(string filtro, bool corredor, List<int> equipo)
+        public List<BusquedaHome> DevolverProveedores(string filtro, int corredor, List<int> equipo)
         {
             var resultado = repositorio.ListarConsulta(new DevolverProveedores(filtro, corredor, equipo));
-
+            var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
+            resultado = lista.Select(x => new BusquedaHome
+            {
+                Cuit = x.Key.Cuit,
+                Filtro = x.Key.Filtro,
+                RazonSocial = resultado.FirstOrDefault(y=>y.Cuit== x.Key.Cuit).RazonSocial,
+                Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
+            }).ToList();
             return resultado;
         }
 

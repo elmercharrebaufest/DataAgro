@@ -219,7 +219,8 @@ function botonVisualizar(dataItem, icono) {
 
         "'" + dataItem.ZonaDescripcion + "'" + ',' +
         "'" + dataItem.NivelTarifa + "'" + ',' +
-        "'" + dataItem.TarifaFlete + "'" + 
+        "'" + dataItem.TarifaFlete + "'" + ',' +
+        "'" + dataItem.Compensacion + "'" + 
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
@@ -1351,7 +1352,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
-    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona,nivelTarifa, tarifaFlete) {
+    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona,nivelTarifa, tarifaFlete,compensacion) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1427,7 +1428,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_comercial_AFijar").text(comercial);
     $("#visualizar_material").text(material);
     $("#visualizar_cantidad").text(isNaN(parseInt(cantidad)) ? "" : kendo.toString(parseInt(cantidad), "n0"));
-    (precio != 0) ? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : pizarra ? $("#visualizar_precio").text("Pizarra") : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
+    precio != 0 ? $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2") + " " + moneda) : pizarra ? $("#visualizar_precio").text("Pizarra") : $("#visualizar_precio").text(kendo.toString(parseFloat(precio), "n2"));
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
 
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
@@ -1498,13 +1499,9 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
     }
-    if (nivelTarifa == "" && tarifaFlete == null) {
-        $("#fleteDivVisualizar").hide();
-    } else {
-        $("#fleteDivVisualizar").show();
-        $("#visualizar_nivelFlete").text(nivelTarifa);
-        $("#visualizar_tarifaFlete").text(tarifaFlete);
-    }
+  
+    
+
     var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
 
     $.each(descuentosDto, function (key, descuento) {
@@ -1551,6 +1548,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar-zona-girasol").text(zona);
     } else {
         $("#visualizar-zona-girasol").text("");
+        $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
     }
     $("#visualizar_aperturaFinanciero").text(null);
     $("#visualizar_aperturaRedespacho").text(null);
@@ -1560,7 +1558,6 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaRedespachoDivVisualizar").hide();
     $("#aperturaComisionesDivVisualizar").hide();
     $("#aperturaBonificacionesDivVisualizar").hide();
-    $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
 
@@ -1606,6 +1603,15 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
         });
     }
+    if ((nivelTarifa == "" || nivelTarifa == "null") && tarifaFlete == "null") {
+        $("#fleteDivVisualizar").hide();
+    } else {
+        $("#fleteDivVisualizar").show();
+        $("#visualizar_nivelFlete").text(nivelTarifa);
+        $("#visualizar_tarifaFlete").text(tarifaFlete);
+        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+    }                       
+    compensacion ? $("#compensacionVisualizar").show() : $("#compensacionVisualizar").hide();
 }
 
 function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {

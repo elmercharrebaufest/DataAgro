@@ -187,7 +187,7 @@ function InicializarElementos() {
                     else {
                         cuit = cuitAux;
                     }
-                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: false };
+                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
                 }
             }
 
@@ -271,7 +271,7 @@ function InicializarElementos() {
                     url: "/Proveedor/BuscarCorredores"
                 },
                 parameterMap: function (data, type) {
-                    return { filtro: $('#buscadorCorredor').val(), corredor: true };
+                    return { filtro: $('#buscadorCorredor').val(), corredor: 1 };
                 }
             }
 

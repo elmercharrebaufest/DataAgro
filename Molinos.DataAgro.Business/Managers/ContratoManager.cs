@@ -467,7 +467,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                 {
                     oContrato.EstadoId = 7;
                 }
@@ -1452,17 +1452,18 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId)
         {
-            return repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(apertura => new AperturaPrecioDto()
+            var lista = repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(x => new AperturaPrecioDto
             {
-                contratoId = apertura.ContratoId,
-                Id = apertura.Id,
-                ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
-                ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
-                Importe = apertura.Importe,
-                MonedaId = apertura.MonedaId,
-                Porcentaje = apertura.Porcentaje
+                contratoId = x.ContratoId,
+                Id = x.Id,
+                ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
+                ConceptoAperturaPrecioId = x.ConceptoAperturaPrecioId,
+                Importe = x.Importe,
+                MonedaId = x.MonedaId,
+                Porcentaje = x.Porcentaje
             },
             x => x.ContratoId == contratoId);
+            return lista;
         }
         public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
         {

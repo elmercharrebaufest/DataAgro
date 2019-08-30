@@ -139,7 +139,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ImporteBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
                     PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                     NivelTarifa = contrato.NivelTarifa.Descripcion,
-                    TarifaFlete = contrato.TarifaFlete
+                    TarifaFlete = contrato.TarifaFlete,
+                    Compensacion = contrato.Compensacion.Value
                 };
 
             var queryFijacion =
@@ -248,7 +249,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ImporteBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
                     PorcentajeBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                     NivelTarifa = "",
-                    TarifaFlete = null
+                    TarifaFlete = null,
+                    Compensacion = null
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -358,7 +360,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ImporteBonificacion = null,
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
-                        TarifaFlete = null
+                        TarifaFlete = null,
+                        Compensacion = null
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -467,7 +470,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ImporteBonificacion = null,
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
-                        TarifaFlete = null
+                        TarifaFlete = null,
+                        Compensacion = null
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
@@ -575,7 +579,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ImporteBonificacion = null,
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
-                        TarifaFlete = null
+                        TarifaFlete = null,
+                        Compensacion = null
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);
