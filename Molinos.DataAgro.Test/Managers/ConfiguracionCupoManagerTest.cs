@@ -99,7 +99,7 @@ namespace Molinos.DataAgro.Test.Managers
                 new LimiteCupo{ Id = 1, ZonaCupoId = 2 , ConfiguracionCupoId = 1, CantidadCupo = 10 }
             };
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>()))
-                .Returns(new ConfiguracionCupo { Id = 1, LimiteCupo = 100 } );
+                .Returns(new ConfiguracionCupo { Id = 1, LimiteCupo = 20 } );
             repositorioMock.Setup(x => x.Agregar(It.IsAny<LimiteCupo>()));
             repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>()))
                 .Returns(new LimiteCupo { Id = 1, ZonaCupoId = 2, ConfiguracionCupoId = 1, CantidadCupo = 10 });

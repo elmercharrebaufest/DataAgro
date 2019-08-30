@@ -1530,7 +1530,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<DevolverProveedores>()))
                 .Returns(new List<BusquedaHome>());
 
-            var result = target.DevolverProveedores("aa", false, new List<int>() { 1, 2, 3 });
+            var result = target.DevolverProveedores("aa", It.IsAny<int>(), new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<DevolverProveedores>()), Times.Once);
             Assert.NotNull(result);
