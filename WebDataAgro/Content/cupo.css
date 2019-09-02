@@ -38,9 +38,6 @@
     overflow-x: auto;
 }
 
-.pend { /*icons*/
-    color: #ffc100;
-}
 
 #gridCupo td button {
     border: 0;
@@ -120,11 +117,15 @@
 }
 
 .status.sinctg {
-    background-color: #ffc100;
-    color: #000000;
+    background-color: #179e2b;
+    color: #fff;
 }
+.pend { /*icons*/
+    color: #179e2b;
+}
+
 .status.anulado {
-    background-color: #848484;
+    background-color: #017940;
     color: #fff;
 }
 .anu { /*icons*/

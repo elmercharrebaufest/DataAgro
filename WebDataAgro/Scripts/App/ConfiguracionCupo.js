@@ -170,6 +170,7 @@ function AbrirModal(id) {
     $("#tablaLimite").empty();
     var zonas = MSExecuteOnServer("/ConfiguracionCupo/TraerZonaCupo");
     $("#tablaLimite").append('<tr><th colspan="2">Zona</th><th>Cupos</th></tr>');
+    
     if (zonas.ZonaCupo) {
         cantidadZonas = zonas.ZonaCupo.length;
         for (var i = 0; i < cantidadZonas; i++) {
@@ -187,8 +188,11 @@ function AbrirModal(id) {
         min:0
     });
     CargarLimites(id);
+    for (var j = 0; j < cantidadZonas; j++) {        
+        var numeric = $("#cantidad" + zonas.ZonaCupo[j].Id).data("kendoNumericTextBox");
 
-
+        numeric.element.unbind("keydown");
+    }
     $("#ModalLimiteCupo").modal('show');
 }
 function CargarLimites(id) {

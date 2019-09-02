@@ -82,13 +82,13 @@ function InicializarCuposIndex() {
                 },
             { field: "Observaciones", type: "string", width: 150 },
             {
-                title: "", filterable: false, sortable: false, width: 150,
+                title: "", filterable: false, sortable: false, width: 200,
                 template: function (dataItem) {
                     if (dataItem.EstadoCupoId == 1) {
-                        return '<div class="status sinctg">' + dataItem.EstadoCupo + '</div>' +
+                        return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonBorrar(dataItem, 'fa-trash pend');
                     } else if (dataItem.EstadoCupoId == 5) {
-                        return '<div class="status anulado">' + dataItem.EstadoCupo + '</div>' +
+                        return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonBorrar(dataItem, 'fa-trash anu');
                     }
                 }
@@ -182,7 +182,6 @@ function ObtenerDatosModalBorrado() {
 }
 function recargarGrilla() {
     $('#gridCupo').data('kendoGrid').dataSource.read();
-    AvisoContratosPendientes();
 }
 function InicializarCargaCupos() {
     $("#buscadorProveedor").click(function () {
