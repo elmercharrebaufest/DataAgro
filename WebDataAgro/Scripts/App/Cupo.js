@@ -1,4 +1,5 @@
 ﻿var viewModel;
+var fecha;
 var zonaSeleccionada;
     $(document).ready(function () {
         kendo.culture("es-AR");
@@ -230,11 +231,12 @@ function InicializarCargaCupos() {
         }
     });
 
-    $("#fecha").kendoDatePicker({
-        value: new Date(),
-        format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    $("#FechaEntrega").kendoDatePicker({
+
+        //format: "dd-MM-yyyy",
+        //parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
+
     $("#cantidad").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",

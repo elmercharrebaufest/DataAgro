@@ -49,14 +49,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-
+                    var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "";
                     var rq = new Z_MPRFC_CREAR_CUPOS
                     {
                         IM_CUPO = new ZMPES5500()
                         {
                             FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
                             MATNR = cupo.Material.Codigo,
-                            PROVEEDOR = cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0,2),
+                            PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0,2),
                             DESCPROV = cupo.Proveedor.RazonSocial,
                             PLANTA = cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,
@@ -77,20 +77,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var listaCupos = new List<string>();
                     for (var i = 0; i < cantidadCupos; i++)
                     {
+                        logger.Debug("envio {0}", i);
                         var devolucion = agent.SI_ZMPWS_DATAAGRO_CREAR_CUPOS(rq);
 
                         logger.Debug(devolucion.ToXml());
                         var log = repositorio.Obtener<Log>(logId.Id);
                         log.Xml += devolucion.ToXml();
                         repositorio.GuardarCambios();
+                        logger.Debug("Guardado en la base");
 
                         if (devolucion.EX_MENSAJE_ERROR != "")
                         {
                             throw new Exception(devolucion.EX_MENSAJE_ERROR);
                         }
+                        logger.Debug("Sin Error");
                         listaCupos.Add(devolucion.EX_N_CUPO);
                     }
-
                     return listaCupos;
                 }
                 catch (Exception e)

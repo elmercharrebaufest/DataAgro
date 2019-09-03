@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado GrabarCupo(Cupo cupo, int cantidadCupos)
         {
             var error = Validar(cupo, cantidadCupos);
-            if (error.HayError)
+            if (error.HayError||cantidadCupos==0)
             {
                 return error;
             }
@@ -86,14 +86,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var limiteCupo = repositorio.Obtener<LimiteCupo>(x => x.ConfiguracionCupo.CentroId == cupo.CentroId && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
            && x.ZonaCupoId == cupo.ZonaCupoId && x.ConfiguracionCupo.Fecha == cupo.FechaIngreso);
-            if (limiteCupo == null)
+            if (limiteCupo == null || limiteCupo.CantidadCupo == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Zona no esta dada de alta en Administracion de Cupos"));
             }
-            var cuposOtorgados = repositorio.Contar<Cupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso && x.ZonaCupoId == cupo.ZonaCupoId);
-            if (limiteCupo!= null && limiteCupo.CantidadCupo < cantidadCupos + cuposOtorgados)
+            else
             {
-                error.Errores.Add(new ErrorMessage(400, "Limite de cupos alcanzado"));
+                var cuposOtorgados = repositorio.Contar<Cupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso && x.ZonaCupoId == cupo.ZonaCupoId);
+                if (limiteCupo != null && limiteCupo.CantidadCupo < cantidadCupos + cuposOtorgados)
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Limite de cupos alcanzado"));
+                }
             }
             return error;
         }

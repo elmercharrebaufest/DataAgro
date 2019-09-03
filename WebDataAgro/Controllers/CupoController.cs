@@ -55,7 +55,7 @@ namespace WebDataAgro.Controllers
             CargarViewBag();
             int zona;
             int.TryParse(ViewBag.ZonaSeleccionada, out zona);
-            return View(new CupoModel() { ZonaId = zona});
+            return View(new CupoModel() { ZonaId = zona, FechaEntrega = DateTime.Now.Date});
         }
         
         [HttpPost]
@@ -68,6 +68,9 @@ namespace WebDataAgro.Controllers
                 {
                     ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
                 }
+            }
+            if (!ModelState.IsValid)
+            {
                 CargarViewBag();
                 return View(cupo);
             }

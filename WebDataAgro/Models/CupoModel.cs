@@ -17,6 +17,7 @@ namespace WebDataAgro.Models
         public int Planta { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_MaterialRequerido")]
         public int Material { get; set; }
+        
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaEntregaRequerido")]
         public DateTime FechaEntrega { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]

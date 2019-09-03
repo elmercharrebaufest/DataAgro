@@ -11,7 +11,8 @@
 @section Scripts {
     @Scripts.Render("~/bundles/Cupos")
 }
-<script> zonaSeleccionada=@ViewBag.ZonaSeleccionada</script>
+<script> fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
+    </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
@@ -65,7 +66,7 @@
                 </div>
                 <div class="col-sm-4">
                     <span id="fechaDiv">
-                        @Html.TextBoxFor(x => x.FechaEntrega, new { type = "date", @class = "w100", @id = "fecha" })
+                        @Html.TextBoxFor(x => x.FechaEntrega,"{0:yyyy-MM-dd}", new { @class = "w100" })
                     </span>
                 </div>
             </div>
@@ -76,7 +77,7 @@
                     <label>Cantidad</label>
                 </div>
                 <div class="col-sm-4 ">
-                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @id = "cantidad" })
+                    @Html.TextBoxFor(x => x.CantidadCupos,null, new { type = "number", @class = "w100", @id = "cantidad" })
                 </div>
             </div>
             <div>
