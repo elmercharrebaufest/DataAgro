@@ -235,10 +235,10 @@ function InicializarCuposIndex() {
         }, 200);
     }
     function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "ProveedorId", "/Cupo/ListarProveedor");
+        return createMultiSelect(element, "Proveedor", "Proveedor", "/Cupo/ListarProveedor");
     }
     function createMultiSelectComercial(element) {
-        return createMultiSelect(element, "Comercial", "ComercialId", "/Cupo/ListarComercial");
+        return createMultiSelect(element, "Comercial", "Comercial", "/Cupo/ListarComercial");
     }
 }
 function botonBorrar(dataItem, icono) {

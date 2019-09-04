@@ -68,8 +68,10 @@ namespace WebDataAgro.Controllers
             {
                 foreach (var e in cupoGrabado.Errores)
                 {
-                    if (ViewData.ModelState["Proveedor"].Errors.Any(x=>x.ErrorMessage != e.Message ))
-                    ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
+                    if (ViewData.ModelState["Proveedor"].Errors.Count==0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
+                    {
+                        ModelState.AddModelError("Error", e.Message);
+                    }
                 }
             }
             if (!ModelState.IsValid)
