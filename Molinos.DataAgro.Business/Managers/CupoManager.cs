@@ -66,7 +66,10 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado Validar(Cupo cupo,int cantidadCupos)
         {
             var error = new Resultado();
-           
+            if (cupo.ProveedorId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacio"));
+            }
             if (cupo.ProveedorId != 0)
             {
                 var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);

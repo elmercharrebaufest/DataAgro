@@ -68,6 +68,7 @@ namespace WebDataAgro.Controllers
             {
                 foreach (var e in cupoGrabado.Errores)
                 {
+                    if (ViewData.ModelState["Proveedor"].Errors.Any(x=>x.ErrorMessage != e.Message ))
                     ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
                 }
             }
@@ -154,6 +155,16 @@ namespace WebDataAgro.Controllers
         {
             var model = cupoManager.EliminarCupo(id);
             return Json(model);
+        }
+        public ActionResult ListarProveedor(string text = "")
+        {
+            var proveedores = proveedorManager.ListarProveedor(text);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ListarComercial(string text = "")
+        {
+            var comerciales = comercialManager.ListarComercial(text, GlobalVariables.Equipo);
+            return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
     }
 }

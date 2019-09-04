@@ -402,13 +402,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
             {
-                oErrorMessages.Error("dolarizado", "La fecha no puede ser mayor a " + fechaFijacion.Value.ToString("dd/MM/yyyy"));
-                
+                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la entrega");
             }
 
             if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
             {
-                oErrorMessages.Error("dolarizado", "La fecha no puede ser mayor a " + fechaAPrecio.ToString("dd/MM/yyyy"));
+                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de fijación");
             }
             
             if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null|| oParam.NivelTarifaId == 0))

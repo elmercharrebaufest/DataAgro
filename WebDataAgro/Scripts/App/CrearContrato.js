@@ -818,6 +818,7 @@ function InicializarElementos() {
         change: function () {
             if (this.value() == 2) {
                 $("#consignatarioDiv").show();
+              
             } else {
                 $("#consignatarioDiv").hide();
                 $("#consignatarioId").prop("checked", false);
@@ -831,6 +832,17 @@ function InicializarElementos() {
             }
 
             $("#clasificacion").trigger('change');
+
+            $("#planCanjeId").click(function () {
+                if (this.checked) {
+                $("#consignatarioId").prop("checked", false);
+                }
+            });
+            $("#consignatarioId").click(function () {
+                if (this.checked) {
+                    $("#planCanjeId").prop("checked", false);
+                }
+            });
         }
     });
 

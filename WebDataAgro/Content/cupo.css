@@ -135,3 +135,10 @@
 .noRightPadding{
     padding-right:0;
 }
+
+.k-filter-menu{
+    width:inherit;
+}
+div > label {
+    margin-left: 10px;
+}

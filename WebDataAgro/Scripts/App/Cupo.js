@@ -41,7 +41,8 @@ function InicializarCuposIndex() {
                 model: {
                     id: 'Id',
                     fields: {
-                        FechaIngreso: { type: "date" }
+                        FechaIngreso: { type: "date" },
+                        FleteProcedencia: {type: "boolean"}
                     }
                 }
             },
@@ -69,20 +70,16 @@ function InicializarCuposIndex() {
             { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
-            { field: "Proveedor", type: "string", width: 150 },
+            { field: "Proveedor", type: "string", width: 150, filterable: { ui: createMultiSelectProveedor } },
             { field: "Destinatario", type: "string", width: 150 },
             { field: "Centro", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
             { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
             {
-                field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) {
-                    if (dataItem.FleteProcedencia) {
-                        return "Si";
-                    } else { return "No"; }
-                }
+                field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
             },
             { field: "Observaciones", type: "string", width: 150 },
-            { field: "Comercial", type: "string", width: 150 },
+            { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
             {
                 field: "EstadoCupo", title: "Estado", filterable: {
                     multi: true,
@@ -167,9 +164,82 @@ function InicializarCuposIndex() {
                     lte: "Menor que o igual a"
                 }
             }
+        },
+        filterMenuInit: function (e) {
+            if (e.field == "Proveedor" || e.field == "Comercial") {
+                $(e.container).css("width", "300px");
+            }
         }
     });
-    
+    var checkInputs = function (elements) {
+        elements.each(function () {
+            var element = $(this);
+            var input = element.children("input");
+
+            input.prop("checked", element.hasClass("k-state-selected"));
+        });
+    };
+    function createMultiSelect(element, textField, valueField, url) {
+        element.removeAttr("data-bind");
+
+        element.kendoMultiSelect({
+            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
+            dataBound: function () {
+                var items = this.ul.find("li");
+                setTimeout(function () {
+                    checkInputs(items);
+                });
+            },
+
+            dataTextField: textField,
+            dataValueField: valueField,
+            autoClose: false,
+            autoBind: false,
+            delay: 300,
+            dataSource: {
+                serverFiltering: true,
+                filter: [],
+                transport: {
+                    read: {
+                        url: url,
+                        data: function () {
+                            return {
+                                text: element.data("kendoMultiSelect").input.val()
+                            };
+                        },
+                        prefix: ""
+                    }
+                }
+            },
+            change: function (e) {
+                var items = this.ul.find("li");
+                checkInputs(items);
+
+                var filter = { logic: "or", filters: [] };
+                var values = this.value();
+                $.each(values, function (i, v) {
+                    if (v !== '') {
+                        filter.filters.push({ field: valueField, operator: "eq", value: v });
+                    }
+                });
+                if (values.length === 0) {
+                    $("#gridCupo").data("kendoGrid").dataSource.filter(defaultFilter);
+                } else {
+                    $("#gridCupo").data("kendoGrid").dataSource.filter(filter);
+                }
+            }
+        });
+        setTimeout(function () {
+            $(".k-multiselect").parent().children(".k-dropdown").remove();
+            $(".k-multiselect").parent().children("div").find('button').remove();
+        }, 200);
+    }
+    function createMultiSelectProveedor(element) {
+        return createMultiSelect(element, "Proveedor", "ProveedorId", "/Cupo/ListarProveedor");
+    }
+    function createMultiSelectComercial(element) {
+        return createMultiSelect(element, "Comercial", "ComercialId", "/Cupo/ListarComercial");
+    }
 }
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +

@@ -733,7 +733,7 @@ function CreateGridInformeCompraNet() {
         },
         filterMenuInit: function (e) {
             if (e.field == "Proveedor" || e.field == "Comercial") {
-                $(e.container).css("width", "300px")
+                $(e.container).css("width", "300px");
             }
         }
 
