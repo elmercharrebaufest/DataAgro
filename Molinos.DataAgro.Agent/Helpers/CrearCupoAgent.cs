@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-                    var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "";
+                    var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
                     var rq = new Z_MPRFC_CREAR_CUPOS
                     {
                         IM_CUPO = new ZMPES5500()

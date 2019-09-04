@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div>
-                        @Html.DropDownListFor(x => x.Material, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
+                        @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     <label>Cantidad</label>
                 </div>
                 <div class="col-sm-4 ">
-                    @Html.TextBoxFor(x => x.CantidadCupos,null, new { type = "number", @class = "w100", @id = "cantidad" })
+                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder="SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
                 </div>
             </div>
             <div>

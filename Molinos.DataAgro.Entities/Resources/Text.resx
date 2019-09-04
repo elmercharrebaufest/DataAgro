@@ -183,6 +183,9 @@
   <data name="Error_CentroRequerido" xml:space="preserve">
     <value>El Centro no debe estar vacio</value>
   </data>
+  <data name="Error_Dias" xml:space="preserve">
+    <value>El campo cantidad de días no debe estar vacío</value>
+  </data>
   <data name="Error_FechaEntregaRequerido" xml:space="preserve">
     <value>La Fecha de Ingreso no debe estar vacio</value>
   </data>

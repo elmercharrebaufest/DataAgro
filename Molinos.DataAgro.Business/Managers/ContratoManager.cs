@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
@@ -40,6 +41,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
+        private readonly IConfiguracionManager configuracionManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -52,7 +54,7 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent)
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -70,6 +72,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oDiasHabilesAgent = oDiasHabilesAgent;
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
+            this.configuracionManager = configuracionManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
@@ -387,6 +390,27 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
+
+            var cantidadDias = configuracionManager.TraerPesificacionDolarizado().CantidadDias;
+            var fechaFijacion = oParam.HastaFijacion;
+            var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
+
+            if (fechaFijacion.HasValue)
+            {
+                fechaFijacion = fechaFijacion.Value.AddDays(cantidadDias);
+            }
+
+            if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
+            {
+                oErrorMessages.Error("dolarizado", "La fecha no puede ser mayor a " + fechaFijacion.Value.ToString("dd/MM/yyyy"));
+                
+            }
+
+            if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
+            {
+                oErrorMessages.Error("dolarizado", "La fecha no puede ser mayor a " + fechaAPrecio.ToString("dd/MM/yyyy"));
+            }
+            
             if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null|| oParam.NivelTarifaId == 0))
             {
                 oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");
@@ -712,25 +736,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
-            {
-                if (oContratoSave.CorredorId != null)
-                {
-                    try
-                    {
-                        if (!oRelacionCorredorProveedorAgent.ObtenerRelacionCorredorProveedor(oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT))
-                        {
-                            throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oContratoSave.Corredor.CUIT, oContratoSave.Proveedor.CUIT));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
-                        repositorio.GuardarCambios();
-                        logger.Error(e);
-                        oEntityErrors.Error("", e.Message);
-                        return oEntityErrors;
-                    }
-                }
+            {                
                 try
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);

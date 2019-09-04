@@ -259,6 +259,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El campo cantidad de días no debe estar vacío.
+        /// </summary>
+        public static string Error_Dias {
+            get {
+                return ResourceManager.GetString("Error_Dias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to La Fecha de Ingreso no debe estar vacio.
         /// </summary>
         public static string Error_FechaEntregaRequerido {

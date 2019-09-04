@@ -70,6 +70,7 @@
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
+    <Compile Include="Dto\ConfiguracionDto.cs" />
     <Compile Include="Dto\LimiteCupoDto.cs" />
     <Compile Include="Dto\CupoDto.cs" />
     <Compile Include="Dto\EstadioDto.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Entities\Estadio.cs" />
     <Compile Include="Entities\ConfiguracionCupo.cs" />
     <Compile Include="Entities\EstadoCupo.cs" />
+    <Compile Include="Entities\Configuracion.cs" />
     <Compile Include="Entities\NivelTarifa.cs" />
     <Compile Include="Entities\Pizarra.cs" />
     <Compile Include="Entities\PrecioPizarra.cs" />

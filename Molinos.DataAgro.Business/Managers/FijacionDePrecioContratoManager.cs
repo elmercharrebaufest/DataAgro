@@ -339,26 +339,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
-            {
-                if (oFijacionDePrecioSave.CorredorId != null)
-                {
-                    try
-                    {
-
-                        if (!oRelacionCorredorProveedorAgent.ObtenerRelacionCorredorProveedor(oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT))
-                        {
-                            throw new Exception(string.Format("No existe Relación entre Corredor {0} y Proveedor {1}", oFijacionDePrecioSave.Corredor.CUIT, oFijacionDePrecioSave.Proveedor.CUIT));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
-                        repositorio.GuardarCambios();
-                        logger.Error(e);
-                        oEntityErrors.Error("", e.Message);
-                        return oEntityErrors;
-                    }
-                }
+            {                
                 try
                 {
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);

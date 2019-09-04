@@ -847,47 +847,6 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void FinalizarContratoErrorCorredorProveedor()
-        {
-            var oContrato = new Contrato()
-            {
-                ProveedorId = 1,
-                Proveedor = new Proveedor { CUIT = "1234" },
-                CorredorId = 2,
-                Corredor = new Proveedor { CUIT = "2345" },
-                ClasificacionId = 1,
-                MaterialId = 1,
-                Cantidad = 1,
-                Precio = 1000,
-                TipoNegocioId = 2,
-                DestinoId = 1,
-                LocalidadId = 1,
-                ProvinciaId = 1,
-                FechaEntrega = DateTime.Now,
-                FechaDesde = DateTime.Now,
-                FechaHasta = DateTime.Now,
-                MonedaId = "ARS ",
-                CampanaId = 1,
-                ComercialId = 70,
-                EstablecimientoPropio = true,
-                BoletoId = 3,
-                StandardDeCalidadId = 1,
-                EstadoId = (int)EnumEstadoContrato.Confirmado,
-                Comercial = new Comercial { ComercialId = 1 }
-            };
-
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
-            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
-            ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecio = new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } } });
-            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception("Mensaje de error"));
-
-            var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
-            Assert.That(resultado.HayError);
-        }
-
-        [Test]
         public void FinalizarContratoError()
         {
             var oContrato = new Contrato()

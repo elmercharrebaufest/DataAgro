@@ -55,13 +55,15 @@ namespace WebDataAgro.Controllers
             CargarViewBag();
             int zona;
             int.TryParse(ViewBag.ZonaSeleccionada, out zona);
-            return View(new CupoModel() { ZonaId = zona, FechaEntrega = DateTime.Now.Date});
+            return View(new CupoModel() {CantidadCupos= null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date});
         }
         
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
-            var cupoGrabado = cupoManager.GrabarCupo(TransformarAEntidad(cupo), cupo.CantidadCupos);
+            cupo.CantidadCupos = cupo.CantidadCupos
+                                 != null ? cupo.CantidadCupos : 0;
+            var cupoGrabado = cupoManager.GrabarCupo(TransformarAEntidad(cupo), cupo.CantidadCupos.Value);
             if (cupoGrabado.HayError)
             {
                 foreach (var e in cupoGrabado.Errores)
@@ -101,7 +103,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.MaterialId.ToString(),
-                    Selected = false
+                    Selected = i.MaterialId == 3 ? true : false
                 });
             }
             ViewBag.Material = listaMaterial.OrderBy(x => x.Value);
@@ -128,7 +130,7 @@ namespace WebDataAgro.Controllers
             var entidad = new Cupo
             {
                 ProveedorId = cupo.Proveedor,
-                MaterialId = cupo.Material,
+                MaterialId = cupo.MaterialId,
                 FechaIngreso = cupo.FechaEntrega,
                 CentroId = cupo.Planta,
                 FleteProcedencia = cupo.FleteAcarreo,

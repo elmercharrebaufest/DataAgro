@@ -572,7 +572,7 @@ function CreateGridInformeCompraNet() {
                         Estado_Contrato: "Eliminado"
                     }]
                 }, itemTemplate: function (e) {
-                    return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>"
+                    return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>";
                 }, template: function (dataItem) {
                     if (dataItem.Estado == 1 && ($("#perfil").val() == "Mesa")) { //pendiente
                         return '<div class="status pendiente">Pendiente</div>' +

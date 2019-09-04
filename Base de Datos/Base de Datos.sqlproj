@@ -262,6 +262,7 @@
     <Build Include="dbo\Tables\ConfiguracionCupo.sql" />
     <Build Include="dbo\Tables\LimiteCupo.sql" />
     <Build Include="dbo\Tables\EstadoCupo.sql" />
+    <Build Include="dbo\Tables\Configuracion.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

@@ -488,9 +488,11 @@
         </div>
         <div class="row">
             <div class="col-sm-2 ">
-                <label style="width:120px">Dolarizado</label>
-                <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
-                <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
+                <div id="pagoDolarizadoDiv">
+                    <label style="width:120px">Dolarizado</label>
+                    <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
             <div class="col-md-4 col-sm-9">
                 <div id="dolarizadoDiv" hidden>
@@ -611,7 +613,7 @@
                 </div>
                 <div class="col-md-5 col-sm-9">
                     <span id="BolsaFisicoDiv" hidden>
-                        <select id="bolsaFisicoId" data-bind="source: BolsaCombo, value: Parametros.bolsaFisicoId, disabled: isControlDisabled"></select>
+                        <select id="bolsaFisicoId" data-bind="source: BolsaFisicoCombo, value: Parametros.bolsaFisicoId, disabled: isControlDisabled"></select>
                         <img id="errbolsaFisicoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
@@ -624,7 +626,7 @@
                 </div>
                 <div class="col-md-5 col-sm-9">
                     <span id="BolsaCartaDiv" hidden>
-                        <select id="bolsaCartaId" data-bind="source: BolsaCombo, value: Parametros.bolsaCartaId, disabled: isControlDisabled"></select>
+                        <select id="bolsaCartaId" data-bind="source: BolsaCartaCombo, value: Parametros.bolsaCartaId, disabled: isControlDisabled"></select>
                         <img id="errbolsaFisicoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>

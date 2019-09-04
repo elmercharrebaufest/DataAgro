@@ -1,0 +1,52 @@
+﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces.Managers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebDataAgro.Models;
+
+namespace WebDataAgro.Controllers
+{
+    public class ConfiguracionController : Controller
+    {
+        private readonly IConfiguracionManager configuracionManager;
+
+        public ConfiguracionController(IConfiguracionManager configuracionManager)
+        {
+            this.configuracionManager = configuracionManager;
+        }
+
+        public ActionResult Index()
+        {
+            var conf = configuracionManager.TraerPesificacionDolarizado();
+            
+            return View(new ConfiguracionModel { CantidadDias = conf != null ? conf.CantidadDias : 0 });
+        }
+        [HttpPost]
+        public ActionResult GuardarPesificacionDolarizado(ConfiguracionModel configuracion)
+        {
+            var configuracionGrabada = configuracionManager.GrabarFechaPesificacionDolarizado(TransformarAEntidad(configuracion));
+           
+            if (configuracionGrabada.HayError ||!ModelState.IsValid )
+            {
+                foreach (var e in configuracionGrabada.Errores)
+                {
+                    ModelState.AddModelError(e.ErrorCode.ToString(), e.Message);
+                }                
+            }
+            return View("Index",configuracion);
+        }
+
+        private Configuracion TransformarAEntidad(ConfiguracionModel configuracion)
+        {
+            var entidad = new Configuracion
+            {
+                Id = configuracion.Id,
+                CantidadDias = configuracion.CantidadDias
+            };
+            return entidad;
+        }
+    }
+}

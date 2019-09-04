@@ -20,7 +20,7 @@ var zonaSeleccionada;
     });
 
 function InicializarCuposIndex() {    
-    var defaultFilter = { field: "FechaIngreso", operator: "eq", value: new Date };
+    var defaultFilter = { field: "FechaIngreso", operator: "gte", value: new Date };
         var ds = {
             transport: {
                 read: {
@@ -47,7 +47,7 @@ function InicializarCuposIndex() {
             },
             serverPaging: true,
             serverSorting: true,
-            sort: [{ field: "FechaIngreso", dir: "desc" }],
+            sort: [{ field: "FechaIngreso", dir: "asc" }],
             serverFiltering: true,
             pageSize: 20,
             filter: defaultFilter
@@ -59,15 +59,14 @@ function InicializarCuposIndex() {
             var grid = $("#gridCupo").data("kendoGrid");
             var view = grid.dataSource.view();
             for (var i = 0; i < view.length; i++) {
-                if (view[i].FleteProcedencia) {                    
+                if (view[i].FleteProcedencia) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("flete-procedencia");
                 }
             }
         },
         columns: [
-            { field: "FechaIngreso", title:"Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
-            { field: "Comercial", type: "string", width: 150 },
+            { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
             { field: "Proveedor", type: "string", width: 150 },
@@ -79,11 +78,29 @@ function InicializarCuposIndex() {
                 field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) {
                     if (dataItem.FleteProcedencia) {
                         return "Si";
-                    } else { return "No";}}
-                },
+                    } else { return "No"; }
+                }
+            },
             { field: "Observaciones", type: "string", width: 150 },
+            { field: "Comercial", type: "string", width: 150 },
             {
-                title: "", filterable: false, sortable: false, width: 200,
+                field: "EstadoCupo", title: "Estado", filterable: {
+                    multi: true,
+                    dataSource: [{
+                        EstadoCupo: "Sin CTG"
+                    }, {
+                        EstadoCupo: "Activado"
+                    }, {
+                        EstadoCupo: "Arribado"
+                    }, {
+                        EstadoCupo: "Descargado"
+                    }, {
+                        EstadoCupo: "Anulado"
+                    }]
+                }, sortable: false, width: 200,
+                itemTemplate: function (e) {
+                    return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
+                },
                 template: function (dataItem) {
                     if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
@@ -94,7 +111,7 @@ function InicializarCuposIndex() {
                     }
                 }
             }
-            ],
+        ],
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -142,12 +159,12 @@ function InicializarCuposIndex() {
                 date: {
                     eq: "Igual",
                     gte: "Despu&eacute;s o igual a",
-                    lte: "Antes o igual a",
+                    lte: "Antes o igual a"
                 },
                 number: {
                     eq: "Igual a",
                     gte: "Mayor que o igual a",
-                    lte: "Menor que o igual a",
+                    lte: "Menor que o igual a"
                 }
             }
         }
@@ -238,10 +255,11 @@ function InicializarCargaCupos() {
     });
 
     $("#cantidad").kendoNumericTextBox({
+        optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min:0
+        min: 0        
     });
     $("#cuit").mask("00000000000");
     $("#fason").click(function () {

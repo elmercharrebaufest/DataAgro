@@ -171,6 +171,10 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/PrecioPizarra").Include(
                                       "~/Scripts/KendoExtensions.js",
                                       "~/Scripts/App/PrecioPizarra.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/Configuracion").Include(
+                                     "~/Scripts/KendoExtensions.js",
+                                     "~/Scripts/App/Configuracion.js"));
             bundles.IgnoreList.Clear();
         }
     }

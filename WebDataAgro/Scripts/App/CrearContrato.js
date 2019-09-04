@@ -142,7 +142,7 @@ function InicializarElementos() {
                     HabilitarEstablecimiento();
                 }
             }
-            if ($("#buscadorCorredor").val() === "") {
+          
                 if (compraNet.BoletoCompraNetId !== null) {
                     LimpiarBoleto();
                     if (compraNet.BoletoCompraNetId === 1) {
@@ -164,7 +164,8 @@ function InicializarElementos() {
                         $("#boletoNingunoId").prop("checked", true);
                     }
                 }
-            }
+            
+          
 
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
@@ -670,7 +671,22 @@ function InicializarElementos() {
     $("#precioMonedaId").kendoDropDownList({
         optionLabel: "MONEDA...",
         dataTextField: "Descripcion",
-        dataValueField: "MonedaId"
+        dataValueField: "MonedaId",
+        change: function () {
+            if ($("#precioMonedaId").val() === "ARP  " && $("#tipoId").val() === "2") {
+                $("#pagoDolarizadoDiv").hide();
+                $("#dolarizadoDiv").hide();
+                $("#pagoDiferidoDiv").show();
+                $("#dolarizadoId").prop("checked", false);
+                $("#dolarizadoFechaId").data("kendoDatePicker").value("");
+            } else if ($("#precioMonedaId").val() === "USDM " && $("#tipoId").val() === "2") {
+                $("#pagoDiferidoDiv").hide();
+                $("#pesificadoDiv").hide();
+                $("#pagoDolarizadoDiv").show();
+                $("#pesificadoId").prop("checked", false);
+                $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+            }
+        }
     });
 
     $("#precioMonedaId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -907,27 +923,16 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+
     $("#bolsaConfirmaId").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
         dataValueField: "Id"
     });
 
-    var bolsaConfirma = $("#bolsaConfirmaId").closest('.k-dropdown.k-widget').keydown(function (e) {
+    $("#bolsaConfirmaId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#bolsaConfirmaId").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
-    $("#bolsaConfirmaIdModalPendiente").kendoDropDownList({
-        optionLabel: "SELECCIONE BOLSA...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-
-    $("#bolsaConfirmaIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#bolsaConfirmaIdModalPendiente").data("kendoDropDownList");
             dropdownlist.text("");
         }
     });
@@ -943,17 +948,7 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
-    $("#bolsaFisicoIdModalPendiente").kendoDropDownList({
-        optionLabel: "SELECCIONE BOLSA...",
-        dataTextField: "Descripcion",
-        dataValueField: "Id"
-    });
-    $("#bolsaFisicoIdModalPendiente").closest('.k-dropdown.k-widget').keydown(function (e) {
-        if (e.keyCode == 46) {
-            var dropdownlist = $("#bolsaFisicoIdModalPendiente").data("kendoDropDownList");
-            dropdownlist.text("");
-        }
-    });
+
     $("#bolsaCartaId").kendoDropDownList({
         optionLabel: "SELECCIONE BOLSA...",
         dataTextField: "Descripcion",
@@ -1908,6 +1903,18 @@ function AsignarDatos() {
     viewModel.set("ClasificacionCombo", datosIniCrearContrato.Datos.Clasificacion);
     viewModel.set("DestinoCombo", datosIniCrearContrato.Datos.Destino);
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
+    var bolsaFisico=[];
+    for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
+        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As" || datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Rosario")
+            bolsaFisico.push(datosIniCrearContrato.Datos.Bolsa[i]);
+    }
+    viewModel.set("BolsaFisicoCombo", bolsaFisico);
+    var bolsaCarta = [];
+    for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
+        if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As")
+            bolsaCarta.push(datosIniCrearContrato.Datos.Bolsa[i]);
+    }
+    viewModel.set("BolsaCartaCombo", bolsaCarta);
     viewModel.set("CondicionFijacionCombo", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardCombo", datosIniCrearContrato.Datos.Standard);
     viewModel.set("tipoFasonCombo", datosIniCrearContrato.Datos.TipoFason);
@@ -1937,7 +1944,10 @@ function AsignarDatos() {
     viewModel.set("isControlDisabled", false);
 
     if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("2");
-    if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+    if ($("#precioMonedaId").data("kendoDropDownList")) {
+        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        $("#pagoDolarizadoDiv").hide();
+    }
     if ($("#comercialId").data("kendoDropDownList")) $("#comercialId").data("kendoDropDownList").value(comercialId);
     if ($("#comercialFijacionId").data("kendoDropDownList")) $("#comercialFijacionId").data("kendoDropDownList").value(comercialId);
     if ($("#material").data("kendoDropDownList")) $("#material").data("kendoDropDownList").value("3");

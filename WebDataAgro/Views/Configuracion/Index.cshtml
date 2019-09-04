@@ -1,0 +1,44 @@
+﻿@model WebDataAgro.Models.ConfiguracionModel
+@{
+    ViewBag.Title = "Configuracion";
+}
+@section Styles {
+
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/configuracion.css" rel="stylesheet" />
+}
+@section Scripts{
+    @Scripts.Render("~/bundles/Configuracion")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+<h3 class="padding">Configuración</h3>
+@if (!Html.ViewData.ModelState.IsValid)
+{
+    <div id="errorModal">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @Html.ValidationSummary()
+        </div>
+    </div>}
+@using (Html.BeginForm("GuardarPesificacionDolarizado", "Configuracion", FormMethod.Post))
+{
+    @Html.AntiForgeryToken();
+    <div id="form">
+
+        <div class="row-botones-material row padding">
+            <div class="col-md-2">
+                <label>Cantidad de días</label>
+            </div>
+
+            <div class="col-md-2" id="CantidadDiasId">
+                @Html.TextBoxFor(m => m.CantidadDias, new { @class = "CantidadDeDias number-input" })
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            </div>
+        </div>
+
+    </div>
+}
+
+
