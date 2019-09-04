@@ -1,5 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Interfaces.Managers;
+using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

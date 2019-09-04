@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Molinos.DataAgro.Interfaces.Managers
+namespace Molinos.DataAgro.Interfaces
 {
     public interface IConfiguracionManager
     {
