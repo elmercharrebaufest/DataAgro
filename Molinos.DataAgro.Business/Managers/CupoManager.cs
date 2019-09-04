@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (cupo.Fason == true && (cupo.Destinatario == ""|| cupo.Destinatario == null))
             {
-                error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacio cuando elige Fasón/Préstamo "));
+                error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacio cuando elige Fasón/Préstamo Devolución"));
             }
             var limiteCupo = repositorio.Obtener<LimiteCupo>(x => x.ConfiguracionCupo.CentroId == cupo.CentroId && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
            && x.ZonaCupoId == cupo.ZonaCupoId && x.ConfiguracionCupo.Fecha == cupo.FechaIngreso);
