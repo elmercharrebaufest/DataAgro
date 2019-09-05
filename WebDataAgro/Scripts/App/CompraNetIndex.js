@@ -784,18 +784,16 @@ function CreateGridInformeCompraNet() {
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
-
-                var filter = { logic: "or", filters: [] };
+                var grilla = $('#gridCupo').data("kendoGrid");
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v !== '') {
-                        filter.filters.push({ field: valueField, operator: "eq", value: v });
+                        addOrRemoveFilter(grilla, valueField, "eq", v);
                     }
                 });
+
                 if (values.length === 0) {
-                    $("#gridInformeCompraNet").data("kendoGrid").dataSource.filter(defaultFilter);
-                } else {
-                    $("#gridInformeCompraNet").data("kendoGrid").dataSource.filter(filter);
+                    addOrRemoveFilter(grilla, valueField, "eq", "");
                 }
             }
         });

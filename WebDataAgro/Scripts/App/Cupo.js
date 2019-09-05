@@ -214,18 +214,16 @@ function InicializarCuposIndex() {
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
-
-                var filter = { logic: "or", filters: [] };
+                var grilla = $('#gridCupo').data("kendoGrid");                
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v !== '') {
-                        filter.filters.push({ field: valueField, operator: "eq", value: v });
+                        addOrRemoveFilter(grilla, valueField, "eq", v);
                     }
                 });
+                
                 if (values.length === 0) {
-                    $("#gridCupo").data("kendoGrid").dataSource.filter(defaultFilter);
-                } else {
-                    $("#gridCupo").data("kendoGrid").dataSource.filter(filter);
+                    addOrRemoveFilter(grilla, valueField, "eq", "");
                 }
             }
         });
@@ -240,6 +238,56 @@ function InicializarCuposIndex() {
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "Comercial", "/Cupo/ListarComercial");
     }
+
+    function addOrRemoveFilter(grid, field, operator, value) {
+
+        var newFilter = { field: field, operator: operator, value: value };
+        var dataSource = grid.dataSource;
+        var filters = null;
+        if (dataSource.filter() != null) {
+            filters = dataSource.filter().filters;
+        }
+
+        if (value && value.length > 0) {
+            //Add filter
+            if (filters == null) {
+                filters = [newFilter];
+            }
+            else {
+                var isNew = true;
+                var index = 0;
+                for (index = 0; index < filters.length; index++) {
+                    if (filters[index].field == field) {
+                        isNew = false;
+                        break;
+                    }
+                }
+                if (isNew) {
+                    filters.push(newFilter);
+                }
+                else {
+                    filters[index] = newFilter;
+                }
+            }
+        }
+        else {
+            //Remove filter 
+            var removeIndex = -1;
+            if (filters != null) {
+                for (var x = 0; x < filters.length; x++) {
+                    var temp = filters[x];
+                    if (temp.field == field) {
+                        removeIndex = x;
+                        break;
+                    }
+                }
+                if (removeIndex != -1)
+                    filters.splice(removeIndex, 1);
+            }
+        }
+        dataSource.filter(filters);
+    }
+
 }
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
