@@ -171,6 +171,7 @@ function InicializarCuposIndex() {
             }
         }
     });
+
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -179,6 +180,7 @@ function InicializarCuposIndex() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
+
     function createMultiSelect(element, textField, valueField, url) {
         element.removeAttr("data-bind");
 

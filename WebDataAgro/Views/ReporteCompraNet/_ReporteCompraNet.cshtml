@@ -5,17 +5,17 @@
     var dispAFijar = Model.ToneladasGranoTipo.Any(x => x.DispAFijar > 0);
     var dispAPrecio = Model.ToneladasGranoTipo.Any(x => x.DispAPrecio > 0);
     var dispFijacion = Model.ToneladasGranoTipo.Any(x => x.DispFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.DispFason > 0);
-    var dispAgente = Model.ToneladasGranoTipo.Any(x => x.DispAgente > 0);
+    var dispAgente = Model.ToneladasGranoTipo.Any(x => x.DispAgente == 0);
     var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispAgente ? 0 : 1);
     var forwAFijar = Model.ToneladasGranoTipo.Any(x => x.FrwAFijar > 0);
     var forwAPrecio = Model.ToneladasGranoTipo.Any(x => x.FrwAPrecio > 0);
     var forwFijacion = Model.ToneladasGranoTipo.Any(x => x.FrwFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.FrwFason > 0);
-    var forwAgente = Model.ToneladasGranoTipo.Any(x => x.FrwAgente > 0);
+    var forwAgente = Model.ToneladasGranoTipo.Any(x => x.FrwAgente == 0);
     var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwAgente ? 0 : 1);
     var newcAFijar = Model.ToneladasGranoTipo.Any(x => x.NewAFijar > 0);
     var newcAPrecio = Model.ToneladasGranoTipo.Any(x => x.NewAPrecio > 0);
     var newcFijacion = Model.ToneladasGranoTipo.Any(x => x.NewFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
-    var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente > 0);
+    var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente == 0);
     var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcAgente ? 0 : 1);
 
     var hedgeMat = Model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0) ? 1 : 0;
@@ -98,10 +98,10 @@
                                 sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==1).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Maiz").Sum(x=>x.NewAgente)).ToString("N0");
                                 break;
                             case 21:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo Cámara"||x.Material=="Trigo Calidad").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
                                 break;
                             case 22:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo Cámara"||x.Material=="Trigo Calidad").Sum(x=>x.NewAgente)).ToString("N0");
                                 break;
                             case 31:
                                 sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Soja").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
@@ -164,7 +164,7 @@
                         var totalForw = posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + toneladaPrecio.FrwAgente;
                         var totalNewC = posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + toneladaPrecio.NewAgente;
 
-                        if (totalDisp > 0 || totalForw > 0 || totalNewC > 0)
+                        if (totalDisp != 0 || totalForw != 0 || totalNewC != 0)
                         {
                             <tr>
                                 <th class="borde-izquierdo">@toneladaPrecio.Material</th>
