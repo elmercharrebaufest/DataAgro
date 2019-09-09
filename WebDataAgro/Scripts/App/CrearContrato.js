@@ -1348,7 +1348,9 @@ function InicializarElementos() {
     });
 
     $("#CDId").click(function () {
-        MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio)) {
+            MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        }
         $("#WarrantId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
         
@@ -1358,7 +1360,9 @@ function InicializarElementos() {
     });
 
     $("#WarrantId").click(function () {
-        MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio)) {
+            MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        }
         $("#CDId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
         if ($(this).is(':checked') && $("#tipoId").val() == "2") {
@@ -1366,6 +1370,10 @@ function InicializarElementos() {
         }else $(".ocultar").hide();
     });
 
+    var importeNoVacio = function (element) {
+        // checks whether an element is even
+        return element.Importe != 0;
+    };
     $("#pagoDirectoId").click(function () {
         $("#CDId").prop("checked", false);
         $("#WarrantId").prop("checked", false);        
@@ -1417,17 +1425,21 @@ function InicializarElementos() {
             $("#condicionFijacionId").data("kendoDropDownList").value("7");
             $("#fechaDesdeTopeId").val(date);
             $("#fechaHastaTopeId").val(datehasta);
+            LimpiarDescuentos();
+            LimpiarApertura();
+            $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+            $("#PorcentajeDescuentoId").val("");
         } else {
             $("#condicionFijacionId").data("kendoDropDownList").value("");
             $("#fechaDesdeTopeId").val("");
             $("#fechaHastaTopeId").val("");
         }
-        if ($("#tipoId").val() == 1 && $("#destinoId").val() != 1) {
-            LimpiarDescuentos();
-            LimpiarApertura();
-            $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
-            $("#PorcentajeDescuentoId").val("");
-        }
+        //if ($("#tipoId").val() == 1 && $("#destinoId").val() != 1) {
+        //    LimpiarDescuentos();
+        //    LimpiarApertura();
+        //    $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+        //    $("#PorcentajeDescuentoId").val("");
+        //}
     });
 
     $("#tipoPeriodoDBId").kendoDropDownList({
@@ -1568,39 +1580,6 @@ function CambioCalidades(calidades) {
         $(".no-girasol-alto").hide();
         $(".girasol-alto").show();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-    } else {
-        $(".girasol-alto").hide();
-        $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
-    }
-}
-
-function CambioCalidades(calidades) {
-    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara" && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica" && $("#calidadesEspecialesId").val() !== "") {
-        $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
-            $(".calidad-no-grado").hide();
-            LimpiarCalidades();
-        } else {
-            $(".calidad-no-grado").show();
-        }
-    } else {
-        $(".calidadesEspecialesDatos").hide();
-        LimpiarCalidades();
-    }
-    if (calidades !== undefined && calidades.length == 1) {
-        $("#valorEspecialesId").data("kendoNumericTextBox").value(calidades[0].Valor);
-    } else  {
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
-        } else {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-        }        
-    } if ($("#material").val() == 5) {
-        $(".no-girasol-alto").hide();
-        $(".girasol-alto").show();
     } else {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
