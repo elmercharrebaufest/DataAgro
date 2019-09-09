@@ -1348,6 +1348,7 @@ function InicializarElementos() {
     });
 
     $("#CDId").click(function () {
+        MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
         $("#WarrantId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
         
@@ -1357,6 +1358,7 @@ function InicializarElementos() {
     });
 
     $("#WarrantId").click(function () {
+        MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
         $("#CDId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
         if ($(this).is(':checked') && $("#tipoId").val() == "2") {
