@@ -1372,7 +1372,7 @@ function InicializarElementos() {
 
     var importeNoVacio = function (element) {
         // checks whether an element is even
-        return element.Importe != 0;
+        return !((element.Importe == 0 || element.Importe == undefined) && (element.Porcentaje == 0 || element.Porcentaje === undefined));
     };
     $("#pagoDirectoId").click(function () {
         $("#CDId").prop("checked", false);
