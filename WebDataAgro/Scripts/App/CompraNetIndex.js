@@ -286,7 +286,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
         filters = dataSource.filter().filters;
     }
 
-    if (value && value.length > 0) {
+    if (value && (value.length > 0||value!= undefined)) {
         //Add filter
         if (filters == null) {
             filters = [newFilter];
@@ -732,7 +732,7 @@ function CreateGridInformeCompraNet() {
             }
         },
         filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial") {
+            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Corredor" || e.field == "ComercialCreador") {
                 $(e.container).css("width", "300px");
             }
         }
@@ -784,7 +784,7 @@ function CreateGridInformeCompraNet() {
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
-                var grilla = $('#gridCupo').data("kendoGrid");
+                var grilla = $('#gridInformeCompraNet').data("kendoGrid");
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v !== '') {
