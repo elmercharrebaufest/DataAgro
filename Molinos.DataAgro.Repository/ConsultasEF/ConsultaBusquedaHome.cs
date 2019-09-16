@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
                 join contactoComercial in contexto.Set<ContactoComercial>() on proveedorComercial.Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                 from contactoComercial in cons.DefaultIfEmpty()
-                where equipo.Contains(proveedorComercial.ComercialId) &&
+                where (equipo.Contains(proveedorComercial.ComercialId)|| proveedorComercial.Comercial.PerfilId == 8) &&
                     (Proveedor.CUIT.Contains(filtro) ||
                     contactoComercial.Nombres.Contains(filtro) ||
                     contactoComercial.Apellido.Contains(filtro) ||
