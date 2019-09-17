@@ -1,16 +1,13 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 
@@ -218,9 +215,8 @@ namespace Molinos.DataAgro.Business
         {
             return repositorio.Existe<ProveedorComercial>(x => x.Proveedor.ProveedorId == proveedorId
                         && (equipo.Contains(x.Comercial.ComercialId) ||
-                        (perfilId == (int)EnumPerfil.Administrativo && x.Proveedor.Segmentacion.Grupo == "Corredores") ||
-                        (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(x.Comercial.ComercialId)))
-                        );
+                        (perfilId == (int)EnumPerfil.Administrativo && x.Proveedor.Segmentacion.Grupo == "Corredores")) ||
+                        (perfilId == (int)EnumPerfil.CorredoresComercial && corredoresComercial.Contains(x.Comercial.ComercialId)));
         }
 
         public List<ComercialDto> ListarComercial(string comercial, List<int> comerciales)
