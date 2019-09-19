@@ -33,14 +33,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where contrato.TipoNegocioId==2 && (contrato.EstadoId == 2|| contrato.EstadoId == 4|| contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                where contrato.TipoNegocioId == 2 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
                     (perfilId == (int)EnumPerfil.CorredoresComercial &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new TotalPesosDolares()
                 {
-                    Cantidad = contrato.Cantidad,                    
+                    Cantidad = contrato.Cantidad,
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                     FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
                     Fecha = DbFunctions.TruncateTime(contrato.Fecha),
@@ -59,8 +59,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialId = contrato.ComercialId,
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
-                    TotalDolares = contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value  : contrato.Precio : 0,
-                    TotalPesos = contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value  : contrato.Precio : 0
+                    TotalDolares = contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
+                    TotalPesos = contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
+                    TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
+                    TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
+                    TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
+                    TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
+                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0
                 };
 
             var queryFijacion =
@@ -90,7 +95,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialId = fijac.ComercialId,
                     ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
                     TotalDolares = fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
-                    TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0
+                    TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
+                    TotalGirasolAlto = fijac.MaterialId == 5 ? fijac.Cantidad : 0,
+                    TotalGirasol = fijac.MaterialId == 4 ? fijac.Cantidad : 0,
+                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad : 0,
+                    TotalSoja = fijac.MaterialId == 3 ? fijac.Cantidad : 0,
+                    TotalTrigo = fijac.MaterialId == 2 ? fijac.Cantidad : 0
                 };
             queryContratos = queryContratos.Union(queryFijacion);
 
@@ -120,6 +130,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = fas.ComercialCreador == null ? fas.Comercial.Nombres + " " + fas.Comercial.Apellido : fas.ComercialCreador.Nombres + " " + fas.ComercialCreador.Apellido,
                     TotalDolares = fas.MonedaId == "USDM " ? fas.Precio : 0,
                     TotalPesos = fas.MonedaId == "ARP  " ? fas.Precio : 0,
+                    TotalGirasolAlto = fas.MaterialId == 5 ? fas.Cantidad : 0,
+                    TotalGirasol = fas.MaterialId == 4 ? fas.Cantidad : 0,
+                    TotalMaiz = fas.MaterialId == 1 ? fas.Cantidad : 0,
+                    TotalSoja = fas.MaterialId == 3 ? fas.Cantidad : 0,
+                    TotalTrigo = fas.MaterialId == 2 ? fas.Cantidad : 0
                 };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -150,6 +165,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ComercialCreador = acu.Comercial == null ? acu.Comercial.Nombres + " " + acu.Comercial.Apellido : acu.Comercial.Nombres + " " + acu.Comercial.Apellido,
                         TotalDolares = acu.MonedaId == "USDM " ? acu.Precio : 0,
                         TotalPesos = acu.MonedaId == "ARP  " ? acu.Precio : 0,
+                        TotalGirasolAlto = acu.MaterialId == 5 ? acu.Cantidad : 0,
+                        TotalGirasol = acu.MaterialId == 4 ? acu.Cantidad : 0,
+                        TotalMaiz = acu.MaterialId == 1 ? acu.Cantidad : 0,
+                        TotalSoja = acu.MaterialId == 3 ? acu.Cantidad : 0,
+                        TotalTrigo = acu.MaterialId == 2 ? acu.Cantidad : 0
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);

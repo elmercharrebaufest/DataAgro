@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Contrato = x.ContratoId.ToString() ?? "",
                            RazonSocial = x.Proveedor.RazonSocial ?? "",
                            Cuit = x.Proveedor.CUIT ?? "",
-                           Material = x.MaterialId == 1 ? "Maiz" : x.MaterialId == 2 ? "Trigo" : x.MaterialId == 3 ? "Soja" : "",
+                           Material = x.MaterialId == 1 ? "Maiz" : x.MaterialId == 2 ? "Trigo" : x.MaterialId == 3 ? "Soja" : x.MaterialId == 4? "Girasol" : x.MaterialId == 5 ? "Girasol Alto Oleico": "",
                            TipoNegocio = x.TipoNegocio.Descripcion ?? "",
                            Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido ?? "",
                            Cantidad = (x != null) ? x.Cantidad : 0,
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Consignatario = x.Consignatario == true ? "X" : "",
                            PlanCanje = x.PlanCanje == true ? "X" : "",
                            Pago = x.PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : x.Warrant == true ? "Warrant" : "",
-                           CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                           CalidadEspecial = x.StandardDeCalidad.Descripcion,
                            EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                            Observacion = x.Observacion ?? ""
                        }).ToList();

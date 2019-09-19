@@ -18,6 +18,8 @@ namespace WebDataAgro.Helpers.Excel
     {
         public static byte[] GenerarExcel(ReporteCompraNetModel model, List<ExcelPosicionMaterialDto> posicion, bool incluirHedge)
         {
+            var c = 0;
+            var r = 0;
             var workbook = new HSSFWorkbook();
             var sheet = (HSSFSheet)workbook.CreateSheet("Tablero");
             var stylebold = workbook.CreateCellStyle();
@@ -120,6 +122,28 @@ namespace WebDataAgro.Helpers.Excel
             HSSFColor colorGold = palette.FindSimilarColor(255, 215, 0);
             cellcolorGoldObjetivos.FillForegroundColor = colorGold.Indexed;
 
+            var cellcolorPink = workbook.CreateCellStyle();
+            cellcolorPink.BorderBottom = BorderStyle.Thin;
+            cellcolorPink.BorderTop = BorderStyle.Thin;
+            cellcolorPink.BorderLeft = BorderStyle.Thin;
+            cellcolorPink.BorderRight = BorderStyle.Thin;
+            cellcolorPink.Alignment = HorizontalAlignment.Center;
+            cellcolorPink.SetFont(fontBold);
+            cellcolorPink.FillPattern = FillPattern.SolidForeground;
+            HSSFColor colorPink = palette.FindSimilarColor(244, 193, 247);
+            cellcolorPink.FillForegroundColor = colorPink.Indexed;
+
+            var cellcolorDarkPink = workbook.CreateCellStyle();
+            cellcolorDarkPink.BorderBottom = BorderStyle.Thin;
+            cellcolorDarkPink.BorderTop = BorderStyle.Thin;
+            cellcolorDarkPink.BorderLeft = BorderStyle.Thin;
+            cellcolorDarkPink.BorderRight = BorderStyle.Thin;
+            cellcolorDarkPink.Alignment = HorizontalAlignment.Center;
+            cellcolorDarkPink.SetFont(fontBold);
+            cellcolorDarkPink.FillPattern = FillPattern.SolidForeground;
+            HSSFColor colorDarkPink = palette.FindSimilarColor(211, 96, 212);
+            cellcolorDarkPink.FillForegroundColor = colorDarkPink.Indexed;
+
             var estiloCeldasColumnTitles = workbook.CreateCellStyle();
             estiloCeldasColumnTitles.Alignment = HorizontalAlignment.Center;
             estiloCeldasColumnTitles.BorderBottom = BorderStyle.Thin;
@@ -128,40 +152,43 @@ namespace WebDataAgro.Helpers.Excel
             estiloCeldasColumnTitles.BorderRight = BorderStyle.Thin;
             estiloCeldasColumnTitles.SetFont(fontBold);
             #endregion 
-            ICellStyle[] colores = new ICellStyle[] { cellcolorGreen, cellcolorTan, cellcolorCornflowerBlue, cellcolorBlue, cellcolorSuperGreen, cellcolorDarkCyanHedge, cellcolorplumObjetivos, cellcolorGoldObjetivos };
+            ICellStyle[] colores = new ICellStyle[] { cellcolorGreen, cellcolorTan, cellcolorCornflowerBlue, cellcolorBlue, cellcolorPink, cellcolorDarkPink, cellcolorSuperGreen, cellcolorDarkCyanHedge, cellcolorplumObjetivos, cellcolorGoldObjetivos };
 
 
             #region row1
-            var row = sheet.CreateRow(0);
-            row = sheet.CreateRow(1);
-            var celda = row.CreateCell(0);
+            var row = sheet.CreateRow(r); r++;
+            row = sheet.CreateRow(r); r++;
+            var celda = row.CreateCell(c);c++;
 
-            CrearCelda(row, 1, null, null);
-            CrearCelda(row, 2, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 3, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 4, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 5, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 6, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 7, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 8, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 9, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 10, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 11, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 12, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 13, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 14, null, null);
-            CrearCelda(row, 15, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 16, null, cellBorderStyleColumnTitles);
-            CrearCelda(row, 17, null, cellBorderStyleColumnTitles);
+            CrearCelda(row, c, null, null); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, null); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
 
-            var cra = new CellRangeAddress(1, 1, 2, 4);
-            var cra1 = new CellRangeAddress(1, 2, 5, 5);
-            var cra2 = new CellRangeAddress(1, 1, 6, 8);
-            var cra3 = new CellRangeAddress(1, 2, 9, 9);
-            var cra4 = new CellRangeAddress(1, 1, 10, 12);
-            var cra5 = new CellRangeAddress(1, 2, 13, 13);
+            var cra = new CellRangeAddress(1, 1, 2, 5);
+            var cra1 = new CellRangeAddress(1, 2, 6, 6);
+            var cra2 = new CellRangeAddress(1, 1, 7, 10);
+            var cra3 = new CellRangeAddress(1, 2,11,11);
+            var cra4 = new CellRangeAddress(1, 1, 12, 15);
+            var cra5 = new CellRangeAddress(1, 2, 16, 16);
 
-            var cra6 = new CellRangeAddress(1, 1, 15, 17);
+            var cra6 = new CellRangeAddress(1, 1, 18, 20);
             sheet.AddMergedRegion(cra);
             sheet.AddMergedRegion(cra1);
             sheet.AddMergedRegion(cra2);
@@ -173,210 +200,216 @@ namespace WebDataAgro.Helpers.Excel
             var celdasMerge = sheet.GetRow(1).GetCell(2);
             celdasMerge.SetCellValue("DISPONIBLE");
             celdasMerge.CellStyle = cellcolorTitles;
-            celdasMerge = sheet.GetRow(1).GetCell(5);
+            celdasMerge = sheet.GetRow(1).GetCell(6);
             celdasMerge.SetCellValue("TOTAL DISP");
             celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
-            celdasMerge = sheet.GetRow(1).GetCell(6);
+            celdasMerge = sheet.GetRow(1).GetCell(7);
             celdasMerge.SetCellValue("FORWARD");
             celdasMerge.CellStyle = cellcolorTitles;
-            celdasMerge = sheet.GetRow(1).GetCell(9);
+            celdasMerge = sheet.GetRow(1).GetCell(11);
             celdasMerge.SetCellValue("TOTAL FWR");
             celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
-            celdasMerge = sheet.GetRow(1).GetCell(10);
+            celdasMerge = sheet.GetRow(1).GetCell(12);
             celdasMerge.SetCellValue("NEW CROP");
             celdasMerge.CellStyle = cellcolorTitles;
-            celdasMerge = sheet.GetRow(1).GetCell(13);
+            celdasMerge = sheet.GetRow(1).GetCell(16);
             celdasMerge.SetCellValue("TOTAL NC");
             celdasMerge.CellStyle = cellcolorTitles;
             celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
-            celdasMerge = sheet.GetRow(1).GetCell(15);
+            celdasMerge = sheet.GetRow(1).GetCell(18);
             celdasMerge.SetCellValue("SOJA SUSTENTABLE");
             celdasMerge.CellStyle = cellcolorTitles;
             #endregion
             #region row2
-            row = sheet.CreateRow(2);
-            CrearCelda(row, 0, null, null);
-            CrearCelda(row, 1, "PRODUCTO", cellcolorTitles);
+            c = 0;
+            row = sheet.CreateRow(r); r++;
+            CrearCelda(row, c, null, null);c++;
+            CrearCelda(row, c, "PRODUCTO", cellcolorTitles); c++;
 
-            //DISPONIBLE
-            CrearCelda(row, 2, "A Fijar", cellcolorTitles);
-            CrearCelda(row, 3, "A Precio", cellcolorTitles);
-            CrearCelda(row, 4, "Fijacion", cellcolorTitles);
-
-            //FORWARD
-            CrearCelda(row, 6, "A Fijar", cellcolorTitles);
-            CrearCelda(row, 7, "A Precio", cellcolorTitles);
-            CrearCelda(row, 8, "Fijacion", cellcolorTitles);
-
-            //NEW CROP
-            CrearCelda(row, 10, "A Fijar", cellcolorTitles);
-            CrearCelda(row, 11, "A Precio", cellcolorTitles);
-            CrearCelda(row, 12, "Fijacion", cellcolorTitles);
-
-            CrearCelda(row, 13, null, cellcolorTitles);
-
+            //DISPONIBLE    
+            CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
+            CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
+            CrearCelda(row, c, "Fijacion", cellcolorTitles); c++;
+            CrearCelda(row, c, "MAT", cellcolorTitles); c++;
+            c++;
+            //FORWARD       
+            CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
+            CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
+            CrearCelda(row, c, "Fijacion", cellcolorTitles); c++;
+            CrearCelda(row, c, "MAT", cellcolorTitles); c++;
+            c++;
+            //NEW CROP      
+            CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
+            CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
+            CrearCelda(row, c, "Fijacion", cellcolorTitles); c++;
+            CrearCelda(row, c, "MAT", cellcolorTitles); c++;
+            CrearCelda(row, c, null, cellcolorTitles); c++;
+            c++;
 
             //SOJA SUSTENTABLE
-            CrearCelda(row, 15, "A Precio", cellcolorTitles);
-            CrearCelda(row, 16, "A Fijar", cellcolorTitles);
-            CrearCelda(row, 17, "Total", cellcolorTitles);
+            CrearCelda(row, c, "A Precio", cellcolorTitles);
+            c++;
+            CrearCelda(row, c, "A Fijar", cellcolorTitles);
+            c++;
+            CrearCelda(row, c, "Total", cellcolorTitles);
+            c++;
 
             #endregion
             #region PosicionToneladas
-            var j = 3;
             foreach (var material in model.ToneladasGranoTipo)
             {
-                row = sheet.CreateRow(j);
-                CrearCelda(row, 0, null, null);
+                var posicionMaterial = model.PosicionCompras.Where(x => x.Material.ToLower() == material.Material.ToLower());
+                var totalDisp = posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + material.DispAgente;
+                var totalForw = posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar + y.FrwAPrecio + y.FrwFijac)).Sum() + material.FrwAgente;
+                var totalNewC = posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar + y.NewAPrecio + y.NewFijac)).Sum() + material.NewAgente;
+                c = 0;
+                row = sheet.CreateRow(r);                
+                CrearCelda(row, c, null, null); c++;          
 
                 //DISPONIBLE
-                CrearCelda(row, 1, material.Material, cellBorderStyleColumnTitles);
-                CrearCelda(row, 2, material.DispAFijar.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 3, material.DispAPrecio.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 4, (material.DispFijac + material.DispFason).ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 5, (material.DispAFijar + material.DispAPrecio + material.DispFijac + material.DispFason).ToString("N0"), cellBorderStyleColumnTitles);
+                CrearCelda(row, c, material.Material, cellBorderStyleColumnTitles); c++;                                                                                        
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;               //A Fijar 
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;              //A Precio 
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;                //Fijacion 
+                CrearCelda(row, c, material.DispAgente.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                      //MAT 
+                CrearCelda(row, c, totalDisp.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                                //Total 
 
-                //FORWARD
-                CrearCelda(row, 6, material.FrwAFijar.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 7, material.FrwAPrecio.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 8, (material.FrwFijac + material.FrwFason).ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 9, (material.FrwAFijar + material.FrwAPrecio + material.FrwFijac + material.FrwFason).ToString("N0"), cellBorderStyleColumnTitles);
+                //FORWARD       
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;                //A Fijar
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;               //A Precio
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;                 //Fijacion
+                CrearCelda(row, c, material.FrwAgente.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                       //MAT
+                CrearCelda(row, c, totalForw.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                                //Total
 
                 //NEW CROP
-                CrearCelda(row, 10, material.NewAFijar.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 11, material.NewAPrecio.ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 12, (material.NewFijac + material.NewFason).ToString("N0"), cellBorderStyleColumnTitles);
-                CrearCelda(row, 13, (material.NewAFijar + material.NewAPrecio + material.NewFijac + material.NewFason).ToString("N0"), cellBorderStyleColumnTitles);
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;                //A Fijar
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;               //A Precio
+                CrearCelda(row, c, posicionMaterial.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0"), cellBorderStyleColumnTitles); c++;                 //Fijacion
+                CrearCelda(row, c, material.NewAgente.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                       //MAT
+                CrearCelda(row, c, totalNewC.ToString("N0"), cellBorderStyleColumnTitles); c++;                                                                                //Total
 
-
-                if (j == 3)
+                c++;
+                if (r == 3)
                 {
-                    CrearCelda(row, 15, model.SojaSustentable.Precio.ToString("N0"), cellBorderStyleColumnTitles);
-                    CrearCelda(row, 16, model.SojaSustentable.Fijar.ToString("N0"), cellBorderStyleColumnTitles);
-                    CrearCelda(row, 17, model.SojaSustentable.Total.ToString("N0"), cellBorderStyleColumnTitles);
+                    CrearCelda(row, c, model.SojaSustentable.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaSustentable.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaSustentable.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                 }
-                j++;
+                r++;
             }
             #endregion
-            
+
             #region PosicionCompras
+            //Encabeza Posicion
             var col = 0;
-            row = sheet.CreateRow(7);
-            row = sheet.CreateRow(8);
-            CrearCelda(row, 1, null, colores[0]);
-            CrearCelda(row, 2, null, colores[0]);
-            var merge = new CellRangeAddress(8, 8, 1, 2);
+            c = 1;
+            row = sheet.CreateRow(r); r++;
+            row = sheet.CreateRow(r); r++;
+            //SOJA
+            CrearCelda(row, c, null, colores[col]); c++;
+            CrearCelda(row, c, null, colores[col]); c++;
+            var merge = new CellRangeAddress(r-1, r-1, 1, 2);
             sheet.AddMergedRegion(merge);
-            celda = sheet.GetRow(8).GetCell(1);
+            celda = sheet.GetRow(r - 1).GetCell(1);
             celda.SetCellValue("SOJA");
-            celda.CellStyle = colores[0];
-            celda = row.CreateCell(4);
-            celda.CellStyle = colores[1];
-            celda = row.CreateCell(5);
-            celda.CellStyle = colores[1];
-            merge = new CellRangeAddress(8, 8, 4, 5);
+            celda.CellStyle = colores[col]; col++;
+            //Maiz
+            c++;
+            celda = row.CreateCell(c);c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 4, 5);
             sheet.AddMergedRegion(merge);
-            celda = sheet.GetRow(8).GetCell(4);
+            celda = sheet.GetRow(r - 1).GetCell(4);
             celda.SetCellValue("MAIZ");
-            celda.CellStyle = colores[1];
-            celda = row.CreateCell(7);
-            celda.CellStyle = colores[2];
-            celda = row.CreateCell(8);
-            celda.CellStyle = colores[2];
-            merge = new CellRangeAddress(8, 8, 7, 8);
+            celda.CellStyle = colores[col]; col++;
+             c++;
+            //Trigo Cam.
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 7, 8);
             sheet.AddMergedRegion(merge);
-            celda = sheet.GetRow(8).GetCell(7);
+            celda = sheet.GetRow(r - 1).GetCell(7);
             celda.SetCellValue("TRIGO CAMARA");
-            celda.CellStyle = colores[2];
-            celda = row.CreateCell(10);
-            celda.CellStyle = colores[3];
-            celda = row.CreateCell(11);
-            celda.CellStyle = colores[3];
-            merge = new CellRangeAddress(8, 8, 10, 11);
+            celda.CellStyle = colores[col];
+            col++;
+            c++;
+            //Trigo Cal.
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 10, 11);
             sheet.AddMergedRegion(merge);
-            celda = sheet.GetRow(8).GetCell(10);
+            celda = sheet.GetRow(r - 1).GetCell(10);
             celda.SetCellValue("TRIGO CALIDAD");
-            celda.CellStyle = colores[3];
-            row = sheet.CreateRow(9);
-            row = sheet.CreateRow(10);
-            row = sheet.CreateRow(11);
-            row = sheet.CreateRow(12);
-            row = sheet.CreateRow(13);
-            row = sheet.CreateRow(14);
-            row = sheet.CreateRow(15);
-            row = sheet.CreateRow(16);
-            row = sheet.CreateRow(17);
-            row = sheet.CreateRow(18);
-            row = sheet.CreateRow(19);
-            row = sheet.CreateRow(20);
-            row = sheet.CreateRow(21);
-            row = sheet.CreateRow(22);
-            row = sheet.CreateRow(23);
-            row = sheet.CreateRow(24);
-            int i;
-            int c = 0;
+            celda.CellStyle = colores[col];
+            col++;
+            c++;
+            //Girasol
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 13, 14);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(r - 1).GetCell(13);
+            celda.SetCellValue("GIRASOL");
+            celda.CellStyle = colores[col];
+            col++;
+            c++;
+
+            //Girasol Alto
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 16,17);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(r-1).GetCell(16);
+            celda.SetCellValue("GIRASOL ALTO OLEICO");
+            celda.CellStyle = colores[col];
+            c++;
+            col=0;
+
+            var filaPosicion= r;
+            row = sheet.CreateRow(r);r++;
+            var max = 0;
+            foreach (var m in model.PosicionCompras) {
+                max = max< m.PosicionKilos.Count()? m.PosicionKilos.Count():max;
+            };
+            for(var l=0;l<=max+1; l++)
+            {
+                row = sheet.CreateRow(r); r++;
+            }
+            c = 0;
             foreach (var material in model.PosicionCompras)
             {
-                i = 9;
-                if (material.Material == "Soja" || material.Material == "Maíz")
-                {
-                    row = sheet.GetRow(i);
+                var f = filaPosicion;
+                row = sheet.GetRow(f); f++;
+                celda = row.CreateCell(c);
+                CrearCelda(row, c + 1, "Posicion", colores[col]);
+                CrearCelda(row, c + 2, "Ton", colores[col]);
+
+                foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
+                {                    
+                    row = sheet.GetRow(f); f++;
                     celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Posicion", colores[col]);
-                    CrearCelda(row, c + 2, "Ton", colores[col]);
-
-                    foreach (var mes in (EnumMeses[])Enum.GetValues(typeof(EnumMeses)))
-                    {
-                        i++;
-                        row = sheet.GetRow(i);
-                        celda = row.CreateCell(c);
-                        CrearCelda(row, c + 1, mes.ToString(), cellBorderStyleColumnTitles);
-                        CrearCelda(row, c + 2, material.PosicionKilos.Where(x => x.Mes == mes).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"), cellBorderStyleColumnTitles);
-                    }
-                    row = sheet.GetRow(i + 1);
-                    CrearCelda(row, c + 1, "Total", colores[col]);
-                    CrearCelda(row, c + 2, material.Total.ToString("N0"), colores[col]);
-
-                    c += 3;
+                    CrearCelda(row, c + 1, (mes.Mes + "-"+ mes.Anio.ToString()), cellBorderStyleColumnTitles);
+                    CrearCelda(row, c + 2, material.PosicionKilos.Sum(x=>x.KilosPesos+x.KilosDolares).ToString("N0"), cellBorderStyleColumnTitles);
                 }
-                else
-                {
-                    row = sheet.GetRow(i);
-                    celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Posicion", colores[col]);
-                    CrearCelda(row, c + 2, "Ton", colores[col]);
-
-                    row = sheet.GetRow(i + 1);
-                    celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Noviembre", cellBorderStyleColumnTitles);
-                    CrearCelda(row, c + 2, material.PosicionKilos.Where(x => x.Mes == EnumMeses.Noviembre).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"), cellBorderStyleColumnTitles);
-
-                    row = sheet.GetRow(i + 2);
-                    celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Diciembre", cellBorderStyleColumnTitles);
-                    CrearCelda(row, c + 2, material.PosicionKilos.Where(x => x.Mes == EnumMeses.Diciembre).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"), cellBorderStyleColumnTitles);
-
-                    row = sheet.GetRow(i + 3);
-                    celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Enero", cellBorderStyleColumnTitles);
-                    CrearCelda(row, c + 2, material.PosicionKilos.Where(x => x.Mes == EnumMeses.Enero).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"), cellBorderStyleColumnTitles);
-
-                    row = sheet.GetRow(i + 4);
-                    celda = row.CreateCell(c);
-                    CrearCelda(row, c + 1, "Febrero", cellBorderStyleColumnTitles);
-                    CrearCelda(row, c + 2, material.PosicionKilos.Where(x => x.Mes == EnumMeses.Febrero).Select(x => x.Kilos).DefaultIfEmpty(0).FirstOrDefault().ToString("N0"), cellBorderStyleColumnTitles);
-
-                    row = sheet.GetRow(i + 5);
-                    CrearCelda(row, c + 1, "Total", colores[col]);
-                    CrearCelda(row, c + 2, material.Total.ToString("N0"), colores[col]);
-
-                    c += 3;
-                }
+                row = sheet.GetRow(f);
+                CrearCelda(row, c + 1, "Total", colores[col]);
+                CrearCelda(row, c + 2, material.Total.ToString("N0"), colores[col]);
+                c += 3;
                 col++;
             }
             #endregion
@@ -384,23 +417,21 @@ namespace WebDataAgro.Helpers.Excel
             #region Hedge
             if (incluirHedge)
             {
-                CrearTablaHedge(sheet, colores[5], estiloCeldasColumnTitles, model, colores[6]);
-                CrearTablaAgenteDeCompras(sheet, colores[7], estiloCeldasColumnTitles, model);
+                CrearTablaHedge(sheet, colores[7], estiloCeldasColumnTitles, model, colores[8], r);
+                CrearTablaAgenteDeCompras(sheet, colores[9], estiloCeldasColumnTitles, model,r);
             }
             #endregion
 
             #region ToneladasKilos
-            i = 9;
             foreach (var moneda in model.PrecioCantidad)
             {
-                row = sheet.GetRow(i);
+                row = sheet.GetRow(filaPosicion-1); filaPosicion++;
                 celda = row.CreateCell(c);
                 CrearCelda(row, c + 1, moneda.Moneda, cellcolorTitles);
                 CrearCelda(row, c + 2, moneda.Cantidad.HasValue ? moneda.Cantidad.Value.ToString("N2") : "0", cellBorderStyleColumnTitles);
-                i++;
             }
             #endregion
-            for (i = 0; i <= 30; i++)
+            for (var i = 0; i <= 30; i++)
             {
                 sheet.AutoSizeColumn(i, true);
             }
@@ -420,12 +451,20 @@ namespace WebDataAgro.Helpers.Excel
             CrearSheets(sheet3, cellcolorTitles, cellStyleColumnTitles, listaMaiz);
 
             var sheet4 = (HSSFSheet)workbook.CreateSheet("Posición Trigo Cámara");
-            var listaTrigoCamara = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial != "X").ToList();
+            var listaTrigoCamara = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial != "Especial").ToList();
             CrearSheets(sheet4, cellcolorTitles, cellStyleColumnTitles, listaTrigoCamara);
 
             var sheet5 = (HSSFSheet)workbook.CreateSheet("Posición Trigo Calidad");
-            var listaTrigoCalidad = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial == "X").ToList();
+            var listaTrigoCalidad = posicion.Where(x => x.Material == "Trigo" && x.CalidadEspecial == "Especial").ToList();
             CrearSheets(sheet5, cellcolorTitles, cellStyleColumnTitles, listaTrigoCalidad);
+
+            var sheet6 = (HSSFSheet)workbook.CreateSheet("Posición Girasol");
+            var listaGirasolCalidad = posicion.Where(x => x.Material == "Girasol").ToList();
+            CrearSheets(sheet6, cellcolorTitles, cellStyleColumnTitles, listaGirasolCalidad);
+
+            var sheet7 = (HSSFSheet)workbook.CreateSheet("Posición Girasol Alto Oleico");
+            var listaGirasolAltoCalidad = posicion.Where(x => x.Material == "Girasol Alto Oleico").ToList();
+            CrearSheets(sheet7, cellcolorTitles, cellStyleColumnTitles, listaGirasolAltoCalidad);
             #endregion
             using (var fileData = new MemoryStream())
             {
@@ -542,83 +581,85 @@ namespace WebDataAgro.Helpers.Excel
             celda.CellStyle = estilo;
         }
 
-        private static void CrearTablaHedge(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model, ICellStyle cellcolorTitlesObjectivos)
+        private static void CrearTablaHedge(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model, ICellStyle cellcolorTitlesObjectivos, int fila)
         {
-            var row = sheet.CreateRow(25);
-
-            row = sheet.CreateRow(26);
+            var row = sheet.CreateRow(fila); 
             int iC = 0;
 
             CrearCelda(row, iC + 1, "HEDGE", cellcolorTitles);
             CrearCelda(row, iC + 2, null, cellcolorTitles);
             CrearCelda(row, iC + 3, null, cellcolorTitles);
             CrearCelda(row, iC + 4, null, cellcolorTitles);
-            var merge = new CellRangeAddress(26, 26, 1, 4);
+            var merge = new CellRangeAddress(fila, fila, 1, 4);
+
+            row = sheet.GetRow(fila);
+            CrearCelda(row, iC + 7, "Dia", cellcolorTitlesObjectivos);
+            CrearCelda(row, iC + 8, "Objetivo", cellcolorTitlesObjectivos);
+
+            fila++;
             sheet.AddMergedRegion(merge);
-            row = sheet.CreateRow(27);
+            row = sheet.CreateRow(fila);
             CrearCelda(row, iC + 1, "Producto", cellcolorTitles);
             CrearCelda(row, iC + 2, "Ddisponible", cellcolorTitles);
             CrearCelda(row, iC + 3, "Forward", cellcolorTitles);
             CrearCelda(row, iC + 4, "New Crop", cellcolorTitles);
+
             int iterFilas = 1;
             foreach (HedgeMaterialModel producto in model.HedgeMaterial)
             {
-                row = sheet.CreateRow(27 + iterFilas);
+                row = sheet.CreateRow(fila + iterFilas);
                 CrearCelda(row, iC + 1, producto.MaterialDescripcion, cellBorderStyleColumnTitles);
                 CrearCelda(row, iC + 2, producto.Disponible.ToString(), cellBorderStyleColumnTitles);
                 CrearCelda(row, iC + 3, producto.Forward.ToString(), cellBorderStyleColumnTitles);
                 CrearCelda(row, iC + 4, producto.NewCrop.ToString(), cellBorderStyleColumnTitles);
                 iterFilas++;
             }
+            
 
-            row = sheet.GetRow(26);
-            CrearCelda(row, iC + 7, "Dia", cellcolorTitlesObjectivos);
-            CrearCelda(row, iC + 8, "Objetivo", cellcolorTitlesObjectivos);
-
-            row = sheet.GetRow(27);
+            row = sheet.GetRow(fila);fila++;
             CrearCelda(row, iC + 6, "Pricing", cellcolorTitlesObjectivos);
             CrearCelda(row, iC + 7, model.HedgeObjetivo.PricingCumplido.ToString(), cellBorderStyleColumnTitles);
             CrearCelda(row, iC + 8, model.HedgeObjetivo.PricingObjetivo.ToString(), cellBorderStyleColumnTitles);
 
-            row = sheet.GetRow(28);
+            row = sheet.GetRow(fila);
             if (row == null)
             {
-                row = sheet.CreateRow(28);
+                row = sheet.CreateRow(fila);
             }
             CrearCelda(row, iC + 6, "A remitir", cellcolorTitlesObjectivos);
             CrearCelda(row, iC + 7, model.HedgeObjetivo.RemitirCumplido.ToString(), cellBorderStyleColumnTitles);
             CrearCelda(row, iC + 8, model.HedgeObjetivo.RemitirObjetivo.ToString(), cellBorderStyleColumnTitles);
 
-            row = sheet.GetRow(30);
+            row = sheet.GetRow(fila +2);
             if (row == null)
             {
-                row = sheet.CreateRow(30);
+                row = sheet.CreateRow(fila+2);
             }
       
             CrearCelda(row, iC + 7, "Hedge TC: $" + model.TCPromedioDto.PromedioTC.ToString("n2"), cellBorderStyleColumnTitles);
             CrearCelda(row, iC + 8, "$" + model.TCPromedioDto.TotalTC.ToString("n2"), cellBorderStyleColumnTitles);
 
         }
-        private static void CrearTablaAgenteDeCompras(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model)
+        private static void CrearTablaAgenteDeCompras(HSSFSheet sheet, ICellStyle cellcolorTitles, ICellStyle cellBorderStyleColumnTitles, ReporteCompraNetModel model,int fila)
         {
             int iC = 0;
-            var row = sheet.GetRow(26);
+            var row = sheet.GetRow(fila);
             if (row == null)
             {
-                row = sheet.CreateRow(26);
+                row = sheet.CreateRow(fila);
             }
-            var cra = new CellRangeAddress(26, 26, 10, 10 + model.AgenteCompras.ListaOperadores.Count + 3);
+            var cra = new CellRangeAddress(fila, fila, 10, 10 + model.AgenteCompras.ListaOperadores.Count + 3);
             sheet.AddMergedRegion(cra);
-
+            fila++;
             CrearCelda(row, iC + 10, "AGENTE DE COMPRAS", cellcolorTitles);
             for (var iter = 11; iter <= 10 + model.AgenteCompras.ListaOperadores.Count + 3; iter++)
             {
                 CrearCelda(row, iter, null, cellcolorTitles);
             }
-            row = sheet.GetRow(27);
+            row = sheet.GetRow(fila);
             if (row == null)
             {
-                row = sheet.CreateRow(27);
+                row = sheet.CreateRow(fila);
             }
             CrearCelda(row, iC + 10, "Agente de Compra", cellcolorTitles);
             CrearCelda(row, iC + 11, "Producto", cellcolorTitles);
@@ -636,10 +677,10 @@ namespace WebDataAgro.Helpers.Excel
             {
                 posicionOperador = 0;
 
-                row = sheet.GetRow(27 + filaOperador);
+                row = sheet.GetRow(fila + filaOperador);
                 if (row == null)
                 {
-                    row = sheet.CreateRow(27 + filaOperador);
+                    row = sheet.CreateRow(fila + filaOperador);
                 }
                 CrearCelda(row, iC + 10 + posicionOperador, agente.TipoAgenteDesc, cellBorderStyleColumnTitles);
                 CrearCelda(row, iC + 11 + posicionOperador, agente.MaterialDesc, cellBorderStyleColumnTitles);

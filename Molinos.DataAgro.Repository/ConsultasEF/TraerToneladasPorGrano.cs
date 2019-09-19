@@ -77,15 +77,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     .Select(x => new NegocioToneladasPosicionDto { Id = x.FijacionDePrecioContratoId, Fecha = x.Fecha, FechaDesde = x.FechaDesde, FechaHasta = x.FechaHasta, TipoNegocioId = 3, MaterialCampanaId = x.Material.CampañaId.Value, CampanaId = x.CampanaId, Cantidad = x.Cantidad }).ToList();
             foreach (var pos in fijaciones)
             {
-                if ((DateTime.DaysInMonth(pos.FechaDesde.Year, pos.FechaDesde.Month) - pos.FechaDesde.Day) >= 10)
+                if ((DateTime.DaysInMonth(pos.Fecha.Year, pos.Fecha.Month) - pos.Fecha.Day) >= 10)
                 {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1);
+                    pos.Posicion = new DateTime(pos.Fecha.Year, pos.Fecha.Month, 1);
                 }
-                else if (pos.FechaDesde.AddMonths(1).Month <= pos.FechaHasta.Month)
+                else if (pos.Fecha.AddMonths(1).Month <= pos.FechaHasta.Month)
                 {
-                    pos.Posicion = new DateTime(pos.FechaDesde.Year, pos.FechaDesde.Month, 1).AddMonths(+1);
+                    pos.Posicion = new DateTime(pos.Fecha.Year, pos.Fecha.Month, 1).AddMonths(+1);
                 }
-                else if (pos.FechaDesde.AddMonths(1).Month > pos.FechaHasta.Month)
+                else if (pos.Fecha.AddMonths(1).Month > pos.FechaHasta.Month)
                 {
                     pos.Posicion = new DateTime(pos.FechaHasta.Year, pos.FechaHasta.Month, 1);
                 }

@@ -875,6 +875,52 @@ function BuscarTotales() {
     if (totales != null) {
         $("#totalPesos").text(kendo.toString(totales.TotalPesos, "n0"));
         $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n0"));
+
+        //Cargar Toneladas de Materiales
+        //Soja
+        if (totales.TotalSoja != 0) {
+            $("#totalSoja").show();
+            $("#toneladasSoja").text(kendo.toString(totales.TotalSoja, "n0"));
+        } else {
+            $("#totalSoja").hide();
+        }
+        //Maiz
+        if (totales.TotalMaiz != 0) {
+            $("#totalMaiz").show();
+            $("#toneladasMaiz").text(kendo.toString(totales.TotalMaiz, "n0"));
+        } else {
+            $("#totalMaiz").hide();
+        }
+        //Trigo
+        if (totales.TotalTrigo != 0) {
+            $("#totalTrigo").show();
+            $("#toneladastrigo").text(kendo.toString(totales.TotalTrigo, "n0"));
+        } else {
+            $("#totalTrigo").hide();
+        }
+        //Girasol
+        if (totales.TotalGirasol != 0) {
+            $("#totalGirasol").show();
+            $("#toneladasGirasol").text(kendo.toString(totales.TotalGirasol, "n0"));
+        } else {
+            $("#totalGirasol").hide();
+        }
+        //Girasol Alto
+        if (totales.TotalGirasolAlto != 0) {
+            $("#totalGirasolAlto").show();
+            $("#toneladasGirasolAlto").text(kendo.toString(totales.TotalGirasolAlto, "n0"));
+        } else {
+            $("#totalGirasolAlto").hide();
+        }
+        //Total
+        var total = totales.TotalSoja + totales.TotalMaiz + totales.TotalTrigo + totales.TotalGirasol + totales.TotalGirasolAlto;
+        if (totales.TotalSoja != 0 || totales.TotalMaiz != 0 || totales.TotalTrigo != 0 || totales.TotalGirasol != 0 || totales.TotalGirasolAlto != 0) {
+            $("#totalMaterial").show();
+            $("#toneladasMaterial").text(kendo.toString(total, "n0"));
+        } else {
+            $("#totalMaterial").hide();
+        }
+
     }
 }
 function isValidDate(date) {

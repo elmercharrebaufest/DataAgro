@@ -623,9 +623,9 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new ToneladasGranoTipoDto { Material = "a", Total = 0 });
             var result = target.TraerToneladasGranoTipo(fecha, fecha);
 
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()),Times.Exactly(4));
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()),Times.Exactly(6));
             Assert.NotNull(result);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(6, result.Count);
         }
         [Test]
         public void TraerToneladasSojaSustTest()
@@ -659,12 +659,12 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.TraerPosicionCompras(fecha, fecha);
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(4));
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(4));
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(4));
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(4));
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(6));
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(6));
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(6));
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(6));
             Assert.NotNull(result);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(6, result.Count);
         }
         [Test]
         public void TraerMonedaCantidadTest()

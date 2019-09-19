@@ -1052,31 +1052,32 @@ body {
         position: relative;
     }
 
-    #tablaApertura td input {
-        position: absolute;
-        display: block;
-        top: 0;
-        left: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-        border: none;
-        padding: 10px;
-        box-sizing: border-box;
-    }
+        #tablaApertura td input {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
 
-    #tablaApertura td span {
-        position: absolute;
-        display: block;
-        top: 0;
-        left: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-        border: none;
-        padding: 10px;
-        box-sizing: border-box;
-    }
+        #tablaApertura td span {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+}
 
 .fuente600 {
     font-weight: 600;
@@ -1112,7 +1113,7 @@ body {
     padding: 3px 5px;
     color: #333 !important;
     border-bottom: 0px;
-    border-right:0px;
+    border-right: 0px;
 }
 
     #modalVisualizar .dobleColumna span {
@@ -1127,66 +1128,18 @@ body {
     border: 1px solid #dbdbdb;
 }
 
-.pointerEventDesabilitado{
-    pointer-events:none;
-
+.pointerEventDesabilitado {
+    pointer-events: none;
 }
 
-.modal-superior{
-    z-index:1250;
+.modal-superior {
+    z-index: 1250;
 }
 
 .modal-inferior {
     z-index: 1050;
 }
 
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-
-
-    .aperturaPrecioInput {
-        display: block;
-        padding: 0;
-        margin: 0;
-        border: 0;
-        width: 100%;
-   
-    }
-
-    .aperturaPrecioTd {
-        margin: 0;
-        padding: 0 !important;
-    }
-
-    #tablaApertura td {
-        position: relative;
-    }
-
-        #tablaApertura td input {
-            position: absolute;
-            display: block;
-            top: 0;
-            left: 0;
-            margin: 0;
-            height: 167%;
-            width: 100%;
-            border: none;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        #tablaApertura td span {
-            position: absolute;
-            display: block;
-            top: 0;
-            left: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-            border: none;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-}
 
 
 @media (max-width: 1024px) {

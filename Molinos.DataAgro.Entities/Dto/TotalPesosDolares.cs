@@ -27,5 +27,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Estado_Contrato { get; set; }
         public decimal TotalPesos { get; set; }
         public decimal TotalDolares { get; set; }
+        public double TotalTrigo { get; set; }
+        public double TotalMaiz { get; set; }
+        public double TotalSoja { get; set; }
+        public double TotalGirasol { get; set; }
+        public double TotalGirasolAlto { get; set; }
     }
 }

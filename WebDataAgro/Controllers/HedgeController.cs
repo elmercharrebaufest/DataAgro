@@ -565,7 +565,7 @@ namespace WebDataAgro.Controllers
                         int mesActual = (int)(EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString());
                         htmlBody += "<tr>";
                         htmlBody += "<td  style=\" " + datoCentro + " \" >" + mes.Mes + " - " + mes.Anio + "</td>";
-                        htmlBody += "<td style=\" " + datoCentro + " \" >" + mes.Kilos.ToString("N0") + "</td>";
+                        htmlBody += "<td style=\" " + datoCentro + " \" >" + mes.KilosPesos.ToString("N0") + "</td>";
                         htmlBody += "</tr>";
                     }
                     htmlBody += "<tr>";

@@ -2,20 +2,20 @@
 @model WebDataAgro.Models.ReporteCompraNetModel
 
 @{
-    var dispAFijar = Model.ToneladasGranoTipo.Any(x => x.DispAFijar > 0);
-    var dispAPrecio = Model.ToneladasGranoTipo.Any(x => x.DispAPrecio > 0);
-    var dispFijacion = Model.ToneladasGranoTipo.Any(x => x.DispFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.DispFason > 0);
-    var dispAgente = Model.ToneladasGranoTipo.Any(x => x.DispAgente == 0);
+    var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar>0));
+    var dispAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAPrecio>0));
+    var dispFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispFijac>0));
+    var dispAgente = Model.ToneladasGranoTipo.Any(x => x.DispAgente != 0);
     var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispAgente ? 0 : 1);
-    var forwAFijar = Model.ToneladasGranoTipo.Any(x => x.FrwAFijar > 0);
-    var forwAPrecio = Model.ToneladasGranoTipo.Any(x => x.FrwAPrecio > 0);
-    var forwFijacion = Model.ToneladasGranoTipo.Any(x => x.FrwFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.FrwFason > 0);
-    var forwAgente = Model.ToneladasGranoTipo.Any(x => x.FrwAgente == 0);
+    var forwAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAFijar>0));
+    var forwAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAPrecio>0));
+    var forwFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwFijac>0));
+    var forwAgente = Model.ToneladasGranoTipo.Any(x => x.FrwAgente != 0);
     var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwAgente ? 0 : 1);
-    var newcAFijar = Model.ToneladasGranoTipo.Any(x => x.NewAFijar > 0);
-    var newcAPrecio = Model.ToneladasGranoTipo.Any(x => x.NewAPrecio > 0);
-    var newcFijacion = Model.ToneladasGranoTipo.Any(x => x.NewFijac > 0) || Model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
-    var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente == 0);
+    var newcAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAFijar>0));
+    var newcAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAPrecio>0));
+    var newcFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewFijac>0));
+    var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente != 0);
     var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcAgente ? 0 : 1);
 
     var hedgeMat = Model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0) ? 1 : 0;
@@ -108,6 +108,18 @@
                                 break;
                             case 32:
                                 sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Soja").Sum(x=>x.NewAgente)).ToString("N0");
+                                break;
+                            case 41:
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                break;
+                            case 42:
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol").Sum(x=>x.NewAgente)).ToString("N0");
+                                break;
+                            case 51:
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol Alto Oleico").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                break;
+                            case 52:
+                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol Alto Oleico").Sum(x=>x.NewAgente)).ToString("N0");
                                 break;
                             default:
                                 sumaPricing = "0";
@@ -209,10 +221,12 @@
             newcAFijar = material.PosicionKilos.Any(x => x.NewAFijar > 0);
             newcAPrecio = material.PosicionKilos.Any(x => x.NewAPrecio > 0);
             newcFijacion = material.PosicionKilos.Any(x => x.NewFijac > 0);
+            var totalPesos = material.PosicionKilos.Sum(y => y.KilosPesos);
+            var totalDolares = material.PosicionKilos.Sum(y => y.KilosDolares);
             var fix = 3 - (dispFijacion ? 0 : 1) - (forwFijacion ? 0 : 1) - (newcFijacion ? 0 : 1);
             var aFijar = 3 - (dispAFijar ? 0 : 1) - (forwAFijar ? 0 : 1) - (newcAFijar ? 0 : 1);
             var aPrecio = 3 - (dispAPrecio ? 0 : 1) - (forwAPrecio ? 0 : 1) - (newcAPrecio ? 0 : 1);
-            var suma = fix + aFijar + aPrecio;
+            var suma = fix + aFijar + aPrecio + (totalPesos != 0 ? 1 : 0) + (totalDolares != 0 ? 1 : 0);
             var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos > 0) ? 1 : 0;
             var pondDolares =material.PosicionKilos.Any(x => x.PrecioPonderadoDolares > 0) ? 1 : 0;
             var pond = pondPesos + pondDolares;
@@ -225,7 +239,8 @@
                             <th colspan="@fix" class="@(fix>0?"" :"hide") borde-izq-der">Fix</th>
                             <th colspan="@aFijar" class="@(aFijar>0?"" :"hide") borde-izq-der">A Fijar</th>
                             <th colspan="@aPrecio" class="@(aPrecio>0?"" :"hide") borde-izq-der">A Precio</th>
-                            <th rowspan="2">Ton.</th>
+                            <th rowspan="2" class="@(totalPesos!= 0?"" :"hide")">Ton. $</th>
+                            <th rowspan="2" class="@(totalDolares!= 0?"" :"hide")">Ton. USD</th>
                             <th rowspan="2" class="@(pondPesos>0?"":"hide")">$ Pond.</th>
                             <th rowspan="2" class="@(pondDolares>0?"":"hide")">USD Pond</th>
                             <th rowspan="2"></th>
@@ -257,7 +272,8 @@
                         <td class="@(dispAPrecio? "":"hide") borde-izq-der">@mes.DispAPrecio.ToString("N0")</td>
                         <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio.ToString("N0")</td>
                         <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio.ToString("N0")</td>
-                        <td> @(mes.Kilos.ToString("N0"))</td>
+                        <td class="@(totalPesos!=0 ? "" :"hide")"> @(mes.KilosPesos.ToString("N0"))</td>
+                        <td class="@(totalDolares!=0 ? "" :"hide")"> @(mes.KilosDolares.ToString("N0"))</td>
                         <td class="@(pondPesos>0?"":"hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
                         <td class="@(pondDolares>0?"":"hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
                         <td>
@@ -278,17 +294,18 @@
                     </tr>
                         }
                     <tr class="titulosPosicion total">
-                        <td class="@(dispFijacion? "":"hide")"></td>
-                        <td class="@(forwFijacion? "":"hide")"></td>
-                        <td class="@(newcFijacion? "":"hide")"></td>
-                        <td class="@(dispAFijar? "":"hide")"></td>
-                        <td class="@(forwAFijar? "":"hide")"></td>
-                        <td class="@(newcAFijar? "":"hide")"></td>
-                        <td class="@(dispAPrecio? "":"hide")"></td>
-                        <td class="@(forwAPrecio? "":"hide")"></td>
-                        <td class="@(newcAPrecio? "":"hide")"></td>
                         <th>Total</th>
-                        <th>@material.Total.ToString("N0")</th>
+                        <td class="@(dispFijacion? "":"hide")">@material.PosicionKilos.Sum(y => y.DispFijac).ToString("N0")</td>
+                        <td class="@(forwFijacion? "":"hide")">@material.PosicionKilos.Sum(y => y.FrwFijac).ToString("N0")</td>
+                        <td class="@(newcFijacion? "":"hide")">@material.PosicionKilos.Sum(y => y.NewFijac).ToString("N0")</td>
+                        <td class="@(dispAFijar? "":"hide")">@material.PosicionKilos.Sum(y => y.DispAFijar).ToString("N0")</td>
+                        <td class="@(forwAFijar? "":"hide")">@material.PosicionKilos.Sum(y => y.FrwAFijar).ToString("N0")</td>
+                        <td class="@(newcAFijar? "":"hide")">@material.PosicionKilos.Sum(y => y.NewAFijar).ToString("N0")</td>
+                        <td class="@(dispAPrecio? "":"hide")">@material.PosicionKilos.Sum(y => y.DispAPrecio).ToString("N0")</td>
+                        <td class="@(forwAPrecio? "":"hide")">@material.PosicionKilos.Sum(y => y.FrwAPrecio).ToString("N0")</td>
+                        <td class="@(newcAPrecio? "":"hide")">@material.PosicionKilos.Sum(y => y.NewAPrecio).ToString("N0")</td>
+                        <th class="@(totalPesos!= 0?"" :"hide")">@totalPesos.ToString("N0")</th>
+                        <th class="@(totalDolares!= 0?"" :"hide")">@totalDolares.ToString("N0")</th>
                         <td></td>
                         <td colspan="@pond"></td>
                         <td></td>

@@ -18,7 +18,8 @@ namespace Molinos.DataAgro.Entities.Dto
     public class PosicionKilos
     {
         public EnumMeses Mes { get; set; }
-        public double Kilos { get; set; }
+        public double KilosPesos { get; set; }
+        public double KilosDolares { get; set; }
         public double DispAFijar { get; set; }
         public double DispAPrecio { get; set; }
         public double DispFijac { get; set; }
