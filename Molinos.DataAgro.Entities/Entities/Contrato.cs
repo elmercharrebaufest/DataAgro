@@ -72,6 +72,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? NivelTarifaId { get;  set; }
         public decimal? TarifaFlete { get; set; }
         public bool? Dolarizado { get; set; }
+        public bool? Sustentable { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }

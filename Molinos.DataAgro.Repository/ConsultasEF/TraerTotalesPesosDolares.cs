@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new TotalPesosDolares()
                 {
-                    Cantidad = contrato.Cantidad,
+                    Cantidad = Math.Round(contrato.Cantidad / 1000),
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                     FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
                     Fecha = DbFunctions.TruncateTime(contrato.Fecha),
@@ -61,11 +61,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                     TotalDolares = contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
                     TotalPesos = contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
-                    TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
-                    TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
-                    TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
-                    TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
-                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0
+                    TotalGirasolAlto = contrato.MaterialId == 5 ? Math.Round(contrato.Cantidad / 1000) : 0,
+                    TotalGirasol = contrato.MaterialId == 4 ? Math.Round(contrato.Cantidad / 1000) : 0,
+                    TotalMaiz = contrato.MaterialId == 1 ? Math.Round(contrato.Cantidad/1000): 0,
+                    TotalSoja = contrato.MaterialId == 3 ? Math.Round(contrato.Cantidad / 1000) : 0,
+                    TotalTrigo = contrato.MaterialId == 2 ? Math.Round(contrato.Cantidad / 1000) : 0
                 };
 
             var queryFijacion =
@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new TotalPesosDolares()
                 {
-                    Cantidad = fijac.Cantidad,
+                    Cantidad = Math.Round(fijac.Cantidad / 1000),
                     FechaDesde = null,
                     FechaHasta = null,
                     Fecha = DbFunctions.TruncateTime(fijac.Fecha),
@@ -96,11 +96,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
                     TotalDolares = fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
                     TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
-                    TotalGirasolAlto = fijac.MaterialId == 5 ? fijac.Cantidad : 0,
-                    TotalGirasol = fijac.MaterialId == 4 ? fijac.Cantidad : 0,
-                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad : 0,
-                    TotalSoja = fijac.MaterialId == 3 ? fijac.Cantidad : 0,
-                    TotalTrigo = fijac.MaterialId == 2 ? fijac.Cantidad : 0
+                    TotalGirasolAlto = fijac.MaterialId == 5 ? Math.Round(fijac.Cantidad / 1000) : 0,
+                    TotalGirasol = fijac.MaterialId == 4 ? Math.Round(fijac.Cantidad / 1000) : 0,
+                    TotalMaiz = fijac.MaterialId == 1 ? Math.Round(fijac.Cantidad / 1000) : 0,
+                    TotalSoja = fijac.MaterialId == 3 ? Math.Round(fijac.Cantidad / 1000) : 0,
+                    TotalTrigo = fijac.MaterialId == 2 ? Math.Round(fijac.Cantidad / 1000) : 0
                 };
             queryContratos = queryContratos.Union(queryFijacion);
 
@@ -109,7 +109,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where (fas.EstadoId == 2 || fas.EstadoId == 4 || fas.EstadoId == 5) && equipo.Contains(fas.ComercialId)
                 select new TotalPesosDolares()
                 {
-                    Cantidad = fas.Cantidad,
+                    Cantidad = Math.Round(fas.Cantidad / 1000),
                     FechaDesde = null,
                     FechaHasta = null,
                     Fecha = DbFunctions.TruncateTime(fas.Fecha),
@@ -130,11 +130,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = fas.ComercialCreador == null ? fas.Comercial.Nombres + " " + fas.Comercial.Apellido : fas.ComercialCreador.Nombres + " " + fas.ComercialCreador.Apellido,
                     TotalDolares = fas.MonedaId == "USDM " ? fas.Precio : 0,
                     TotalPesos = fas.MonedaId == "ARP  " ? fas.Precio : 0,
-                    TotalGirasolAlto = fas.MaterialId == 5 ? fas.Cantidad : 0,
-                    TotalGirasol = fas.MaterialId == 4 ? fas.Cantidad : 0,
-                    TotalMaiz = fas.MaterialId == 1 ? fas.Cantidad : 0,
-                    TotalSoja = fas.MaterialId == 3 ? fas.Cantidad : 0,
-                    TotalTrigo = fas.MaterialId == 2 ? fas.Cantidad : 0
+                    TotalGirasolAlto = fas.MaterialId == 5 ? Math.Round(fas.Cantidad / 1000) : 0,
+                    TotalGirasol = fas.MaterialId == 4 ? Math.Round(fas.Cantidad / 1000) : 0,
+                    TotalMaiz = fas.MaterialId == 1 ? Math.Round(fas.Cantidad / 1000) : 0,
+                    TotalSoja = fas.MaterialId == 3 ? Math.Round(fas.Cantidad / 1000) : 0,
+                    TotalTrigo = fas.MaterialId == 2 ? Math.Round(fas.Cantidad / 1000) : 0
                 };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -144,7 +144,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     where (acu.EstadoId == 2 || acu.EstadoId == 4 || acu.EstadoId == 5) && equipo.Contains(acu.ComercialCreadorId)
                     select new TotalPesosDolares()
                     {                        
-                        Cantidad = acu.Cantidad,
+                        Cantidad = Math.Round((double)acu.Cantidad / 1000),
                         FechaDesde = DbFunctions.TruncateTime(acu.FechaDesde),
                         FechaHasta = DbFunctions.TruncateTime(acu.FechaHasta),
                         Fecha = DbFunctions.TruncateTime(acu.Fecha),
@@ -165,11 +165,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ComercialCreador = acu.Comercial == null ? acu.Comercial.Nombres + " " + acu.Comercial.Apellido : acu.Comercial.Nombres + " " + acu.Comercial.Apellido,
                         TotalDolares = acu.MonedaId == "USDM " ? acu.Precio : 0,
                         TotalPesos = acu.MonedaId == "ARP  " ? acu.Precio : 0,
-                        TotalGirasolAlto = acu.MaterialId == 5 ? acu.Cantidad : 0,
-                        TotalGirasol = acu.MaterialId == 4 ? acu.Cantidad : 0,
-                        TotalMaiz = acu.MaterialId == 1 ? acu.Cantidad : 0,
-                        TotalSoja = acu.MaterialId == 3 ? acu.Cantidad : 0,
-                        TotalTrigo = acu.MaterialId == 2 ? acu.Cantidad : 0
+                        TotalGirasolAlto = acu.MaterialId == 5 ? Math.Round((double)acu.Cantidad/1000) : 0,
+                        TotalGirasol = acu.MaterialId == 4 ? Math.Round((double)acu.Cantidad / 1000) : 0,
+                        TotalMaiz = acu.MaterialId == 1 ? Math.Round((double)acu.Cantidad / 1000) : 0,
+                        TotalSoja = acu.MaterialId == 3 ? Math.Round((double)acu.Cantidad / 1000) : 0,
+                        TotalTrigo = acu.MaterialId == 2 ? Math.Round((double)acu.Cantidad / 1000) : 0
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);

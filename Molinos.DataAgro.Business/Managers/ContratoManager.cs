@@ -391,6 +391,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
 
+            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && !oParam.ImporteSustentable.HasValue || string.IsNullOrEmpty(oParam.MonedaSustentableId))
+            {
+                oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+            }
             var cantidadDias = configuracionManager.TraerPesificacionDolarizado().CantidadDias;
             var fechaFijacion = oParam.HastaFijacion;
             var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
@@ -1474,13 +1478,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, perfilId, listComercialesId, corredoresComercial));
             return new TotalPesosDolares {
-                TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*((decimal)x.Cantidad/1000),0)),
-                TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * ((decimal)x.Cantidad / 1000),0)),
-                TotalSoja = resultados.Data.Sum(x => Math.Round(x.TotalSoja/ 1000)),
-                TotalMaiz = resultados.Data.Sum(x => Math.Round(x.TotalMaiz / 1000)),
-                TotalTrigo = resultados.Data.Sum(x => Math.Round(x.TotalTrigo / 1000)),
-                TotalGirasol = resultados.Data.Sum(x => Math.Round(x.TotalGirasol / 1000)),
-                TotalGirasolAlto = resultados.Data.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
+                TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*((decimal)x.Cantidad),0)),
+                TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * ((decimal)x.Cantidad),0)),
+                TotalSoja = resultados.Data.Sum(x => x.TotalSoja),
+                TotalMaiz = resultados.Data.Sum(x => x.TotalMaiz),
+                TotalTrigo = resultados.Data.Sum(x => x.TotalTrigo),
+                TotalGirasol = resultados.Data.Sum(x => x.TotalGirasol),
+                TotalGirasolAlto = resultados.Data.Sum(x => x.TotalGirasolAlto)
 
             };
         }
