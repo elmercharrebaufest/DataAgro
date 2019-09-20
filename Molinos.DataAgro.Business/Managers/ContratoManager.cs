@@ -391,7 +391,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
 
-            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && !oParam.ImporteSustentable.HasValue || string.IsNullOrEmpty(oParam.MonedaSustentableId))
+            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value==0 ||string.IsNullOrEmpty(oParam.MonedaSustentableId)))
             {
                 oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
             }

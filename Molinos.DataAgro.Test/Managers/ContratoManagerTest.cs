@@ -178,6 +178,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Sustentable = false,
                 Calidad = new List<Calidad>()
 
             };
@@ -217,6 +218,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Sustentable = false,
                 Calidad = new List<Calidad>()
 
             };
@@ -259,8 +261,8 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Sustentable = false,
                 Calidad = new List<Calidad>()
-                
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
@@ -303,6 +305,7 @@ namespace Molinos.DataAgro.Test.Managers
                 StandardDeCalidadId = 1,
                 PagoDiferido = true,
                 DiasPesificado=10,
+                Sustentable = false,
                 Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -349,6 +352,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
+                Sustentable = false,
                 EstadoId = (int)EnumEstadoContrato.Confirmado
             };
 
@@ -508,6 +512,7 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = null,
                 StandardDeCalidadId = null,
+                Sustentable = true,
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
@@ -535,7 +540,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(25, resultado.ListaErrores.Count);
+            Assert.AreEqual(26, resultado.ListaErrores.Count);
         }
 
         [Test]

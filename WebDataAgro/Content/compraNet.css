@@ -44,6 +44,7 @@
     color: #fff;
     padding: 8px;
     border-radius: 5px !important;
+    margin-bottom:10px;
 }
 
     .btnAzul:hover {
@@ -1157,4 +1158,5 @@ body {
     border: 1px solid green;
     color: #26337B;
     border-radius: 5px !important;
+    display: inline-block;
 }
