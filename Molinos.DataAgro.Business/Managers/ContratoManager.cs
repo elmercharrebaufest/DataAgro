@@ -42,7 +42,6 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
         private readonly IConfiguracionManager configuracionManager;
-        private readonly IReportesManager reportesManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -55,8 +54,7 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
-            IReportesManager reportesManager)
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -75,7 +73,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
             this.configuracionManager = configuracionManager;
-            this.reportesManager = reportesManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
