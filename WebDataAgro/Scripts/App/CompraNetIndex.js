@@ -877,6 +877,7 @@ function BuscarTotales() {
         $("#totalDolares").text(kendo.toString(totales.TotalDolares, "n0"));
 
         //Cargar Toneladas de Materiales
+        var total = totales.TotalSoja + totales.TotalMaiz + totales.TotalTrigo + totales.TotalGirasol + totales.TotalGirasolAlto;
         //Soja
         if (totales.TotalSoja != 0) {
             $("#totalSoja").show();
@@ -913,11 +914,12 @@ function BuscarTotales() {
             $("#totalGirasolAlto").hide();
         }
         //Total
-        var total = totales.TotalSoja + totales.TotalMaiz + totales.TotalTrigo + totales.TotalGirasol + totales.TotalGirasolAlto;
-        if (totales.TotalSoja != 0 || totales.TotalMaiz != 0 || totales.TotalTrigo != 0 || totales.TotalGirasol != 0 || totales.TotalGirasolAlto != 0) {
+        if (total != 0) {
+            $("#totalizador-materiales").addClass("grupo-totales");
             $("#totalMaterial").show();
             $("#toneladasMaterial").text(kendo.toString(total, "n0"));
         } else {
+            $("#totalizador-materiales").removeClass("grupo-totales");
             $("#totalMaterial").hide();
         }
 

@@ -962,7 +962,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
-                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
@@ -1228,7 +1228,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(fechaHasta.Year, fechaHasta.Month, 1);
                 }
-                var dato = new string[34];
+                
                 if (posicion.Month == mes && posicion.Year == anio)
                 {
                     retorno.Add(cont);

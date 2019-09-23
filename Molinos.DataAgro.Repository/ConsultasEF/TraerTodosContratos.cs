@@ -1,4 +1,4 @@
-﻿using KendoGridBinder;
+﻿ using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 select new BasicoContrato()
                 {
                     Id = fijac.FijacionDePrecioContratoId,
-                    ContratoId = fijac.ContratoId.HasValue? fijac.ContratoId.Value : 0,
+                    ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
                     ProveedorId = fijac.ProveedorId,
                     CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                     ComercialId = fijac.ComercialId,

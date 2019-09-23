@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaHasta { get; set; }
         public string TipoNegocio { get; set; }
         public string Material { get; set; }
+        public int MaterialId { get; set; }
         public double Cantidad { get; set; }
         public double? Ampliaciones { get; set; }
         public string Campania { get; set; }

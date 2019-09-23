@@ -61,11 +61,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                     TotalDolares = contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
                     TotalPesos = contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? contrato.PrecioNeto.Value : contrato.Precio : 0,
-                    TotalGirasolAlto = contrato.MaterialId == 5 ? Math.Round(contrato.Cantidad / 1000) : 0,
-                    TotalGirasol = contrato.MaterialId == 4 ? Math.Round(contrato.Cantidad / 1000) : 0,
-                    TotalMaiz = contrato.MaterialId == 1 ? Math.Round(contrato.Cantidad/1000): 0,
-                    TotalSoja = contrato.MaterialId == 3 ? Math.Round(contrato.Cantidad / 1000) : 0,
-                    TotalTrigo = contrato.MaterialId == 2 ? Math.Round(contrato.Cantidad / 1000) : 0
+                    TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
+                    TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad: 0,
+                    TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad: 0,
+                    TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
+                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad  : 0
                 };
 
             var queryFijacion =
@@ -96,11 +96,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
                     TotalDolares = fijac.MonedaId == "USDM " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
                     TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
-                    TotalGirasolAlto = fijac.MaterialId == 5 ? Math.Round(fijac.Cantidad / 1000) : 0,
-                    TotalGirasol = fijac.MaterialId == 4 ? Math.Round(fijac.Cantidad / 1000) : 0,
-                    TotalMaiz = fijac.MaterialId == 1 ? Math.Round(fijac.Cantidad / 1000) : 0,
-                    TotalSoja = fijac.MaterialId == 3 ? Math.Round(fijac.Cantidad / 1000) : 0,
-                    TotalTrigo = fijac.MaterialId == 2 ? Math.Round(fijac.Cantidad / 1000) : 0
+                    TotalGirasolAlto = fijac.MaterialId == 5 ? fijac.Cantidad : 0,
+                    TotalGirasol = fijac.MaterialId == 4 ? fijac.Cantidad : 0,
+                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad: 0,
+                    TotalSoja = fijac.MaterialId == 3 ? fijac.Cantidad : 0,
+                    TotalTrigo = fijac.MaterialId == 2 ? fijac.Cantidad : 0
                 };
             queryContratos = queryContratos.Union(queryFijacion);
 
@@ -130,11 +130,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialCreador = fas.ComercialCreador == null ? fas.Comercial.Nombres + " " + fas.Comercial.Apellido : fas.ComercialCreador.Nombres + " " + fas.ComercialCreador.Apellido,
                     TotalDolares = fas.MonedaId == "USDM " ? fas.Precio : 0,
                     TotalPesos = fas.MonedaId == "ARP  " ? fas.Precio : 0,
-                    TotalGirasolAlto = fas.MaterialId == 5 ? Math.Round(fas.Cantidad / 1000) : 0,
-                    TotalGirasol = fas.MaterialId == 4 ? Math.Round(fas.Cantidad / 1000) : 0,
-                    TotalMaiz = fas.MaterialId == 1 ? Math.Round(fas.Cantidad / 1000) : 0,
-                    TotalSoja = fas.MaterialId == 3 ? Math.Round(fas.Cantidad / 1000) : 0,
-                    TotalTrigo = fas.MaterialId == 2 ? Math.Round(fas.Cantidad / 1000) : 0
+                    TotalGirasolAlto = fas.MaterialId == 5 ? fas.Cantidad : 0,
+                    TotalGirasol = fas.MaterialId == 4 ? fas.Cantidad: 0,
+                    TotalMaiz = fas.MaterialId == 1 ? fas.Cantidad : 0,
+                    TotalSoja = fas.MaterialId == 3 ? fas.Cantidad : 0,
+                    TotalTrigo = fas.MaterialId == 2 ? fas.Cantidad : 0
                 };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -165,15 +165,48 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ComercialCreador = acu.Comercial == null ? acu.Comercial.Nombres + " " + acu.Comercial.Apellido : acu.Comercial.Nombres + " " + acu.Comercial.Apellido,
                         TotalDolares = acu.MonedaId == "USDM " ? acu.Precio : 0,
                         TotalPesos = acu.MonedaId == "ARP  " ? acu.Precio : 0,
-                        TotalGirasolAlto = acu.MaterialId == 5 ? Math.Round((double)acu.Cantidad/1000) : 0,
-                        TotalGirasol = acu.MaterialId == 4 ? Math.Round((double)acu.Cantidad / 1000) : 0,
-                        TotalMaiz = acu.MaterialId == 1 ? Math.Round((double)acu.Cantidad / 1000) : 0,
-                        TotalSoja = acu.MaterialId == 3 ? Math.Round((double)acu.Cantidad / 1000) : 0,
-                        TotalTrigo = acu.MaterialId == 2 ? Math.Round((double)acu.Cantidad / 1000) : 0
+                        TotalGirasolAlto = acu.MaterialId == 5 ? (double)acu.Cantidad : 0,
+                        TotalGirasol = acu.MaterialId == 4 ? (double)acu.Cantidad  : 0,
+                        TotalMaiz = acu.MaterialId == 1 ? (double)acu.Cantidad : 0,
+                        TotalSoja = acu.MaterialId == 3 ? (double)acu.Cantidad : 0,
+                        TotalTrigo = acu.MaterialId == 2 ? (double)acu.Cantidad : 0
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);
-            
+            var queryAgente =
+                    from age in contexto.Set<AgenteCompra>()
+                    where equipo.Contains(age.ComercialId)
+                    select new TotalPesosDolares()
+                    {
+                        Cantidad = Math.Round((double)age.Cantidad / 1000),
+                        FechaDesde = null,
+                        FechaHasta = null,
+                        Fecha = DbFunctions.TruncateTime(age.Fecha),
+                        GrupoCompraDescripcion = null,
+                        Estado_Contrato = age.Estado.Descripcion,
+                        Ampliaciones = null,
+                        Proveedor = age.Operador != null ? age.Operador.Descripcion : "",
+                        Corredor = "",
+                        ProveedorId = age.OperadorId,
+                        CorredorId = 0,
+                        Comercial = age.Comercial == null ? "" : age.Comercial.Nombres + " " + age.Comercial.Apellido,
+                        Material = age.Material == null ? "" : age.Material.Descripcion,
+                        Campania = "",
+                        TipoNegocio = "AGENTE DE COMPRAS",
+                        Negocio = null,
+                        DestinoDescripcion = "",
+                        ComercialId = age.ComercialCreadorId,
+                        ComercialCreador = age.Comercial == null ? age.Comercial.Nombres + " " + age.Comercial.Apellido : age.Comercial.Nombres + " " + age.Comercial.Apellido,
+                        TotalDolares = age.MonedaId == "USDM " ? age.Precio : 0,
+                        TotalPesos = age.MonedaId == "ARP  " ? age.Precio : 0,
+                        TotalGirasolAlto = age.MaterialId == 5 ? (double)age.Cantidad : 0,
+                        TotalGirasol = age.MaterialId == 4 ? (double)age.Cantidad : 0,
+                        TotalMaiz = age.MaterialId == 1 ? (double)age.Cantidad : 0,
+                        TotalSoja = age.MaterialId == 3 ? (double)age.Cantidad : 0,
+                        TotalTrigo = age.MaterialId == 2 ? (double)age.Cantidad : 0
+                    };
+            queryContratos = queryContratos.Union(queryAgente);
+
             return new KendoGrid<TotalPesosDolares>(request, queryContratos);
         }
 

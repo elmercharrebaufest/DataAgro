@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
         private readonly IConfiguracionManager configuracionManager;
+        private readonly IReportesManager reportesManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -54,7 +55,8 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager)
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
+            IReportesManager reportesManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -73,6 +75,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
             this.configuracionManager = configuracionManager;
+            this.reportesManager = reportesManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
@@ -1477,15 +1480,16 @@ namespace Molinos.DataAgro.Business.Managers
         public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
         {
             var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, perfilId, listComercialesId, corredoresComercial));
+            var materialesId = resultados.Data.Select(x => x.MaterialId).Distinct();
+           
             return new TotalPesosDolares {
                 TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*((decimal)x.Cantidad),0)),
                 TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * ((decimal)x.Cantidad),0)),
-                TotalSoja = resultados.Data.Sum(x => x.TotalSoja),
-                TotalMaiz = resultados.Data.Sum(x => x.TotalMaiz),
-                TotalTrigo = resultados.Data.Sum(x => x.TotalTrigo),
-                TotalGirasol = resultados.Data.Sum(x => x.TotalGirasol),
-                TotalGirasolAlto = resultados.Data.Sum(x => x.TotalGirasolAlto)
-
+                TotalSoja = resultados.Data.Sum(x => Math.Round( x.TotalSoja / 1000)),
+                TotalMaiz = resultados.Data.Sum(x => Math.Round(x.TotalMaiz / 1000)),
+                TotalTrigo = resultados.Data.Sum(x => Math.Round(x.TotalTrigo / 1000)),
+                TotalGirasol = resultados.Data.Sum(x => Math.Round(x.TotalGirasol / 1000)),
+                TotalGirasolAlto = resultados.Data.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
             };
         }
     }

@@ -156,17 +156,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                 if (fecha >= fechaAñoSiguiente)
                 {
-                    toneladasPorGrano.NewAgente +=age.Cantidad;
+                    toneladasPorGrano.NewAgente += Math.Round(age.Cantidad / 1000);
                 }
                 else if (fecha < fechaAñoSiguiente && (fechaMesSiguiente >= fecha))                    
                 {
-                    toneladasPorGrano.DispAgente += age.Cantidad;
+                    toneladasPorGrano.DispAgente += Math.Round(age.Cantidad / 1000);
                 }
-                else { toneladasPorGrano.FrwAgente += age.Cantidad; }
+                else { toneladasPorGrano.FrwAgente += Math.Round(age.Cantidad / 1000);  }
             }
-            toneladasPorGrano.NewAgente = Math.Round(toneladasPorGrano.NewAgente / 1000);
-            toneladasPorGrano.FrwAgente = Math.Round(toneladasPorGrano.FrwAgente / 1000);
-            toneladasPorGrano.DispAgente = Math.Round(toneladasPorGrano.DispAgente / 1000);
+            toneladasPorGrano.NewAgente = toneladasPorGrano.NewAgente;
+            toneladasPorGrano.FrwAgente = toneladasPorGrano.FrwAgente;
+            toneladasPorGrano.DispAgente = toneladasPorGrano.DispAgente;
             toneladasPorGrano.Total += toneladasPorGrano.NewAgente + toneladasPorGrano.DispAgente + toneladasPorGrano.FrwAgente;
 
             return toneladasPorGrano;

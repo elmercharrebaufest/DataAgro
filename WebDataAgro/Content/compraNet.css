@@ -1160,3 +1160,8 @@ body {
     border-radius: 5px !important;
     display: inline-block;
 }
+@media (max-width: 767px) {
+    .text-xs-center {
+        text-align: center;
+    }
+}
