@@ -685,7 +685,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, perfilId, listComercialesId, corredoresComercial));
         }
-
+        public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, perfilId, listComercialesId, corredoresComercial));
+        }
         public GrabarContratoResult ConfirmarContrato(int contratoId)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -1488,6 +1491,33 @@ namespace Molinos.DataAgro.Business.Managers
                 TotalGirasol = resultados.Data.Sum(x => Math.Round(x.TotalGirasol / 1000)),
                 TotalGirasolAlto = resultados.Data.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
             };
+        }
+
+        public List<EstadoContratoDto> TraerTodoLosEstados()
+        {
+            return repositorio.Listar<EstadoContrato, EstadoContratoDto>(x => new EstadoContratoDto
+            {
+                EstadoContratoId = x.EstadoContratoId,
+                Descripcion = x.Descripcion
+            });
+        }
+
+        public List<BoletoCompraNetDto> TraerTodosLosBoletos()
+        {
+            return repositorio.Listar<BoletoCompraNet, BoletoCompraNetDto>(x => new BoletoCompraNetDto
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion
+            });
+        }
+
+        public List<GrupoDeComprasDto> TraerTodoGrupoDeCompras()
+        {
+            return repositorio.Listar<GrupoDeCompras, GrupoDeComprasDto>(x => new GrupoDeComprasDto
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion
+            });
         }
     }
 }

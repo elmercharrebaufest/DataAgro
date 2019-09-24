@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface IContratoManager
     {
         KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
+        KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
 
         DatosIniContrato TraerDatosCombo(int perfil);
 
@@ -39,6 +40,8 @@ namespace Molinos.DataAgro.Interfaces
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
         TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
-
-    }
+        List<EstadoContratoDto> TraerTodoLosEstados();
+        List<BoletoCompraNetDto> TraerTodosLosBoletos();
+        List<GrupoDeComprasDto> TraerTodoGrupoDeCompras();
+            }
 }

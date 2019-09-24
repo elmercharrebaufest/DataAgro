@@ -1,6 +1,7 @@
 ﻿using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,57 +18,64 @@ namespace WebDataAgro.Controllers
         private IComercialManager mobjComercialManager;
         private IProvinciaManager mobjProvinciaManager;
         private ILocalidadManager mobjLocalidadManager;
+        private IMaterialManager mobjMaterialManager;
+        private ITipoNegocioManager mobjTipoNegocioManager;
+        private ICampañaManager mobjCampaniaManager;
+        private ICentroManager mobjCentroManager;
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ContratoController(  IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager)
+        public ContratoController(IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager,
+            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager,  ICampañaManager oCampaniaManager,  ICentroManager oCentroManager)
         {
             mobjProveedorManager = oProveedorManager;
             mobjComercialManager = oComercialManager;
             mobjContratoManager = ocontratoManager;
             mobjProvinciaManager = oProvinciaManager;
             mobjLocalidadManager = oLocalidadManager;
+            mobjMaterialManager = oMaterialManager;
+            mobjTipoNegocioManager = oTipoNegocioManager;
+            mobjCampaniaManager = oCampaniaManager;
+            mobjCentroManager = oCentroManager;
+            
         }
 
         public ActionResult Index()
         {
+           
             if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
             {
                 ViewBag.edita = false;
             }
-
+            FillViewBag();
             return View();
         }
 
         [HttpPost]
-        public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
+        public ActionResult BuscaDatosTabla(FiltroReporteNegocioDto filtro)
         {
-            if (request.SortObjects != null)
+            var filtrarReporte = new FiltroReporteNegocioDto();
+            if (!filtrarReporte.Equals(filtro))
             {
-                request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
+                filtro.FechaCarga = DateTime.Now.Date.ToString("dd-MM-yyyy");
             }
-            else
-            {
-                request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
-            }
-            
-            var model = mobjContratoManager.TraerTodosContratos(request,(int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
-            
+            var model = mobjContratoManager.TraerContratosFiltrados(filtro, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-
+        
         public ActionResult ListarComercial(string text = "")
         {
             var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
-                                                     //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
+            //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ListarProvincia(string text = "")
         {
-            var provincias = mobjProvinciaManager.ListarProvincia(text);            
+            var provincias = mobjProvinciaManager.ListarProvincia(text);
             return Json(provincias.Select(x => new { x.ProvinciaId, Provincia = x.Nombre }), JsonRequestBehavior.AllowGet);
         }
 
@@ -76,11 +84,95 @@ namespace WebDataAgro.Controllers
             var localidades = mobjLocalidadManager.ListarLocalidad(text);
             return Json(localidades.Select(x => new { x.LocalidadId, Localidad = x.Nombre }), JsonRequestBehavior.AllowGet);
         }
-        
+
         public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = mobjProveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
+        
+        private void FillViewBag()
+        {
+
+            var material = mobjMaterialManager.TraerTodoMaterial();
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+
+            var tipoNegocio = mobjTipoNegocioManager.TraerTodoTipoNegocio();
+            var tipoNegocioListItems = tipoNegocio.Select(
+
+                x => new SelectListItem
+                {
+                    Text = x.Descripcion,
+                    Value = x.TipoNegocioId.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value);
+            ViewBag.TipoNegocio = tipoNegocioListItems;
+
+            var campania = mobjCampaniaManager.TraerTodoCampania();
+            var campaniaListItems = campania.Select(x => new SelectListItem
+            {
+                Text = x.Descripcion,
+                Value = x.CampañaId.ToString(),
+                Selected = false
+            }).OrderBy(x => x.Value);
+            ViewBag.Campania = campaniaListItems;
+
+            var zona = mobjContratoManager.TraerTodoGrupoDeCompras();
+            var zonaListItems = zona.Select(
+                x => new SelectListItem
+                {
+                    Text = x.Descripcion,
+                    Value = x.Id.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value);
+            ViewBag.Zona = zonaListItems;
+
+            var estado = mobjContratoManager.TraerTodoLosEstados();
+            var estadoListItems = estado.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.EstadoContratoId.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Estado = estadoListItems;
+
+            var centro = mobjCentroManager.TraerTodoCentro();
+            var centroListItems = centro.Centro.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.Id.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Centro = centroListItems;
+
+            var boleto = mobjContratoManager.TraerTodosLosBoletos();
+            var boletoListItems = boleto.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.Id.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Boleto = boletoListItems;
+
+            var comercial = mobjComercialManager.TraerTodoComercial();
+            var comercialListItems = comercial.Comercial.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Nombres+" "+ x.Apellido,
+                   Value = x.ComercialId.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Comercial = comercialListItems;
         }
     }
 }

@@ -20,5 +20,7 @@ namespace Molinos.DataAgro.Interfaces
 
         CampañaDto TraerCampania(int CampaniaId);
 
+        List<CampañaDto> TraerTodoCampania();
+
     }
 }

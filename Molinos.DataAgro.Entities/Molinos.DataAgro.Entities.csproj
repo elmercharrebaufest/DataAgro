@@ -69,8 +69,13 @@
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
+    <Compile Include="Dto\BoletoCompraNetDto.cs" />
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
     <Compile Include="Dto\ConfiguracionDto.cs" />
+    <Compile Include="Dto\KendoGridContratoDto.cs" />
+    <Compile Include="Dto\EstadoContratoDto.cs" />
+    <Compile Include="Dto\FiltroReporteNegocioDto.cs" />
+    <Compile Include="Dto\GrupoDeComprasDto.cs" />
     <Compile Include="Dto\LimiteCupoDto.cs" />
     <Compile Include="Dto\CupoDto.cs" />
     <Compile Include="Dto\EstadioDto.cs" />

@@ -89,5 +89,14 @@ namespace Molinos.DataAgro.Business
             calidades.AddRange(repositorio.Listar<CalidadEspecial, CalidadEspecialDto>(x => new CalidadEspecialDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, MaterialId = x.MaterialId }, x => x.MaterialId == materialId));
             return calidades;
         }
+
+        public List<CampañaDto> TraerTodoCampania()
+        {
+            return repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto
+            {
+                CampañaId = x.CampañaId,
+                Descripcion = x.Descripcion
+            });
+        }
     }    
 }

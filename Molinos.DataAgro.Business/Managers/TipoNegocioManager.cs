@@ -1,4 +1,5 @@
-﻿using Autofac.Extras.NLog;
+﻿using System.Collections.Generic;
+using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
@@ -24,6 +25,16 @@ namespace Molinos.DataAgro.Business
         public TipoNegocioDto TraerTipoNegociod(int tipoNegocioId)
         {
             return repositorio.Obtener<TipoNegocio, TipoNegocioDto>(x => x.TipoNegocioId == tipoNegocioId, x=> new TipoNegocioDto(){TipoNegocioId = x.TipoNegocioId,Descripcion =x.Descripcion}) ?? new TipoNegocioDto();
+        }
+
+        public List<TipoNegocioDto> TraerTodoTipoNegocio()
+        {
+            
+            return repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto
+            {
+                TipoNegocioId = x.TipoNegocioId,
+                Descripcion = x.Descripcion
+            });
         }
     }
 }

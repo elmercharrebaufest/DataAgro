@@ -241,7 +241,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La Cantidad no debe estar vacia.
+        ///   Looks up a localized string similar to La Cantidad no debe estar vacía.
         /// </summary>
         public static string Error_CantidadCupoRequerido {
             get {
@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to El Centro no debe estar vacio.
+        ///   Looks up a localized string similar to El Centro no debe estar vacío.
         /// </summary>
         public static string Error_CentroRequerido {
             get {
@@ -268,7 +268,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La Fecha de Ingreso no debe estar vacio.
+        ///   Looks up a localized string similar to La Fecha de Ingreso no debe estar vacío.
         /// </summary>
         public static string Error_FechaEntregaRequerido {
             get {
@@ -295,7 +295,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to El Material no debe estar vacio.
+        ///   Looks up a localized string similar to El Material no debe estar vacío.
         /// </summary>
         public static string Error_MaterialRequerido {
             get {
@@ -304,7 +304,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La Planta no debe estar vacia.
+        ///   Looks up a localized string similar to La Planta no debe estar vacía.
         /// </summary>
         public static string Error_PlantaRequerido {
             get {
@@ -313,7 +313,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to El Proveedor no debe estar vacio.
+        ///   Looks up a localized string similar to El Proveedor no debe estar vacío.
         /// </summary>
         public static string Error_ProveedorRequerido {
             get {
@@ -322,7 +322,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La Zona no debe estar vacia.
+        ///   Looks up a localized string similar to La Zona no debe estar vacía.
         /// </summary>
         public static string Error_ZonaRequerido {
             get {
@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hasta Fijacion.
+        ///   Looks up a localized string similar to Hasta Fijación.
         /// </summary>
         public static string HastaFijacion {
             get {

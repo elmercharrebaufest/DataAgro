@@ -42,3 +42,20 @@ div > label {
 .resultado{
     overflow-x:scroll;
 }
+
+.filtro-desplegable {
+    border-bottom: 3px solid #017940;
+    margin-bottom: 10px;
+    padding: 0 0 5px 20px;
+    cursor: pointer;
+}
+.filtro {
+    color: #017940;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans",sans-serif;
+    text-align: center;
+}
+.k-icon.k-i-close {
+    display: none !important;
+}
