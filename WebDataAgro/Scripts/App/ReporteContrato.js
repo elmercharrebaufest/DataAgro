@@ -1,10 +1,8 @@
 ﻿$(document).ready(function () {
     kendo.culture("es-AR");
-    CreateGridInformeCompraNet();
     InicializarDate();
     InicializarElementos();
-    $('#grid').data('kendoGrid').dataSource.read();
-    CreateGridInformeCompraNet()
+    CreateGridInformeCompraNet();
         
 });
 
@@ -13,6 +11,7 @@ function CreateGridInformeCompraNet() {
         $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
             "selectedItemsFormat": ""
         });
+   
     var ds = {
         transport: {
             read: {
@@ -36,34 +35,21 @@ function CreateGridInformeCompraNet() {
                     obj.ImporteSustentable = $("#ImporteSustentable").val();
                     obj.DiasDiferimiento = $("#DiasDiferimiento").val();
                     obj.FechaLimiteDolarizado = $("#fechalimiteId").val();
-                    if ($("#buscadorProveedor").val() != "") {
-                        var cuitAux = $("#buscadorProveedor").val().split('(');
-                        var proveedorId;
-                        if (cuitAux[1]) {
-                            var cuit = cuitAux[1].split(')');
-                            proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
-                        } else {
-                            proveedorId = -1;
-                        }
-                    }
-                    if ($("#buscadorCorredor").val() != "") {
-                        var cuitAuxC = $("#buscadorCorredor").val().split('(');
-                        if (cuitAuxC[1]) {
-                            var cuitC = cuitAuxC[1].split(')');
-                            var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
-                        }
-                    }
-                    obj.ProveedorId = proveedorId;
-                    obj.CorredorId = corredorId;
+
+                    obj.Importe = $("#importeSustentableId").is(':checked');
+                   
+                    var lista = [];
+                        lista = $("#buscadorProveedor").data("kendoMultiSelect").value();
+                    obj.ProveedorId = lista.filter(function (value, index, arr) {
+                        return value != "";
+                    });
+                    lista = $("#buscadorCorredor").data("kendoMultiSelect").value();
+                    obj.CorredorId = lista.filter(function (value, index, arr) {
+                        return value != "";
+                    });
                     return obj;
                 }
-            },
-            //parameterMap: function (options, operation) {
-            //    if (options.filter) {
-            //        KendoGrid_FixFilter(ds, options.filter);
-            //    }
-            //    return options;
-            //}
+            }
 
         },
         schema: {
@@ -98,7 +84,7 @@ function CreateGridInformeCompraNet() {
         serverFiltering: false,
         pageSize: 20,
     };
-
+   
     $("#grid").kendoGrid({
         toolbar: ["excel"],
         excel: {
@@ -291,21 +277,14 @@ function CreateGridInformeCompraNet() {
         filterable: false,
         filterMenuInit: function (e) {
             if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field == "Localidad") {
-                $(e.container).css("width", "300px")
+                $(e.container).css("width", "300px");
             } else {
-                $(e.container).css("width", "150px")
+                $(e.container).css("width", "150px");
             }
         }
     });
 
-    var checkInputs = function (elements) {
-        elements.each(function () {
-            var element = $(this);
-            var input = element.children("input");
-
-            input.prop("checked", element.hasClass("k-state-selected"));
-        });
-    };
+    
     function createMultiSelect(element, textField, valueField, url) {
         element.removeAttr("data-bind");
 
@@ -368,11 +347,11 @@ function CreateGridInformeCompraNet() {
     }
 
     function createMultiSelectProvincia(element) {
-        return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia")
+        return createMultiSelect(element, "Provincia", "ProvinciaId", "/Contrato/ListarProvincia");
     }
 
     function createMultiSelectLocalidad(element) {
-        return createMultiSelect(element, "Localidad", "LocalidadId", "/Contrato/ListarLocalidad")
+        return createMultiSelect(element, "Localidad", "LocalidadId", "/Contrato/ListarLocalidad");
     }
 
     function createMultiSelectProveedor(element) {
@@ -380,10 +359,12 @@ function CreateGridInformeCompraNet() {
     }
 }
 
+
 function InicializarDate() {
     kendo.culture("es-AR");   
     var dateCarga = ObtenerFecha();
-
+    var dateEntregaDesde = ObtenerFecha();
+    var dateEntregaHasta = ObtenerFechaMas30();
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
@@ -393,6 +374,7 @@ function InicializarDate() {
     $("#fechaHastaTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
+        
     });
     fechaStringDesde = $("#fechaHastaTopeId").val();
 
@@ -442,6 +424,7 @@ function InicializarDate() {
     $("#ImporteSustentable").click(function () {
         $("#ImporteSustentable").val("");
     });
+
     
 }
 
@@ -459,6 +442,22 @@ function ObtenerFecha() {
     return dia + '-' + mes + '-' + anio;
 }
 
+function ObtenerFechaMas30() {
+    var hoy = new Date();
+    hoy.setDate(hoy.getDate() + 30);
+    var anio = hoy.getFullYear();
+    var mes = hoy.getMonth() + 1;
+    var dia = hoy.getDate();
+
+    if (mes < 10) {
+        mes = "0" + mes.toString();
+    }
+    if (dia < 10) {
+        dia = "0" + dia.toString();
+    }
+    return dia + '-' + mes + '-' + anio;
+}
+
 function mostrarocultar(element) {
     if ($(element).text() == "Mostrar") {
         $(element).text("Ocultar");
@@ -466,7 +465,38 @@ function mostrarocultar(element) {
         $(element).text("Mostrar");
     }
 }
+function CrearMultiSelectFiltro(element, text, value, url){
 
+    $(element).kendoMultiSelect({
+        itemTemplate: " #:data." + text + " #",
+        dataBound: function () {
+            var items = this.ul.find("li");
+            setTimeout(function () {
+                checkInputs(items);
+            }, 500);
+        },
+
+        dataTextField: text,
+        dataValueField: value,
+        autoClose: false,
+        autoBind: false,
+        dataSource: {
+            serverFiltering: true,
+            filter: [],
+            transport: {
+                read: {
+                    url: url,
+                    data: function () {
+                        return {
+                            text: $( element ).data("kendoMultiSelect").input.val()
+                        };
+                    },
+                    prefix: ""
+                }
+            }
+        }
+    });
+}
 function InicializarElementos() {
     $(".number").kendoNumericTextBox({
         culture: "es-AR",
@@ -478,83 +508,18 @@ function InicializarElementos() {
         min: 0
     });
     kendo.culture("es-AR");
-    $("#buscadorProveedor").click(function () {
-        $("#buscadorProveedor").data("kendoAutoComplete").value("");
-    });
-
-    $("#buscadorProveedor").kendoAutoComplete({
-        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "Filtro",
-        dataValueField: "Id",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#buscadorProveedor").val().split('|').length > 1) {
-                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-            }
-        },
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/Proveedor/BuscarProveedoresConCorredor"
-                },
-                parameterMap: function (data, type) {
-                    var cuitAux = $("#buscadorCorredor").val().split('(');
-                    if (cuitAux[1] != null) {
-                        var cuit = cuitAux[1].split(')');
-                    }
-                    else {
-                        cuit = cuitAux;
-                    }
-                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
-                }
-            }
-
-        },
-
-    });
-    $("#buscadorCorredor").click(function () {
-        $("#buscadorCorredor").data("kendoAutoComplete").value("");
-        $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
-    });
-    $("#buscadorCorredor").kendoAutoComplete({
-        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "Filtro",
-        dataValueField: "Id",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#buscadorCorredor").val().split('|').length > 1) {
-                $("#buscadorCorredor").val($("#buscadorCorredor").val().split('|')[1]);
-            }
-        },
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/Proveedor/BuscarCorredores"
-                },
-                parameterMap: function (data, type) {
-                    return { filtro: $('#buscadorCorredor').val(), corredor: 1 };
-                }
-            }
-
-
+    
+    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
+    CrearMultiSelectFiltro("#buscadorCorredor", "Corredor", "CorredorId", "/Contrato/ListarCorredor");
+    $("#importeSustentableId").click(function () {
+        if ($("#importeSustentableId").is(':checked')) {
+            $("#ImporteSustentable").prop('disabled', true);
+            $("#ImporteSustentable").data("kendoNumericTextBox").value("");
+        } else {
+            $("#ImporteSustentable").prop('disabled', false);
         }
     });
+   
 }
 
 function Filtrar() {

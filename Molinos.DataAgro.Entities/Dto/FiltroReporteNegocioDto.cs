@@ -21,12 +21,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int GrupoDeCompraId { get; set; }
         public int EstadoId { get; set; }
         public int CentroId { get; set; }
-        public int ProveedorId { get; set; }
-        public int CorredorId { get; set; }
+        public int[] ProveedorId { get; set; }
+        public int[] CorredorId { get; set; }
         public int BoletoCompraNetId { get; set; }
         public decimal? ImporteSustentable { get; set; }
         public int DiasDiferimiento { get; set; }
         public string FechaLimiteDolarizado { get; set; }
+        public bool Importe { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
         public IEnumerable<OrdenarFiltros> Sort { get; set; }
@@ -36,7 +37,7 @@ namespace Molinos.DataAgro.Entities.Dto
             var result = false;
             Type type = typeof(FiltroReporteNegocioDto);
             var propiedades = type.GetProperties();
-            propiedades = propiedades.Where(x => x.Name != "Page"&& x.Name != "PageSize" && x.Name != "sort").ToArray();
+            propiedades = propiedades.Where(x => x.Name != "Page"&& x.Name != "PageSize" && x.Name != "Sort").ToArray();
             
             foreach (PropertyInfo pi in propiedades)
             {
@@ -46,17 +47,28 @@ namespace Molinos.DataAgro.Entities.Dto
                     if (pi.PropertyType == typeof(string))
                     {
                         value = (string)pi.GetValue(obj);
-                        result = string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value) ? false : true ;
+                        result = string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value) ? false : true;
                     }
                     else if (pi.PropertyType == typeof(int))
                     {
                         value = (int)pi.GetValue(obj);
-                        result = value == 0 || value == null ? false: true;
+                        result = value == 0 || value == null ? false : true;
 
-                    }else if (pi.PropertyType == typeof(decimal?))
+                    }
+                    else if (pi.PropertyType == typeof(decimal?))
                     {
                         value = (decimal?)pi.GetValue(obj);
                         result = value == 0 || value == null ? false : true;
+                    }
+                    else if (pi.PropertyType == typeof(bool))
+                    {
+                        value = (bool)pi.GetValue(obj);
+                        result = value;
+                    }
+                    else if (pi.PropertyType == typeof(int[]))
+                    {
+                        value = (int[])pi.GetValue(obj);
+                        result = value == null || value.Length == 0? false : true;
                     }
                 }
                 else

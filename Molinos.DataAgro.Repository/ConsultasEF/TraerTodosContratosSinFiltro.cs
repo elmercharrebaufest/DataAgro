@@ -73,7 +73,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Localidad = contrato.Localidad == null ? "" : contrato.Localidad.Nombre,
                     Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                     FijacionDePrecioContratoId = null,
-                    Sustentable = ((decimal)contrato.ImporteSustentable) != null && ((decimal)contrato.ImporteSustentable) > 0,
+                    Sustentable = contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0,
                     Dolarizado = contrato.FechaDolarizado != null,
                     Pesificado = contrato.DiasPesificado != null,
                     Negocio = contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",

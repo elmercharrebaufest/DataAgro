@@ -37,30 +37,32 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var FechaEntregaHasta = (!string.IsNullOrEmpty(request.FechaEntregaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaHastaFijacion = (!string.IsNullOrEmpty(request.FechaHastaFijacion) ? (DateTime?)DateTime.ParseExact(request.FechaHastaFijacion, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaLimiteDolarizado = (!string.IsNullOrEmpty(request.FechaLimiteDolarizado) ? (DateTime?)DateTime.ParseExact(request.FechaLimiteDolarizado, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
-
+            request.ProveedorId = request.ProveedorId ?? (new int[0]);
+            request.CorredorId = request.CorredorId ?? (new int[0]);
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, perfilId, equipo, corredoresComercial);
 
             queryContratos = queryContratos.Where(contrato =>
-            (!string.IsNullOrEmpty(request.ContratoSAP) ? request.ContratoSAP == contrato.ContratoSAP : true) &&
-                    (request.CorredorId != 0 ? request.CorredorId == contrato.CorredorId : true) &&
+                    (!string.IsNullOrEmpty(request.ContratoSAP) ? request.ContratoSAP == contrato.ContratoSAP : true) &&
+                    (request.ProveedorId.Any() ? request.ProveedorId.Contains(contrato.ProveedorId) : true) &&
+                    (request.CorredorId.Any() ? request.CorredorId.Contains(contrato.CorredorId) : true) &&
                     (request.TipoNegocioId != 0 ? request.TipoNegocioId == contrato.TipoNegocioId : true) &&
                     (request.CampaniaId != 0 ? request.CampaniaId == contrato.CampanaId : true) &&
                     (request.MaterialId != 0 ? request.MaterialId == contrato.MaterialId : true) &&
                     (request.GrupoDeCompraId != 0 ? request.GrupoDeCompraId == contrato.GrupoCompra : true) &&
                     (request.EstadoId != 0 ? request.EstadoId == contrato.Estado : true) &&
                     (request.CentroId != 0 ? request.CentroId == contrato.DestinoId : true) &&
-                    (request.ProveedorId != 0 ? request.ProveedorId == contrato.ProveedorId : true)
-                    && (request.BoletoCompraNetId != 0 ? request.BoletoCompraNetId == contrato.BoletoId : true) &&
-                    (request.ImporteSustentable != 0 ? request.ImporteSustentable == contrato.Importe_Sustentable : true) &&
+                    (request.BoletoCompraNetId != 0 ? request.BoletoCompraNetId == contrato.BoletoId : true) &&
+                    (request.ImporteSustentable != null ? request.ImporteSustentable == contrato.Importe_Sustentable : true) &&
                     (request.DiasDiferimiento != 0 ? request.DiasDiferimiento == contrato.Dias_Pesificado : true) &&
                     (fechaCarga != null ? fechaCarga == contrato.Fecha : true) &&
-                    (fechaEntregaDesde != null ? fechaEntregaDesde == contrato.FechaDesde : true)
-                    && (FechaEntregaHasta != null ? FechaEntregaHasta == contrato.FechaHasta : true) &&
-                    (FechaHastaFijacion != null ? FechaHastaFijacion == contrato.HastaFijacion : true)
-                    && (FechaLimiteDolarizado != null ? FechaLimiteDolarizado == contrato.Fecha_Dolarizado : true)
+                    (fechaEntregaDesde != null ? fechaEntregaDesde == contrato.FechaDesde : true) &&
+                    (FechaEntregaHasta != null ? FechaEntregaHasta == contrato.FechaHasta : true) &&
+                    (FechaHastaFijacion != null ? FechaHastaFijacion == contrato.HastaFijacion : true) &&
+                    (FechaLimiteDolarizado != null ? FechaLimiteDolarizado == contrato.Fecha_Dolarizado : true) &&
+                    (request.Importe ? (contrato.Sustentable.HasValue && contrato.Sustentable.Value ) : true)
             );
 
-            
+
 
             var itemsTotales = queryContratos.Count();
             if (request.Sort != null)

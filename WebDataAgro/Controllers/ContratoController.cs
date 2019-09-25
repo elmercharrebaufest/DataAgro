@@ -90,7 +90,11 @@ namespace WebDataAgro.Controllers
             var proveedores = mobjProveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
-        
+        public ActionResult ListarCorredor(string text = "")
+        {
+            var corredores = mobjProveedorManager.ListarCorredor(text);
+            return Json(corredores.Select(x => new { CorredorId = x.ProveedorId, Corredor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
         private void FillViewBag()
         {
 
@@ -115,7 +119,7 @@ namespace WebDataAgro.Controllers
                 }).OrderBy(x => x.Value);
             ViewBag.TipoNegocio = tipoNegocioListItems;
 
-            var campania = mobjCampaniaManager.TraerTodoCampania();
+            var campania = mobjCampaniaManager.TraerTodoCampania().Where(x => x.CampañaId >= 6).ToList();
             var campaniaListItems = campania.Select(x => new SelectListItem
             {
                 Text = x.Descripcion,
@@ -134,7 +138,7 @@ namespace WebDataAgro.Controllers
                 }).OrderBy(x => x.Value);
             ViewBag.Zona = zonaListItems;
 
-            var estado = mobjContratoManager.TraerTodoLosEstados();
+            var estado = mobjContratoManager.TraerTodoLosEstados().Where(x => x.EstadoContratoId != 3);
             var estadoListItems = estado.Select(
                x => new SelectListItem
                {

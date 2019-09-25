@@ -22,13 +22,29 @@
 </div>
 <br />
 
-<div id="filtrar" class="container collapse" >
+<div id="filtrar" class="container collapse">
+    <div class="row">
+        <div class="col-md-2">
+            <label>Corredor</label>
+        </div>
+        <div class="col-md-4">
+            <input id="buscadorCorredor" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Proveedor</label>
+        </div>
+        <div class="col-md-4">
+            <input id="buscadorProveedor" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+        </div>
+    </div>
+    <br />
     <div class="row">
         <div class="col-md-2">
             <label>Contrato SAP</label>
         </div>
         <div class="col-md-4">
-            @Html.TextBoxFor(x=>x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
+            @Html.TextBoxFor(x => x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
         </div>
         <div class="col-md-2">
             <label>Tipo de Negocio</label>
@@ -40,13 +56,20 @@
     </div>
     <br />
     <div class="row">
-
+        <div class="col-md-2">
+            <label>Fecha de Carga</label>
+        </div>
+        <div class="col-md-4">
+            <span id="fechaDeCarga">
+                <input id="fechaCargaId" name="fechaString" type="date" style="width: 50%" />
+            </span>
+        </div>
         <div class="col-md-2">
             <label>Entrega Desde-Hasta</label>
         </div>
         <div class="col-md-2">
             <span id="fechaDesdeTopeDiv">
-                <input id="fechaDesdeTopeId"  name="fechaStringDesde" type="date" style="width: 100%" />
+                <input id="fechaDesdeTopeId" name="fechaStringDesde" type="date" style="width: 100%" />
                 <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
             </span>
         </div>
@@ -57,12 +80,26 @@
             </span>
         </div>
 
+
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha Hasta Fijación</label>
+        </div>
+        <div class="col-md-4">
+            <span id="fechaHastaFijacionDiv">
+                <input id="fechaHastaFijacionId" type="date" style="width: 50%" />
+            </span>
+        </div>
         <div class="col-md-2">
             <label>Campaña</label>
         </div>
         <div class="col-md-4">
             @Html.DropDownListFor(m => m.CampaniaId, new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione la Campaña", new { @class = "form-control", @id = "campaniaId" })
         </div>
+
+
     </div>
     <br />
     <div class="row">
@@ -79,7 +116,6 @@
             @Html.DropDownListFor(m => m.GrupoDeCompraId, new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione la Zona", new { @class = "form-control", @id = "grupoDeCompraId" })
         </div>
 
-
     </div>
     <br />
     <div class="row">
@@ -95,55 +131,28 @@
         <div class="col-md-4">
             @Html.DropDownListFor(m => m.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione el Centro", new { @class = "form-control", @id = "centroId" })
         </div>
+
+
     </div>
     <br />
     <div class="row">
+        
         <div class="col-md-2">
-            <label>Proveedor</label>
+            <label>Boleto</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            @Html.DropDownListFor(m => m.BoletoCompraNetId, new SelectList(ViewBag.Boleto, "Value", "Text"), "Seleccione el Boleto", new { @class = "form-control", @id = "BoletoId" })
         </div>
-        <div class="col-md-2">
-            <label>Corredor</label>
-        </div>
-        <div class="col-md-4">
-            <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
-        </div>
-    </div>
-    <br />
-    <div class="row">
         <div class="col-md-2">
             <label>Comercial</label>
         </div>
         <div class="col-md-4">
             @Html.DropDownListFor(m => m.ComercialId, new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control", @id = "ComercialId" })
         </div>
-        <div class="col-md-2">
-            <label>Boleto</label>
-        </div>
-        <div class="col-md-4">
-            @Html.DropDownListFor(m => m.BoletoCompraNetId, new SelectList(ViewBag.Boleto, "Value", "Text"), "Seleccione el Boleto", new { @class = "form-control", @id = "BoletoId" })
-        </div>        
+
     </div>
     <br />
     <div class="row">
-        <div class="col-md-2">
-            <label>Fecha de Carga</label>
-        </div>
-        <div class="col-md-2">
-            <span id="fechaDeCarga">
-                <input id="fechaCargaId" name="fechaString" type="date" style="width: 100%" />
-            </span>
-        </div>
-        <div class="col-md-2">
-            <label>Fecha Hasta Fijación</label>
-        </div>
-        <div class="col-md-2">
-            <span id="fechaHastaFijacionDiv">
-                <input id="fechaHastaFijacionId" type="date" style="width: 100%" />
-            </span>
-        </div>
         <div class="col-md-2">
             <label>Fecha Dolarizado</label>
         </div>
@@ -152,26 +161,28 @@
                 <input id="fechalimiteId" type="date" style="width: 100%" />
             </span>
         </div>
-    </div>
-    <br />
-    <div class="row">
+        <div class="col-md-2">
+            <label>Importe Sustentable</label>
+        </div>
+        <div class="col-md-2">
+            @Html.TextBoxFor(x => x.ImporteSustentable, new { @class = "number", style = "width:100%" })
+            <input type="checkbox" id="importeSustentableId" style="position:absolute; right:20px;top:6px">
+        </div>
         <div class="col-md-2">
             <label>Días de Diferimiento</label>
         </div>
         <div class="col-md-2">
             @Html.TextBoxFor(x => x.DiasDiferimiento, new { @class = "number", style = "width:100%", @id = "diaDiferimientoId" })
         </div>
-        <div class="col-md-2">
-            <label>Importe Sustentable</label>
-        </div>
-        <div class="col-md-2">
-            @Html.TextBoxFor(x => x.ImporteSustentable, new { @class = "number", style = "width:100%" })
-        </div> 
-        <div class="col-md-4" style="text-align:right">
-            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 45%" onclick="Filtrar()">Filtrar</button>
+    </div>
+    <br />
+    <div class="row">
+       
+        <div class="col-md-12" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
         </div>
     </div>
-    
+
 </div>
 
 <br />

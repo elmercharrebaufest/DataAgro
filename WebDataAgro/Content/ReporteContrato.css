@@ -59,3 +59,12 @@ div > label {
 .k-icon.k-i-close {
     display: none !important;
 }
+
+
+.k-widget.k-multiselect.multiselect.k-multiselect-clearable {
+    overflow: auto !important;
+    max-height: 35px !important;
+}
+.k-icon.k-i-loading.k-hidden{
+    display:none;
+}

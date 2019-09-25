@@ -2338,7 +2338,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<ProveedorDto> ListarCorredor(string proveedor)
         {
-            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo == "Corredores", 15);
+            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => (proveedor == "" || x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo == "Corredores", 15);
         }
         public List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId)
         {
