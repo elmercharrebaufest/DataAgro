@@ -33,9 +33,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaEntregaDesde = (!string.IsNullOrEmpty(request.FechaEntregaDesde) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaDesde, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
+            var FechaEntregaHasta = (!string.IsNullOrEmpty(request.FechaEntregaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var fechaCarga = (!string.IsNullOrEmpty(request.FechaCarga) ? (DateTime?)DateTime.ParseExact(request.FechaCarga, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var fechaCargaHasta = (!string.IsNullOrEmpty(request.FechaCargaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaCargaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : fechaCarga);
-            var FechaEntregaHasta = (!string.IsNullOrEmpty(request.FechaEntregaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaHastaFijacion = (!string.IsNullOrEmpty(request.FechaHastaFijacion) ? (DateTime?)DateTime.ParseExact(request.FechaHastaFijacion, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaLimiteDolarizado = (!string.IsNullOrEmpty(request.FechaLimiteDolarizado) ? (DateTime?)DateTime.ParseExact(request.FechaLimiteDolarizado, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             request.ProveedorId = request.ProveedorId ?? (new int[0]);
@@ -65,8 +65,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     (request.ImporteSustentable != null ? request.ImporteSustentable == contrato.Importe_Sustentable : true) &&
                     (request.DiasDiferimiento != 0 ? request.DiasDiferimiento == contrato.Dias_Pesificado : true) &&
                     (fechaCarga != null ? fechaCarga <= contrato.Fecha && fechaCargaHasta >= contrato.Fecha : true) &&
-                    (fechaEntregaDesde != null ? fechaEntregaDesde == contrato.FechaDesde : true) &&
-                    (FechaEntregaHasta != null ? FechaEntregaHasta == contrato.FechaHasta : true) &&
+                    (fechaEntregaDesde != null && FechaEntregaHasta == null ? fechaEntregaDesde == contrato.FechaDesde : true) &&
+                    (FechaEntregaHasta != null && fechaEntregaDesde == null ? FechaEntregaHasta == contrato.FechaHasta : true) &&
+                    (fechaEntregaDesde != null && FechaEntregaHasta != null ? (fechaEntregaDesde <= contrato.FechaDesde && FechaEntregaHasta >= contrato.FechaHasta) : true) &&
                     (FechaHastaFijacion != null ? FechaHastaFijacion == contrato.HastaFijacion : true) &&
                     (FechaLimiteDolarizado != null ? FechaLimiteDolarizado == contrato.Fecha_Dolarizado : true) &&
                     (request.Importe ? (contrato.Sustentable.HasValue && contrato.Sustentable.Value ) : true) &&
