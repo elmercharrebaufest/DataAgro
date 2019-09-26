@@ -34,15 +34,25 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaEntregaDesde = (!string.IsNullOrEmpty(request.FechaEntregaDesde) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaDesde, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var fechaCarga = (!string.IsNullOrEmpty(request.FechaCarga) ? (DateTime?)DateTime.ParseExact(request.FechaCarga, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
+            var fechaCargaHasta = (!string.IsNullOrEmpty(request.FechaCargaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaCargaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : fechaCarga);
             var FechaEntregaHasta = (!string.IsNullOrEmpty(request.FechaEntregaHasta) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaHasta, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaHastaFijacion = (!string.IsNullOrEmpty(request.FechaHastaFijacion) ? (DateTime?)DateTime.ParseExact(request.FechaHastaFijacion, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             var FechaLimiteDolarizado = (!string.IsNullOrEmpty(request.FechaLimiteDolarizado) ? (DateTime?)DateTime.ParseExact(request.FechaLimiteDolarizado, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             request.ProveedorId = request.ProveedorId ?? (new int[0]);
             request.CorredorId = request.CorredorId ?? (new int[0]);
+            var listaContrato = new List<string>();
+            if (!string.IsNullOrEmpty(request.ContratoSAP))
+            {
+                request.ContratoSAPHasta = string.IsNullOrEmpty(request.ContratoSAPHasta) ? request.ContratoSAP : request.ContratoSAPHasta;
+                for (var i = int.Parse(request.ContratoSAP); i <= int.Parse(request.ContratoSAPHasta); i++)
+                {
+                    listaContrato.Add(i.ToString().PadLeft(10, '0'));
+                }
+            }
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, perfilId, equipo, corredoresComercial);
 
             queryContratos = queryContratos.Where(contrato =>
-                    (!string.IsNullOrEmpty(request.ContratoSAP) ? request.ContratoSAP == contrato.ContratoSAP : true) &&
+                    (!string.IsNullOrEmpty(request.ContratoSAP) ? listaContrato.Contains(contrato.ContratoSAP) : true) &&
                     (request.ProveedorId.Any() ? request.ProveedorId.Contains(contrato.ProveedorId) : true) &&
                     (request.CorredorId.Any() ? request.CorredorId.Contains(contrato.CorredorId) : true) &&
                     (request.TipoNegocioId != 0 ? request.TipoNegocioId == contrato.TipoNegocioId : true) &&
@@ -54,15 +64,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     (request.BoletoCompraNetId != 0 ? request.BoletoCompraNetId == contrato.BoletoId : true) &&
                     (request.ImporteSustentable != null ? request.ImporteSustentable == contrato.Importe_Sustentable : true) &&
                     (request.DiasDiferimiento != 0 ? request.DiasDiferimiento == contrato.Dias_Pesificado : true) &&
-                    (fechaCarga != null ? fechaCarga == contrato.Fecha : true) &&
+                    (fechaCarga != null ? fechaCarga <= contrato.Fecha && fechaCargaHasta >= contrato.Fecha : true) &&
                     (fechaEntregaDesde != null ? fechaEntregaDesde == contrato.FechaDesde : true) &&
                     (FechaEntregaHasta != null ? FechaEntregaHasta == contrato.FechaHasta : true) &&
                     (FechaHastaFijacion != null ? FechaHastaFijacion == contrato.HastaFijacion : true) &&
                     (FechaLimiteDolarizado != null ? FechaLimiteDolarizado == contrato.Fecha_Dolarizado : true) &&
-                    (request.Importe ? (contrato.Sustentable.HasValue && contrato.Sustentable.Value ) : true)
+                    (request.Importe ? (contrato.Sustentable.HasValue && contrato.Sustentable.Value ) : true) &&
+                    (request.Diferimiento ? (contrato.Pesificado.HasValue && contrato.Pesificado.Value ) : true) &&
+                    (request.Dolarizado ? (contrato.Dolarizado.HasValue && contrato.Dolarizado.Value ) : true)
             );
-
-
 
             var itemsTotales = queryContratos.Count();
             if (request.Sort != null)

@@ -38,8 +38,7 @@ namespace WebDataAgro.Controllers
             mobjMaterialManager = oMaterialManager;
             mobjTipoNegocioManager = oTipoNegocioManager;
             mobjCampaniaManager = oCampaniaManager;
-            mobjCentroManager = oCentroManager;
-            
+            mobjCentroManager = oCentroManager;            
         }
 
         public ActionResult Index()

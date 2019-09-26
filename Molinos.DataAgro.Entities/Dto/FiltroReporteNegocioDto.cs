@@ -11,8 +11,10 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ComercialId { get; set; }
         public string ContratoSAP { get; set; }
+        public string ContratoSAPHasta { get; set; }
         public int TipoNegocioId { get; set; }
         public string FechaCarga { get; set; }
+        public string FechaCargaHasta { get; set; }
         public string FechaEntregaDesde { get; set; }
         public string FechaEntregaHasta { get; set; }
         public string FechaHastaFijacion { get; set; }
@@ -28,6 +30,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int DiasDiferimiento { get; set; }
         public string FechaLimiteDolarizado { get; set; }
         public bool Importe { get; set; }
+        public bool Diferimiento { get; set; }
+        public bool Dolarizado { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
         public IEnumerable<OrdenarFiltros> Sort { get; set; }

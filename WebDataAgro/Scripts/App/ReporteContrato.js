@@ -21,10 +21,12 @@ function CreateGridInformeCompraNet() {
                 data: function () {
                     obj = {};
                     obj.ContratoSAP = $("#ContratoSAP").val();
+                    obj.ContratoSAPHasta = $("#ContratoSAPHasta").val();
                     obj.TipoNegocioId = $("#tipoNegocioId").val();
                     obj.FechaEntregaDesde = $("#fechaDesdeTopeId").val();
                     obj.FechaEntregaHasta = $("#fechaHastaTopeId").val();
                     obj.FechaCarga = $("#fechaCargaId").val();
+                    obj.FechaCargaHasta = $("#fechaCargaHastaId").val();
                     obj.FechaHastaFijacion = $("#fechaHastaFijacionId").val();
                     obj.CampaniaId = $("#campaniaId").val();
                     obj.MaterialId = $("#materialId").val();
@@ -37,7 +39,10 @@ function CreateGridInformeCompraNet() {
                     obj.FechaLimiteDolarizado = $("#fechalimiteId").val();
 
                     obj.Importe = $("#importeSustentableId").is(':checked');
-                   
+                    obj.Diferimiento = $("#diferimientoId").is(':checked');
+                    obj.Dolarizado = $("#dolarizadoId").is(':checked');
+
+
                     var lista = [];
                         lista = $("#buscadorProveedor").data("kendoMultiSelect").value();
                     obj.ProveedorId = lista.filter(function (value, index, arr) {
@@ -384,7 +389,10 @@ function InicializarDate() {
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
     });
     fechaStringDesde = $("#fechaCargaId").val();
-
+    $("#fechaCargaHastaId").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
+    });
     $("#fechaHastaFijacionId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
@@ -405,6 +413,9 @@ function InicializarDate() {
     });
     $("#fechaCargaId").click(function () {
         $("#fechaCargaId").val(dateCarga);
+    });
+    $("#fechaCargaHastaId").click(function () {
+        $("#fechaCargaHastaId").val("");
     });
     $("#fechaHastaFijacionId").click(function () {
         $("#fechaHastaFijacionId").val("");
@@ -519,7 +530,22 @@ function InicializarElementos() {
             $("#ImporteSustentable").prop('disabled', false);
         }
     });
-   
+    $("#diferimientoId").click(function () {
+        if ($("#diferimientoId").is(':checked')) {
+            $("#DiasDiferimiento").prop('disabled', true);
+            $("#DiasDiferimiento").data("kendoNumericTextBox").value("");
+        } else {
+            $("#DiasDiferimiento").prop('disabled', false);
+        }
+    });
+    $("#dolarizadoId").click(function () {
+        if ($("#dolarizadoId").is(':checked')) {
+            $("#fechalimiteId").prop('disabled', true);
+            $("#fechalimiteId").data("kendoDatePicker").value("");
+        } else {
+            $("#fechalimiteId").prop('disabled', false);
+        }
+    });
 }
 
 function Filtrar() {

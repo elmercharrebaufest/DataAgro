@@ -135,7 +135,7 @@ namespace Molinos.DataAgro.Business
 
         public List<BusquedaLocalidad> DevolverLocalidades(string filtro)
         {
-            var resultado = repositorio.SelStore<BusquedaLocalidad>("DataAgro_BusquedaLocalidades", 15, filtro);
+            var resultado = repositorio.SelStore<BusquedaLocalidad>("DataAgro_BusquedaLocalidades", 20, filtro);
             foreach (var r in resultado)
             {
                 r.Filtro = filtro + "|" + r.Localidad + " (" + r.Provincia + ")";

@@ -43,8 +43,11 @@
         <div class="col-md-2">
             <label>Contrato SAP</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             @Html.TextBoxFor(x => x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
+        </div>
+        <div class="col-md-2">
+            @Html.TextBoxFor(x => x.ContratoSAPHasta, new { @class = "form-control", style = "width:100%" })
         </div>
         <div class="col-md-2">
             <label>Tipo de Negocio</label>
@@ -59,9 +62,14 @@
         <div class="col-md-2">
             <label>Fecha de Carga</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <span id="fechaDeCarga">
-                <input id="fechaCargaId" name="fechaString" type="date" style="width: 50%" />
+                <input id="fechaCargaId" name="fechaString" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDeCargaHasta">
+                <input id="fechaCargaHastaId" name="fechaString" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
@@ -159,6 +167,7 @@
         <div class="col-md-2">
             <span id="fechalimiteDiv">
                 <input id="fechalimiteId" type="date" style="width: 100%" />
+                <input type="checkbox" id="dolarizadoId" style="position:absolute; right:55px;top:8px">
             </span>
         </div>
         <div class="col-md-2">
@@ -166,13 +175,14 @@
         </div>
         <div class="col-md-2">
             @Html.TextBoxFor(x => x.ImporteSustentable, new { @class = "number", style = "width:100%" })
-            <input type="checkbox" id="importeSustentableId" style="position:absolute; right:20px;top:6px">
+            <input type="checkbox" id="importeSustentableId" style="position:absolute; right:20px;top:8px">
         </div>
         <div class="col-md-2">
             <label>Días de Diferimiento</label>
         </div>
         <div class="col-md-2">
-            @Html.TextBoxFor(x => x.DiasDiferimiento, new { @class = "number", style = "width:100%", @id = "diaDiferimientoId" })
+            @Html.TextBoxFor(x => x.DiasDiferimiento, new { @class = "number", style = "width:100%" })
+            <input type="checkbox" id="diferimientoId" style="position:absolute; right:20px;top:8px">
         </div>
     </div>
     <br />
