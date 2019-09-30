@@ -31,7 +31,7 @@ function CreateGridInformeCompraNet() {
                     obj.CampaniaId = $("#campaniaId").val();
                     obj.MaterialId = $("#materialId").val();
                     obj.EstadoId = $("#estadoId").val();
-                    obj.CentroId = $("#centroId").val();                    
+                    obj.CentroId = $("#centroId").val();
                     obj.BoletoCompraNetId = $("#BoletoId").val();
                     obj.GrupoDeCompraId = $("#grupoDeCompraId").val();
                     obj.ImporteSustentable = $("#ImporteSustentable").val();
@@ -44,7 +44,7 @@ function CreateGridInformeCompraNet() {
 
 
                     var lista = [];
-                        lista = $("#buscadorProveedor").data("kendoMultiSelect").value();
+                    lista = $("#buscadorProveedor").data("kendoMultiSelect").value();
                     obj.ProveedorId = lista.filter(function (value, index, arr) {
                         return value != "";
                     });
@@ -72,6 +72,7 @@ function CreateGridInformeCompraNet() {
                     Fecha_Dolarizado: { type: "date" },
                     Cantidad: { type: "number" },
                     Precio: { type: "number", format: "n2" },
+                    Pizarra: { type: "boolean"},
                     Dias_Pesificado: { type: "number" },
                     Pesificado: { type: "boolean" },
                     Sustentable: { type: "boolean" },
@@ -162,6 +163,7 @@ function CreateGridInformeCompraNet() {
                 field: "Moneda", title: "Moneda"
             },
             { field: "PrecioNeto", title: "Precio Neto", type: "number", format: "{0:n2}" },
+            { field: "Pizarra", title: "Pizarra", template: function (dataItem) { return dataItem.Pizarra ? "Si" : "No"; } },
             { field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}" },
             { field: "ImporteRedespacho", title: "Importe Redespacho", type: "number", format: "{0:n2}" },
             { field: "PorcentajeComision", title: "Porcentaje Comision", type: "number", format: "{0:n2}" },
@@ -210,47 +212,50 @@ function CreateGridInformeCompraNet() {
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var templateHora = kendo.template(this.columns[5].template);
-            var templateSustentable = kendo.template(this.columns[24].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[25].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[26].columns[0].template);
-            var templateSIO = kendo.template(this.columns[27].template);
-            var templateTrigoEsp = kendo.template(this.columns[28].template);
+            var templatePizarra = kendo.template(this.columns[12].template);
+            var templateSustentable = kendo.template(this.columns[25].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[26].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[27].columns[0].template);
+            var templateSIO = kendo.template(this.columns[28].template);
+            var templateTrigoEsp = kendo.template(this.columns[29].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
                     Hora: row.cells[5].value,
-                    Sustentable: row.cells[25].value,
-                    Dolarizado: row.cells[28].value,
-                    Pesificado: row.cells[30].value,
-                    NoInformaSIO: row.cells[32].value,
-                    TrigoEspecial: row.cells[33].value,
+                    Pizarra: row.cells[12].value,
+                    Sustentable: row.cells[26].value,
+                    Dolarizado: row.cells[29].value,
+                    Pesificado: row.cells[31].value,
+                    NoInformaSIO: row.cells[33].value,
+                    TrigoEspecial: row.cells[34].value,
                 };
 
                 var operacionFecha = row.cells[4].value;
                 operacionFecha.setHours(operacionFecha.getHours() + 1);
                 row.cells[4].value = operacionFecha;
 
-                var fechaHasta = row.cells[21].value;
-                var fechaDesde = row.cells[22].value;
+                var fechaHasta = row.cells[22].value;
+                var fechaDesde = row.cells[23].value;
 
                 if (fechaHasta != null) {
 
                     fechaHasta.setHours(fechaHasta.getHours() + 1);
-                    row.cells[21].value = fechaHasta;
+                    row.cells[22].value = fechaHasta;
                 }
                 if (fechaDesde != null) {
                     fechaDesde.setHours(fechaDesde.getHours() + 1);
-                    row.cells[22].value = fechaDesde;
+                    row.cells[21].value = fechaDesde;
                 }
 
                 row.cells[5].value = templateHora(dataItem);
-                row.cells[25].value = templateSustentable(dataItem);
-                row.cells[28].value = templateDolarizado(dataItem);
-                row.cells[30].value = templatePesificado(dataItem);
-                row.cells[32].value = templateSIO(dataItem);
-                row.cells[33].value = templateTrigoEsp(dataItem);
+                row.cells[12].value = templatePizarra(dataItem);
+                row.cells[26].value = templateSustentable(dataItem);
+                row.cells[29].value = templateDolarizado(dataItem);
+                row.cells[31].value = templatePesificado(dataItem);
+                row.cells[33].value = templateSIO(dataItem);
+                row.cells[34].value = templateTrigoEsp(dataItem);
 
             }
         },
