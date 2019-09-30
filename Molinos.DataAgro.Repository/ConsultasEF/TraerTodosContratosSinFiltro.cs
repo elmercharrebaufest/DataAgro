@@ -185,7 +185,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
                     Sustentable = false,
                     Dolarizado = false,
-                    Pesificado = false,
+                    Pesificado = fijac.DiasPesificado != null&& fijac.DiasPesificado > 0,
                     Negocio = fijac.EstadoId == (int)EnumEstadoContrato.Finalizado ? fijac.FijacionSAP : fijac.ContratoSAP,
                     DestinoId = fijac.DestinoId,
                     DestinoDescripcion = fijac.Destino != null ? fijac.Destino.Descripcion : "",
