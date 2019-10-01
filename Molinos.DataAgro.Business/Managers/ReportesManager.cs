@@ -434,7 +434,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && x.TipoNegocioId == 2 &&
-            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId==null);
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.FijacionDePrecioContratoId,
@@ -472,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = x.Cantidad
             }, x => fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
-                &&  (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Descripcion = x.Descripcion, Campana = x.Campaña.Descripcion });
 
@@ -596,13 +596,13 @@ namespace Molinos.DataAgro.Business.Managers
                             operador = new AgenteCompraDto.OperadorCantidad { OperadorDesc = agente.Operador.Descripcion, OperadorId = agente.OperadorId };
                             agenteTemp.Operador.Add(operador);
                         }
-                        operador.Cantidad += Math.Round(agente.Cantidad/1000);
+                        operador.Cantidad += Math.Round(agente.Cantidad / 1000);
                         agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
                         agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
                         agenteTemp.MaterialDesc = agente.Material.Descripcion;
                         agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
                         agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
-                        agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x =>(x.MonedaId.Contains("ARP")? x.Precio/precioDolar:x.Precio )* (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
+                        agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
                     }
                     listaAgentes.Add(agenteTemp);
                 }
@@ -635,7 +635,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, bool? calidad, int centroId = 0)
         {
-            var standard = calidad.HasValue && calidad.Value?2:1;
+            var standard = calidad.HasValue && calidad.Value ? 2 : 1;
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1);
@@ -702,10 +702,10 @@ namespace Molinos.DataAgro.Business.Managers
                 && (centroId == 0 || centroId == x.DestinoId));
             foreach (var cont in fijaciones)
             {
-                var posicion=new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
-                
-                cont.ClasificacionNegocio =(fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :                
-                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :                
+                var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(fijaciones);
@@ -718,7 +718,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                CampanaId =x.CampanaId,
+                CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampañaId,
                 Posicion = x.Posicion,
                 MonedaId = x.MonedaId
@@ -729,7 +729,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.Especial == calidad))
                 && (centroId == 0 || centroId == 1));
-            foreach(var cont in fason)
+            foreach (var cont in fason)
             {
                 //var mes = int.Parse(cont.Posicion.Substring(0, 2));
                 //var anio = int.Parse(cont.Posicion.Substring(3, 4));
@@ -750,7 +750,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
                 MonedaId = x.MonedaId,
-                
+
             },
                x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -759,10 +759,10 @@ namespace Molinos.DataAgro.Business.Managers
                && (calidad == null || !calidad.Value)
                && (centroId == 0 || x.DestinoId == centroId));
 
-            foreach (var cont in acuerdos )
+            foreach (var cont in acuerdos)
             {
                 var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
-             
+
                 //if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
                 //{
                 //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
@@ -787,29 +787,29 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
                 {
-                    posKil.KilosPesos = cont.MonedaId == "ARP  " 
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar 
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar 
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                        ? Math.Round(cont.Cantidad/1000):0;
-                    posKil.KilosDolares = cont.MonedaId == "USDM " 
+                    posKil.KilosPesos = cont.MonedaId == "ARP  "
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
                         ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.DispAFijar = cont.ClasificacionNegocio==EnumClasificacionNegocio.DisponibleAFijar? cont.Cantidad:0;
+                    posKil.KilosDolares = cont.MonedaId == "USDM "
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
+                        ? Math.Round(cont.Cantidad / 1000) : 0;
+                    posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
                     posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
                     posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
                     posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
                     posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
-                    posKil.FrwFijac= cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
+                    posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
                     posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
-                    posKil.NewAPrecio= cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
-                    posKil.NewFijac= cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
+                    posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
+                    posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
                     posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
                     posKil.Anio = cont.FechaDesde.Year;
-                    posKil.PrecioPonderadoPesos =cont.MonedaId=="ARP  "? cont.Precio * (decimal)cont.CantidadPonderada:0;
-                    posKil.PrecioPonderadoDolares =cont.MonedaId== "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada:0;
+                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
                     posKil.CantidadPonderada = cont.CantidadPonderada;
                 }
                 else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
@@ -954,7 +954,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
-                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                FechaHasta = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
@@ -998,8 +998,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
-                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
-                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaHasta = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
@@ -1043,8 +1043,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
                 CantidadCamiones = "",
                 Campana = "",
-                FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
-                FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaHasta = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda.Descripcion,
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
@@ -1219,7 +1219,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(fechaHasta.Year, fechaHasta.Month, 1);
                 }
-                
+
                 if (posicion.Month == mes && posicion.Year == anio)
                 {
                     retorno.Add(cont);
