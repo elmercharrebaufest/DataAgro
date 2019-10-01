@@ -686,7 +686,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.FijacionDePrecioContratoId,
                 FechaDesde = x.Fecha,
-                FechaHasta = x.FechaHasta,
+                FechaHasta = x.Fecha,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CampanaId = x.CampanaId,
@@ -713,8 +713,8 @@ namespace Molinos.DataAgro.Business.Managers
             var fason = repositorio.Listar<Fason, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.Id,
-                FechaDesde = x.FechaDesde,
-                FechaHasta = x.FechaHasta,
+                FechaDesde = x.Fecha,
+                FechaHasta = x.Fecha,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
@@ -744,8 +744,8 @@ namespace Molinos.DataAgro.Business.Managers
             var acuerdos = repositorio.Listar<ContratoAcuerdo, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.Id,
-                FechaDesde = x.FechaDesde,
-                FechaHasta = x.FechaHasta,
+                FechaDesde = x.Fecha,
+                FechaHasta = x.Fecha,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
@@ -761,19 +761,20 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var cont in acuerdos )
             {
-                var posicion = new DateTime();
-                if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
-                {
-                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
-                }
-                else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
-                {
-                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
-                }
-                else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
-                {
-                    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
-                }
+                var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+             
+                //if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                //{
+                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+                //}
+                //else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                //{
+                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
+                //}
+                //else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                //{
+                //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
+                //}
                 cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
                 EnumClasificacionNegocio.NewCropFijacion;
