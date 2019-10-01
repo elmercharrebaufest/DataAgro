@@ -240,8 +240,8 @@
                             <th colspan="@aFijar" class="@(aFijar>0?"" :"hide") borde-izq-der">A Fijar</th>
                             <th colspan="@aPrecio" class="@(aPrecio>0?"" :"hide") borde-izq-der">A Precio</th>
                             <th rowspan="2" class="@(totalPesos!= 0?"" :"hide")">Ton. $</th>
-                            <th rowspan="2" class="@(totalDolares!= 0?"" :"hide")">Ton. USD</th>
                             <th rowspan="2" class="@(pondPesos>0?"":"hide")">$ Pond.</th>
+                            <th rowspan="2" class="@(totalDolares!= 0?"" :"hide")">Ton. USD</th>
                             <th rowspan="2" class="@(pondDolares>0?"":"hide")">USD Pond</th>
                             <th rowspan="2"></th>
                             <th rowspan="2"></th>
@@ -273,8 +273,8 @@
                         <td class="@(forwAPrecio? "":"hide") borde-izq-der">@mes.FrwAPrecio.ToString("N0")</td>
                         <td class="@(newcAPrecio? "":"hide") borde-izq-der">@mes.NewAPrecio.ToString("N0")</td>
                         <td class="@(totalPesos!=0 ? "" :"hide")"> @(mes.KilosPesos.ToString("N0"))</td>
-                        <td class="@(totalDolares!=0 ? "" :"hide")"> @(mes.KilosDolares.ToString("N0"))</td>
                         <td class="@(pondPesos>0?"":"hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
+                        <td class="@(totalDolares!=0 ? "" :"hide")"> @(mes.KilosDolares.ToString("N0"))</td>
                         <td class="@(pondDolares>0?"":"hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
                         <td>
                             <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
@@ -305,8 +305,9 @@
                         <td class="@(forwAPrecio? "":"hide")">@material.PosicionKilos.Sum(y => y.FrwAPrecio).ToString("N0")</td>
                         <td class="@(newcAPrecio? "":"hide")">@material.PosicionKilos.Sum(y => y.NewAPrecio).ToString("N0")</td>
                         <th class="@(totalPesos!= 0?"" :"hide")">@totalPesos.ToString("N0")</th>
+                        <td class="@(pondPesos>0?"":"hide")"></td>
                         <th class="@(totalDolares!= 0?"" :"hide")">@totalDolares.ToString("N0")</th>
-                        <td class="@(pond>0?"":"hide")" colspan="@pond"></td>
+                        <td class="@(totalDolares!=0 ? "" :"hide")"></td>
                         <td></td>
                         <td></td>
                     </tr>

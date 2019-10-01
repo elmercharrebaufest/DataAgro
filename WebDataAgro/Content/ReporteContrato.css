@@ -56,6 +56,9 @@ div > label {
     font-family: "Open Sans",sans-serif;
     text-align: center;
 }
+.k-button:hover .filtro{
+    color: #FFF;
+}
 .k-icon.k-i-close {
     display: none !important;
 }
@@ -68,3 +71,4 @@ div > label {
 .k-icon.k-i-loading.k-hidden{
     display:none;
 }
+
