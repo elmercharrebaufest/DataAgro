@@ -230,7 +230,7 @@
             var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos > 0) ? 1 : 0;
             var pondDolares =material.PosicionKilos.Any(x => x.PrecioPonderadoDolares > 0) ? 1 : 0;
             var pond = pondPesos + pondDolares;
-            <div id="@material.Material.Replace(" ", "")Table" class="col-xs-12 @(suma <= 5? "col-md-6":"col-md-12") @(suma>0? "":"hide")">
+            <div id="@material.Material.Replace(" ", "")Table" class="table-responsive col-xs-12 @(suma <= 5? "col-md-6":"col-md-12") @(suma>0? "":"hide")">
                 <table id="@material.Material.Replace(" ", "")" class="table table-condensed">
                     <tbody>
                         <tr class="titulosPosicion"><th colspan="@(suma + pond + 3)">@material.Material.ToUpper()</th></tr>
@@ -315,7 +315,7 @@
                 </table>
             </div>
         }
-        <div class="col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count > 0 ?"":"hide")">
+        <div class="table-responsive col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count > 0 ?"":"hide")">
             <table id="agenteCompras" class="table-condensed">
                 <tr class="titulos agente">
                     <th colspan="@(Model.AgenteCompras.ListaOperadores.Count+3)">AGENTE DE COMPRA MAT</th>
@@ -354,7 +354,7 @@
                 }
             </table>
         </div>
-        <div class="col-xs-6 col-md-3 @(Model.SojaSustentable.Total > 0 ?"":"hide")">
+        <div class="table-responsive col-xs-6 col-md-3 @(Model.SojaSustentable.Total > 0 ?"":"hide")">
             <table class="table-condensed " id="SojaSustentable">
                 <tbody>
                     <tr>
@@ -373,7 +373,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-xs-6 col-md-3">
+        <div class="table-responsive col-xs-6 col-md-3">
             <table class="table-condensed noSideMargin" id="MonedaKilo">
                 <tbody>
                     @foreach (var moneda in Model.PrecioCantidad)
