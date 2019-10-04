@@ -45,7 +45,8 @@ namespace Molinos.DataAgro.Agent
                         AltaTemprana = valor.EX_ALTA_TEMPRANA,
                         Bolsa = valor.EX_BOLSA,
                         Carta = valor.EX_CARTA,
-                        FechaActualizacion = valor.EX_FECHA_ACTUALIZACION
+                        FechaActualizacion = valor.EX_FECHA_ACTUALIZACION,
+                        Mensaje = valor.EX_MENSAJE
                     };
                     return retorno;
                 }catch (Exception e)

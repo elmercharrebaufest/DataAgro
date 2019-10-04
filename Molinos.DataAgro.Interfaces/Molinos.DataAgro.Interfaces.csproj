@@ -115,7 +115,6 @@
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />
     <Compile Include="Agent\IEliminarCupoAgent.cs" />
     <Compile Include="Agent\ICrearCupoAgent.cs" />
-    <Compile Include="Agent\IClienteStopAgent.cs" />
     <Compile Include="Agent\IAltaTempranaAgent.cs" />
     <Compile Include="Agent\ITipoDeCambioAgent.cs" />
     <Compile Include="Agent\IComprasAgent.cs" />

@@ -118,6 +118,8 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         private string eX_FECHA_ACTUALIZACIONField;
         
+        private string eX_MENSAJEField;
+        
         private string eX_NOSISField;
         
         private ZMPES5510 eX_RUCAField;
@@ -172,6 +174,18 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string EX_MENSAJE {
+            get {
+                return this.eX_MENSAJEField;
+            }
+            set {
+                this.eX_MENSAJEField = value;
+                this.RaisePropertyChanged("EX_MENSAJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string EX_NOSIS {
             get {
                 return this.eX_NOSISField;
@@ -183,7 +197,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public ZMPES5510 EX_RUCA {
             get {
                 return this.eX_RUCAField;

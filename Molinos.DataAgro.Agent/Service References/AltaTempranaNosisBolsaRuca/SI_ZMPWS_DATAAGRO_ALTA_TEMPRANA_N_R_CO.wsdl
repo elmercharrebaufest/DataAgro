@@ -12,6 +12,7 @@
             <xsd:element name="EX_BOLSA" type="rfc:string" />
             <xsd:element name="EX_CARTA" type="rfc:string" />
             <xsd:element name="EX_FECHA_ACTUALIZACION" type="rfc:string" />
+            <xsd:element name="EX_MENSAJE" type="rfc:string" />
             <xsd:element name="EX_NOSIS" type="rfc:string" />
             <xsd:element name="EX_RUCA" type="rfc:ZMPES5510" />
           </xsd:sequence>

@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private ReportesController target;
         private Mock<IHomeManager> homeManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<IComercialManager> comercialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -28,15 +29,17 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             homeManagerMock = new Mock<IHomeManager>();
             reportesManagerMock = new Mock<IReportesManager>();
+            comercialManagerMock = new Mock<IComercialManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ReportesController(reportesManagerMock.Object, homeManagerMock.Object);
+            target = new ReportesController(reportesManagerMock.Object, homeManagerMock.Object,comercialManagerMock.Object);
         }
 
         [Test]
         public void IndexOk()
         {
+            comercialManagerMock.Setup(x => x.ComercialExiste(It.IsAny<string>())).Returns(true);
             var result = target.Index() as ViewResult;
 
             Assert.NotNull(result);

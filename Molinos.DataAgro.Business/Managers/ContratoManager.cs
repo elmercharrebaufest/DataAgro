@@ -437,40 +437,49 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Capacidad Productiva", result);
             }
             var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
-            if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
+            if (string.IsNullOrEmpty(alta.Mensaje))
             {
-                oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-            }
-            else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
-            {
-                oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-            }
-
-            if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI") {
-                oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
-            }
-
-            if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
-            {
-                oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
-            }
-            if (alta.FechaActualizacion != "SI" )
-            {
-                oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
-            }
-            if (alta.AltaTemprana == "SI")
-            {
-                if (alta.Bolsa != "SI" && alta.Nosis != "SI") {
-                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
-                }
-                if (alta.Bolsa != "SI" && alta.Nosis == "SI")
+                if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
                 {
-                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                 }
-                if (alta.Bolsa == "SI" && alta.Nosis != "SI")
+                else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
                 {
-                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                 }
+
+                if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI")
+                {
+                    oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
+                }
+
+                if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
+                {
+                    oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
+                }
+                if (alta.FechaActualizacion != "SI")
+                {
+                    oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
+                }
+                if (alta.AltaTemprana == "SI")
+                {
+                    if (alta.Bolsa != "SI" && alta.Nosis != "SI")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
+                    }
+                    if (alta.Bolsa != "SI" && alta.Nosis == "SI")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                    }
+                    if (alta.Bolsa == "SI" && alta.Nosis != "SI")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                    }
+                }                
+            }
+            else
+            {
+                oErrorMessages.Error("", alta.Mensaje);
             }
             return oErrorMessages;
         }
