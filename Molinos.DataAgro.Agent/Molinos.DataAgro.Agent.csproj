@@ -76,6 +76,8 @@
   <ItemGroup>
     <Compile Include="Helpers\EliminarCupoAgent.cs" />
     <Compile Include="Helpers\CrearCupoAgent.cs" />
+    <Compile Include="Helpers\AltaTempranaAgent.cs" />
+    <Compile Include="Helpers\CapacidadProductivaAgent.cs" />
     <Compile Include="Helpers\TipoDeCambioAgent.cs" />
     <Compile Include="Helpers\ComprasAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
@@ -88,12 +90,22 @@
     <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\AltaTempranaNosisBolsaRuca\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\AnulacionContratos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\AnularCupo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CapacidadProductiva\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -157,6 +169,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca.SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_COResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca.Z_MPRFC_ALTA_TEMPRANA_N_R_COResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO.wsdl" />
     <None Include="Service References\AnulacionContratos\Molinos.DataAgro.Agent.AnulacionContratos.SI_ZMPWS_DATAAGRO_ANULACION_CONTRATOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -171,6 +190,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AnularCupo\SI_ZMPWS_DATAAGRO_ANULAR_CUPOS1.wsdl" />
+    <None Include="Service References\CapacidadProductiva\Molinos.DataAgro.Agent.CapacidadProductiva.SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CapacidadProductiva\Molinos.DataAgro.Agent.CapacidadProductiva.Z_MPRFC_CAPACIDAD_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CapacidadProductiva\SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA.wsdl" />
     <None Include="Service References\Compras\Molinos.DataAgro.Agent.Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -245,8 +271,10 @@
     <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
     <WCFMetadataStorage Include="Service References\AnularCupo\" />
+    <WCFMetadataStorage Include="Service References\CapacidadProductiva\" />
     <WCFMetadataStorage Include="Service References\Compras\" />
     <WCFMetadataStorage Include="Service References\ContratosParaFijacion\" />
     <WCFMetadataStorage Include="Service References\CrearCupo\" />
@@ -412,6 +440,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\AnularCupo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

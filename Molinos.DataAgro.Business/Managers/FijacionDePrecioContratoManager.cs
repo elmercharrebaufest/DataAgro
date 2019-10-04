@@ -587,8 +587,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
-            var contratos = oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro, fijacionId);
-            return contratos;
+            return oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro, fijacionId);            
         }
 
         public List<AperturaPrecioDto> TraerAperturaDePrecioPorFijacion(int fijacionId)

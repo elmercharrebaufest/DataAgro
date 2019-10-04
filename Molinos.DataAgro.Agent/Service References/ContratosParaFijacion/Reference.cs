@@ -118,6 +118,10 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         
         private string cENTROField;
         
+        private decimal a_RECIBIR_SIN_PRECIOField;
+        
+        private decimal rECIBIDO_SIN_FIJARField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CONTRATO {
@@ -271,6 +275,30 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.cENTROField = value;
                 this.RaisePropertyChanged("CENTRO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=13)]
+        public decimal A_RECIBIR_SIN_PRECIO {
+            get {
+                return this.a_RECIBIR_SIN_PRECIOField;
+            }
+            set {
+                this.a_RECIBIR_SIN_PRECIOField = value;
+                this.RaisePropertyChanged("A_RECIBIR_SIN_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=14)]
+        public decimal RECIBIDO_SIN_FIJAR {
+            get {
+                return this.rECIBIDO_SIN_FIJARField;
+            }
+            set {
+                this.rECIBIDO_SIN_FIJARField = value;
+                this.RaisePropertyChanged("RECIBIDO_SIN_FIJAR");
             }
         }
         

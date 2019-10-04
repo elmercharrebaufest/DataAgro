@@ -72,6 +72,7 @@
     <Compile Include="Dto\BoletoCompraNetDto.cs" />
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
     <Compile Include="Dto\ConfiguracionDto.cs" />
+    <Compile Include="Dto\AltaTempranaNRCODto.cs" />
     <Compile Include="Dto\KendoGridContratoDto.cs" />
     <Compile Include="Dto\EstadoContratoDto.cs" />
     <Compile Include="Dto\FiltroReporteNegocioDto.cs" />

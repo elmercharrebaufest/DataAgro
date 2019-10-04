@@ -42,6 +42,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
         private readonly IConfiguracionManager configuracionManager;
+        private readonly ICapacidadProductivaAgent capacidadProductiva;
+        private readonly IAltaTempranaAgent altaTempranaAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -54,7 +56,8 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager)
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager, 
+            ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -73,6 +76,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
             this.configuracionManager = configuracionManager;
+            this.altaTempranaAgent = altaTempranaAgent;
+            this.capacidadProductiva = capacidadProductiva;
         }
 
         public DatosIniContrato TraerDatosCombo(int perfilId)
@@ -422,6 +427,51 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
             }
+            var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
+            var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
+            var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+
+            var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
+            if (result != "OK")
+            {
+                oErrorMessages.Error("Capacidad Productiva", result);
+            }
+            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+            if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
+            {
+                oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+            }
+            else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
+            {
+                oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+            }
+
+            if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI") {
+                oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
+            }
+
+            if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
+            {
+                oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
+            }
+            if (alta.FechaActualizacion != "SI" )
+            {
+                oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
+            }
+            if (alta.AltaTemprana == "SI")
+            {
+                if (alta.Bolsa != "SI" && alta.Nosis != "SI") {
+                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
+                }
+                if (alta.Bolsa != "SI" && alta.Nosis == "SI")
+                {
+                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                }
+                if (alta.Bolsa == "SI" && alta.Nosis != "SI")
+                {
+                    oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                }
+            }
             return oErrorMessages;
         }
 
@@ -457,6 +507,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oEntityErrors.Error("", "El contrato no se puede ampliar");
             }
+
+           
 
             return oEntityErrors;
         }

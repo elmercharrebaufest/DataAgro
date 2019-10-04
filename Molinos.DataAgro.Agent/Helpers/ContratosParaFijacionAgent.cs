@@ -33,39 +33,43 @@ namespace Molinos.DataAgro.Agent
 
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (CuitCorredor != "" ? x.Corredor.CUIT == CuitCorredor : x.Corredor.CUIT == null));
-
-                var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));
-                foreach (var id in listaContratos)
+                var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (CuitCorredor != "" ? x.Corredor.CUIT == CuitCorredor : x.Corredor.CUIT == null)&& x.ContratoSAP!= null);
+                if (contratos != null)
                 {
-                    var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
-                    && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
-                    var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == idFijacion && x.ContratoSAP == id, x => x.Cantidad) : 0;
-                    var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1, x => new DatosFijacionDeContratoDto()
+                    var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));
+                    foreach (var id in listaContratos)
                     {
-                        ContratoId = id.ToString(),
-                        KilosAplicados = cantidad.ToString(),
-                        KilosPendiente = (x.Cantidad - cantidad + cantidadFijacion).ToString(),
-                        FechaDesde = x.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion) : "",
-                        FechaHasta = x.HastaFijacion.HasValue ? SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.HastaFijacion) : "",
-                        KilosContrato = x.Cantidad.ToString(),
-                        DesdeEntrega = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
-                        HastaEntrega = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
-                        Posicion = x.FechaDesde.Month.ToString() + "." + x.FechaDesde.Year.ToString(),
-                        Calidad = x.TrigoEspecial,
-                        Campana = x.Campana.Descripcion,
-                        PagoDiferido = x.PagoDiferido ?? false,
-                        Centro = x.DestinoId,
-                        CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null
-                    });
-                    contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                    contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                    contrato.KilosContrato = (double.Parse(contrato.KilosContrato)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                    contrato.ContratoId = contrato.ContratoId.TrimStart('0');
-                    contrato.Filtro = filtro + "|" + contrato.ContratoId;
-                    if (double.Parse(contrato.KilosPendiente) > 0)
-                    {
-                        datosContratos.Add(contrato);
+                        var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
+                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
+                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == idFijacion && x.ContratoSAP == id, x => x.Cantidad) : 0;
+                        var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1, x => new DatosFijacionDeContratoDto()
+                        {
+                            ContratoId = id.ToString(),
+                            KilosAplicados = cantidad.ToString(),
+                            KilosPendiente = (x.Cantidad - cantidad + cantidadFijacion).ToString(),
+                            FechaDesde = x.DesdeFijacion.HasValue ? SqlFunctions.DateName("day", x.DesdeFijacion) + "/" + SqlFunctions.DatePart("month", x.DesdeFijacion) + "/" + SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                            FechaHasta = x.HastaFijacion.HasValue ? SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                            KilosContrato = x.Cantidad.ToString(),
+                            DesdeEntrega = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
+                            HastaEntrega = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
+                            Posicion = x.FechaDesde.Month.ToString() + "." + x.FechaDesde.Year.ToString(),
+                            Calidad = x.TrigoEspecial,
+                            Campana = x.Campana.Descripcion,
+                            PagoDiferido = x.PagoDiferido ?? false,
+                            Centro = x.DestinoId,
+                            ARecibirSinPrecio = 10000,
+                            RecibidoSinFijar = 19000,
+                            CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null
+                        });
+                        contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                        contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                        contrato.KilosContrato = (double.Parse(contrato.KilosContrato)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                        contrato.ContratoId = contrato.ContratoId.TrimStart('0');
+                        contrato.Filtro = filtro + "|" + contrato.ContratoId;
+                        if (double.Parse(contrato.KilosPendiente) > 0)
+                        {
+                            datosContratos.Add(contrato);
+                        }
                     }
                 }
             }
@@ -110,7 +114,10 @@ namespace Molinos.DataAgro.Agent
                             Posicion = contrato.POSICION,
                             PagoDiferido = contrato.PAGO_DIF_ARP == "X" ? true : false,
                             Centro = centro.Id,
+                            ARecibirSinPrecio = contrato.A_RECIBIR_SIN_PRECIO,
+                            RecibidoSinFijar = contrato.RECIBIDO_SIN_FIJAR,
                             CentroDescripcion = centro.Descripcion,
+
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0')
                         };
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)

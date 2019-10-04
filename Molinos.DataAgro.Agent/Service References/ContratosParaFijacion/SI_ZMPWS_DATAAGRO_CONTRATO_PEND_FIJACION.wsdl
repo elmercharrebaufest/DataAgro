@@ -21,6 +21,12 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char1">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="1" />
@@ -63,10 +69,10 @@
           <xsd:maxLength value="16" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="date">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="10" />
-          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+      <xsd:simpleType name="decimal13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char18">
@@ -79,16 +85,18 @@
           <xsd:element name="CONTRATO" type="rfc:char10" />
           <xsd:element name="KILOS_APLICADOS" type="rfc:decimal10.2" />
           <xsd:element name="KILOS_PEND_FIJAR" type="rfc:decimal10.2" />
-          <xsd:element name="FECHA_DESDE" type="rfc:date" />
-          <xsd:element name="FECHA_HASTA" type="rfc:date" />
+          <xsd:element name="FECHA_DESDE" type="rfc:date10" />
+          <xsd:element name="FECHA_HASTA" type="rfc:date10" />
           <xsd:element name="KILOS_CONTRATO" type="rfc:decimal25.0" />
-          <xsd:element name="ENTREGA_DESDE" type="rfc:date" />
-          <xsd:element name="ENTREGA_HASTA" type="rfc:date" />
+          <xsd:element name="ENTREGA_DESDE" type="rfc:date10" />
+          <xsd:element name="ENTREGA_HASTA" type="rfc:date10" />
           <xsd:element name="POSICION" type="rfc:char7" />
           <xsd:element name="COSECHA" type="rfc:char5" />
           <xsd:element name="CALIDAD" type="rfc:char1" />
           <xsd:element name="PAGO_DIF_ARP" type="rfc:char1" />
           <xsd:element name="CENTRO" type="rfc:char4" />
+          <xsd:element name="A_RECIBIR_SIN_PRECIO" type="rfc:decimal13.3" />
+          <xsd:element name="RECIBIDO_SIN_FIJAR" type="rfc:decimal13.3" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7910">
