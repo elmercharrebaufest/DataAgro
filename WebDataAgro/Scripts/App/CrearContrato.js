@@ -287,9 +287,10 @@ function InicializarElementos() {
 
     $("#contratoId").kendoAutoComplete({
         template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> - ' +
-            'KG CTO: #: data.KilosContrato# - KG PEND: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
-            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong>' +
-            ' - KGS SIN PRECIO : #: data.ARecibirSinPrecio# - KGS SIN FIJAR : #: data.RecibidoSinFijar# </p> ',
+            'KG CTO: #: data.KilosContrato# ' +
+            ' - KGS SIN PRECIO : #: data.ARecibirSinPrecio# - KGS SIN FIJAR : #: data.RecibidoSinFijar#' +
+            ' - KG PEND: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
+            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong></p>',
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,

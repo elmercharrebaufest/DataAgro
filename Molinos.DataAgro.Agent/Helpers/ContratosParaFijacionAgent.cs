@@ -57,8 +57,7 @@ namespace Molinos.DataAgro.Agent
                             Campana = x.Campana.Descripcion,
                             PagoDiferido = x.PagoDiferido ?? false,
                             Centro = x.DestinoId,
-                            ARecibirSinPrecio = 10000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
-                            RecibidoSinFijar = 19000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            
                             CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null
                         });
                         contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
@@ -66,6 +65,8 @@ namespace Molinos.DataAgro.Agent
                         contrato.KilosContrato = (double.Parse(contrato.KilosContrato)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.ContratoId = contrato.ContratoId.TrimStart('0');
                         contrato.Filtro = filtro + "|" + contrato.ContratoId;
+                        contrato.ARecibirSinPrecio = 10000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                        contrato.RecibidoSinFijar = 19000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         if (double.Parse(contrato.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contrato);
