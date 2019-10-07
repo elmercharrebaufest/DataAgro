@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Agent.CapacidadProductiva;
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Agent.CapacidadProductiva;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -13,41 +14,49 @@ namespace Molinos.DataAgro.Agent
 {
     public class CapacidadProductivaAgent : ICapacidadProductivaAgent
     {
-        public CapacidadProductivaAgent(IRepositorio repositorio)
+        public CapacidadProductivaAgent(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
+            this.logger = logger;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
+
         public string ObtenerCapacidadProductiva(string cuit, decimal cantidad, string centro, string cosecha, string material )
         {
-            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "0")
             {
                 return "OK";
             }
             else
             {
-
-                SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAClient agent = new SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAClient();
-
-                agent.ClientCredentials.UserName.UserName = UserSap;
-
-                agent.ClientCredentials.UserName.Password = PassSap;
-
-                var rq = new Z_MPRFC_CAPACIDAD_PRODUCTIVA()
+                try
                 {
-                    IM_CUIT = cuit,
-                    IM_CANTIDAD = cantidad,
-                    IM_CENTRO = centro,
-                    IM_COSECHA = cosecha,
-                    IM_MATERIAL = material
-                
-                };
+                    SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAClient agent = new SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAClient();
 
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_CAPACIDAD_PRODUCTIVA()
+                    {
+                        IM_CUIT = cuit,
+                        IM_CANTIDAD = cantidad,
+                        IM_CENTRO = centro,
+                        IM_COSECHA = cosecha,
+                        IM_MATERIAL = material
+
+                    };
                 var valor = agent.SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA(rq);
                 
                 return valor.EX_MENSAJE;
+                }catch (Exception e)
+                {
+                    logger.Error(e.Message);
+                    throw;
+                }
             }
         }
 

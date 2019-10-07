@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
             }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
-            var sisa = new SISA();            
+            var sisa = new SISA();
             if (oParam.ClasificacionId == 1)
             {
                 sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
@@ -357,19 +357,19 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oParam.AperturaPrecio != null && oParam.TipoNegocioId==2)
+            if (oParam.AperturaPrecio != null && oParam.TipoNegocioId == 2)
             {
-                if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value) )
+                if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
                 {
-                    var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje!= 0 || x.Importe != 0));                
-                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0))||
+                    var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
                         (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
                         oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
                     }
                 }
             }
-            if (oParam.DestinoId != 1 && oParam.TipoNegocioId==2 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x=>x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe !=0 ||x.Porcentaje!=0)))
+            if (oParam.DestinoId != 1 && oParam.TipoNegocioId == 2 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
             {
                 oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
             }
@@ -391,12 +391,12 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "Falta completar el rango de Granos Verdes");
                 }
             }
-            if(oParam.Dolarizado.HasValue&& oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
+            if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
 
-            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value==0 ||string.IsNullOrEmpty(oParam.MonedaSustentableId)))
+            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId)))
             {
                 oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
             }
@@ -418,68 +418,74 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
             }
-            
-            if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null|| oParam.NivelTarifaId == 0))
+
+            if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null || oParam.NivelTarifaId == 0))
             {
                 oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");
             }
-            if (oParam.NivelTarifaId!= null && oParam.NivelTarifaId!= 0 && oParam.TarifaFlete == null)
+            if (oParam.NivelTarifaId != null && oParam.NivelTarifaId != 0 && oParam.TarifaFlete == null)
             {
                 oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
             }
             var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
             var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
             var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-
-            var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
-            if (result != "OK")
+            try
             {
-                oErrorMessages.Error("Capacidad Productiva", result);
+                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
+                if (result != "OK")
+                {
+                    oErrorMessages.Error("Capacidad Productiva", result);
+                }
+                var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                if (string.IsNullOrEmpty(alta.Mensaje))
+                {
+                    if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
+                    {
+                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                    }
+                    else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
+                    {
+                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                    }
+
+                    if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI")
+                    {
+                        oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
+                    }
+
+                    if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
+                    {
+                        oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
+                    }
+                    if (alta.FechaActualizacion != "SI")
+                    {
+                        oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
+                    }
+                    if (alta.AltaTemprana == "SI")
+                    {
+                        if (alta.Bolsa != "SI" && alta.Nosis != "SI")
+                        {
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
+                        }
+                        if (alta.Bolsa != "SI" && alta.Nosis == "SI")
+                        {
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                        }
+                        if (alta.Bolsa == "SI" && alta.Nosis != "SI")
+                        {
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                        }
+                    }
+                }
+                else
+                {
+                    oErrorMessages.Error("", alta.Mensaje);
+                }
             }
-            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
-            if (string.IsNullOrEmpty(alta.Mensaje))
+            catch (Exception e)
             {
-                if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
-                {
-                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-                }
-                else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
-                {
-                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-                }
-
-                if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI")
-                {
-                    oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
-                }
-
-                if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
-                {
-                    oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
-                }
-                if (alta.FechaActualizacion != "SI")
-                {
-                    oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
-                }
-                if (alta.AltaTemprana == "SI")
-                {
-                    if (alta.Bolsa != "SI" && alta.Nosis != "SI")
-                    {
-                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
-                    }
-                    if (alta.Bolsa != "SI" && alta.Nosis == "SI")
-                    {
-                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
-                    }
-                    if (alta.Bolsa == "SI" && alta.Nosis != "SI")
-                    {
-                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
-                    }
-                }                
-            }
-            else
-            {
-                oErrorMessages.Error("", alta.Mensaje);
+                oErrorMessages.Error("", e.Message);
             }
             return oErrorMessages;
         }

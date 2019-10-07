@@ -19,8 +19,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? PagoDiferido { get; set; }
         public int? Centro { get; set; }
         public string CentroDescripcion { get; set; }
-        public decimal ARecibirSinPrecio { get; set; }
-        public decimal RecibidoSinFijar { get; set; }
+        public string ARecibirSinPrecio { get; set; }
+        public string RecibidoSinFijar { get; set; }
     }
 }
 
