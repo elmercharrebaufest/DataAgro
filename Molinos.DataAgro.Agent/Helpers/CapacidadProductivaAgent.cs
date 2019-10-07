@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.CapacidadProductiva;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -24,7 +25,7 @@ namespace Molinos.DataAgro.Agent
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
 
-        public string ObtenerCapacidadProductiva(string cuit, decimal cantidad, string centro, string cosecha, string material )
+        public string ObtenerCapacidadProductiva(string cuit, decimal cantidad, string centro, string cosecha, string material)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "0")
             {
@@ -49,16 +50,29 @@ namespace Molinos.DataAgro.Agent
                         IM_MATERIAL = material
 
                     };
-                var valor = agent.SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA(rq);
-                
-                return valor.EX_MENSAJE;
-                }catch (Exception e)
+
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                    logger.Debug(rq.ToXml());
+
+                    var valor = agent.SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA(rq);
+                    logger.Debug(valor.ToXml());
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += valor.ToXml();
+                    repositorio.GuardarCambios();
+                    return valor.EX_MENSAJE;
+                }
+                catch (Exception e)
                 {
                     logger.Error(e.Message);
                     throw;
                 }
             }
         }
-
     }
 }

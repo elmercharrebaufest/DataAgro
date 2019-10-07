@@ -1,6 +1,8 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -10,13 +12,15 @@ namespace Molinos.DataAgro.Agent
 {
     public class AltaTempranaAgent : IAltaTempranaAgent
     {
-        public AltaTempranaAgent(ILogger logger)
+        public AltaTempranaAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
         string UserSap = ConfigurationManager.AppSettings["SapUser"];
         string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
 
         public AltaTempranaNRCODto ObtenerAlta(string cuit)
         {
@@ -36,8 +40,21 @@ namespace Molinos.DataAgro.Agent
                     {
                         IM_CUIT = cuit
                     };
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                    logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO(rq);
+                    logger.Debug(valor.ToXml());
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += valor.ToXml();
+                    repositorio.GuardarCambios();
+
                     var retorno = new AltaTempranaNRCODto
                     {
                         Ruca = new Ruca { Acopiador = valor.EX_RUCA.ACOPIADOR, Otros = valor.EX_RUCA.OTROS },
