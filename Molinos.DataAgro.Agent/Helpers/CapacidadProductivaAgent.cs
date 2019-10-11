@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Agent
 
         public string ObtenerCapacidadProductiva(string cuit, decimal cantidad, string centro, string cosecha, string material)
         {
-            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "0")
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 return "OK";
             }
