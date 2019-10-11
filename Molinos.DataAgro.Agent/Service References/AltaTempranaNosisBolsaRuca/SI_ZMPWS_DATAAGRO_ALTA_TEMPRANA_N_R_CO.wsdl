@@ -12,7 +12,7 @@
             <xsd:element name="EX_BOLSA" type="rfc:char2" />
             <xsd:element name="EX_CARTA" type="rfc:char2" />
             <xsd:element name="EX_FECHA_ACTUALIZACION" type="rfc:char2" />
-            <xsd:element name="EX_MENSAJE" type="rfc:char30" />
+            <xsd:element name="EX_MENSAJE" type="rfc:char50" />
             <xsd:element name="EX_NOSIS" type="rfc:char2" />
             <xsd:element name="EX_RUCA" type="rfc:ZMPES5510" />
           </xsd:sequence>
@@ -35,9 +35,9 @@
           <xsd:maxLength value="16" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char30">
+      <xsd:simpleType name="char50">
         <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="30" />
+          <xsd:maxLength value="50" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:complexType name="ZMPES5510">
