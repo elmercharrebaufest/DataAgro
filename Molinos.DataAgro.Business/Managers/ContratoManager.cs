@@ -282,14 +282,17 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
             }
-            var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
-            var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
-            var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-            var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
-            if (result != "OK")
+            if (oParam.ClasificacionId == 1)
             {
-                oErrorMessages.Error("Capacidad Productiva", result);
-            }                
+                var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
+                var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
+                var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
+                if (result != "OK")
+                {
+                    oErrorMessages.Error("Capacidad Productiva", result);
+                }
+            }
             
             if (oParam.ContratoMadre != null)
             {
