@@ -217,6 +217,51 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado");
                 }
             }
+            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+            if (string.IsNullOrEmpty(alta.Mensaje))
+            {
+                if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
+                {
+                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                }
+                else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta == "NO")
+                {
+                    oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                }
+
+                if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador == "NO")
+                {
+                    oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
+                }
+
+                if (oParam.ClasificacionId == 3 && alta.Ruca.Otros == "NO")
+                {
+                    oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
+                }
+                if (alta.FechaActualizacion == "NO")
+                {
+                    oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
+                }
+                if (alta.AltaTemprana == "SI")
+                {
+                    if (alta.Bolsa == "NO" && alta.Nosis == "NO")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
+                    }
+                    if (alta.Bolsa == "NO" && alta.Nosis == "SI")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                    }
+                    if (alta.Bolsa == "SI" && alta.Nosis == "NO")
+                    {
+                        oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                    }
+                }
+            }
+            else
+            {
+                oErrorMessages.Error("", alta.Mensaje);
+            }
             if (oParam.MaterialId == 0)
             {
                 oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
@@ -229,6 +274,23 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
             }
+            if (oParam.CampanaId == 0)
+            {
+                oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
+            }
+            if (oParam.DestinoId == 0 || oParam.DestinoId == null)
+            {
+                oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
+            }
+            var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
+            var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
+            var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+            var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
+            if (result != "OK")
+            {
+                oErrorMessages.Error("Capacidad Productiva", result);
+            }                
+            
             if (oParam.ContratoMadre != null)
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
@@ -243,10 +305,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            if (oParam.DestinoId == 0 || oParam.DestinoId == null)
-            {
-                oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
-            }
+            
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
@@ -283,10 +342,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacio");
             }
-            if (oParam.CampanaId == 0)
-            {
-                oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
-            }
+            
             if (oParam.ComercialId == 0 || oParam.ComercialId == null)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
@@ -426,67 +482,8 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.NivelTarifaId != null && oParam.NivelTarifaId != 0 && oParam.TarifaFlete == null)
             {
                 oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
-            }
-            var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
-            var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
-            var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-            try
-            {
-                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
-                if (result != "OK")
-                {
-                    oErrorMessages.Error("Capacidad Productiva", result);
-                }
-                var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
-                if (string.IsNullOrEmpty(alta.Mensaje))
-                {
-                    if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
-                    {
-                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-                    }
-                    else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta != "SI")
-                    {
-                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
-                    }
-
-                    if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador != "SI")
-                    {
-                        oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
-                    }
-
-                    if (oParam.ClasificacionId == 3 && alta.Ruca.Otros != "SI")
-                    {
-                        oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
-                    }
-                    if (alta.FechaActualizacion != "SI")
-                    {
-                        oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
-                    }
-                    if (alta.AltaTemprana == "SI")
-                    {
-                        if (alta.Bolsa != "SI" && alta.Nosis != "SI")
-                        {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
-                        }
-                        if (alta.Bolsa != "SI" && alta.Nosis == "SI")
-                        {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
-                        }
-                        if (alta.Bolsa == "SI" && alta.Nosis != "SI")
-                        {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
-                        }
-                    }
-                }
-                else
-                {
-                    oErrorMessages.Error("", alta.Mensaje);
-                }
-            }
-            catch (Exception e)
-            {
-                oErrorMessages.Error("", e.Message);
-            }
+            }           
+            
             return oErrorMessages;
         }
 
