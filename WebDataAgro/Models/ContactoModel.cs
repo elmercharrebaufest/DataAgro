@@ -7,6 +7,7 @@ namespace WebDataAgro.Models
     {
         public ResultIniContacto Contactos { get; set; }
         public CampañaHome Campaña { get; set; }
+        public ObjetivoHome Objetivo { get; set; }
         public DatosIniciales Datos { get; set; }
 
         public ResultIniContactoModel()

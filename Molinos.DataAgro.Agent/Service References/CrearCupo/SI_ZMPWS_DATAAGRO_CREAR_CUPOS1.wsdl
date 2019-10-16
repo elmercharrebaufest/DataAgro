@@ -8,18 +8,26 @@
       <xsd:element name="Z_MPRFC_CREAR_CUPOSResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_MENSAJE_ERROR" type="xsd:string" />
-            <xsd:element name="EX_N_CUPO" type="rfc:char18" />
+            <xsd:element name="EX_MENSAJE_ERROR" type="rfc:string" />
+            <xsd:element name="EX_N_CUPO" type="rfc:ZMPES5530" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="Z_MPRFC_CREAR_CUPOS">
         <xsd:complexType>
           <xsd:sequence>
+            <xsd:element name="IM_CANTIDAD_CUPOS" type="rfc:numeric4" />
+            <xsd:element name="IM_COMERCIAL" type="rfc:char12" />
             <xsd:element name="IM_CUPO" type="rfc:ZMPES5500" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char2">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="2" />
@@ -28,6 +36,12 @@
       <xsd:simpleType name="char1">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+          <xsd:pattern value="\d*" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char4">
@@ -40,6 +54,11 @@
           <xsd:maxLength value="3" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char35">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="35" />
@@ -50,15 +69,12 @@
           <xsd:maxLength value="10" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="string">
+        <xsd:restriction base="xsd:string" />
+      </xsd:simpleType>
       <xsd:simpleType name="char16">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="16" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="date">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="10" />
-          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char255">
@@ -71,9 +87,14 @@
           <xsd:maxLength value="18" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:complexType name="ZMPES5520">
+        <xsd:sequence>
+          <xsd:element name="CODIGO_CUPO" type="rfc:char18" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:complexType name="ZMPES5500">
         <xsd:sequence>
-          <xsd:element name="FECHA_INGRESO" type="rfc:date" />
+          <xsd:element name="FECHA_INGRESO" type="rfc:date10" />
           <xsd:element name="MATNR" type="rfc:char18" />
           <xsd:element name="PROVEEDOR" type="rfc:char10" />
           <xsd:element name="DESCPROV" type="rfc:char35" />
@@ -83,6 +104,11 @@
           <xsd:element name="DESTINATARIO" type="rfc:char16" />
           <xsd:element name="FLETE_PROC" type="rfc:char1" />
           <xsd:element name="CALIDAD" type="rfc:char2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5530">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5520" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

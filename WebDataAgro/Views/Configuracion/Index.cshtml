@@ -24,21 +24,66 @@
 {
     @Html.AntiForgeryToken();
     <div id="form">
+        <div class="container">
+            <div>
+                <h4>CompraNet</h4>
 
-        <div class="row-botones-material row padding">
-            <div class="col-md-2">
-                <label>Cantidad de días</label>
+            </div>
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Cantidad de días</label>
+                </div>
+                <div class="col-md-2" id="CantidadDiasId">
+                    @Html.TextBoxFor(m => m.CantidadDias, new { @class = "CantidadDeDias number-input" })
+                </div>
+            </div>
+            <h4>Stop</h4>
+
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Clave Stop</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.ClaveStop, new { @class = "CantidadDeDias k-input" })
+                </div>
+                <div class="col-md-offset-2 col-md-2">
+                    <label>ABM STOP</label>
+                    @Html.CheckBoxFor(m => m.ConexionABMStop)
+                </div>
+                <div class="col-md-2">
+                    <label>Consulta STOP</label>
+                    @Html.CheckBoxFor(m => m.ConexionConsultaStop)
+                </div>
             </div>
 
-            <div class="col-md-2" id="CantidadDiasId">
-                @Html.TextBoxFor(m => m.CantidadDias, new { @class = "CantidadDeDias number-input" })
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Terminal Stop</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.TerminalStopId, new { @class = "CantidadDeDias number-input" })
+                </div>
+                <div class="col-md-2">
+                    <label>CUIT Destinatario</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.CuitDestinoStop, new { @class = "CantidadDeDias number-input" })
+                </div>
+                <div class="col-md-2">
+                    <label>Codigo Localidad</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.CodigoLocalidadStop, new { @class = "CantidadDeDias number-input" })
+                </div>
             </div>
+        <div class="row">
             <div class="col-md-3">
                 <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
             </div>
         </div>
-
+        </div>
     </div>
+
 }
 
 

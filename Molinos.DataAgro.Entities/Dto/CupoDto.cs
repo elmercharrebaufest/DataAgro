@@ -27,5 +27,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaGeneracion { get; set; }    
         public int EstadoCupoId { get; set; }
         public string EstadoCupo { get; set; }
+        public string MensajeError { get; set; }
     }
 }

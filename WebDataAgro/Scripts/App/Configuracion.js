@@ -5,9 +5,8 @@
 
 
 function InicializarElementos() {
-    $("#CantidadDias").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "n0",
+    $(".number-input").kendoNumericTextBox({
+        format:"####################",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,

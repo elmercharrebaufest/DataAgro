@@ -190,6 +190,12 @@
                            /endpoint[@name='HTTP_Port13']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port14 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port14']
+                           /@address" />
+  </parameter>
   <parameter name="ServiceUser Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServiceUser']
@@ -198,6 +204,12 @@
   <parameter name="ServicePass Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServicePass']
+                           /@value" />
+  </parameter>
+  
+  <parameter name="UrlBaseSTOP Key">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/appSettings/add[@key='UrlBaseSTOP']
                            /@value" />
   </parameter>
   

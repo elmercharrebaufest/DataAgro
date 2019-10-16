@@ -17,7 +17,7 @@ namespace WebDataAgro.Controllers
     public class HomeController : Controller
     {
         private IHomeManager mobjHomeManager;
-
+        private readonly IObjetivoManager objetivoManager;
         private IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
 
@@ -25,12 +25,13 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager)
+        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager, IObjetivoManager objetivoManager)
         {
 
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
+            this.objetivoManager = objetivoManager;
         }
 
 
@@ -88,7 +89,7 @@ namespace WebDataAgro.Controllers
             }
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
-
+            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
             model.Datos = mobjHomeManager.TraerInfoIniciales(GlobalVariables.EquipoReal);
 
             if (result != null)
@@ -256,7 +257,37 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        public ActionResult GuardarObjetivoComercial(ObjetivoComercial objetivo)
+        {
+            var model = new Resultado();
 
+            objetivo.ComercialId = GlobalVariables.ComercialId;
+
+            if (objetivo.ComercialId != 0)
+            {
+                model = objetivoManager.GuardarObjetivo(objetivo);
+            }
+
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+        public ActionResult TraerObjetivos()
+        {
+            var model = new ResultIniContactoModel();
+            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
     }
 
 }

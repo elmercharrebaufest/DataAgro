@@ -20,23 +20,23 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly ICrearCupoAgent crearCupoAgent;
         private readonly IEliminarCupoAgent eliminarCupoAgent;
+        private readonly IClienteStopAgent clienteStopAgent;
 
-        public CupoManager(IRepositorio repositorio,ILogger logger,ICrearCupoAgent crearCupoAgent, IEliminarCupoAgent eliminarCupoAgent) {
+        public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent, IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent)
+        {
             this.repositorio = repositorio;
             this.logger = logger;
             this.crearCupoAgent = crearCupoAgent;
             this.eliminarCupoAgent = eliminarCupoAgent;
+            this.clienteStopAgent = clienteStopAgent;
         }
         public Resultado GrabarCupo(Cupo cupo, int cantidadCupos)
         {
-            var error = Validar(cupo, cantidadCupos);
-            if (error.HayError||cantidadCupos==0)
-            {
-                return error;
-            }
+            var error = new Resultado();
             try
             {
                 cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
+                cupo.Comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
                 cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
                 cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                 cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
@@ -44,12 +44,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
                 var cuposConSap = new List<Cupo>();
                 
-                cupo.EstadoCupoId = 1;
+                cupo.EstadoCupoId = 6;
                 foreach (var cupoSap in listaCupos)
                 {
                     var nuevoCupo = (Cupo)cupo.Clone();
                     nuevoCupo.CupoSap = cupoSap;
-
                     cuposConSap.Add(nuevoCupo);
                 }
                 repositorio.AgregarTodos(cuposConSap);
@@ -63,7 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
         }
-        private Resultado Validar(Cupo cupo,int cantidadCupos)
+        public Resultado Validar(Cupo cupo,int cantidadCupos)
         {
             var error = new Resultado();
             if (cupo.ProveedorId == 0)
@@ -87,20 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacio cuando elige Fasón/Préstamo Devolución"));
             }
-            var limiteCupo = repositorio.Obtener<LimiteCupo>(x => x.ConfiguracionCupo.CentroId == cupo.CentroId && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
-           && x.ZonaCupoId == cupo.ZonaCupoId && x.ConfiguracionCupo.Fecha == cupo.FechaIngreso);
-            if (limiteCupo == null || limiteCupo.CantidadCupo == 0)
-            {
-                error.Errores.Add(new ErrorMessage(400, "La Zona no esta dada de alta en Administracion de Cupos"));
-            }
-            else
-            {
-                var cuposOtorgados = repositorio.Contar<Cupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso && x.ZonaCupoId == cupo.ZonaCupoId);
-                if (limiteCupo != null && limiteCupo.CantidadCupo < cantidadCupos + cuposOtorgados)
-                {
-                    error.Errores.Add(new ErrorMessage(400, "Limite de cupos alcanzado"));
-                }
-            }
+            
             return error;
         }
         public KendoGrid<CupoDto> TraerCuposTabla(KendoGridMvcRequest request, List<int> equipo)
@@ -112,22 +98,53 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var nuevoResultado = new Resultado();
+                var stop = clienteStopAgent.EliminarCupo(id);
+                if (stop.HayError)
+                {
+                    return stop;
+                }
                 var cupoSap = repositorio.Obtener<Cupo>(id);
                 var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap);
                 if (resultado == "OK")
                 {
-                    cupoSap.EstadoCupoId = 5;
+                    cupoSap.EstadoCupoId = 4;
                     repositorio.GuardarCambios();
                 }
                 else
                 {
-                    nuevoResultado.Error("","Error al anular cupo"); ;
+                    nuevoResultado.Error("", "Error al anular cupo"); ;
                 }
                 return nuevoResultado;
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
-                throw e;
+                var nuevoResultado = new Resultado();
+                nuevoResultado.Error("eliminar",e.Message);
+                return nuevoResultado;
             }
         }
+        public void TransmitirCupos()
+        {
+            clienteStopAgent.TransmitirJobCupos();
+        }
+        public Resultado TransmitirCupos(List<string> cupos)
+        {
+            var result = new Resultado();
+            try
+            {
+                clienteStopAgent.CrearCupo(cupos);
+            }
+            catch (Exception e)
+            {
+                result.Error("", e.Message);
+            }
+            return result;
+        }
+
+        public List<RespuestaCupoStop> ConsultarCuposDiarios()
+        {
+            return clienteStopAgent.ConsultarCuposDiarios();
+        }
+
     }
 }

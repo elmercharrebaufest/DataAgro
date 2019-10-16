@@ -22,6 +22,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Destinatario { get; set; }
         public DateTime FechaGeneracion { get; set; }
         public int EstadoCupoId { get; set; }
+        public int? CupoStop { get; set; }
+        public string CreacionStop { get; set; }
+        public string ErrorStop { get; set; }
 
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }

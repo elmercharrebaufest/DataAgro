@@ -165,7 +165,9 @@ li {
 .float-left {
     float:left;
 }
-
+.float-right {
+    float: right;
+}
 #search-bar > div > ul.nav.navbar-nav.navbar-right > li.li-contacto.float-right  {
     float: right;
 }

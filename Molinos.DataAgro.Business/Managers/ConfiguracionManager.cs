@@ -31,11 +31,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
-            var oConfiguracionSave = TraerPesificacionDolarizado();
+            var oConfiguracionSave = TraerConfiguraciones();
             if (oConfiguracionSave != null)
             {               
                 oConfiguracionSave.CantidadDias = oConfiguracion.CantidadDias;
-              
+                oConfiguracionSave.ClaveStop = oConfiguracion.ClaveStop;
+                oConfiguracionSave.ConexionABMStop = oConfiguracion.ConexionABMStop;
+                oConfiguracionSave.ConexionConsultaStop = oConfiguracion.ConexionConsultaStop;
+                oConfiguracionSave.TerminalStopId = oConfiguracion.TerminalStopId;
+                oConfiguracionSave.CuitDestinoStop = oConfiguracion.CuitDestinoStop;
+                oConfiguracionSave.CodigoLocalidadStop = oConfiguracion.CodigoLocalidadStop;
             }
 
             else
@@ -58,7 +63,7 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public Configuracion TraerPesificacionDolarizado()
+        public Configuracion TraerConfiguraciones()
         {
             return repositorio.Obtener<Configuracion>(x=>x.Id==1);
 

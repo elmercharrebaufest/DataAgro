@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ILogger> loggerMock;
         private Mock<IContratoManager> contratoManagerMock;
         private Mock<IFijacionDePrecioContratoManager> fijacionManagerMock;
+        private Mock<ICupoManager> cupoManagerMock;
         private JavaScriptSerializer serializer;
 
 
@@ -32,8 +33,9 @@ namespace Molinos.DataAgro.Test.Controllers
             loggerMock = new Mock<ILogger>();
             contratoManagerMock = new Mock<IContratoManager>();
             fijacionManagerMock = new Mock<IFijacionDePrecioContratoManager>();
+            cupoManagerMock = new Mock<ICupoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new TareasProgramadasController(loggerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object);
+            target = new TareasProgramadasController(loggerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, cupoManagerMock.Object);
         }
 
         [Test]

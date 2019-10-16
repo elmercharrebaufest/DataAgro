@@ -3,6 +3,7 @@ using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -11,5 +12,10 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarCupo(Cupo cupo,int cantidadCupos);
         KendoGrid<CupoDto> TraerCuposTabla(KendoGridMvcRequest request, List<int> equipo);
         Resultado EliminarCupo(int id);
+        //Task ObtenerToken();
+        Resultado Validar(Cupo cupo, int cantidadCupos);
+        void TransmitirCupos();
+        Resultado TransmitirCupos(List<string> cupos);
+        List<RespuestaCupoStop> ConsultarCuposDiarios();
     }
 }

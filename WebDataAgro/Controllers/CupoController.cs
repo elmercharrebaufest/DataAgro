@@ -63,14 +63,29 @@ namespace WebDataAgro.Controllers
         {
             cupo.CantidadCupos = cupo.CantidadCupos
                                  != null ? cupo.CantidadCupos : 0;
-            var cupoGrabado = cupoManager.GrabarCupo(TransformarAEntidad(cupo), cupo.CantidadCupos.Value);
-            if (cupoGrabado.HayError)
+            var cupoNuevo = TransformarAEntidad(cupo);
+            var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value);
+            if (error.HayError)
             {
-                foreach (var e in cupoGrabado.Errores)
+                foreach (var e in error.Errores)
                 {
-                    if (ViewData.ModelState["Proveedor"].Errors.Count==0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
+                    if (ViewData.ModelState["Proveedor"].Errors.Count == 0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
                     {
                         ModelState.AddModelError("Error", e.Message);
+                    }
+                }
+            }
+            else
+            {
+                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.CantidadCupos.Value);
+                if (cupoGrabado.HayError)
+                {
+                    foreach (var e in cupoGrabado.Errores)
+                    {
+                        if (ViewData.ModelState["Proveedor"].Errors.Count == 0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
+                        {
+                            ModelState.AddModelError("Error", e.Message);
+                        }
                     }
                 }
             }
@@ -141,7 +156,7 @@ namespace WebDataAgro.Controllers
                 Calidad = cupo.Calidad == 1 ? "Camara" : cupo.Calidad == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,
                 Fason = cupo.Fason,
-                Destinatario = cupo.CUIT,
+                Destinatario = cupo.CUIT ?? "30715118773",
                 ComercialId = GlobalVariables.ComercialId,
                 FechaGeneracion = DateTime.Now
             };
@@ -167,6 +182,13 @@ namespace WebDataAgro.Controllers
         {
             var comerciales = comercialManager.ListarComercial(text, GlobalVariables.Equipo);
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
+        }      
+        
+        [HttpPost]
+        public ActionResult TransmitirCupos(List<string> cupos)
+        {
+            var resultado = cupoManager.TransmitirCupos(cupos);
+            return Json(resultado, JsonRequestBehavior.AllowGet);
         }
     }
 }

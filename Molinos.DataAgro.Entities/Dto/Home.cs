@@ -15,7 +15,36 @@ namespace Molinos.DataAgro.Entities.Dto
         public double Toneladas { get; set; }
         public string Campaña { get; set; }
     }
+    public class ObjetivoHome
+    {
+        public List<DetalleObjetivo> Comerciales { get; set; }
+        public List<MaterialObjetivo> Objetivos { get; set; }
+        public ObjetivoHome()
+        {
+            Objetivos = new List<MaterialObjetivo>();
+            Comerciales = new List<DetalleObjetivo>();
+        }
+    }
+    public class DetalleObjetivo
+    {
+        public string Comercial { get; set; }
+        public int ComercialId { get; set; }
+        public List<MaterialObjetivo> Objetivos { get; set; }
 
+        public DetalleObjetivo()
+        {
+            Objetivos = new List<MaterialObjetivo>();
+        }
+    }
+    public class MaterialObjetivo
+    {
+        public string Material { get; set; }
+        public int MaterialId { get; set; }
+        public double Toneladas { get; set; }
+        public string Campana { get; set; }
+        public string Comercial { get; set; }
+        public int ComercialId { get; set; }
+    }
     public class Contactos
     {
 

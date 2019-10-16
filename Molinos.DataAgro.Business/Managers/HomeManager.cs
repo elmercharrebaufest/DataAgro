@@ -15,12 +15,14 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private ICampañaManager mobCampaña;
+        private readonly IObjetivoManager objetivoManager;
         private ILogger logger;
 
-        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager)
+        public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager)
         {
             this.logger = logger;
             this.mobCampaña = campañaManager;
+            this.objetivoManager = objetivoManager;
             this.repositorio = repositorio;
         }
 
@@ -205,7 +207,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return mobCampaña.TraerCampañaHome(idComercial, equipo);
         }
-
+        public ObjetivoHome TraerInfoObjetivo(int idComercial, List<int> equipo)
+        {
+            return objetivoManager.TraerObjetivoHome(idComercial, equipo);
+        }
         public int TraerIdComercial(string idActiveDirectory)
         {
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);

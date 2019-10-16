@@ -21,38 +21,38 @@ var zonaSeleccionada;
 
 function InicializarCuposIndex() {    
     var defaultFilter = { field: "FechaIngreso", operator: "gte", value: new Date };
-        var ds = {
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: '/Cupo/BuscaDatosTabla'
-                },
-                parameterMap: function (options, operation) {
-                    if (options.filter) {
-                        KendoGrid_FixFilter(ds, options.filter);
-                    }
-                    return options;
-                }
+    var ds = {
+        transport: {
+            read: {
+                type: 'post',
+                dataType: 'json',
+                url: '/Cupo/BuscaDatosTabla'
             },
-            schema: {
-                data: 'Data',
-                total: 'Total',
-                model: {
-                    id: 'Id',
-                    fields: {
-                        FechaIngreso: { type: "date" },
-                        FleteProcedencia: {type: "boolean"}
-                    }
+            parameterMap: function (options, operation) {
+                if (options.filter) {
+                    KendoGrid_FixFilter(ds, options.filter);
                 }
-            },
-            serverPaging: true,
-            serverSorting: true,
-            sort: [{ field: "FechaIngreso", dir: "asc" }],
-            serverFiltering: true,
-            pageSize: 20,
-            filter: defaultFilter
-        };
+                return options;
+            }
+        },
+        schema: {
+            data: 'Data',
+            total: 'Total',
+            model: {
+                id: 'Id',
+                fields: {
+                    FechaIngreso: { type: "date" },
+                    FleteProcedencia: { type: "boolean" }
+                }
+            }
+        },
+        serverPaging: true,
+        serverSorting: true,
+        sort: [{ field: "FechaIngreso", dir: "asc" }],
+        serverFiltering: true,
+        pageSize: 20,
+        filter: defaultFilter
+    };
 
     $("#gridCupo").kendoGrid({
         dataSource: ds,
@@ -65,8 +65,10 @@ function InicializarCuposIndex() {
                         .addClass("flete-procedencia");
                 }
             }
+            $('[data-toggle="tooltip"]').tooltip();
         },
         columns: [
+            {selectable:true},
             { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
@@ -91,9 +93,13 @@ function InicializarCuposIndex() {
                         EstadoCupo: "Arribado"
                     }, {
                         EstadoCupo: "Descargado"
-                    }, {
-                        EstadoCupo: "Anulado"
-                    }]
+                        }, {
+                            EstadoCupo: "Anulado"
+                        }, {
+                            EstadoCupo: "Sin STOP"
+                        }, {
+                            EstadoCupo: "Error STOP"
+                        }]
                 }, sortable: false, width: 200,
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
@@ -101,10 +107,23 @@ function InicializarCuposIndex() {
                 template: function (dataItem) {
                     if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
-                            botonBorrar(dataItem, 'fa-trash pend');
+                            botonBorrar(dataItem, 'fa-trash ctg');
+                    } else if (dataItem.EstadoCupoId == 2) {
+                        return '<div class="status activado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    } else if (dataItem.EstadoCupoId == 3) {
+                        return '<div class="status arribado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 5) {
-                        return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
-                            botonBorrar(dataItem, 'fa-trash anu');
+                        return '<div class="status descargado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    } else if (dataItem.EstadoCupoId == 4) {
+                        return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    } else if (dataItem.EstadoCupoId == 6) {
+                        return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonBorrar(dataItem, 'fa-trash sto') +
+                            botonRetransmitir(dataItem, 'fa-mail-forward sto' );
+                    } else if (dataItem.EstadoCupoId == 7) {
+                        return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError +'"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonBorrar(dataItem, 'fa-trash err') +
+                            botonRetransmitir(dataItem, 'fa-mail-forward err');
                     }
                 }
             }
@@ -171,7 +190,7 @@ function InicializarCuposIndex() {
             }
         }
     });
-
+    
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -289,7 +308,9 @@ function InicializarCuposIndex() {
         }
         dataSource.filter(filters);
     }
-
+    $("#finalizarBorrar").click(function () {
+        ObtenerDatosModalBorrado();
+    });
 }
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
@@ -297,15 +318,44 @@ function botonBorrar(dataItem, icono) {
         "'" + dataItem.CupoSap + "'" + ',' +
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
+function botonRetransmitir(dataItem, icono) {
+    return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
+        "'" + dataItem.CupoSap + "'" + 
+        ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+}
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
-    $("#cupoBorrar").val(id);
-    $("#finalizarBorrar").click(function () {
-        ObtenerDatosModalBorrado();
-    });
+    $("#cupoBorrar").val(id);   
 
     $("#modalBorrar").modal('show');
 }
+function retransmitirSelccionados() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7) {
+            obj.push(selectedItem.CupoSap);
+        }
+    });
+    Retransmitir(obj);
+}
+
+function Retransmitir(listaCupos) {
+    var a = [];
+    if (!Array.isArray(listaCupos)) {
+        a.push(listaCupos);
+    } else {
+        for (var i = 0; i <= cupos.length; i++) {
+            a.push(listaCupos[i]);
+        }
+    }
+    MSExecuteOnServer('/Cupo/TransmitirCupos', {cupos:a});
+    recargarGrilla();
+}
+
 function ObtenerDatosModalBorrado() {
     var objBorrar = {};
     var result;    
@@ -315,12 +365,14 @@ function ObtenerDatosModalBorrado() {
         MensErr(result.Errores[0].Message);
     }
     else {
+        MensInfo("Borrado Exitoso");
         recargarGrilla();
     }
 }
 function recargarGrilla() {
     $('#gridCupo').data('kendoGrid').dataSource.read();
 }
+
 function InicializarCargaCupos() {
     $("#buscadorProveedor").click(function () {
         $("#buscadorProveedor").data("kendoAutoComplete").value("");

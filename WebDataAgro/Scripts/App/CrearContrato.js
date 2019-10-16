@@ -2172,6 +2172,7 @@ function ObtenerDatos() {
     obj.StandardDeCalidadId = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 3 ? 4 :
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 4 || obj.MaterialId == 5 ? 5 :
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId != 3 ? 1 :
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" && obj.MaterialId == 2 ? 7 :
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
                         $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length === 0 ? 0 : 2;

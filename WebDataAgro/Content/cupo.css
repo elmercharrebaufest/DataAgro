@@ -62,6 +62,21 @@
     cursor: pointer;
 }
 
+.btnVarios {
+    border: 1px solid #848484;
+    border-radius: 5px !important;
+    background: white;
+    text-align: center;
+    margin: 0 0 15px 0;
+    cursor: pointer;
+    padding: 10px;
+}
+
+    .btnVarios:hover {
+        background: #ccc;
+        border: 1px solid #017940;
+    }
+
 .myBtn {
     width: 100%;
     text-decoration: none;
@@ -120,8 +135,40 @@
     background-color: #179e2b;
     color: #fff;
 }
-.pend { /*icons*/
+.ctg { /*icons*/
     color: #179e2b;
+}
+
+.status.activado {
+    background-color: #ffc100;
+    color: #fff;
+}
+.act { /*icons*/
+    color: #ffc100;
+}
+
+.status.arribado {
+    background-color: #00adf5;
+    color: #fff;
+}
+.arr { /*icons*/
+    color: #00adf5;
+}
+
+.status.descargado {
+    background-color: #000000;
+    color: #dbdbdb;
+}
+.des { /*icons*/
+    color: #d00707;
+}
+
+.status.sinstop {
+    background-color: #ac67ca;
+    color: #ffffff;
+}
+.sto { /*icons*/
+    color: #ac67ca;
 }
 
 .status.anulado {
@@ -131,6 +178,15 @@
 .anu { /*icons*/
     color: #848484;
 }
+
+.status.error {
+    background-color: #d00707;
+    color: #ffffff;
+}
+.err { /*icons*/
+    color: #d00707;
+}
+
 
 .noRightPadding{
     padding-right:0;

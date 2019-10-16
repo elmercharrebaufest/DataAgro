@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
                             TIPO_DB = descBon.TipoDB.CodigoSap,
                             FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
-                            FEHASTA = descBon.FechaHasta != null ? descBon.FechaHasta.Value.ToString("yyyy-MM-dd") : null,
+                            FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
                             MONEDA_DB = descBon.Moneda.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
@@ -130,7 +130,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : null;
+                string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";

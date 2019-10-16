@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHomeManager> homeManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<IObjetivoManager> objetivoManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -34,9 +35,10 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock = new Mock<IReportesManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             homeManagerMock = new Mock<IHomeManager>();
+            objetivoManagerMock = new Mock<IObjetivoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["comercialId"] = 1;
-            target = new HomeController(comercialManagerMock.Object, reportesManagerMock.Object, homeManagerMock.Object);
+            target = new HomeController(comercialManagerMock.Object, reportesManagerMock.Object, homeManagerMock.Object, objetivoManagerMock.Object);
         }
 
         [Test]
@@ -115,7 +117,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":{\"Nombre\":\"A\",\"Materiales\":[{\"Nombre\":\"a\",\"Toneladas\":12,\"Campaña\":\"17-18\"}]},\"Datos\":{\"mat\":[],\"camp\":[],\"segm\":[],\"tipoact\":[],\"est\":[],\"cond\":[],\"come\":[],\"zona\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":{\"Nombre\":\"A\",\"Materiales\":[{\"Nombre\":\"a\",\"Toneladas\":12,\"Campaña\":\"17-18\"}]},\"Objetivo\":null,\"Datos\":{\"mat\":[],\"camp\":[],\"segm\":[],\"tipoact\":[],\"est\":[],\"cond\":[],\"come\":[],\"zona\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);        
         }
 

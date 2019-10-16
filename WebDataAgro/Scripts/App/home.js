@@ -1,5 +1,5 @@
 ﻿var conts = [];
-
+var viewModel;
 var htmlaux = "";
 
 var filtro = {};
@@ -14,6 +14,7 @@ var checkear = function (el, nam) {
 };
 
 $(document).ready(function () {
+    CrearObjetivo();
     InicializarDatos();
     armarFunciones();
     setChangeChecks();
@@ -53,6 +54,9 @@ function InicializarDatos() {
             ArmarCabeceraContactos();
             ArmarContactos(conts);
             ArmarCamapaña(result.Campaña);
+            ArmarObjetivo(result.Objetivo.Objetivos);
+            CargarModelObjetivosComerciales(result.Objetivo.Comerciales);
+            CargarViewModel(result.Datos);
         }
     }
 }
@@ -491,7 +495,7 @@ function ArmarContactos(contactos) {
 }
 
 function setChangeChecks() {
-    $('div :input').change(function () {
+    $('#form-filtro > div :input').change(function () {
         updateFiltro(ObtenerEstadoActual());
     });
 }
@@ -546,18 +550,69 @@ function ArmarCamapaña(campañas) {
                 + '<div class="contenedor-principal-campanas-grano">'
                 + campañas.Materiales[i].Campaña
                 + '</div>'
-                + '</div>'
+                + '</div>';
         })(ii);
     }
     $(".contenedor-principal-campanas-detalle").append(html);
 }
+function ArmarObjetivo(objetivos) {
+    var html = "";
+    for (var ii in objetivos) {
+        (function (i) {
+            var ToneladasAux = FormatearNumeros(objetivos[i].Toneladas);
+            //ToneladasAux.join(",");
 
+            html += '<div class="contenedor-principal-objetivo-detalle">'
+                + '<div class="contenedor-principal-objetivo-grano">'
+                + objetivos[i].Material
+                + '</div>'
+                + '<div class="contenedor-principal-objetivo-cantidad">'
+                + ToneladasAux
+                + '</div>'
+                + '<div class="contenedor-principal-objetivo-grano">'
+                + objetivos[i].Campana
+                + '</div>'
+                + '</div>';
+        })(ii);
+    }
+    $(".contenedor-principal-objetivo-detalle").append(html);
+}
+
+function CargarModelObjetivosComerciales(comercial) {
+    var html = "";
+    for (var i in comercial) {
+        html += '<div class="row listado"><div class="comercial-listado" data-toggle="collapse"  href="#comercial' + comercial[i].ComercialId + '"> <span class="comercial-objetivo">' + comercial[i].Comercial + '</span></div>' +
+            '<div id="comercial' + comercial[i].ComercialId + '" class="panel-collapse collapse in">' +
+            '<div class="col-xs-12"><table class="tabla-home">';
+        for (var j in comercial[i].Objetivos) {
+            var ToneladasAux = FormatearNumeros(comercial[i].Objetivos[j].Toneladas);
+            html += '<tr><th class="col-xs-5">' + comercial[i].Objetivos[j].Material + '</th>' +
+                '<td class="col-xs-5">' + ToneladasAux+'</td>' +
+                '<td class="col-xs-2">' + comercial[i].Objetivos[j].Campana+'</td></tr>';
+        }
+        html += '</table></div></div></div>';                  
+    }
+    $(".contenedor-principal-detalle").append(html);
+}
+function FormatearNumeros(ton) {
+    var ToneladasAux = ton.toString().split(".");
+    if (ToneladasAux.length > 1) {
+        ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+        ToneladasAux = ToneladasAux.join(",");
+    }
+    else {
+        ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        ToneladasAux = ToneladasAux.join("");
+    }
+    return ToneladasAux;
+}
 function armarSelectCampañas() {
     $("#per-tie-sel").multiselect({
         header: false,
         multiple: false,
         selectedList: 1,
-        noneSelectedText: "Elegir",
+        noneSelectedText: "Elegir"
     });//.multiselectfilter();
 
     //para que funcione el filtro, hay que sacar el header: false
@@ -858,6 +913,69 @@ function armarFuncionalidadesHome() {
             $(".mostrar-filtro span").html("Ocultar filtro -");
         }
     });
+}
+function CrearObjetivo() {
+    $("#MaterialId").kendoDropDownList({
+        optionLabel: "SELECCIONE UN MATERIAL...",
+        dataTextField: "Descripcion",
+        dataValueField: "MaterialId"
+    });
 
+    $("#CampaniaId").kendoDropDownList({
+        optionLabel: "SELECCIONE UNA CAMPAÑA...",
+        dataTextField: "Descripcion",
+        dataValueField: "CampañaId"
+    });
+    $("#Toneladas").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners:false
+    });
+    var param = {
+        "materialId": null,
+        "campaniaId": null,
+        "toneladas": null
+    };
+    viewModel = kendo.observable({
+        Parametros: param,
 
+        campaniaCombo: [],
+        materialCombo: []
+    });
+
+    kendo.bind($("#objetivo-modal"), viewModel);
+
+    $("#objetivo-modal").on("hidden.bs.modal", function () {
+        viewModel.set("Parametros", param);
+    });
+}
+function CargarViewModel(datos) {
+    viewModel.set("materialCombo", datos.mat);
+    viewModel.set("campaniaCombo", datos.camp);
+}
+function AgregarObjetivo() {
+    var objetivo = {};
+    objetivo.MaterialId = $("#MaterialId").val();
+    objetivo.CampanaId = $("#CampaniaId").val();
+    objetivo.ToneladasObjetivos = $("#Toneladas").val();
+
+    var res = MSExecuteOnServer('/Home/GuardarObjetivoComercial', objetivo);
+    if (res != null) {
+        if (ExistsErrorMessages(res.Errores)) {
+            MensErr(res.Errores[0].Message);
+        }
+        else {
+            $('#objetivo-modal').modal('toggle'); 
+            MensInfo("Grabación Exitosa");
+            Actualizar();
+        }
+    }
+}
+function Actualizar() {
+    $(".contenedor-principal-objetivo-detalle").empty();
+    $(".contenedor-principal-detalle").empty();
+    var obj = MSExecuteOnServer('/Home/TraerObjetivos');
+
+    ArmarObjetivo(obj.Objetivo.Objetivos);
+    CargarModelObjetivosComerciales(obj.Objetivo.Comerciales);
 }

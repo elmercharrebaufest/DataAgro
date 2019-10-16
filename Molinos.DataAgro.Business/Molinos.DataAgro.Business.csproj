@@ -103,8 +103,8 @@
     <Reference Include="System.Linq.Dynamic.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.8.2\lib\net45\System.Linq.Dynamic.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -143,6 +143,7 @@
     <Compile Include="Managers\AreaInfluenciaManager.cs" />
     <Compile Include="Managers\CampaniaActualManager.cs" />
     <Compile Include="Managers\CampaniaMaterialManager.cs" />
+    <Compile Include="Managers\ObjetivoManager.cs" />
     <Compile Include="Managers\CampañaManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\AgenteCompraManager.cs" />

@@ -43,5 +43,5 @@ namespace Molinos.DataAgro.Interfaces
         List<EstadoContratoDto> TraerTodoLosEstados();
         List<BoletoCompraNetDto> TraerTodosLosBoletos();
         List<GrupoDeComprasDto> TraerTodoGrupoDeCompras();
-            }
+    }
 }

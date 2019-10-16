@@ -20,9 +20,18 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Index()
         {
-            var conf = configuracionManager.TraerPesificacionDolarizado();
-            
-            return View(new ConfiguracionModel { CantidadDias = conf != null ? conf.CantidadDias : 0 });
+            var conf = configuracionManager.TraerConfiguraciones();
+
+            return View(new ConfiguracionModel
+            {
+                CantidadDias = conf != null ? conf.CantidadDias : 0,
+                TerminalStopId = conf != null ? conf.TerminalStopId : 0,
+                CuitDestinoStop = conf != null ? conf.CuitDestinoStop : "",
+                ConexionConsultaStop = conf != null ? conf.ConexionConsultaStop.Value : true,
+                ConexionABMStop = conf != null ? conf.ConexionABMStop.Value : true,
+                ClaveStop = conf.ClaveStop,
+                CodigoLocalidadStop = conf.CodigoLocalidadStop
+            });
         }
         [HttpPost]
         public ActionResult GuardarPesificacionDolarizado(ConfiguracionModel configuracion)
@@ -44,7 +53,13 @@ namespace WebDataAgro.Controllers
             var entidad = new Configuracion
             {
                 Id = configuracion.Id,
-                CantidadDias = configuracion.CantidadDias
+                CantidadDias = configuracion.CantidadDias,
+                ConexionABMStop= configuracion.ConexionABMStop,
+                ConexionConsultaStop= configuracion.ConexionConsultaStop,
+                ClaveStop =configuracion.ClaveStop,
+                CuitDestinoStop = configuracion.CuitDestinoStop,
+                TerminalStopId = configuracion.TerminalStopId,
+                CodigoLocalidadStop = configuracion.CodigoLocalidadStop
             };
             return entidad;
         }

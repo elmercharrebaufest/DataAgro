@@ -12,5 +12,11 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int Id { get; set; }
         public int CantidadDias { get; set; }
+        public string ClaveStop { get; set; }
+        public bool? ConexionABMStop { get; set; }
+        public bool? ConexionConsultaStop { get; set; }
+        public int TerminalStopId { get; set; }
+        public string CuitDestinoStop { get; set; }
+        public int CodigoLocalidadStop { get; set; }
     }
 }

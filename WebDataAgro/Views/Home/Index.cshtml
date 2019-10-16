@@ -111,15 +111,31 @@
         </div>
     </div>
     <div class="col-lg-3 contenedor-principal-campanas">
-        <div class="contenedor-principal-campanas-titulo">
-            Compras
-        </div>
-        <div class="contenedor-principal-campanas-subtitulo">
-            Total granos comprados (TNs)
-        </div>
-        <div class="contenedor-principal-campanas-grupo">
-            <div class="contenedor-principal-campanas-detalle">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="pill" href="#Compras" class="contenedor-principal-campanas-titulo">Compras</a></li>
+            <li><a data-toggle="pill" href="#Objetivos" class="contenedor-principal-campanas-titulo">Objetivos</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="Compras" class="tab-pane fade in active">
+                <div class="contenedor-principal-campanas-subtitulo">
+                    Total granos comprados (TNs)
+                </div>
+                <div class="contenedor-principal-campanas-grupo">
+                    <div class="contenedor-principal-campanas-detalle">
 
+                    </div>
+                </div>
+            </div>
+            <div id="Objetivos" class="tab-pane fade in">
+                <div class="contenedor-principal-campanas-subtitulo">
+                    Objetivo granos (TNs)
+                    <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-modal"></button>
+                    <button class="ajax-editar-link fa fa-eye btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-detalle-modal"></button>
+                    <div class="contenedor-principal-objetivo-detalle">
+
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -252,3 +268,5 @@
 </div>
 
 @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
+@Html.Partial("ModalObjetivo")
+@Html.Partial("ModalObjetivoDetalle")

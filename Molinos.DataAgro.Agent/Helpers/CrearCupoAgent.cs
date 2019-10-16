@@ -52,18 +52,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
                     var rq = new Z_MPRFC_CREAR_CUPOS
                     {
+                        IM_CANTIDAD_CUPOS = cantidadCupos.ToString(),
+                        IM_COMERCIAL = cupo.Comercial.IdActiveDirectory,
                         IM_CUPO = new ZMPES5500()
                         {
                             FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
                             MATNR = cupo.Material.Codigo,
-                            PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0,2),
+                            PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
                             DESCPROV = cupo.Proveedor.RazonSocial,
                             PLANTA = cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,
                             OBSERVACIONES = cupo.Observaciones,
                             DESTINATARIO = cupo.Destinatario,
-                            FLETE_PROC = cupo.FleteProcedencia == true? "S":"N",
-                            CALIDAD = cupo.Calidad== "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03":""
+                            FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
+                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
                         }
                     };
 
@@ -74,26 +76,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                     });
                     repositorio.GuardarCambios();
                     logger.Debug(rq.ToXml());
-                    var listaCupos = new List<string>();
-                    for (var i = 0; i < cantidadCupos; i++)
+
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_CREAR_CUPOS(rq);
+
+                    logger.Debug(devolucion.ToXml());
+                    var log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += devolucion.ToXml();
+                    repositorio.GuardarCambios();
+                    logger.Debug("Guardado en la base");
+
+                    if (devolucion.EX_MENSAJE_ERROR != "")
                     {
-                        logger.Debug("envio {0}", i);
-                        var devolucion = agent.SI_ZMPWS_DATAAGRO_CREAR_CUPOS(rq);
-
-                        logger.Debug(devolucion.ToXml());
-                        var log = repositorio.Obtener<Log>(logId.Id);
-                        log.Xml += devolucion.ToXml();
-                        repositorio.GuardarCambios();
-                        logger.Debug("Guardado en la base");
-
-                        if (devolucion.EX_MENSAJE_ERROR != "")
-                        {
-                            throw new Exception(devolucion.EX_MENSAJE_ERROR);
-                        }
-                        logger.Debug("Sin Error");
-                        listaCupos.Add(devolucion.EX_N_CUPO);
+                        throw new Exception(devolucion.EX_MENSAJE_ERROR);
                     }
-                    return listaCupos;
+                    logger.Debug("Sin Error");
+
+                    return devolucion.EX_N_CUPO.Select(x => x.CODIGO_CUPO).ToList();
                 }
                 catch (Exception e)
                 {

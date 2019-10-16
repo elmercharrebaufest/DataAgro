@@ -259,6 +259,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La clave no debe estar vacia.
+        /// </summary>
+        public static string Error_ClaveStop {
+            get {
+                return ResourceManager.GetString("Error_ClaveStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El campo cantidad de días no debe estar vacío.
         /// </summary>
         public static string Error_Dias {

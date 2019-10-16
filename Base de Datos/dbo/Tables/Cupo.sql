@@ -15,6 +15,10 @@
 	[Destinatario]			VARCHAR(20) NULL,
     [FechaGeneracion]		DATETIME NOT NULL, 
 	[EstadoCupoId]			INT NOT NULL DEFAULT 1,
+	[CupoStop]				INT NULL,
+	[CreacionStop]			VARCHAR(50) NULL,
+	[ErrorStop]				VARCHAR(MAX) NULL,
+
     CONSTRAINT [PK_Cupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Cupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Cupo_Centro] FOREIGN KEY (CentroId) REFERENCES [Centro]([Id]),

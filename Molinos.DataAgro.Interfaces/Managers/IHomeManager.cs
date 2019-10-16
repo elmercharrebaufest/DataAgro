@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Interfaces
         ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> corredoresComerciales);
 
         CampañaHome TraerInfoCampaña(int idComercial, List<int> equipo);
+        ObjetivoHome TraerInfoObjetivo(int idComercial, List<int> equipo);
 
         DatosIniciales TraerInfoIniciales(List<int> equipo);
 

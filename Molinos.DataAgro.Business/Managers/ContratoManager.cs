@@ -459,7 +459,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
             }
-            var cantidadDias = configuracionManager.TraerPesificacionDolarizado().CantidadDias;
+            var cantidadDias = configuracionManager.TraerConfiguraciones().CantidadDias;
             var fechaFijacion = oParam.HastaFijacion;
             var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
 

@@ -32,10 +32,38 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_CREAR_CUPOS : object, System.ComponentModel.INotifyPropertyChanged {
         
+        private string iM_CANTIDAD_CUPOSField;
+        
+        private string iM_COMERCIALField;
+        
         private ZMPES5500 iM_CUPOField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string IM_CANTIDAD_CUPOS {
+            get {
+                return this.iM_CANTIDAD_CUPOSField;
+            }
+            set {
+                this.iM_CANTIDAD_CUPOSField = value;
+                this.RaisePropertyChanged("IM_CANTIDAD_CUPOS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string IM_COMERCIAL {
+            get {
+                return this.iM_COMERCIALField;
+            }
+            set {
+                this.iM_COMERCIALField = value;
+                this.RaisePropertyChanged("IM_COMERCIAL");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public ZMPES5500 IM_CUPO {
             get {
                 return this.iM_CUPOField;
@@ -219,12 +247,44 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES5520 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cODIGO_CUPOField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CODIGO_CUPO {
+            get {
+                return this.cODIGO_CUPOField;
+            }
+            set {
+                this.cODIGO_CUPOField = value;
+                this.RaisePropertyChanged("CODIGO_CUPO");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_CREAR_CUPOSResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string eX_MENSAJE_ERRORField;
         
-        private string eX_N_CUPOField;
+        private ZMPES5520[] eX_N_CUPOField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -239,8 +299,9 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string EX_N_CUPO {
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES5520[] EX_N_CUPO {
             get {
                 return this.eX_N_CUPOField;
             }

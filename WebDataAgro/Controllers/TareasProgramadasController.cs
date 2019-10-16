@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
@@ -10,12 +11,14 @@ namespace WebDataAgro.Controllers
         private readonly ILogger logger;
         private readonly IContratoManager contratoManager;
         private readonly IFijacionDePrecioContratoManager fijacionManager;
+        private readonly ICupoManager cupoManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager)
         {
             this.logger = logger;
             this.contratoManager = contratoManager;
             this.fijacionManager = fijacionManager;
+            this.cupoManager = cupoManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -39,6 +42,21 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"Borrado Automatico - Iniciando");
             contratoManager.BorradoAutomatico();
+            logger.Info($"Borrado Automatico - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult TransmitirCupoStop()
+        {
+            logger.Info($"Transmitiendo cupos a STOP");
+            cupoManager.TransmitirCupos();
+            logger.Info($"Borrado Automatico - Finalizado");
+            return Content("ok");
+        }
+        public ActionResult ConsultarCuposDiarios()
+        {
+            logger.Info($"Transmitiendo cupos a STOP");
+             var result = cupoManager.ConsultarCuposDiarios();
             logger.Info($"Borrado Automatico - Finalizado");
             return Content("ok");
         }

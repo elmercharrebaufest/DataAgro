@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IConfiguracionManager
     {
-        Configuracion TraerPesificacionDolarizado();
+        Configuracion TraerConfiguraciones();
         Resultado GrabarFechaPesificacionDolarizado(Configuracion oConfiguracion);
 
 
