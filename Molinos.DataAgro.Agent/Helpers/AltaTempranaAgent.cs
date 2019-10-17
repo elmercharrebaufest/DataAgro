@@ -26,7 +26,32 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return new AltaTempranaNRCODto { AltaTemprana = "SI", Bolsa = "SI", Carta = "SI", FechaActualizacion = "SI", Nosis = "SI", Ruca = new Ruca { Acopiador = "SI", Otros = "SI" } };
+                return new AltaTempranaNRCODto
+                {
+                    AltaTemprana = "NO",
+                    Bolsa = "NO",
+                    Carta = "NO",
+                    FechaActualizacion = "NO",
+                    Nosis = "NO",
+                    Ruca = new Ruca
+                        {
+                        Acopiador = new ValoresRuca
+                        {
+                            Consignatario = "NO",
+                            Directo = "NO",
+                            PlanCanje = "NO"
+                        },
+                        Otros = new ValoresRuca
+                        {
+                            Consignatario = "NO",
+                            Directo = "NO",
+                            PlanCanje = "NO"
+                        },
+                        Corredor = "NO"
+                    },
+                    Consignatario = "NO",
+                    PlanCanje = "NO"
+                };
             }
             else
             {
@@ -57,7 +82,23 @@ namespace Molinos.DataAgro.Agent
 
                     var retorno = new AltaTempranaNRCODto
                     {
-                        Ruca = new Ruca { Acopiador = valor.EX_RUCA.ACOPIADOR, Otros = valor.EX_RUCA.OTROS },
+                        Ruca = new Ruca
+                        {
+                            Acopiador = new ValoresRuca
+                            {
+                                Consignatario = valor.EX_RUCA.ACOPIADOR.CONSIGNATARIO,
+                                Directo = valor.EX_RUCA.ACOPIADOR.DIRECTO,
+                                PlanCanje = valor.EX_RUCA.ACOPIADOR.PROV_PLAN_CANJE
+                            },
+                            Otros = new ValoresRuca
+                            {
+                                Consignatario = valor.EX_RUCA.OTROS.CONSIGNATARIO,
+                                Directo = valor.EX_RUCA.OTROS.DIRECTO,
+                                PlanCanje = valor.EX_RUCA.OTROS.PROV_PLAN_CANJE
+                            }
+                        },
+                        PlanCanje = valor.EX_PLAN_CANJE,
+                        Consignatario = valor.EX_CONSIGNATARIO,
                         Nosis = valor.EX_NOSIS,
                         AltaTemprana = valor.EX_ALTA_TEMPRANA,
                         Bolsa = valor.EX_BOLSA,

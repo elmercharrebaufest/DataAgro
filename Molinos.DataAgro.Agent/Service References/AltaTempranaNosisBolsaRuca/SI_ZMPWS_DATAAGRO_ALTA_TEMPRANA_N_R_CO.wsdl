@@ -11,9 +11,11 @@
             <xsd:element name="EX_ALTA_TEMPRANA" type="rfc:char2" />
             <xsd:element name="EX_BOLSA" type="rfc:char2" />
             <xsd:element name="EX_CARTA" type="rfc:char2" />
+            <xsd:element name="EX_CONSIGNATARIO" type="rfc:char2" />
             <xsd:element name="EX_FECHA_ACTUALIZACION" type="rfc:char2" />
             <xsd:element name="EX_MENSAJE" type="rfc:char50" />
             <xsd:element name="EX_NOSIS" type="rfc:char2" />
+            <xsd:element name="EX_PLAN_CANJE" type="rfc:char2" />
             <xsd:element name="EX_RUCA" type="rfc:ZMPES5510" />
           </xsd:sequence>
         </xsd:complexType>
@@ -42,8 +44,16 @@
       </xsd:simpleType>
       <xsd:complexType name="ZMPES5510">
         <xsd:sequence>
-          <xsd:element name="ACOPIADOR" type="rfc:char2" />
-          <xsd:element name="OTROS" type="rfc:char2" />
+          <xsd:element name="ACOPIADOR" type="rfc:ZMPES540" />
+          <xsd:element name="OTROS" type="rfc:ZMPES540" />
+          <xsd:element name="CORREDOR" type="rfc:char2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES540">
+        <xsd:sequence>
+          <xsd:element name="DIRECTO" type="rfc:char2" />
+          <xsd:element name="PROV_PLAN_CANJE" type="rfc:char2" />
+          <xsd:element name="CONSIGNATARIO" type="rfc:char2" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

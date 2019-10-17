@@ -201,8 +201,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -254,8 +253,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -306,8 +304,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
 
             var resultado = target.GrabarContrato(oContrato);
@@ -412,8 +409,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
             configuracionManagermock.Setup(y => y.TraerConfiguraciones()).Returns(new Configuracion { CantidadDias = 10 });
 
@@ -516,8 +512,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
             var resultado = target.GrabarContrato(oContrato);
             Assert.That(resultado.HayError);
@@ -607,8 +602,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
 
             var resultado = target.GrabarContrato(oContrato);
@@ -673,8 +667,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI",
-                Ruca = new Ruca { Acopiador = "SI", Otros = "SI" }
+                Nosis = "SI"
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);

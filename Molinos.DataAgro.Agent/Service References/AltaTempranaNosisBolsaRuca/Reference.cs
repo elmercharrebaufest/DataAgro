@@ -62,15 +62,77 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
-    public partial class ZMPES5510 : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class ZMPES540 : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string aCOPIADORField;
+        private string dIRECTOField;
         
-        private string oTROSField;
+        private string pROV_PLAN_CANJEField;
+        
+        private string cONSIGNATARIOField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string ACOPIADOR {
+        public string DIRECTO {
+            get {
+                return this.dIRECTOField;
+            }
+            set {
+                this.dIRECTOField = value;
+                this.RaisePropertyChanged("DIRECTO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string PROV_PLAN_CANJE {
+            get {
+                return this.pROV_PLAN_CANJEField;
+            }
+            set {
+                this.pROV_PLAN_CANJEField = value;
+                this.RaisePropertyChanged("PROV_PLAN_CANJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string CONSIGNATARIO {
+            get {
+                return this.cONSIGNATARIOField;
+            }
+            set {
+                this.cONSIGNATARIOField = value;
+                this.RaisePropertyChanged("CONSIGNATARIO");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES5510 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private ZMPES540 aCOPIADORField;
+        
+        private ZMPES540 oTROSField;
+        
+        private string cORREDORField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public ZMPES540 ACOPIADOR {
             get {
                 return this.aCOPIADORField;
             }
@@ -82,13 +144,25 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string OTROS {
+        public ZMPES540 OTROS {
             get {
                 return this.oTROSField;
             }
             set {
                 this.oTROSField = value;
                 this.RaisePropertyChanged("OTROS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string CORREDOR {
+            get {
+                return this.cORREDORField;
+            }
+            set {
+                this.cORREDORField = value;
+                this.RaisePropertyChanged("CORREDOR");
             }
         }
         
@@ -116,11 +190,15 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         private string eX_CARTAField;
         
+        private string eX_CONSIGNATARIOField;
+        
         private string eX_FECHA_ACTUALIZACIONField;
         
         private string eX_MENSAJEField;
         
         private string eX_NOSISField;
+        
+        private string eX_PLAN_CANJEField;
         
         private ZMPES5510 eX_RUCAField;
         
@@ -162,6 +240,18 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string EX_CONSIGNATARIO {
+            get {
+                return this.eX_CONSIGNATARIOField;
+            }
+            set {
+                this.eX_CONSIGNATARIOField = value;
+                this.RaisePropertyChanged("EX_CONSIGNATARIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string EX_FECHA_ACTUALIZACION {
             get {
                 return this.eX_FECHA_ACTUALIZACIONField;
@@ -173,7 +263,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string EX_MENSAJE {
             get {
                 return this.eX_MENSAJEField;
@@ -185,7 +275,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string EX_NOSIS {
             get {
                 return this.eX_NOSISField;
@@ -197,7 +287,19 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public string EX_PLAN_CANJE {
+            get {
+                return this.eX_PLAN_CANJEField;
+            }
+            set {
+                this.eX_PLAN_CANJEField = value;
+                this.RaisePropertyChanged("EX_PLAN_CANJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public ZMPES5510 EX_RUCA {
             get {
                 return this.eX_RUCAField;

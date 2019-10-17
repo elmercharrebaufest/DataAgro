@@ -620,5 +620,13 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
+        public ActionResult ValidarProveedor(int proveedorId )
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ValidarProveedor(proveedorId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

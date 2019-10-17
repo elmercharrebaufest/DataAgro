@@ -229,19 +229,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                 }
 
-                if (oParam.ClasificacionId == 2 && alta.Ruca.Acopiador == "NO")
-                {
-                    oErrorMessages.Error("Clasificacion Acopiador", "No está habilitado en Ruca");
-                }
-
-                if (oParam.ClasificacionId == 3 && alta.Ruca.Otros == "NO")
-                {
-                    oErrorMessages.Error("Clasificacion Otros", "No está habilitado en Ruca");
-                }
-                if (alta.FechaActualizacion == "NO")
-                {
-                    oErrorMessages.Error("Fecha Actualizacion", "Falta fecha de actualización de legajo");
-                }
                 if (alta.AltaTemprana == "SI")
                 {
                     if (alta.Bolsa == "NO" && alta.Nosis == "NO")
@@ -1585,6 +1572,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = x.Id,
                 Descripcion = x.Descripcion
             });
+        }
+        public AltaTempranaNRCODto ValidarProveedor(int proveedorId)
+        {
+            var proveedor = repositorio.Obtener<Proveedor>(proveedorId);
+            return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);            
         }
     }
 }
