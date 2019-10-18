@@ -288,7 +288,7 @@ function InicializarElementos() {
         template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> - ' +
             'KG CTO: #: data.KilosContrato# ' +
             ' - KGS SIN PRECIO : #: data.ARecibirSinPrecio# - KGS SIN FIJAR : #: data.RecibidoSinFijar#' +
-            ' - KG PEND: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
+            ' - KILOS A FIJAR: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
             ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong></p>',
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
@@ -3034,11 +3034,11 @@ function ValidarCorredor(Id) {
 }
 function ValidarAlta() {
     if (altaTemprana) {
-        if ($("#consignatarioId").is(':checked') && altaTemprana.Consignatario) {
+        if ($("#consignatarioId").is(':checked') && altaTemprana.Consignatario == "NO") {
             MensInfo("El proveedor no está habilitado como Consignatario");
             return;
         }
-        if ($("#planCanjeId").is(':checked') && altaTemprana.PlanCanje) {
+        if ($("#planCanjeId").is(':checked') && altaTemprana.PlanCanje == "NO") {
             MensInfo("El proveedor no está habilitado como Proveedor Plan canje");
             return;
         }

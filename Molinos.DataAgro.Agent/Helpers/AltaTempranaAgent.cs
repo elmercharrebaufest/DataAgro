@@ -28,29 +28,29 @@ namespace Molinos.DataAgro.Agent
             {
                 return new AltaTempranaNRCODto
                 {
-                    AltaTemprana = "NO",
-                    Bolsa = "NO",
-                    Carta = "NO",
-                    FechaActualizacion = "NO",
-                    Nosis = "NO",
+                    AltaTemprana = "SI",
+                    Bolsa = "SI",
+                    Carta = "SI",
+                    FechaActualizacion = "SI",
+                    Nosis = "SI",
                     Ruca = new Ruca
                         {
                         Acopiador = new ValoresRuca
                         {
-                            Consignatario = "NO",
-                            Directo = "NO",
+                            Consignatario = "SI",
+                            Directo = "SI",
                             PlanCanje = "NO"
                         },
                         Otros = new ValoresRuca
                         {
-                            Consignatario = "NO",
-                            Directo = "NO",
-                            PlanCanje = "NO"
+                            Consignatario = "SI",
+                            Directo = "SI",
+                            PlanCanje = "SI"
                         },
                         Corredor = "NO"
                     },
-                    Consignatario = "NO",
-                    PlanCanje = "NO"
+                    Consignatario = "SI",
+                    PlanCanje = "SI"
                 };
             }
             else
