@@ -64,8 +64,16 @@ function InicializarCuposIndex() {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("flete-procedencia");
                 }
-            }
-            $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="tooltip"]').tooltip();
+                grid.tbody.find('tr').each(function () {
+                    var row = $(this);
+                    var dataItem = grid.dataItem(row);
+
+                    if (dataItem.CentroId !== 1) {
+                        row.find('td').eq(0).empty();
+                    }
+                });
+            }        
         },
         columns: [
             {selectable:true},
@@ -319,9 +327,14 @@ function botonBorrar(dataItem, icono) {
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 function botonRetransmitir(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
-        "'" + dataItem.CupoSap + "'" + 
-        ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    if (dataItem.CentroId == 1) {
+        return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
+            "'" + dataItem.CupoSap + "'" +
+            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    } else {
+        return '<div></div>';
+    }
+
 }
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
@@ -336,7 +349,7 @@ function retransmitirSelccionados() {
 
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if (selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7) {
+        if ((selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7) && selectedItem.CentroId == 1 ) {
             obj.push(selectedItem.CupoSap);
         }
     });

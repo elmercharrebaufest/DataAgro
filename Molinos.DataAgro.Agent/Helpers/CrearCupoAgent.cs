@@ -27,16 +27,14 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 var numeroSAP = repositorio.ObtenerMayor<Cupo,int>(x => x.CupoSap != null,x=>x.Id);
-                var numero ="0000";
-                if(numeroSAP != null)
-                {
-                    numero = numeroSAP.CupoSap.Substring(3, 4);
-                    numero = (int.Parse(numero) + 1).ToString().PadLeft(4, '0'); ;
-                }
+                
                 var listaCupos = new List<string>();
+                var random = new Random();
+
                 for (var i = 0; i < cantidadCupos; i++)
                 {
-                    var n = (int.Parse(numero) + 1+i).ToString().PadLeft(4, '0');
+                    int randomNumber = random.Next(0, 1000);
+                    var n = randomNumber.ToString().PadLeft(4, '0');
                     listaCupos.Add("MOL" + n + "/" + cupo.FechaIngreso.ToString("ddMMyyyy"));
                 }
                 return listaCupos;

@@ -950,8 +950,9 @@ function CrearObjetivo() {
     });
 }
 function CargarViewModel(datos) {
+    var campania = datos.camp.filter(camp => camp.CampañaId > 6);
     viewModel.set("materialCombo", datos.mat);
-    viewModel.set("campaniaCombo", datos.camp);
+    viewModel.set("campaniaCombo", campania);
 }
 function AgregarObjetivo() {
     var objetivo = {};

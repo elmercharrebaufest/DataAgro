@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Proveedor=cupo.Proveedor.RazonSocial,
                     Destinatario = cupo.Destinatario,
                     Centro = cupo.Centro.Descripcion,
+                    CentroId = cupo.CentroId,
                     Calidad = cupo.Calidad,
                     ZonaCupo = cupo.ZonaCupo.Descripcion,
                     FleteProcedencia = cupo.FleteProcedencia,
