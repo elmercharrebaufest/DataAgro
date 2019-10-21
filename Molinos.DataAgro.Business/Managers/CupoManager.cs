@@ -43,8 +43,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
                 var cuposConSap = new List<Cupo>();
-                
-                cupo.EstadoCupoId = 6;
+
+                cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1029" || cupo.Centro.CodigoSap == "1600" ? 6 : 8;
                 foreach (var cupoSap in listaCupos)
                 {
                     var nuevoCupo = (Cupo)cupo.Clone();
@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
                 if(listaCupos.Count< cantidadCupos)
                 {
-                    error.Error("CantidadCupos", "Se generaron "+listaCupos.Count+ " de "+ cantidadCupos + " cupos");
+                    error.Error("CantidadCuposSAP", "Se generaron "+listaCupos.Count+ " de "+ cantidadCupos + " cupos");
                 }
                 return error;
             }

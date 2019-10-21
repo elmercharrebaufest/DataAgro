@@ -101,13 +101,15 @@ function InicializarCuposIndex() {
                         EstadoCupo: "Arribado"
                     }, {
                         EstadoCupo: "Descargado"
-                        }, {
-                            EstadoCupo: "Anulado"
-                        }, {
-                            EstadoCupo: "Sin STOP"
-                        }, {
-                            EstadoCupo: "Error STOP"
-                        }]
+                    }, {
+                        EstadoCupo: "Anulado"
+                    }, {
+                        EstadoCupo: "Disponible"
+                    }, {
+                        EstadoCupo: "Sin STOP"
+                    }, {
+                        EstadoCupo: "Error STOP"
+                    }]
                 }, sortable: false, width: 200,
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
@@ -127,11 +129,14 @@ function InicializarCuposIndex() {
                     } else if (dataItem.EstadoCupoId == 6) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonBorrar(dataItem, 'fa-trash sto') +
-                            botonRetransmitir(dataItem, 'fa-mail-forward sto' );
+                            botonRetransmitir(dataItem, 'fa-mail-forward sto');
                     } else if (dataItem.EstadoCupoId == 7) {
-                        return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError +'"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                        return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError + '"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonBorrar(dataItem, 'fa-trash err') +
                             botonRetransmitir(dataItem, 'fa-mail-forward err');
+                    } else if (dataItem.EstadoCupoId == 8) {
+                        return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonBorrar(dataItem, 'fa-trash sto');
                     }
                 }
             }

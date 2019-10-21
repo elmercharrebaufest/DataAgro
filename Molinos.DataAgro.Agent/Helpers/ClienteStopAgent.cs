@@ -45,6 +45,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
+        private void LogError(Exception e)
+        {
+            if (string.IsNullOrEmpty(e.Message))
+            {
+                logger.Error(e.Message);
+                LogError(e.InnerException);
+            }
+        }
         private TokenStop CreateTokenAsync(string clave)
         {
             HttpClient client = new HttpClient();
@@ -62,8 +70,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                
-                logger.Error("Error generando Token: "+ e.Message);
+                LogError(e);
                 throw;
             }
         }
@@ -94,7 +101,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             cuitDestino = datosConfiguracion.CuitDestinoStop,
                             idCupoTerminal = cupo.CupoSap,
                             idTerminal = datosConfiguracion.TerminalStopId,
-                            fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss"),
+                            fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
                             codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
                             desvio = "N",
                             codGrano = cupo.Material.CodigoEspecie.Value
@@ -151,7 +158,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         cuitDestino = datosConfiguracion.CuitDestinoStop,
                         idCupoTerminal = cupo.CupoSap,
                         idTerminal = datosConfiguracion.TerminalStopId,
-                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss"),
+                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
                         codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
                         desvio = "N",
                         codGrano = cupo.Material.CodigoEspecie.Value
@@ -240,7 +247,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         idCupoEstado = 4,
                         estado = "B",
                         idTerminal = datosConfiguracion.TerminalStopId,
-                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss"),
+                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
                         codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
                         desvio = "N",
                         codGrano = cupo.Material.CodigoEspecie.Value

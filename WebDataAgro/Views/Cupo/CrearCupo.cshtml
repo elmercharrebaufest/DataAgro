@@ -16,7 +16,15 @@
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
-@if (!Html.ViewData.ModelState.IsValid)
+@if (Html.ViewData.ModelState.Any(x=>x.Key == "CantidadCuposSAP")) {
+    <script>
+        MensErr('@Html.ViewData.ModelState["CantidadCuposSAP"].Errors[0].ErrorMessage')
+        $(".modal").on("hidden.bs.modal", function () {
+    window.location.href = window.location.origin + "/Cupo/";
+            MSExecuteOnServer('/Cupo/Index');
+        });
+    </script>
+} else if(!Html.ViewData.ModelState.IsValid)
 {
 <div id="errorModal">
     <div class="alert alert-danger alert-dismissible" role="alert">

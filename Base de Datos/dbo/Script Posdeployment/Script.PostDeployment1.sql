@@ -170,3 +170,4 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Borrado') BEGIN ins
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Arribado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Arribado', 5); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Sin STOP', 6); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Error STOP', 7); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END

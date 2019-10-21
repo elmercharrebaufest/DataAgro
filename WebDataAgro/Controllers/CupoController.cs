@@ -84,7 +84,7 @@ namespace WebDataAgro.Controllers
                     {
                         if (ViewData.ModelState["Proveedor"].Errors.Count == 0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
                         {
-                            ModelState.AddModelError("Error", e.Message);
+                            ModelState.AddModelError(e.Source, e.Message);
                         }
                     }
                 }
