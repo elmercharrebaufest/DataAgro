@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             client.BaseAddress = new Uri(urlStop);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            logger.Debug("urlStop : " + client.BaseAddress.ToString());
             try
             {
                 HttpResponseMessage response = client.PostAsJsonAsync(
@@ -61,6 +62,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
+                
+                logger.Error("Error generando Token: "+ e.Message);
                 throw;
             }
         }
