@@ -9,9 +9,9 @@ namespace Molinos.DataAgro.Interfaces
     {
         TokenStop ObtenerToken(string clave);
         void CrearCupo(List<string> listaCupos);
-
         void TransmitirJobCupos();
         List<RespuestaCupoStop> ConsultarCuposDiarios();
         Resultado EliminarCupo(Cupo cupo);
+        void ModificarCupo(Cupo cupo);
     }
 }

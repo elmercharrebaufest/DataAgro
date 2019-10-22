@@ -1005,7 +1005,7 @@ function Finalizar(finalizarContratoFijacion) {
     if (result != null) {
         if (result.Errores != null) {
             if (ExistsErrorMessages(result.Errores)) {
-                MensErr("No se ha podido finalizar el contrato correctamente: " + result.Errores[0].Message);
+                MensErr(result.Errores[0].Message);
             } else {
                 recargarGrilla();
             }

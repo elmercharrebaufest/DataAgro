@@ -942,6 +942,7 @@
     <Content Include="Scripts\App\CopiarContrato.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
+    <Content Include="Scripts\App\CrearCupo.js" />
     <Content Include="Scripts\App\Cupo.js" />
     <Content Include="Scripts\App\detalleCorredor.js" />
     <Content Include="Scripts\App\firebase-suscribir.js" />

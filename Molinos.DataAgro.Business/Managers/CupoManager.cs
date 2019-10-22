@@ -14,21 +14,24 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-    public class CupoManager:ICupoManager
+    public class CupoManager : ICupoManager
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly ICrearCupoAgent crearCupoAgent;
         private readonly IEliminarCupoAgent eliminarCupoAgent;
         private readonly IClienteStopAgent clienteStopAgent;
+        private readonly IModificarCupoAgent modificarCupoAgent;
 
-        public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent, IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent)
+        public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
+            IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
             this.crearCupoAgent = crearCupoAgent;
             this.eliminarCupoAgent = eliminarCupoAgent;
             this.clienteStopAgent = clienteStopAgent;
+            this.modificarCupoAgent = modificarCupoAgent;
         }
         public Resultado GrabarCupo(Cupo cupo, int cantidadCupos)
         {
@@ -40,29 +43,47 @@ namespace Molinos.DataAgro.Business.Managers
                 cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
                 cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                 cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
-
-                var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
-                var cuposConSap = new List<Cupo>();
-
-                cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1029" || cupo.Centro.CodigoSap == "1600" ? 6 : 8;
-                foreach (var cupoSap in listaCupos)
+                if (cupo.Id==0)
                 {
-                    var nuevoCupo = (Cupo)cupo.Clone();
-                    nuevoCupo.CupoSap = cupoSap;
-                    cuposConSap.Add(nuevoCupo);
+                    var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
+                    var cuposConSap = new List<Cupo>();
+
+                    cupo.EstadoCupoId = 6;
+                    foreach (var cupoSap in listaCupos)
+                    {
+                        var nuevoCupo = (Cupo)cupo.Clone();
+                        nuevoCupo.CupoSap = cupoSap;
+                        cuposConSap.Add(nuevoCupo);
+                    }
+                    repositorio.AgregarTodos(cuposConSap);
+                    repositorio.GuardarCambios();
+                    return error;
                 }
-                repositorio.AgregarTodos(cuposConSap);
-                repositorio.GuardarCambios();
-                if(listaCupos.Count< cantidadCupos)
+                else
                 {
-                    error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de "+ cantidadCupos + " cupos solicitados");
+                    var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
+                    cupoSave.ProveedorId = cupo.ProveedorId;
+                    cupoSave.Calidad = cupo.Calidad;
+                    cupoSave.Observaciones = cupo.Observaciones;
+                    cupoSave.Destinatario = cupo.Destinatario;
+                    cupoSave.Fason = cupo.Fason;
+                    var res = modificarCupoAgent.Modificar(cupoSave);
+                    if(res != "Ok")
+                    {
+                        error.Error("SAP", $"Error al grabar en SAP: {res}");
+                    }
+                    if (cupoSave.CupoStop != null)
+                    {
+                        clienteStopAgent.ModificarCupo(cupoSave);
+                    }
+                    repositorio.GuardarCambios();
+                    return error;
                 }
-                return error;
             }
             catch(Exception e)
             {
                 logger.Error(e);
-                error.Errores.Add(new ErrorMessage(400,e.Message));
+                error.Errores.Add(new ErrorMessage(400, e.Message));
                 return error;
             }
         }
@@ -81,7 +102,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     error.Errores.Add(new ErrorMessage(400, "Proveedor con CUIT en estado No Operable"));
                 }
-            }                                   
+            }    
+            if(cupo.Id == 0 && cantidadCupos == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "La Cantidad no debe estar vacía"));
+            }
             if (cupo.MaterialId == 3 && (cupo.Calidad == ""|| cupo.Calidad == null))
             {
                 error.Errores.Add(new ErrorMessage(400, "La calidad no debe estar vacia para Soja"));
@@ -97,7 +122,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosCupos(request, equipo));
         }
-        public Resultado EliminarCupo(int id)
+        public Resultado EliminarCupo(int id, string comercial)
         {
             try
             {
@@ -112,7 +137,7 @@ namespace Molinos.DataAgro.Business.Managers
                         return nuevoResultado;
                     }
                 }
-                var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap);
+                var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap, comercial);
                 if (resultado == "OK")
                 {
                     cupoSap.EstadoCupoId = 4;
@@ -153,6 +178,27 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return clienteStopAgent.ConsultarCuposDiarios();
         }
-
+        public CupoDto ObtenerCupo(int id)
+        {
+            return repositorio.Obtener<Cupo, CupoDto>(x => x.Id == id, x=> new CupoDto
+            { 
+                Id= x.Id,
+                Calidad = x.Calidad,
+                Centro = x.Centro.Descripcion,
+                CentroId = x.CentroId,
+                ComercialId = x.ComercialId,
+                Destinatario = x.Destinatario,
+                Fason = x.Fason,
+                FleteProcedencia = x.FleteProcedencia,
+                FechaIngreso = x.FechaIngreso,
+                MaterialId = x.MaterialId,
+                Material = x.Material.Descripcion,
+                Observaciones = x.Observaciones,
+                ProveedorId = x.ProveedorId,
+                Proveedor = x.Proveedor.RazonSocial+ " (" + x.Proveedor.CUIT+ ")",
+                ZonaCupoId = x.ZonaCupoId,
+                ZonaCupo = x.ZonaCupo.Descripcion
+            });
+        }
     }
 }

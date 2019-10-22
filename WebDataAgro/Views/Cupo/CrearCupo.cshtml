@@ -9,10 +9,12 @@
 </script>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/Cupos")
+    <script src="~/Scripts/jquery.mask.js"></script>    
+    <script src="~/Scripts/App/CrearCupo.js"></script>
 }
-<script> fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
-    </script>
+<script>
+ fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
+</script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
@@ -26,25 +28,26 @@
     </script>
 } else if(!Html.ViewData.ModelState.IsValid)
 {
-<div id="errorModal">
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        @Html.ValidationSummary()
-    </div>
-</div>}
+    <div id="errorModal">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @Html.ValidationSummary()
+        </div>
+    </div>}
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken();
     <div id="CrearCupo" class="container">
 
         <br />
+        @Html.HiddenFor(x => x.Id)
         <div class="row">
             <div>
                 <div class="col-sm-2" id="proveedorLabelId">
                     <label id="proveedorLabel">Proveedor</label>
                 </div>
                 <div class="col-sm-4">
-                    @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder="Buscar por CUIT, razón social", @id="buscadorProveedor",@class="w100"})
+                    @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "w100" })
                     @Html.HiddenFor(x => x.Proveedor)
                 </div>
             </div>
@@ -53,7 +56,8 @@
                     <label>Planta</label>
                 </div>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(x => x.Planta, new SelectList(ViewBag.Centro, "Value", "Text"),  new { @class = "form-control", @id = "planta" })
+                    @Html.DropDownListFor(x=>x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
+                    @Html.HiddenFor(x=>x.PlantaId)
                 </div>
             </div>
         </div>
@@ -65,6 +69,7 @@
                 <div class="col-sm-4">
                     <div>
                         @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
+                        @Html.HiddenFor(x => x.MaterialId)
                     </div>
                 </div>
             </div>
@@ -74,7 +79,8 @@
                 </div>
                 <div class="col-sm-4">
                     <span id="fechaDiv">
-                        @Html.TextBoxFor(x => x.FechaEntrega,"{0:yyyy-MM-dd}", new { @class = "w100" })
+                        @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100",@id="fechaEntrega" })
+                        @Html.HiddenFor(x => x.FechaEntrega)
                     </span>
                 </div>
             </div>
@@ -85,17 +91,18 @@
                     <label>Cantidad</label>
                 </div>
                 <div class="col-sm-4 ">
-                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder="SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
+                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
                 </div>
             </div>
             <div>
                 <div class="col-sm-2 ">
                     <label>Zona</label>
                 </div>
-                
+
                 <div class="col-sm-4">
                     <div>
-                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control",@id="zona" })
+                        @Html.HiddenFor(x => x.ZonaId)
                     </div>
                 </div>
             </div>
@@ -105,16 +112,17 @@
                 <div class="col-sm-2 noRightPadding">
                     <label>Flete procedencia/Acarreo </label>
                 </div>
-                    <div class="col-sm-4 ">
-                        @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
-                    </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+                    @Html.HiddenFor(x => x.FleteAcarreo)
+                </div>
             </div>
             <div id="calidadDiv" hidden>
                 <div class="col-sm-2">
                     <label>Calidad</label>
                 </div>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(x => x.Calidad, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control", @id = "calidad" })
+                    @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control", @id = "calidad" })
                 </div>
             </div>
         </div>
@@ -134,8 +142,8 @@
             </div>
             <div class="col-sm-4">
                 <span style="height:34px"></span>
-                @Html.CheckBoxFor(x => x.Fason, new { @id = "fason" })
-                @Html.TextBoxFor(x => x.CUIT, new { @class = "w95", @style = "display:none;", @id = "cuit" })
+                @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
+                @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
             </div>
         </div>
     </div>
@@ -143,10 +151,7 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-4" style="padding-left: 67px;">
             <input id="guardarBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar Cupo" />
-            @Html.ActionLink("Volver","Index",null ,new { @class = "formulario-footer-guardar-contrato k-button k-button-icontext" })
-            @*<span class="formulario-footer-cancelar k-button k-button-icontext" type="button">
-                Volver
-            </span>*@
+            @Html.ActionLink("Volver", "Index", null, new { @class = "formulario-footer-guardar-contrato k-button k-button-icontext" })
         </div>
     </div>
 }

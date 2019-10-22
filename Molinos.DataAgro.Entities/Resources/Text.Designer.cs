@@ -241,15 +241,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La Cantidad no debe estar vacía.
-        /// </summary>
-        public static string Error_CantidadCupoRequerido {
-            get {
-                return ResourceManager.GetString("Error_CantidadCupoRequerido", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to El Centro no debe estar vacío.
         /// </summary>
         public static string Error_CentroRequerido {

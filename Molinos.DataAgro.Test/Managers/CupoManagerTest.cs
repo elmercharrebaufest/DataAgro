@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ICrearCupoAgent> crearCupoAgentMock;
         private Mock<IEliminarCupoAgent> eliminarCupoAgentMock;
         private Mock<IClienteStopAgent> clienteStopMock;
+        private Mock<IModificarCupoAgent> modificarCupoAgentMock;
         [SetUp]
         public void SetUp()
         {
@@ -38,7 +39,10 @@ namespace Molinos.DataAgro.Test.Managers
             crearCupoAgentMock = new Mock<ICrearCupoAgent>();
             eliminarCupoAgentMock = new Mock<IEliminarCupoAgent>();
             clienteStopMock = new Mock<IClienteStopAgent>();
-            target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object, eliminarCupoAgentMock.Object, clienteStopMock.Object);
+            modificarCupoAgentMock = new Mock<IModificarCupoAgent>();
+            target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object, 
+                eliminarCupoAgentMock.Object, clienteStopMock.Object,
+                modificarCupoAgentMock.Object);
         }
 
         [Test]
@@ -83,15 +87,15 @@ namespace Molinos.DataAgro.Test.Managers
         public void EliminarCupoTest()
         {
             repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { CupoSap = "a",CupoStop = 1, EstadoCupoId=1 });
-            eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>())).Returns("OK");
+            eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             repositorioMock.Setup(x => x.GuardarCambios());
 
-            var result = target.EliminarCupo(1);
+            var result = target.EliminarCupo(1,"a");
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
             clienteStopMock.Verify(x => x.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-            eliminarCupoAgentMock.Verify(x => x.Eliminar(It.IsAny<string>()), Times.Once);
+            eliminarCupoAgentMock.Verify(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.IsFalse(result.HayError);
         }
     }

@@ -29,10 +29,10 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.repositorio = repositorio;
         }
         public TokenStop ObtenerToken(string clave)
-        {           
+        {
             try
             {
-               
+
                 // Create a new token
                 logger.Debug($"Gestionando Token...");
                 var token = CreateTokenAsync(clave);
@@ -234,7 +234,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
                 var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
-                if (estado == 1 )
+                if (estado == 1)
                 {
                     var cupoStop = new ModificarCupo
                     {
@@ -242,20 +242,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                         cuitDestinatario = cupo.Destinatario,
                         cuitDestino = datosConfiguracion.CuitDestinoStop,
                         idCupoTerminal = cupo.CupoSap,
-                        idCupo = cupo.CupoStop.Value,
-                        idCupoEstado = 4,
-                        estado = "B",
                         idTerminal = datosConfiguracion.TerminalStopId,
                         fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
                         codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
                         desvio = "N",
-                        codGrano = cupo.Material.CodigoEspecie.Value
+                        codGrano = cupo.Material.CodigoEspecie.Value,
+                        estado = "A",
+                        idCupo = cupo.CupoStop.Value,
+                        idCupoEstado=cupo.EstadoCupoId
                     };
                     var obj = JsonConvert.SerializeObject(cupoStop);
                     HttpRequestMessage request = new HttpRequestMessage
                     {
                         Content = new StringContent(obj, Encoding.UTF8, "application/json"),
-                        Method = HttpMethod.Delete,
+                        Method = HttpMethod.Put,
                         RequestUri = new Uri($"{urlStop}v1.1.0/turnos/")
                     };
 
@@ -274,7 +274,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                         else
                         {
-                            resultado.Error("", "Error al eliminar de STOP");
+                            resultado.Error("", "Error al Modificar en STOP");
                             return resultado;
                         }
                     }
@@ -301,7 +301,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw e;
             }
         }
-
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
             try
@@ -362,6 +361,64 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 logger.Error(e.Message);
                 throw;
+            }
+        }
+        public void ModificarCupo(Cupo cupo)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(urlStop);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+            var token = ObtenerToken(datosConfiguracion.ClaveStop);
+
+            var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
+            var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
+            if (estado == 1)
+            {
+                try
+                {
+                    var cupoStop = new CupoStop
+                    {
+                        token = token.Data,
+                        cuitDestinatario = cupo.Destinatario,
+                        cuitDestino = datosConfiguracion.CuitDestinoStop,
+                        idCupoTerminal = cupo.CupoSap,
+                        idTerminal = datosConfiguracion.TerminalStopId,
+                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaIngreso.ToString("HH:mm:ss"),
+                        codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
+                        desvio = "N",
+                        codGrano = cupo.Material.CodigoEspecie.Value
+                    };
+                    HttpResponseMessage response = client.PostAsJsonAsync(
+                            $"v1.1.0/turnos/{cupo.CupoStop}", cupoStop).Result;
+                    response.EnsureSuccessStatusCode();
+                    var res = response.Content.ReadAsAsync<dynamic>().Result;
+                    var jObject = JObject.Parse(res.ToString());
+
+                    ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                    if (!respuesta.isError)
+                    {
+                        RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
+                        logger.Debug(model.ToJson());
+                    }
+                    else
+                    {
+                        ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                        cupo.ErrorStop = error.userMessage;
+                        cupo.EstadoCupoId = 7;
+                        logger.Debug(error.ToJson());
+                        throw new Exception("Cupo Grabado en SAP, error Stop: " + error.userMessage);
+                    }
+
+                    repositorio.GuardarCambios();
+
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e.Message);
+                    throw;
+                }
             }
         }
     }

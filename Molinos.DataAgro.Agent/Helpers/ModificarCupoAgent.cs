@@ -1,5 +1,5 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent.AnularCupo;
+using Molinos.DataAgro.Agent.ModificarCupos;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class EliminarCupoAgent:IEliminarCupoAgent
+    public class ModificarCupoAgent : IModificarCupoAgent
     {
-        public EliminarCupoAgent(ILogger logger, IRepositorio repositorio)
+        public ModificarCupoAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -22,56 +22,53 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        public string Eliminar(string cupoSap, string comercial)
+        public string Modificar(Cupo cupo)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                try
-                {
-                    if (repositorio.Existe<Cupo>(x=>x.CupoSap == cupoSap))
-                    {
-                        return "OK";
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                }
-                catch (Exception e)
-                {
-                    logger.Error("Error comunicacion SAP", e);
-                    throw e;
-                }
+                return "Ok";
             }
             else
             {
                 try
                 {
-                    var agent = new SI_ZMPWS_DATAAGRO_ANULAR_CUPOSClient();
+                    var agent = new SI_ZMPWS_DATAAGRO_MODIFICAR_CUPOClient();
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-
-                    var rq = new Z_MPRFC_ANULAR_CUPOS
+                    var corredor = repositorio.Existe<CorredorProveedor>(x => x.CorredorId == cupo.ProveedorId) ? "C" : "00";
+                    var rq = new Z_MPRFC_MODIFICAR_CUPO
                     {
-                        IM_CODIGO = cupoSap,
-                        IM_COMERCIAL = comercial
+                        IM_COMERCIAL = cupo.Comercial.IdActiveDirectory,
+                        IM_CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : "",
+                        IM_DESTINATARIO = cupo.Destinatario,
+                        IM_OBSERVACIONES = cupo.Observaciones,
+                        IM_PROVEEDOR= corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
+                        IM_DESCPROV = cupo.Proveedor.RazonSocial,
+                        IM_CODIGO = cupo.CupoSap
                     };
 
-                    logger.Debug(rq.ToXml());
                     var logId = repositorio.Agregar(new Log
                     {
                         Fecha = DateTime.Now,
                         Xml = rq.ToXml()
                     });
                     repositorio.GuardarCambios();
+                    logger.Debug(rq.ToXml());
 
-                    var devolucion = agent.SI_ZMPWS_DATAAGRO_ANULAR_CUPOS(rq);
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_MODIFICAR_CUPO(rq);
+
                     logger.Debug(devolucion.ToXml());
-
                     var log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += devolucion.ToXml();
                     repositorio.GuardarCambios();
+                    logger.Debug("Guardado en la base");
+
+                    if (devolucion.EX_MENSAJE != "Ok")
+                    {
+                        throw new Exception(devolucion.EX_MENSAJE);
+                    }
+                    logger.Debug("Sin Error");
 
                     return devolucion.EX_MENSAJE;
                 }

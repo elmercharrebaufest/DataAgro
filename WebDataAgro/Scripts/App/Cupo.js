@@ -12,10 +12,8 @@ var zonaSeleccionada;
             }
         });
 
-        InicializarCargaCupos();
         $.unblockUI();
-        checkFason();
-        checkSoja();
+       
         InicializarCuposIndex();
     });
 
@@ -117,6 +115,7 @@ function InicializarCuposIndex() {
                 template: function (dataItem) {
                     if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonModificar(dataItem, 'fa-pencil ctg') +
                             botonBorrar(dataItem, 'fa-trash ctg');
                     } else if (dataItem.EstadoCupoId == 2) {
                         return '<div class="status activado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -128,6 +127,7 @@ function InicializarCuposIndex() {
                         return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 6) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonModificar(dataItem, 'fa-pencil sto') +
                             botonBorrar(dataItem, 'fa-trash sto') +
                             botonRetransmitir(dataItem, 'fa-mail-forward sto');
                     } else if (dataItem.EstadoCupoId == 7) {
@@ -341,6 +341,11 @@ function botonRetransmitir(dataItem, icono) {
     }
 
 }
+function botonModificar(dataItem, icono) {
+    return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
+        "'" + dataItem.Id + "'" +
+        ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+}
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
     $("#cupoBorrar").val(id);   
@@ -391,89 +396,6 @@ function recargarGrilla() {
     $('#gridCupo').data('kendoGrid').dataSource.read();
 }
 
-function InicializarCargaCupos() {
-    $("#buscadorProveedor").click(function () {
-        $("#buscadorProveedor").data("kendoAutoComplete").value("");
-        $("#Proveedor").val("");    
-        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
-    });
-
-    $("#buscadorProveedor").kendoAutoComplete({
-        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "Filtro",
-        dataValueField: "Id",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#buscadorProveedor").val().split('|').length > 1) {
-                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-                
-            }
-        },
-        select: function (e) {
-            $("#Proveedor").val(e.dataItem.Id);
-        },
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/Cupo/BuscarProveedor"
-                },
-                parameterMap: function (data, type) {
-                    return { filtroProveedor: $('#buscadorProveedor').val() };
-                }
-            }
-
-        },
-        filtering: function (e) {
-            if (!e.filter.value) {
-                e.preventDefault();
-            }
-        }
-    });
-
-    $("#FechaEntrega").kendoDatePicker({
-
-        //format: "dd-MM-yyyy",
-        //parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
-    });
-
-    $("#cantidad").kendoNumericTextBox({
-        optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
-        culture: "es-AR",
-        format: "n0",
-        spinners: false,
-        min: 0        
-    });
-    $("#cuit").mask("00000000000");
-    $("#fason").click(function () {
-        checkFason();
-    });
-    $("#material").change(function () {
-        checkSoja();
-    });
-    
-}
-function checkFason() {
-    if ($("#fason").is(':checked')) {
-        $("#cuit").show();
-    }
-    else {
-        $("#cuit").hide("hidden");
-        $("#cuit").val("");
-    }
-}
-function checkSoja() {
-    if ($("#material").val() !== "3") {
-        $("#calidadDiv").hide();
-        $("#calidad").val("");
-    } else {
-        $("#calidadDiv").show();
-    }
+function ModificarCupo(cupoId) {
+    window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + cupoId;
 }

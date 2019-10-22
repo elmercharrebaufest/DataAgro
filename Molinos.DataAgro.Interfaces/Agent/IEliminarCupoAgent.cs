@@ -4,6 +4,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IEliminarCupoAgent
     {
-        string Eliminar(string cupoSap);
+        string Eliminar(string cupoSap, string comercial);
     }
 }

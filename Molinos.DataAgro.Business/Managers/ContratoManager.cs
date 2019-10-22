@@ -284,7 +284,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
                 var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
                 var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
-                if (result != "OK")
+                if (result.ToUpper() != "OK".ToUpper())
                 {
                     oErrorMessages.Error("Capacidad Productiva", result);
                 }
@@ -817,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (oContratoSave.Fecha < diaAnterior)
                 {
-                    oEntityErrors.Error("", "Fecha excedida para Finalizar");
+                    oEntityErrors.Error("", "Fecha del contrato debe ser la de hoy o día hábil anterior");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
                     return oEntityErrors;

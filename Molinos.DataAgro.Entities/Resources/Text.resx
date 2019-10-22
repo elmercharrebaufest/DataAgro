@@ -177,9 +177,6 @@
   <data name="DiasPesificado" xml:space="preserve">
     <value>Días Pesificado</value>
   </data>
-  <data name="Error_CantidadCupoRequerido" xml:space="preserve">
-    <value>La Cantidad no debe estar vacía</value>
-  </data>
   <data name="Error_CentroRequerido" xml:space="preserve">
     <value>El Centro no debe estar vacío</value>
   </data>

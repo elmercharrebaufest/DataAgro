@@ -8,7 +8,7 @@
       <xsd:element name="Z_MPRFC_ANULAR_CUPOSResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_MENSAJE" type="xsd:string" />
+            <xsd:element name="EX_MENSAJE" type="rfc:string" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -16,9 +16,18 @@
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="IM_CODIGO" type="rfc:char18" />
+            <xsd:element name="IM_COMERCIAL" type="rfc:char12" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="string">
+        <xsd:restriction base="xsd:string" />
+      </xsd:simpleType>
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />

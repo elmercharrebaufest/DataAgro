@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ClienteStopAgent.cs" />
+    <Compile Include="Helpers\ModificarCupoAgent.cs" />
     <Compile Include="Helpers\EliminarCupoAgent.cs" />
     <Compile Include="Helpers\CrearCupoAgent.cs" />
     <Compile Include="Helpers\AltaTempranaAgent.cs" />

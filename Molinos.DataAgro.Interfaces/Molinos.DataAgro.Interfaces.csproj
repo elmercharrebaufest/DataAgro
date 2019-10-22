@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />
+    <Compile Include="Agent\IModificarCupoAgent.cs" />
     <Compile Include="Agent\IClienteStopAgent.cs" />
     <Compile Include="Agent\IEliminarCupoAgent.cs" />
     <Compile Include="Agent\ICrearCupoAgent.cs" />

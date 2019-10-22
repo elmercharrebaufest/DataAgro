@@ -50,12 +50,37 @@ namespace WebDataAgro.Controllers
             ViewBag.comercialId = GlobalVariables.ComercialId;
             return View();
         }
-        public ActionResult CrearCupo()
+
+        public ActionResult CrearCupo(int? id)
         {
             CargarViewBag();
-            int zona;
-            int.TryParse(ViewBag.ZonaSeleccionada, out zona);
-            return View(new CupoModel() {CantidadCupos= null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date});
+            if (id == null)
+            {
+                int zona;
+                int.TryParse(ViewBag.ZonaSeleccionada, out zona);
+                return View(new CupoModel() { CantidadCupos = null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date });
+            }
+            else
+            {
+                var cupo = cupoManager.ObtenerCupo(id.Value);
+                var cupoModel = new CupoModel
+                {
+                    Id = cupo.Id,
+                    CalidadId= cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
+                    CantidadCupos = null,
+                    FasonId = cupo.Fason ?? false,
+                    FechaEntrega = cupo.FechaIngreso,
+                    FleteAcarreo = cupo.FleteProcedencia?? false,
+                    MaterialId = cupo.MaterialId,
+                    ProveedorDescripcion = cupo.Proveedor,
+                    Proveedor = cupo.ProveedorId,
+                    Observacion = cupo.Observaciones,
+                    ZonaId = cupo.ZonaCupoId,
+                    PlantaId = cupo.CentroId,
+                    CuitId = cupo.Destinatario
+                };
+                return View(cupoModel);
+            }
         }
         
         [HttpPost]
@@ -147,16 +172,17 @@ namespace WebDataAgro.Controllers
         {
             var entidad = new Cupo
             {
+                Id = cupo.Id,
                 ProveedorId = cupo.Proveedor,
                 MaterialId = cupo.MaterialId,
                 FechaIngreso = cupo.FechaEntrega,
-                CentroId = cupo.Planta,
+                CentroId = cupo.PlantaId,
                 FleteProcedencia = cupo.FleteAcarreo,
                 ZonaCupoId = cupo.ZonaId,
-                Calidad = cupo.Calidad == 1 ? "Camara" : cupo.Calidad == 2 ? "Fabrica" : "",
+                Calidad = cupo.CalidadId == 1 ? "Camara" : cupo.CalidadId == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,
-                Fason = cupo.Fason,
-                Destinatario = cupo.CUIT ?? "30715118773",
+                Fason = cupo.FasonId,
+                Destinatario = cupo.CuitId ?? "30715118773",
                 ComercialId = GlobalVariables.ComercialId,
                 FechaGeneracion = DateTime.Now
             };
@@ -170,7 +196,7 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult EliminarCupo(int id)
         {
-            var model = cupoManager.EliminarCupo(id);
+            var model = cupoManager.EliminarCupo(id, GlobalVariables.IdActiveDirectory);
             return Json(model);
         }
         public ActionResult ListarProveedor(string text = "")

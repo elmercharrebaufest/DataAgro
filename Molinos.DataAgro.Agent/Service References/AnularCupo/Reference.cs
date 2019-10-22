@@ -34,6 +34,8 @@ namespace Molinos.DataAgro.Agent.AnularCupo {
         
         private string iM_CODIGOField;
         
+        private string iM_COMERCIALField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string IM_CODIGO {
@@ -43,6 +45,18 @@ namespace Molinos.DataAgro.Agent.AnularCupo {
             set {
                 this.iM_CODIGOField = value;
                 this.RaisePropertyChanged("IM_CODIGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string IM_COMERCIAL {
+            get {
+                return this.iM_COMERCIALField;
+            }
+            set {
+                this.iM_COMERCIALField = value;
+                this.RaisePropertyChanged("IM_COMERCIAL");
             }
         }
         
