@@ -18,7 +18,7 @@
 }
 @if (Html.ViewData.ModelState.Any(x=>x.Key == "CantidadCuposSAP")) {
     <script>
-        MensErr('@Html.ViewData.ModelState["CantidadCuposSAP"].Errors[0].ErrorMessage')
+        MensInfo('@Html.ViewData.ModelState["CantidadCuposSAP"].Errors[0].ErrorMessage')
         $(".modal").on("hidden.bs.modal", function () {
     window.location.href = window.location.origin + "/Cupo/";
             MSExecuteOnServer('/Cupo/Index');

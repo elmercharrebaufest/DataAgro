@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
                 if(listaCupos.Count< cantidadCupos)
                 {
-                    error.Error("CantidadCuposSAP", "Se generaron "+listaCupos.Count+ " de "+ cantidadCupos + " cupos");
+                    error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de "+ cantidadCupos + " cupos solicitados");
                 }
                 return error;
             }
@@ -102,12 +102,16 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var nuevoResultado = new Resultado();
-                var stop = clienteStopAgent.EliminarCupo(id);
-                if (stop.HayError)
-                {
-                    return stop;
-                }
+                
                 var cupoSap = repositorio.Obtener<Cupo>(id);
+                if (cupoSap.EstadoCupoId == 1)
+                {
+                    nuevoResultado = clienteStopAgent.EliminarCupo(cupoSap);
+                    if (nuevoResultado.HayError)
+                    {
+                        return nuevoResultado;
+                    }
+                }
                 var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap);
                 if (resultado == "OK")
                 {

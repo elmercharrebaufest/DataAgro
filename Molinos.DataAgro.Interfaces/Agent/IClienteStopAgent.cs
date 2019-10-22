@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,6 @@ namespace Molinos.DataAgro.Interfaces
 
         void TransmitirJobCupos();
         List<RespuestaCupoStop> ConsultarCuposDiarios();
-        Resultado EliminarCupo(int id);
+        Resultado EliminarCupo(Cupo cupo);
     }
 }

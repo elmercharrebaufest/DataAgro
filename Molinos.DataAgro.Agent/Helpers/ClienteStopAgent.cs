@@ -221,7 +221,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public Resultado EliminarCupo(int id)
+        public Resultado EliminarCupo(Cupo cupo)
         {
             try
             {
@@ -230,7 +230,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
-                var cupo = repositorio.Obtener<Cupo>(id);
                 var token = ObtenerToken(datosConfiguracion.ClaveStop);
 
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
