@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
                     var cuposConSap = new List<Cupo>();
 
-                    cupo.EstadoCupoId = 6;
+                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
                     foreach (var cupoSap in listaCupos)
                     {
                         var nuevoCupo = (Cupo)cupo.Clone();
