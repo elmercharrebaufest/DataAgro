@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Agent
         public List<DateTime> ObtenerDiasHabiles()
         {
             var fecha = new List<DateTime>();
-            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month - 1); i++)
             {
                 DateTime.TryParse(i.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), out DateTime dia);
                 if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x=>x.Feriado).Contains(dia))
@@ -26,8 +26,14 @@ namespace Molinos.DataAgro.Agent
                     fecha.Add(dia);
                 }
             }
-
-
+            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                DateTime.TryParse(i.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), out DateTime dia);
+                if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x => x.Feriado).Contains(dia))
+                {
+                    fecha.Add(dia);
+                }
+            }
             return fecha;
         }
 

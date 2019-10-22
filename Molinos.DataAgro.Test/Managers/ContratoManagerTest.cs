@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IConfiguracionManager> configuracionManagermock;
         private Mock<IAltaTempranaAgent> altaTempranaAgentMock;
         private Mock<ICapacidadProductivaAgent> capacidadProductivaAgentMock;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -68,6 +69,7 @@ namespace Molinos.DataAgro.Test.Managers
             configuracionManagermock = new Mock<IConfiguracionManager>();
             altaTempranaAgentMock = new Mock<IAltaTempranaAgent>();
             capacidadProductivaAgentMock = new Mock<ICapacidadProductivaAgent>();
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new ContratoManager(logger.Object, repositorioMock.Object,
@@ -82,7 +84,8 @@ namespace Molinos.DataAgro.Test.Managers
                 eliminarContratoAgentMock.Object,
                 configuracionManagermock.Object,
                 capacidadProductivaAgentMock.Object,
-                altaTempranaAgentMock.Object);
+                altaTempranaAgentMock.Object,
+                diasHabilesAgentMock.Object);
         }
 
         [Test]
@@ -855,6 +858,7 @@ namespace Molinos.DataAgro.Test.Managers
                 DestinoId = 1,
                 LocalidadId = 1,
                 ProvinciaId = 1,
+                Fecha = DateTime.Now,
                 FechaEntrega = DateTime.Now,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
@@ -867,6 +871,16 @@ namespace Molinos.DataAgro.Test.Managers
                 EstadoId = (int)EnumEstadoContrato.Confirmado,
                 Comercial = new Comercial { ComercialId = 1 }
             };
+            var diasHabiles = new List<DateTime>();
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
@@ -897,6 +911,7 @@ namespace Molinos.DataAgro.Test.Managers
                 DestinoId = 1,
                 LocalidadId = 1,
                 ProvinciaId = 1,
+                Fecha = DateTime.Now,
                 FechaEntrega = DateTime.Now,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
@@ -909,7 +924,16 @@ namespace Molinos.DataAgro.Test.Managers
                 EstadoId = (int)EnumEstadoContrato.Confirmado,
                 Comercial = new Comercial { ComercialId = 1 }
             };
-
+            var diasHabiles = new List<DateTime>();
+            for(var i =1; i<= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
             relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
@@ -917,7 +941,6 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } });
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>() { 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { Id = 1, ComercialId = 1, Key = "ala" } });
-
 
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
@@ -967,8 +990,19 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
                 EstadoId = (int)EnumEstadoContrato.Confirmado,
-                Comercial = new Comercial { ComercialId = 1 }
+                Comercial = new Comercial { ComercialId = 1 },
+                Fecha = DateTime.Now
             };
+            var diasHabiles = new List<DateTime>();
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
 
@@ -1232,8 +1266,20 @@ namespace Molinos.DataAgro.Test.Managers
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
-                EstadoId = (int)EnumEstadoContrato.Confirmado
+                EstadoId = (int)EnumEstadoContrato.Confirmado,
+                Fecha = DateTime.Now
             };
+            var diasHabiles = new List<DateTime>();
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
+            {
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+            }
+            diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
+
 
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);

@@ -44,6 +44,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IConfiguracionManager configuracionManager;
         private readonly ICapacidadProductivaAgent capacidadProductiva;
         private readonly IAltaTempranaAgent altaTempranaAgent;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -57,7 +58,8 @@ namespace Molinos.DataAgro.Business.Managers
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager, 
-            ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent)
+            ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
+            IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -77,6 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oEliminarContratoAgent = oEliminarContratoAgent;
             this.configuracionManager = configuracionManager;
             this.altaTempranaAgent = altaTempranaAgent;
+            this.diasHabilesAgent = diasHabilesAgent;
             this.capacidadProductiva = capacidadProductiva;
         }
 
@@ -220,6 +223,12 @@ namespace Molinos.DataAgro.Business.Managers
             var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
             if (string.IsNullOrEmpty(alta.Mensaje))
             {
+                if (oParam.Consignatario.HasValue&& oParam.Consignatario.Value&& alta.Consignatario == "NO") {
+                    oErrorMessages.Error("Consignatario","El proveedor no está habilitado como Consignatario");                    
+                }
+                if (oParam.PlanCanje.HasValue && oParam.PlanCanje.Value && alta.PlanCanje == "NO") {
+                    oErrorMessages.Error("PlanCanje","El proveedor no está habilitado como Proveedor Plan canje");
+                }
                 if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
                 {
                     oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
@@ -794,9 +803,25 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-
+            
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
-            {                
+            {
+                var diaAnterior = new DateTime();
+                var diasHabiles = diasHabilesAgent.ObtenerDiasHabiles();                
+                for (var i = 1; i < diasHabiles.Count; i++) {
+                    if (diasHabiles.Contains(DateTime.Now.Date.AddDays(-i)))
+                    {
+                        diaAnterior = DateTime.Now.Date.AddDays(-i);
+                        break;
+                    }
+                }
+                if (oContratoSave.Fecha < diaAnterior)
+                {
+                    oEntityErrors.Error("", "Fecha excedida para Finalizar");
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
+                    repositorio.GuardarCambios();
+                    return oEntityErrors;
+                }
                 try
                 {
                     var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);

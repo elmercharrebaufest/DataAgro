@@ -3034,14 +3034,7 @@ function ValidarCorredor(Id) {
 }
 function ValidarAlta() {
     if (altaTemprana) {
-        if ($("#consignatarioId").is(':checked') && altaTemprana.Consignatario == "NO") {
-            MensInfo("El proveedor no está habilitado como Consignatario");
-            return;
-        }
-        if ($("#planCanjeId").is(':checked') && altaTemprana.PlanCanje == "NO") {
-            MensInfo("El proveedor no está habilitado como Proveedor Plan canje");
-            return;
-        }
+       
         if ($("#clasificacion").val() == 2 &&
             (($("#planCanjeId").is(':checked') && altaTemprana.Ruca.Acopiador.PlanCanje == "NO") ||
                 ($("#consignatarioId").is(':checked') && altaTemprana.Ruca.Acopiador.Consignatario == "NO") ||
