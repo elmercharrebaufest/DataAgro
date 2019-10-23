@@ -387,8 +387,7 @@ function ObtenerDatosModalBorrado() {
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
-    else {
-        MensInfo("Borrado Exitoso");
+    else {        
         recargarGrilla();
     }
 }

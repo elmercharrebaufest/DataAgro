@@ -56,7 +56,11 @@ namespace Molinos.DataAgro.Business.Managers
                         cuposConSap.Add(nuevoCupo);
                     }
                     repositorio.AgregarTodos(cuposConSap);
-                    repositorio.GuardarCambios();
+                    repositorio.GuardarCambios(); 
+                    if (listaCupos.Count < cantidadCupos)
+                    {
+                        error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + cantidadCupos + " cupos solicitados");
+                    }
                     return error;
                 }
                 else
