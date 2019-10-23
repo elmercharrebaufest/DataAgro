@@ -67,6 +67,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
                     cupoSave.ProveedorId = cupo.ProveedorId;
+                    cupoSave.Proveedor = cupo.Proveedor;
                     cupoSave.Calidad = cupo.Calidad;
                     cupoSave.Observaciones = cupo.Observaciones;
                     cupoSave.Destinatario = cupo.Destinatario;

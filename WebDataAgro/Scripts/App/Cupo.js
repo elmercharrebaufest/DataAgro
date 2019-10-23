@@ -136,6 +136,7 @@ function InicializarCuposIndex() {
                             botonRetransmitir(dataItem, 'fa-mail-forward err');
                     } else if (dataItem.EstadoCupoId == 8) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonModificar(dataItem, 'fa-pencil sto') +
                             botonBorrar(dataItem, 'fa-trash sto');
                     }
                 }
@@ -326,7 +327,7 @@ function InicializarCuposIndex() {
     });
 }
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
+    return '<button data-toggle="tooltip" title="Anular" onclick="ModalBorrar(' +
         "'" + dataItem.Id + "'" + ',' +
         "'" + dataItem.CupoSap + "'" + ',' +
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
