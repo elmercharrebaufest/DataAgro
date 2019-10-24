@@ -1001,7 +1001,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecialId = cal.CalidadEspecialId,
                 Valor = cal.Valor,
                 PorcentajeDesde = cal.PorcentajeDesde,
-                PorcentajeHasta = cal.PorcentajeHasta
+                PorcentajeHasta = cal.PorcentajeHasta,                
             },
             x => x.ContratoId == contratoId);
         }

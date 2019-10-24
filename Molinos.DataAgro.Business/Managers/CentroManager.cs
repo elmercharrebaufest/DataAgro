@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Business
 
         public CentroDto TraerCentro(int id)
         {
-            return repositorio.Obtener<Centro, CentroDto>(x => x.Id == id, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion}) ?? new CentroDto();
+            return repositorio.Obtener<Centro, CentroDto>(x => x.Id == id, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion,Acopio= x.Acopio}) ?? new CentroDto();
         }
 
         public Resultado GrabarCentro(Centro oCentro)
@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Business
                 var oCentroSave = repositorio.Obtener<Centro>(oCentro.Id);
                 oCentroSave.Descripcion = oCentro.Descripcion;
                 oCentroSave.CodigoSap = oCentro.CodigoSap;
+                oCentroSave.Acopio = oCentro.Acopio;
             }
             else
             {

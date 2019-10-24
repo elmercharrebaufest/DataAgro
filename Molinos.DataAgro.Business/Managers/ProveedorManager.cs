@@ -678,7 +678,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oContrato.TrigoEspecial == true)
+            if (oContrato.StandardDeCalidadId == 7)
+            {
+                htmlBody += "CALIDAD GRADO 2<br />";
+            }
+            else if (oContrato.TrigoEspecial == true)
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }

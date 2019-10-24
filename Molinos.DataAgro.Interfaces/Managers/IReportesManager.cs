@@ -61,10 +61,10 @@ namespace Molinos.DataAgro.Interfaces
         HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta);
         HedgeTCPromedioDto TraerTcPromedio(DateTime fechaDesde, DateTime fechaHasta);
         List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta);
-        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, bool? calidad, int centroId = 0);
+        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0);
         ExcelDetallePosicionDto DetalleAgente(DateTime fecha);
         List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta);
-        string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, bool? calidad, int centroId = 0);
+        string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0);
         string DetalleAgenteModal(DateTime fecha);
     }
 }

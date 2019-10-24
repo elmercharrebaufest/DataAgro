@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         public string Descripcion { get; set; }
         public string CodigoSap { get; set; }
+        public bool Acopio { get; set; }
     }
 
 }

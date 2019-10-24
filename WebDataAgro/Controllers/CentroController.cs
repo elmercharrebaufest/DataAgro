@@ -95,7 +95,7 @@ namespace WebDataAgro.Controllers
             model.Errores = entityErrors.Errores;
             if (model.HayErrores)
             {
-                model.Centro = new CentroDto { CodigoSap= oCentro.CodigoSap, Descripcion = oCentro.Descripcion, Id = oCentro.Id};
+                model.Centro = new CentroDto { CodigoSap= oCentro.CodigoSap, Descripcion = oCentro.Descripcion, Id = oCentro.Id, Acopio = oCentro.Acopio};
             }
 
             return new JsonResult()

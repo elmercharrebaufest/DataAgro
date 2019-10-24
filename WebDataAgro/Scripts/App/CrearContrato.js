@@ -2035,7 +2035,7 @@ function ObtenerDatos() {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDolarizado = $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
-    obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false; 
+    obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
     obj.Dolarizado = $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
@@ -2125,7 +2125,10 @@ function ObtenerDatos() {
     }
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
+
+
     obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;
+
     obj.ZonaId = obj.MaterialId == 5 ?
         $("#zonasGirasolAltoId").val() : null;
     if (obj.MaterialId === "3") {
@@ -2147,19 +2150,21 @@ function ObtenerDatos() {
             }
         }
     }
+    
+    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
+        if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
+        else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
+        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 3;
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
+        obj.StandardDeCalidadId = 3;
+    } else if (viewModel.Calidades.length > 0) {
+        obj.StandardDeCalidadId = viewModel.Calidades[0].StandardDeCalidadId;
+    }
+
     obj.Compensacion = $("#compensacionId").is(":checked") ? true : false;
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     obj.AperturaPrecio = viewModel.AperturaPrecio;
-    
-    obj.StandardDeCalidadId = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 3 ? 4 :
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId == 4 || obj.MaterialId == 5 ? 5 :
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && obj.MaterialId != 3 ? 1 :
-                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" && obj.MaterialId == 2 ? 7 :
-                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
-                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
-                        $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length === 0 ? 0 : 2;
-    
     
     if (!error) {
         GrabarContrato(obj);
@@ -2359,12 +2364,15 @@ function AgregarCalidades() {
             Valor: $("#valorEspecialesId").val(),
             PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
             PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
-            StandardDeCalidadId: 2,
+            StandardDeCalidadId: $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" && $("#valorEspecialesId").val() == 2 && $("#material").data("kendoDropDownList").value() == 2 ? 7 :
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
+                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
+                        $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length === 0 ? 0 : 2,
             Borrar: function () {
                 viewModel.Calidades.remove(this);
             }
         };
-
+                
         var err = validarCalidad(calidades);
         if (ExistsErrorMessages(err)) {
             MensErr(err[0]);

@@ -67,7 +67,7 @@ function InicializarCuposIndex() {
                     var row = $(this);
                     var dataItem = grid.dataItem(row);
 
-                    if (dataItem.CentroId !== 1) {
+                    if (dataItem.Acopio) {
                         row.find('td').eq(0).empty();
                     }
                 });
@@ -333,7 +333,7 @@ function botonBorrar(dataItem, icono) {
         ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 function botonRetransmitir(dataItem, icono) {
-    if (dataItem.CentroId == 1) {
+    if (!dataItem.Acopio) {
         return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
             "'" + dataItem.CupoSap + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';

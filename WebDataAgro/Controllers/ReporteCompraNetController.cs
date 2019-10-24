@@ -38,7 +38,7 @@ namespace WebDataAgro.Controllers
             return PartialView("_ReporteCompraNet", model);
 
         }
-        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion, string centroId = "0")
+        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
         {
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
@@ -96,12 +96,13 @@ namespace WebDataAgro.Controllers
             return lista;
         }
 
-        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, bool? clasificacion, string centroId = "0")
+        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
         {
             DateTime fecha;
             DateTime.TryParse(fechaString, out fecha);
             DateTime fechaHasta;
             DateTime.TryParse(fechaHastaString, out fechaHasta);
+
             return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
         }
         public ExcelResult ExcelAgente(string fechaString)

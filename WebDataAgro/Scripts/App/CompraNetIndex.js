@@ -1589,7 +1589,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
-
+    if (standardDeCalidadDescripcion == "Grado 2") $("#calidadesDivVisualizar").hide();
     if (zona !== "undefined" && zona !=="") {
         $("#visualizar-zona-girasol").text(zona);
     } else {

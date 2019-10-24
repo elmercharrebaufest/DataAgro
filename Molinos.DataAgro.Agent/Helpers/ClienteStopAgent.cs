@@ -247,15 +247,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
                         desvio = "N",
                         codGrano = cupo.Material.CodigoEspecie.Value,
-                        estado = "A",
+                        estado = "B",
                         idCupo = cupo.CupoStop.Value,
-                        idCupoEstado=cupo.EstadoCupoId
+                        idCupoEstado=4
                     };
                     var obj = JsonConvert.SerializeObject(cupoStop);
                     HttpRequestMessage request = new HttpRequestMessage
                     {
                         Content = new StringContent(obj, Encoding.UTF8, "application/json"),
-                        Method = HttpMethod.Put,
+                        Method = HttpMethod.Delete,
                         RequestUri = new Uri($"{urlStop}v1.1.0/turnos/")
                     };
 

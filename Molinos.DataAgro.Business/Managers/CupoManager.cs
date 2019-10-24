@@ -150,7 +150,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    nuevoResultado.Error("", "Error al anular cupo"); ;
+                    nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}"); ;
                 }
                 return nuevoResultado;
             }

@@ -87,30 +87,6 @@ a.Descarga {
     background: rgb(255, 204, 153);
 }
 #MaizTable {
-    z-index: 150;
-}
-#TrigoCámara .titulosPosicion {
-    background: rgb(153, 153, 255);
-}
-#TrigoCámaraTable {
-    z-index: 100;
-}
-#TrigoCalidad .titulosPosicion {
-    background: rgb(153, 204, 255);
-}
-#TrigoCalidadTable {
-    z-index: 50;
-}
-#Soja .titulosPosicion {
-    background: rgb(153, 204, 0);
-}
-#SojaTable {
-    z-index: 200;
-}
-#Maiz .titulosPosicion {
-    background: rgb(255, 204, 153);
-}
-#MaizTable {
     z-index: 175;
 }
 #TrigoCámara .titulosPosicion {
@@ -125,17 +101,23 @@ a.Descarga {
 #TrigoCalidadTable {
     z-index: 125;
 }
+#TrigoGrado2 .titulosPosicion {
+    background: rgb(106, 230, 190);
+}
+#TrigoGrado2Table {
+    z-index: 100;
+}
 #Girasol .titulosPosicion {
     background: rgb(211, 96, 212);
 }
 #GirasolTable {
-    z-index: 100;
+    z-index: 75;
 }
 #GirasolAltoOleico .titulosPosicion {
     background: rgb(244, 193, 247);
 }
 #GirasolAltoOleicoTable {
-    z-index: 75;
+    z-index: 50;
 }
 
 table#Soja th, table#Soja td,

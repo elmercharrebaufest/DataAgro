@@ -111,6 +111,17 @@ namespace WebDataAgro.Helpers.Excel
             HSSFColor colorPlum = palette.FindSimilarColor(221, 160, 221);
             cellcolorplumObjetivos.FillForegroundColor = colorPlum.Indexed;
 
+            var cellcolorTrigoGrado2 = workbook.CreateCellStyle();
+            cellcolorTrigoGrado2.BorderBottom = BorderStyle.Thin;
+            cellcolorTrigoGrado2.BorderTop = BorderStyle.Thin;
+            cellcolorTrigoGrado2.BorderLeft = BorderStyle.Thin;
+            cellcolorTrigoGrado2.BorderRight = BorderStyle.Thin;
+            cellcolorTrigoGrado2.Alignment = HorizontalAlignment.Center;
+            cellcolorTrigoGrado2.SetFont(fontBold);
+            cellcolorTrigoGrado2.FillPattern = FillPattern.SolidForeground;
+            HSSFColor colorTeal = palette.FindSimilarColor(106, 230, 190);
+            cellcolorTrigoGrado2.FillForegroundColor = colorTeal.Indexed;
+
             var cellcolorGoldObjetivos = workbook.CreateCellStyle();
             cellcolorGoldObjetivos.BorderBottom = BorderStyle.Thin;
             cellcolorGoldObjetivos.BorderTop = BorderStyle.Thin;
@@ -152,8 +163,14 @@ namespace WebDataAgro.Helpers.Excel
             estiloCeldasColumnTitles.BorderRight = BorderStyle.Thin;
             estiloCeldasColumnTitles.SetFont(fontBold);
             #endregion 
-            ICellStyle[] colores = new ICellStyle[] { cellcolorGreen, cellcolorTan, cellcolorCornflowerBlue, cellcolorBlue, cellcolorPink, cellcolorDarkPink, cellcolorSuperGreen, cellcolorDarkCyanHedge, cellcolorplumObjetivos, cellcolorGoldObjetivos };
-
+            ICellStyle[] colores = new ICellStyle[] { 
+                cellcolorGreen,  cellcolorTan,
+                cellcolorCornflowerBlue,cellcolorBlue, 
+                cellcolorTrigoGrado2, cellcolorPink,
+                cellcolorDarkPink, cellcolorSuperGreen,
+                cellcolorDarkCyanHedge, cellcolorplumObjetivos,
+                cellcolorGoldObjetivos,
+                 };
 
             #region row1
             var row = sheet.CreateRow(r); r++;
@@ -354,7 +371,7 @@ namespace WebDataAgro.Helpers.Excel
             celda.CellStyle = colores[col];
             col++;
             c++;
-            //Girasol
+            //Trigo Grado2
             celda = row.CreateCell(c); c++;
             celda.CellStyle = colores[col];
             celda = row.CreateCell(c); c++;
@@ -362,19 +379,30 @@ namespace WebDataAgro.Helpers.Excel
             merge = new CellRangeAddress(r - 1, r - 1, 13, 14);
             sheet.AddMergedRegion(merge);
             celda = sheet.GetRow(r - 1).GetCell(13);
+            celda.SetCellValue("TRIGO GRADO 2");
+            celda.CellStyle = colores[col];
+            col++;
+            c++;
+            //Girasol
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            celda = row.CreateCell(c); c++;
+            celda.CellStyle = colores[col];
+            merge = new CellRangeAddress(r - 1, r - 1, 16, 17);
+            sheet.AddMergedRegion(merge);
+            celda = sheet.GetRow(r - 1).GetCell(16);
             celda.SetCellValue("GIRASOL");
             celda.CellStyle = colores[col];
             col++;
             c++;
-
             //Girasol Alto
             celda = row.CreateCell(c); c++;
             celda.CellStyle = colores[col];
             celda = row.CreateCell(c); c++;
             celda.CellStyle = colores[col];
-            merge = new CellRangeAddress(r - 1, r - 1, 16,17);
+            merge = new CellRangeAddress(r - 1, r - 1, 19,20);
             sheet.AddMergedRegion(merge);
-            celda = sheet.GetRow(r-1).GetCell(16);
+            celda = sheet.GetRow(r-1).GetCell(19);
             celda.SetCellValue("GIRASOL ALTO OLEICO");
             celda.CellStyle = colores[col];
             c++;
@@ -417,8 +445,8 @@ namespace WebDataAgro.Helpers.Excel
             #region Hedge
             if (incluirHedge)
             {
-                CrearTablaHedge(sheet, colores[7], estiloCeldasColumnTitles, model, colores[8], r);
-                CrearTablaAgenteDeCompras(sheet, colores[9], estiloCeldasColumnTitles, model,r);
+                CrearTablaHedge(sheet, colores[8], estiloCeldasColumnTitles, model, colores[9], r);
+                CrearTablaAgenteDeCompras(sheet, colores[10], estiloCeldasColumnTitles, model,r);
             }
             #endregion
 

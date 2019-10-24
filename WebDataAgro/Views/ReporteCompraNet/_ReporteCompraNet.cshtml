@@ -277,7 +277,7 @@
                         <td class="@(totalDolares!=0 ? "" :"hide")"> @(mes.KilosDolares.ToString("N0"))</td>
                         <td class="@(pondDolares>0?"":"hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
                         <td>
-                            <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") })">
+                            <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD"? 2 : material.Material.ToUpper() == "TRIGO GRADO 2"?7:3) })">
                                 <span>
                                     <i class="fa fa-file-excel-o"></i>
                                 </span>

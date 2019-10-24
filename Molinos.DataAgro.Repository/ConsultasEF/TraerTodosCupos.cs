@@ -47,7 +47,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Observaciones = cupo.Observaciones,
                     EstadoCupoId = cupo.EstadoCupoId,
                     EstadoCupo = cupo.EstadoCupo.Descripcion,
-                    MensajeError = cupo.ErrorStop
+                    MensajeError = cupo.ErrorStop,
+                    Acopio = cupo.Centro.Acopio
                 };
 
             return new KendoGrid<CupoDto>(request, queryContratos);

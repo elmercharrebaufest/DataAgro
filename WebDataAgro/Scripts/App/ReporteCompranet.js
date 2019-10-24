@@ -77,7 +77,11 @@ function ObtenerValorCentroId() {
 }
 
 function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre, mesNombre) {
-    var calidad = materialNombre == "TRIGO CALIDAD";
+    var calidad;
+    if (materialNombre == "TRIGO CALIDAD") calidad = 2;
+    else if (materialNombre == "TRIGO GRADO 2") calidad = 7;
+    else if (materialNombre == "TRIGO CÁMARA") calidad = 3;
+    else calidad = null;
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
     href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad;

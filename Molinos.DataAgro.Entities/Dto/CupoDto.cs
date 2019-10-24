@@ -28,5 +28,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int EstadoCupoId { get; set; }
         public string EstadoCupo { get; set; }
         public string MensajeError { get; set; }
+        public bool Acopio { get; set; }
     }
 }
