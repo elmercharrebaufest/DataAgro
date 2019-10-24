@@ -147,7 +147,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             try
             {
                 var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
-                var listaCupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 6 || x.EstadoCupoId == 7 && x.CentroId == 1, 100);
+                var listaCupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 6 || x.EstadoCupoId == 7 && !x.Centro.Acopio, 100);
                 var token = ObtenerToken(datosConfiguracion.ClaveStop);
                 foreach (var cupo in listaCupos)
                 {
@@ -311,7 +311,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
-                var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 6 && x.EstadoCupoId != 7 && x.CentroId==1 );
+                var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 6 && x.EstadoCupoId != 7 && !x.Centro.Acopio );
                 var token = ObtenerToken(datosConfiguracion.ClaveStop);
                 var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
                 foreach (var fecha in fechas)
