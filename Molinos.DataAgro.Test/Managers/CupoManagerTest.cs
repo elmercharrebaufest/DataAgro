@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IEliminarCupoAgent> eliminarCupoAgentMock;
         private Mock<IClienteStopAgent> clienteStopMock;
         private Mock<IModificarCupoAgent> modificarCupoAgentMock;
+
         [SetUp]
         public void SetUp()
         {
@@ -43,6 +44,7 @@ namespace Molinos.DataAgro.Test.Managers
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object, 
                 eliminarCupoAgentMock.Object, clienteStopMock.Object,
                 modificarCupoAgentMock.Object);
+            repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop =true});
         }
 
         [Test]

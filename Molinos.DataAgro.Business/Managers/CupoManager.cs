@@ -153,11 +153,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}"); ;
                 }
-                if (cupoSap.EstadoCupoId == 1)
+                if (cupoSap.EstadoCupoId == 4)
                 {
                     if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                     {
                         nuevoResultado.Error("Stop", "Error al anular cupo en STOP: Sin conexión a STOP. Anulado en SAP Correctamente");
+                        return nuevoResultado;
                     }
                     var resultadoStop = clienteStopAgent.EliminarCupo(cupoSap);
                     if (nuevoResultado.HayError)
