@@ -50,7 +50,8 @@ namespace Molinos.DataAgro.Agent
                         Corredor = "NO"
                     },
                     Consignatario = "SI",
-                    PlanCanje = "SI"
+                    PlanCanje = "SI",
+                    
                 };
             }
             else
@@ -95,7 +96,8 @@ namespace Molinos.DataAgro.Agent
                                 Consignatario = valor.EX_RUCA.OTROS.CONSIGNATARIO,
                                 Directo = valor.EX_RUCA.OTROS.DIRECTO,
                                 PlanCanje = valor.EX_RUCA.OTROS.PROV_PLAN_CANJE
-                            }
+                            },
+                            Corredor = valor.EX_RUCA.CORREDOR
                         },
                         PlanCanje = valor.EX_PLAN_CANJE,
                         Consignatario = valor.EX_CONSIGNATARIO,

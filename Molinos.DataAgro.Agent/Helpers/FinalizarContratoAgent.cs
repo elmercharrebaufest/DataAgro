@@ -67,6 +67,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 logger.Debug("Descuentos: " + descuentoBonificacion);
                 var listaCalidades = new List<ZMPES5300>();
+
                 foreach (var cal in calidad)
                 {
                     if (cal.StandardDeCalidadId == 2)
@@ -107,6 +108,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 );
                             }
                         }
+                    }
+                    else if (cal.StandardDeCalidadId == 7)
+                    {
+                        listaCalidades.Add(new ZMPES5300
+                        {
+                            CODIGO = cal.CalidadEspecial.CodigoSap,
+                            VALOR = 0,
+                            PORC_DESDE = 1,
+                            PORC_HASTA = 1
+                        });
                     }
                 }
                 logger.Debug("Calidades: " + calidad);

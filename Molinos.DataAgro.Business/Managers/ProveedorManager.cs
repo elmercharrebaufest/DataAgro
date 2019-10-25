@@ -686,7 +686,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "CALIDAD ESPECIAL ";
             }
-            if (objCalidad != null)
+            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
             {
                 foreach (var cal in objCalidad)
                 {

@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
+                    var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
                     var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
                     cupoSave.ProveedorId = cupo.ProveedorId;
                     cupoSave.Proveedor = cupo.Proveedor;
@@ -77,9 +78,16 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         error.Error("SAP", $"Error al grabar en SAP: {res}");
                     }
-                    if (cupoSave.CupoStop != null)
+                    if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                     {
-                        clienteStopAgent.ModificarCupo(cupoSave);
+                        if (cupoSave.CupoStop != null)
+                        {
+                            clienteStopAgent.ModificarCupo(cupoSave);
+                        }
+                    }
+                    else
+                    {
+                        error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
                     }
                     repositorio.GuardarCambios();
                     return error;
@@ -134,14 +142,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var nuevoResultado = new Resultado();
                 
                 var cupoSap = repositorio.Obtener<Cupo>(id);
-                if (cupoSap.EstadoCupoId == 1)
-                {
-                    nuevoResultado = clienteStopAgent.EliminarCupo(cupoSap);
-                    if (nuevoResultado.HayError)
-                    {
-                        return nuevoResultado;
-                    }
-                }
+                var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
                 var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap, comercial);
                 if (resultado == "OK")
                 {
@@ -152,6 +153,21 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}"); ;
                 }
+                if (cupoSap.EstadoCupoId == 1)
+                {
+                    if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
+                    {
+                        nuevoResultado.Error("Stop", "Error al anular cupo en STOP: Sin conexión a STOP. Anulado en SAP Correctamente");
+                    }
+                    var resultadoStop = clienteStopAgent.EliminarCupo(cupoSap);
+                    if (nuevoResultado.HayError)
+                    {
+                        foreach (var e in resultadoStop.Errores) { 
+                            nuevoResultado.Error("", $"Error al anular cupo en STOP: {e.Message}. Anulado en SAP Correctamente"); ;
+                        }
+                        return nuevoResultado;
+                    }
+                }
                 return nuevoResultado;
             }
             catch (Exception e)
@@ -161,13 +177,16 @@ namespace Molinos.DataAgro.Business.Managers
                 return nuevoResultado;
             }
         }
-        public void TransmitirCupos()
-        {
-            clienteStopAgent.TransmitirJobCupos();
-        }
+        
         public Resultado TransmitirCupos(List<string> cupos)
         {
             var result = new Resultado();
+            var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+            if(datosConfiguracion.ConexionABMStop.HasValue&& !datosConfiguracion.ConexionABMStop.Value)
+            {
+                result.Error("Stop", "Sin conexión a STOP");
+                return result;
+            }
             try
             {
                 clienteStopAgent.CrearCupo(cupos);
@@ -178,7 +197,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
-
+        public void TransmitirCupos()
+        {
+            clienteStopAgent.TransmitirJobCupos();
+        }
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
             return clienteStopAgent.ConsultarCuposDiarios();
