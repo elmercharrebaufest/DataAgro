@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarCupoTest()
         {
-            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { CupoSap = "a",CupoStop = 1, EstadoCupoId=1 });
+            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { CupoSap = "a",CupoStop = 1, EstadoCupoId=1, Centro = new Centro { Acopio = false} });
             eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             repositorioMock.Setup(x => x.GuardarCambios());
