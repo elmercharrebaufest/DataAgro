@@ -207,8 +207,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             client.BaseAddress = new Uri(urlStop);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.PostAsJsonAsync(
-                            $"v1.1.0/turnos/{token}/{terminalId}/{cupo}", new { }).Result;
+            HttpResponseMessage response = client.GetAsync(
+                            $"v1.1.0/turnos/{token}/{terminalId}/{cupo}").Result;
             response.EnsureSuccessStatusCode();
             var res = response.Content.ReadAsAsync<dynamic>().Result;
             var jObject = JObject.Parse(res.ToString());

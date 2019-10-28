@@ -78,16 +78,19 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         error.Error("SAP", $"Error al grabar en SAP: {res}");
                     }
-                    if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
+                    if (!cupoSave.Centro.Acopio)
                     {
-                        if (cupoSave.CupoStop != null)
+                        if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
                         {
-                            clienteStopAgent.ModificarCupo(cupoSave);
+                            if (cupoSave.CupoStop != null)
+                            {
+                                clienteStopAgent.ModificarCupo(cupoSave);
+                            }
                         }
-                    }
-                    else
-                    {
-                        error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
+                        else
+                        {
+                            error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
+                        }
                     }
                     repositorio.GuardarCambios();
                     return error;
@@ -153,20 +156,24 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}"); ;
                 }
-                if (cupoSap.EstadoCupoId == 4)
+                if (!cupoSap.Centro.Acopio)
                 {
-                    if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
+                    if (cupoSap.EstadoCupoId == 4)
                     {
-                        nuevoResultado.Error("Stop", "Error al anular cupo en STOP: Sin conexión a STOP. Anulado en SAP Correctamente");
-                        return nuevoResultado;
-                    }
-                    var resultadoStop = clienteStopAgent.EliminarCupo(cupoSap);
-                    if (nuevoResultado.HayError)
-                    {
-                        foreach (var e in resultadoStop.Errores) { 
-                            nuevoResultado.Error("", $"Error al anular cupo en STOP: {e.Message}. Anulado en SAP Correctamente"); ;
+                        if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
+                        {
+                            nuevoResultado.Error("Stop", "Error al anular cupo en STOP: Sin conexión a STOP. Anulado en SAP Correctamente");
+                            return nuevoResultado;
                         }
-                        return nuevoResultado;
+                        var resultadoStop = clienteStopAgent.EliminarCupo(cupoSap);
+                        if (nuevoResultado.HayError)
+                        {
+                            foreach (var e in resultadoStop.Errores)
+                            {
+                                nuevoResultado.Error("", $"Error al anular cupo en STOP: {e.Message}. Anulado en SAP Correctamente"); ;
+                            }
+                            return nuevoResultado;
+                        }
                     }
                 }
                 return nuevoResultado;
