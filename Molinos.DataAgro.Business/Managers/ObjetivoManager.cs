@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -27,15 +28,16 @@ namespace Molinos.DataAgro.Business
         {
             var list = new ObjetivoHome();
 
-            var lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x=> new MaterialObjetivo
+            var lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
             {
-               Material = x.Material.Descripcion,
-               MaterialId = x.MaterialId,
-               Campana = x.Campana.Descripcion,
-               Toneladas = x.ToneladasObjetivos,
-               Comercial = x.Comercial.Nombres + " "+x.Comercial.Apellido,
-               ComercialId = x.ComercialId
-            }, x=> equipo.Contains(x.ComercialId) && x.Material.CampañaId <= x.CampanaId,0,"ComercialId");
+                Id = x.Id,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Campana = x.Campana.Descripcion,
+                Toneladas = x.ToneladasObjetivos,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                ComercialId = x.ComercialId
+            }, x => equipo.Contains(x.ComercialId) && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
             var listaPorMaterial = lista.GroupBy(x => x.Material);
             foreach (var obj in listaPorMaterial)
             {
@@ -78,6 +80,20 @@ namespace Molinos.DataAgro.Business
 
             return resultado;
         }
-
+        public Resultado EliminarObjetivo(int id)
+        {
+            var res = new Resultado();
+            try
+            {
+                repositorio.Remover<ObjetivoComercial>(id);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+                res.Error("", e.Message);
+            }
+            return res;
+        }
     }
 }

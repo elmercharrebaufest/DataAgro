@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Entities.Dto
     }
     public class MaterialObjetivo
     {
+        public int Id { get; set; }
         public string Material { get; set; }
         public int MaterialId { get; set; }
         public double Toneladas { get; set; }

@@ -969,3 +969,16 @@ span.glyphicon.glyphicon-chevron-right {
 .tabla-home {
     width: 100% !important;
 }
+
+.deshabilitado{
+    cursor:default !important;
+}
+
+.danger {
+    color: crimson;
+    font-size: 18px;
+}
+    .danger:hover {
+        color: crimson;
+        text-decoration: none;
+    }

@@ -288,6 +288,16 @@ namespace WebDataAgro.Controllers
             };
 
         }
+
+        public ActionResult EliminarObjetivo(int id)
+        {
+            var resultado = objetivoManager.EliminarObjetivo(id);
+            return new JsonResult()
+            {
+                Data = resultado,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 
 }

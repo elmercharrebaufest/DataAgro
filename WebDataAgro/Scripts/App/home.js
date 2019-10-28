@@ -586,9 +586,10 @@ function CargarModelObjetivosComerciales(comercial) {
             '<div class="col-xs-12"><table class="tabla-home">';
         for (var j in comercial[i].Objetivos) {
             var ToneladasAux = FormatearNumeros(comercial[i].Objetivos[j].Toneladas);
-            html += '<tr><th class="col-xs-5">' + comercial[i].Objetivos[j].Material + '</th>' +
+            html += '<tr><th class="col-xs-4">' + comercial[i].Objetivos[j].Material + '</th>' +
                 '<td class="col-xs-5">' + ToneladasAux+'</td>' +
-                '<td class="col-xs-2">' + comercial[i].Objetivos[j].Campana+'</td></tr>';
+                '<td class="col-xs-2">' + comercial[i].Objetivos[j].Campana + '</td>' +
+                '<td class="col-xs-1"><a class="fa fa-minus-circle danger" onclick="EliminarObjetivo(' + comercial[i].Objetivos[j].Id +')"></td>'+ '</tr>';
         }
         html += '</table></div></div></div>';                  
     }
@@ -860,8 +861,7 @@ function DescargarExportAll(param) {
                 window.location = url;
             }
         }
-    }
-
+    };
     MSExecuteOnServerAsync('/Home/ExportarAll', param, funcReturn, true);
 }
 
@@ -979,4 +979,17 @@ function Actualizar() {
 
     ArmarObjetivo(obj.Objetivo.Objetivos);
     CargarModelObjetivosComerciales(obj.Objetivo.Comerciales);
+}
+
+function EliminarObjetivo(id) {
+    var res = MSExecuteOnServer('/Home/EliminarObjetivo', { id });
+
+    if (res != null) {
+        if (ExistsErrorMessages(res.Errores)) {
+            MensErr(res.Errores[0].Message);
+        }
+        else {
+            Actualizar();
+        }
+    }
 }

@@ -8,6 +8,6 @@ namespace Molinos.DataAgro.Interfaces
     {
         ObjetivoHome TraerObjetivoHome(int idComercial, List<int> equipo);
         Resultado GuardarObjetivo(ObjetivoComercial objetivo);
-
+        Resultado EliminarObjetivo(int id);
     }
 }
