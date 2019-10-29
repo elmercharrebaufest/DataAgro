@@ -984,10 +984,10 @@ function Actualizar() {
 }
 function AlertaObjetivoBorrar(e) {
     $("#borrar-objetivo").show();    
-    $("#aceptar-borrar").unbind('click');
     $("#aceptar-borrar").click(function () {
         EliminarObjetivo(e);
         $("#borrar-objetivo").hide();   
+        $("#aceptar-borrar").unbind('click');
     });
 }
 

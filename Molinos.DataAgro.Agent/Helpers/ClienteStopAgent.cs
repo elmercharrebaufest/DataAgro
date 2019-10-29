@@ -32,7 +32,6 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
-
                 // Create a new token
                 logger.Debug($"Gestionando Token...");
                 var token = CreateTokenAsync(clave);
@@ -74,6 +73,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 throw;
             }
         }
+
         public void CrearCupo(List<string> cupos)
         {
             HttpClient client = new HttpClient();
@@ -99,6 +99,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             token = token.Data,
                             cuitDestinatario = cupo.Destinatario,
                             cuitDestino = datosConfiguracion.CuitDestinoStop,
+                            cuitCorredorC = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                             idCupoTerminal = cupo.CupoSap,
                             idTerminal = datosConfiguracion.TerminalStopId,
                             fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
@@ -162,6 +163,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             token = token.Data,
                             cuitDestinatario = cupo.Destinatario,
                             cuitDestino = datosConfiguracion.CuitDestinoStop,
+                            cuitCorredorC = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                             idCupoTerminal = cupo.CupoSap,
                             idTerminal = datosConfiguracion.TerminalStopId,
                             fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
@@ -248,6 +250,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         token = token.Data,
                         cuitDestinatario = cupo.Destinatario,
                         cuitDestino = datosConfiguracion.CuitDestinoStop,
+                        cuitCorredorC = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                         idCupoTerminal = cupo.CupoSap,
                         idTerminal = datosConfiguracion.TerminalStopId,
                         fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
@@ -397,6 +400,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         token = token.Data,
                         cuitDestinatario = cupo.Destinatario,
                         cuitDestino = datosConfiguracion.CuitDestinoStop,
+                        cuitCorredorC = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                         idCupoTerminal = cupo.CupoSap,
                         idTerminal = datosConfiguracion.TerminalStopId,
                         fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaIngreso.ToString("HH:mm:ss"),

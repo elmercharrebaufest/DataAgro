@@ -11,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string cuitDestino { get; set; }
         public string cuitDestinatario { get; set; }
         public string idCupoTerminal { get; set; }
+        public string cuitCorredorC { get; set; }
         public int idTerminal { get; set; }
         public string fecha { get; set; }
         public int codLocalidadDestino { get; set; }
