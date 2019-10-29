@@ -982,3 +982,23 @@ span.glyphicon.glyphicon-chevron-right {
         color: crimson;
         text-decoration: none;
     }
+
+.alert{
+    text-align:center;
+    padding:5px;
+    border-radius:4px !important;
+    margin-bottom:0px;
+}
+.boton-eliminar {
+    border: 1px solid #c09853;
+    border-radius: 5px !important;
+    cursor: pointer;
+    padding: 3px 25px;
+}
+    .boton-eliminar:hover {
+        border: 1px solid #c09853;
+        border-radius: 5px !important;
+        background: #c09853;
+        color: #fcf8e3;
+        cursor: pointer;
+    }

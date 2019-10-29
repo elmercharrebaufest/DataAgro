@@ -589,7 +589,7 @@ function CargarModelObjetivosComerciales(comercial) {
             html += '<tr><th class="col-xs-4">' + comercial[i].Objetivos[j].Material + '</th>' +
                 '<td class="col-xs-5">' + ToneladasAux+'</td>' +
                 '<td class="col-xs-2">' + comercial[i].Objetivos[j].Campana + '</td>' +
-                '<td class="col-xs-1"><a class="fa fa-minus-circle danger" onclick="EliminarObjetivo(' + comercial[i].Objetivos[j].Id +')"></td>'+ '</tr>';
+                '<td class="col-xs-1"><a class="fa fa-minus-circle danger" onclick="AlertaObjetivoBorrar(' + comercial[i].Objetivos[j].Id +')"></td>'+ '</tr>';
         }
         html += '</table></div></div></div>';                  
     }
@@ -944,7 +944,9 @@ function CrearObjetivo() {
     });
 
     kendo.bind($("#objetivo-modal"), viewModel);
-
+    $("#cancelar-borrar").click(function () {
+        $("#borrar-objetivo").hide();
+    });
     $("#objetivo-modal").on("hidden.bs.modal", function () {
         viewModel.set("Parametros", param);
     });
@@ -979,6 +981,14 @@ function Actualizar() {
 
     ArmarObjetivo(obj.Objetivo.Objetivos);
     CargarModelObjetivosComerciales(obj.Objetivo.Comerciales);
+}
+function AlertaObjetivoBorrar(e) {
+    $("#borrar-objetivo").show();    
+    $("#aceptar-borrar").unbind('click');
+    $("#aceptar-borrar").click(function () {
+        EliminarObjetivo(e);
+        $("#borrar-objetivo").hide();   
+    });
 }
 
 function EliminarObjetivo(id) {
