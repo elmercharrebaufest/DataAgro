@@ -158,7 +158,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (!cupoSap.Centro.Acopio)
                 {
-                    if (cupoSap.EstadoCupoId == 4)
+                    if (cupoSap.EstadoCupoId == 4 && cupoSap.CupoStop!= null)
                     {
                         if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                         {
