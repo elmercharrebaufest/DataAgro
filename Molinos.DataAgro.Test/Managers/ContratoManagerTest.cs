@@ -878,7 +878,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
             {
-                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, i));
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
@@ -931,7 +931,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
             {
-                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, i));
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
             relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
@@ -1000,7 +1000,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
             {
-                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, i));
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
@@ -1276,7 +1276,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month); i++)
             {
-                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
+                diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, i));
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
