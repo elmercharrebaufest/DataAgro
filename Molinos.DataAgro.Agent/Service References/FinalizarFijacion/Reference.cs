@@ -40,6 +40,8 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         
         private string iM_DIAS_DIFERIMField;
         
+        private string iM_FECHAField;
+        
         private decimal iM_KILOSField;
         
         private string iM_MATERIALField;
@@ -103,6 +105,18 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string IM_FECHA {
+            get {
+                return this.iM_FECHAField;
+            }
+            set {
+                this.iM_FECHAField = value;
+                this.RaisePropertyChanged("IM_FECHA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public decimal IM_KILOS {
             get {
                 return this.iM_KILOSField;
@@ -114,7 +128,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string IM_MATERIAL {
             get {
                 return this.iM_MATERIALField;
@@ -126,7 +140,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string IM_MONEDA {
             get {
                 return this.iM_MONEDAField;
@@ -138,7 +152,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public string IM_PAGO_DIF_ARP {
             get {
                 return this.iM_PAGO_DIF_ARPField;
@@ -150,7 +164,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public decimal IM_PRECIO {
             get {
                 return this.iM_PRECIOField;
@@ -162,7 +176,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
         public string IM_PROVEEDOR {
             get {
                 return this.iM_PROVEEDORField;

@@ -12,6 +12,7 @@
             <xsd:element name="IM_CONTRATO" type="rfc:char10" />
             <xsd:element minOccurs="0" name="IM_CORREDOR" type="rfc:char16" />
             <xsd:element name="IM_DIAS_DIFERIM" type="rfc:numeric3" />
+            <xsd:element name="IM_FECHA" type="rfc:date10" />
             <xsd:element name="IM_KILOS" type="rfc:quantum13.3" />
             <xsd:element name="IM_MATERIAL" type="rfc:char18" />
             <xsd:element name="IM_MONEDA" type="rfc:char4" />
@@ -24,11 +25,17 @@
       <xsd:element name="Z_MPRFC_REGISTRAR_FIJACIONResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_MENSAJE" type="xsd:string" />
+            <xsd:element name="EX_MENSAJE" type="rfc:string" />
             <xsd:element name="EX_SALIDA" type="rfc:char10" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char2">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="2" />
@@ -82,6 +89,9 @@
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="16" />
         </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="string">
+        <xsd:restriction base="xsd:string" />
       </xsd:simpleType>
       <xsd:simpleType name="decimal5.2">
         <xsd:restriction base="xsd:decimal">
