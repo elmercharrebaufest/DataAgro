@@ -352,21 +352,17 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
         {
-            var sojaToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(3, fechaDesde, fechaHasta, null, centroId));
+            var sojaToneladas =  repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(3, fechaDesde, fechaHasta, null, centroId));
             sojaToneladas.Material = "Soja";
-            var maizToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1, fechaDesde, fechaHasta, null, centroId));
+            var maizToneladas =  repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1, fechaDesde, fechaHasta, null, centroId));
             maizToneladas.Material = "Maiz";
             var trigoCamaraToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 3, centroId));
             trigoCamaraToneladas.Material = "Trigo Cámara";
             var trigoCalidadToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 2, centroId));
             trigoCalidadToneladas.Material = "Trigo Calidad";
-            var girasolToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(4, fechaDesde, fechaHasta, null, centroId));
+            var girasolToneladas =  repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(4, fechaDesde, fechaHasta, null, centroId));
             girasolToneladas.Material = "Girasol";
-            var girasolAltoToneladas = new ToneladasGranoTipoDto();
-                //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId));
+            var girasolAltoToneladas =  repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId));
             girasolAltoToneladas.Material = "Girasol Alto Oleico";
             var trigoGradoToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, 7, centroId));
             trigoGradoToneladas.Material = "Trigo Grado 2";
