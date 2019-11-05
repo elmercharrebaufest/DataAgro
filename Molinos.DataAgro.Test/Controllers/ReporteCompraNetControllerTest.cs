@@ -101,7 +101,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var fecha = new DateTime(2018, 10, 26);
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             reportesManagerMock.Setup(x => x.DetallePosicionModal(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, 0)).Returns("");
-            var result = target.DetalleExcelModal(2, 2018, 1, "26-10-2018", "26-10-2018", null, "0");
+            var result = target.DetalleExcelModal(2, 2018, 1, "26-10-2018", "26-10-2018", 2, "0");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
