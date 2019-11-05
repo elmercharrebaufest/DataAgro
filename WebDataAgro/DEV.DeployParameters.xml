@@ -11,7 +11,7 @@
     <setParameter name="EmailAgenda Key" value="1" />
   <setParameter name="SmtpAnonimo Key" value="N" />
     <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
-    <setParameter name="SapPass Key" value="Dataagro2017" />
+    <setParameter name="SapPass Key" value="Data2015" />
     <setParameter name="SinConexionSap Key" value="1" />
     <setParameter name="ValorPruebaSap Key" value="1" />
     <setParameter name="AmbientePruebas Key" value="1" />

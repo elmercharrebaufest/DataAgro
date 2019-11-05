@@ -358,11 +358,9 @@ namespace Molinos.DataAgro.Business.Managers
             var maizToneladas = new ToneladasGranoTipoDto();
             //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1, fechaDesde, fechaHasta, null, centroId));
             maizToneladas.Material = "Maiz";
-            var trigoCamaraToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, false, centroId));
+            var trigoCamaraToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 3, centroId));
             trigoCamaraToneladas.Material = "Trigo Cámara";
-            var trigoCalidadToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, true, centroId));
+            var trigoCalidadToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 2, centroId));
             trigoCalidadToneladas.Material = "Trigo Calidad";
             var girasolToneladas = new ToneladasGranoTipoDto();
             //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(4, fechaDesde, fechaHasta, null, centroId));
@@ -370,8 +368,7 @@ namespace Molinos.DataAgro.Business.Managers
             var girasolAltoToneladas = new ToneladasGranoTipoDto();
                 //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId));
             girasolAltoToneladas.Material = "Girasol Alto Oleico";
-            var trigoGradoToneladas = new ToneladasGranoTipoDto();
-            //repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId));
+            var trigoGradoToneladas = repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, 7, centroId));
             trigoGradoToneladas.Material = "Trigo Grado 2";
             return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, trigoCalidadToneladas, trigoGradoToneladas, girasolToneladas, girasolAltoToneladas };
 
