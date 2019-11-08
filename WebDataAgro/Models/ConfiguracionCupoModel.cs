@@ -14,7 +14,7 @@ namespace WebDataAgro.Models
         public int MaterialId { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
         public DateTime Fecha { get; set; }
-        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
+        //[Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
         public int CantidadCupo { get; set; }
         public Resultado Resultado { get; set; }
     }

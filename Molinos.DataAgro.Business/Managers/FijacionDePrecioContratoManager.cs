@@ -148,7 +148,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oErrorMessages;
             }
             var cantidadContrato = listaContrato.FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosPendiente;
-            if (double.Parse(cantidadContrato) - oParam.Cantidad < 0)
+            if (double.Parse(cantidadContrato.Replace(".","")) - oParam.Cantidad < 0)
             {
                 oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
             }
