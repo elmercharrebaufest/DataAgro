@@ -490,7 +490,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var emailComerciales = "";
                 if (oFijacionDePrecioContrato.Comercial.PerfilId == (int)EnumPerfil.CorredoresComercial)
                 {
-                    var corredoresComerciales = mobComercial.ListarComercialesCorredor();
+                    var corredoresComerciales = mobComercial.ListarComercialesPorPerfil(EnumPerfil.CorredoresComercial);
                     corredoresComerciales.Remove(oFijacionDePrecioContrato.Comercial);
 
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
