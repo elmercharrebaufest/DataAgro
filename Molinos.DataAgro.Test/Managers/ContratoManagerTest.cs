@@ -4,6 +4,7 @@ using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -279,9 +280,9 @@ namespace Molinos.DataAgro.Test.Managers
                 DestinoId = 1,
                 LocalidadId = 1,
                 ProvinciaId = 1,
-                FechaEntrega = DateTime.Now,
-                FechaDesde = DateTime.Now,
-                FechaHasta = DateTime.Now,
+                FechaEntrega = new DateTime(2019,11,11),
+                FechaDesde = new DateTime(2019, 11, 11),
+                FechaHasta = new DateTime(2019, 12, 11),
                 MonedaId = "ARS ",
                 CampanaId = 1,
                 ComercialId = 70,
@@ -289,7 +290,8 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
                 Sustentable = false,
-                Calidad = new List<Calidad>()
+                Calidad = new List<Calidad>(),
+                Comercial= new Comercial { GrupoDeComprasId=1}
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
@@ -297,7 +299,11 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
 
             repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<Expression<Func<RangoConfirmacionAutomatica, DateTime>>>()))
-                    .Returns(new RangoConfirmacionAutomatica() { MaterialId = 1, MonedaId = "ARS ", PrecioMinimo = 1, PrecioMaximo = 2000 });
+                    .Returns(new RangoConfirmacionAutomatica() { MaterialId = 1, MonedaId = "ARS ", PrecioMinimo = 1, PrecioMaximo = 2000,Cantidad=1000,DesdeAnio=2019,DesdeMes=10,FechaDesde= new DateTime(2018, 11, 11),
+                        FechaHasta=new DateTime(2020, 11, 11),
+                        HastaAnio=2021,HastaMes=12,ZonaId=1
+                    });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(),It.IsAny<Expression<Func<FijacionDePrecioContrato,bool>>>(), It.IsAny<int>(), It.IsAny<string>(),It.IsAny<DirOrden>()));
             configuracionManagermock.Setup(y => y.TraerConfiguraciones()).Returns(new Configuracion { CantidadDias = 10 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
@@ -415,7 +421,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Nosis = "SI"
             });
             configuracionManagermock.Setup(y => y.TraerConfiguraciones()).Returns(new Configuracion { CantidadDias = 10 });
-
+            
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<DescuentoBonificacion>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Calidad>()), Times.Exactly(1));

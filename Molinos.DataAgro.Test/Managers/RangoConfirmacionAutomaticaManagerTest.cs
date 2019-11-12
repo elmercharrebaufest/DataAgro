@@ -84,7 +84,15 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarRangoOk()
         {
-            var rango = new RangoConfirmacionAutomatica { Id = 1, MaterialId = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1 };
+            var rango = new RangoConfirmacionAutomatica { Id = 1, MaterialId = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1,
+            Cantidad=1,
+            HastaAnio=1,
+            DesdeAnio=1,
+            HastaMes=1,
+            DesdeMes=1,
+            ZonaId=1,
+            FechaHasta=new DateTime(2019,11,11),
+            FechaDesde= new DateTime(2019, 11, 11)};
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar( It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -101,7 +109,22 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarRangoNuevoOk()
         {
-            var rango = new RangoConfirmacionAutomatica { Id = 0, MaterialId = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1 };
+            var rango = new RangoConfirmacionAutomatica
+            {
+                Id = 0,
+                MaterialId = 1,
+                MonedaId = "a",
+                PrecioMaximo = 10,
+                PrecioMinimo = 1,
+                Cantidad = 1,
+                HastaAnio = 1,
+                DesdeAnio = 1,
+                HastaMes = 1,
+                DesdeMes = 1,
+                ZonaId = 1,
+                FechaHasta = new DateTime(2019, 11, 11),
+                FechaDesde = new DateTime(2019, 11, 11)
+            };
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -176,7 +199,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarRangoErrorMaterial()
         {
-            var rango = new RangoConfirmacionAutomatica { Id = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1 };
+            var rango = new RangoConfirmacionAutomatica {};
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -191,17 +214,45 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
-            Assert.AreEqual("El campo Material no puede estar vacío", resultado.ListaErrores[0].Message);
+            Assert.AreEqual(8, resultado.Errores.Count);
         }
         [Test]
         public void GrabarRangoErrorRangoexistente()
         {
             var fecha = new DateTime(2019, 04, 25);
-            var rango = new RangoConfirmacionAutomatica { Id = 0, MaterialId = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1,FechaDesde= fecha };
+            var rango = new RangoConfirmacionAutomatica
+            {
+                Id = 0,
+                MaterialId = 1,
+                MonedaId = "a",
+                PrecioMaximo = 10,
+                PrecioMinimo = 1,
+                Cantidad = 1,
+                HastaAnio = 1,
+                DesdeAnio = 1,
+                HastaMes = 1,
+                DesdeMes = 1,
+                ZonaId = 1,
+                FechaHasta = new DateTime(2019, 04, 25),
+                FechaDesde = new DateTime(2019, 04, 25)
+            };
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<RangoConfirmacionAutomatica>() { new RangoConfirmacionAutomatica { MaterialId=1,MonedaId="a", Id =2 ,FechaDesde= fecha } });
+                .Returns(new List<RangoConfirmacionAutomatica>() { new RangoConfirmacionAutomatica {
+                    Id=1,
+                    MaterialId = 1,
+                MonedaId = "a",
+                PrecioMaximo = 10,
+                PrecioMinimo = 1,
+                Cantidad = 1,
+                HastaAnio = 1,
+                DesdeAnio = 1,
+                HastaMes = 1,
+                DesdeMes = 1,
+                ZonaId = 1,
+                FechaHasta = new DateTime(2019, 04, 25),
+                FechaDesde = new DateTime(2019, 04, 25) } });
             var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
@@ -210,7 +261,7 @@ namespace Molinos.DataAgro.Test.Managers
             logger.Verify(x=>x.Debug(It.IsAny<string>()),Times.Never);
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
-            Assert.AreEqual("Ya existe un rango para el grano, moneda y fecha de activación elegidos", resultado.ListaErrores[0].Message);
+            Assert.AreEqual("Ya existe un rango para los valores seleccionados", resultado.ListaErrores[0].Message);
         }
         [Test]
         public void EliminarRangoOk()

@@ -214,9 +214,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
             var hoy = DateTime.Now;
-            var rangoConfirmacionAutomaticaActivo = repositorio.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(
-                                    x => x.FechaDesde <= hoy && x.MaterialId == oFijacionDePrecio.MaterialId && x.MonedaId == oFijacionDePrecio.MonedaId,
-                                    x => x.FechaDesde);
+        
             var oFijacionDePrecioSave = oFijacionDePrecio;
             var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.ContratoId);
             if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
@@ -273,16 +271,10 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.Agregar(oFijacionDePrecioSave);
             }
-            if (rangoConfirmacionAutomaticaActivo != null)
+            if (ConfirmacionAutomatica(oFijacionDePrecioSave))
             {
-                if (rangoConfirmacionAutomaticaActivo.MaterialId == oFijacionDePrecioSave.MaterialId && rangoConfirmacionAutomaticaActivo.MonedaId == oFijacionDePrecioSave.MonedaId)
-                {
-                    if (rangoConfirmacionAutomaticaActivo.PrecioMinimo <= oFijacionDePrecioSave.Precio && rangoConfirmacionAutomaticaActivo.PrecioMaximo >= oFijacionDePrecioSave.Precio)
-                    {
-                        oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                        logger.Debug("El contrato " + oFijacionDePrecioSave.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
-                    }
-                }
+                oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                logger.Debug("El contrato " + oFijacionDePrecioSave.FijacionDePrecioContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
             }
             try
             {
@@ -294,6 +286,38 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
             return oEntityErrors;
+        }
+        private bool ConfirmacionAutomatica(FijacionDePrecioContrato contrato)
+        {
+            var hoy = DateTime.Now.Date;
+            var rango = repositorio.Obtener<RangoConfirmacionAutomatica>(x =>
+            x.FechaDesde <= hoy &&
+            x.FechaHasta >= hoy &&
+            x.MaterialId == contrato.MaterialId &&
+            x.MonedaId == contrato.MonedaId);
+
+            if (rango != null)
+            {
+            var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
+            var cantidad =
+                repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == hoy &&
+             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&  x.TipoNegocioId == 2);
+            cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId));
+            var total = cantidad.Sum();
+            var precioContrato = contrato.PrecioNeto.HasValue ? contrato.PrecioNeto.Value : contrato.Precio;
+
+                var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
+                    contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
+                    (total + contrato.Cantidad) <= rango.Cantidad &&
+                    grupo == rango.ZonaId &&
+                     precioContrato >= rango.PrecioMinimo && precioContrato <= rango.PrecioMaximo;
+                return valor;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId)

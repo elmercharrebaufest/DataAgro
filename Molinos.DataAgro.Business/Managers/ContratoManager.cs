@@ -13,6 +13,7 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
@@ -541,11 +542,6 @@ namespace Molinos.DataAgro.Business.Managers
             List<AperturaPrecio> aperturasExistentes = null;
             var hoy = DateTime.Now;
 
-            var rangoConfirmacionAutomaticaActivo = repositorio.ObtenerMayor<RangoConfirmacionAutomatica, DateTime>(
-                                    x => x.FechaDesde <= hoy && x.MaterialId == oContrato.MaterialId && x.MonedaId == oContrato.MonedaId,
-                                    x => x.FechaDesde);
-
-
             if (oContrato.ContratoId != 0)
             {
                 oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
@@ -694,17 +690,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Agregar(oContratoSave);
             }
 
-            if (rangoConfirmacionAutomaticaActivo != null)
-            {
-                if (rangoConfirmacionAutomaticaActivo.MaterialId == oContrato.MaterialId && rangoConfirmacionAutomaticaActivo.MonedaId == oContrato.MonedaId)
-                {
-                    if (rangoConfirmacionAutomaticaActivo.PrecioMinimo <= oContratoSave.Precio && rangoConfirmacionAutomaticaActivo.PrecioMaximo >= oContratoSave.Precio)
-                    {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                        logger.Debug("El contrato " + oContratoSave.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
-                    }
-                }
-            }
+            
 
             if (aperturasExistentes != null)
             {
@@ -721,7 +707,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
+            if (ConfirmacionAutomatica(oContrato))
+            {
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                logger.Debug("El contrato " + oContrato.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
 
+            }
             repositorio.GuardarCambios();
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
@@ -742,6 +733,38 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             return oEntityErrors;
+        }
+        private bool ConfirmacionAutomatica(Contrato contrato)
+        {
+            var hoy = DateTime.Now.Date;
+            var rango = repositorio.Obtener<RangoConfirmacionAutomatica>(x =>
+            x.FechaDesde <= hoy &&
+            x.FechaHasta >= hoy &&
+            x.MaterialId == contrato.MaterialId &&
+            x.MonedaId == contrato.MonedaId);
+
+            if (rango != null)
+            {
+            var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
+            var cantidad =
+                repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == hoy &&
+             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.ContratoId != contrato.ContratoId && x.TipoNegocioId == 2);
+            cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)));
+            var total = cantidad.Sum();
+            var precioContrato = contrato.PrecioNeto ?? contrato.Precio;
+
+                var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
+                    contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
+                    (total + contrato.Cantidad) <= rango.Cantidad &&
+                    grupo == rango.ZonaId &&
+                     precioContrato >= rango.PrecioMinimo && precioContrato <= rango.PrecioMaximo;
+                return valor;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)

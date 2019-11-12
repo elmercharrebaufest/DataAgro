@@ -27,7 +27,8 @@ namespace Molinos.DataAgro.Business
             return new DatosIniAbmRangoConfirmacionAutomatica()
             {
                 Material = qry.GetMaterialCombo(),
-                Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion })
+                Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }),
+                Zona= repositorio.Listar<GrupoDeCompras, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion })
             };
         }
 
@@ -59,6 +60,13 @@ namespace Molinos.DataAgro.Business
                 Moneda = x.Moneda.Descripcion,
                 MonedaId = x.MonedaId,
                 FechaDesde = x.FechaDesde,
+                HastaAnio=x.HastaAnio,
+                ZonaId=x.ZonaId,
+                Zona=x.Zona.Descripcion,
+                Cantidad=x.Cantidad,
+                DesdeAnio=x.DesdeAnio,
+                DesdeMes=x.DesdeMes,
+                HastaMes=x.HastaMes
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
@@ -81,6 +89,12 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.MaterialId = oRango.MaterialId;
                 oRangoSave.MonedaId = oRango.MonedaId;
                 oRangoSave.FechaDesde = oRango.FechaDesde;
+                oRangoSave.ZonaId = oRango.ZonaId;
+                oRangoSave.Cantidad = oRango.Cantidad;
+                oRangoSave.DesdeMes = oRango.DesdeMes;
+                oRangoSave.HastaMes = oRango.HastaMes;
+                oRangoSave.DesdeAnio = oRango.DesdeAnio;                
+                oRangoSave.HastaAnio = oRango.HastaAnio;                
             }
             else
             {
@@ -135,18 +149,44 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Moneda", "El campo Moneda no puede estar vacío");
             }
-            if (oRango.FechaDesde == null)
+            if (oRango.FechaDesde == null|| oRango.FechaHasta == null)
             {
-                oEntityErrors.Error("FechaDesde", "El campo Fecha Desde no puede estar vacío");
+                oEntityErrors.Error("FechaDesde", "Los campos Fecha Desde-Hasta no pueden estar vacíos");
             }
             if (oRango.MaterialId == 0)
             {
                 oEntityErrors.Error("Material", "El campo Material no puede estar vacío");
             }
-            var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
-            if (rangosExistentes.Exists(x => x.Id != oRango.Id && x.MaterialId == oRango.MaterialId && x.MonedaId == oRango.MonedaId && x.FechaDesde == oRango.FechaDesde))
+            if (oRango.Cantidad == 0)
             {
-                oEntityErrors.Error("Rango", "Ya existe un rango para el grano, moneda y fecha de activación elegidos");
+                oEntityErrors.Error("cantidad", "El campo Cantidad no puede estar vacío");
+            }
+            if (oRango.ZonaId == 0)
+            {
+                oEntityErrors.Error("Zona", "El campo Zona no puede estar vacío");
+            }
+            if (oRango.DesdeMes == 0 || oRango.HastaMes == 0)
+            {
+                oEntityErrors.Error("Mes", "Los campos Mes no pueden estar vacios");
+            }
+            if (oRango.DesdeAnio == 0 || oRango.HastaAnio == 0)
+            {
+                oEntityErrors.Error("Anio", "Los campos Año no pueden estar vacios");
+            }
+            var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
+            if (rangosExistentes.Exists(x => 
+            x.Id != oRango.Id &&
+            x.MaterialId == oRango.MaterialId &&
+            x.MonedaId == oRango.MonedaId && 
+            x.FechaDesde == oRango.FechaDesde &&
+            x.FechaHasta == oRango.FechaHasta &&
+            x.ZonaId == oRango.ZonaId &&
+            x.DesdeMes == oRango.DesdeMes &&
+            x.HastaMes == oRango.HastaMes &&
+            x.DesdeAnio == oRango.DesdeAnio &&
+            x.HastaAnio == oRango.HastaAnio))
+            {
+                oEntityErrors.Error("Rango", "Ya existe un rango para los valores seleccionados");
             }
             return oEntityErrors;
         }

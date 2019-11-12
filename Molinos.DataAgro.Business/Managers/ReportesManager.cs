@@ -695,8 +695,8 @@ namespace Molinos.DataAgro.Business.Managers
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.FijacionDePrecioContratoId,
-                FechaDesde = x.Fecha,
-                FechaHasta = x.Fecha,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 CampanaId = x.CampanaId,
@@ -712,10 +712,10 @@ namespace Molinos.DataAgro.Business.Managers
                 && (centroId == 0 || centroId == x.DestinoId));
             foreach (var cont in fijaciones)
             {
-                var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+                var posicion = cont.FechaDesde - DateTime.Now;
 
-                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
-                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                cont.ClasificacionNegocio = (posicion.Days<=30 && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.CampanaMaterialId == cont.CampanaId && posicion.Days > 30 ? EnumClasificacionNegocio.ForwardFijacion :
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(fijaciones);
@@ -795,88 +795,64 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var posKil = new PosicionKilos();
 
-                if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
+                    cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
+                    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
                 {
-                    posKil.KilosPesos = cont.MonedaId == "ARP  "
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                        ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.KilosDolares = cont.MonedaId == "USDM "
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                        ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
-                    posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
-                    posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
-                    posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
-                    posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
-                    posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
-                    posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
-                    posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
-                    posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
-                    posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
-                    posKil.Anio = cont.FechaDesde.Year;
-                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.CantidadPonderada = cont.CantidadPonderada;
+                    if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+                    }
+                    else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                    {
+                        cont.FechaDesde = cont.FechaDesde.AddMonths(1);
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+
+                    }
+                    else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
+                        posKil.Anio = cont.FechaHasta.Year;
+                    }
                 }
-                else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                else
                 {
-                    cont.FechaDesde = cont.FechaDesde.AddMonths(1);
-                    posKil.KilosPesos = cont.MonedaId == "ARP  "
-                       && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
-                       && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
-                       && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                       ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.KilosDolares = cont.MonedaId == "USDM "
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                        ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
-                    posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
-                    posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
-                    posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
-                    posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
-                    posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
-                    posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
-                    posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
-                    posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
-                    posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
-                    posKil.Anio = cont.FechaDesde.Year;
-                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.CantidadPonderada = cont.CantidadPonderada;
+                    if (new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+                    {
+                        posKil.Mes = (EnumMeses)DateTime.Now.Month;
+                        posKil.Anio = DateTime.Now.Year;
+                    }
+                    else
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+                    }
                 }
-                else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
-                {
-                    posKil.KilosPesos = cont.MonedaId == "ARP  "
+                posKil.KilosPesos = cont.MonedaId == "ARP  "
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
                         && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
                         ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.KilosDolares = cont.MonedaId == "USDM "
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
-                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
-                        ? Math.Round(cont.Cantidad / 1000) : 0;
-                    posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
-                    posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
-                    posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
-                    posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
-                    posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
-                    posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
-                    posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
-                    posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
-                    posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
-                    posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
-                    posKil.Anio = cont.FechaHasta.Year;
-                    posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
-                    posKil.CantidadPonderada = cont.CantidadPonderada;
-                }
+                posKil.KilosDolares = cont.MonedaId == "USDM "
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
+                    ? Math.Round(cont.Cantidad / 1000) : 0;
+                posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
+                posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
+                posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
+                posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
+                posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
+                posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
+                posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
+                posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
+                posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
+                posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                posKil.CantidadPonderada = cont.CantidadPonderada;
+                
                 posicionKilos.Add(posKil);
             }
             posicionKilos = posicionKilos

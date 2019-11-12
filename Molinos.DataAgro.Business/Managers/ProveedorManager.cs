@@ -487,7 +487,22 @@ namespace Molinos.DataAgro.Business.Managers
                     return;
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+                var emailComerciales = "";
+                if (oFijacionDePrecioContrato.Comercial.PerfilId == (int)EnumPerfil.CorredoresComercial)
+                {
+                    var corredoresComerciales = mobComercial.ListarComercialesCorredor();
+                    corredoresComerciales.Remove(oFijacionDePrecioContrato.Comercial);
 
+                    foreach (Comercial corredorComercialCopia in corredoresComerciales)
+                    {
+                        try
+                        {
+                            emailComerciales = GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                            oMensaje.To.Add(emailComerciales);
+                        }
+                        catch (Exception e) { logger.Error(e); }
+                    }
+                }
                 oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {

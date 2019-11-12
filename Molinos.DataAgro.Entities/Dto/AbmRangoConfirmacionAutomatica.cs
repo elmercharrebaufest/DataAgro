@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<MaterialCombo> Material { get; set; }
         public List<MonedaQry> Moneda { get; set; }
+        public List<ZonaQry> Zona { get; set; }
     }
 
     public class DataAbmRangoConfirmacionAutomatica : Resultado
@@ -33,6 +34,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public string Moneda { get; set; }
         public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public int ZonaId { get; set; }
+        public string Zona { get; set; }
+        public int Cantidad { get; set; }
+        public int DesdeMes { get; set; }
+        public int DesdeAnio { get; set; }
+        public int HastaMes { get; set; }
+        public int HastaAnio { get; set; }
     }
 }
 

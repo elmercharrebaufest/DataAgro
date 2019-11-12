@@ -6,10 +6,9 @@
     @Scripts.Render("~/bundles/AbmRangoConfirmacionAutomatica")
 }
 <style>
-    .k-i-warning{
-        display:none;
+    .k-i-warning {
+        display: none;
     }
-
 </style>
 
 <h3>Rango de Confirmacion Automática</h3>
@@ -59,19 +58,12 @@
                         <input id="precioMaximo" data-bind="value: RangoConfirmacionAutomatica.PrecioMaximo, disabled: isControlDisabled" style="width:100%" />
                         <img id="errPrecio" src="~/Content/Images/error.png" style="display:none" />
                     </div>
-                    <div class="col-md-6">
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-2">
                         <label>Material</label>
                     </div>
                     <div class="col-md-4">
                         <select id="material" data-bind="source: MaterialCombo, value: RangoConfirmacionAutomatica.MaterialId, disabled: isControlDisabled"></select>
                         <img id="errMaterial" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-                    <div class="col-md-6">
                     </div>
                 </div>
                 <div class="row">
@@ -82,16 +74,50 @@
                         <select id="moneda" data-bind="source: MonedaCombo, value: RangoConfirmacionAutomatica.MonedaId, disabled: isControlDisabled"></select>
                         <img id="errMoneda" src="~/Content/Images/error.png" style="display:none" />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-2">
+                        <label> Validez </label>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="FechaDesde" type="text" data-bind="value: RangoConfirmacionAutomatica.FechaDesde, disabled: isControlDisabled" style="width:100%" />
+                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-2">
+                        <input id="FechaHasta" type="text" data-bind="value: RangoConfirmacionAutomatica.FechaHasta, disabled: isControlDisabled" style="width:100%" />
+                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label> Fecha Desde </label>
+                        <label>Zona</label>
                     </div>
                     <div class="col-md-4">
-                        <input id="FechaDesde" type="text" data-bind="value: RangoConfirmacionAutomatica.FechaDesde, disabled: isControlDisabled" style="width:100%" />
-                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
+                        <select id="zona" data-bind="source: ZonaCombo, value: RangoConfirmacionAutomatica.ZonaId, disabled: isControlDisabled"></select>
+                    </div>
+                    <div class="col-md-2">
+                        <label> Cantidad </label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="cantidad" data-bind="value: RangoConfirmacionAutomatica.Cantidad, disabled: isControlDisabled" style="width:100%" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label> Mes Desde-Hasta </label>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="desdeMes" data-bind="value: RangoConfirmacionAutomatica.DesdeMes, disabled: isControlDisabled" style="width:100%" />
+                    </div>
+                    <div class="col-md-2">
+                        <input id="hastaMes" data-bind="value: RangoConfirmacionAutomatica.HastaMes, disabled: isControlDisabled" style="width:100%" />
+                    </div>
+                    <div class="col-md-2">
+                        <label> Año Desde-Hasta </label>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="desdeAnio" data-bind="value: RangoConfirmacionAutomatica.DesdeAnio, disabled: isControlDisabled" style="width:100%" />
+                    </div>
+                    <div class="col-md-2">
+                        <input id="hastaAnio" data-bind="value: RangoConfirmacionAutomatica.HastaAnio, disabled: isControlDisabled" style="width:100%" />
                     </div>
                 </div>
                 <br />

@@ -17,11 +17,6 @@ $(document).ready(function () {
     InicializarCombos();
     InicializarBusquedaInicial();
 
-    var idPerfil = $("#PerfilId").val();
-
-    if (idPerfil == 4 || idPerfil == 5) {
-        $("#Administrador").prop("checked", false);
-        $("#Administrador").prop("disabled", true);
     }
 });
 
@@ -46,7 +41,7 @@ function InicializarElementos() {
 
     $("#material").kendoDropDownList({
         dataTextField: "Descripcion",
-        dataValueField: "MaterialId",
+        dataValueField: "MaterialId"
     });
 
     $("#material").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -54,7 +49,16 @@ function InicializarElementos() {
             $("#material").data("kendoDropDownList").text("");
         }
     });
+    $("#zona").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
 
+    $("#zona").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#zona").data("kendoDropDownList").text("");
+        }
+    });
     $("#moneda").kendoDropDownList({
         dataTextField: "Descripcion",
         dataValueField: "MonedaId",
@@ -70,7 +74,42 @@ function InicializarElementos() {
         value: new Date(),
         dateInput: true
     });
-
+    $("#FechaHasta").kendoDateTimePicker({
+        value: new Date(),
+        dateInput: true
+    });
+    $("#cantidad").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
+    $("#desdeMes").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 1,
+        max:12
+    });
+    $("#hastaMes").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 1,
+        max:12
+    });
+    $("#desdeAnio").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
+    $("#hastaAnio").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
     });
@@ -175,7 +214,7 @@ function InicializarCombos() {
             AsignarCombos();
             InicializarBusquedaInicial();
         }
-    }
+    };
 
     MSExecuteURLOnServerAsync('/RangoConfirmacionAutomatica/Inicializar', funcReturn, '');
 }
@@ -183,6 +222,7 @@ function InicializarCombos() {
 function AsignarCombos() {
     viewModel.set("MaterialCombo", datosIniAbmRango.Datos.Material);
     viewModel.set("MonedaCombo", datosIniAbmRango.Datos.Moneda);
+    viewModel.set("ZonaCombo", datosIniAbmRango.Datos.Zona);
 }
 
 function InicializarBusquedaInicial() {
@@ -235,7 +275,14 @@ function UpdateViewModel(model) {
         "PrecioMaximo": model.Rango.PrecioMaximo,
         "MaterialId": model.Rango.MaterialId,
         "MonedaId": model.Rango.MonedaId,
-        "FechaDesde": model.Rango.FechaDesde
+        "FechaDesde": model.Rango.FechaDesde,
+        "FechaHasta": model.Rango.FechaHasta,
+        "ZonaId": model.Rango.ZonaId,
+        "Cantidad": model.Rango.Cantidad,
+        "DesdeMes": model.Rango.DesdeMes,
+        "DesdeAnio": model.Rango.DesdeAnio,
+        "HastaMes": model.Rango.HastaMes,
+        "HastaAnio": model.Rango.HastaAnio
     };
 
     viewModel.set("RangoConfirmacionAutomatica", rango);
@@ -288,6 +335,13 @@ function LimpiarAgregarModificar() {
     $("#material").data("kendoDropDownList").value("");
     $("#moneda").data("kendoDropDownList").value("");
     $("#FechaDesde").data("kendoDateTimePicker").value("");
+    $("#FechaHasta").data("kendoDateTimePicker").value("");
+    $("#zona").data("kendoDropDownList").value("");
+    $("#cantidad").data("kendoNumericTextBox").value("");
+    $("#desdeMes").data("kendoNumericTextBox").value("");
+    $("#desdeAnio").data("kendoNumericTextBox").value("");
+    $("#hastaMes").data("kendoNumericTextBox").value("");
+    $("#hastaAnio").data("kendoNumericTextBox").value("");
 }
 function Modificar() {
 
@@ -302,7 +356,7 @@ function Modificar() {
     }
 
     var param = {
-        "Id": data.Id,
+        "Id": data.Id
     };
 
     if (data.Id > 0) {
@@ -323,21 +377,6 @@ function Modificar() {
             }
         }
     }
-
-    //var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Aplicar', param);
-
-    //if (result != null) {
-    //    if (ExistsErrorMessages(result.Errores)) {
-    //        ShowTooltipMessages("err", result.Errores);
-    //    }
-    //    else {
-    //        viewModel.set("isModifyDisabled", true);
-    //        $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
-    //        HabilitarEdicion();
-    //        LimpiarValidaciones();
-    //        UpdateViewModel(result);
-    //    }
-    //}
 }
 
 function Eliminar() {
@@ -356,7 +395,7 @@ function EjecutarEliminar() {
     var data = grid.dataItem(row);
 
     var param = {
-        "Id": data.Id,
+        "Id": data.Id
     };
 
     var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Eliminar', param);
@@ -389,6 +428,13 @@ function Grabar() {
         "MaterialId": $("#material").data("kendoDropDownList").value(),
         "MonedaId": $("#moneda").data("kendoDropDownList").value(),
         "FechaDesde": $("#FechaDesde").data("kendoDateTimePicker").value(),
+        "Fechahasta": $("#FechaHasta").data("kendoDateTimePicker").value(),
+        "ZonaId": $("#zona").data("kendoDropDownList").value(),
+        "Cantidad": $("#cantidad").data("kendoNumericTextBox").value(),
+        "DesdeMes": $("#desdeMes").data("kendoNumericTextBox").value(),
+        "DesdeAnio": $("#desdeAnio").data("kendoNumericTextBox").value(),
+        "HastaMes": $("#hastaMes").data("kendoNumericTextBox").value(),
+        "HastaAnio": $("#hastaAnio").data("kendoNumericTextBox").value()
     };
     var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Grabar', datos);
 
