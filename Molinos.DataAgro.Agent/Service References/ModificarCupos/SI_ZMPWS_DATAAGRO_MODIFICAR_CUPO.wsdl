@@ -13,6 +13,7 @@
             <xsd:element name="IM_COMERCIAL" type="rfc:char12" />
             <xsd:element minOccurs="0" name="IM_DESCPROV" type="rfc:char35" />
             <xsd:element minOccurs="0" name="IM_DESTINATARIO" type="rfc:char16" />
+            <xsd:element minOccurs="0" name="IM_FLETE_PROC" type="rfc:char1" />
             <xsd:element minOccurs="0" name="IM_OBSERVACIONES" type="rfc:char255" />
             <xsd:element minOccurs="0" name="IM_PROVEEDOR" type="rfc:char10" />
           </xsd:sequence>
@@ -38,6 +39,11 @@
       <xsd:simpleType name="char35">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="35" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char10">

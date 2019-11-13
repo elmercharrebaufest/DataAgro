@@ -2,7 +2,7 @@
 
 var datosIniAbmCentro;
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
@@ -17,7 +17,6 @@ $(document).ready(function () {
     InicializarCombos();
     InicializarBusquedaInicial();
 
-    }
 });
 
 function InicializarElementos() {

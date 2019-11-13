@@ -42,6 +42,8 @@ namespace Molinos.DataAgro.Agent.ModificarCupos {
         
         private string iM_DESTINATARIOField;
         
+        private string iM_FLETE_PROCField;
+        
         private string iM_OBSERVACIONESField;
         
         private string iM_PROVEEDORField;
@@ -108,6 +110,18 @@ namespace Molinos.DataAgro.Agent.ModificarCupos {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string IM_FLETE_PROC {
+            get {
+                return this.iM_FLETE_PROCField;
+            }
+            set {
+                this.iM_FLETE_PROCField = value;
+                this.RaisePropertyChanged("IM_FLETE_PROC");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string IM_OBSERVACIONES {
             get {
                 return this.iM_OBSERVACIONESField;
@@ -119,7 +133,7 @@ namespace Molinos.DataAgro.Agent.ModificarCupos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string IM_PROVEEDOR {
             get {
                 return this.iM_PROVEEDORField;
