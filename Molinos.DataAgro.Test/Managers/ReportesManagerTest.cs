@@ -839,7 +839,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             Assert.NotNull(result);
-            Assert.AreEqual(4, result.Data.Count);
+            Assert.AreEqual(2, result.Data.Count);
         }
         [Test]
         public void DetallePosicionTestOkDesdeSuperiorMesAnio()
@@ -866,7 +866,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             Assert.NotNull(result);
-            Assert.AreEqual(2, result.Data.Count);
+            Assert.AreEqual(1, result.Data.Count);
         }
         [Test]
         public void DetallePosicionTestOkHastaInferiorMesDesdeAnio()
@@ -894,7 +894,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             Assert.NotNull(result);
-            Assert.AreEqual(3, result.Data.Count);
+            Assert.AreEqual(2, result.Data.Count);
         }
         [Test]
         public void DetalleAgenteTestOk()

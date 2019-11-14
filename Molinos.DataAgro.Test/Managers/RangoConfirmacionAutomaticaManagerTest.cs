@@ -214,7 +214,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
-            Assert.AreEqual(8, resultado.Errores.Count);
+            Assert.AreEqual(6, resultado.Errores.Count);
         }
         [Test]
         public void GrabarRangoErrorRangoexistente()

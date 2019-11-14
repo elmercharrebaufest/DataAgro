@@ -167,11 +167,7 @@ namespace Molinos.DataAgro.Business
             if (oRango.Cantidad == 0)
             {
                 oEntityErrors.Error("cantidad", "El campo Cantidad no puede estar vacío");
-            }
-            if (oRango.ZonaId == 0)
-            {
-                oEntityErrors.Error("Zona", "El campo Zona no puede estar vacío");
-            }
+            }           
             if (oRango.DesdeMes == 0 || oRango.HastaMes == 0)
             {
                 oEntityErrors.Error("Mes", "Los campos Mes no pueden estar vacios");
