@@ -11,8 +11,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int MaterialId { get; set; }
         public string MonedaId { get; set; }
         public DateTime FechaDesde { get; set; }
-        public DateTime? FechaHasta { get; set; }
-        public int ZonaId { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public int? ZonaId { get; set; }
         public int Cantidad { get; set; }
         public int DesdeMes { get; set; }
         public int DesdeAnio { get; set; }

@@ -38,10 +38,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ZonaId { get; set; }
         public string Zona { get; set; }
         public int Cantidad { get; set; }
-        public int DesdeMes { get; set; }
-        public int DesdeAnio { get; set; }
-        public int HastaMes { get; set; }
-        public int HastaAnio { get; set; }
+        public string EntregaDesde { get; set; }
+        public string EntregaHasta { get; set; }
+
     }
 }
 

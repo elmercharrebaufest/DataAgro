@@ -60,7 +60,7 @@ function InicializarElementos() {
     });
     $("#moneda").kendoDropDownList({
         dataTextField: "Descripcion",
-        dataValueField: "MonedaId",
+        dataValueField: "MonedaId"
     });
 
     $("#moneda").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -85,27 +85,27 @@ function InicializarElementos() {
     });
     $("#desdeMes").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "#",
         spinners: false,
         min: 1,
         max:12
     });
     $("#hastaMes").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "#",
         spinners: false,
         min: 1,
         max:12
     });
     $("#desdeAnio").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "#",
         spinners: false,
         min: 0
     });
     $("#hastaAnio").kendoNumericTextBox({
         culture: "es-AR",
-        format: "n0",
+        format: "#",
         spinners: false,
         min: 0
     });
@@ -142,6 +142,11 @@ function CrearResultadosDataSource(datos) {
                     Material: { type: "string", editable: false },
                     Moneda: { type: "string", editable: false },
                     FechaDesde: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
+                    FechaHasta: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
+                    Cantidad: { type: "number", editable: false },
+                    EntregaDesde: { type: "string", editable: false },
+                    EntregaHasta: { type: "string", editable: false },
+                    Zona: { type: "string", editable: false }
                 }
             }
         },
@@ -162,7 +167,15 @@ function CreateGridRango() {
             {
                 field: "FechaDesde", title: "Fecha Desde", filterable: false,
                 template: "#= kendo.toString(kendo.parseDate(FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm') #"
-            }
+            },
+            {
+                field: "FechaHasta", title: "Fecha Hasta", filterable: false,
+                template: "#= kendo.toString(kendo.parseDate(FechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm') #"
+            },
+            { field: "Cantidad", title: "Cantidad", filterable: false },
+            { field: "EntregaDesde", title: "Entrega Desde", filterable: false },
+            { field: "EntregaHasta", title: "Entrega Hasta", filterable: false },
+            { field: "Zona", title: "Zona", filterable: false }
         ],
         sortable: true,
         scrollable: false,
@@ -368,8 +381,8 @@ function Modificar() {
             else {
                 viewModel.set("RangoConfirmacionAutomatica", datosRango.Rango);
                 $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                $("#FechaHasta").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
                 viewModel.set("isModifyDisabled", true);
-                $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
                 HabilitarEdicion();
                 LimpiarValidaciones();
                 UpdateViewModel(datosRango);

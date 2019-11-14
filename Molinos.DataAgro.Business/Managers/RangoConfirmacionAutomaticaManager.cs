@@ -43,7 +43,12 @@ namespace Molinos.DataAgro.Business
                     PrecioMaximo = x.PrecioMaximo,
                     Material = x.Material.Descripcion,
                     Moneda = x.MonedaId,
-                    FechaDesde = x.FechaDesde
+                    FechaDesde = x.FechaDesde,
+                    FechaHasta = x.FechaHasta,
+                    Cantidad = x.Cantidad,
+                    EntregaDesde = x.DesdeMes + "/" + x.DesdeAnio,
+                    EntregaHasta = x.HastaMes + "/" + x.HastaAnio,
+                    Zona = x.Zona != null ? x.Zona.Descripcion : ""
                 }, null, 0, "Material")
             };
         }
@@ -61,12 +66,13 @@ namespace Molinos.DataAgro.Business
                 MonedaId = x.MonedaId,
                 FechaDesde = x.FechaDesde,
                 HastaAnio=x.HastaAnio,
-                ZonaId=x.ZonaId,
+                ZonaId=x.ZonaId ?? 0,
                 Zona=x.Zona.Descripcion,
                 Cantidad=x.Cantidad,
                 DesdeAnio=x.DesdeAnio,
                 DesdeMes=x.DesdeMes,
-                HastaMes=x.HastaMes
+                HastaMes=x.HastaMes,
+                FechaHasta=x.FechaHasta
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
@@ -89,6 +95,7 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.MaterialId = oRango.MaterialId;
                 oRangoSave.MonedaId = oRango.MonedaId;
                 oRangoSave.FechaDesde = oRango.FechaDesde;
+                oRangoSave.FechaHasta = oRango.FechaHasta;
                 oRangoSave.ZonaId = oRango.ZonaId;
                 oRangoSave.Cantidad = oRango.Cantidad;
                 oRangoSave.DesdeMes = oRango.DesdeMes;

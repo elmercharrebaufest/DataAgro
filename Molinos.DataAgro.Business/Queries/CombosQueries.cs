@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Business
             {
                 MaterialId = x.MaterialId,
                 Descripcion = x.Descripcion
-            }, null, 15, "Descripcion");
+            }, null, 15, "MaterialId");
         }
 
         public List<NivelTarifaCombo> GetNivelTarifaCombo()
