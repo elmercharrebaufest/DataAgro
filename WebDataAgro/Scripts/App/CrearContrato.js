@@ -312,7 +312,7 @@ function InicializarElementos() {
             $("#fechaHastaId").val(e.dataItem.HastaEntrega);
             $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
             $("#destinoId").data("kendoDropDownList").value(e.dataItem.Centro);
-            e.dataItem.Calidad === true ? $("#pesificadoId").prop("checked", true) : $("#pesificadoId").prop("checked", false);
+            e.dataItem.Calidad === true ? $("#trigoEspecialFijacion").prop("checked", true) : $("#trigoEspecialFijacion").prop("checked", false);
             e.dataItem.PagoDiferido === true ? $("#pesificadoId").prop("checked", true) : $("#pesificadoId").prop("checked", false);
         },
         dataSource: {
@@ -2161,6 +2161,7 @@ function ObtenerDatos() {
         obj.StandardDeCalidadId = viewModel.Calidades[0].StandardDeCalidadId;
     }
 
+    if (obj.TipoNegocioId == 3) obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
     obj.Compensacion = $("#compensacionId").is(":checked") ? true : false;
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
