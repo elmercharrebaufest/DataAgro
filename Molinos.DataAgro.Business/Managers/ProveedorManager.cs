@@ -409,12 +409,13 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (eliminar != null && eliminar == true)
                 {
-                    subject += "Anulación negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                    subject += "Anulación negocio Molinos Agro S.A. - ";
                 }
                 else
                 {
-                    subject += "Nuevo negocio Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
+                    subject += "Nuevo negocio Molinos Agro S.A. - ";
                 }
+                subject += oContrato.Corredor != null ? oContrato.Corredor.RazonSocial : oContrato.Proveedor.RazonSocial;
                 oMensaje.Subject = subject;
                 oMensaje.BodyEncoding = Encoding.UTF8;
 
@@ -452,7 +453,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oFijacionDePrecioContrato.ProveedorId && x.CompraNet == true);
+                var id = oFijacionDePrecioContrato.CorredorId.HasValue ? oFijacionDePrecioContrato.CorredorId : oFijacionDePrecioContrato.ProveedorId;
+                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.CompraNet == true);
 
                 string emailComercial = "";
 
@@ -504,14 +506,17 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
+                var subject = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
-                    oMensaje.Subject = "Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
+                    subject += "Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
                 }
                 else
                 {
-                    oMensaje.Subject = "Mail Pruebas - Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
+                    subject += "Mail Pruebas - Nueva fijación Molinos Agro S.A. –  " ;
                 }
+                subject += oFijacionDePrecioContrato.Corredor!= null? oFijacionDePrecioContrato.Corredor.RazonSocial: oFijacionDePrecioContrato.Proveedor.RazonSocial;
+                oMensaje.Subject = subject;
                 var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
 
                 oMensaje.BodyEncoding = Encoding.UTF8;
