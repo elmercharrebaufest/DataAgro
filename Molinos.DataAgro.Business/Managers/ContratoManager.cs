@@ -751,7 +751,7 @@ namespace Molinos.DataAgro.Business.Managers
              (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.ContratoId != contrato.ContratoId && x.TipoNegocioId == 2
              && x.MaterialId== rango.MaterialId);
             cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
-            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)));
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == rango.MaterialId));
             var total = cantidad.Sum();
             var precioContrato = contrato.PrecioNeto ?? contrato.Precio;
 

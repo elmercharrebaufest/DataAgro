@@ -287,9 +287,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        
         private bool ConfirmacionAutomatica(FijacionDePrecioContrato contrato)
         {
-            var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Now;
             var rango = repositorio.Obtener<RangoConfirmacionAutomatica>(x =>
             x.FechaDesde <= hoy &&
             x.FechaHasta >= hoy &&
@@ -298,19 +299,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (rango != null)
             {
-            var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
-            var cantidad =
-                repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == hoy &&
-             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&  x.TipoNegocioId == 2);
-            cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
-            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId));
-            var total = cantidad.Sum();
-            var precioContrato = contrato.PrecioNeto.HasValue ? contrato.PrecioNeto.Value : contrato.Precio;
+                var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
+                var cantidad =
+                    repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
+                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 2
+                 && x.MaterialId == rango.MaterialId);
+                cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId 
+                && x.MaterialId == rango.MaterialId));
+
+                var total = cantidad.Sum();
+                var precioContrato = contrato.PrecioNeto ?? contrato.Precio;
 
                 var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
                     contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
                     (total + contrato.Cantidad) <= rango.Cantidad &&
-                    grupo == rango.ZonaId &&
+                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId) &&
                      precioContrato >= rango.PrecioMinimo && precioContrato <= rango.PrecioMaximo;
                 return valor;
             }
@@ -319,7 +323,6 @@ namespace Molinos.DataAgro.Business.Managers
                 return false;
             }
         }
-
         public GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             var oEntityErrors = new GrabarFijacionResult();
