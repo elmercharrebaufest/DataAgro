@@ -142,15 +142,20 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
                 return oErrorMessages;
             }
-            if (!listaContrato.Select(x => x.ContratoId.TrimStart('0')).Contains(oParam.ContratoSAP.TrimStart('0')))
+            var fijacion = listaContrato.FirstOrDefault(x => x.ContratoId == oParam.ContratoSAP.TrimStart('0'));
+            if (fijacion == null)
             {
                 oErrorMessages.Error("ContratoId", "El Contrato no existe");
                 return oErrorMessages;
             }
-            var cantidadContrato = listaContrato.FirstOrDefault(x=>x.ContratoId == oParam.ContratoSAP.TrimStart('0')).KilosPendiente;
-            if (double.Parse(cantidadContrato.Replace(".","")) - oParam.Cantidad < 0)
+            else
             {
-                oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
+                var cantidadContrato = fijacion.KilosPendiente;
+                if (double.Parse(cantidadContrato.Replace(".", "")) - oParam.Cantidad < 0)
+                {
+                    oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
+                }
+                oParam.TrigoEspecial = fijacion.Calidad.Value;
             }
             if (oParam.Cantidad < 0)
             {

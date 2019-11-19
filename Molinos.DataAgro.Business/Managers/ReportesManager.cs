@@ -454,7 +454,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId.Value,
                 Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
-                && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
+                && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta & (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
             var fasones = repositorio.Listar<Fason, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
@@ -464,7 +464,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000)
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaDesde
-                    && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3) && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+                    && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var agentes = repositorio.Listar<AgenteCompra, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
