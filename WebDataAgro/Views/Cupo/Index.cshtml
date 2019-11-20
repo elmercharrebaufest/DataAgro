@@ -17,7 +17,6 @@
 
 @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
 {
-
     <input type="hidden" id="perfil" value="@ViewBag.perfil" />
     <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
     <!--container-->
@@ -27,9 +26,15 @@
                 <span id="crearCupo" class="btnAzul btn-block" type="button">
                     <i class="fa fa-file-o"></i>
                     Crear Nuevo Cupo
-                </span>                
+                </span>
             </div>
-            <div class="float-right">
+            <div class="float-right margen-15">
+                <span id="copiar" class="btnVarios" onclick="copiarSelccionados()">
+                    <i class="fa fa-copy"></i>
+                    Copiar
+                </span>
+            </div>
+            <div class="float-right margen-15">
                 <span id="retransmitir" class="btnVarios" onclick="retransmitirSelccionados()">
                     <i class="fa fa-mail-forward"></i>
                     Retransmitir
@@ -45,7 +50,7 @@
             </div>
         </div>
     </div>
-}
 
+}
 <!-- Modal Borrar-->
 @Html.Partial("ModalBorrar")

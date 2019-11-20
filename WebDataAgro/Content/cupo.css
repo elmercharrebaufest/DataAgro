@@ -77,28 +77,6 @@
         border: 1px solid #017940;
     }
 
-.myBtn {
-    width: 100%;
-    text-decoration: none;
-    color: #787878;
-    text-align: center;
-    box-shadow: none !important;
-    padding: 6px;
-    color: #000;
-    border: 1px solid #017940;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-weight: 400 !important;
-    background-color: #fff;
-}
-    .myBtn:hover, .myBtn:active {
-        color: #FFF;
-        background: #017940;
-        border-color: #017940;
-    }
 
 .espaciolineas {
     line-height: 1.6;
@@ -191,10 +169,101 @@
 .noRightPadding{
     padding-right:0;
 }
-
+.noLeftPadding {
+    padding-left: 0;
+}
 .k-filter-menu{
     width:inherit;
 }
 div > label {
     margin-left: 10px;
+}
+
+.status div {
+    font-size: 12px;
+    text-align: left;
+    margin: 10px 0;
+    border: 0;
+    color: #FFF;
+    padding: 3px;
+    font-weight: 700;
+}
+
+.confirmado-modal div {
+    background: #008e61 !important;
+}
+
+.modal .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    background: none !important;
+    text-indent: 0;
+}
+
+.modal .modal-header .cerrar {
+    margin-top: 0.8rem !important;
+    margin-right: 0.5rem;
+}
+.modal .modal-header {
+    padding: 6px;
+    border-bottom: none;
+}
+.modal .modal-body {
+    padding: 0 15px 0px 15px;
+}
+
+.modal .modal-footer {
+    border: none;
+    padding: 15px 15px 0px 15px;
+    margin: 0;
+}
+#error-modal {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+}
+
+.myBtn {    
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400 !important;
+    background-color: #fff;
+}
+
+    .myBtn:hover, .myBtn:active {
+        color: #FFF;
+        background: #017940;
+        border-color: #017940;
+    }
+#cupos-generados-modal {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.margen-15{
+    margin:15px;
+}
+
+#boton-si,
+#boton-no {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+ul{
+    padding:0;
 }

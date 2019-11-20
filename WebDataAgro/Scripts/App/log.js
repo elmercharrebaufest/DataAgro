@@ -13,7 +13,7 @@ function copia_portapapeles(data) {
         } else if (window.clipboardData) {
             window.clipboardData.setData('Text', data);
         }
-    }
+    };
     window.addEventListener('copy', copy);
     document.execCommand('copy');
     window.removeEventListener('copy', copy);

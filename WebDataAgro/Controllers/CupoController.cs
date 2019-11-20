@@ -89,7 +89,8 @@ namespace WebDataAgro.Controllers
             cupo.CantidadCupos = cupo.CantidadCupos
                                  != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
-            var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value);
+            var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
+            var modificado = cupo.Id != 0;
             if (error.HayError)
             {
                 foreach (var e in error.Errores)
@@ -102,7 +103,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.CantidadCupos.Value);
+                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
                 if (cupoGrabado.HayError)
                 {
                     foreach (var e in cupoGrabado.Errores)
@@ -113,14 +114,16 @@ namespace WebDataAgro.Controllers
                         }
                     }
                 }
+                cupo.Resultado = cupoGrabado;
             }
-            if (!ModelState.IsValid)
+            if (!ViewData.ModelState.IsValid || !modificado)
             {
                 CargarViewBag();
                 return View(cupo);
             }
-            return RedirectToAction("Index");            
+            return RedirectToAction("Index");
         }
+
         public JsonResult BuscarProveedor(string filtroProveedor)
         {
             return Json(proveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);

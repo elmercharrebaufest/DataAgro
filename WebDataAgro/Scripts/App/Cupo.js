@@ -62,15 +62,7 @@ function InicializarCuposIndex() {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("flete-procedencia");
                 }
-                $('[data-toggle="tooltip"]').tooltip();
-                grid.tbody.find('tr').each(function () {
-                    var row = $(this);
-                    var dataItem = grid.dataItem(row);
-
-                    if (dataItem.Acopio) {
-                        row.find('td').eq(0).empty();
-                    }
-                });
+                $('[data-toggle="tooltip"]').tooltip();                
             }        
         },
         columns: [
@@ -365,6 +357,32 @@ function retransmitirSelccionados() {
         }
     });
     Retransmitir(obj);
+}
+
+function copiarSelccionados() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.EstadoCupoId != 4)
+            obj.push(selectedItem.CupoSap);
+    });
+    var listaCupos = obj.join("\n");
+    var copy = function (e) {
+        e.preventDefault();
+        console.log('copy');
+
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', listaCupos);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', listaCupos);
+        }
+    };
+    window.addEventListener('copy', copy);
+    document.execCommand('copy');
+    window.removeEventListener('copy', copy);
 }
 
 function Retransmitir(listaCupos) {

@@ -8,32 +8,36 @@
     BlockUi("Cargando...");
 </script>
 
-@section Scripts {
-    <script src="~/Scripts/jquery.mask.js"></script>    
-    <script src="~/Scripts/App/CrearCupo.js"></script>
-}
+
+<script src="~/Scripts/jquery.mask.js"></script>
+<script src="~/Scripts/App/CrearCupo.js"></script>
+
 <script>
  fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
-@if (Html.ViewData.ModelState.Any(x=>x.Key == "CantidadCuposSAP")) {
+@if (Html.ViewData.ModelState.Any(x => x.Key == "CantidadCuposSAP") || Model.Resultado != null)
+{
     <script>
-        MensInfo('@Html.ViewData.ModelState["CantidadCuposSAP"].Errors[0].ErrorMessage')
-        $(".modal").on("hidden.bs.modal", function () {
-    window.location.href = window.location.origin + "/Cupo/";
-            MSExecuteOnServer('/Cupo/Index');
-        });
+        var model = '@Html.Raw(Json.Encode(Model.Resultado.ListaCupos))';
+        var data = JSON.parse(model);
+        var error = '@(Html.ViewData.ModelState.ContainsKey("CantidadCuposSAP")? Html.Raw(Json.Encode(Html.ViewData.ModelState["CantidadCuposSAP"].Errors.Select(x => x.ErrorMessage))) : Html.Raw(Json.Encode(new List<string>())))';
+        //Html.ViewData.ModelState.Values.Select(x=>x.Errors)
+        cuposCreados(error, data);
     </script>
-} else if(!Html.ViewData.ModelState.IsValid)
+}
+else if (!Html.ViewData.ModelState.IsValid)
 {
     <div id="errorModal">
         <div class="alert alert-danger alert-dismissible" role="alert">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             @Html.ValidationSummary()
         </div>
-    </div>}
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken();
@@ -56,8 +60,8 @@
                     <label>Planta</label>
                 </div>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(x=>x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
-                    @Html.HiddenFor(x=>x.PlantaId)
+                    @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
+                    @Html.HiddenFor(x => x.PlantaId)
                 </div>
             </div>
         </div>
@@ -78,10 +82,15 @@
                     <label>Fecha Entrega</label>
                 </div>
                 <div class="col-sm-4">
-                    <span id="fechaDiv">
-                        @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100",@id="fechaEntrega" })
+                    <div id="fechaDiv">
+                        <div class="col-xs-6 noLeftPadding">
+                            @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+                        </div>
                         @Html.HiddenFor(x => x.FechaEntrega)
-                    </span>
+                        <div class="col-xs-6 noRightPadding">
+                            @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,7 +110,7 @@
 
                 <div class="col-sm-4">
                     <div>
-                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control",@id="zona" })
+                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
                         @Html.HiddenFor(x => x.ZonaId)
                     </div>
                 </div>
@@ -114,7 +123,6 @@
                 </div>
                 <div class="col-sm-4 ">
                     @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
-                    @Html.HiddenFor(x => x.FleteAcarreo)
                 </div>
             </div>
             <div id="calidadDiv" hidden>
@@ -154,4 +162,49 @@
             @Html.ActionLink("Volver", "Index", null, new { @class = "formulario-footer-guardar-contrato k-button k-button-icontext" })
         </div>
     </div>
+    <div class="modal fade" id="fleteProcedenciaModal" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 class="modal-title" id="reasignarFleteProcedencia"></h1>
+                    <div class="status confirmado-modal">
+                        <div>¿Desea reasignar un cupo con flete procedencia?</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn btn" id="boton-si">Si</button>
+                    <button type="button" class="myBtn btn" id="boton-no">No</button>
+                    <button type="button" class="myBtn btn" id="boton-cancelar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+
+<div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="resultadoCupo"></h1>
+                <div class="status confirmado-modal">
+                    <div>Cupos Creados</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="error-modal" hidden></div>
+                <div id="cupos-generados-modal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="myBtn btn" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

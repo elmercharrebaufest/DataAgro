@@ -33,9 +33,9 @@ namespace Molinos.DataAgro.Business.Managers
             this.clienteStopAgent = clienteStopAgent;
             this.modificarCupoAgent = modificarCupoAgent;
         }
-        public Resultado GrabarCupo(Cupo cupo, int cantidadCupos)
+        public CupoResult GrabarCupo(Cupo cupo, int cantidadCupos, DateTime? fechaHasta)
         {
-            var error = new Resultado();
+            var error = new CupoResult { ListaCupos = new List<string>()};
             try
             {
                 cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
@@ -43,23 +43,45 @@ namespace Molinos.DataAgro.Business.Managers
                 cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
                 cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                 cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
-                if (cupo.Id==0)
+                if (cupo.Id == 0)
                 {
-                    var listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
-                    var cuposConSap = new List<Cupo>();
+                    fechaHasta = fechaHasta ?? cupo.FechaIngreso;
+                    while (cupo.FechaIngreso <= fechaHasta)
+                    {
+                        var listaCupos = new List<string>();
+                        var errorSap = new Resultado();
+                        try
+                        {
+                            listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
+                        }
+                        catch(Exception e)
+                        {
+                            errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
+                        }
+                        if (errorSap.HayError)
+                        {
+                            error.Errores.AddRange(errorSap.Errores);
+                            cupo.FechaIngreso = cupo.FechaIngreso.AddDays(1);
+                            continue;
+                        }
+                        var cuposConSap = new List<Cupo>();
 
-                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
-                    foreach (var cupoSap in listaCupos)
-                    {
-                        var nuevoCupo = (Cupo)cupo.Clone();
-                        nuevoCupo.CupoSap = cupoSap;
-                        cuposConSap.Add(nuevoCupo);
-                    }
-                    repositorio.AgregarTodos(cuposConSap);
-                    repositorio.GuardarCambios(); 
-                    if (listaCupos.Count < cantidadCupos)
-                    {
-                        error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + cantidadCupos + " cupos solicitados");
+                        cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
+                        foreach (var cupoSap in listaCupos)
+                        {
+                            var nuevoCupo = (Cupo)cupo.Clone();
+                            nuevoCupo.CupoSap = cupoSap;
+                            cuposConSap.Add(nuevoCupo);
+                        }
+                        repositorio.AgregarTodos(cuposConSap);
+                        repositorio.GuardarCambios();
+                        
+                        if (listaCupos.Count < cantidadCupos)
+                        {
+                            error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + cantidadCupos + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
+                        }
+                        error.ListaCupos.AddRange(listaCupos);
+                        cupo.FechaIngreso = cupo.FechaIngreso.AddDays(1);
                     }
                     return error;
                 }
@@ -73,8 +95,9 @@ namespace Molinos.DataAgro.Business.Managers
                     cupoSave.Observaciones = cupo.Observaciones;
                     cupoSave.Destinatario = cupo.Destinatario;
                     cupoSave.Fason = cupo.Fason;
+                    cupoSave.FleteProcedencia = cupo.FleteProcedencia;
                     var res = modificarCupoAgent.Modificar(cupoSave);
-                    if(res != "Ok")
+                    if (res != "Ok")
                     {
                         error.Error("SAP", $"Error al grabar en SAP: {res}");
                     }
@@ -96,19 +119,19 @@ namespace Molinos.DataAgro.Business.Managers
                     return error;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e);
                 error.Errores.Add(new ErrorMessage(400, e.Message));
                 return error;
             }
         }
-        public Resultado Validar(Cupo cupo,int cantidadCupos)
+        public Resultado Validar(Cupo cupo,int cantidadCupos, DateTime? fechaHasta)
         {
             var error = new Resultado();
             if (cupo.ProveedorId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacio"));
+                error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacío"));
             }
             if (cupo.ProveedorId != 0)
             {
@@ -129,9 +152,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (cupo.Fason == true && (cupo.Destinatario == ""|| cupo.Destinatario == null))
             {
-                error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacio cuando elige Fasón/Préstamo Devolución"));
+                error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacío cuando elige Fasón/Préstamo Devolución"));
             }
-            
+            if(fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
+            {
+                error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
+            }
+
             return error;
         }
         public KendoGrid<CupoDto> TraerCuposTabla(KendoGridMvcRequest request, List<int> equipo)

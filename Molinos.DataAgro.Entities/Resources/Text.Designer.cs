@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to La clave no debe estar vacia.
+        ///   Looks up a localized string similar to La clave no debe estar vacía.
         /// </summary>
         public static string Error_ClaveStop {
             get {

@@ -65,6 +65,8 @@ function InicializarCargaCupos() {
 
     $("#fechaEntrega").kendoDatePicker({
     });
+    $("#fechaHasta").kendoDatePicker({
+    });
 
     $("#cantidad").kendoNumericTextBox({
         optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
@@ -86,12 +88,30 @@ function InicializarCargaCupos() {
         $("#material").attr('disabled', 'disabled');
         $("#planta").attr('disabled', 'disabled');
         $("#fechaEntrega").data('kendoDatePicker').enable(false);
+        $("#fechaHasta").data('kendoDatePicker').enable(false);
         $("#cantidad").data('kendoNumericTextBox').enable(false);
         $("#zona").attr('disabled', 'disabled');
         $("#flete").attr('disabled', 'disabled');
         if ($("#flete").is(':checked')) {
             MensInfo("Cupo con condición de Flete");
         }
+        $("#guardarBtn").attr('type', 'button');
+        $("#guardarBtn").click(function () {
+            $('#fleteProcedenciaModal').modal('toggle');
+        });
+        $("#boton-si").click(function () {
+            $("#flete").removeAttr('disabled');
+            $("#flete").prop('checked', true);
+            $("form:first").submit();
+        });
+        $("#boton-no").click(function () {
+            $("#flete").removeAttr('disabled');
+            $("#flete").prop('checked', false);
+            $("form:first").submit();
+        });
+        $("#boton-cancelar").click(function () {
+            window.location.href = window.location.origin + "/Cupo/";
+        });
     }
 
 }
@@ -111,4 +131,47 @@ function checkSoja() {
     } else {
         $("#calidadDiv").show();
     }
+}
+
+function cuposCreados(error, lista) {
+    $(document).ready(function () {
+        var listaError = JSON.parse(error);
+        if (listaError.length>0) {
+            $("#error-modal").html(makeUL(listaError));
+            $("#error-modal").show();
+        }
+
+        $("#cupos-generados-modal").html(lista.join(", "));
+        $('#resultadoCupo').modal('toggle');
+
+        $(".modal").on("hidden.bs.modal", function () {
+            window.location.href = window.location.origin + "/Cupo/";
+        });
+    });
+}
+function makeUL(array) {
+    var list = document.createElement('ul');
+    for (var i = 0; i < array.length; i++) {
+        var item = document.createElement('li');
+        item.appendChild(document.createTextNode(array[i]));
+        list.appendChild(item);
+    }
+    return list;
+}
+
+function copiarGenerados() {
+    var listaCupos = $("#cupos-generados-modal").html().replace(/[, ]/g, "\n");
+    var copy = function (e) {
+        e.preventDefault();
+        console.log('copy');
+
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', listaCupos);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', listaCupos);
+        }
+    };
+    window.addEventListener('copy', copy);
+    document.execCommand('copy');
+    window.removeEventListener('copy', copy);
 }

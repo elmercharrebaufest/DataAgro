@@ -21,6 +21,7 @@ namespace WebDataAgro.Models
         
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaEntregaRequerido")]
         public DateTime FechaEntrega { get; set; }
+        public DateTime? FechaHastaEntrega { get; set; }
         public int? CantidadCupos {get;set;}
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ZonaRequerido")]
         //public int Zona { get; set; }
@@ -32,7 +33,7 @@ namespace WebDataAgro.Models
         public string Observacion { get; set; }
         public bool FasonId { get; set; }
         public string CuitId { get; set; }
-        public Resultado Resultado { get; set; }
+        public CupoResult Resultado { get; set; }
     }
 
 }

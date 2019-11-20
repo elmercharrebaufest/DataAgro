@@ -181,7 +181,7 @@
     <value>El Centro no debe estar vacío</value>
   </data>
   <data name="Error_ClaveStop" xml:space="preserve">
-    <value>La clave no debe estar vacia</value>
+    <value>La clave no debe estar vacía</value>
   </data>
   <data name="Error_Dias" xml:space="preserve">
     <value>El campo cantidad de días no debe estar vacío</value>
