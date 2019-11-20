@@ -181,12 +181,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
-            }
-            if (oParam.PagoDiferidoContrato.HasValue && !oParam.PagoDiferidoContrato.Value 
-                && oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value)
-            {
-                oErrorMessages.Error("pagoDiferido", "El contrato no corresponde a Pago diferido");
-            }
+            }           
             if ( oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0 && 
                 oParam.MonedaId!= "ARP  " )
             {
