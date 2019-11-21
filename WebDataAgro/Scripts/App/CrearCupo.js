@@ -102,18 +102,20 @@ function InicializarCargaCupos() {
         $("#boton-si").click(function () {
             $("#flete").removeAttr('disabled');
             $("#flete").prop('checked', true);
-            $("form:first").submit();
+            $("form").submit();
         });
         $("#boton-no").click(function () {
             $("#flete").removeAttr('disabled');
             $("#flete").prop('checked', false);
-            $("form:first").submit();
+            $("form").submit();
         });
         $("#boton-cancelar").click(function () {
             window.location.href = window.location.origin + "/Cupo/";
         });
     }
-
+    $("#fleteProcedenciaModal").draggable({
+        handle: ".modal-header"
+    }); 
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {
@@ -160,7 +162,7 @@ function makeUL(array) {
 }
 
 function copiarGenerados() {
-    var listaCupos = $("#cupos-generados-modal").html().replace(/[, ]/g, "\n");
+    var listaCupos = $("#cupos-generados-modal").html().split(/[, ]/g).filter(e => e.trim().length > 0).join("\n");
     var copy = function (e) {
         e.preventDefault();
         console.log('copy');
