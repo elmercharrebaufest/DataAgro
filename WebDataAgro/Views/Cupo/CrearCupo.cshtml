@@ -18,7 +18,7 @@
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
-@if (Html.ViewData.ModelState.Any(x => x.Key == "CantidadCuposSAP") || Model.Resultado != null)
+@if (Html.ViewData.ModelState.Any(x => x.Key == "CantidadCuposSAP") || (Model.Resultado != null && Model.Resultado.ListaCupos != null && Model.Resultado.ListaCupos.Count>0))
 {
     <script>
         var model = '@Html.Raw(Json.Encode(Model.Resultado.ListaCupos))';
