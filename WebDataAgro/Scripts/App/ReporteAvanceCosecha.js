@@ -69,8 +69,8 @@ function CreateGridInformeCompraNet() {
             { field: "Campania", title: "Campaña"},
             { field: "Avance", title: "Avance %" },
             { field: "Rendimiento", title: "Rendimiento (Tn)"},
-            { field: "RangoDesde", title: "Rango Desde" },
-            { field: "RangoHasta", title: "Rango Hasta" },
+            { field: "RangoDesde", title: "Rango Desde Tn." },
+            { field: "RangoHasta", title: "Rango Hasta Tn." },
             { field: "Comercial", title: "Comercial" },
             { field: "FechaHora", type: "date", title: "Fecha", format: _DefaultDateTemplate, width: 80 },
             { field: "Observaciones", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }

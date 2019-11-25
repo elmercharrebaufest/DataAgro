@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[ResearchAvanceCosecha] (
     [Id]    INT           IDENTITY (1, 1) NOT NULL,
-    [RangoDesde] DECIMAL  NOT NULL DEFAULT(1),
-	[RangoHasta] DECIMAL  NOT NULL  DEFAULT(1) ,
+    [RangoDesde] DECIMAL(18,2)  NOT NULL DEFAULT(1),
+	[RangoHasta] DECIMAL(18,2)  NOT NULL  DEFAULT(1) ,
     [LocalidadId] INT           NOT NULL,
 	[MaterialId] INT           NOT NULL,
 	[ComercialId] INT           NOT NULL,

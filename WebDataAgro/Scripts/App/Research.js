@@ -209,6 +209,15 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
+    $(".number-2d").kendoNumericTextBox({
+        culture: "es-AR",
+        format :'#.#',
+        value: " ",
+        decimals: 1,
+        restrictDecimals:true,
+        spinners: false,
+        min: 0
+    });
     $(".number-negativo").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
