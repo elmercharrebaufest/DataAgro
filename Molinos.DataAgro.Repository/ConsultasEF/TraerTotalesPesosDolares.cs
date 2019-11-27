@@ -3,6 +3,7 @@ using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -16,26 +17,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly KendoGridMvcRequest request;
         private readonly List<int> equipo;
-        private readonly int perfilId;
         private readonly List<int> corredoresComercial;
 
-        public TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> equipo, List<int> corredoresComercial)
+        public TraerTotalesPesosDolares(KendoGridMvcRequest request, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
-            this.perfilId = perfilId;
             this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGrid<TotalPesosDolares> Query(DbContext contexto, KendoGridMvcRequest request, int perfilId, List<int> equipo, List<int> corredoresComercial)
+        private static KendoGrid<TotalPesosDolares> Query(DbContext contexto, KendoGridMvcRequest request, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-
-            var queryContratos =
+            var corredor = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+            var queryContratos = 
                 from contrato in contexto.Set<Contrato>()
-                where contrato.TipoNegocioId == 2 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                where contrato.TipoNegocioId == 2 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && !corredor ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
-                    (perfilId == (int)EnumPerfil.CorredoresComercial &&
+                    (corredor &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
                 select new TotalPesosDolares()
@@ -70,8 +69,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
-                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) ||
+                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                        (corredor && (corredoresComercial.Contains(fijac.ComercialId) ||
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new TotalPesosDolares()
                 {
@@ -214,7 +213,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, perfilId, equipo, corredoresComercial);
+                return Query(contexto, request, equipo, corredoresComercial);
             }
         }
     }

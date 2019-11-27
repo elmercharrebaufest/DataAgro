@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.ActiveReport;
 using OfficeOpenXml;
@@ -131,7 +132,7 @@ namespace Molinos.DataAgro.Report
         }
 
 
-        public string GenerarExcelExportAll(ExportAll oDatos, int perfil)
+        public string GenerarExcelExportAll(ExportAll oDatos)
         {
 
             var excel = new ExcelPackage();
@@ -157,14 +158,6 @@ namespace Molinos.DataAgro.Report
             var workSheet5 = excel.Workbook.Worksheets.Add("Almacenamiento");
 
             workSheet5.Cells[1, 1].LoadFromCollection(oDatos.almacenamiento, true);
-
-
-
-            if (perfil == (int)EnumPerfil.Administrativo || perfil == (int)EnumPerfil.Visualizador)
-            {
-
-
-            }
 
             var workSheet7 = excel.Workbook.Worksheets.Add("Compras");
 
@@ -415,7 +408,7 @@ namespace Molinos.DataAgro.Report
             workSheet5.Cells[1, 13].Value = "Habilitado Soja Sustentable";
             workSheet5.Column(13).AutoFit();
 
-            if (perfil != (int)EnumPerfil.Administrativo && perfil != (int)EnumPerfil.Visualizador)
+            if (PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial))
             {
                 var workSheet6 = excel.Workbook.Worksheets.Add("Agenda");
                 workSheet6.Cells[1, 1].LoadFromCollection(oDatos.agenda, true);

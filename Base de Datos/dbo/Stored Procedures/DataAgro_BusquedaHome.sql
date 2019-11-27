@@ -3,13 +3,13 @@
 Create procedure  [dbo].[DataAgro_BusquedaHome]  --'Dow',42
   
  @filtro varchar(100),  
- @ComercialId int  
+ @comercialId varchar(max)
   
 as  
   
 
   declare @EmpleadoTable TABLE ( ComercialId int , Apellido varchar(255), Nombres varchar(255), PerfilId int, EmpleadorACargoId int , IdActiveDirectory varchar(255),GrupoDeComprasId int)
-  insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @ComercialId
+  insert into @EmpleadoTable exec DataAgro_ComercialesJerarquicos_Traer @comercialId
   
   
 select p.ProveedorId as Id,p.RazonSocial,p.CUIT  

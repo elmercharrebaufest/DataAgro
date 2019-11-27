@@ -1,15 +1,16 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class LogController :Controller
     {
         private readonly ILogManager oLogManager;
@@ -19,6 +20,7 @@ namespace WebDataAgro.Controllers
             this.oLogManager = oLogManager;
         }
 
+        [Autorizacion(PermisosDataAgro.ConfiguracionLogs)]
         public ActionResult Index()
         {
             return View();

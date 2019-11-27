@@ -1,4 +1,6 @@
-﻿@using Molinos.DataAgro.Entities.Common.Enums
+﻿@using Molinos.DataAgro.Entities.Common.Enums;
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -54,10 +56,7 @@
 </head>
 
 <body id="theBody">
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
-    {
-        @Html.AntiForgeryToken()
-    }
+
     <div class="navbar navbar-inverse" id="navbarPrincipal">
         <div class="container-fluid">
             <div class="navbar-header ">
@@ -86,7 +85,7 @@
                                     <i class="icon-bar-chart font-color"></i> Reporte Dinámico
                                 </a>
                             </li>
-                            @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                             {
                                 <li>
                                     <a href="/Agenda" class="nav-link misreporteslink">
@@ -94,17 +93,23 @@
                                     </a>
                                 </li>
                             }
-                            <li>
-                                <a href="/Proveedor/ReporteProveedor" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Reporte de Proveedor
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/Contrato" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Negocios CompraNet
-                                </a>
-                            </li>
-                            @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa || global_asax.GlobalVariables.Perfil == EnumPerfil.Jefe)
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteProveedor))
+                            {
+                                <li>
+                                    <a href="/Proveedor/ReporteProveedor" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Reporte de Proveedor
+                                    </a>
+                                </li>
+                            }
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteCompraNet))
+                            {
+                                <li>
+                                    <a href="/Contrato" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Negocios CompraNet
+                                    </a>
+                                </li>
+                            }
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarComprasDiarias))
                             {
                                 <li>
                                     <a href="/ReporteCompraNet" class="nav-link misreporteslink">
@@ -112,14 +117,24 @@
                                     </a>
                                 </li>
                             }
-                            <li>
-                                <a href="/Reportes/Index" class="nav-link misreporteslink">
-                                    <i class="icon-bar-chart"></i> Indicadores
-                                </a>
-                            </li>
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarIndicadores))
+                            {
+                                <li>
+                                    <a href="/Reportes/Index" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Indicadores
+                                    </a>
+                                </li>
+                            }
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteCupo))
+                            {
+                                <li>
+                                    <a href="/ReporteCupo/Index" class="nav-link misreporteslink">
+                                        <i class="icon-bar-chart"></i> Reporte Cupos
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
-
                     <li class="agregar-contacto-mobile">
                         <img src="~/Content/Images/Users-Add-user.png" style="width:16px;" />
                     </li>
@@ -130,7 +145,7 @@
                         <a onclick="return false" id="informes-a" class="dropdown-toggle nav-text2 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Informes <span class="caret"></span></a>
                         <ul class="dropdown-menu opacidad" id="informes">
 
-                            @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarInformeComercial))
                             {
                                 <li>
                                     <a href="/InformeComercial/Index" class="nav-link misreporteslink">
@@ -138,7 +153,7 @@
                                     </a>
                                 </li>
                             }
-                            @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Administrativo)
+                            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarInformeAdministrativo))
                             {
                                 <li>
                                     <a href="/InformeComercial/InformeAdministrativo" class="nav-link misreporteslink">
@@ -154,127 +169,192 @@
                         </ul>
                     </li>
 
-                    @if (global_asax.GlobalVariables.EsAdministrador || global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                    @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCanalOperacion) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionCondicion) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionUsuarios) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionCentros) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosPrecios) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionOperador) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosConfirmacion) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionLogs) ||
+                         PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos) ||
+                         PermisosHelper.Is(PermisosDataAgro.AdministracionCupos) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="tablas">
 
-                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCanalOperacion))
                                 {
                                     <li>
                                         <a href="~/CanalOperacion" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Canal de Operación
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA))
+                                {
                                     <li>
                                         <a href="~/Destinatario" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Entrega A
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCondicion))
+                                {
                                     <li>
                                         <a href="~/Condicion" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Condición Preferente
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionUsuarios))
+                                {
                                     <li>
                                         <a href="~/Comercial" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Usuarios
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCentros))
+                                {
                                     <li>
                                         <a href="~/Centro" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Centros
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosPrecios))
+                                {
                                     <li>
                                         <a href="~/RangoPrecio" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Rangos de precio por material
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionOperador))
+                                {
                                     <li>
                                         <a href="~/Operador" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Operador
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas))
+                                {
                                     <li>
                                         <a href="~/TareaProgramada" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Tareas Programadas
                                         </a>
                                     </li>
                                 }
-                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosConfirmacion))
                                 {
                                     <li>
                                         <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Rangos para confirmacion automatica
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial))
+                                {
                                     <li>
                                         <a href="~/Diferencial" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Diferencial
                                         </a>
                                     </li>
                                 }
-                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol))
                                 {
                                     <li>
                                         <a href="~/Zona" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Zona Calidad Girasol
                                         </a>
                                     </li>
-
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial))
+                                {
                                     <li>
                                         <a href="~/Material" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Material
                                         </a>
                                     </li>
                                 }
-                                @if (global_asax.GlobalVariables.EsAdministrador)
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionLogs))
                                 {
                                     <li>
                                         <a href="~/Log" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Logs
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
+                                {
                                     <li>
                                         <a href="/NotificacionResearch" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Notificaciones Research
                                         </a>
                                     </li>
                                 }
-                                @if (global_asax.GlobalVariables.EsCupera)
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos))
                                 {
                                     <li>
                                         <a href="~/ZonaCupo" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Zona Cupos
                                         </a>
                                     </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionCupos))
+                                {
                                     <li>
                                         <a href="/ConfiguracionCupo" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Administración de Cupos
                                         </a>
                                     </li>
                                 }
-                                <li>
-                                    <a href="/Configuracion" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Configuraciones Constantes
-                                    </a>
-                                </li>
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
+                                {
+                                    <li>
+                                        <a href="/Configuracion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuraciones Constantes
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos))
+                                {
+                                    <li>
+                                        <a href="/Rol" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Roles y Permisos
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }
-                    @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet)||
+                        PermisosHelper.Is(PermisosDataAgro.VisualizarHedge)||
+                        PermisosHelper.Is(PermisosDataAgro.VisualizarPizarra))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="negocios-a" class="dropdown-toggle nav-text4 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">CompraNet <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="negocios">
-                                <li>
-                                    <a href="/CompraNet" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Negocios
-                                    </a>
-                                </li>
-                                @if (global_asax.GlobalVariables.Perfil == EnumPerfil.Mesa)
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
+                                {
+                                    <li>
+                                        <a href="/CompraNet" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Negocios
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarHedge))
                                 {
                                     <li>
                                         <a href="/Hedge" class="nav-link misreporteslink">
@@ -282,20 +362,18 @@
                                         </a>
                                     </li>
                                 }
-
-                                <li>
-                                    <a href="~/PrecioPizarra" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Precio Pizarra
-                                    </a>
-                                </li>
-                                @*<li>
-                                        <a href="/ContratoAcuerdo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Contrato Acuerdo
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarPizarra))
+                                {
+                                    <li>
+                                        <a href="~/PrecioPizarra" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Precio Pizarra
                                         </a>
-                                    </li>*@
+                                    </li>
+                                }
                             </ul>
                         </li>
-                    }@if (global_asax.GlobalVariables.EsCupera)
+                    }
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="cupos-a" class="dropdown-toggle nav-text6 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Cupos <span class="caret"></span></a>
@@ -309,22 +387,28 @@
                         </li>
                     }
 
-                    @if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
+                    @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch)||PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Research <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="research">
-                                <li>
-                                    <a href="/Research" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Datos Research
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/ReporteResearch" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Reporte Research
-                                    </a>
-                                </li>
+                                @if (PermisosHelper.Is(PermisosDataAgro.DatosResearch))
+                                {
+                                    <li>
+                                        <a href="/Research" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Datos Research
+                                        </a>
+                                    </li>
+                                }
 
+                                @if (PermisosHelper.Is(PermisosDataAgro.ReporteResearch))
+                                {
+                                    <li>
+                                        <a href="/ReporteResearch" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Reporte Research
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }

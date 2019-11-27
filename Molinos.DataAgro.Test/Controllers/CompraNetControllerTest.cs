@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -103,12 +104,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void InicializarContratoTest()
         {
             HttpContext.Current.Session["perfil"] = 7;
-            contratoManagerMock.Setup(x => x.TraerDatosCombo((int)GlobalVariables.Perfil)).Returns(new DatosIniContrato());
+            contratoManagerMock.Setup(x => x.TraerDatosCombo()).Returns(new DatosIniContrato());
             var result = target.InicializarContrato();
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int>()), Times.Once);
+            contratoManagerMock.Verify(x => x.TraerDatosCombo(), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
@@ -321,13 +322,13 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             HttpContext.Current.Session["perfil"] = 7;
             var request = new KendoGridMvcRequest();
-            contratoManagerMock.Setup(x => x.TraerTodosContratos(request,(int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato {ContratoId=1,ComercialId= 1 } }, 15));
+            contratoManagerMock.Setup(x => x.TraerTodosContratos(request, It.IsAny<bool>(), GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato {ContratoId=1,ComercialId= 1 } }, 15));
             var result = target.BuscaDatosTabla(request);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             Assert.That(request.SortObjects.Count() == 2);
-            contratoManagerMock.Verify(x => x.TraerTodosContratos(It.IsAny<KendoGridMvcRequest>(),It.IsAny<int>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
+            contratoManagerMock.Verify(x => x.TraerTodosContratos(It.IsAny<KendoGridMvcRequest>(), It.IsAny<bool>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":0,\"Cuit\":null,\"ContratoId\":1,\"MaterialId\":0,\"NivelTarifaId\":null,\"TipoNegocioId\":0,\"Cantidad\":0,\"Precio\":0,\"PrecioPlazo\":null,\"FechaEntrega\":null,\"CampanaId\":0,\"FechaDesde\":null,\"FechaDesdeFormateado\":null,\"FechaHasta\":null,\"FechaHastaFormateado\":null,\"ProveedorId\":0,\"MonedaId\":null,\"Moneda\":null,\"Fecha\":null,\"FechaFormateado\":null,\"Hora\":null,\"NivelTarifa\":null,\"TarifaFlete\":null,\"GrupoCompra\":0,\"GrupoCompraDescripcion\":null,\"ComercialId\":1,\"ComercialCreadorId\":null,\"ProvinciaId\":null,\"LocalidadId\":null,\"Base\":null,\"Importe_Sustentable\":null,\"MonedaId_Sustentable\":null,\"Moneda_Sustentable\":null,\"Fecha_Dolarizado\":null,\"Fecha_DolarizadoFormateado\":null,\"Dias_Pesificado\":null,\"NoInformaSIO\":null,\"TrigoEspecial\":null,\"Estado\":null,\"UsuarioId\":null,\"ContratoSAP\":null,\"Ampliaciones\":null,\"TipoNegocio\":null,\"Proveedor\":null,\"Corredor\":null,\"Comercial\":null,\"ComercialCreador\":null,\"Material\":null,\"Campania\":null,\"Provincia\":null,\"Localidad\":null,\"Estado_Contrato\":null,\"Cantidad_F\":null,\"Precio_F\":null,\"Proveedor_F\":null,\"Fecha_F\":null,\"Material_F\":null,\"MonedaId_F\":null,\"Moneda_F\":null,\"Ampliaciones_F\":null,\"Fecha_Order\":\"\\/Date(-62135586000000)\\/\",\"Estado_Order\":0,\"Observacion\":null,\"Observacion_F\":null,\"FijacionDePrecioContratoId\":null,\"Sustentable\":null,\"Dolarizado\":null,\"Pesificado\":null,\"Negocio\":null,\"ClasificacionId\":null,\"ClasificacionDescripcion\":null,\"DestinoId\":null,\"DestinoDescripcion\":null,\"CantidadCamiones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"CondicionFijacion\":null,\"CD\":null,\"Warrant\":null,\"PagoDirectoVendedor\":null,\"CalidadDescripcion\":null,\"EstablecimientoPropio\":null,\"BoletoId\":null,\"BolsaId\":null,\"BoletoDescripcion\":null,\"BolsaDescripcion\":null,\"DesdeFijacion\":null,\"DesdeFijacionFormateado\":null,\"HastaFijacion\":null,\"HastaFijacionFormateado\":null,\"CondicionFijacionDescripcion\":null,\"Descuentos\":null,\"Calidades\":null,\"MercsDeposito\":null,\"CorredorId\":0,\"DatosFijacion\":null,\"PorcentajeComision\":null,\"ContratoCorredor\":null,\"ContratoVendedor\":null,\"SelCargoMOA\":null,\"SelCargoVendedor\":null,\"Madre\":null,\"ContratoMadre\":null,\"Posicion\":null,\"TipoFason\":null,\"TipoFasonId\":0,\"FasonId\":0,\"Operador\":null,\"OperadorId\":0,\"AgenteId\":0,\"AperturaPrecios\":null,\"PrecioNeto\":null,\"Pizarra\":null,\"StandardCalidadId\":null,\"StandardDeCalidadDescripcion\":null,\"PagoDiferido\":null,\"ZonaId\":null,\"ZonaDescripcion\":null,\"AcuerdoId\":null,\"ImporteFinanciero\":null,\"ImporteRedespacho\":null,\"ImporteComision\":null,\"ImporteBonificacion\":null,\"PorcentajeBonificacion\":null,\"Compensacion\":null}],\"Aggregates\":null,\"Total\":15},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
@@ -338,13 +339,14 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             HttpContext.Current.Session["perfil"] = 7;
             var request = new KendoGridMvcRequest() { SortObjects = new List<SortObject> { new SortObject("Fecha", "asc"), new SortObject("ContratoId", "asc") } };
-            contratoManagerMock.Setup(x => x.TraerTodosContratos(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato { ContratoId = 1, ComercialId = 1 } }, 15));
+            contratoManagerMock.Setup(x => x.TraerTodosContratos(request, It.IsAny<bool>(), GlobalVariables.Equipo, GlobalVariables.CorredoresComercial))
+                .Returns(new KendoGrid<BasicoContrato>(new List<BasicoContrato>() { new BasicoContrato { ContratoId = 1, ComercialId = 1 } }, 15));
             var result = target.BuscaDatosTabla(request);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             Assert.That(request.SortObjects.Count() > 2);
-            contratoManagerMock.Verify(x => x.TraerTodosContratos(It.IsAny<KendoGridMvcRequest>(),It.IsAny<int>(), It.IsAny<List<int>>(),It.IsAny<List<int>>()), Times.Once);
+            contratoManagerMock.Verify(x => x.TraerTodosContratos(It.IsAny<KendoGridMvcRequest>(),It.IsAny<bool>(), It.IsAny<List<int>>(),It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":0,\"Cuit\":null,\"ContratoId\":1,\"MaterialId\":0,\"NivelTarifaId\":null,\"TipoNegocioId\":0,\"Cantidad\":0,\"Precio\":0,\"PrecioPlazo\":null,\"FechaEntrega\":null,\"CampanaId\":0,\"FechaDesde\":null,\"FechaDesdeFormateado\":null,\"FechaHasta\":null,\"FechaHastaFormateado\":null,\"ProveedorId\":0,\"MonedaId\":null,\"Moneda\":null,\"Fecha\":null,\"FechaFormateado\":null,\"Hora\":null,\"NivelTarifa\":null,\"TarifaFlete\":null,\"GrupoCompra\":0,\"GrupoCompraDescripcion\":null,\"ComercialId\":1,\"ComercialCreadorId\":null,\"ProvinciaId\":null,\"LocalidadId\":null,\"Base\":null,\"Importe_Sustentable\":null,\"MonedaId_Sustentable\":null,\"Moneda_Sustentable\":null,\"Fecha_Dolarizado\":null,\"Fecha_DolarizadoFormateado\":null,\"Dias_Pesificado\":null,\"NoInformaSIO\":null,\"TrigoEspecial\":null,\"Estado\":null,\"UsuarioId\":null,\"ContratoSAP\":null,\"Ampliaciones\":null,\"TipoNegocio\":null,\"Proveedor\":null,\"Corredor\":null,\"Comercial\":null,\"ComercialCreador\":null,\"Material\":null,\"Campania\":null,\"Provincia\":null,\"Localidad\":null,\"Estado_Contrato\":null,\"Cantidad_F\":null,\"Precio_F\":null,\"Proveedor_F\":null,\"Fecha_F\":null,\"Material_F\":null,\"MonedaId_F\":null,\"Moneda_F\":null,\"Ampliaciones_F\":null,\"Fecha_Order\":\"\\/Date(-62135586000000)\\/\",\"Estado_Order\":0,\"Observacion\":null,\"Observacion_F\":null,\"FijacionDePrecioContratoId\":null,\"Sustentable\":null,\"Dolarizado\":null,\"Pesificado\":null,\"Negocio\":null,\"ClasificacionId\":null,\"ClasificacionDescripcion\":null,\"DestinoId\":null,\"DestinoDescripcion\":null,\"CantidadCamiones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"CondicionFijacion\":null,\"CD\":null,\"Warrant\":null,\"PagoDirectoVendedor\":null,\"CalidadDescripcion\":null,\"EstablecimientoPropio\":null,\"BoletoId\":null,\"BolsaId\":null,\"BoletoDescripcion\":null,\"BolsaDescripcion\":null,\"DesdeFijacion\":null,\"DesdeFijacionFormateado\":null,\"HastaFijacion\":null,\"HastaFijacionFormateado\":null,\"CondicionFijacionDescripcion\":null,\"Descuentos\":null,\"Calidades\":null,\"MercsDeposito\":null,\"CorredorId\":0,\"DatosFijacion\":null,\"PorcentajeComision\":null,\"ContratoCorredor\":null,\"ContratoVendedor\":null,\"SelCargoMOA\":null,\"SelCargoVendedor\":null,\"Madre\":null,\"ContratoMadre\":null,\"Posicion\":null,\"TipoFason\":null,\"TipoFasonId\":0,\"FasonId\":0,\"Operador\":null,\"OperadorId\":0,\"AgenteId\":0,\"AperturaPrecios\":null,\"PrecioNeto\":null,\"Pizarra\":null,\"StandardCalidadId\":null,\"StandardDeCalidadDescripcion\":null,\"PagoDiferido\":null,\"ZonaId\":null,\"ZonaDescripcion\":null,\"AcuerdoId\":null,\"ImporteFinanciero\":null,\"ImporteRedespacho\":null,\"ImporteComision\":null,\"ImporteBonificacion\":null,\"PorcentajeBonificacion\":null,\"Compensacion\":null}],\"Aggregates\":null,\"Total\":15},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
@@ -733,6 +735,273 @@ namespace Molinos.DataAgro.Test.Controllers
             agenteManagerMock.Verify(x => x.GrabarAmpliacionAgente(It.IsAny<AgenteCompra>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AgenteId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void BorrarAcuerdoTest()
+        {
+            var agente = new AgenteCompra { Id = 1, ComercialId = 1, MaterialId = 1 };
+            acuerdoManagerMock.Setup(x => x.BorrarAcuerdo(It.IsAny<ContratoAcuerdo>()))
+                .Returns(new GrabarAcuerdoResult {AcuerdoId=1,Errores= new List<ErrorMessage>()});
+            var result = target.BorrarAcuerdo(new ContratoAcuerdo());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            acuerdoManagerMock.Verify(x => x.BorrarAcuerdo(It.IsAny<ContratoAcuerdo>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void GrabarAmpliacionFijacionTest()
+        {
+            var agente = new AgenteCompra { Id = 1, ComercialId = 1, MaterialId = 1 };
+            fijacionManagerMock.Setup(x => x.GrabarAmpliacionFijacion(It.IsAny<FijacionDePrecioContrato>()))
+                .Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.GrabarAmpliacionFijacion(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void TraerDescuentosPorContratoTest()
+        {
+            var agente = new AgenteCompra { Id = 1, ComercialId = 1, MaterialId = 1 };
+            contratoManagerMock.Setup(x => x.TraerDescuentosPorContrato(It.IsAny<int>()))
+                .Returns(new List<DescuentoBonificacionDto> { new DescuentoBonificacionDto() { Id=1,ContratoId=1,
+                    FechaDesde="01/10/2019",
+                    FechaHasta= "01/10/2019",
+                    Importe=1,
+                    MonedaId="a",
+                    Porcentaje=1,
+                    TipoDBDesc="a",
+                    TipoDBId=1,
+                    TipoPeriodoDBDesc="a",
+                    TipoPeriodoDBId=1 } });
+            var result = target.TraerDescuentosPorContrato(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerDescuentosPorContrato(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"FechaDesde\":\"01/10/2019\",\"FechaHasta\":\"01/10/2019\",\"Importe\":1,\"MonedaId\":\"a\",\"Porcentaje\":1,\"TipoDBDesc\":\"a\",\"TipoDBId\":1,\"TipoPeriodoDBDesc\":\"a\",\"TipoPeriodoDBId\":1,\"ContratoId\":1}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void TraerAperturaPrecioPorContratoTestNoFijacion()
+        {
+            var agente = new AgenteCompra { Id = 1, ComercialId = 1, MaterialId = 1 };
+            contratoManagerMock.Setup(x => x.TraerAperturaDePrecioPorContrato(It.IsAny<int>()))
+                .Returns(new List<AperturaPrecioDto> { new AperturaPrecioDto() { contratoId=1,
+                    ConceptoAperturaPrecio="a",
+                    ConceptoAperturaPrecioId=1,
+                    FijacionId=null,Id=1,
+                    Importe=1,Moneda="a",
+                    MonedaId="a",
+                    Porcentaje=1} });
+            var result = target.TraerAperturaPrecioPorContrato(1,"A");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerAperturaDePrecioPorContrato(It.IsAny<int>()), Times.Once);
+            fijacionManagerMock.Verify(x => x.TraerAperturaDePrecioPorFijacion(It.IsAny<int>()), Times.Never);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"contratoId\":1,\"FijacionId\":null,\"ConceptoAperturaPrecioId\":1,\"Importe\":1,\"Porcentaje\":1,\"MonedaId\":\"a\",\"ConceptoAperturaPrecio\":\"a\",\"Moneda\":\"a\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void TraerAperturaPrecioPorContratoTestFijacion()
+        {
+            var agente = new AgenteCompra { Id = 1, ComercialId = 1, MaterialId = 1 };
+            fijacionManagerMock.Setup(x => x.TraerAperturaDePrecioPorFijacion(It.IsAny<int>()))
+                .Returns(new List<AperturaPrecioDto> { new AperturaPrecioDto() { contratoId=1,
+                    ConceptoAperturaPrecio="a",
+                    ConceptoAperturaPrecioId=1,
+                    FijacionId=null,Id=1,
+                    Importe=1,Moneda="a",
+                    MonedaId="a",
+                    Porcentaje=1} });
+            var result = target.TraerAperturaPrecioPorContrato(1, "Fijacion");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerAperturaDePrecioPorContrato(It.IsAny<int>()), Times.Never);
+            fijacionManagerMock.Verify(x => x.TraerAperturaDePrecioPorFijacion(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"contratoId\":1,\"FijacionId\":null,\"ConceptoAperturaPrecioId\":1,\"Importe\":1,\"Porcentaje\":1,\"MonedaId\":\"a\",\"ConceptoAperturaPrecio\":\"a\",\"Moneda\":\"a\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ConfirmarAcuerdoTest()
+        {
+            acuerdoManagerMock.Setup(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>()))
+                .Returns(new GrabarAcuerdoResult { AcuerdoId = 1, Errores = new List<ErrorMessage>() });
+            var result = target.GrabarAcuerdo(new ContratoAcuerdo());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            acuerdoManagerMock.Verify(x => x.GrabarAcuerdo(It.IsAny<ContratoAcuerdo>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void TraerAcuerdoCompletoTest()
+        {
+            acuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
+                .Returns(new BasicoContrato());
+            var result = target.TraerAcuerdoCompleto(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":0,\"Cuit\":null,\"ContratoId\":0,\"MaterialId\":0,\"NivelTarifaId\":null,\"TipoNegocioId\":0,\"Cantidad\":0,\"Precio\":0,\"PrecioPlazo\":null,\"FechaEntrega\":null,\"CampanaId\":0,\"FechaDesde\":null,\"FechaDesdeFormateado\":null,\"FechaHasta\":null,\"FechaHastaFormateado\":null,\"ProveedorId\":0,\"MonedaId\":null,\"Moneda\":null,\"Fecha\":null,\"FechaFormateado\":null,\"Hora\":null,\"NivelTarifa\":null,\"TarifaFlete\":null,\"GrupoCompra\":0,\"GrupoCompraDescripcion\":null,\"ComercialId\":null,\"ComercialCreadorId\":null,\"ProvinciaId\":null,\"LocalidadId\":null,\"Base\":null,\"Importe_Sustentable\":null,\"MonedaId_Sustentable\":null,\"Moneda_Sustentable\":null,\"Fecha_Dolarizado\":null,\"Fecha_DolarizadoFormateado\":null,\"Dias_Pesificado\":null,\"NoInformaSIO\":null,\"TrigoEspecial\":null,\"Estado\":null,\"UsuarioId\":null,\"ContratoSAP\":null,\"Ampliaciones\":null,\"TipoNegocio\":null,\"Proveedor\":null,\"Corredor\":null,\"Comercial\":null,\"ComercialCreador\":null,\"Material\":null,\"Campania\":null,\"Provincia\":null,\"Localidad\":null,\"Estado_Contrato\":null,\"Cantidad_F\":null,\"Precio_F\":null,\"Proveedor_F\":null,\"Fecha_F\":null,\"Material_F\":null,\"MonedaId_F\":null,\"Moneda_F\":null,\"Ampliaciones_F\":null,\"Fecha_Order\":\"\\/Date(-62135586000000)\\/\",\"Estado_Order\":0,\"Observacion\":null,\"Observacion_F\":null,\"FijacionDePrecioContratoId\":null,\"Sustentable\":null,\"Dolarizado\":null,\"Pesificado\":null,\"Negocio\":null,\"ClasificacionId\":null,\"ClasificacionDescripcion\":null,\"DestinoId\":null,\"DestinoDescripcion\":null,\"CantidadCamiones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"CondicionFijacion\":null,\"CD\":null,\"Warrant\":null,\"PagoDirectoVendedor\":null,\"CalidadDescripcion\":null,\"EstablecimientoPropio\":null,\"BoletoId\":null,\"BolsaId\":null,\"BoletoDescripcion\":null,\"BolsaDescripcion\":null,\"DesdeFijacion\":null,\"DesdeFijacionFormateado\":null,\"HastaFijacion\":null,\"HastaFijacionFormateado\":null,\"CondicionFijacionDescripcion\":null,\"Descuentos\":null,\"Calidades\":null,\"MercsDeposito\":null,\"CorredorId\":0,\"DatosFijacion\":null,\"PorcentajeComision\":null,\"ContratoCorredor\":null,\"ContratoVendedor\":null,\"SelCargoMOA\":null,\"SelCargoVendedor\":null,\"Madre\":null,\"ContratoMadre\":null,\"Posicion\":null,\"TipoFason\":null,\"TipoFasonId\":0,\"FasonId\":0,\"Operador\":null,\"OperadorId\":0,\"AgenteId\":0,\"AperturaPrecios\":null,\"PrecioNeto\":null,\"Pizarra\":null,\"StandardCalidadId\":null,\"StandardDeCalidadDescripcion\":null,\"PagoDiferido\":null,\"ZonaId\":null,\"ZonaDescripcion\":null,\"AcuerdoId\":null,\"ImporteFinanciero\":null,\"ImporteRedespacho\":null,\"ImporteComision\":null,\"ImporteBonificacion\":null,\"PorcentajeBonificacion\":null,\"Compensacion\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void FinalizarAcuerdoTest()
+        {
+            acuerdoManagerMock.Setup(x => x.FinalizarAcuerdo(It.IsAny<int>()))
+                .Returns(new GrabarAcuerdoResult { AcuerdoId=1,Errores=new List<ErrorMessage>()});
+            var result = target.FinalizarAcuerdo(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            acuerdoManagerMock.Verify(x => x.FinalizarAcuerdo(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AcuerdoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void AnularContrato()
+        {
+            contratoManagerMock.Setup(x => x.AnularContrato(It.IsAny<Contrato>(), It.IsAny<string>()))
+                .Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            var result = target.AnularContrato(new Contrato());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.AnularContrato(It.IsAny<Contrato>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ObtenerContratosParaCopiarTest()
+        {
+            contratoManagerMock.Setup(x => x.TraerContratosPorSap(It.IsAny<string>()))
+                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { Cantidad="a",Comercial="",ContratoSap="a",Fecha="a",Filtro="a",Id=1,Material="a",RazonSocial="a",tipoNegocio="a"} });
+            var result = target.ObtenerContratosParaCopiar("a");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerContratosPorSap(It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Cantidad\":\"a\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ObtenerContratosAcuerdoTest()
+        {
+            contratoManagerMock.Setup(x => x.TraerContratosAcuerdo(It.IsAny<string>()))
+                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { Cantidad = "a", Comercial = "", ContratoSap = "a", Fecha = "a", Filtro = "a", Id = 1, Material = "a", RazonSocial = "a", tipoNegocio = "a" } });
+            var result = target.ObtenerContratosAcuerdo("a");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerContratosAcuerdo(It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Cantidad\":\"a\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void BuscarGrupoDeComprasTest()
+        {
+            comercialManagerMock.Setup(x => x.ListarGrupoDeCompras(It.IsAny<string>()))
+                .Returns(new List<GrupoDeCompras>() { new GrupoDeCompras { Id = 1, Descripcion = "a" } });
+            var result = target.BuscarGrupoDeCompras("a");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            comercialManagerMock.Verify(x => x.ListarGrupoDeCompras(It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void BuscarTotalesTest()
+        {
+            contratoManagerMock.Setup(x => x.TraerTotalesPesosDolares(It.IsAny<KendoGridMvcRequest>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .Returns(new TotalPesosDolares
+                {
+                    Ampliaciones = 1,
+                    Campania = "a",
+                    Cantidad = 1,
+                    Comercial = "a",
+                    ComercialCreador = "a",
+                    ComercialId = 1,
+                    Corredor = "a",
+                    CorredorId = 1,
+                    DestinoDescripcion = "a",
+                    Estado_Contrato="a",
+                    Fecha= new DateTime(2019,10,1),
+                    FechaDesde= new DateTime(2019, 10, 1),
+                    FechaHasta = new DateTime(2019, 10, 1),
+                    GrupoCompraDescripcion ="a",
+                    Material="a",
+                    MaterialId=1,
+                    Negocio="a",
+                    Proveedor="a",
+                    ProveedorId=1,
+                    TipoNegocio="a",
+                    TotalDolares=1,
+                    TotalGirasol=2,
+                    TotalGirasolAlto=1,
+                    TotalMaiz=1,
+                    TotalPesos=1,
+                    TotalSoja=1,
+                    TotalTrigo=1
+                });
+
+
+            var result = target.BuscarTotales(new FilterObject[0]);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerTotalesPesosDolares(It.IsAny<KendoGridMvcRequest>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ValidarProveedorTest()
+        {
+            contratoManagerMock.Setup(x => x.ValidarProveedor(It.IsAny<int>()))
+                .Returns(new AltaTempranaNRCODto { AltaTemprana="SI",
+                Bolsa="SI",
+                Carta="SI",
+                Consignatario="SI",
+                FechaActualizacion= "SI",
+                Mensaje="",
+                Nosis = "SI",
+                PlanCanje = "SI",
+                Ruca = new Ruca { Acopiador= new ValoresRuca { PlanCanje = "SI", Consignatario = "SI", Directo = "SI" },
+                Corredor = "SI",
+                Otros = new ValoresRuca{Directo = "SI",Consignatario = "SI",PlanCanje = "SI" }
+                }
+                });
+            var result = target.ValidarProveedor(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.ValidarProveedor(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

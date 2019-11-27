@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business
                 var suscripcion = repositorio.Listar<SuscripcionComercial>(x => x.ComercialId == comercialId);
                 foreach(var susc in suscripcion)
                 {
-                repositorio.Remover(susc);
+                    repositorio.Remover(susc);
                 }
             }
             repositorio.GuardarCambios();

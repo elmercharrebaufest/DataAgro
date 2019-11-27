@@ -1,9 +1,12 @@
 ﻿var viewModel;
 var datosIniAbmContratoAcuerdo;
 kendo.culture("es-AR");
-
+var modifica;
+var elimina;
 
 $(document).ready(function () {
+    modifica = ConvertirStringABool(modifica);
+    elimina = ConvertirStringABool(elimina);
     InicializarElementos();
     InicializarDatos();
     InicializarDate();
@@ -11,6 +14,7 @@ $(document).ready(function () {
     CrearViewModel();
     AsignarBotones();
     InicializarBusquedaInicial();
+
 });
 
 function InicializarElementos() {
@@ -375,16 +379,12 @@ function CreateGridContratoAcuerdo() {
                 },
 
                 template: function (dataItem) {
-                    if (dataItem.EstadoId == 1 && $("#perfil").val() == "Mesa") {
+                    if (dataItem.EstadoId == 1 ) {
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonPendiente(dataItem, 'fa-pencil pend') +
                             botonConfirmadoTilde(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend');
-                    } else if (dataItem.EstadoId == 1) {
-                        return '<div class="status pendiente">Pendiente</div>' +
-                            botonPendiente(dataItem, 'fa-pencil pend') +
-                            botonBorrar(dataItem, 'fa-trash pend');
-                    }
+                    } 
                     if (dataItem.EstadoId == 2) {
                         return '<div class="status confirmado">Confirmado</div>' +
                             botonPendiente(dataItem, 'fa-pencil conf') +
@@ -511,10 +511,6 @@ function AsignarBotones() {
     $("#butConfirmar").click(function () {
         ConfirmarMasivo();
     });
-
-    if ($("#perfil").val() != "Mesa") {
-        $("#butConfirmar").hide();
-    }
 }
 
 function UpdateViewModel(model) {
@@ -724,11 +720,16 @@ function Cancelar() {
 }
 
 function botonPendiente(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Editar" onclick="ModificarPorId(' + dataItem.Id + ')"><i class="fa ' + icono + '"></i></button>';
+    if (modifica) {
+        return '<button data-toggle="tooltip" title="Editar" onclick="ModificarPorId(' + dataItem.Id + ')"><i class="fa ' + icono + '"></i></button>';
+    } else {
+        return '<div></div>';
+    }
 }
 
 
 function botonConfirmadoTilde(dataItem, icono) {
+
     return '<button data-toggle="tooltip" title="Confirmar" onclick="ConfirmarConId(' + dataItem.Id + ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -736,7 +737,11 @@ function botonConfirmadoTilde(dataItem, icono) {
 
 
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Rechazar" onclick="EliminarConId(' + dataItem.Id + ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    if (elimina) {
+        return '<button data-toggle="tooltip" title="Rechazar" onclick="EliminarConId(' + dataItem.Id + ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    } else {
+        return '<div></div>';
+    }
 }
 
 function ModificarPorId(id) {

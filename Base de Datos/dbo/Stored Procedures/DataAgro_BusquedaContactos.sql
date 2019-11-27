@@ -8,7 +8,7 @@ CREATE procedure [dbo].[DataAgro_BusquedaContactos]
 @Calificacion varchar(max) = null,
 @Hectarea varchar(max) = null,
 @Tonelada varchar(max) = null,
-@comercialId int,
+@comercialId varchar(max),
 @Condicion varchar(max) = null,
 @EstadoDelContacto varchar(max) = null,
 @ComercialFiltro int,

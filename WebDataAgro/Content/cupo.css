@@ -267,3 +267,24 @@ div > label {
 ul{
     padding:0;
 }
+
+#cupos-seleccionados-a-borrar {
+    max-height: 240px;
+    overflow-y: auto;
+    max-width:550px;
+    text-align:center;
+}
+
+#CargaCupos .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#carga-cupos-table td, #carga-cupos-table th {
+    padding: 0px;
+    text-align: center;
+}
+
+span.k-widget.k-numerictextbox.cantidad-masiva {
+    margin-bottom: 0;
+}

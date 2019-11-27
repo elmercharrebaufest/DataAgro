@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -267,7 +268,7 @@ namespace Molinos.DataAgro.Business
                 if (mail)
                 {
                     mailManager.EnviarMail(repositorio.Obtener<Comercial>(x => x.ComercialId == comercialId),
-                                            repositorio.Listar<Comercial>(x => x.PerfilId == 3 || x.PerfilId == 6 || x.PerfilId == 7),
+                                            repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso == PermisosDataAgro.MailHedge))),
                                                 "Cierre del dia " + hoy.Day + "/" + hoy.Month,
                                                     string.Empty,
                                                         null,

@@ -89,6 +89,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="microsoft.identitymodel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.7.0.0\lib\net35\microsoft.identitymodel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.Futures.5.0.0\lib\net40\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.5.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
       <HintPath>..\packages\TaskScheduler.2.8.5\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
@@ -113,6 +119,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Services" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Linq.Dynamic.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.8.2\lib\net45\System.Linq.Dynamic.Core.dll</HintPath>
@@ -191,11 +199,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Atributos\AutorizacionAttribute.cs" />
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
+    <Compile Include="Controllers\ReporteCupoController.cs" />
     <Compile Include="Controllers\CupoController.cs" />
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
     <Compile Include="Controllers\HedgeController.cs" />
@@ -226,6 +236,7 @@
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\ReporteResearchController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
+    <Compile Include="Controllers\RolController.cs" />
     <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Controllers\TareaProgramadaController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
@@ -277,10 +288,14 @@
     <Compile Include="Models\ReporteCompraNetModel.cs" />
     <Compile Include="Models\ConfiguracionCupoModel.cs" />
     <Compile Include="Models\ResearchModel.cs" />
+    <Compile Include="Models\RolModel.cs" />
     <Compile Include="Models\TareaProgramadaModel.cs" />
     <Compile Include="Models\ZonaCupoModel.cs" />
     <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Seguridad\AjaxOnlyAttribute.cs" />
+    <Compile Include="Seguridad\ClaimsTransformationHttpModule.cs" />
+    <Compile Include="Seguridad\DataAgroClaimsAuthenticationManager.cs" />
     <Compile Include="Service References\Compras\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -334,6 +349,7 @@
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
+    <Content Include="Content\ReporteCupo.css" />
     <Content Include="Content\cupo.css" />
     <Content Include="Content\dataAgro.css" />
     <Content Include="Content\dataAgroTablas.css" />
@@ -898,6 +914,7 @@
     <Content Include="Content\reportesResponsive.css" />
     <Content Include="Content\configuracionCupo.css" />
     <Content Include="Content\research.css" />
+    <Content Include="Content\rol.css" />
     <Content Include="Content\SiteResponsive.css" />
     <Content Include="parameters.xml">
       <SubType>Designer</SubType>
@@ -921,6 +938,7 @@
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
+    <Content Include="Scripts\App\AbmRol.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
     <Content Include="Scripts\App\AbmRangoPrecio.js" />
     <Content Include="Scripts\App\AbmCentro.js" />
@@ -957,6 +975,7 @@
     <Content Include="Scripts\App\proveedorDetalle.js" />
     <Content Include="Scripts\App\home.js" />
     <Content Include="Scripts\App\layout.js" />
+    <Content Include="Scripts\App\ReporteCupo.js" />
     <Content Include="Scripts\App\ReporteResearchVentaStock.js" />
     <Content Include="Scripts\App\ReporteSituacionCultivoParcial.js" />
     <Content Include="Scripts\App\ReporteComercial.js" />
@@ -2478,8 +2497,13 @@
     <Content Include="Views\PrecioPizarra\Index.cshtml" />
     <Content Include="Views\PrecioPizarra\_ListaPrecioPizarra.cshtml" />
     <Content Include="Views\Configuracion\Index.cshtml" />
+    <Content Include="Views\Rol\Index.cshtml" />
+    <Content Include="Views\Rol\ModalLimite.cshtml" />
     <Content Include="Views\Home\ModalObjetivo.cshtml" />
     <Content Include="Views\Home\ModalObjetivoDetalle.cshtml" />
+    <Content Include="Views\Home\BorrarCookie.cshtml" />
+    <Content Include="Views\ReporteCupo\Index.cshtml" />
+    <Content Include="Views\Cupo\ModalBorrarVarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2573,8 +2597,6 @@
           <DevelopmentServerPort>52498</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:52498/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:52498/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

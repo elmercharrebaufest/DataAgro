@@ -3,6 +3,7 @@ using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -75,7 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
                 res.Acopio = campoacopio.Where(z => z.EsCampoProduccion == false).ToList();
 
                 res.DatosContacto = DevolverDatosContacto(ProveedorId);
-                res.Historial = Comprar(ProveedorId, UsuarioDirectory);
+                res.Historial = Comprar(ProveedorId, UsuarioDirectory, equipo);
                 res.CanalesDeOperacion = repositorio.Listar<ProveedorCanalOperacion, CanalOperacion>(x => x.CanalOperacion, x => x.ProveedorId == ProveedorId);
                 res.ProveedorCondicion = repositorio.Listar<ProveedorCondicion, Condicion>(x => x.Condicion, x => x.ProveedorId == ProveedorId);
                 res.ProveedorDestinatario = repositorio.Listar<ProveedorDestinatario, Destinatario>(x => x.Destinatario, x => x.ProveedorId == ProveedorId);
@@ -384,9 +385,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 var emailComerciales = "";
-                if (oContrato.Comercial.PerfilId == (int)EnumPerfil.CorredoresComercial)
+                if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
                 {
-                    var corredoresComerciales = mobComercial.ListarComercialesPorPerfil(EnumPerfil.CorredoresComercial);
+                    var corredoresComerciales = mobComercial.ListarComercialesCorredor();
                     corredoresComerciales.Remove(oContrato.Comercial);
 
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
@@ -490,9 +491,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 var emailComerciales = "";
-                if (oFijacionDePrecioContrato.Comercial.PerfilId == (int)EnumPerfil.CorredoresComercial)
+                if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
                 {
-                    var corredoresComerciales = mobComercial.ListarComercialesPorPerfil(EnumPerfil.CorredoresComercial);
+                    var corredoresComerciales = mobComercial.ListarComercialesCorredor();
                     corredoresComerciales.Remove(oFijacionDePrecioContrato.Comercial);
 
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
@@ -2234,7 +2235,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private Historial Comprar(int proveedorId, string UsuarioDirectory)
+        private Historial Comprar(int proveedorId, string UsuarioDirectory, List<int> equipo)
         {
             var historial = new Historial();
 
@@ -2246,16 +2247,12 @@ namespace Molinos.DataAgro.Business.Managers
                 var listMateriales = repositorio.Listar<CampañaMaterial, Material>(x => x.Material, x => x.Proveedor.ProveedorId == proveedorId);
                 foreach (var material in listMateriales)
                 {
-                    Comercial comercial = null;
-
-                    comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == UsuarioDirectory);
-
                     var campaniaActual = material.Campaña.CampañaId;
                     var oCampañaMaterialAnteriorActualNueva = repositorio.Listar<CampañaMaterial>(x => x.Proveedor.ProveedorId == proveedorId && (x.Campaña.CampañaId == (campaniaActual - 1) || x.Campaña.CampañaId == campaniaActual || x.Campaña.CampañaId == (campaniaActual + 1)) && x.Material.MaterialId == material.MaterialId);
 
                     foreach (var cmaux in oCampañaMaterialAnteriorActualNueva)
                     {
-                        var oCampañaMaterialPorMes = repositorio.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", 0, comercial.ComercialId, cmaux.CampañaMaterialId);
+                        var oCampañaMaterialPorMes = repositorio.SelStore<CampañaMaterialPorMes>("DataAgro_ComprasPorComercialId", 0, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), cmaux.CampañaMaterialId);
 
                         foreach (var cmpm in oCampañaMaterialPorMes)
                         {

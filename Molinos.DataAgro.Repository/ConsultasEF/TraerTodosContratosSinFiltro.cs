@@ -3,6 +3,7 @@ using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,17 +14,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public static class TraerTodosContratosSinFiltro
     {
-        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, int perfilId, List<int> equipo, List<int> corredoresComercial)
+        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where perfilId != 8 ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
-                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
-                    (perfilId == (int)EnumPerfil.CorredoresComercial &&
-                    (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
-                    corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
+                where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) 
                 select new BasicoContrato()
                 {
                     Id = contrato.ContratoId,
@@ -131,9 +129,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where perfilId != 8 ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
-                        (perfilId == (int)EnumPerfil.CorredoresComercial && (corredoresComercial.Contains(fijac.ComercialId) ||
-                        corredoresComercial.Contains(fijac.ComercialCreadorId)))
+                where equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) 
                 select new BasicoContrato()
                 {
                     Id = fijac.FijacionDePrecioContratoId,
@@ -240,7 +236,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
-            if (perfilId == 7)
+            if (PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
             {
                 var queryFason =
                     from fas in contexto.Set<Fason>()

@@ -6,7 +6,7 @@
 <div class="container">
     @using (Ajax.BeginForm("GrabarHedgeObjetivo", null, new AjaxOptions { UpdateTargetId = "objetivos", InsertionMode = InsertionMode.Replace, OnSuccess = "objetivoInput" }, new { }))
     {
-        @Html.AntiForgeryToken();
+      
         <div id="formularioObjetivo" class="table-container">
             @if (Model.Resultado.HayError)
             {

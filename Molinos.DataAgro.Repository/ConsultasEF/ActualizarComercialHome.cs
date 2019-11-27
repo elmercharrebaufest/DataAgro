@@ -14,7 +14,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly int comercialId;
         private readonly string filtro;
         private readonly List<int> corredoresComercial;
-        private readonly int perfilId;
 
         public ActualizarComercialHome(List<int> equipo, int comercialId)
         {

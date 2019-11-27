@@ -2,7 +2,7 @@
 
 create procedure [dbo].[DataAgro_ExportAll_Contacto] --'1,2,3',44
 	@Proveedores VARCHAR(max),
-	 @ComercialId Int
+	 @ComercialId VARCHAR(max)
 as
 
 --set @Proveedores ='1,2,3'

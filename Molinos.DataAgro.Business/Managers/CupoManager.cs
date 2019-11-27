@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.clienteStopAgent = clienteStopAgent;
             this.modificarCupoAgent = modificarCupoAgent;
         }
-        public CupoResult GrabarCupo(Cupo cupo, int cantidadCupos, DateTime? fechaHasta)
+        public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
             var error = new CupoResult { ListaCupos = new List<string>()};
             try
@@ -45,43 +45,44 @@ namespace Molinos.DataAgro.Business.Managers
                 cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
                 if (cupo.Id == 0)
                 {
-                    fechaHasta = fechaHasta ?? cupo.FechaIngreso;
-                    while (cupo.FechaIngreso <= fechaHasta)
+                    foreach (var d in dias)
                     {
-                        var listaCupos = new List<string>();
-                        var errorSap = new Resultado();
-                        try
+                        if (d.Cantidad > 0)
                         {
-                            listaCupos = crearCupoAgent.Crear(cupo, cantidadCupos);
-                        }
-                        catch(Exception e)
-                        {
-                            errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
-                        }
-                        if (errorSap.HayError)
-                        {
-                            error.Errores.AddRange(errorSap.Errores);
-                            cupo.FechaIngreso = cupo.FechaIngreso.AddDays(1);
-                            continue;
-                        }
-                        var cuposConSap = new List<Cupo>();
+                            cupo.FechaIngreso = d.Fecha;
+                            var listaCupos = new List<string>();
+                            var errorSap = new Resultado();
+                            try
+                            {
+                                listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
+                            }
+                            catch (Exception e)
+                            {
+                                errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
+                            }
+                            if (errorSap.HayError)
+                            {
+                                error.Errores.AddRange(errorSap.Errores);
+                                continue;
+                            }
+                            var cuposConSap = new List<Cupo>();
 
-                        cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
-                        foreach (var cupoSap in listaCupos)
-                        {
-                            var nuevoCupo = (Cupo)cupo.Clone();
-                            nuevoCupo.CupoSap = cupoSap;
-                            cuposConSap.Add(nuevoCupo);
+                            cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
+                            foreach (var cupoSap in listaCupos)
+                            {
+                                var nuevoCupo = (Cupo)cupo.Clone();
+                                nuevoCupo.CupoSap = cupoSap;
+                                cuposConSap.Add(nuevoCupo);
+                            }
+                            repositorio.AgregarTodos(cuposConSap);
+                            repositorio.GuardarCambios();
+
+                            if (listaCupos.Count < d.Cantidad.Value)
+                            {
+                                error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
+                            }
+                            error.ListaCupos.AddRange(listaCupos);
                         }
-                        repositorio.AgregarTodos(cuposConSap);
-                        repositorio.GuardarCambios();
-                        
-                        if (listaCupos.Count < cantidadCupos)
-                        {
-                            error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + cantidadCupos + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
-                        }
-                        error.ListaCupos.AddRange(listaCupos);
-                        cupo.FechaIngreso = cupo.FechaIngreso.AddDays(1);
                     }
                     return error;
                 }
@@ -154,7 +155,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacío cuando elige Fasón/Préstamo Devolución"));
             }
-            if(fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
+            if(cupo.Id == 0 && fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
@@ -259,8 +260,27 @@ namespace Molinos.DataAgro.Business.Managers
                 ProveedorId = x.ProveedorId,
                 Proveedor = x.Proveedor.RazonSocial+ " (" + x.Proveedor.CUIT+ ")",
                 ZonaCupoId = x.ZonaCupoId,
-                ZonaCupo = x.ZonaCupo.Descripcion
+                ZonaCupo = x.ZonaCupo.Descripcion,
+                CupoSap = x.CupoSap
             });
+        }
+        public Resultado EliminarVarios(List<int> cupos, string comercial)
+        {
+            var resultado = new Resultado();
+            foreach(var c in cupos)
+            {
+                var resCupos = EliminarCupo(c, comercial);
+                if (resCupos.HayError)
+                {
+                    resultado.Errores.AddRange(resCupos.Errores);
+                }
+            }
+            return resultado;
+        }
+
+        public string ObtenerCodigoSap(int id)
+        {
+            return repositorio.Obtener<Cupo, string>(x => x.Id == id, x => x.CupoSap);
         }
     }
 }

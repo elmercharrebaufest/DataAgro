@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ComercialCombo> Comercial { get; set; }
         public List<Perfil> Perfil { get; set; }
         public List<GrupoDeCompras> GrupoDeCompras { get; set; }
+        public List<RolCombo> Rol { get; set; }
     }
 
     public class DataAbmComercial : Resultado
@@ -31,7 +32,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }                  
         public string Apellido { get; set; }                  
         public string Nombres { get; set; }                  
-        public string PerDescripcion { get; set; }                  
+        public string PerDescripcion { get; set; }                    
+        public string Rol { get; set; }
     }
 
 }

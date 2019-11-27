@@ -5,18 +5,19 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CompraNetController : Controller
     {
         private IHomeManager mobjHomeManager;
@@ -74,14 +75,15 @@ namespace WebDataAgro.Controllers
         // Metodos Publicos
         //-----------------------------------------------------
 
+        [Autorizacion(PermisosDataAgro.VisualizarCompraNet)]
         public ActionResult Index()
         {
-            ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId; 
             return View();
         }
 
+        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioCorredor)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
         {
             ViewBag.ComercialId = GlobalVariables.ComercialId;
@@ -109,7 +111,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new ContratoModel_prueba
                 {
-                    Datos = mobjContratoManager.TraerDatosCombo((int)GlobalVariables.Perfil)
+                    Datos = mobjContratoManager.TraerDatosCombo()
                 },
                 MaxJsonLength = Int32.MaxValue
             };
@@ -279,8 +281,8 @@ namespace WebDataAgro.Controllers
                 request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
             }
             request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
-            var equipo = (int)GlobalVariables.Perfil == (int)EnumPerfil.Jefe ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var model = mobjContratoManager.TraerTodosContratos(request, (int)GlobalVariables.Perfil, equipo, GlobalVariables.CorredoresComercial);
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerJerarquia) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
         }
@@ -615,7 +617,7 @@ namespace WebDataAgro.Controllers
             request.PageSize = 0;
             request.SortObjects = null;
             request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and",FilterObjects=filtros.AsEnumerable()}: null; 
-            var model = mobjContratoManager.TraerTotalesPesosDolares(request, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+            var model = mobjContratoManager.TraerTotalesPesosDolares(request, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
              
             return Json(model);
         }

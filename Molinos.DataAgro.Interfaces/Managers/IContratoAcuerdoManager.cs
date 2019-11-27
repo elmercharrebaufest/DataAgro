@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface IContratoAcuerdoManager
     {
         DatosIniAbmContratoAcuerdo TraerDatosIniciales();
-        DatosIniComboContratoAcuerdo TraerDatosCombo(int perfil);
+        DatosIniComboContratoAcuerdo TraerDatosCombo();
         ResultIniContratoAcuerdo TraerTodoContratoAcuerdo();
         GrabarAcuerdoResult FinalizarAcuerdo(int id);
         GrabarAcuerdoResult GrabarAcuerdo(ContratoAcuerdo oContratoAcuerdo);

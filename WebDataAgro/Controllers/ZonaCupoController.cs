@@ -1,40 +1,28 @@
-﻿using System;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using WebDataAgro.Models;
-using System.Web;
+using System;
 using System.Web.Mvc;
-using static WebDataAgro.MvcApplication;
+using WebDataAgro.Atributos;
+using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro )]
     public class ZonaCupoController: Controller
     {
 
         private IZonaCupoManager mobjZonaCupoManager;
-        private IComercialManager mobjComercialManager;
 
-        public ZonaCupoController(IZonaCupoManager oZonaCupoManager, IComercialManager oComercialManager)
+        public ZonaCupoController(IZonaCupoManager oZonaCupoManager)
         {
             mobjZonaCupoManager = oZonaCupoManager;
-            mobjComercialManager = oComercialManager;
         }
+        [Autorizacion(PermisosDataAgro.ConfiguracionZonaCupos )]
         public ActionResult Index()
         {
-            string ActionView = "";
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
-            else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
-            {
-                ActionView = "ErrorDePermisos";
-            }
-            return View(ActionView);
+            return View();
         }
 
         public ActionResult Inicializar()

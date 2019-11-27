@@ -13,6 +13,5 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public string Xml { get; set; }
-        public List<Log> Log { get; set; }
     }
 }

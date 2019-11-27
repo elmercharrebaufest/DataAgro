@@ -1,0 +1,23 @@
+﻿@model Molinos.DataAgro.Entities.Dto.FiltroReporteNegocioDto
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Reporte de contratos";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ReporteCupo")
+}
+
+@section Styles {
+    <link href="~/Content/ReporteCupo.css" rel="stylesheet" />
+}
+
+<div class="Titulo">
+    <h5>Reporte de Cupos</h5>
+</div>
+
+<br />
+<div>
+    <div id="grid" class="table-responsive">
+    </div>
+</div>

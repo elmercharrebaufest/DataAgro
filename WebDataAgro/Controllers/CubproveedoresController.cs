@@ -1,15 +1,18 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CubProveedoresController : Controller
     {
         private ICubProveedoresManager mobjCubProveedoresManager;
@@ -31,11 +34,6 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Index()
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
-
             return View();
         }
 

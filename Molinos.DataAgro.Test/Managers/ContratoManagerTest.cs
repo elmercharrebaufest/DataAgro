@@ -72,7 +72,8 @@ namespace Molinos.DataAgro.Test.Managers
             capacidadProductivaAgentMock = new Mock<ICapacidadProductivaAgent>();
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
+            
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
                 oMSCampaniaManagerMock.Object, provinciaManagerMock.Object,
@@ -85,7 +86,7 @@ namespace Molinos.DataAgro.Test.Managers
                 eliminarContratoAgentMock.Object,
                 configuracionManagermock.Object,
                 capacidadProductivaAgentMock.Object,
-                altaTempranaAgentMock.Object,
+                altaTempranaAgentMock.Object, 
                 diasHabilesAgentMock.Object);
         }
 
@@ -141,7 +142,7 @@ namespace Molinos.DataAgro.Test.Managers
         .Returns(new List<OperadorQry>() { new OperadorQry { Id = 1, Descripcion = "OP SD" } });
 
 
-            var result = target.TraerDatosCombo(8);
+            var result = target.TraerDatosCombo();
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Provincia, ProvinciaQry>>>(), It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Campaña, CampañaQry>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
@@ -205,7 +206,12 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca { 
+                    Acopiador = new ValoresRuca {Consignatario="SI", Directo="SI", PlanCanje= "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor="SI" 
+                }
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -257,7 +263,12 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
@@ -313,7 +324,13 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
 
             var resultado = target.GrabarContrato(oContrato);
@@ -418,7 +435,13 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
             configuracionManagermock.Setup(y => y.TraerConfiguraciones()).Returns(new Configuracion { CantidadDias = 10 });
             
@@ -521,7 +544,13 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
             var resultado = target.GrabarContrato(oContrato);
             Assert.That(resultado.HayError);
@@ -611,7 +640,13 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
 
             var resultado = target.GrabarContrato(oContrato);
@@ -676,7 +711,13 @@ namespace Molinos.DataAgro.Test.Managers
                 Carta = "SI",
                 FechaActualizacion = "SI",
                 Mensaje = "",
-                Nosis = "SI"
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
             });
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
@@ -931,7 +972,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Comercial = new Comercial { ComercialId = 1 }
             };
             var diasHabiles = new List<DateTime>();
-            for(var i =1; i<= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);i++)
+            for (var i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
             {
                 diasHabiles.Add(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i));
             }

@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Repository
         /// <returns>La unica entidad que se corresponde con la condicion o null si no la encuentra</returns>
         /// <exception cref="InvalidOperationException">Se lanza cuando más de una entidad comple con la condición</exception>
         TEntidad Obtener<TEntidad>(Expression<Func<TEntidad, bool>> condicion) where TEntidad : class;
+        TEntidad ObtenerNoTracking<TEntidad>(Expression<Func<TEntidad, bool>> condicion) where TEntidad : class;
 
         TEntidad Obtener<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, bool>> condicion) where TEntidad : class;
 

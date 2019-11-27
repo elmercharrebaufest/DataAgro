@@ -1,7 +1,7 @@
 ﻿
 create procedure [dbo].[DataAgro_Contactos_Exportar] --'2,481,485,494,574,589,662,678,687,694,805,889,954',42
 	@Proveedores VARCHAR(max),
-	@ComercialId Int
+	@ComercialId varchar(max)
 as
 
 

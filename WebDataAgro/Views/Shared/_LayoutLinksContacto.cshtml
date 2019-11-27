@@ -53,14 +53,17 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <div class="buscador-nav">
-                            <input class="buscador-nav-input" type="text" placeholder="Buscar por CUIT, razón social" />
-                            <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
-                            <div class="buscar-result"></div>
-                        </div>
-                    </li>
-                    @if (ViewBag.edita != false)
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor))
+                    {
+                        <li>
+                            <div class="buscador-nav">
+                                <input class="buscador-nav-input" type="text" placeholder="Buscar por CUIT, razón social" />
+                                <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
+                                <div class="buscar-result"></div>
+                            </div>
+                        </li>
+                    }
+                    @if (PermisosHelper.Is(PermisosDataAgro.AltaDatosProveedor))
                     {
                         <li class="">
                             <a class="agregarcontacto-nav" href="/Proveedor/Agregar">

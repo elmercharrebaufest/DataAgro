@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -30,30 +31,30 @@ namespace Molinos.DataAgro.Business.Managers
         //  Metodos Publicos
         //--------------------------------------------------
 
-        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> corredoresComerciales)
+        public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> equipo)
         {
             var res = new ResultIniContacto();
             res.Contactos = new List<ContactoIni>();
-            if (repositorio.Obtener<Comercial>(oParam.ComercialId).PerfilId != 8)
+            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
             {
                 var query = repositorio.SelStorePaginado<Contactos>("DataAgro_BusquedaContactos", 50, pagina, oParam.Campaña,
                     oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                    oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
+                    oParam.Hectareas, oParam.Toneladas, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
 
                 res.Contactos = DevolverContactosIni(query);
             }
             else
             {
-                var re = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(corredoresComerciales, oParam.ComercialId)));
+                var re = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(equipo)));
                 res.Contactos.AddRange(re);
             }
 
             oParam.Estado = null;
-            if (repositorio.Obtener<Comercial>(oParam.ComercialId).PerfilId != 8)
+            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
             {
                 var queryPorEstado = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
+                oParam.Hectareas, oParam.Toneladas, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
 
                 res.TotalContactos = queryPorEstado.Count();
                 res.TotalPotencialContactos = queryPorEstado.Count(x => x.Estado == "Cliente Potencial");
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(corredoresComerciales, oParam.ComercialId)));
+                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(equipo)));
                 res.TotalContactos = cuenta.Count();
                 res.TotalPotencialContactos = cuenta.Count(x => x.Estado == "Cliente Potencial");
                 res.TotalOperandoContactos = cuenta.Count(x => x.Estado == "Operando");
@@ -240,10 +241,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public List<BusquedaHome> BusquedaHome(string filtro, int comercialId, List<int> equipo, List<int> corredoresComercial, int perfilId)
+        public List<BusquedaHome> BusquedaHome(string filtro, int comercialId, List<int> equipo, List<int> corredoresComercial)
         {
             //var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
-            var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo, comercialId, filtro, corredoresComercial, perfilId));
+            var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo, comercialId, filtro, corredoresComercial, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)));
             return query;
         }
 
@@ -278,7 +279,7 @@ namespace Molinos.DataAgro.Business.Managers
             return list;
         }
 
-        public List<ContactoIni> ExportarContactos(oParamBusqueda oParam, string idActiveDirectory)
+        public List<ContactoIni> ExportarContactos(oParamBusqueda oParam, string idActiveDirectory, List<int> equipo)
         {
 
             var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
@@ -287,9 +288,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var ids = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId).ToList(); ;
+                oParam.Hectareas, oParam.Toneladas, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId).ToList(); ;
 
-                var Contactos = repositorio.SelStore<Contactos>("DataAgro_Contactos_Exportar", 0, string.Join(",", ids.Select(n => n.ToString()).ToArray()), oComerciales.ComercialId);
+                var Contactos = repositorio.SelStore<Contactos>("DataAgro_Contactos_Exportar", 0, string.Join(",", ids.Select(n => n.ToString()).ToArray()), string.Join(",", equipo.Select(n => n.ToString()).ToArray()));
 
                 var aux = DevolverContactosIni(Contactos);
 
@@ -320,19 +321,19 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var ids = repositorio.SelStore<Contactos>("DataAgro_BusquedaContactos", 0, oParam.Campaña,
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
-                oParam.Hectareas, oParam.Toneladas, oParam.ComercialId, oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId.ToString()).ToArray(); ;
+                oParam.Hectareas, oParam.Toneladas, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona).Select(x => x.ProveedorId.ToString()).ToArray(); ;
                 var idsStr = string.Join(",", ids);
 
                 var idProveedores = repositorio.ListarConsulta(new TraerBusquedaContactosProveedorId(oParam, equipo)).Select(x => x.ProveedorId).Distinct();
                 
 
-                if (repositorio.Obtener<Comercial>(oParam.ComercialId).PerfilId != 8)
+                if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
                 {
-                    exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, oComerciales.ComercialId);
+                    exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, string.Join(",", equipo.Select(n => n.ToString()).ToArray()));
                 }
                 else
                 {
-                    var comerciales = repositorio.Listar<Comercial>(x => x.PerfilId == 8).Select(x => x.ComercialId).ToList();
+                    var comerciales = repositorio.Listar<Comercial,int>(x=>x.ComercialId,x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)));
 
                     var re = repositorio.ListarConsulta(new TraerCorredoresComercialExportarAll(comerciales, oParam.ComercialId));
                     exp.contacto.AddRange(re);
@@ -389,9 +390,9 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public ResultIniContacto TraerBusquedaContactoCorredores(List<int> comercialesId, int comercialOriginalIda)
+        public ResultIniContacto TraerBusquedaContactoCorredores(List<int> comercialesId)
         {
-            var lista = repositorio.ListarConsulta(new TraerCorredoresComercial(comercialesId, comercialOriginalIda));
+            var lista = repositorio.ListarConsulta(new TraerCorredoresComercial(comercialesId));
             return null;
         }
 

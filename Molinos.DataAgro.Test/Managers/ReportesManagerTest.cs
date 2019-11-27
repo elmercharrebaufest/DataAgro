@@ -96,67 +96,67 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerComprasMapaTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResulIndicadores>() { new ResulIndicadores { Cuit = 1, CantidadDeCliente = 1 } });
 
-            var result = target.TraerComprasMapa(new ParamReportes());
+            var result = target.TraerComprasMapa(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerComprasMapaExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultIndicadoresReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultIndicadoresReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerComprasMapaExportacion(new ParamReportes());
+            var result = target.TraerComprasMapaExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultIndicadoresReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultIndicadoresReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerComprasTortaTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()))
                 .Returns(new List<ResulIndicadores>() { new ResulIndicadores { Cuit = 1, CantidadDeCliente = 1 } });
 
-            var result = target.TraerComprasTorta(new ParamReportes());
+            var result = target.TraerComprasTorta(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null,  0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerComprasTortaExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultIndicadoresReportesTorta>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultIndicadoresReportesTorta>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, ""))
                 .Returns(new List<ResultIndicadoresReportesTorta>() { new ResultIndicadoresReportesTorta { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerComprasTortaExportacion(new ParamReportes());
+            var result = target.TraerComprasTortaExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultIndicadoresReportesTorta>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultIndicadoresReportesTorta>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerComprasBarraTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes { MasTn100 = 1 } });
 
-            var result = target.TraerComprasBarra(new ParamReportes());
+            var result = target.TraerComprasBarra(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerComprasBarraExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultComprasBarrasReportesmini>() { new ResultComprasBarrasReportesmini { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerComprasBarraExportacion(new ParamReportes());
+            var result = target.TraerComprasBarraExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportesmini>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         #endregion
@@ -164,45 +164,45 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerCapacidadProductivaMapaTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResulIndicadores>() { new ResulIndicadores { Cuit = 1, CantidadDeCliente = 1 } });
 
-            var result = target.TraerCapacidadProductivaMapa(new ParamReportes());
+            var result = target.TraerCapacidadProductivaMapa(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadProductivaMapaExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultProduccionMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultProduccionMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultProduccionMapaReportes>() { new ResultProduccionMapaReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerCapacidadProductivaMapaExportacion(new ParamReportes());
+            var result = target.TraerCapacidadProductivaMapaExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultProduccionMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultProduccionMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadProductivaBarraTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""))
                 .Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes { MasTn100 = 1 } });
 
-            var result = target.TraerCapacidadProductivaBarra(new ParamReportes());
+            var result = target.TraerCapacidadProductivaBarra(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadProductivaBarraExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultProduccionBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultProduccionBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""))
                 .Returns(new List<ResultProduccionBarraReportes>() { new ResultProduccionBarraReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerCapacidadProductivaBarraExportacion(new ParamReportes());
+            var result = target.TraerCapacidadProductivaBarraExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultProduccionBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultProduccionBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         #endregion
@@ -210,45 +210,45 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerCapacidadDeAcopioMapaTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResulIndicadores>() { new ResulIndicadores { Cuit = 1, CantidadDeCliente = 1 } });
 
-            var result = target.TraerCapacidadDeAcopioMapa(new ParamReportes());
+            var result = target.TraerCapacidadDeAcopioMapa(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResulIndicadores>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadDeAcopioMapaExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultAcopioMapaReportes>() { new ResultAcopioMapaReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerCapacidadDeAcopioMapaExportacion(new ParamReportes());
+            var result = target.TraerCapacidadDeAcopioMapaExportacion(new ParamReportes(),new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadDeAcopioBarraTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""))
                 .Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes { MasTn100 = 1 } });
 
-            var result = target.TraerCapacidadDeAcopioBarra(new ParamReportes());
+            var result = target.TraerCapacidadDeAcopioBarra(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultComprasBarrasReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerCapacidadDeAcopioBarraExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultAcopioBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0))
+            repositorioMock.Setup(y => y.SelStore<ResultAcopioBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""))
                 .Returns(new List<ResultAcopioBarraReportes>() { new ResultAcopioBarraReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerCapacidadDeAcopioBarraExportacion(new ParamReportes());
+            var result = target.TraerCapacidadDeAcopioBarraExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultAcopioBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, 0), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultAcopioBarraReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
         }
         #endregion
@@ -256,23 +256,23 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerObjetivosGaugeTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), null, 0, null, null))
+            repositorioMock.Setup(y => y.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes { Cuit="1",Toneladas=1 } });
 
-            var result = target.TraerObjetivosGauge(new ParamReportes());
+            var result = target.TraerObjetivosGauge(new ParamReportes(),new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), null, 0, null, null), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once);
             Assert.NotNull(result);
         }
         [Test]
         public void TraerObjetivosGaugeExportacionTest()
         {
-            repositorioMock.Setup(y => y.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), null, 0, null, null))
+            repositorioMock.Setup(y => y.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
                 .Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerObjetivosGaugeExportacion(new ParamReportes());
+            var result = target.TraerObjetivosGaugeExportacion(new ParamReportes(), new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), null, 0, null, null), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once);
             Assert.NotNull(result);
         }
         #endregion
@@ -281,12 +281,12 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var fecha = new DateTime(2018, 10, 26);
             var reporte = new ParamReportes { FechaDesde= fecha, FechaHasta= fecha, Mes=1, Segmentacion="a", Cosecha=1, Toneladas=1, Comercial= 1, ComercialActual=1, Grano=1 };
-            repositorioMock.Setup(y => y.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            repositorioMock.Setup(y => y.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(new List<valoresGrilla>() { new valoresGrilla { Cuit="1",Toneladas = 1,Segmentación="a" } });
 
-            var result = target.TraerDatosGrillaBD(reporte);
+            var result = target.TraerDatosGrillaBD(reporte,new List<int>());
 
-            repositorioMock.Verify(x => x.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
         }
         [Test]

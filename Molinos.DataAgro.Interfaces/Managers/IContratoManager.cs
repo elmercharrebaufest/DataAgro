@@ -9,10 +9,10 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IContratoManager
     {
-        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
-        KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
+        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
+        KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
 
-        DatosIniContrato TraerDatosCombo(int perfil);
+        DatosIniContrato TraerDatosCombo();
 
         GrabarContratoResult GrabarContrato(Contrato oContrato);
 
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
-        TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfil, List<int> listComercialesId, List<int> corredoresComercial);
+        TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, List<int> listComercialesId, List<int> corredoresComercial);
         List<EstadoContratoDto> TraerTodoLosEstados();
         List<BoletoCompraNetDto> TraerTodosLosBoletos();
         List<GrupoDeComprasDto> TraerTodoGrupoDeCompras();

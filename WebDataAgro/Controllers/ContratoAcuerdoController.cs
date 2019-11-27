@@ -1,16 +1,16 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
-using Molinos.DataAgro.Entities.Extensions;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ContratoAcuerdoController : Controller
     {
         private IContratoAcuerdoManager mobjContratoAcuerdoManager;
@@ -23,13 +23,8 @@ namespace WebDataAgro.Controllers
         public ActionResult Index()
         {
             string ActionView = "";
-
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Mesa)
-            {
-                ViewBag.edita = false;
-            }
+            
             ViewBag.ComercialId = GlobalVariables.ComercialId;
-            ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
 
             return View(ActionView);
         }
@@ -49,7 +44,7 @@ namespace WebDataAgro.Controllers
             {
                 Data = new ContratoAcuerdoModel_prueba
                 {
-                    Datos = mobjContratoAcuerdoManager.TraerDatosCombo((int)GlobalVariables.Perfil)
+                    Datos = mobjContratoAcuerdoManager.TraerDatosCombo()
                 },
                 MaxJsonLength = Int32.MaxValue
             };

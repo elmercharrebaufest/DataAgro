@@ -7,7 +7,7 @@
 	@CampañaId int = null,
 	@Toneladas float = null,
 	@ComercialId int = null,
-	@ComercialGenerador Int=null,
+	@ComercialGenerador VARCHAR(max)=null,
 	@MaterialId int = null
 
 as 

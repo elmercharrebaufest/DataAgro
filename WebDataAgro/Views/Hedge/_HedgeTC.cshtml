@@ -3,7 +3,6 @@
 <div class="container">
     @using (Ajax.BeginForm("GrabarHedgeTC", null, new AjaxOptions { UpdateTargetId = "hedgeTC", InsertionMode = InsertionMode.Replace, OnSuccess = "tcInput" }, new { }))
     {
-        @Html.AntiForgeryToken();
 
     <div id="formularioHedgeTC" class="table-container">
         @if (Model.Resultado.HayError)

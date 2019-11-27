@@ -5,7 +5,7 @@
 @CampañaId int    ,
 
 @ComercialId int =null,
-@ComercialGenerador Int=null   
+@ComercialGenerador VARCHAR(MAX)=null   
 
 as
 declare @ProveedoresTable TABLE ( ProveedorId int , Segmentacion varchar(255))

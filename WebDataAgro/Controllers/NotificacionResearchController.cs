@@ -1,16 +1,16 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class NotificacionResearchController : Controller
     {
         private readonly IMaterialManager materialManager;
@@ -25,6 +25,7 @@ namespace WebDataAgro.Controllers
         }
 
         // GET: NotificacionResearch
+        [Autorizacion(PermisosDataAgro.NotificacionesResearch)]
         public ActionResult Index()
         {
             return View();

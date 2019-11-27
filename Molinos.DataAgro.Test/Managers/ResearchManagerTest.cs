@@ -203,8 +203,26 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.IsFalse(result.HayErrores);
         }
+        [Test]
+        public void GrabarNotificacionError()
+        {
+            var notificacion = new NotificacionResearch();
 
+            repositorioMock.Setup(x => x.Obtener<NotificacionResearch>(1)).Returns(notificacion);
+            repositorioMock.Setup(x => x.Agregar(notificacion)).Returns(notificacion);
+            repositorioMock.Setup(x => x.GuardarCambios());
 
+            var result = target.GrabarNotificacion(notificacion);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Obtener<NotificacionResearch>(It.IsAny<int>()), Times.Never);
+            repositorioMock.Verify(x => x.Agregar(notificacion), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(4, result.Errores.Count);
+        }
         [Test]
         public void GrabarResearchAvanceSiembraOk()
         {
@@ -229,11 +247,74 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
 
             repositorioMock.Verify(x => x.Agregar(researchAvanceSiembra), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(200, result.ListaErrores[0].ErrorCode);
+
+        }
+        [Test]
+        public void GrabarResearchAvanceSiembraError()
+        {
+            var researchAvanceSiembra = new ResearchAvanceSiembra();
+
+            var result = target.GrabarResearchAvanceSiembra(researchAvanceSiembra, 1);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Agregar(researchAvanceSiembra), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(3, result.Errores.Count);
+        }
+        [Test]
+        public void GrabarResearchAvanceCosechaOk()
+        {
+            var researchAvanceCosecha = new ResearchAvanceCosecha
+            {
+                Avance = 1,
+                Campania = new Campaña(),
+                ComercialId = 1,
+                FechaHora = new DateTime(2018, 10, 26),
+                Id = 1,
+                Observaciones = "a",
+                LocalidadId = 4,
+                MaterialId = 5,
+                CampaniaId = 1,
+                RangoDesde= 1,
+                RangoHasta = 2,
+                Rendimiento=1
+            };
+
+            repositorioMock.Setup(x => x.Agregar(researchAvanceCosecha)).Returns(researchAvanceCosecha);
+            repositorioMock.Setup(x => x.GuardarCambios());
+
+            var result = target.GrabarResearchAvanceCosecha(researchAvanceCosecha, 1);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<ResearchAvanceCosecha>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios());
 
             Assert.IsTrue(result.HayErrores);
             Assert.AreEqual(200, result.ListaErrores[0].ErrorCode);
 
+        }
+        [Test]
+        public void GrabarResearchAvanceCosechaError()
+        {
+            var researchAvanceC = new ResearchAvanceCosecha();
+
+            var result = target.GrabarResearchAvanceCosecha(researchAvanceC, 1);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Agregar(researchAvanceC), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(8, result.Errores.Count);
         }
         [Test]
         public void GrabarResearchSituacionCultivo()
@@ -264,7 +345,21 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(200, result.ListaErrores[0].ErrorCode);
 
         }
+        [Test]
+        public void GrabarResearchSituacionCultivoError()
+        {
+            var researchC = new ResearchSituacionCultivo();
 
+            var result = target.GrabarResearchSituacionCultivo(researchC, 1);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Agregar(researchC), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(5, result.Errores.Count);
+        }
         [Test]
         public void GrabarResearchVentaStockOk()
         {
@@ -296,7 +391,21 @@ namespace Molinos.DataAgro.Test.Managers
 
 
         }
+        [Test]
+        public void GrabarResearchVentaStockError()
+        {
+            var researchC = new ResearchVentaStock();
 
+            var result = target.GrabarResearchVentaStock(researchC, 1);
+
+            Assert.NotNull(result);
+
+            repositorioMock.Verify(x => x.Agregar(researchC), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+            Assert.IsTrue(result.HayErrores);
+            Assert.AreEqual(6, result.Errores.Count);
+        }
         [Test]
         public void TraerTodoResearchAvanceSiembraOk()
         {
@@ -311,7 +420,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(1, result.Count);
         }
-
         [Test]
         public void TraerTodoResearchAvanceCosechaOk()
         {
@@ -326,7 +434,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(1, result.Count);
         }
-
         [Test]
         public void TraerTodoResearchSituacionCultivoOk()
         {
@@ -342,7 +449,6 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Count);
 
         }
-
         [Test]
         public void TraerTodoResearchVentaStockOk()
         {
@@ -357,7 +463,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(1, result.Count);
         }
-
         [Test]
         public void TraerTodasNotificacionesOk()
         {
@@ -372,7 +477,6 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(1, result.Count);
         }
-
         [Test]
         public void TraerResearchOk()
         {

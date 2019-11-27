@@ -16,7 +16,6 @@ namespace Molinos.DataAgro.Test.Controllers
     {
         private OperadorController target;
         private Mock<IOperadorManager> operadorManagerMock;
-        private Mock<IComercialManager> comercialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -24,8 +23,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             this.serializer = new JavaScriptSerializer();
             operadorManagerMock = new Mock<IOperadorManager>();
-            comercialManagerMock = new Mock<IComercialManager>();
-            target = new OperadorController(operadorManagerMock.Object, comercialManagerMock.Object);
+            target = new OperadorController(operadorManagerMock.Object);
         }
 
         [Test]

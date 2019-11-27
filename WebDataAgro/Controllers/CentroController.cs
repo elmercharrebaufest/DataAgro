@@ -1,36 +1,26 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro, PermisosDataAgro.ConfiguracionCentros)]
     public class CentroController : Controller
     {
         private ICentroManager mobjCentroManager;
-        private IComercialManager mobjComercialManager;
-
-        public CentroController(ICentroManager oCentroManager, IComercialManager oComercialManager)
+        public CentroController(ICentroManager oCentroManager)
         {
             mobjCentroManager = oCentroManager;
-            mobjComercialManager = oComercialManager;
         }
+        [Autorizacion(PermisosDataAgro.ConfiguracionCentros)]
         public ActionResult Index()
         {
-            string ActionView = "";
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
-            else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
-            {
-                ActionView = "ErrorDePermisos";
-            }
-            return View(ActionView);
+            return View( );
         }
 
         public ActionResult Inicializar()

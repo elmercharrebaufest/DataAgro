@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public Configuracion TraerConfiguraciones()
         {
-            return repositorio.Obtener<Configuracion>(x=>x.Id==1);
+            return repositorio.Obtener<Configuracion>(1);
 
         }
     }

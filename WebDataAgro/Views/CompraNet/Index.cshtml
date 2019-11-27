@@ -7,32 +7,42 @@
 @section Scripts {
     @Scripts.Render("~/bundles/CompraNetIndex")
 }
-
+@{
+    var creaNegocios = PermisosHelper.Is(PermisosDataAgro.NuevoNegocios) || PermisosHelper.Is(PermisosDataAgro.NuevoNegocioCorredor);
+    var modificaNegocios = PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegocioCorredor);
+    var eliminaNegocios = PermisosHelper.Is(PermisosDataAgro.RechazarNegocios);
+    var ampliaNegocios = PermisosHelper.Is(PermisosDataAgro.AmpliarNegocios) || PermisosHelper.Is(PermisosDataAgro.AmpliarNegocioCorredor);
+    var finalizaNegocios = PermisosHelper.Is(PermisosDataAgro.FinalizarNegocios);
+    var verMesa = PermisosHelper.Is(PermisosDataAgro.VerMesa);
+}
 <script>
     comercialId = '@ViewBag.comercialId';
+    creaNegocios= '@creaNegocios';
+    modificaNegocios ='@modificaNegocios';
+    eliminaNegocios = '@eliminaNegocios';
+    ampliaNegocios = '@ampliaNegocios';
+    finalizaNegocios = '@finalizaNegocios';
+    verMesa = '@verMesa'
 </script>
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
 
-@if (global_asax.GlobalVariables.Perfil != EnumPerfil.Administrativo && global_asax.GlobalVariables.Perfil != EnumPerfil.Visualizador)
-{
-
-    <input type="hidden" id="perfil" value="@ViewBag.perfil" />
-    <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
-    <!--container-->
-    <div class="panelflotante">
-        <div class="row">
-            <div class="col-md-2">
-                <div style="width:fit-content">
-                    <span id="crearContrato" class="btnAzul btn-block" type="button">
-                        <i class="fa fa-file-o"></i>
-                        Crear Nuevo Negocio
-                    </span>
-                </div>
+<input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
+<!--container-->
+<div class="panelflotante">
+    <div class="row">
+        <div class="col-md-2">
+            <div style="width:fit-content">
+                <span id="crearContrato" class="btnAzul btn-block @(creaNegocios ? "":"hide")" type="button">
+                    <i class="fa fa-file-o"></i>
+                    Crear Nuevo Negocio
+                </span>
             </div>
-            <div id="totalizador-materiales" class="col-xs-12 col-md-7 text-xs-center">
-
+        </div>
+        <div id="totalizador-materiales" class="col-xs-12 col-md-7 text-xs-center">
+            @if (verMesa)
+            {
                 <div id="totalSoja" class="col-xs-12 col-sm-6 col-md-2 noPadding" hidden>
                     <div>
                         <span class="col-md-12 col-xs-5 noPadding"><strong>Soja</strong></span>
@@ -81,148 +91,154 @@
                         </div>
                     </div>
                 </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <div class="autoRecarga col-md-6 noPadding">
+                <label style="width: 110px">Notificaciones: </label><input type="checkbox" id="suscribirNotificacion" name="suscribirNotificacion" value="suscribirNotificacion">
             </div>
-                <div class="col-md-3">
-                    <div class="autoRecarga col-md-6 noPadding">
-                        <label style="width: 110px">Notificaciones: </label><input type="checkbox" id="suscribirNotificacion" name="suscribirNotificacion" value="suscribirNotificacion">
-                    </div>
-                    <div class="autoRecarga col-md-6 noPadding">
-                        <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>
-                    </div>
-                </div>
+            <div class="autoRecarga col-md-6 noPadding">
+                <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>
+            </div>
         </div>
     </div>
+</div>
+<div>
     <div>
-        <div>
-            <div id="CompraNet">
-                <br />
-                <div id="contratos-pendientes" hidden>
-                    <span>Contratos Pendientes. Por favor confirmar o rechazarlos</span>
-                    <table id="tabla-contratos-pendientes" class="table">
-                        <thead>
-                            <tr>
-                                <th>Proveedor</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Fecha</th>
-                                <th class="comercial-contrato-pendiente">Comercial</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-pendientes" data-template="div-pendientes" data-bind="source:ContratosPendientes">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <script id="div-pendientes" type="text/x-kendo-template">
+        <div id="CompraNet">
+            <br />
+            <div id="contratos-pendientes" hidden>
+                <span>Contratos Pendientes. Por favor confirmar o rechazarlos</span>
+                <table id="tabla-contratos-pendientes" class="table">
+                    <thead>
                         <tr>
-                            <td> &bull; #: RazonSocial#</td>
-                            <td>#: Cantidad#</td>
-                            <td>#: Precio# #: Moneda# </td>
-                            <td>#: Fecha#</td>
-                            <td class="comercial-contrato-pendiente">#: NombreApellido# </td>
+                            <th>Proveedor</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Fecha</th>
+                            <th class="comercial-contrato-pendiente @(verMesa?"":"hide")">Comercial</th>
                         </tr>
-                    </script>
+                    </thead>
+                    <tbody id="tabla-pendientes" data-template="div-pendientes" data-bind="source:ContratosPendientes">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <script id="div-pendientes" type="text/x-kendo-template">
+                    <tr>
+                        <td> &bull; #: RazonSocial#</td>
+                        <td>#: Cantidad#</td>
+                        <td>#: Precio# #: Moneda# </td>
+                        <td>#: Fecha#</td>
+                        <td class="comercial-contrato-pendiente @(verMesa?"":"hide")"">#: NombreApellido# </td>
+                    </tr>
+                </script>
+            </div>
+            <div class="row no-margin">
+                <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
+                    @if (verMesa)
+                    {
+                    <div id="inputZona" class="col-xs-6 col-md-4">
+                        <input id="buscadorFiltroZona" style="width:100%; padding:0px" type="text" placeholder="Buscar por Zona" />
+                    </div>
+                    <div class="col-xs-6 col-md-4">
+                        <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                            <span class="botonVarios">
+                                <i class="fa fa-search varios" aria-hidden="true"></i>
+                            </span>
+                            <span>Buscar</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
+                            <span class="botonVarios">
+                                <i id="negociosPropios" class="fa fa-user varios" aria-hidden="true"></i>
+                            </span>
+                            <span>Propios</span>
+                        </div>
+                    </div>
+                    }
                 </div>
-                <div class="row no-margin">
-                    <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
-                        <div id="inputZona" class="col-xs-6 col-md-4">
-                            <input id="buscadorFiltroZona" style="width:100%; padding:0px" type="text" placeholder="Buscar por Zona" />
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
-                                <span class="botonVarios">
-                                    <i class="fa fa-search varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Buscar</span>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-4">
-                            <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
-                                <span class="botonVarios">
-                                    <i id="negociosPropios" class="fa fa-user varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Propios</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div id="totalesPesosDolares" class="col-xs-12 col-md-2 noRightPadding totales">
-                        <strong>Pesos:</strong> <span id="totalPesos"></span><br />
-                        <strong>Dólares:</strong> <span id="totalDolares"></span>
-                    </div>
-
-                    <div id="variosDiv" class="col-xs-12 col-md-5 alinear-derecha">
-                        <div class="col-xs-12 col-md-4">
-                            <div id="modificarVariosDiv" data-toggle="tooltip" onclick="ModalModificarVarios()">
-                                <span class="botonVarios">
-                                    <i class="fa fa-pencil varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Modificar </span>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-4">
-                            <div id="confirmarVariosDiv" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
-                                <span class="botonVarios">
-                                    <i class="fa fa-check varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Confirmar</span>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-4">
-                            <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="ModalFinalizarVarios()">
-                                <span class="botonVarios">
-                                    <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Finalizar </span>
-                            </div>
-                        </div>
-
-                    </div>
+                    @if (verMesa)
+                    {
+                <div id="totalesPesosDolares" class="col-xs-12 col-md-2 noRightPadding totales">
+                    <strong>Pesos:</strong> <span id="totalPesos"></span><br />
+                    <strong>Dólares:</strong> <span id="totalDolares"></span>
                 </div>
-                <div class="row" id="nuevotab">
-                    <div class="col-xs-12">
-                        <div id="gridInformeCompraNet"></div>
+                    }
+
+                <div id="variosDiv" class="col-xs-12 col-md-5 alinear-derecha">
+                    <div class="col-xs-12 col-md-4">
+                        <div id="modificarVariosDiv" class="@(modificaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalModificarVarios()">
+                            <span class="botonVarios">
+                                <i class="fa fa-pencil varios" aria-hidden="true"></i>
+                            </span>
+                            <span>Modificar </span>
+                        </div>
                     </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div id="confirmarVariosDiv" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
+                            <span class="botonVarios">
+                                <i class="fa fa-check varios" aria-hidden="true"></i>
+                            </span>
+                            <span>Confirmar</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div id="finalizarVariosDiv" class="@(finalizaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalFinalizarVarios()">
+                            <span class="botonVarios">
+                                <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
+                            </span>
+                            <span>Finalizar </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" id="nuevotab">
+                <div class="col-xs-12">
+                    <div id="gridInformeCompraNet"></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal pendiente-->
-    @Html.Partial("ModalPendiente")
+<!-- Modal pendiente-->
+@Html.Partial("ModalPendiente")
 
-    <!-- Modal finalizado-->
-    @Html.Partial("ModalFinalizado")
+<!-- Modal finalizado-->
+@Html.Partial("ModalFinalizado")
 
-    <!-- Modal Confirmado-->
-    @Html.Partial("ModalConfirmado")
+<!-- Modal Confirmado-->
+@Html.Partial("ModalConfirmado")
 
-    <!-- Modal ConError-->
-    @Html.Partial("ModalConError")
+<!-- Modal ConError-->
+@Html.Partial("ModalConError")
 
-    <!-- Modal ConfirmadoTilde-->
-    @Html.Partial("ModalConfirmadoTilde")
+<!-- Modal ConfirmadoTilde-->
+@Html.Partial("ModalConfirmadoTilde")
 
-    <!-- Modal Ampliaciones-->
-    @Html.Partial("ModalAmpliaciones")
+<!-- Modal Ampliaciones-->
+@Html.Partial("ModalAmpliaciones")
 
-    <!-- Modal Visualizar-->
-    @Html.Partial("ModalVisualizar")
+<!-- Modal Visualizar-->
+@Html.Partial("ModalVisualizar")
 
-    <!-- Modal Borrar-->
-    @Html.Partial("ModalBorrar")
+<!-- Modal Borrar-->
+@Html.Partial("ModalBorrar")
 
-    <!-- Modal Confirmar Varios-->
-    @Html.Partial("_ModalConfirmarVarios")
+<!-- Modal Confirmar Varios-->
+@Html.Partial("_ModalConfirmarVarios")
 
-    <!-- Modal Finalizar Varios-->
-    @Html.Partial("_ModalFinalizarVarios")
+<!-- Modal Finalizar Varios-->
+@Html.Partial("_ModalFinalizarVarios")
 
-    <!-- Modal Modificar Varios-->
-    @Html.Partial("_ModalModificarVarios")
-}
+<!-- Modal Modificar Varios-->
+@Html.Partial("_ModalModificarVarios")

@@ -34,8 +34,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     Id=cupo.Id,
                     FechaIngreso = cupo.FechaIngreso,
+                    FechaGeneracion = cupo.FechaGeneracion,
                     Comercial=cupo.Comercial.Nombres+" "+cupo.Comercial.Apellido,
                     CupoSap = cupo.CupoSap,
+                    CupoStop = cupo.CupoStop.ToString(),
                     Material = cupo.Material.Descripcion,
                     Proveedor=cupo.Proveedor.RazonSocial,
                     Destinatario = cupo.Destinatario,
@@ -48,7 +50,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     EstadoCupoId = cupo.EstadoCupoId,
                     EstadoCupo = cupo.EstadoCupo.Descripcion,
                     MensajeError = cupo.ErrorStop,
-                    Acopio = cupo.Centro.Acopio
+                    Acopio = cupo.Centro.Acopio,
+
                 };
 
             return new KendoGrid<CupoDto>(request, queryContratos);

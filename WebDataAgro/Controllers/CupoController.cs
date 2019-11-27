@@ -1,22 +1,22 @@
-﻿using Autofac.Extras.NLog;
-using KendoGridBinder.Containers;
+﻿
 using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CupoController : Controller
     {
         private readonly ICentroManager centroManager;
@@ -43,22 +43,24 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------
+        [Autorizacion(PermisosDataAgro.VisualizarCupos)]
         public ActionResult Index()
-        {
-            ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
+        {          
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
             return View();
         }
 
-        public ActionResult CrearCupo(int? id)
+        [Autorizacion(PermisosDataAgro.AltaCupos)]
+        public ActionResult CrearCupo(int? id,string siguientes)
         {
             CargarViewBag();
             if (id == null)
             {
+                ViewBag.Titulo = "Nuevo Cupo";
                 int zona;
                 int.TryParse(ViewBag.ZonaSeleccionada, out zona);
-                return View(new CupoModel() { CantidadCupos = null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date });
+                return View(new CupoModel() { CantidadCupos = null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date });
             }
             else
             {
@@ -70,6 +72,7 @@ namespace WebDataAgro.Controllers
                     CantidadCupos = null,
                     FasonId = cupo.Fason ?? false,
                     FechaEntrega = cupo.FechaIngreso,
+                    FechaHastaEntrega = cupo.FechaIngreso,
                     FleteAcarreo = cupo.FleteProcedencia?? false,
                     MaterialId = cupo.MaterialId,
                     ProveedorDescripcion = cupo.Proveedor,
@@ -77,8 +80,10 @@ namespace WebDataAgro.Controllers
                     Observacion = cupo.Observaciones,
                     ZonaId = cupo.ZonaCupoId,
                     PlantaId = cupo.CentroId,
-                    CuitId = cupo.Destinatario
+                    CuitId = cupo.Destinatario,
+                    Siguientes = siguientes
                 };
+                ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 return View(cupoModel);
             }
         }
@@ -86,11 +91,11 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
+            var modificado = cupo.Id != 0;
             cupo.CantidadCupos = cupo.CantidadCupos
                                  != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
             var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
-            var modificado = cupo.Id != 0;
             if (error.HayError)
             {
                 foreach (var e in error.Errores)
@@ -103,7 +108,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
+                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.Dias);
                 if (cupoGrabado.HayError)
                 {
                     foreach (var e in cupoGrabado.Errores)
@@ -116,10 +121,26 @@ namespace WebDataAgro.Controllers
                 }
                 cupo.Resultado = cupoGrabado;
             }
+            var siguientes = JsonConvert.DeserializeObject<List<int>>(cupo.Siguientes ?? ""); 
             if (!ViewData.ModelState.IsValid || !modificado)
-            {
+            {   
+                if(!modificado)
+                {
+                    ViewBag.Titulo="Nuevo Cupo";
+                }
+                else
+                {
+                    ViewBag.Titulo = "Código Cupo " + cupoManager.ObtenerCodigoSap(cupo.Id);
+                    cupo.FechaHastaEntrega = cupo.FechaEntrega;
+                }
                 CargarViewBag();
                 return View(cupo);
+            }
+            if (siguientes != null && siguientes.Count != 0 )
+            {
+                var id = siguientes[0];
+                siguientes.RemoveAt(0);
+                return RedirectToAction("CrearCupo", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
             }
             return RedirectToAction("Index");
         }
@@ -197,6 +218,7 @@ namespace WebDataAgro.Controllers
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);
         }
+        [Autorizacion(PermisosDataAgro.AnularCupos)]
         public ActionResult EliminarCupo(int id)
         {
             var model = cupoManager.EliminarCupo(id, GlobalVariables.IdActiveDirectory);
@@ -217,6 +239,12 @@ namespace WebDataAgro.Controllers
         public ActionResult TransmitirCupos(List<string> cupos)
         {
             var resultado = cupoManager.TransmitirCupos(cupos);
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EliminarVarios(List<int> listaCupos)
+        {
+            var resultado = cupoManager.EliminarVarios(listaCupos, GlobalVariables.IdActiveDirectory);
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
     }

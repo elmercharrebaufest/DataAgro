@@ -2,7 +2,7 @@
 (
 	@Cuit Varchar(20) =null,
 	@ComercialID Int=null,
-	@ComercialGenerador Int=null,
+	@ComercialGenerador VARCHAR(MAX)=null,
 	@MaterialID int=null,
 	@EstadoId int=null
 )

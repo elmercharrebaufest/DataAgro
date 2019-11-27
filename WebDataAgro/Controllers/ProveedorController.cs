@@ -1,17 +1,20 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ProveedorController : Controller
     {
         private IProveedorManager mobjProveedorManager;
@@ -43,29 +46,19 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
+        [Autorizacion(PermisosDataAgro.VisualizarReporteProveedor)]
         public ActionResult ReporteProveedor()
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
-
+            ViewBag.edita = false;
             return View();
         }
 
 
+        [Autorizacion(PermisosDataAgro.AltaDatosProveedor,PermisosDataAgro.ModificarDatosProveedor)]
         public ActionResult Agregar(int? ProveedorId)
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                return RedirectToAction("Index", "Error");
-            }
-            else
-            {
-                ViewBag.ProveedorId = ProveedorId;
-                return View();
-            }
-
+            ViewBag.ProveedorId = ProveedorId;
+            return View();
         }
 
         // GET: Contactos/Details/5
@@ -140,6 +133,7 @@ namespace WebDataAgro.Controllers
             }
         }
 
+        [Autorizacion(PermisosDataAgro.VisualizarDatosProveedor)]
         public ActionResult Detalle(int ProveedorId, bool? Agenda)
         {
             string ActionView = "";
@@ -151,13 +145,7 @@ namespace WebDataAgro.Controllers
                 ActionView = "ErrorDePermisos";
             }
 
-
-            if ((GlobalVariables.Perfil == EnumPerfil.Administrativo && !mobjProveedorManager.ValidarProveedorEsCorredor(ProveedorId)) || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                mostrarEditar = false;
-                ViewBag.edita = false;
-            }
-            else if (!mobComercialManager.ComercialPerteneceProveedor(GlobalVariables.Equipo, ProveedorId, (int)GlobalVariables.Perfil, GlobalVariables.CorredoresComercial))
+            else if (!mobComercialManager.ComercialPerteneceProveedor(GlobalVariables.Equipo, ProveedorId, GlobalVariables.CorredoresComercial))
             {
                 ActionView = "ErrorUsuarioSinDerechos";
             }
@@ -183,7 +171,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjProveedorManager.TraerDatosCombo(proveedorId, GlobalVariables.Perfil == EnumPerfil.Administrativo),
+                Data = mobjProveedorManager.TraerDatosCombo(proveedorId,  PermisosHelper.Is(PermisosDataAgro.FiltrarAdministrativo)),
                 MaxJsonLength = Int32.MaxValue
             };
         }

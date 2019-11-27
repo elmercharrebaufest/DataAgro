@@ -16,13 +16,7 @@ $(document).ready(function () {
     AsignarBotones();
     InicializarCombos();
     InicializarBusquedaInicial();
-
-    var idPerfil = $("#PerfilId").val();
-
-    if (idPerfil == 4 || idPerfil == 5) {
-        $("#Administrador").prop("checked", false);
-        $("#Administrador").prop("disabled", true);
-    }
+   
 });
 
 function InicializarElementos() {

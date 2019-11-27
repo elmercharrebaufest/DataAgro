@@ -1,18 +1,21 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class InformeComercialController : Controller
     {
         private ICondicionManager mobjCondicionManager;
@@ -26,22 +29,19 @@ namespace WebDataAgro.Controllers
             mobjInformeComercialManager = oInformeComercialManager;
             mobjHomeManager = oHomeManager;
             this.reportesManager = reportesManager;
-
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
         }
 
         //-----------------------------------------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------------------------------------
 
+        [Autorizacion(PermisosDataAgro.VisualizarInformeComercial)]
         public ActionResult Index()
         {
             return View();
         }
 
+        [Autorizacion(PermisosDataAgro.VisualizarInformeAdministrativo)]
         public ActionResult InformeAdministrativo()
         {
             return View();
@@ -170,7 +170,7 @@ namespace WebDataAgro.Controllers
 
             var oLstIndicadores = new LstInformeComercial(reportesManager);
 
-            var odatos = mobjInformeComercialManager.ListarReportes(oParamReportes);
+            var odatos = mobjInformeComercialManager.ListarReportes(oParamReportes, GlobalVariables.Equipo);
 
             var identif = await oLstIndicadores.GenerarInformesExcelICAsync(odatos);
 
@@ -237,7 +237,7 @@ namespace WebDataAgro.Controllers
             }
             return new JsonResult()
             {
-                Data = mobjInformeComercialManager.ListarReportes(oParam),
+                Data = mobjInformeComercialManager.ListarReportes(oParam,GlobalVariables.Equipo),
                 MaxJsonLength = Int32.MaxValue
             };
         }

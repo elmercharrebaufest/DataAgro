@@ -18,18 +18,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly FiltroReporteNegocioDto request;
         private readonly List<int> equipo;
-        private readonly int perfilId;
+        private readonly bool corredor;
         private readonly List<int> corredoresComercial;
 
-        public TraerContratosPorFiltro(FiltroReporteNegocioDto request, int perfilId, List<int> equipo, List<int> corredoresComercial)
+        public TraerContratosPorFiltro(FiltroReporteNegocioDto request, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
-            this.perfilId = perfilId;
+            this.corredor = corredor;
             this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGridContratoDto Query(DbContext contexto, FiltroReporteNegocioDto request, int perfilId, List<int> equipo, List<int> corredoresComercial)
+        private static KendoGridContratoDto Query(DbContext contexto, FiltroReporteNegocioDto request, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaEntregaDesde = (!string.IsNullOrEmpty(request.FechaEntregaDesde) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaDesde, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     listaContrato.Add(i.ToString().PadLeft(10, '0'));
                 }
             }
-            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, perfilId, equipo, corredoresComercial);
+            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, corredor, equipo, corredoresComercial);
 
             queryContratos = queryContratos.Where(contrato =>
                     (!string.IsNullOrEmpty(request.ContratoSAP) ? listaContrato.Contains(contrato.ContratoSAP) : true) &&
@@ -115,7 +115,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, perfilId, equipo, corredoresComercial);
+                return Query(contexto, request, corredor, equipo, corredoresComercial);
             }
         }
     }

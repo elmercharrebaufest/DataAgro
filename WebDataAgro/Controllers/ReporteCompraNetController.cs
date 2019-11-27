@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -6,11 +7,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ReporteCompraNetController : Controller
     {
         private readonly IReportesManager mobjReportesManager;
@@ -23,6 +26,7 @@ namespace WebDataAgro.Controllers
         }
 
         // GET: ReporteCompraNet
+        [Autorizacion(PermisosDataAgro.VisualizarComprasDiarias)]
         public ActionResult Index()
         {
             return View();

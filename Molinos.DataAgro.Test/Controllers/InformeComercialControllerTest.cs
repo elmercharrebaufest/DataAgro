@@ -239,14 +239,14 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var repo = new ParamReportesIC { ComercialID = 1, ComercialIDGenerador = 2, Cuit = "A", EstadoId = 1, MaterialID = 2 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(10);
-            informeComercialManagerMock.Setup(x => x.ListarReportes(repo)).Returns(new List<ReportesList>()
+            informeComercialManagerMock.Setup(x => x.ListarReportes(repo, It.IsAny<List<int>>())).Returns(new List<ReportesList>()
             {
                 new ReportesList{Cuit="1",Comercial="B",Estado="C",InformeComercialId=2,Material="D",RazonSocial="E"}
             });
             
             var result = target.GenerarExcelIA(repo);
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
-            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>(), It.IsAny<List<int>>()), Times.Once);
 
             var model = result.Result as JsonResult;
             Assert.NotNull(result);
@@ -333,14 +333,14 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ListarReportesConIdGeneradorTest()
         {
             var repo = new ParamReportesIC { ComercialID = 1, ComercialIDGenerador = 2, Cuit = "A", EstadoId = 1, MaterialID = 2 };
-            informeComercialManagerMock.Setup(x => x.ListarReportes(repo)).Returns(new List<ReportesList>()
+            informeComercialManagerMock.Setup(x => x.ListarReportes(repo, It.IsAny<List<int>>())).Returns(new List<ReportesList>()
             {
                 new ReportesList{Cuit="1",Comercial="B",Estado="C",InformeComercialId=2,Material="D",RazonSocial="E"}
             });
 
             var result = target.ListarReportes(repo);
 
-            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -352,7 +352,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ListarReportesSinIdGeneradorTest()
         {
             var repo = new ParamReportesIC { ComercialID = 1, Cuit = "A", EstadoId = 1, MaterialID = 2 };
-            informeComercialManagerMock.Setup(x => x.ListarReportes(repo)).Returns(new List<ReportesList>()
+            informeComercialManagerMock.Setup(x => x.ListarReportes(repo, It.IsAny<List<int>>())).Returns(new List<ReportesList>()
             {
                 new ReportesList{Cuit="1",Comercial="B",Estado="C",InformeComercialId=2,Material="D",RazonSocial="E"}
             });
@@ -360,7 +360,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(10);
             var result = target.ListarReportes(repo);
 
-            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

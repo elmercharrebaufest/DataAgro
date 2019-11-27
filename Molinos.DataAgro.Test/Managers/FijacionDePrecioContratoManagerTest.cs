@@ -4,6 +4,7 @@ using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -636,6 +637,91 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.That(!result.HayError);
         }
-    }
+        [Test]
+        public void TraerFijacionTestOk()
+        {
 
+            var fijacionSave = new FijacionDePrecioContrato
+            {
+                FijacionDePrecioContratoId = 1,
+                EstadoId = (int)EnumEstadoContrato.Rechazado,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente },
+                Comercial = new Comercial { ComercialId = 1 }
+            };
+
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double>() { 10000 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato() {ContratoId=1, 
+                    DatosFijacion = new DatosFijacionDeContratoDto { ContratoId="00011111", FechaDesde= "2019/10/30",
+                        FechaHasta= "2019/11/30", KilosAplicados="1111",KilosPendiente="1111" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<AperturaPrecioDto>());
+
+            
+            var result = target.TraerFijacion(1);
+
+            repositorioMock.Verify(x => x.Obtener<FijacionDePrecioContrato>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void TraerAperturaDePrecioPorFijacionOk()
+        { 
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<AperturaPrecioDto>() { new AperturaPrecioDto() });
+
+            var result = target.TraerAperturaDePrecioPorFijacion(1);
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1,result.Count);
+        }
+        [Test]
+        public void FinalizacionAutomaticaOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato{FijacionDePrecioContratoId=1} });
+
+            var fijacionSave = new FijacionDePrecioContrato
+            {
+                Proveedor = new Proveedor { CUIT = "11" },
+                Corredor = new Proveedor { CUIT = "22" },
+                CorredorId = 1,
+                Ampliaciones = 1,
+                ProveedorId = 1,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 2,
+                MonedaId = "ARP  ",
+                ComercialId = 1,
+                ContratoSAP = "1234",
+                CampanaId = 1,
+                EstadoId = (int)EnumEstadoContrato.Finalizado,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado },
+                Comercial = new Comercial { ComercialId = 1 }
+            };
+
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
+            repositorioMock.Setup(y => y.Obtener<EstadoContrato>(It.IsAny<int>())).Returns(new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Finalizado });
+            comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int> { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
+
+            relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { CodigoSap = "RE", Descripcion = "Redespacho", Id = 2 } });
+
+            finalizarFijacionAgentMock.Setup(y => y.Finalizar(It.IsAny<FijacionDePrecioContrato>())).Returns("OK");
+            
+            target.FinalizacionAutomatica("a");
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            finalizarFijacionAgentMock.Verify(y => y.Finalizar(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
+        }
+    }
 }

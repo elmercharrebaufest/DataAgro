@@ -1,16 +1,15 @@
-﻿using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ContratoController : Controller
     {
         private readonly IContratoManager mobjContratoManager;
@@ -41,13 +40,9 @@ namespace WebDataAgro.Controllers
             mobjCentroManager = oCentroManager;            
         }
 
+        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet)]
         public ActionResult Index()
         {
-           
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
             FillViewBag();
             return View();
         }
@@ -60,7 +55,7 @@ namespace WebDataAgro.Controllers
             {
                 filtro.FechaCarga = DateTime.Now.Date.ToString("dd-MM-yyyy");
             }
-            var model = mobjContratoManager.TraerContratosFiltrados(filtro, (int)GlobalVariables.Perfil, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+            var model = mobjContratoManager.TraerContratosFiltrados(filtro, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }

@@ -174,21 +174,30 @@ namespace Molinos.DataAgro.Business.Managers
             if (researchAvanceSiembra.MaterialId == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
-
             }
             if (researchAvanceSiembra.LocalidadId <= 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
-            if (researchAvanceSiembra.IntencionSiembra == 0 && researchAvanceSiembra.Avance == 0 && researchAvanceSiembra.CambioAA == 0)
+            }
+            if (researchAvanceSiembra.IntencionSiembra == 0 && researchAvanceSiembra.Avance == 0 &&
+                researchAvanceSiembra.CambioAA == 0 && researchAvanceSiembra.CampaniaId <= 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
+            }
             else if (researchAvanceSiembra.IntencionSiembra == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Intención Siembra no debe estar vacío"));
+            }
             else if (researchAvanceSiembra.Avance == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Avance no debe estar vacío"));
+            }
             else if (researchAvanceSiembra.CambioAA == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Cambio vs AA no debe estar vacío"));
+            }
             else if (researchAvanceSiembra.CampaniaId <= 0)
             {
-
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
             return error;
@@ -201,25 +210,37 @@ namespace Molinos.DataAgro.Business.Managers
             if (researchAvanceCosecha.MaterialId == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
-
             }
             if (researchAvanceCosecha.LocalidadId <= 0)
-                error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
-            if (researchAvanceCosecha.RangoDesde == 0 && researchAvanceCosecha.RangoHasta == 0 && researchAvanceCosecha.Rendimiento == 0 && researchAvanceCosecha.Avance == 0)
-                error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
-            if (researchAvanceCosecha.RangoDesde == 0)
-                error.Errores.Add(new ErrorMessage(400, "El campo Rango Desde no debe estar vacío"));
-            if (researchAvanceCosecha.RangoHasta == 0)
-                error.Errores.Add(new ErrorMessage(400, "El campo Rango Hasta Desde no debe estar vacío"));
-            if (researchAvanceCosecha.RangoHasta < researchAvanceCosecha.RangoDesde)
-                error.Errores.Add(new ErrorMessage(400, "El campo Rango Hasta no debe ser menor que Rango Desde"));
-            if (researchAvanceCosecha.Avance == 0)
-                error.Errores.Add(new ErrorMessage(400, "El campo Avance no debe estar vacío"));
-            if (researchAvanceCosecha.Rendimiento == 0)
-                error.Errores.Add(new ErrorMessage(400, "El campo Rendimiento no debe estar vacío"));
-            if (researchAvanceCosecha.CampaniaId <= 0)
             {
-
+                error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
+            }
+            if (researchAvanceCosecha.RangoDesde == 0 && researchAvanceCosecha.RangoHasta == 0 && researchAvanceCosecha.Rendimiento == 0 && researchAvanceCosecha.Avance == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
+            }
+            if (researchAvanceCosecha.RangoDesde == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El campo Rango Desde no debe estar vacío"));
+            }
+            if (researchAvanceCosecha.RangoHasta == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El campo Rango Hasta Desde no debe estar vacío"));
+            }
+            if (researchAvanceCosecha.RangoHasta < researchAvanceCosecha.RangoDesde)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El campo Rango Hasta no debe ser menor que Rango Desde"));
+            }
+            if (researchAvanceCosecha.Avance == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El campo Avance no debe estar vacío"));
+            }
+            if (researchAvanceCosecha.Rendimiento == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El campo Rendimiento no debe estar vacío"));
+            }
+            if (researchAvanceCosecha.CampaniaId <= 0) 
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
             return error;
@@ -231,24 +252,22 @@ namespace Molinos.DataAgro.Business.Managers
             
             if (researchSituacionCultivo.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
-
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));                
             }
             if (researchSituacionCultivo.LocalidadId <= 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
+            }
             if (String.IsNullOrEmpty(researchSituacionCultivo.Situacion))
             {
-
                 error.Errores.Add(new ErrorMessage(400, "El campo Situacion no debe estar vacío"));
             }
             if (researchSituacionCultivo.EstadioId <= 0)
             {
-
                 error.Errores.Add(new ErrorMessage(400, "El campo Estadío no debe estar vacío"));
             }
             if (researchSituacionCultivo.CampaniaId <= 0)
             {
-
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
             
@@ -261,20 +280,26 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new Resultado();
             if (researchVentaStock.MaterialId == 0)
             {
-                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
-               
+                error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));               
             }
             if (researchVentaStock.LocalidadId <= 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Localidad no debe estar vacío"));
+            }
             if (researchVentaStock.Almacenado == 0 && researchVentaStock.VendidoAPrecio == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
+            }
             if (researchVentaStock.Almacenado == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Almacenado no debe estar vacío"));
+            }
             if (researchVentaStock.VendidoAPrecio == 0)
+            {
                 error.Errores.Add(new ErrorMessage(400, "El campo Vendido a Precio no debe estar vacío"));
+            }
             if (researchVentaStock.CampaniaId <= 0)
             {
-
                 error.Errores.Add(new ErrorMessage(400, "El campo Campaña no debe estar vacío"));
             }
             return error;
@@ -522,7 +547,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Error("Campana", "La Campaña no puede estar vacia");
             }
-            if (notificacion.FechaDesde == null|| notificacion.FechaHasta== null)
+            if (notificacion.FechaDesde.Year == 1|| notificacion.FechaHasta.Year == 1)
             {
                 error.Error("Fecha", "Las Fechas no pueden estar vacia");
             }

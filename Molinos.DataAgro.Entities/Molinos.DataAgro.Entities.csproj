@@ -74,15 +74,19 @@
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
     <Compile Include="Dto\BoletoCompraNetDto.cs" />
+    <Compile Include="Dto\CampaniaMaterialSAP.cs" />
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
     <Compile Include="Dto\ConfiguracionDto.cs" />
     <Compile Include="Dto\AltaTempranaNRCODto.cs" />
     <Compile Include="Dto\CupoResult.cs" />
+    <Compile Include="Dto\DiaCupo.cs" />
     <Compile Include="Dto\KendoGridContratoDto.cs" />
     <Compile Include="Dto\EstadoContratoDto.cs" />
     <Compile Include="Dto\FiltroReporteNegocioDto.cs" />
     <Compile Include="Dto\GrupoDeComprasDto.cs" />
     <Compile Include="Dto\CupoStop.cs" />
+    <Compile Include="Dto\MaterialBasicoDto.cs" />
+    <Compile Include="Dto\ProveedorBasicoDto.cs" />
     <Compile Include="Dto\TokenStop.cs" />
     <Compile Include="Dto\LimiteCupoDto.cs" />
     <Compile Include="Dto\CupoDto.cs" />
@@ -91,6 +95,10 @@
     <Compile Include="Dto\NivelTarifaDto.cs" />
     <Compile Include="Dto\NotificacionResearchDto.cs" />
     <Compile Include="Dto\LogDto.cs" />
+    <Compile Include="Dto\PermisoDto.cs" />
+    <Compile Include="Dto\RolBasicoDto.cs" />
+    <Compile Include="Dto\RolDto.cs" />
+    <Compile Include="Dto\RolPermisoDto.cs" />
     <Compile Include="Dto\PizarraDto.cs" />
     <Compile Include="Dto\PricingCampaniaDto.cs" />
     <Compile Include="Dto\PrecioPizarraDto.cs" />
@@ -194,6 +202,8 @@
     <Compile Include="Entities\Pizarra.cs" />
     <Compile Include="Entities\PrecioPizarra.cs" />
     <Compile Include="Entities\LimiteCupo.cs" />
+    <Compile Include="Entities\Rol.cs" />
+    <Compile Include="Entities\RolPermiso.cs" />
     <Compile Include="Entities\TipoResearch.cs" />
     <Compile Include="Entities\NotificacionResearch.cs" />
     <Compile Include="Entities\Cupo.cs" />
@@ -233,6 +243,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
     </Compile>
+    <Compile Include="Seguridad\PermisosDataAgro.cs" />
+    <Compile Include="Seguridad\PermisosHelper.cs" />
     <Compile Include="Validations\EntityValid.cs" />
     <Compile Include="Validations\IEntityKeyValid.cs" />
     <Compile Include="Validations\FijacionDePrecioContrato.cs" />

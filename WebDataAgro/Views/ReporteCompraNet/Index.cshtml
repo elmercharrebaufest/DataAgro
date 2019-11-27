@@ -15,7 +15,7 @@
 
     @using (Ajax.BeginForm("PartialReporteCompraNet", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "CuerpoCompraNet" }, null))
     {
-        @Html.AntiForgeryToken();
+        @*@Html.AntiForgeryToken();*@
         <div class="container-reporte">
             <div id="fecha-buscador-reporte" class="row">
                 <div class="col-sm-1 noRightPadding">

@@ -1,36 +1,30 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Web.Mvc;
-using WebDataAgro.Models;
+using WebDataAgro.Atributos;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class DiferencialController : Controller
     {
-        private IDiferencialManager mobjDiferencialManager;
-        private IComercialManager mobjComercialManager;
+        private readonly IDiferencialManager mobjDiferencialManager;
 
-        public DiferencialController(IComercialManager oComercialManager, IDiferencialManager oDiferencialManager)
+        public DiferencialController(IDiferencialManager oDiferencialManager)
         {
             mobjDiferencialManager = oDiferencialManager;
-            mobjComercialManager = oComercialManager;
         }
+        [Autorizacion(PermisosDataAgro.ConfiguracionDiferencial)]
         public ActionResult Index()
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Mesa)
-            {
-                var model = mobjDiferencialManager.TraerDiferencial();
-                model = model ?? new DiferencialDto { };
-                return View(model);
-            }
-            else
-            {
-                return View("ErrorDePermisos");
-            }
+            var model = mobjDiferencialManager.TraerDiferencial();
+            model = model ?? new DiferencialDto { };
+            return View(model);
         }
 
         [HttpPost]
@@ -49,17 +43,11 @@ namespace WebDataAgro.Controllers
 
         public ActionResult AbmDiferencialPartial(Resultado res)
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Mesa)
-            {
-                var model = mobjDiferencialManager.TraerDiferencial();
+               var model = mobjDiferencialManager.TraerDiferencial();
                 model = model ?? new DiferencialDto { };
                 model.Resultado = res;
                 return PartialView("_AbmDiferencial", model);
-            }
-            else
-            {
-                return View("ErrorDePermisos");
-            }
+           
 
         }
 

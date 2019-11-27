@@ -2,7 +2,7 @@
 
 CREATE PROCEDURE [dbo].[DataAgro_Comercial_TraerPorComerciales]
 
- @ComercialId Int
+ @ComercialId NVARCHAR(MAX)
 
 AS
 

@@ -1,24 +1,25 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IdentityModel.Services;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class HomeController : Controller
     {
-        private IHomeManager mobjHomeManager;
+        private readonly IHomeManager mobjHomeManager;
         private readonly IObjetivoManager objetivoManager;
-        private IComercialManager comercialManager;
+        private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
 
         //-----------------------------------------------------
@@ -27,7 +28,6 @@ namespace WebDataAgro.Controllers
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager, IObjetivoManager objetivoManager)
         {
-
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
@@ -37,24 +37,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Index()
         {
-            string ActionView = "";
-
-            if (GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
-
-            if (!comercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
-            {
-                ActionView = "ErrorDePermisos";
-            }
-            else if (GlobalVariables.EsAdministrador)
-            {
-
-                ViewBag.esadmin = true;
-            }
-
-            return View(ActionView);
+            return View();
         }
 
 
@@ -78,15 +61,8 @@ namespace WebDataAgro.Controllers
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.EquipoReal
             };
-            ResultIniContacto result;
-            if (GlobalVariables.Perfil != EnumPerfil.CorredoresComercial)
-            {
-                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, new List<int>());
-            }
-            else
-            {
-                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.Equipo);
-            }
+
+            var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.Equipo);
 
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, GlobalVariables.EquipoReal);
@@ -108,7 +84,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial, (int)GlobalVariables.Perfil),
+                Data = mobjHomeManager.BusquedaHome(filtro, GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial),
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -122,9 +98,9 @@ namespace WebDataAgro.Controllers
             filtro.Equipo = GlobalVariables.EquipoReal;
 
             ResultIniContacto result;
-            if (GlobalVariables.Perfil != EnumPerfil.CorredoresComercial)
+            if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
             {
-                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, new List<int>());
+                result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, GlobalVariables.Equipo);
             }
             else
             {
@@ -162,14 +138,14 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
+        [Autorizacion(PermisosDataAgro.DescargaPdf)]
         public ActionResult ExportarContactosPDF(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = GlobalVariables.EquipoReal;
 
-            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory);
+            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo);
 
             var oLstContacto = new LstContacto(reportesManager);
 
@@ -180,13 +156,13 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
-
+        [Autorizacion(PermisosDataAgro.DescargaExcel)]
         public ActionResult ExportarContactosExcel(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = GlobalVariables.EquipoReal;
-            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory);
+            var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo);
 
             var oLstContacto = new LstContacto(reportesManager);
 
@@ -196,7 +172,7 @@ namespace WebDataAgro.Controllers
 
             return Json(model);
         }
-
+        [Autorizacion(PermisosDataAgro.DescargaExportAllComercial, PermisosDataAgro.DescargaExportAllVisualizador)]
         public ActionResult ExportarAll(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
@@ -207,7 +183,7 @@ namespace WebDataAgro.Controllers
 
             var oLstContacto = new LstContacto(reportesManager);
 
-            var identif = oLstContacto.GenerarExcelExportAll(datos, (int)GlobalVariables.Perfil);
+            var identif = oLstContacto.GenerarExcelExportAll(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
@@ -297,6 +273,20 @@ namespace WebDataAgro.Controllers
                 Data = resultado,
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public ActionResult BorrarCookie()
+        {
+            return View();
+        }
+
+        [AjaxOnly]
+        public void BorrarCookies()
+        {
+            if (FederatedAuthentication.SessionAuthenticationModule != null)
+            {
+                FederatedAuthentication.SessionAuthenticationModule.DeleteSessionTokenCookie();
+            }
         }
     }
 

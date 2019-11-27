@@ -242,7 +242,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecioSave.CampanaId = oFijacionDePrecio.CampanaId;
                 oFijacionDePrecioSave.Posicion = oFijacionDePrecio.Posicion;
-                oFijacionDePrecioSave.TrigoEspecial = oFijacionDePrecioSave.TrigoEspecial;
+                oFijacionDePrecioSave.TrigoEspecial = oFijacionDePrecio.TrigoEspecial;
                 oFijacionDePrecioSave.FechaDesde = oFijacionDePrecio.FechaDesde;
                 oFijacionDePrecioSave.FechaHasta = oFijacionDePrecio.FechaHasta;
                 oFijacionDePrecioSave.PrecioNeto = oFijacionDePrecio.PrecioNeto;
@@ -392,7 +392,7 @@ namespace Molinos.DataAgro.Business.Managers
                         oFijacionDePrecioSave.AperturaPrecio = objApertura;
                     }
 
-                    string nroFijacionSAP = SAPFinalizarFijacion(oFijacionDePrecioSave);
+                    string nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);
                     try
                     {
                         oFijacionDePrecioSave.FijacionSAP = nroFijacionSAP;
@@ -445,7 +445,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        private string SAPFinalizarFijacion(FijacionDePrecioContrato fijacion)
+        private string SapFinalizarFijacion(FijacionDePrecioContrato fijacion)
         {
             return oFinalizarFijacionAgent.Finalizar(fijacion);
         }
@@ -509,7 +509,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public BasicoContrato TraerFijacion(int id)
         {
-            var sap = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionDePrecioContratoId == id);
+            var sap = repositorio.Obtener<FijacionDePrecioContrato>(id);
             var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoSAP && x.FijacionDePrecioContratoId != id).Sum();
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
             {

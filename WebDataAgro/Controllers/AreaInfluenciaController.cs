@@ -1,26 +1,24 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class AreaInfluenciaController : Controller
     {
         private IAreaInfluenciaManager mobjAreaInfluenciaManager;
 
         public AreaInfluenciaController(IAreaInfluenciaManager oAreaInfluenciaManager)
         {
-            mobjAreaInfluenciaManager = oAreaInfluenciaManager;
-            
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
+            mobjAreaInfluenciaManager = oAreaInfluenciaManager;            
         }
 
         //-----------------------------------------------------

@@ -155,6 +155,7 @@
     <Compile Include="Managers\PrecioPizarraManager.cs" />
     <Compile Include="Managers\ConfiguracionCupoManager.cs" />
     <Compile Include="Managers\ResearchManager.cs" />
+    <Compile Include="Managers\RolManager.cs" />
     <Compile Include="Managers\ZonaCupoManager.cs" />
     <Compile Include="Managers\ZonaManager.cs" />
     <Compile Include="Managers\ContratoAcuerdoManager.cs" />

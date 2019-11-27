@@ -117,14 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Administracion_Cupos" xml:space="preserve">
+    <value>Administración Cupos</value>
+  </data>
+  <data name="Agenda_Comercial" xml:space="preserve">
+    <value>Visualizar Agenda Comercial</value>
+  </data>
   <data name="Agente" xml:space="preserve">
     <value>Agente</value>
+  </data>
+  <data name="Alta_Cupos" xml:space="preserve">
+    <value>Alta Cupos</value>
+  </data>
+  <data name="Alta_Datos_Proveedor" xml:space="preserve">
+    <value>Alta de Proveedores</value>
   </data>
   <data name="Ampliaciones" xml:space="preserve">
     <value>Ampliaciones</value>
   </data>
+  <data name="Ampliar_Negocios" xml:space="preserve">
+    <value>Ampliar Negocios</value>
+  </data>
+  <data name="Ampliar_Negocio_Corredor" xml:space="preserve">
+    <value>Ampliar Negocio Corredor</value>
+  </data>
+  <data name="Anular_Cupos" xml:space="preserve">
+    <value>Anular Cupos</value>
+  </data>
   <data name="April" xml:space="preserve">
     <value>Abril</value>
+  </data>
+  <data name="Asignar_Proveedores" xml:space="preserve">
+    <value>Asignar Proveedores a Comerciales</value>
   </data>
   <data name="August" xml:space="preserve">
     <value>Agosto</value>
@@ -144,6 +168,9 @@
   <data name="Campana" xml:space="preserve">
     <value>Campaña</value>
   </data>
+  <data name="Canal_Notificaciones" xml:space="preserve">
+    <value>Canal de Notificaciones</value>
+  </data>
   <data name="Cantidad" xml:space="preserve">
     <value>Cantidad</value>
   </data>
@@ -156,8 +183,62 @@
   <data name="CondicionFijacion" xml:space="preserve">
     <value>Condición Fijacion</value>
   </data>
+  <data name="Configuracion_Canal_Operacion" xml:space="preserve">
+    <value>Configuración Canal Operacion</value>
+  </data>
+  <data name="Configuracion_Centros" xml:space="preserve">
+    <value>Configuración Centros</value>
+  </data>
+  <data name="Configuracion_Condicion" xml:space="preserve">
+    <value>Configuración Condición</value>
+  </data>
+  <data name="Configuracion_Constantes" xml:space="preserve">
+    <value>Configuración Constantes</value>
+  </data>
+  <data name="Configuracion_Diferencial" xml:space="preserve">
+    <value>Configuración Diferencial Hedge</value>
+  </data>
+  <data name="Configuracion_Entrega_A" xml:space="preserve">
+    <value>Configuración Entrega A</value>
+  </data>
+  <data name="Configuracion_Logs" xml:space="preserve">
+    <value>Configuración Logs</value>
+  </data>
+  <data name="Configuracion_Material" xml:space="preserve">
+    <value>Configuración Material</value>
+  </data>
+  <data name="Configuracion_Operador" xml:space="preserve">
+    <value>Configuracion Operadores</value>
+  </data>
+  <data name="Configuracion_Rangos_Confirmacion" xml:space="preserve">
+    <value>Configuración Rangos Confirmacion</value>
+  </data>
+  <data name="Configuracion_Rangos_Precios" xml:space="preserve">
+    <value>Configuración Rangos Precios</value>
+  </data>
+  <data name="Configuracion_Roles_Permisos" xml:space="preserve">
+    <value>Configuración Roles y Permisos</value>
+  </data>
+  <data name="Configuracion_Tareas_Programadas" xml:space="preserve">
+    <value>Configuración Tareas Programadas</value>
+  </data>
+  <data name="Configuracion_Usuarios" xml:space="preserve">
+    <value>Configuración Usuarios</value>
+  </data>
+  <data name="Configuracion_Zona_Cupos" xml:space="preserve">
+    <value>Configuración Zona Cupos</value>
+  </data>
+  <data name="Configuracion_Zona_Girasol" xml:space="preserve">
+    <value>Configuración Zona Girasol</value>
+  </data>
   <data name="Consignatario" xml:space="preserve">
     <value>Consignatario</value>
+  </data>
+  <data name="Contador_CompraNet" xml:space="preserve">
+    <value>Visualizar Contadores CompraNet</value>
+  </data>
+  <data name="Contador_Proveedores" xml:space="preserve">
+    <value>Visualizar Contador Home </value>
   </data>
   <data name="Contrato" xml:space="preserve">
     <value>Nro Contrato</value>
@@ -165,8 +246,26 @@
   <data name="Cuit" xml:space="preserve">
     <value>CUIT</value>
   </data>
+  <data name="Datos_Research" xml:space="preserve">
+    <value>Datos Research</value>
+  </data>
   <data name="December" xml:space="preserve">
     <value>Diciembre</value>
+  </data>
+  <data name="Descargar_Informe_Administrativo" xml:space="preserve">
+    <value>Descargar Informe Administrativo</value>
+  </data>
+  <data name="Descarga_Excel" xml:space="preserve">
+    <value>Descargar Excel Proveedores</value>
+  </data>
+  <data name="Descarga_Export_All_Comercial" xml:space="preserve">
+    <value>Export All de Comerciales</value>
+  </data>
+  <data name="Descarga_Export_All_Visualizador" xml:space="preserve">
+    <value>Export All de Visualizador</value>
+  </data>
+  <data name="Descarga_Pdf" xml:space="preserve">
+    <value>Descargar PDF Proveedores</value>
   </data>
   <data name="DesdeFijacion" xml:space="preserve">
     <value>Desde Fijacion</value>
@@ -225,11 +324,26 @@
   <data name="FechaHasta" xml:space="preserve">
     <value>Fecha Hasta</value>
   </data>
+  <data name="Filtrar_Administrativo" xml:space="preserve">
+    <value>Filtrar Administrativo</value>
+  </data>
+  <data name="Finalizar_Negocios" xml:space="preserve">
+    <value>Finalizar Negocios</value>
+  </data>
   <data name="HastaFijacion" xml:space="preserve">
     <value>Hasta Fijación</value>
   </data>
+  <data name="Home_Corredor" xml:space="preserve">
+    <value>Mis Contactos Corredor</value>
+  </data>
   <data name="ImporteSustentable" xml:space="preserve">
     <value>Importe Sustentable</value>
+  </data>
+  <data name="Informe_Comercial" xml:space="preserve">
+    <value>Generar Informe Comercial</value>
+  </data>
+  <data name="Ingreso_DataAgro" xml:space="preserve">
+    <value>Acesso DataAgro</value>
   </data>
   <data name="January" xml:space="preserve">
     <value>Enero</value>
@@ -240,8 +354,20 @@
   <data name="June" xml:space="preserve">
     <value>Junio</value>
   </data>
+  <data name="Lista_Comercial" xml:space="preserve">
+    <value>Listar en Abm Comerciales</value>
+  </data>
+  <data name="Lista_Comercial_CompraNet" xml:space="preserve">
+    <value>Listar en Comercial CompraNet</value>
+  </data>
   <data name="Localidad" xml:space="preserve">
     <value>Localidad</value>
+  </data>
+  <data name="Mail_Hedge" xml:space="preserve">
+    <value>Recibir Mail Fin del Dia Hedge</value>
+  </data>
+  <data name="Mail_SIO" xml:space="preserve">
+    <value>Recibir Mail SIO</value>
   </data>
   <data name="March" xml:space="preserve">
     <value>Marzo</value>
@@ -255,14 +381,47 @@
   <data name="Mes" xml:space="preserve">
     <value>Mes</value>
   </data>
+  <data name="Modificar_Cupos" xml:space="preserve">
+    <value>Modificar Cupos</value>
+  </data>
+  <data name="Modificar_Datos_Proveedor" xml:space="preserve">
+    <value>Modificar Proveedores</value>
+  </data>
+  <data name="Modificar_Interes" xml:space="preserve">
+    <value>Modificar Links de Interes</value>
+  </data>
+  <data name="Modificar_Negocios" xml:space="preserve">
+    <value>Modificar Negocios</value>
+  </data>
+  <data name="Modificar_Negocio_Corredor" xml:space="preserve">
+    <value>Modificar Negocio Corredor</value>
+  </data>
   <data name="Moneda" xml:space="preserve">
     <value>Moneda</value>
   </data>
   <data name="NoInformaSio" xml:space="preserve">
     <value>No Informa Sio</value>
   </data>
+  <data name="Notificaciones_Corredor" xml:space="preserve">
+    <value>Visualizar Notificaciones Corredor</value>
+  </data>
+  <data name="Notificaciones_Mail_Jerarquia" xml:space="preserve">
+    <value>Recibir Notificaciones Mail por Jerarquia</value>
+  </data>
+  <data name="Notificaciones_Mail_Todos" xml:space="preserve">
+    <value>Recibir Todas Notificaciones Mail</value>
+  </data>
+  <data name="Notificaciones_Research" xml:space="preserve">
+    <value>Notificaciones Research</value>
+  </data>
   <data name="November" xml:space="preserve">
     <value>Noviembre</value>
+  </data>
+  <data name="Nuevo_Negocios" xml:space="preserve">
+    <value>Nuevos Negocios</value>
+  </data>
+  <data name="Nuevo_Negocio_Corredor" xml:space="preserve">
+    <value>Nuevo Negocio Corredor</value>
   </data>
   <data name="Observacion" xml:space="preserve">
     <value>Observación</value>
@@ -294,10 +453,82 @@
   <data name="RazonSocial" xml:space="preserve">
     <value>Razon Social</value>
   </data>
+  <data name="Rechazar_Negocios" xml:space="preserve">
+    <value>Rechazar Negocios</value>
+  </data>
+  <data name="Reporte_Research" xml:space="preserve">
+    <value>Reporte Research</value>
+  </data>
   <data name="September" xml:space="preserve">
     <value>Septiembre</value>
   </data>
   <data name="TipoNegocio" xml:space="preserve">
     <value>Tipo Negocio</value>
+  </data>
+  <data name="Ver_Corredor_Comercial" xml:space="preserve">
+    <value>Ver Corredor Comercial</value>
+  </data>
+  <data name="Ver_Jerarquia" xml:space="preserve">
+    <value>Ver Jerarquia Comercial</value>
+  </data>
+  <data name="Ver_Mesa" xml:space="preserve">
+    <value>Ver Informacion de Mesa</value>
+  </data>
+  <data name="Ver_Solo_Corredores" xml:space="preserve">
+    <value>Ver Solo Corredores</value>
+  </data>
+  <data name="Ver_Todos_Comercial" xml:space="preserve">
+    <value>Ver Todo Comercial</value>
+  </data>
+  <data name="Ver_Todos_Negocios" xml:space="preserve">
+    <value>Ver Todos los Negocios</value>
+  </data>
+  <data name="Visualizar_CompraNet" xml:space="preserve">
+    <value>Visualizar CompraNet</value>
+  </data>
+  <data name="Visualizar_Compras_Diarias" xml:space="preserve">
+    <value>Visualizar Compras Diarias</value>
+  </data>
+  <data name="Visualizar_Compras_Proveedor" xml:space="preserve">
+    <value>Visualizar Compras de Proveedores</value>
+  </data>
+  <data name="Visualizar_Cupos" xml:space="preserve">
+    <value>Acceder a Cupos</value>
+  </data>
+  <data name="Visualizar_Datos_Proveedor" xml:space="preserve">
+    <value>Visualizar Proveedores</value>
+  </data>
+  <data name="Visualizar_Hedge" xml:space="preserve">
+    <value>Visualizar Hedge</value>
+  </data>
+  <data name="Visualizar_Indicadores" xml:space="preserve">
+    <value>Visualizar Indicadores</value>
+  </data>
+  <data name="Visualizar_Informe_Administrativo" xml:space="preserve">
+    <value>Visualizar Informe Administrativo</value>
+  </data>
+  <data name="Visualizar_Informe_Comercial" xml:space="preserve">
+    <value>Visualizar Informe Comercial</value>
+  </data>
+  <data name="Visualizar_Pizarra" xml:space="preserve">
+    <value>Acceder a Precio Pizarra</value>
+  </data>
+  <data name="Visualizar_Proveedor_De_Corredor" xml:space="preserve">
+    <value>Visualizar Proveedor De Corredor</value>
+  </data>
+  <data name="Visualizar_Reporte_Agenda" xml:space="preserve">
+    <value>Visualizar Reporte Agenda</value>
+  </data>
+  <data name="Visualizar_Reporte_CompraNet" xml:space="preserve">
+    <value>Visualizar Reporte CompraNet</value>
+  </data>
+  <data name="Visualizar_Reporte_CompraNet_Corredor" xml:space="preserve">
+    <value>Visualizar Reporte CompraNet Corredor</value>
+  </data>
+  <data name="Visualizar_Reporte_Cupos" xml:space="preserve">
+    <value>Visualizar Reporte Cupos</value>
+  </data>
+  <data name="Visualizar_Reporte_Proveedor" xml:space="preserve">
+    <value>Visualizar Reporte Proveedor</value>
   </data>
 </root>

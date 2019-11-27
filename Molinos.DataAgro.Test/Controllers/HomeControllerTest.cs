@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             HttpContext.Current.Session["equipo"] = new List<int>();
             HttpContext.Current.Session["perfil"] = EnumPerfil.CorredoresComercial;
-            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo, GlobalVariables.CorredoresComercial, (int)GlobalVariables.Perfil)).Returns(new List<BusquedaHome>()
+            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new List<BusquedaHome>()
             {
                 new BusquedaHome
                 {
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }
             });            
             var result = target.BusquedaHome("a");
-            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
+            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -165,7 +165,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var busqueda = new oParamBusqueda();
 
-            homeManagerMock.Setup(x => x.ExportarContactos(busqueda, GlobalVariables.IdActiveDirectory))
+            homeManagerMock.Setup(x => x.ExportarContactos(busqueda, GlobalVariables.IdActiveDirectory, It.IsAny<List<int>>()))
                 .Returns(new List<ContactoIni>(){new ContactoIni(){
                     Calificacion = 1,
                     ComercialCargo = "",
@@ -186,7 +186,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }});
 
             var result = target.ExportarContactosPDF(busqueda) as JsonResult;
-            homeManagerMock.Verify(x => x.ExportarContactos(It.IsAny<oParamBusqueda>(), It.IsAny<string>()), Times.Once);
+            homeManagerMock.Verify(x => x.ExportarContactos(It.IsAny<oParamBusqueda>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.IsTrue(((ReportesModel)result.Data).DownloadKey != "");
@@ -196,7 +196,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var busqueda = new oParamBusqueda();
 
-            homeManagerMock.Setup(x => x.ExportarContactos(busqueda, GlobalVariables.IdActiveDirectory))
+            homeManagerMock.Setup(x => x.ExportarContactos(busqueda, GlobalVariables.IdActiveDirectory, It.IsAny<List<int>>()))
                 .Returns(new List<ContactoIni>() { new ContactoIni
                 {
                     Calificacion = 1,
@@ -218,7 +218,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }});
 
             var result = target.ExportarContactosPDF(busqueda) as JsonResult;
-            homeManagerMock.Verify(x => x.ExportarContactos(It.IsAny<oParamBusqueda>(), It.IsAny<string>()), Times.Once);
+            homeManagerMock.Verify(x => x.ExportarContactos(It.IsAny<oParamBusqueda>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.IsTrue(((ReportesModel)result.Data).DownloadKey != "");

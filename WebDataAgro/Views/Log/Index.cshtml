@@ -14,7 +14,6 @@
 
     @using (Ajax.BeginForm("ListaLogPartial", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Log" }, null))
     {
-        @Html.AntiForgeryToken();
         <div class="container-log">
             <div id="fecha-buscador-log" class="row">
                 <div class="col-sm-1 noRightPadding">

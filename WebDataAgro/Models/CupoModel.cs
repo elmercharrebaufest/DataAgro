@@ -10,6 +10,7 @@ namespace WebDataAgro.Models
     public class CupoModel
     {
         public int Id { get; set; }
+        public string Siguientes { get; set; }
         public string ProveedorDescripcion { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
         [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
@@ -21,7 +22,7 @@ namespace WebDataAgro.Models
         
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaEntregaRequerido")]
         public DateTime FechaEntrega { get; set; }
-        public DateTime? FechaHastaEntrega { get; set; }
+        public DateTime FechaHastaEntrega { get; set; }
         public int? CantidadCupos {get;set;}
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ZonaRequerido")]
         [Range(1, 999.99,ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ZonaRequerido")]
@@ -34,7 +35,8 @@ namespace WebDataAgro.Models
         public string Observacion { get; set; }
         public bool FasonId { get; set; }
         public string CuitId { get; set; }
+        public List<DiaCupo> Dias { get; set; }
         public CupoResult Resultado { get; set; }
     }
-
+    
 }

@@ -1,7 +1,7 @@
 ﻿CREATE  procedure [dbo].[DataAgro_Gauget_Traer]
 
-@comercialId int = null,
-@ComercialGenerador Int=null,
+@comercialId INT=null,
+@ComercialGenerador VARCHAR(max)=null,
 @CampañaId int = null,
 @MaterialId int = null
 

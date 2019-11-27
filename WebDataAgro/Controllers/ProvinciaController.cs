@@ -15,11 +15,6 @@ namespace WebDataAgro.Controllers
         public ProvinciaController(IProvinciaManager oProvinciaManager)
         {
             mobjProvinciaManager = oProvinciaManager;
-            
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
         }
 
         //-----------------------------------------------------

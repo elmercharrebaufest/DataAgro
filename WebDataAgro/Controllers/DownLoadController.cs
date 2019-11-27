@@ -1,13 +1,15 @@
 ﻿
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 
 namespace WebDataAgro.Controllers
 {
-    //[Authorize]
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class DownLoadController : Controller
     {
         private readonly IReportesManager reportesManager;

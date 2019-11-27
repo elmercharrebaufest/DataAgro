@@ -16,14 +16,6 @@ $(document).ready(function () {
     AsignarBotones();
 
     InicializarBusquedaInicial();
-
-    var idPerfil = $("#PerfilId").val();
-
-    if (idPerfil == 4 || idPerfil == 5) {
-        //var EsAdmin = $("#Administrador");
-        $("#Administrador").prop("checked", false);
-        $("#Administrador").prop("disabled", true);
-    }
 });
 
 function InicializarElementos() {

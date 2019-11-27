@@ -9,7 +9,7 @@ CREATE PROCEDURE [dbo].[DataAgro_IndicadoresComprasExportacionMapa]
 
 @CampañaId int =null ,
 @ComercialId int =null,
-@ComercialGenerador Int=null  
+@ComercialGenerador VARCHAR(max)=null  
 
 as
 

@@ -44,7 +44,7 @@
 
                     @using (Html.BeginForm("GrabarCupos", null, FormMethod.Post))
                     {
-                        @Html.AntiForgeryToken();
+                       
                         <div class="row">
                             @Html.HiddenFor(x => x.Id)
                             <div class="col-xs-2">

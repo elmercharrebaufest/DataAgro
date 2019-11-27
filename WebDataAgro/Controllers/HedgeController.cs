@@ -1,17 +1,20 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Helpers.Excel;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class HedgeController : Controller
     {
         private readonly IHedgeManager oHedgeManager;
@@ -24,21 +27,18 @@ namespace WebDataAgro.Controllers
             this.mobjReportesManager = mobjReportesManager;
             this.diferencialManager = diferencialManager;
         }
+        [Autorizacion(PermisosDataAgro.VisualizarHedge)]
         public ActionResult Index()
         {
-            if (GlobalVariables.Perfil == EnumPerfil.Mesa)
-            {
+            
                 var model = new HedgeModel();
                 var dia = oHedgeManager.Dia();
                 model.Dia = dia;
                 ViewBag.DiaCerrado = dia == null ? false : dia.Cerrado;
                 ViewBag.Diferencial = dia?.Diferencial;
                 return View(model);
-            }
-            else
-            {
-                return View("ErrorDePermisos");
-            }
+            
+           
         }
         public ActionResult HedgeMaterialPartial(Resultado res)
         {

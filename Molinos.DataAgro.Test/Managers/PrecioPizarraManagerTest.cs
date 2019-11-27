@@ -22,13 +22,11 @@ namespace Molinos.DataAgro.Test.Managers
     {
         private PrecioPizarraManager target;
         private Mock<IRepositorio> repositorioMock;
-        private JavaScriptSerializer serializer;
         private Mock<ILogger> logger;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             target = new PrecioPizarraManager(repositorioMock.Object, logger.Object);
@@ -96,6 +94,43 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(200, resultado.ListaErrores[0].ErrorCode);
         }
 
+        [Test]
+        public void TraerTodoMonedaOk()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Moneda, MonedaDto>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<MonedaDto>() { new MonedaDto() });
 
-    }
+            var resultado = target.TraerTodoMoneda();
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Moneda, MonedaDto>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Count);
+        }
+        [Test]
+        public void EliminarPizarraOk()
+        {
+            var resultado = target.EliminarPizarra(1);
+
+            repositorioMock.Verify(x => x.Remover<PrecioPizarra>(It.IsAny<int>()));
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayErrores);
+            Assert.AreEqual(200, resultado.ListaErrores[0].ErrorCode);
+        }
+        [Test]
+        public void TraerPrecioPizarraPorIdOk()
+        {
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>()))
+                .Returns(new PrecioPizarraDto() { Id=1 });
+
+            var resultado = target.TraerPrecioPizarraPorId(1);
+
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
+        }
+    }    
 }

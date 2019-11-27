@@ -61,11 +61,47 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Administración Cupos.
+        /// </summary>
+        public static string Administracion_Cupos {
+            get {
+                return ResourceManager.GetString("Administracion_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Agenda Comercial.
+        /// </summary>
+        public static string Agenda_Comercial {
+            get {
+                return ResourceManager.GetString("Agenda_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Agente.
         /// </summary>
         public static string Agente {
             get {
                 return ResourceManager.GetString("Agente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Cupos.
+        /// </summary>
+        public static string Alta_Cupos {
+            get {
+                return ResourceManager.GetString("Alta_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta de Proveedores.
+        /// </summary>
+        public static string Alta_Datos_Proveedor {
+            get {
+                return ResourceManager.GetString("Alta_Datos_Proveedor", resourceCulture);
             }
         }
         
@@ -79,11 +115,47 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ampliar Negocio Corredor.
+        /// </summary>
+        public static string Ampliar_Negocio_Corredor {
+            get {
+                return ResourceManager.GetString("Ampliar_Negocio_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ampliar Negocios.
+        /// </summary>
+        public static string Ampliar_Negocios {
+            get {
+                return ResourceManager.GetString("Ampliar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Cupos.
+        /// </summary>
+        public static string Anular_Cupos {
+            get {
+                return ResourceManager.GetString("Anular_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Abril.
         /// </summary>
         public static string April {
             get {
                 return ResourceManager.GetString("April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asignar Proveedores a Comerciales.
+        /// </summary>
+        public static string Asignar_Proveedores {
+            get {
+                return ResourceManager.GetString("Asignar_Proveedores", resourceCulture);
             }
         }
         
@@ -142,6 +214,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Canal de Notificaciones.
+        /// </summary>
+        public static string Canal_Notificaciones {
+            get {
+                return ResourceManager.GetString("Canal_Notificaciones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cantidad.
         /// </summary>
         public static string Cantidad {
@@ -178,11 +259,173 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuración Canal Operacion.
+        /// </summary>
+        public static string Configuracion_Canal_Operacion {
+            get {
+                return ResourceManager.GetString("Configuracion_Canal_Operacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Centros.
+        /// </summary>
+        public static string Configuracion_Centros {
+            get {
+                return ResourceManager.GetString("Configuracion_Centros", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Condición.
+        /// </summary>
+        public static string Configuracion_Condicion {
+            get {
+                return ResourceManager.GetString("Configuracion_Condicion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Constantes.
+        /// </summary>
+        public static string Configuracion_Constantes {
+            get {
+                return ResourceManager.GetString("Configuracion_Constantes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Diferencial Hedge.
+        /// </summary>
+        public static string Configuracion_Diferencial {
+            get {
+                return ResourceManager.GetString("Configuracion_Diferencial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Entrega A.
+        /// </summary>
+        public static string Configuracion_Entrega_A {
+            get {
+                return ResourceManager.GetString("Configuracion_Entrega_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Logs.
+        /// </summary>
+        public static string Configuracion_Logs {
+            get {
+                return ResourceManager.GetString("Configuracion_Logs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Material.
+        /// </summary>
+        public static string Configuracion_Material {
+            get {
+                return ResourceManager.GetString("Configuracion_Material", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuracion Operadores.
+        /// </summary>
+        public static string Configuracion_Operador {
+            get {
+                return ResourceManager.GetString("Configuracion_Operador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Rangos Confirmacion.
+        /// </summary>
+        public static string Configuracion_Rangos_Confirmacion {
+            get {
+                return ResourceManager.GetString("Configuracion_Rangos_Confirmacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Rangos Precios.
+        /// </summary>
+        public static string Configuracion_Rangos_Precios {
+            get {
+                return ResourceManager.GetString("Configuracion_Rangos_Precios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Roles y Permisos.
+        /// </summary>
+        public static string Configuracion_Roles_Permisos {
+            get {
+                return ResourceManager.GetString("Configuracion_Roles_Permisos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Tareas Programadas.
+        /// </summary>
+        public static string Configuracion_Tareas_Programadas {
+            get {
+                return ResourceManager.GetString("Configuracion_Tareas_Programadas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Usuarios.
+        /// </summary>
+        public static string Configuracion_Usuarios {
+            get {
+                return ResourceManager.GetString("Configuracion_Usuarios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Zona Cupos.
+        /// </summary>
+        public static string Configuracion_Zona_Cupos {
+            get {
+                return ResourceManager.GetString("Configuracion_Zona_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuración Zona Girasol.
+        /// </summary>
+        public static string Configuracion_Zona_Girasol {
+            get {
+                return ResourceManager.GetString("Configuracion_Zona_Girasol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Consignatario.
         /// </summary>
         public static string Consignatario {
             get {
                 return ResourceManager.GetString("Consignatario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Contadores CompraNet.
+        /// </summary>
+        public static string Contador_CompraNet {
+            get {
+                return ResourceManager.GetString("Contador_CompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Contador Home .
+        /// </summary>
+        public static string Contador_Proveedores {
+            get {
+                return ResourceManager.GetString("Contador_Proveedores", resourceCulture);
             }
         }
         
@@ -205,11 +448,65 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datos Research.
+        /// </summary>
+        public static string Datos_Research {
+            get {
+                return ResourceManager.GetString("Datos_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Diciembre.
         /// </summary>
         public static string December {
             get {
                 return ResourceManager.GetString("December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descargar Excel Proveedores.
+        /// </summary>
+        public static string Descarga_Excel {
+            get {
+                return ResourceManager.GetString("Descarga_Excel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export All de Comerciales.
+        /// </summary>
+        public static string Descarga_Export_All_Comercial {
+            get {
+                return ResourceManager.GetString("Descarga_Export_All_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export All de Visualizador.
+        /// </summary>
+        public static string Descarga_Export_All_Visualizador {
+            get {
+                return ResourceManager.GetString("Descarga_Export_All_Visualizador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descargar PDF Proveedores.
+        /// </summary>
+        public static string Descarga_Pdf {
+            get {
+                return ResourceManager.GetString("Descarga_Pdf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descargar Informe Administrativo.
+        /// </summary>
+        public static string Descargar_Informe_Administrativo {
+            get {
+                return ResourceManager.GetString("Descargar_Informe_Administrativo", resourceCulture);
             }
         }
         
@@ -385,6 +682,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filtrar Administrativo.
+        /// </summary>
+        public static string Filtrar_Administrativo {
+            get {
+                return ResourceManager.GetString("Filtrar_Administrativo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finalizar Negocios.
+        /// </summary>
+        public static string Finalizar_Negocios {
+            get {
+                return ResourceManager.GetString("Finalizar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hasta Fijación.
         /// </summary>
         public static string HastaFijacion {
@@ -394,11 +709,38 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mis Contactos Corredor.
+        /// </summary>
+        public static string Home_Corredor {
+            get {
+                return ResourceManager.GetString("Home_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Importe Sustentable.
         /// </summary>
         public static string ImporteSustentable {
             get {
                 return ResourceManager.GetString("ImporteSustentable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generar Informe Comercial.
+        /// </summary>
+        public static string Informe_Comercial {
+            get {
+                return ResourceManager.GetString("Informe_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acesso DataAgro.
+        /// </summary>
+        public static string Ingreso_DataAgro {
+            get {
+                return ResourceManager.GetString("Ingreso_DataAgro", resourceCulture);
             }
         }
         
@@ -430,11 +772,47 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Listar en Abm Comerciales.
+        /// </summary>
+        public static string Lista_Comercial {
+            get {
+                return ResourceManager.GetString("Lista_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listar en Comercial CompraNet.
+        /// </summary>
+        public static string Lista_Comercial_CompraNet {
+            get {
+                return ResourceManager.GetString("Lista_Comercial_CompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Localidad.
         /// </summary>
         public static string Localidad {
             get {
                 return ResourceManager.GetString("Localidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mail Fin del Dia Hedge.
+        /// </summary>
+        public static string Mail_Hedge {
+            get {
+                return ResourceManager.GetString("Mail_Hedge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mail SIO.
+        /// </summary>
+        public static string Mail_SIO {
+            get {
+                return ResourceManager.GetString("Mail_SIO", resourceCulture);
             }
         }
         
@@ -475,6 +853,51 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Cupos.
+        /// </summary>
+        public static string Modificar_Cupos {
+            get {
+                return ResourceManager.GetString("Modificar_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Proveedores.
+        /// </summary>
+        public static string Modificar_Datos_Proveedor {
+            get {
+                return ResourceManager.GetString("Modificar_Datos_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Links de Interes.
+        /// </summary>
+        public static string Modificar_Interes {
+            get {
+                return ResourceManager.GetString("Modificar_Interes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Negocio Corredor.
+        /// </summary>
+        public static string Modificar_Negocio_Corredor {
+            get {
+                return ResourceManager.GetString("Modificar_Negocio_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Negocios.
+        /// </summary>
+        public static string Modificar_Negocios {
+            get {
+                return ResourceManager.GetString("Modificar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moneda.
         /// </summary>
         public static string Moneda {
@@ -493,11 +916,65 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Notificaciones Corredor.
+        /// </summary>
+        public static string Notificaciones_Corredor {
+            get {
+                return ResourceManager.GetString("Notificaciones_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Notificaciones Mail por Jerarquia.
+        /// </summary>
+        public static string Notificaciones_Mail_Jerarquia {
+            get {
+                return ResourceManager.GetString("Notificaciones_Mail_Jerarquia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Todas Notificaciones Mail.
+        /// </summary>
+        public static string Notificaciones_Mail_Todos {
+            get {
+                return ResourceManager.GetString("Notificaciones_Mail_Todos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notificaciones Research.
+        /// </summary>
+        public static string Notificaciones_Research {
+            get {
+                return ResourceManager.GetString("Notificaciones_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Noviembre.
         /// </summary>
         public static string November {
             get {
                 return ResourceManager.GetString("November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nuevo Negocio Corredor.
+        /// </summary>
+        public static string Nuevo_Negocio_Corredor {
+            get {
+                return ResourceManager.GetString("Nuevo_Negocio_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nuevos Negocios.
+        /// </summary>
+        public static string Nuevo_Negocios {
+            get {
+                return ResourceManager.GetString("Nuevo_Negocios", resourceCulture);
             }
         }
         
@@ -592,6 +1069,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rechazar Negocios.
+        /// </summary>
+        public static string Rechazar_Negocios {
+            get {
+                return ResourceManager.GetString("Rechazar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reporte Research.
+        /// </summary>
+        public static string Reporte_Research {
+            get {
+                return ResourceManager.GetString("Reporte_Research", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Septiembre.
         /// </summary>
         public static string September {
@@ -606,6 +1101,204 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string TipoNegocio {
             get {
                 return ResourceManager.GetString("TipoNegocio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Corredor Comercial.
+        /// </summary>
+        public static string Ver_Corredor_Comercial {
+            get {
+                return ResourceManager.GetString("Ver_Corredor_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Jerarquia Comercial.
+        /// </summary>
+        public static string Ver_Jerarquia {
+            get {
+                return ResourceManager.GetString("Ver_Jerarquia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Informacion de Mesa.
+        /// </summary>
+        public static string Ver_Mesa {
+            get {
+                return ResourceManager.GetString("Ver_Mesa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Solo Corredores.
+        /// </summary>
+        public static string Ver_Solo_Corredores {
+            get {
+                return ResourceManager.GetString("Ver_Solo_Corredores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Todo Comercial.
+        /// </summary>
+        public static string Ver_Todos_Comercial {
+            get {
+                return ResourceManager.GetString("Ver_Todos_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Todos los Negocios.
+        /// </summary>
+        public static string Ver_Todos_Negocios {
+            get {
+                return ResourceManager.GetString("Ver_Todos_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar CompraNet.
+        /// </summary>
+        public static string Visualizar_CompraNet {
+            get {
+                return ResourceManager.GetString("Visualizar_CompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Compras Diarias.
+        /// </summary>
+        public static string Visualizar_Compras_Diarias {
+            get {
+                return ResourceManager.GetString("Visualizar_Compras_Diarias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Compras de Proveedores.
+        /// </summary>
+        public static string Visualizar_Compras_Proveedor {
+            get {
+                return ResourceManager.GetString("Visualizar_Compras_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acceder a Cupos.
+        /// </summary>
+        public static string Visualizar_Cupos {
+            get {
+                return ResourceManager.GetString("Visualizar_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Proveedores.
+        /// </summary>
+        public static string Visualizar_Datos_Proveedor {
+            get {
+                return ResourceManager.GetString("Visualizar_Datos_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Hedge.
+        /// </summary>
+        public static string Visualizar_Hedge {
+            get {
+                return ResourceManager.GetString("Visualizar_Hedge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Indicadores.
+        /// </summary>
+        public static string Visualizar_Indicadores {
+            get {
+                return ResourceManager.GetString("Visualizar_Indicadores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Informe Administrativo.
+        /// </summary>
+        public static string Visualizar_Informe_Administrativo {
+            get {
+                return ResourceManager.GetString("Visualizar_Informe_Administrativo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Informe Comercial.
+        /// </summary>
+        public static string Visualizar_Informe_Comercial {
+            get {
+                return ResourceManager.GetString("Visualizar_Informe_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acceder a Precio Pizarra.
+        /// </summary>
+        public static string Visualizar_Pizarra {
+            get {
+                return ResourceManager.GetString("Visualizar_Pizarra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Proveedor De Corredor.
+        /// </summary>
+        public static string Visualizar_Proveedor_De_Corredor {
+            get {
+                return ResourceManager.GetString("Visualizar_Proveedor_De_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Agenda.
+        /// </summary>
+        public static string Visualizar_Reporte_Agenda {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Agenda", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte CompraNet.
+        /// </summary>
+        public static string Visualizar_Reporte_CompraNet {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_CompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte CompraNet Corredor.
+        /// </summary>
+        public static string Visualizar_Reporte_CompraNet_Corredor {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_CompraNet_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Cupos.
+        /// </summary>
+        public static string Visualizar_Reporte_Cupos {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Proveedor.
+        /// </summary>
+        public static string Visualizar_Reporte_Proveedor {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Proveedor", resourceCulture);
             }
         }
     }

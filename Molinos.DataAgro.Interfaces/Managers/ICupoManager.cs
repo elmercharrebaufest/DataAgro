@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface ICupoManager
     {
-        CupoResult GrabarCupo(Cupo cupo,int cantidadCupos, DateTime? fechaHasta);
+        CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias);
         KendoGrid<CupoDto> TraerCuposTabla(KendoGridMvcRequest request, List<int> equipo);
         Resultado EliminarCupo(int id, string comercial);
         //Task ObtenerToken();
@@ -19,5 +19,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado TransmitirCupos(List<string> cupos);
         List<RespuestaCupoStop> ConsultarCuposDiarios();
         CupoDto ObtenerCupo(int id);
+        Resultado EliminarVarios(List<int> cupos, string comercial);
+        string ObtenerCodigoSap(int id);
     }
 }

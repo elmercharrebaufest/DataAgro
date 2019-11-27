@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Interfaces
 
         List<ComercialCombo> ObtenerComerciales(List<int> equipo, int comercialId);
 
-        Resultado GrabarComercial(Comercial oComercial);
+        Resultado GrabarComercial(Comercial oComercial, List<Rol> roles);
 
         Resultado EliminarComercial(int intComercialId);
 
@@ -23,7 +23,7 @@ namespace Molinos.DataAgro.Interfaces
 
         bool ComercialExiste(string ActiveDirectoryId);
 
-        bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId, int perfilId, List<int> corredoresComercial);
+        bool ComercialPerteneceProveedor(List<int> equipo, int proveedorId, List<int> corredoresComercial);
 
         EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId);
 
@@ -36,9 +36,9 @@ namespace Molinos.DataAgro.Interfaces
 
         List<int> CadenaComerciales(int comercialId);
 
-        List<int> ListarCorredoresComercial(int perfilId);
+        List<int> ListarCorredoresComercial();
 
-        List<Comercial> ListarComercialesPorPerfil(EnumPerfil perfil);
+        List<Comercial> ListarComercialesCorredor();
         List<GrupoDeCompras> ListarGrupoDeCompras(string filtro);
     }
 }

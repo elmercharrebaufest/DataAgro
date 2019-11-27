@@ -1,18 +1,19 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
-using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class PrecioPizarraController : Controller
     {
         private readonly IPrecioPizarraManager oPrecioPizarraManager;
@@ -26,6 +27,7 @@ namespace WebDataAgro.Controllers
             this.oPizarraManager = oPizarraManager;
         }
         // GET: PrecioPizarra
+        [Autorizacion(PermisosDataAgro.VisualizarPizarra)]
         public ActionResult Index()
         {
             FillViewBag();

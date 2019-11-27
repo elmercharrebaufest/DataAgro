@@ -10,15 +10,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class TraerCorredoresComercial : IConsulta<Contactos>
     {
         private readonly List<int> idComerciales;
-        private readonly int comercialOriginalId;
 
-        public TraerCorredoresComercial(List<int> idComerciales, int comercialOriginalId)
+        public TraerCorredoresComercial(List<int> idComerciales)
         {
             this.idComerciales = idComerciales;
-            this.comercialOriginalId = comercialOriginalId;
         }
 
-        private static List<Contactos> Query(DbContext contexto, List<int> idComerciales, int comercialOriginalId)
+        private static List<Contactos> Query(DbContext contexto, List<int> idComerciales)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
@@ -62,7 +60,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, idComerciales, comercialOriginalId);
+                return Query(contexto, idComerciales);
             }
         }
     }

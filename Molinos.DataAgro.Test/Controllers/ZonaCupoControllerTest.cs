@@ -16,7 +16,6 @@ namespace Molinos.DataAgro.Test.Controllers
     {
         private ZonaCupoController target;
         private Mock<IZonaCupoManager> zonaCupoManagerMock;
-        private Mock<IComercialManager> comercialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -24,8 +23,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             this.serializer = new JavaScriptSerializer();
             zonaCupoManagerMock = new Mock<IZonaCupoManager>();
-            comercialManagerMock = new Mock<IComercialManager>();
-            target = new ZonaCupoController(zonaCupoManagerMock.Object, comercialManagerMock.Object);
+            target = new ZonaCupoController(zonaCupoManagerMock.Object);
         }
 
         [Test]

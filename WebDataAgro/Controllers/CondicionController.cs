@@ -1,21 +1,17 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CondicionController : Controller
     {
         private ICondicionManager mobjCondicionManager;
-
-        
-
         //-----------------------------------------------------------------------------------
         //  Constructor
         //-----------------------------------------------------------------------------------
@@ -23,16 +19,13 @@ namespace WebDataAgro.Controllers
         public CondicionController(ICondicionManager oCondicionManager)
         {
             mobjCondicionManager = oCondicionManager;
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
         }
 
         //-----------------------------------------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------------------------------------
 
+        [Autorizacion(PermisosDataAgro.ConfiguracionCondicion)]
         public ActionResult Index()
         {
             return View();

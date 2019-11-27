@@ -14,18 +14,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly int comercialId;
         private readonly string filtro;
         private readonly List<int> corredoresComercial;
-        private readonly int perfilId;
+        private readonly bool corredor;
 
-        public ConsultaBusquedaHome(List<int> equipo, int comercialId, string filtro, List<int> corredoresComercial, int perfilId)
+        public ConsultaBusquedaHome(List<int> equipo, int comercialId, string filtro, List<int> corredoresComercial, bool corredor)
         {
             this.equipo = equipo;
             this.comercialId = comercialId;
             this.filtro = filtro;
             this.corredoresComercial = corredoresComercial;
-            this.perfilId = perfilId;
+            this.corredor = corredor;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, List<int> equipo, int comercialId, string filtro, List<int> corredoresComercial, int perfilId)
+        private static List<BusquedaHome> Query(DbContext contexto, List<int> equipo, int comercialId, string filtro, List<int> corredoresComercial, bool corredor)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
                 join contactoComercial in contexto.Set<ContactoComercial>() on proveedorComercial.Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                 from contactoComercial in cons.DefaultIfEmpty()
-                where (equipo.Contains(proveedorComercial.ComercialId) || perfilId == 8) &&
+                where (equipo.Contains(proveedorComercial.ComercialId) || corredor) &&
                     (Proveedor.CUIT.Contains(filtro) ||
                     contactoComercial.Nombres.Contains(filtro) ||
                     contactoComercial.Apellido.Contains(filtro) ||
@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, equipo, comercialId, filtro, corredoresComercial, perfilId);
+                return Query(contexto, equipo, comercialId, filtro, corredoresComercial, corredor);
             }
         }
     }

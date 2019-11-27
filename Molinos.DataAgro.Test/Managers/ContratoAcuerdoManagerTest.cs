@@ -147,7 +147,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ComercialQry>() { new ComercialQry { ComercialId = 1, Nombre = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Moneda, MonedaQry>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MonedaQry>() { new MonedaQry { MonedaId = "a", Descripcion = "a" } });
-            var resultado = target.TraerDatosCombo(1);
+            var resultado = target.TraerDatosCombo();
 
             Assert.AreEqual(1, resultado.comercial.Count);
             Assert.AreEqual(1, resultado.material.Count);

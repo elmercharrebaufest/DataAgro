@@ -2,7 +2,7 @@
     [ComercialId]       INT           IDENTITY (1, 1) NOT NULL,
     [Apellido]          VARCHAR (50)  NOT NULL,
     [Nombres]           VARCHAR (50)  NOT NULL,
-    [PerfilId]          INT           NOT NULL,
+    [PerfilId]          INT           NULL,
     [EmpleadorACargoId]   INT           NULL,
     [IdActiveDirectory] VARCHAR (100) NULL,
     [GrupoDeComprasId]    INT           NULL,

@@ -123,6 +123,7 @@
     <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />
     <Compile Include="Controllers\ContratoAcuerdoControllerTest.cs" />
     <Compile Include="Controllers\PrecioPizarraControllerTest.cs" />
+    <Compile Include="Controllers\ReporteResearchControllerTest.cs" />
     <Compile Include="Controllers\ResearchControllerTest.cs" />
     <Compile Include="Controllers\ZonaControllerTest.cs" />
     <Compile Include="Controllers\OperadorControllerTest.cs" />
@@ -158,10 +159,17 @@
     <Compile Include="Managers\AgenteCompraManagerTest.cs" />
     <Compile Include="Managers\AreaInfluenciaManagerTest.cs" />
     <Compile Include="Managers\ComercialManagerTest.cs" />
+    <Compile Include="Managers\CompraNetManagerTest.cs" />
+    <Compile Include="Managers\ConfiguracionManagerTest.cs" />
     <Compile Include="Managers\EstadioManagerTest.cs" />
     <Compile Include="Managers\CupoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionCupoManagerTest.cs" />
     <Compile Include="Managers\ContratoAcuerdoManagerTest.cs" />
+    <Compile Include="Managers\InformeComercialManagerTest.cs" />
+    <Compile Include="Managers\ComprasManagerTest.cs" />
+    <Compile Include="Managers\ObjetivoManagerTest.cs" />
+    <Compile Include="Managers\LogManagerTest.cs" />
+    <Compile Include="Managers\PizarraManagerTest.cs" />
     <Compile Include="Managers\PrecioPizarraManagerTest.cs" />
     <Compile Include="Managers\ResearchManagerTest.cs" />
     <Compile Include="Managers\ZonaCupoManagerTest.cs" />

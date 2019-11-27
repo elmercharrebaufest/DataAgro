@@ -7,7 +7,7 @@
 @CampañaId int,
 
 @ComercialId int =null,
-@ComercialGenerador Int=null 
+@ComercialGenerador VARCHAR(max)=null 
 
 as
 

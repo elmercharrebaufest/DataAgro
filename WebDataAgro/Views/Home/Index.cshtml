@@ -5,7 +5,10 @@
 <link rel="stylesheet" href="~/Content/home.css" />
 <link rel="stylesheet" href="~/Content/homeResponsive.css" />
 <script type="text/javascript" src="~/Scripts/App/home.js"></script>
-
+@{ 
+    var visualiza = PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor);
+}
+<script>visualiza = '@visualiza'</script>
 <div class="row contenedor-principal">
     <div class="col-lg-3 contenedor-principal-widget">
 
@@ -148,11 +151,11 @@
         <div class="col-lg-4">
             <span class="contenedor-segundo-titulo">Lista de contactos</span>
         </div>
-        <div class="col-lg-5" style="text-align:right;">
-            <a id="exportarPDF" class="exportar-contactos"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
-            <a id="exportarExcel" class="exportar-contactos"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar a Excel</span></a>
+        <div class="col-lg-5" style="text-align:right;min-height: 22px;">
+            <a id="exportarPDF" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaPdf)?"":"hide") "><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
+            <a id="exportarExcel" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaExcel)?"":"hide") "><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar a Excel</span></a>
 
-            <a id="exportarAll" class="exportar-contactos"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Export All</span></a>
+            <a id="exportarAll" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial) || PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial)?"":"hide")"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Export All</span></a>
         </div>
 
 

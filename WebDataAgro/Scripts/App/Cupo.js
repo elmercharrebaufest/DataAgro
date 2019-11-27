@@ -1,21 +1,23 @@
 ﻿var viewModel;
 var fecha;
 var zonaSeleccionada;
-    $(document).ready(function () {
-        kendo.culture("es-AR");
-        $('#menuproveedor').hide();
-        $("#crearCupo").click(function () {
-            if ($("#perfil").val() == "Jefe" || $("#perfil").val() == "Mesa" || $("#perfil").val() == "Comercial" || $("#perfil").val() == "CorredoresComercial") {
-                window.location.href = window.location.origin + "/Cupo/CrearCupo";
-            } else {
-                MensInfo("No posee permisos para la carga de cupos");
-            }
-        });
+var anularCupo;
+var modificarCupo; 
 
-        $.unblockUI();
-       
-        InicializarCuposIndex();
+$(document).ready(function () {
+    anularCupo = ConvertirStringABool(anularCupo);
+    modificarCupo = ConvertirStringABool(modificarCupo);
+
+    kendo.culture("es-AR");
+    $('#menuproveedor').hide();
+    $("#crearCupo").click(function () {
+        window.location.href = window.location.origin + "/Cupo/CrearCupo";
     });
+
+    $.unblockUI();
+
+    InicializarCuposIndex();
+});
 
 function InicializarCuposIndex() {    
     var defaultFilter = { field: "FechaIngreso", operator: "gte", value: new Date };
@@ -314,15 +316,20 @@ function InicializarCuposIndex() {
         }
         dataSource.filter(filters);
     }
+
     $("#finalizarBorrar").click(function () {
         ObtenerDatosModalBorrado();
     });
 }
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Anular" onclick="ModalBorrar(' +
-        "'" + dataItem.Id + "'" + ',' +
-        "'" + dataItem.CupoSap + "'" + ',' +
-        ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    if (anularCupo) {
+        return '<button data-toggle="tooltip" title="Anular" onclick="ModalBorrar(' +
+            "'" + dataItem.Id + "'" + ',' +
+            "'" + dataItem.CupoSap + "'" + ',' +
+            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    } else {
+        return "<div></div>";
+    }
 }
 function botonRetransmitir(dataItem, icono) {
     if (!dataItem.Acopio) {
@@ -335,9 +342,13 @@ function botonRetransmitir(dataItem, icono) {
 
 }
 function botonModificar(dataItem, icono) {
+    if (modificarCupo) {
     return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
         "'" + dataItem.Id + "'" +
-        ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    } else {
+        return "<div></div>";
+    }
 }
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
@@ -345,7 +356,7 @@ function ModalBorrar(id, cupo) {
 
     $("#modalBorrar").modal('show');
 }
-function retransmitirSelccionados() {
+function RetransmitirSeleccionados() {
     var grid = $("#gridCupo").data("kendoGrid");
     var selectedRows = grid.select();
     obj = [];
@@ -359,7 +370,7 @@ function retransmitirSelccionados() {
     Retransmitir(obj);
 }
 
-function copiarSelccionados() {
+function CopiarSeleccionados() {
     var grid = $("#gridCupo").data("kendoGrid");
     var selectedRows = grid.select();
     obj = [];
@@ -390,7 +401,7 @@ function Retransmitir(listaCupos) {
     if (!Array.isArray(listaCupos)) {
         a.push(listaCupos);
     } else {
-        for (var i = 0; i <= cupos.length; i++) {
+        for (var i = 0; i < listaCupos.length; i++) {
             a.push(listaCupos[i]);
         }
     }
@@ -422,4 +433,68 @@ function recargarGrilla() {
 
 function ModificarCupo(cupoId) {
     window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + cupoId;
+}
+
+function AnularSeleccionados() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    var obj = [];
+    var borrar = [];
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7 || selectedItem.EstadoCupoId == 8)
+            obj.push(selectedItem.CupoSap);
+        borrar.push(selectedItem.Id);
+    });
+    var result;
+    if (obj.length == 0) {
+        $("#cupos-seleccionados-a-borrar").text("No hay cupos seleccionados");
+        $("#BorrarVarios").hide();
+    } else {
+        $("#cupos-seleccionados-a-borrar").text(obj.join(", "));
+        $("#BorrarVarios").show();
+        $("#BorrarVarios").click(function () {
+            result = MSExecuteOnServer('/Cupo/EliminarVarios', { listaCupos: borrar });
+            $("#modalBorrarVarios").modal('toggle');
+            recargarGrilla();
+            ErrorAnulacion(result);
+        });
+    }
+
+    $("#modalBorrarVarios").on("hidden.bs.modal", function () {
+        $("#BorrarVarios").unbind('click');
+    });
+    $("#modalBorrarVarios").modal('toggle');   
+}
+function ErrorAnulacion(resultado) {
+    if (resultado != null) {
+        if (ExistsErrorMessages(resultado.Errores)) {
+            MensErr(makeUL(resultado.Errores));            
+        }
+        else {
+            MensInfo("Anulación exitosa");
+        }
+    }
+}
+function makeUL(array) {
+    var list = document.createElement('ul');
+    for (var i = 0; i < array.length; i++) {
+        var item = document.createElement('li');
+        item.appendChild(document.createTextNode(array[i].Message));
+        list.appendChild(item);
+    }
+    return list;
+}
+
+function ModificarSeleccionados() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    var obj = [];
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 8)
+            obj.push(selectedItem.Id);
+    });
+    var siguientes = obj.slice(1);
+    window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + obj[0] + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
 }

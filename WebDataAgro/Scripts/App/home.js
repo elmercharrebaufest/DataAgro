@@ -4,7 +4,7 @@ var htmlaux = "";
 
 var filtro = {};
 var pagina = 1;
-
+var visualiza;
 
 
 var checkear = function (el, nam) {
@@ -417,8 +417,15 @@ function ArmarContactos(contactos) {
     for (var ii in contactos) {
         $("#verMasContactos").show();
         (function (i) {
+            var clase ='';
+            var onClick = '';
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
-            htmlaux += '<a href=' + htmlurl + '><div class="col-lg-12 lista-contactos-contenedor';
+            if (visualiza === "False") {
+                htmlurl = '#';
+                onClick = ' onClick= "return false"';
+                clase= ' deshabilitado';
+            }
+            htmlaux += '<a href=' + htmlurl + onClick + ' class="'+clase + '"><div class="col-lg-12 lista-contactos-contenedor' + clase;
             contactos[i].Corredor ? htmlaux += ' detalleCorredor' : '';
             htmlaux += '">'
                 + '<div class="lista-contactos-estado">'

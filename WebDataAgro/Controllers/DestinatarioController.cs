@@ -1,15 +1,16 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class DestinatarioController : Controller
     {
         private IDestinatarioManager mobjDestinatarioManager;
@@ -23,17 +24,13 @@ namespace WebDataAgro.Controllers
         public DestinatarioController(IDestinatarioManager oDestinatarioManager)
         {
             mobjDestinatarioManager = oDestinatarioManager;      
-            
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
         }
 
         //-----------------------------------------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------------------------------------
 
+        [Autorizacion(PermisosDataAgro.ConfiguracionEntregaA)]
         public ActionResult Index()
         {
             return View();

@@ -1,13 +1,11 @@
 ﻿using Autofac.Extras.NLog;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
@@ -26,7 +24,7 @@ namespace Molinos.DataAgro.Business.Managers
     public class ContratoManager : IContratoManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         private readonly IMaterialManager mobjMaterialManager;
         private readonly ITipoNegocioManager mobjTipoNegocioManager;
@@ -84,7 +82,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.capacidadProductiva = capacidadProductiva;
         }
 
-        public DatosIniContrato TraerDatosCombo(int perfilId)
+        public DatosIniContrato TraerDatosCombo()
         {
             var datosCombo = new DatosIniContrato();
 
@@ -99,12 +97,12 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
-                (x => x.Perfil.PerfilId == (int)EnumPerfil.Comercial || x.Perfil.PerfilId == (int)EnumPerfil.CorredoresComercial || x.Perfil.PerfilId == (int)EnumPerfil.Mesa || x.Perfil.PerfilId == (int)EnumPerfil.Jefe), 0, "Comercial");
+                (x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso == PermisosDataAgro.ListaComercialCompraNet))), 0, "Comercial");
 
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
-            if (perfilId != 7)
+            if (PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 5));
@@ -768,13 +766,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, perfilId, listComercialesId, corredoresComercial));
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial));
         }
-        public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
+        public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, perfilId, listComercialesId, corredoresComercial));
+            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, corredor, listComercialesId, corredoresComercial));
         }
         public GrabarContratoResult ConfirmarContrato(int contratoId)
         {
@@ -1127,7 +1125,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy);
-            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.PerfilId == 7);
+            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso== PermisosDataAgro.NotificacionesMailTodos)));
             var mailComercialesMesa = new List<string>();
             foreach (var mesa in comercialesMesa)
             {
@@ -1365,7 +1363,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (respuesta.Contains("SIO"))
                     {
-                        var administrativo = repositorio.Listar<Comercial>(x => x.PerfilId == 4);
+                        var administrativo = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.MailSio)));
                         EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
                     }
                     oEntityErrors.Error("", respuesta);
@@ -1580,9 +1578,9 @@ namespace Molinos.DataAgro.Business.Managers
             x => x.ContratoId == contratoId);
             return lista;
         }
-        public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, int perfilId, List<int> listComercialesId, List<int> corredoresComercial)
+        public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, perfilId, listComercialesId, corredoresComercial));
+            var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, listComercialesId, corredoresComercial));
             var materialesId = resultados.Data.Select(x => x.MaterialId).Distinct();
            
             return new TotalPesosDolares {

@@ -14,8 +14,6 @@ $(document).ready(function () {
     checkSoja();
 });
 
-
-
 function InicializarCargaCupos() {
     $("#buscadorProveedor").click(function () {
         $("#buscadorProveedor").data("kendoAutoComplete").value("");
@@ -64,17 +62,33 @@ function InicializarCargaCupos() {
     });
 
     $("#fechaEntrega").kendoDatePicker({
-    });
-    $("#fechaHasta").kendoDatePicker({
+        change: function () {
+            $("#fechaHasta").data("kendoDatePicker").value("");
+            var datepicker = $("#fechaHasta").data("kendoDatePicker");
+            datepicker.min(kendo.parseDate($("#fechaEntrega").val()));
+            datepicker.value(kendo.parseDate($("#fechaEntrega").val()));
+            CrearTablaFechaHasta();
+        }
     });
 
+    $("#fechaHasta").kendoDatePicker({
+        min: kendo.parseDate($("#fechaEntrega").val()),
+        change: function () {
+            CrearTablaFechaHasta();
+            $("#boton-carga-masiva").show();
+        }
+    });
     $("#cantidad").kendoNumericTextBox({
         optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min: 0
+        min: 0,
+        change: function () {
+            $(".cantidad-masiva").val($("#cantidad").data('kendoNumericTextBox').value());
+        }
     });
+    CrearTablaFechaHasta();
     $("#cuit").mask("00000000000");
     $("#fason").click(function () {
         checkFason();
@@ -116,6 +130,10 @@ function InicializarCargaCupos() {
     $("#fleteProcedenciaModal").draggable({
         handle: ".modal-header"
     }); 
+
+    if ($("#fechaHasta").val() != $("#fechaEntrega").val() ) {
+        $("#boton-carga-masiva").show();
+    }
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {
@@ -176,4 +194,52 @@ function copiarGenerados() {
     window.addEventListener('copy', copy);
     document.execCommand('copy');
     window.removeEventListener('copy', copy);
+}
+function MostrarCarga() {
+    $("#CargaCupos").modal('toggle');
+}
+
+function CrearTablaFechaHasta(){
+    $(".fila-carga").remove();
+
+    var date1 = $("#fechaEntrega").val();
+    var date2 = $("#fechaHasta").val();
+    var diffDays = parseInt((kendo.parseDate(date2) - kendo.parseDate(date1)) / (1000 * 60 * 60 * 24), 10);
+
+    for (var i = 0; i <= diffDays; i++) {
+
+        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input name="Dias['+i+'].Cantidad" class="cantidad-masiva" value="' + $("#cantidad").data('kendoNumericTextBox').value() + '"/></td></tr>';
+        $("#carga-cupos-table").append(fila);
+        var newdate = kendo.parseDate(date1);
+
+        newdate.setDate(newdate.getDate() + 1); var dd = newdate.getDate();
+        var mm = newdate.getMonth() + 1;
+        var y = newdate.getFullYear();
+
+        date1 = dd + '/' + mm + '/' + y;
+    }
+    $(".cantidad-masiva").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
+
+    $("#cancelar-carga").click(function () {
+        $(".cantidad-masiva").val($("#cantidad").data('kendoNumericTextBox').value());
+        $("#cancelar-carga").unbind('click');
+    });
+    $('[name="Dias[0].Cantidad"]').change(function () {
+        if ($("#cantidad").val() == 0) {
+            $("#cantidad").data('kendoNumericTextBox').value($('[name="Dias[0].Cantidad"]').val());
+            $("#cantidad").data("kendoNumericTextBox").trigger("change");
+        }
+    });
+}
+function ActualizarCantidad(cantidadDias) {
+    $(document).ready(function () {
+        for (var i=0; i < cantidadDias.length; i++) {
+            $('[name="Dias[' + i + '].Cantidad"]').data('kendoNumericTextBox').value(cantidadDias[i].Cantidad);
+        }
+    });
 }

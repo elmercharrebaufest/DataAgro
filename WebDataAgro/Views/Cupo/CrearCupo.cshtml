@@ -8,7 +8,7 @@
     BlockUi("Cargando...");
 </script>
 
-
+<h3 id="titulo">@ViewBag.Titulo</h3>
 <script src="~/Scripts/jquery.mask.js"></script>
 <script src="~/Scripts/App/CrearCupo.js"></script>
 
@@ -18,7 +18,7 @@
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
 }
-@if (Html.ViewData.ModelState.Any(x => x.Key == "CantidadCuposSAP") || (Model.Resultado != null && Model.Resultado.ListaCupos != null && Model.Resultado.ListaCupos.Count>0))
+@if (Html.ViewData.ModelState.Any(x => x.Key == "CantidadCuposSAP") || (Model.Resultado != null && Model.Resultado.ListaCupos != null && Model.Resultado.ListaCupos.Count > 0))
 {
     <script>
         var model = '@Html.Raw(Json.Encode(Model.Resultado.ListaCupos))';
@@ -36,15 +36,23 @@ else if (!Html.ViewData.ModelState.IsValid)
             @Html.ValidationSummary()
         </div>
     </div>
+    <script>
+        var cantidadDias = '@Html.Raw(Json.Encode(Model.Dias))';
+        ActualizarCantidad(JSON.parse(cantidadDias));
+    </script>
 }
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken();
     <div id="CrearCupo" class="container">
-
+        <div id="boton-carga-masiva" class="margen-15" hidden>
+            <span class="btnVarios" onclick="MostrarCarga()">
+                Carga Masiva
+            </span>
+        </div>
         <br />
         @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Siguientes)
         <div class="row">
             <div>
                 <div class="col-sm-2" id="proveedorLabelId">
@@ -162,6 +170,7 @@ else if (!Html.ViewData.ModelState.IsValid)
             @Html.ActionLink("Volver", "Index", null, new { @class = "formulario-footer-guardar-contrato k-button k-button-icontext" })
         </div>
     </div>
+
     <div class="modal fade" id="fleteProcedenciaModal" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -169,7 +178,6 @@ else if (!Html.ViewData.ModelState.IsValid)
                     <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h1 class="modal-title" id="reasignarFleteProcedencia"></h1>
                     <div class="status confirmado-modal">
                         <div>¿Desea reasignar un cupo con flete procedencia?</div>
                     </div>
@@ -182,6 +190,37 @@ else if (!Html.ViewData.ModelState.IsValid)
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="CargaCupos" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 class="modal-title" id="CargaCupos"></h1>
+                    <div class="status confirmado-modal">
+                        <div>Carga de Cupos</div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="carga-cupos-table" class="table table-striped">
+                            <tr>
+                                <th>Día</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="myBtn btn" id="cancelar-carga"  data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 <div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
@@ -207,4 +246,5 @@ else if (!Html.ViewData.ModelState.IsValid)
         </div>
     </div>
 </div>
+
 

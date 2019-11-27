@@ -5,7 +5,6 @@
 <script>
     var ProveedorId = '@ViewBag.ProveedorId';
     var MostrarAgenda = '@ViewBag.MostrarAgenda';
-    //var mostrarEditar = '@ViewBag.MostrarEditar';
 
     var extras = {};
     extras.AgendaCita = '@System.Configuration.ConfigurationManager.AppSettings["AgendaCita"]';
@@ -185,13 +184,13 @@
                         <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
                             Almacenamiento
                         </div>
-                        @if (ViewBag.MostrarEditar == true)
+                        @if (PermisosHelper.Is(PermisosDataAgro.AgendaComercial))
                         {
                             <div class="wizard-header-contenedor noCorredor" id="agenda">
                                 Agenda
                             </div>
                         }
-                        @if (ViewBag.MostrarEditar == true)
+                        @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosProveedor))
                         {
                             <div class="align-right wizardeditar">
                                 <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>

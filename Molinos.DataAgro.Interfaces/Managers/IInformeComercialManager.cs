@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Interfaces
 
         RptInformeComercialInfo GenerarInformeComercial(ParamInformeComercial informe,int InformeId);
 
-        List<ReportesList> ListarReportes(ParamReportesIC oParam);
+        List<ReportesList> ListarReportes(ParamReportesIC oParam, List<int> equipo);
 
         List<InformeList> TraerInformesGenerados() ;
 

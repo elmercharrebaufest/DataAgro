@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Business.Managers
 {
     public class ComprasManager : IComprasManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IComprasAgent oComprasAgent;
 
@@ -74,9 +74,9 @@ namespace Molinos.DataAgro.Business.Managers
         {            
             var histActual = repositorio.Listar<CampañaMaterialPorMes>();
             var campaniaMaterialActual = repositorio.Listar<CampañaMaterial>();
-            var proveedores = repositorio.Listar(x => new { x.ProveedorId, x.CUIT }, (Proveedor x) => true).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
-            var campanias = repositorio.Listar(x => new { x.CampañaId, x.Descripcion }, (Campaña x) => true).ToDictionary(x => x.Descripcion.ToUpper().Trim());
-            var materiales = repositorio.Listar(x => new { x.MaterialId, x.Codigo }, (Material x) => true).ToDictionary(x => x.Codigo.ToUpper().Trim());
+            var proveedores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto {ProveedorId= x.ProveedorId,CUIT= x.CUIT }).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
+            var campanias = repositorio.Listar<Campaña,CampañaDto>(x => new CampañaDto { CampañaId=x.CampañaId,Descripcion=x.Descripcion }).ToDictionary(x => x.Descripcion.ToUpper().Trim());
+            var materiales = repositorio.Listar<Material,MaterialBasicoDto>(x => new MaterialBasicoDto { MaterialId= x.MaterialId,Codigo= x.Codigo }).ToDictionary(x => x.Codigo.ToUpper().Trim());
             var campaniasMaterial = new List<CampañaMaterial>();
             var campaniaMaterialPorMes = new List<CampañaMaterialPorMes>();
             

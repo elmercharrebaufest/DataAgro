@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -9,7 +10,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ComercialId { get; set; }
         public string Apellido { get; set; }
         public string Nombres { get; set; }
-        public int PerfilId { get; set; }
+        public int? PerfilId { get; set; }
         public int? EmpleadorACargoId { get; set; }        
         public string IdActiveDirectory { get; set; }
         public int? GrupoDeComprasId { get; set; }        
@@ -22,6 +23,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial EmpleadorACargo { get; set; }
         [ForeignKey("GrupoDeComprasId")]
         public virtual GrupoDeCompras GrupoDeCompras { get; set; }
+
+        [InverseProperty("ComercialesAsociados")]
+        public virtual ICollection<Rol> RolesAsociados { get; set; }
 
         public Comercial()
         {

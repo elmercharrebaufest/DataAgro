@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Test.Controllers
             {
                 Material = new List<MaterialIni>
                  {
-                     new MaterialIni { Codigo = " ", Descripcion = " ", MaterialId = 1, CampaniaIdActual = 1}
+                     new MaterialIni { Codigo = "a", Descripcion = "a", MaterialId = 1, CampaniaIdActual = 1}
                  }
             });
 
@@ -314,7 +314,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerEstadio()
         {
-            estadioManagerMock.Setup(x => x.TraerTodoEstadioPorMaterial(1)).Returns(new List<EstadioDto>());
+            estadioManagerMock.Setup(x => x.TraerTodoEstadioPorMaterial(1)).Returns(new List<EstadioDto>() { new EstadioDto { Id=1,Descripcion="a",MaterialId=1} });
             var result = target.TraerEstadio(1) as JsonResult;
 
             Assert.NotNull(result);
@@ -322,7 +322,37 @@ namespace Molinos.DataAgro.Test.Controllers
 
             estadioManagerMock.Verify(x => x.TraerTodoEstadioPorMaterial(1), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Disabled\":false,\"Group\":null,\"Selected\":false,\"Text\":\"a\",\"Value\":\"1\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void TraerCampañaPorMaterialTest()
+        {
+            campañaManagerMock.Setup(x => x.TraerCampañaPorMaterial(1)).Returns(new List<CampañaDto>() { new CampañaDto { CampañaId = 1, Descripcion = "a" } });
+            var result = target.TraerCampañaPorMaterial(1) as JsonResult;
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            campañaManagerMock.Verify(x => x.TraerCampañaPorMaterial(1), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Disabled\":false,\"Group\":null,\"Selected\":false,\"Text\":\"a\",\"Value\":\"1\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void BuscaAvanceSiembraTest()
+        {
+            researchManagerMock.Setup(x => x.TraerAvanceSiembra(It.IsAny<KendoGridMvcRequest>()))
+                .Returns(new KendoGrid<ResearchAvanceSiembraDto>(new List<ResearchAvanceSiembraDto>(), 1));
+
+            var result = target.BuscaAvanceSiembra(It.IsAny<KendoGridMvcRequest>()) as JsonResult;
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            researchManagerMock.Verify(x => x.TraerAvanceSiembra(It.IsAny<KendoGridMvcRequest>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

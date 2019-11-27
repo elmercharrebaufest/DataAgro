@@ -556,3 +556,7 @@ function AddIncorectMessage(errores) {
 function BlockUi(mensaje) {
     $.blockUI({ blockMsgClass: 'alertBox', message: '<h3>' + mensaje +'</h3>' });
 }
+
+function ConvertirStringABool(valor) {
+    return valor == "True" ? true : valor == "False" ? false : valor;    
+}

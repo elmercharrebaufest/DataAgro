@@ -260,6 +260,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaId { get; set; }
         public DateTime FechaDesde { get; set; }
     }
+    public class RolCombo
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+
+        public bool Disabled { get; set; }
+    }
 }
 
 

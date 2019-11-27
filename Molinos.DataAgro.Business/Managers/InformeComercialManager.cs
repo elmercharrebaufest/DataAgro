@@ -385,14 +385,13 @@ namespace Molinos.DataAgro.Business
             return repositorio.SelStore<MaterialesModificacionInforme>("DataAgro_InformeComercial_TraerMaterialesAModificar", 0, InformeId);
         }
 
-        public List<ReportesList> ListarReportes(ParamReportesIC oParam)
+        public List<ReportesList> ListarReportes(ParamReportesIC oParam, List<int> equipo)
         {
-            return repositorio.SelStore<ReportesList>("DataAgro_InformeComercial_Reporte", 0, oParam.Cuit, oParam.ComercialID, oParam.ComercialIDGenerador, oParam.MaterialID, oParam.EstadoId);
+            return repositorio.SelStore<ReportesList>("DataAgro_InformeComercial_Reporte", 0, oParam.Cuit, oParam.ComercialID, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.MaterialID, oParam.EstadoId);
         }
 
         public List<InformeList> TraerInformesGenerados()
         {
-
             var list = repositorio.SelStore<InformeList>("DataAgro_InformeComercial_TraerExcelGeneracion", 0);
             list.ForEach(x => x.Materiales = x.Materiales.Replace("|", @"<br>"));
             return list;
@@ -438,14 +437,14 @@ namespace Molinos.DataAgro.Business
             {
                 var proveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == cuit, x => x.ProveedorId);
 
-                var Mat = repositorio.Obtener((Material x) => x.Codigo == Material, z => new { MateriaId = z.MaterialId, CampañaId = z.CampañaId });
+                var Mat = repositorio.Obtener<Material, CampaniaMaterialSAP>(x=>x.Codigo == Material, z => new CampaniaMaterialSAP { MaterialId = z.MaterialId, CampaniaId = z.CampañaId });
 
                 var oInformeComercialProduccionSave = repositorio.Obtener<InformeComercialProduccion>(x => x.InformeComercial.EstadoId == (int)EnumEstadoInforme.Enviado && x.InformeComercial.ProveedorId == proveedorId
-                    && x.InformeComercial.CampañaId == Mat.CampañaId && x.MaterialId == Mat.MateriaId);
+                    && x.InformeComercial.CampañaId == Mat.CampaniaId && x.MaterialId == Mat.MaterialId);
 
                 if (oInformeComercialProduccionSave == null)
                 {
-                    error.Errores.Add(new ErrorMessage($"No se encontro un informe comercial produccion con proveedor {proveedorId}, estado {(int)EnumEstadoInforme.Enviado}, campania {Mat.CampañaId}, material {Mat.MateriaId}"));
+                    error.Errores.Add(new ErrorMessage($"No se encontro un informe comercial produccion con proveedor {proveedorId}, estado {(int)EnumEstadoInforme.Enviado}, campania {Mat.CampaniaId}, material {Mat.MaterialId}"));
                     return error;
                 }
                 if (Respuesta.Length > 0)

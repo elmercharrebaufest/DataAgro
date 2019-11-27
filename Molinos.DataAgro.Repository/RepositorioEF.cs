@@ -44,7 +44,10 @@ namespace Molinos.DataAgro.Repository
         {
             return Set<TEntidad>().FirstOrDefault(filtro);
         }
-
+        public TEntidad ObtenerNoTracking<TEntidad>(Expression<Func<TEntidad, bool>> filtro) where TEntidad : class
+        {
+            return Set<TEntidad>().AsNoTracking().FirstOrDefault(filtro);
+        }
         public TEntidad Obtener<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, bool>> filtro) where TEntidad : class
         {
             IQueryable<TEntidad> resultado = Set<TEntidad>();

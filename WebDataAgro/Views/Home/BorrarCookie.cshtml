@@ -1,0 +1,12 @@
+﻿@section Scripts {
+    
+<script>
+    $(document).ready(function(){
+    $.ajax({
+            type: "GET",
+            url: "@Url.Action("BorrarCookies","Home")"
+        }).complete(function () {
+            window.location = "@Url.Action("Index","Home")"
+        });   })
+</script>
+}

@@ -166,7 +166,7 @@ namespace Molinos.DataAgro.Business
         {
             throw new NotImplementedException();
         }
-        public DatosIniComboContratoAcuerdo TraerDatosCombo(int perfilId)
+        public DatosIniComboContratoAcuerdo TraerDatosCombo()
         {
             var datosCombo = new DatosIniComboContratoAcuerdo
             {

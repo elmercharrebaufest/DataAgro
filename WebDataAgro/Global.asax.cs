@@ -65,7 +65,7 @@ namespace WebDataAgro
             GlobalVariables.Equipo = equipo.Equipo;
             GlobalVariables.EquipoReal = equipo.EquipoReal;
             GlobalVariables.ComercialId = comercialManager.ObtenerComercialId(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial((int)GlobalVariables.Perfil);
+            GlobalVariables.CorredoresComercial = comercialManager.ListarCorredoresComercial();
         }
 
 

@@ -14,13 +14,7 @@ $(document).ready(function () {
     CrearViewModel();
     
     InicializarBusquedaInicial();
-    AsignarBotones();
-    var idPerfil = $("#PerfilId").val();
-
-    if (idPerfil == 4 || idPerfil == 5) {
-        $("#Administrador").prop("checked", false);
-        $("#Administrador").prop("disabled", true);
-    }
+    AsignarBotones();    
 });
 
 function InicializarElementos() {

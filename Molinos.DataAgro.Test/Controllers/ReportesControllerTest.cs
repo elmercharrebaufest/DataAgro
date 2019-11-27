@@ -20,7 +20,6 @@ namespace Molinos.DataAgro.Test.Controllers
         private ReportesController target;
         private Mock<IHomeManager> homeManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
-        private Mock<IComercialManager> comercialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -29,17 +28,15 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             homeManagerMock = new Mock<IHomeManager>();
             reportesManagerMock = new Mock<IReportesManager>();
-            comercialManagerMock = new Mock<IComercialManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ReportesController(reportesManagerMock.Object, homeManagerMock.Object,comercialManagerMock.Object);
+            target = new ReportesController(reportesManagerMock.Object, homeManagerMock.Object);
         }
 
         [Test]
         public void IndexOk()
         {
-            comercialManagerMock.Setup(x => x.ComercialExiste(It.IsAny<string>())).Returns(true);
             var result = target.Index() as ViewResult;
 
             Assert.NotNull(result);
@@ -73,7 +70,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerComprasBarra(reportes)).Returns(new List<ResultComprasBarrasReportes>(){ new ResultComprasBarrasReportes() { MasCl100 = 1} });
+            reportesManagerMock.Setup(x => x.TraerComprasBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>(){ new ResultComprasBarrasReportes() { MasCl100 = 1} });
             var result = target.TraerDatosReporteComprasBarra(reportes);
 
             Assert.NotNull(result);
@@ -88,7 +85,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1 };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerObjetivosGauge(reportes)).Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes() { Cuit = "1" } });
+            reportesManagerMock.Setup(x => x.TraerObjetivosGauge(reportes, It.IsAny<List<int>>())).Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes() { Cuit = "1" } });
             var result = target.TraerDatosReporteObjetivoGauge(reportes);
 
             Assert.NotNull(result);
@@ -103,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "compras", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerComprasMapa(reportes)).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
+            reportesManagerMock.Setup(x => x.TraerComprasMapa(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -118,7 +115,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1,Indicadores = "compras", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerComprasTorta(reportes)).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1,Grano=1 } });
+            reportesManagerMock.Setup(x => x.TraerComprasTorta(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1,Grano=1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -133,7 +130,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "capacidadproductiva", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerCapacidadProductivaMapa(reportes)).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
+            reportesManagerMock.Setup(x => x.TraerCapacidadProductivaMapa(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -148,7 +145,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "capacidadproductiva", Grafico = "barras" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerCapacidadProductivaBarra(reportes)).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
+            reportesManagerMock.Setup(x => x.TraerCapacidadProductivaBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -163,7 +160,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "capacidadacopio", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioMapa(reportes)).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
+            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioMapa(reportes, It.IsAny<List<int>>())).Returns(new List<ResulIndicadores>() { new ResulIndicadores() { Cuit = 1, Grano = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -178,7 +175,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "capacidadacopio", Grafico = "barras" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioBarra(reportes)).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
+            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -193,7 +190,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "basededatos", Grafico = "torta" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioBarra(reportes)).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
+            reportesManagerMock.Setup(x => x.TraerCapacidadDeAcopioBarra(reportes, It.IsAny<List<int>>())).Returns(new List<ResultComprasBarrasReportes>() { new ResultComprasBarrasReportes() { MasCl1000 = 1 } });
             var result = target.TraerDatosReporteCompras(reportes);
 
             Assert.NotNull(result);
@@ -209,7 +206,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "basededatos", Grafico = "torta" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
-            reportesManagerMock.Setup(x => x.TraerDatosGrillaBD(reportes)).Returns(new BaseDeDatosReturn() { graficoBaseDatos = new List<graficoBaseDatos>() { new graficoBaseDatos() { segmentacion = "A", Toneladas = 100 } }, valoresGrilla = new List<valoresGrilla>() { new valoresGrilla() { Comercial = "A" } } });
+            reportesManagerMock.Setup(x => x.TraerDatosGrillaBD(reportes, It.IsAny<List<int>>())).Returns(new BaseDeDatosReturn() { graficoBaseDatos = new List<graficoBaseDatos>() { new graficoBaseDatos() { segmentacion = "A", Toneladas = 100 } }, valoresGrilla = new List<valoresGrilla>() { new valoresGrilla() { Comercial = "A" } } });
             var result = target.TraerDatosGrillaBD(reportes);
 
             Assert.NotNull(result);
@@ -226,13 +223,13 @@ namespace Molinos.DataAgro.Test.Controllers
             var reportes = new ParamReportes() { ComercialActual = 1, Indicadores = "compras", Grafico = "mapa" };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(1);
             reportesManagerMock.Setup(x => x.TransformarFiltros(reportes)).Returns(reportes);
-            reportesManagerMock.Setup(x => x.TraerComprasMapaExportacion(reportes)).Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini() { Cuit = "1", Comercial = "A" } });
+            reportesManagerMock.Setup(x => x.TraerComprasMapaExportacion(reportes, It.IsAny<List<int>>())).Returns(new List<ResultIndicadoresReportesmini>() { new ResultIndicadoresReportesmini() { Cuit = "1", Comercial = "A" } });
             var result = target.ExportarIndicadores(reportes) ;
             var model = result.Result as JsonResult;
             Assert.NotNull(result);
 
             reportesManagerMock.Verify(x => x.TransformarFiltros(It.IsAny<ParamReportes>()), Times.Once);
-            reportesManagerMock.Verify(x => x.TraerComprasMapaExportacion(It.IsAny<ParamReportes>()), Times.Once);
+            reportesManagerMock.Verify(x => x.TraerComprasMapaExportacion(It.IsAny<ParamReportes>(), It.IsAny<List<int>>()), Times.Once);
 
             Assert.IsTrue(((ReportesModel)model.Data).DownloadKey != "");
         }

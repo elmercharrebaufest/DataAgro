@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
@@ -101,7 +102,7 @@ namespace Molinos.DataAgro.Business
                 {
                     ComercialId = x.ComercialId,
                     Apellido = x.Apellido + " " + x.Nombres
-                }, c => c.Perfil.PerfilId != (int)EnumPerfil.Visualizador && c.Perfil.PerfilId != (int)EnumPerfil.Administrativo, 0, "Apellido");
+                }, c => c.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.ListaComercial)), 0, "Apellido");
             }
             catch (Exception ex)
             {
@@ -264,6 +265,11 @@ namespace Molinos.DataAgro.Business
         public List<ClasificacionCompraNet> GetClasificacionCombo()
         {
             return repositorio.Listar<ClasificacionCompraNet>().OrderBy(x => x.Descripcion).ToList();
+        }
+
+        public List<RolCombo> GetRolCombo()
+        {
+            return repositorio.Listar<Rol,RolCombo>(x => new RolCombo { Id= x.Id,  Descripcion = x.Descripcion}).OrderBy(x => x.Descripcion).ToList();
         }
 
     }

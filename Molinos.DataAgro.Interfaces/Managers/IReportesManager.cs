@@ -14,26 +14,26 @@ namespace Molinos.DataAgro.Interfaces
 
         DatosInicialesReportes TraerDatosIniciales(string idActiveDirectory);
 
-        BaseDeDatosReturn TraerDatosGrillaBD(ParamReportes oParamReportes);
+        BaseDeDatosReturn TraerDatosGrillaBD(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResulIndicadores> TraerComprasMapa(ParamReportes oParamReportes);
+        List<ResulIndicadores> TraerComprasMapa(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResulIndicadores> TraerComprasTorta(ParamReportes oParamReportes);
+        List<ResulIndicadores> TraerComprasTorta(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResultComprasBarrasReportes> TraerComprasBarra(ParamReportes oParamReportes);
+        List<ResultComprasBarrasReportes> TraerComprasBarra(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResulIndicadores> TraerCapacidadProductivaMapa(ParamReportes oParamReportes);
+        List<ResulIndicadores> TraerCapacidadProductivaMapa(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes);
+        List<ResultComprasBarrasReportes> TraerCapacidadProductivaBarra(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes);
+        List<ResulIndicadores> TraerCapacidadDeAcopioMapa(ParamReportes oParamReportes,List<int> equipo);
 
-        List<ResultComprasBarrasReportes> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes);
+        List<ResultComprasBarrasReportes> TraerCapacidadDeAcopioBarra(ParamReportes oParamReportes, List<int> equipo);
 
 
         #region Objetivos
-        List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes);
-        List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes);
+        List<ResultObjetivoGaugeReportes> TraerObjetivosGauge(ParamReportes oParamReportes, List<int> equipo);
+        List<ResultObjetivoGaugeReportes> TraerObjetivosGaugeExportacion(ParamReportes oParamReportes, List<int> equipo);
         #endregion
 
 
@@ -41,17 +41,17 @@ namespace Molinos.DataAgro.Interfaces
 
         ParamReportes TransformarFiltros(ParamReportes oParamReportes);
 
-        List<ResultIndicadoresReportesmini> TraerComprasMapaExportacion(ParamReportes oParamReportes);
+        List<ResultIndicadoresReportesmini> TraerComprasMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
 
-        List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes filtrosconvertidos);
+        List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
 
-        List<ResultComprasBarrasReportesmini> TraerComprasBarraExportacion(ParamReportes filtrosconvertidos);
+        List<ResultComprasBarrasReportesmini> TraerComprasBarraExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
 
-        List<ResultProduccionMapaReportes> TraerCapacidadProductivaMapaExportacion(ParamReportes filtrosconvertidos);
-        List<ResultProduccionBarraReportes> TraerCapacidadProductivaBarraExportacion(ParamReportes filtrosconvertidos);
+        List<ResultProduccionMapaReportes> TraerCapacidadProductivaMapaExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
+        List<ResultProduccionBarraReportes> TraerCapacidadProductivaBarraExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
 
-        List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes);
-        List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes);
+        List<ResultAcopioBarraReportes> TraerCapacidadDeAcopioBarraExportacion(ParamReportes oParamReportes, List<int> equipo);
+        List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
         List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
         ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
         List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);

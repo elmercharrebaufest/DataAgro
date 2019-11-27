@@ -263,6 +263,9 @@
     <Build Include="dbo\Tables\LimiteCupo.sql" />
     <Build Include="dbo\Tables\EstadoCupo.sql" />
     <Build Include="dbo\Tables\Configuracion.sql" />
+    <Build Include="dbo\Tables\Rol.sql" />
+    <Build Include="dbo\Tables\RolPermiso.sql" />
+    <Build Include="dbo\Tables\ComercialRol.sql" />
     <Build Include="dbo\Tables\ObjetivoComercial.sql" />
   </ItemGroup>
   <ItemGroup>

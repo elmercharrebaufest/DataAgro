@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void InicializarContratoAcuerdoTest()
         {
-            contratoAcuerdoManagerMock.Setup(x => x.TraerDatosCombo(It.IsAny<int>()))
+            contratoAcuerdoManagerMock.Setup(x => x.TraerDatosCombo())
                 .Returns(new DatosIniComboContratoAcuerdo { comercial = new List<ComercialQry>(), destino = new List<CentroQry>(), material = new List<MaterialQry>(), moneda = new List<MonedaQry>() });
             var result = target.InicializarContratoAcuerdo();
             var a = serializer.Serialize(result);

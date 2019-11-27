@@ -38,11 +38,28 @@ namespace Molinos.DataAgro.Test.Managers
         public void InsertarSISATest()
         {
             var fecha = new DateTime(2018, 10, 26);
-            var datos = new List<SISA>() { new SISA { Id = 1, Categoria = "A", CBU = "1", CodCategoria = 1, CUIT = "1", EstadoCuit = 1, FechaActCBU = fecha, FechaGeneracion = fecha, FechaNotifDFECategoria = fecha, FechaNotifDFEEstado = fecha, FechaVigenciaCategoria = fecha, FechaVigenciaEstado = fecha, Observaciones = "", RazonSocial = "A", SituacionCategoria = "A" } };
-            repositorioMock.Setup(x => x.Listar<SISA>(null, 0, null, Entities.Helpers.DirOrden.Asc)).Returns( datos);
-            var result = target.InsertarSISA(datos, new List<SISA>());
+            var datos = new List<SISA>() { 
+                new SISA { 
+                    Id = 1, 
+                    Categoria = "A", 
+                    CBU = "1", 
+                    CodCategoria = 1, CUIT = "1", EstadoCuit = 1, FechaActCBU = fecha, FechaGeneracion = fecha, 
+                    FechaNotifDFECategoria = fecha, FechaNotifDFEEstado = fecha, FechaVigenciaCategoria = fecha, FechaVigenciaEstado = fecha,
+                    Observaciones = "", RazonSocial = "A", SituacionCategoria = "A" } };
+
+            repositorioMock.Setup(x => x.Listar<SISA>(null, 0, null, Entities.Helpers.DirOrden.Asc)).Returns(datos);
+            var result = target.InsertarSISA(new List<SISA>(), new List<SISA>() { new SISA {
+                CUIT = "1",
+                CodCategoria = 1,
+                FechaVigenciaCategoria = DateTime.Now.AddDays(1),
+                SituacionCategoria="A",
+                FechaVigenciaEstado= DateTime.Now.AddDays(1),
+                EstadoCuit=1
+            }});
 
             repositorioMock.Verify(x => x.Listar<SISA>(null, 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
+            repositorioMock.Verify(x => x.RemoverTodos<SISA>(It.IsAny<Expression<Func<SISA,bool>>>()), Times.Once);
+            repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SISA>>(), It.IsAny<List<KeyValuePair<string,string>>>()), Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(1, result);
         }

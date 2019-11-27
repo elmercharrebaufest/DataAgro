@@ -1,45 +1,41 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro, PermisosDataAgro.ConfiguracionUsuarios)]
     public class ComercialController : Controller
     {
         private IComercialManager mobjComercialManager;
-
+        private IRolManager mobjRolManager;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ComercialController(IComercialManager oComercialManager)
+        public ComercialController(IComercialManager oComercialManager, IRolManager mobjRolManager)
         {
             mobjComercialManager = oComercialManager;
+            this.mobjRolManager = mobjRolManager;
         }
 
         //-----------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------
 
+        [Autorizacion(PermisosDataAgro.ConfiguracionUsuarios)]
         public ActionResult Index()
         {
-            string ActionView = "";
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            } else if (!mobjComercialManager.ComercialExiste(GlobalVariables.IdActiveDirectory))
-            {
-                ActionView = "ErrorDePermisos";
-            }
-
-            return View(ActionView);
+            return View();
         }
 
         public ActionResult Inicializar()
@@ -87,21 +83,22 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Aplicar(AbmComercialParam oParam)
         {
+            var comercial = mobjComercialManager.TraerComercial(oParam.ComercialId);
             return new JsonResult()
             {
                 Data = new AbmComercialCrearResult
                 {
-                    Comercial = mobjComercialManager.TraerComercial(oParam.ComercialId)
+                    Comercial = comercial
                 },
                 MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public ActionResult Grabar(Comercial oComercial)
+        public ActionResult Grabar(Comercial oComercial, List<Rol> roles)
         {
             var model = new AbmComercialResult();
-
-            var entityErrors = mobjComercialManager.GrabarComercial(oComercial);
+            
+            var entityErrors = mobjComercialManager.GrabarComercial(oComercial, roles);
 
             model.Errores = entityErrors.Errores;
             if (model.HayError)
@@ -124,7 +121,19 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        private void FillViewBag()
+        {
 
+            var rol = mobjRolManager.TraerTodoRoles();
+            var rolesListItems = rol.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Id.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Rol = rolesListItems;
+        }
         public ActionResult Cancelar()
         {
             var model = new AbmComercialResult();
@@ -134,8 +143,7 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-        }
+        }       
     }
 }
-
 

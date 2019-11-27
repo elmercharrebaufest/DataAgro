@@ -1,5 +1,25 @@
 ﻿var viewModel;
+function Rol(id, descripcion) {
+    if ($.isNumeric(parseInt(id))) {
+        this.Id = id;
+        this.Descripcion = descripcion;
+    } else {
+        //id trae el objeto que ya existia
+        this.Id = id.Id;
+        this.Descripcion = id.Descripcion;
+    }
+    this.removeRol = function () {
+        viewModel.RolesSeleccionados.remove(this);
 
+        var select = $("#RolId").data("kendoDropDownList");
+        for (var i = 0; i <= select.dataSource.data().length; i++) {
+            var option = $("#RolId").data("kendoDropDownList").dataItem(i);
+            if (option.Id == this.Id) {
+                option.set("Disabled", false);
+            }
+        }
+    }
+}
 var datosIniAbmCentro;
 
 $(document).ready(function () {
@@ -16,13 +36,6 @@ $(document).ready(function () {
     AsignarBotones();
 
     InicializarCombos();
-
-    var idPerfil = $("#PerfilId").val();
-
-    if (idPerfil == 4 || idPerfil == 5) {
-        $("#Administrador").prop("checked", false);
-        $("#Administrador").prop("disabled", true);
-    }
 });
 
 function InicializarElementos() {
@@ -56,6 +69,8 @@ function InicializarElementos() {
         }
     });
 
+
+
     $("#EmpleadorACargo").kendoDropDownList({
         dataTextField: "Apellido",
         dataValueField: "ComercialId",
@@ -64,6 +79,25 @@ function InicializarElementos() {
     $("#EmpleadorACargo").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             $("#EmpleadorACargo").data("kendoDropDownList").text("");
+        }
+    });
+
+    $("#RolId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        optionLabel: "Seleccione el Rol...",
+        select: function (e) {
+            if (e.dataItem.Disabled) {
+                e.preventDefault();
+            }
+        },
+        template: kendo.template($("#template").html())
+
+    });
+
+    $("#RolId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#RolId").data("kendoDropDownList").text("");
         }
     });
 
@@ -97,7 +131,7 @@ function CrearResultadosDataSource(datos) {
                     ComercialId: { type: "number", editable: false },
                     Apellido: { type: "string", editable: false },
                     Nombres: { type: "string", editable: false },
-                    PerDescripcion: { type: "string", editable: false },
+                    Roles: { type: "string", editable: false },
                 }
             }
         },
@@ -111,7 +145,7 @@ function CreateGridCentro() {
         columns: [
             { field: "Apellido", title: "Apellido" },
             { field: "Nombres", title: "Nombres" },
-            { field: "PerDescripcion", title: "Perfil" },
+            { field: "Rol", title: "Roles" }
         ],
 
         sortable: true,
@@ -179,18 +213,33 @@ function CrearViewModel() {
 
         isReadOnly: true,
         isFilterDisabled: true,
-        isControlDisabled: false,
         isModifyDisabled: false,
         isAddNewDisabled: true,
         isDeleteDisabled: true,
 
         PerfilCombo: [],
         ComercialCombo: [],
+        RolCombo: [],
+        RolesSeleccionados: [],
         Comercial: null,
+
+        addRol: function () {
+            if ($('#RolId option:selected').text() != "Seleccione el Rol...") {
+                this.RolesSeleccionados.push(new Rol($('#RolId option:selected').val(), $('#RolId option:selected').text()));
+                
+                var option = $("#RolId").data("kendoDropDownList").dataItem();
+                option.set("Disabled", true);
+
+                //.Disabled = true;
+
+                $("#RolId").data("kendoDropDownList").value("");
+            }
+        }
     });
 
     kendo.bind($("#Abm"), viewModel);
 }
+
 
 function InicializarCombos() {
     var funcReturn = function (data) {
@@ -210,6 +259,7 @@ function InicializarCombos() {
 function AsignarCombos() {
     viewModel.set("PerfilCombo", datosIniAbmCentro.Datos.Perfil);
     viewModel.set("ComercialCombo", datosIniAbmCentro.Datos.Comercial);
+    viewModel.set("RolCombo", datosIniAbmCentro.Datos.Rol);
 }
 
 function InicializarBusquedaInicial() {
@@ -268,13 +318,34 @@ function UpdateViewModel(model) {
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         "Administrador": model.Comercial.Administrador,
-        "Cupera":model.Comercial.Cupera
+        "Cupera": model.Comercial.Cupera
+        
     };
-
+    
     viewModel.set("Comercial", comercial);
-
+    viewModel.set("RolesSeleccionados", []);
     viewModel.Comercial.PerfilId = $("#PerfilId").data("kendoDropDownList").dataItem();
     viewModel.Comercial.EmpleadorACargo = $("#EmpleadorACargo").data("kendoDropDownList").dataItem();
+
+    var select = $("#RolId").data("kendoDropDownList");
+    
+    if (model.Comercial.RolesAsociados != null) {
+        for (var i = 0; i < model.Comercial.RolesAsociados.length; i++) {
+            viewModel.RolesSeleccionados.push(new Rol(model.Comercial.RolesAsociados[i].Id, model.Comercial.RolesAsociados[i].Descripcion));
+
+            for (var j = 1; j <= select.dataSource.data().length; j++) {
+                var option = $("#RolId").data("kendoDropDownList").dataItem(j);
+                if (option.Id == model.Comercial.RolesAsociados[i].Id) {
+                    option.set("Disabled", true);
+                }
+            }
+        }
+    } else {
+        for (var j = 1; j <= select.dataSource.data().length; j++) {
+            var option = $("#RolId").data("kendoDropDownList").dataItem(j);
+            option.set("Disabled", false);
+        }
+    }
 }
 
 function LimpiarValidaciones() {
@@ -397,7 +468,6 @@ function EjecutarEliminar() {
             ShowTooltipMessages("err", result.Errores);
         }
         else {
-            UpdateViewModel(result);
             LimpiarValidaciones();
             HabilitarInicio();
             InicializarBusquedaInicial();
@@ -430,13 +500,15 @@ function Grabar() {
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
         "Administrador": viewModel.get("Comercial.Administrador"),
         "Cupera": viewModel.get("Comercial.Cupera")
+        
     };
 
-    var result = MSExecuteOnServer('/Comercial/Grabar', datos);
+    var result = MSExecuteOnServer('/Comercial/Grabar', { oComercial: datos, roles: viewModel.RolesSeleccionados });
 
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
-            ShowTooltipMessages("err", result.Errores);
+            //ShowTooltipMessages("err", result.Errores);
+            MensErr(result.Errores[0].Message);
         }
         else {
             UpdateViewModel(result);

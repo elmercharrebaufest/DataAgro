@@ -1,31 +1,22 @@
-﻿using KendoGridBinder;
-using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Interfaces;
+﻿using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using WebDataAgro.Models;
-using static WebDataAgro.MvcApplication;
+using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ReporteResearchController : Controller
     {
         private readonly IResearchManager oResearchManager;
-        private readonly IMaterialManager oMaterialManager;
-        public ReporteResearchController(IResearchManager oResearchManager, IMaterialManager oMaterialManager)
+        public ReporteResearchController(IResearchManager oResearchManager)
         {
             this.oResearchManager = oResearchManager;
-            this.oMaterialManager = oMaterialManager;
         }
         // GET: ResearchAvanceSiembra
+        [Autorizacion(PermisosDataAgro.ReporteResearch)]
         public ActionResult Index()
         {
             return View();

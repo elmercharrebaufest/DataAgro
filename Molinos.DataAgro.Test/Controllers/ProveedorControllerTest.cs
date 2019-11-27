@@ -104,7 +104,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
 
             comercialManagerMock.Setup(x => x.ComercialExiste(GlobalVariables.IdActiveDirectory)).Returns(true);
-            comercialManagerMock.Setup(x => x.ComercialPerteneceProveedor(GlobalVariables.Equipo, 1, (int)GlobalVariables.Perfil, GlobalVariables.CorredoresComercial)).Returns(true);
+            comercialManagerMock.Setup(x => x.ComercialPerteneceProveedor(GlobalVariables.Equipo, 1, GlobalVariables.CorredoresComercial)).Returns(true);
             var result = target.Detalle(1, null);
             Assert.NotNull(result);
         }

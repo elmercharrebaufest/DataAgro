@@ -1,16 +1,19 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class AgendaController : Controller
     {
         private IAgendaManager mobjAgendaManager;
@@ -19,13 +22,10 @@ namespace WebDataAgro.Controllers
         public AgendaController(IAgendaManager oAgendaManager, IReportesManager reportesManager)
         {
             mobjAgendaManager = oAgendaManager;
-            this.reportesManager = reportesManager;
-            if (GlobalVariables.Perfil == EnumPerfil.Administrativo || GlobalVariables.Perfil == EnumPerfil.Visualizador)
-            {
-                ViewBag.edita = false;
-            }
+            this.reportesManager = reportesManager;            
         }
         
+        [Autorizacion( PermisosDataAgro.VisualizarReporteAgenda)]
         public ActionResult Index()
         {
             return View();

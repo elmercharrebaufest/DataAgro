@@ -1,22 +1,20 @@
-﻿using Autofac.Extras.NLog;
-using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
+﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using WebDataAgro.Core;
+using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class ConfiguracionCupoController : Controller
     {
         private readonly ICentroManager centroManager;
@@ -40,10 +38,10 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         // Metodos Publicos
         //-----------------------------------------------------
+        [Autorizacion(PermisosDataAgro.AdministracionCupos)]
         public ActionResult Index()
         {
-            ViewBag.perfil = GlobalVariables.Perfil.DisplayEnum();
-            ViewBag.cupera = GlobalVariables.EsCupera;
+
             ViewBag.comercialId = GlobalVariables.ComercialId;
             CargarViewBag();
             return View();
