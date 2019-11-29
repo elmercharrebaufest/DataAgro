@@ -51,7 +51,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     EstadoCupo = cupo.EstadoCupo.Descripcion,
                     MensajeError = cupo.ErrorStop,
                     Acopio = cupo.Centro.Acopio,
-
+                    Fecha= SqlFunctions.DateName("day", cupo.FechaIngreso) + "/" + SqlFunctions.DatePart("month", cupo.FechaIngreso) + "/" + SqlFunctions.DateName("year", cupo.FechaIngreso),
+                    Hora = SqlFunctions.DateName("hh", cupo.FechaGeneracion) + ":" + SqlFunctions.DateName("mi", cupo.FechaGeneracion),
                 };
 
             return new KendoGrid<CupoDto>(request, queryContratos);

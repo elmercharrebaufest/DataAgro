@@ -11,6 +11,7 @@
     var creaNegocios = PermisosHelper.Is(PermisosDataAgro.NuevoNegocios) || PermisosHelper.Is(PermisosDataAgro.NuevoNegocioCorredor);
     var modificaNegocios = PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegocioCorredor);
     var eliminaNegocios = PermisosHelper.Is(PermisosDataAgro.RechazarNegocios);
+    var confirmaNegocios = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocio);
     var ampliaNegocios = PermisosHelper.Is(PermisosDataAgro.AmpliarNegocios) || PermisosHelper.Is(PermisosDataAgro.AmpliarNegocioCorredor);
     var finalizaNegocios = PermisosHelper.Is(PermisosDataAgro.FinalizarNegocios);
     var verMesa = PermisosHelper.Is(PermisosDataAgro.VerMesa);
@@ -19,6 +20,7 @@
     comercialId = '@ViewBag.comercialId';
     creaNegocios= '@creaNegocios';
     modificaNegocios ='@modificaNegocios';
+    confirmaNegocios ='@confirmaNegocios';
     eliminaNegocios = '@eliminaNegocios';
     ampliaNegocios = '@ampliaNegocios';
     finalizaNegocios = '@finalizaNegocios';

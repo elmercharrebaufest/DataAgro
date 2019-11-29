@@ -231,6 +231,9 @@
   <data name="Configuracion_Zona_Girasol" xml:space="preserve">
     <value>Configuración Zona Girasol</value>
   </data>
+  <data name="Confirmar_Negocio" xml:space="preserve">
+    <value>Confirmar Negocios</value>
+  </data>
   <data name="Consignatario" xml:space="preserve">
     <value>Consignatario</value>
   </data>

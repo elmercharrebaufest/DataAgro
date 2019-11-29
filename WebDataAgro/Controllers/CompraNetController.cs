@@ -161,6 +161,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
         public ActionResult ConfirmarContrato(int contratoId)
         {
             return new JsonResult()
@@ -215,6 +216,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
         public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()

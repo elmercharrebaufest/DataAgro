@@ -403,6 +403,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios.
+        /// </summary>
+        public static string Confirmar_Negocio {
+            get {
+                return ResourceManager.GetString("Confirmar_Negocio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Consignatario.
         /// </summary>
         public static string Consignatario {

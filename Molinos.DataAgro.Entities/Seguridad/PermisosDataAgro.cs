@@ -75,6 +75,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerMesa = 309,
         [Display(ResourceType = typeof(Text), Name = "Mail_Hedge")]
         MailHedge = 310,
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_Negocio")]
+        ConfirmarNegocio = 311,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Proveedor")]

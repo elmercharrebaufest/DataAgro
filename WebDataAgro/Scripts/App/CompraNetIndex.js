@@ -4,6 +4,7 @@ var filasSeleccionadas = {};
 var comercialId;
 var creaNegocios;
 var modificaNegocios;
+var confirmaNegocios;
 var eliminaNegocios;
 var finalizaNegocios;
 var ampliaNegocios;
@@ -15,6 +16,7 @@ $(document).ready(function () {
     modificaNegocios = ConvertirStringABool(modificaNegocios);
     eliminaNegocios = ConvertirStringABool(eliminaNegocios);
     finalizaNegocios = ConvertirStringABool(finalizaNegocios);
+    confirmaNegocios = ConvertirStringABool(confirmaNegocios);
     ampliaNegocios = ConvertirStringABool(ampliaNegocios);
     verMesa = ConvertirStringABool(verMesa);
     kendo.culture("es-AR");
@@ -129,14 +131,18 @@ function botonPendiente(dataItem, icono) {
 }
 
 function botonConfirmadoTilde(dataItem, icono) {
+    if (confirmaNegocios) {
+        return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTilde(' +
+            "'" + dataItem.Estado + "'" + ',' +
+            "'" + dataItem.ContratoId + "'" + ',' +
+            "'" + dataItem.ContratoSAP + "'" + ',' +
+            "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
+            "'" + dataItem.TipoNegocioId + "'" +
+            ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
+    } else {
+        return "<div</div>";
+    }
     
-    return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTilde(' +
-        "'" + dataItem.Estado + "'" + ',' +
-        "'" + dataItem.ContratoId + "'" + ',' +
-        "'" + dataItem.ContratoSAP + "'" + ',' +
-        "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-        "'" + dataItem.TipoNegocioId + "'" +
-        ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
 function botonFinalizado(dataItem, icono) {

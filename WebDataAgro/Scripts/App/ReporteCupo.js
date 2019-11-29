@@ -60,9 +60,8 @@ function InicializarCuposIndex() {
             }
         },
         columns: [            
-            { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
-
-            { field: "FechaGeneracion", title: "Hora", type: "date", width: 150, format: "{0:HH:mm}" },
+            { field: "Fecha", title: "Ingreso", type: "date", width: 150 },
+            { field: "Hora", title: "Hora", type: "date", width: 150 },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
             { field: "Proveedor", type: "string", width: 150, filterable: { ui: createMultiSelectProveedor } },
@@ -146,20 +145,13 @@ function InicializarCuposIndex() {
         },
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var formatHora = kendo.template(this.columns[1].format);
             var templateFlete = kendo.template(this.columns[9].template);
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                var dataItem = {
-                    Hora: row.cells[1].value,
-                    Flete: row.cells[9].value
-                };
+                var dataItem = { FleteProcedencia: row.cells[9].value };
 
-
-                row.cells[1].format = "hh:mm";
                 row.cells[9].value = templateFlete(dataItem);
-
             }
         },
         filterable: {
