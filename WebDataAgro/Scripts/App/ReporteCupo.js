@@ -60,7 +60,7 @@ function InicializarCuposIndex() {
             }
         },
         columns: [            
-            { field: "Fecha", title: "Ingreso", type: "date", width: 150 },
+            { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "Hora", title: "Hora", type: "date", width: 150 },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
@@ -151,7 +151,15 @@ function InicializarCuposIndex() {
 
                 var dataItem = { FleteProcedencia: row.cells[9].value };
 
-                row.cells[9].value = templateFlete(dataItem);
+                var fecha = row.cells[0].value;
+
+                if (fecha != null) {
+
+                    fecha.setHours(fecha.getHours() + 1);
+                    fecha.setHours(0,0,0,0); 
+                    row.cells[0].value = fecha;
+                }
+                row.cells[9].value = templateFlete(dataItem); 
             }
         },
         filterable: {
