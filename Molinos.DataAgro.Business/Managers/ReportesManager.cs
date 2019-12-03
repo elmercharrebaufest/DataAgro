@@ -645,7 +645,7 @@ namespace Molinos.DataAgro.Business.Managers
             var standard = calidad.HasValue ? calidad.Value : 1;
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
-            var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1);
+            var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
             var posicionKilos = new List<PosicionKilos>();
             var contratos = repositorio.Listar<Contrato, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
@@ -682,10 +682,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
-                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion <= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
-                cont.TipoNegocioId == 2 && ((fechaPosicion <= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion > posicion ? EnumClasificacionNegocio.ForwardAFijar :
-                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion > posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
+                cont.TipoNegocioId == 2 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
+                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
