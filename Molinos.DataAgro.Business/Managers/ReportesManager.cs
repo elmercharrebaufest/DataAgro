@@ -682,10 +682,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 }
-                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
-                cont.TipoNegocioId == 2 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
-                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion <= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
+                cont.TipoNegocioId == 2 && ((fechaPosicion <= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion > posicion ? EnumClasificacionNegocio.ForwardAFijar :
+                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion > posicion ? EnumClasificacionNegocio.ForwardAPrecio :
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
