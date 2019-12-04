@@ -102,7 +102,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
-            if (PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
+            if (!PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 5));
