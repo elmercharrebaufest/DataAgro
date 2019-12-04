@@ -16,8 +16,7 @@ $(document).ready(function() {
     AsignarBotones();
     InicializarCombos();
     InicializarBusquedaInicial();
-
-    }
+  
 });
 
 function InicializarElementos() {

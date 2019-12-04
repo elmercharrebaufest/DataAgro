@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Resources;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -73,7 +74,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             //var query = repositorio.SelStore<FakeHome>("DataAgro_Comercial_TraerPorComerciales", 0, ComercialId);
             //Datos.come = query.Select(s => new ComercialQry() { ComercialId = s.Id, IdActiveDirectory = s.Nombre }).ToList();
-            var equipo = oComercial.ListarEquipo(idActiveDirectory).EquipoReal;
+            var lista = oComercial.ListarEquipo(idActiveDirectory);
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? lista.Equipo: lista.EquipoReal;
             equipo.ForEach(x => Datos.come.Add(repositorio.Obtener<Comercial, ComercialQry>(y => y.ComercialId == x, y => new ComercialQry { ComercialId = x, Nombre = y.Apellido + " " + y.Nombres })));
 
             Datos.mat = repositorio.Listar<Material, MaterialesQry>(x => new MaterialesQry

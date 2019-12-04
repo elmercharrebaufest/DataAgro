@@ -484,7 +484,10 @@
     <value>Ver Todo Comercial</value>
   </data>
   <data name="Ver_Todos_Negocios" xml:space="preserve">
-    <value>Ver Todos los Negocios</value>
+    <value>Ver Todos los Negocios CompraNet</value>
+  </data>
+  <data name="Ver_Todos_Tipos_Negocios" xml:space="preserve">
+    <value>Ver Todos los Tipos de Negocios CompraNet</value>
   </data>
   <data name="Visualizar_CompraNet" xml:space="preserve">
     <value>Visualizar CompraNet</value>

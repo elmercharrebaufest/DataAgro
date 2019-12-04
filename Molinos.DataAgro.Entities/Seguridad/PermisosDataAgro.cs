@@ -49,8 +49,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NotificacionesMailJerarquia = 209,        
         [Display(ResourceType = typeof(Text), Name = "Mail_SIO")]
         MailSio = 210,
-        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
-        VerTodosNegocios = 211,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Tipos_Negocios")]
+        VerTodosTiposNegocios = 211,
         [Display(ResourceType = typeof(Text), Name = "Lista_Comercial")]
         ListaComercial = 212 ,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CompraNet")]
@@ -77,6 +77,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         MailHedge = 310,
         [Display(ResourceType = typeof(Text), Name = "Confirmar_Negocio")]
         ConfirmarNegocio = 311,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
+        VerTodosNegocios = 312,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Proveedor")]

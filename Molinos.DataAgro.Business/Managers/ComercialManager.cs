@@ -258,9 +258,9 @@ namespace Molinos.DataAgro.Business
             var comercialId = repositorio.Obtener<Comercial,int>(x => x.IdActiveDirectory == idActiveDirectory,x=>x.ComercialId);
             var resultado = new EquipoDto
             {
-                EquipoReal = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ? ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)))
+                Equipo = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ? ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)))
             };
-            resultado.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? comerciales.Select(x => x.ComercialId).ToList() : resultado.EquipoReal;
+            resultado.EquipoReal = comerciales.Select(x => x.ComercialId).ToList();
 
             return resultado;
         }

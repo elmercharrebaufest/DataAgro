@@ -1159,11 +1159,20 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ver Todos los Negocios.
+        ///   Looks up a localized string similar to Ver Todos los Negocios CompraNet.
         /// </summary>
         public static string Ver_Todos_Negocios {
             get {
                 return ResourceManager.GetString("Ver_Todos_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver Todos los Tipos de Negocios CompraNet.
+        /// </summary>
+        public static string Ver_Todos_Tipos_Negocios {
+            get {
+                return ResourceManager.GetString("Ver_Todos_Tipos_Negocios", resourceCulture);
             }
         }
         
