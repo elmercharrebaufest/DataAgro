@@ -389,7 +389,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var corredoresComerciales = mobComercial.ListarComercialesCorredor();
                     corredoresComerciales.Remove(oContrato.Comercial);
-
+                    logger.Debug("Enviando mail a " + string.Join(", ",corredoresComerciales));
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try

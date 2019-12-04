@@ -161,7 +161,7 @@ function cuposCreados(error, lista) {
             $("#error-modal").show();
         }
 
-        $("#cupos-generados-modal").html(lista.join(", "));
+        $("#cupos-generados-modal").html(lista.join("</br>"));
         $('#resultadoCupo').modal('toggle');
 
         $(".modal").on("hidden.bs.modal", function () {
@@ -180,7 +180,7 @@ function makeUL(array) {
 }
 
 function copiarGenerados() {
-    var listaCupos = $("#cupos-generados-modal").html().split(/[, ]/g).filter(e => e.trim().length > 0).join("\n");
+    var listaCupos = $("#cupos-generados-modal").html().replace(/<br>/g, "\n");
     var copy = function (e) {
         e.preventDefault();
         console.log('copy');

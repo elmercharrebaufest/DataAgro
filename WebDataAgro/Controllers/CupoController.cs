@@ -60,7 +60,7 @@ namespace WebDataAgro.Controllers
                 ViewBag.Titulo = "Nuevo Cupo";
                 int zona;
                 int.TryParse(ViewBag.ZonaSeleccionada, out zona);
-                return View(new CupoModel() { CantidadCupos = null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date });
+                return View(new CupoModel() { CantidadCupos = null, MaterialId = 3, ZonaId = zona, FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date, CalidadId = 2 });
             }
             else
             {
@@ -190,7 +190,7 @@ namespace WebDataAgro.Controllers
             ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
             
             ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
-                new SelectListItem { Text = "Fabrica", Value = "2",Selected =false } };
+                new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
         }
         private Cupo TransformarAEntidad(CupoModel cupo)
         {

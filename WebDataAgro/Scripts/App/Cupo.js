@@ -405,13 +405,17 @@ function Retransmitir(listaCupos) {
             a.push(listaCupos[i]);
         }
     }
-    var result = MSExecuteOnServer('/Cupo/TransmitirCupos', { cupos: a });
+    if (a.length > 0) {
+        var result = MSExecuteOnServer('/Cupo/TransmitirCupos', { cupos: a });
 
-    if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
-        MensErr(result.Errores[0].Message);
-    }
-    else {
-        recargarGrilla();
+        if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
+        }
+        else {
+            recargarGrilla();
+        }
+    } else {
+        MensErr("Seleccione cupos válidos");
     }
 }
 

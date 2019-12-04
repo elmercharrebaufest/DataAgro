@@ -252,8 +252,13 @@ div > label {
 #cupos-generados-modal {
     max-height: 240px;
     overflow-y: auto;
+    text-align: center;
 }
-
+@media screen and (min-width: 768px) {
+    #resultadoCupo .modal-dialog {
+        width: 500px;
+    }
+}
 .margen-15{
     margin:15px;
 }
