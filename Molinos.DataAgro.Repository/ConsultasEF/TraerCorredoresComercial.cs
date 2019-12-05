@@ -9,14 +9,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerCorredoresComercial : IConsulta<Contactos>
     {
-        private readonly List<int> idComerciales;
-
-        public TraerCorredoresComercial(List<int> idComerciales)
+        public TraerCorredoresComercial()
         {
-            this.idComerciales = idComerciales;
         }
 
-        private static List<Contactos> Query(DbContext contexto, List<int> idComerciales)
+        private static List<Contactos> Query(DbContext contexto)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
@@ -26,7 +23,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId into estados
                 from ests in estados.DefaultIfEmpty()
-                where idComerciales.Contains(pCom.ComercialId)||prove.SegmentacionId==5 || prove.SegmentacionId == 7
+                where prove.SegmentacionId==5 || prove.SegmentacionId == 7
                 group prove by prove into provs
                 select new Contactos
                 {
@@ -60,7 +57,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, idComerciales);
+                return Query(contexto);
             }
         }
     }

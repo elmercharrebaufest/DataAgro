@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":{\"Nombre\":\"A\",\"Materiales\":[{\"Nombre\":\"a\",\"Toneladas\":12,\"Campaña\":\"17-18\"}]},\"Objetivo\":null,\"Datos\":{\"mat\":[],\"camp\":[],\"segm\":[],\"tipoact\":[],\"est\":[],\"cond\":[],\"come\":[],\"zona\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":null,\"Objetivo\":null,\"Datos\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);        
         }
 

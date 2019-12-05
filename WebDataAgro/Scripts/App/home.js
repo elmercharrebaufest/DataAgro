@@ -959,7 +959,7 @@ function CrearObjetivo() {
     });
 }
 function CargarViewModel(datos) {
-    var campania = datos.camp.filter(camp => camp.CampañaId > 6);
+    var campania = datos.camp.filter(function (camp) { return camp.CampañaId > 6; });
     viewModel.set("materialCombo", datos.mat);
     viewModel.set("campaniaCombo", campania);
 }
@@ -999,7 +999,7 @@ function AlertaObjetivoBorrar(e) {
 }
 
 function EliminarObjetivo(id) {
-    var res = MSExecuteOnServer('/Home/EliminarObjetivo', { id });
+    var res = MSExecuteOnServer('/Home/EliminarObjetivo', { id:id });
 
     if (res != null) {
         if (ExistsErrorMessages(res.Errores)) {

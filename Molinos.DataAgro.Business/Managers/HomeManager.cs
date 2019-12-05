@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var re = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(equipo)));
+                var re = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial()));
                 res.Contactos.AddRange(re);
             }
 
@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial(equipo)));
+                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial()));
                 res.TotalContactos = cuenta.Count();
                 res.TotalPotencialContactos = cuenta.Count(x => x.Estado == "Cliente Potencial");
                 res.TotalOperandoContactos = cuenta.Count(x => x.Estado == "Operando");
@@ -389,14 +389,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
-        public ResultIniContacto TraerBusquedaContactoCorredores(List<int> comercialesId)
-        {
-            var lista = repositorio.ListarConsulta(new TraerCorredoresComercial(comercialesId));
-            return null;
-        }
-
-
+        
     }
 
 

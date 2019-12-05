@@ -27,6 +27,5 @@ namespace Molinos.DataAgro.Interfaces
 
         GrabarPostItResult GuardarPostIt(PostIt post);
 
-        ResultIniContacto TraerBusquedaContactoCorredores(List<int> comercialesId);
     }
 }
