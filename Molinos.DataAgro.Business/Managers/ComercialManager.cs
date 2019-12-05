@@ -259,8 +259,8 @@ namespace Molinos.DataAgro.Business
             var resultado = new EquipoDto
             {
                 Equipo = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ? 
-                (PermisosHelper.Is(PermisosDataAgro.VerJerarquia)|| PermisosHelper.Is(PermisosDataAgro.VerTodos) ?
-                ListarEquipo(comercialId, comerciales):new List<int>() { comercialId }) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)))
+                
+                ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)))
             };
             resultado.EquipoReal = comerciales.Select(x => x.ComercialId).ToList();
 
@@ -270,6 +270,10 @@ namespace Molinos.DataAgro.Business
         private static List<int> ListarEquipo(int comercialId, List<ComercialQry> comerciales)
         {
             var resultado = new List<int> { comercialId };
+            if (!PermisosHelper.Is(PermisosDataAgro.VerJerarquia) && !PermisosHelper.Is(PermisosDataAgro.VerTodos))
+            {
+                return resultado;
+            }
             foreach (var comercial in comerciales.Where(x => x.EmpleadorACargo == comercialId).ToList())
             {
                 resultado.AddRange(ListarEquipo(comercial.ComercialId, comerciales));
