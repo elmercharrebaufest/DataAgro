@@ -55,7 +55,9 @@ namespace WebDataAgro.Controllers
             {
                 filtro.FechaCarga = DateTime.Now.Date.ToString("dd-MM-yyyy");
             }
-            var model = mobjContratoManager.TraerContratosFiltrados(filtro, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+
+            var model = mobjContratoManager.TraerContratosFiltrados(filtro, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }

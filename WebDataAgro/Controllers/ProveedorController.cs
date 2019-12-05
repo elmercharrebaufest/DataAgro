@@ -145,12 +145,6 @@ namespace WebDataAgro.Controllers
                 ActionView = "ErrorDePermisos";
             }
 
-            else if (!mobComercialManager.ComercialPerteneceProveedor(GlobalVariables.Equipo, ProveedorId, GlobalVariables.CorredoresComercial))
-            {
-                ActionView = "ErrorUsuarioSinDerechos";
-            }
-
-
             ViewBag.MostrarEditar = mostrarEditar;
             ViewBag.MostrarAgenda = Agenda;
             ViewBag.ProveedorId = ProveedorId;
