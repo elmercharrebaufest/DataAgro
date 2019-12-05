@@ -144,7 +144,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Anular_Cupos")]
         AnularCupos = 703,
         [Display(ResourceType = typeof(Text), Name = "Administracion_Cupos")]
-        AdministracionCupos = 704,        
+        AdministracionCupos = 704,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Cupos")]
+        VerTodosCupos = 705,
         [Display(ResourceType = typeof(Text), Name = "Home_Corredor")]
         HomeCorredor = 801,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Corredor")]

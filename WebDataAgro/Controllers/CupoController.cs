@@ -214,7 +214,7 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
         {
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos)? GlobalVariables.EquipoReal: GlobalVariables.Equipo;
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos)? GlobalVariables.EquipoReal: GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);
         }
