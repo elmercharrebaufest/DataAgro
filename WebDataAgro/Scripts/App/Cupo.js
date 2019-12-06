@@ -3,6 +3,7 @@ var fecha;
 var zonaSeleccionada;
 var anularCupo;
 var modificarCupo; 
+var filasSeleccionadas = {};
 
 $(document).ready(function () {
     anularCupo = ConvertirStringABool(anularCupo);
@@ -17,6 +18,7 @@ $(document).ready(function () {
     $.unblockUI();
 
     InicializarCuposIndex();
+    AutoRecargar();
 });
 
 function InicializarCuposIndex() {    
@@ -63,6 +65,14 @@ function InicializarCuposIndex() {
                 if (view[i].FleteProcedencia) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("flete-procedencia");
+                }
+                for (var j = 0; j < filasSeleccionadas.length; j++) {
+                    if (filasSeleccionadas[j].Id == view[i].Id) {
+                        grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                            .addClass("k-state-selected")
+                            .find(".k-checkbox")
+                            .prop('checked', true);
+                    }
                 }
                 $('[data-toggle="tooltip"]').tooltip();                
             }        
@@ -501,4 +511,23 @@ function ModificarSeleccionados() {
     });
     var siguientes = obj.slice(1);
     window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + obj[0] + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
+}
+
+function AutoRecargar() {
+    setInterval(function () {
+        filasSeleccionadas = SeleccionarElementos();
+        recargarGrilla();
+    }, 5000);
+
+}
+function SeleccionarElementos() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        obj.push(selectedItem);
+    });
+    return obj;
 }
