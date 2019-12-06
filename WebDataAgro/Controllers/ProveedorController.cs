@@ -153,9 +153,10 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TraerProveedor(int ProveedorId)
         {
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             return new JsonResult()
             {
-                Data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo),
+                Data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, equipo),
                 MaxJsonLength = Int32.MaxValue
             };
 
