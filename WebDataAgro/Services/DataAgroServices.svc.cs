@@ -1,18 +1,21 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Web.Mvc;
+using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Services
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "DataAgroServices" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select DataAgroServices.svc or DataAgroServices.svc.cs at the Solution Explorer and start debugging.
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class DataAgroServices : IDataAgroServices
     {
         private ILogger logger;
