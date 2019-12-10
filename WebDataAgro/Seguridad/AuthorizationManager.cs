@@ -1,6 +1,7 @@
 ﻿using System.ServiceModel;
 
-namespace WebDataAgro.Seguridad
+namespace WebDataAgro.Seguridad 
+{ 
     public class AuthorizationManager : ServiceAuthorizationManager
     {
         public AuthorizationManager()
