@@ -295,6 +295,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seguridad\AjaxOnlyAttribute.cs" />
     <Compile Include="Seguridad\ClaimsTransformationHttpModule.cs" />
+    <Compile Include="Seguridad\AuthorizationManager.cs" />
     <Compile Include="Seguridad\DataAgroClaimsAuthenticationManager.cs" />
     <Compile Include="Service References\Compras\Reference.cs">
       <AutoGen>True</AutoGen>
