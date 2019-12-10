@@ -21,7 +21,8 @@ namespace WebDataAgro.Seguridad
             var context = ((HttpApplication)sender).Context;
 
             // no need to call transformation if session already exists
-            if (FederatedAuthentication.SessionAuthenticationModule != null && FederatedAuthentication.SessionAuthenticationModule.ContainsSessionTokenCookie(context.Request.Cookies))
+            if ((FederatedAuthentication.SessionAuthenticationModule != null && FederatedAuthentication.SessionAuthenticationModule.ContainsSessionTokenCookie(context.Request.Cookies))||
+                (context.Request.RawUrl.Contains(".svc") && context.User.Identity.IsAuthenticated))
             {
                 return;
             }
