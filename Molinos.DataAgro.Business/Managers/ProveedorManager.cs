@@ -814,27 +814,34 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oFijacionDePrecioContrato.PagoDiferido.HasValue && oFijacionDePrecioContrato.PagoDiferido.Value)
             {
-                htmlBody += "Pago Diferido";
+                htmlBody += "PAGO DIFERIDO <br /> ";
             }
             if (oFijacionDePrecioContrato.DiasPesificado.HasValue)
             {
-                htmlBody += "<br /> Días de Diferimiento: " + oFijacionDePrecioContrato.DiasPesificado.ToString();
+                htmlBody += "DÍAS DE DIFERIMIENTO: " + oFijacionDePrecioContrato.DiasPesificado.ToString()+ "<br /> ";
             }
             var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
             if (oFijacionDePrecioContrato.AperturaPrecio != null && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
             {
-                htmlBody += "<br /> Costo Financiero: " + conceptoApertura.Select(x => x.Importe).First().ToString();
-            } 
-            if (oFijacionDePrecioContrato.TrigoEspecial.HasValue && oFijacionDePrecioContrato.TrigoEspecial.Value)
-            {
-                if(oFijacionDePrecioContrato.MaterialId == 3)
-                {
-                    htmlBody += "<br /> Calidad Sustentable";
-                }else
-                {
-                    htmlBody += "<br /> Calidad Especial";
-                }
+                htmlBody += "COSTO FINANCIERO: " + conceptoApertura.Select(x => x.Importe).First().ToString()+ "<br />";
             }
+            var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
+            if (contrato != null)
+            {
+                if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
+                {
+                    htmlBody += "SUSTENTABLE <br />";
+                }
+                if (contrato.StandardDeCalidad.Descripcion == "Grado 2")
+                {
+                    htmlBody += "CALIDAD GRADO 2<br />";
+                }
+                if (contrato.StandardDeCalidad.Descripcion == "Especial"
+                    || contrato.StandardDeCalidad.Descripcion == "Materia Extraña")
+                {
+                    htmlBody += "CALIDAD ESPECIAL<br />";
+                }
+            }            
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
