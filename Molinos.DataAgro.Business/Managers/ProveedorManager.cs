@@ -640,10 +640,6 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
-            if(oContrato.ClasificacionId == 1 && oContrato.CorredorId == null)
-            {
-                htmlBody += "Dolarizado mínimo 30 días<br />";
-            }
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -655,6 +651,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (oContrato.ImporteSustentable != null)
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+            }
+            if(oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
+            {
+                htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
             if (oContrato.FechaDolarizado != null)
             {
@@ -811,16 +811,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
-            htmlBody += "<tr>" + th + "OBSERVACIONES</th>";
-            if (oFijacionDePrecioContrato.PagoDiferido.HasValue)
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
+            if (oFijacionDePrecioContrato.PagoDiferido.HasValue && oFijacionDePrecioContrato.PagoDiferido.Value)
             {
-                htmlBody += "Pago Diferido: SI";
+                htmlBody += "Pago Diferido";
             }
-            else
-            {
-                htmlBody += "Pago Diferido: NO";
-            }
-
             if (oFijacionDePrecioContrato.DiasPesificado.HasValue)
             {
                 htmlBody += "<br /> Días de Diferimiento: " + oFijacionDePrecioContrato.DiasPesificado.ToString();
@@ -829,8 +824,18 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecioContrato.AperturaPrecio != null && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
             {
                 htmlBody += "<br /> Costo Financiero: " + conceptoApertura.Select(x => x.Importe).First().ToString();
+            } 
+            if (oFijacionDePrecioContrato.TrigoEspecial.HasValue && oFijacionDePrecioContrato.TrigoEspecial.Value)
+            {
+                if(oFijacionDePrecioContrato.MaterialId == 3)
+                {
+                    htmlBody += "<br /> Calidad Sustentable";
+                }else
+                {
+                    htmlBody += "<br /> Calidad Especial";
+                }
             }
-            htmlBody += " </ td ></ tr >";
+            htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
