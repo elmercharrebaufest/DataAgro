@@ -1143,8 +1143,7 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoTelefono1Id = (param.telefonos[0].tipoTelefono.HasValue ? (int?)param.telefonos[0].tipoTelefono.Value : null),
                         TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null),
                         TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null),
-                        CompraNet = param.CompraNet,
-                        Cupo = param.Cupo
+                        CompraNet = param.CompraNet
                     };
                     repositorio.Agregar(contactoComercial);
 
@@ -1804,8 +1803,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Email2 = can.emails[1],
                                 Email3 = can.emails[2],
                                 ProveedorId = (int)oParam.ProveedorId,
-                                CompraNet = can.CompraNet,
-                                Cupo = can.Cupo
+                                CompraNet = can.CompraNet
                             };
                             repositorio.Agregar(contacto);
 
@@ -1851,7 +1849,6 @@ namespace Molinos.DataAgro.Business.Managers
                         con.FechaNacimiento = mod.fechaNacimiento;
                         con.Cargo = mod.cargo;
                         con.CompraNet = mod.CompraNet;
-                        con.Cupo = mod.Cupo;
 
                         #region Eliminar Intereses Contactos
                         var oContactosInteresesSave = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercial.ContactoComercialId == mod.contactoComercialId);
@@ -2380,19 +2377,7 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
             return resultado;
         }
-        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro)
-        {
-            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro));
-            //var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
-            //resultado = lista.Select(x => new BusquedaHome
-            //{
-            //    Cuit = x.Key.Cuit,
-            //    Filtro = x.Key.Filtro,
-            //    RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
-            //    Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
-            //}).ToList();
-            return resultado;
-        }
+
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
