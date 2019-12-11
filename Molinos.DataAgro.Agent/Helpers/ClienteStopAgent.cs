@@ -244,29 +244,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
                 var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
                 if (estado == 1)
-                {
-                    var cupoStop = new ModificarCupo
-                    {
-                        token = token.Data,
-                        cuitDestinatario = cupo.Destinatario,
-                        cuitDestino = datosConfiguracion.CuitDestinoStop,
-                        cuitCorredorC = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
-                        idCupoTerminal = cupo.CupoSap,
-                        idTerminal = datosConfiguracion.TerminalStopId,
-                        fecha = cupo.FechaIngreso.ToString("yyyy-MM-dd") + "T" + cupo.FechaGeneracion.ToString("HH:mm:ss"),
-                        codLocalidadDestino = datosConfiguracion.CodigoLocalidadStop,
-                        desvio = "N",
-                        codGrano = cupo.Material.CodigoEspecie.Value,
-                        estado = "B",
-                        idCupo = cupo.CupoStop.Value,
-                        idCupoEstado=4
-                    };
-                    var obj = JsonConvert.SerializeObject(cupoStop);
+                {                    
                     HttpRequestMessage request = new HttpRequestMessage
                     {
-                        Content = new StringContent(obj, Encoding.UTF8, "application/json"),
                         Method = HttpMethod.Delete,
-                        RequestUri = new Uri($"{urlStop}v1.1.0/turnos/")
+                        RequestUri = new Uri($"{urlStop}v1.1.0/turnos/{token.Data}/{datosConfiguracion.TerminalStopId}/{cupo.CupoStop.Value}")
                     };
 
                     HttpResponseMessage response = client.SendAsync(request).Result;

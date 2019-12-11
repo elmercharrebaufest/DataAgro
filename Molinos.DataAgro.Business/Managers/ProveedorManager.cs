@@ -640,6 +640,10 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            if(oContrato.ClasificacionId == 1 && oContrato.CorredorId == null)
+            {
+                htmlBody += "Dolarizado mínimo 30 días<br />";
+            }
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -794,7 +798,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
 
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
-            if(oFijacionDePrecioContrato.Pizarra.HasValue && oFijacionDePrecioContrato.Pizarra.Value)
+            
+            if (oFijacionDePrecioContrato.Pizarra.HasValue && oFijacionDePrecioContrato.Pizarra.Value)
             {
                 htmlBody += "Pizarra";
             }
@@ -806,6 +811,26 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
+            htmlBody += "<tr>" + th + "OBSERVACIONES</th>";
+            if (oFijacionDePrecioContrato.PagoDiferido.HasValue)
+            {
+                htmlBody += "Pago Diferido: SI";
+            }
+            else
+            {
+                htmlBody += "Pago Diferido: NO";
+            }
+
+            if (oFijacionDePrecioContrato.DiasPesificado.HasValue)
+            {
+                htmlBody += "<br /> Días de Diferimiento: " + oFijacionDePrecioContrato.DiasPesificado.ToString();
+            }
+            var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
+            if (oFijacionDePrecioContrato.AperturaPrecio != null && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
+            {
+                htmlBody += "<br /> Costo Financiero: " + conceptoApertura.Select(x => x.Importe).First().ToString();
+            }
+            htmlBody += " </ td ></ tr >";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
@@ -1118,7 +1143,8 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoTelefono1Id = (param.telefonos[0].tipoTelefono.HasValue ? (int?)param.telefonos[0].tipoTelefono.Value : null),
                         TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null),
                         TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null),
-                        CompraNet = param.CompraNet
+                        CompraNet = param.CompraNet,
+                        Cupo = param.Cupo
                     };
                     repositorio.Agregar(contactoComercial);
 
@@ -1778,7 +1804,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 Email2 = can.emails[1],
                                 Email3 = can.emails[2],
                                 ProveedorId = (int)oParam.ProveedorId,
-                                CompraNet = can.CompraNet
+                                CompraNet = can.CompraNet,
+                                Cupo = can.Cupo
                             };
                             repositorio.Agregar(contacto);
 
@@ -1824,6 +1851,7 @@ namespace Molinos.DataAgro.Business.Managers
                         con.FechaNacimiento = mod.fechaNacimiento;
                         con.Cargo = mod.cargo;
                         con.CompraNet = mod.CompraNet;
+                        con.Cupo = mod.Cupo;
 
                         #region Eliminar Intereses Contactos
                         var oContactosInteresesSave = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercial.ContactoComercialId == mod.contactoComercialId);
@@ -2352,7 +2380,19 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
             return resultado;
         }
-
+        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro)
+        {
+            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro));
+            //var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
+            //resultado = lista.Select(x => new BusquedaHome
+            //{
+            //    Cuit = x.Key.Cuit,
+            //    Filtro = x.Key.Filtro,
+            //    RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
+            //    Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
+            //}).ToList();
+            return resultado;
+        }
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
