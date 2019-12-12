@@ -313,7 +313,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
                 }
             }
             if (isNew) {
-                filters.pusamh(newFilter);
+                filters.push(newFilter);
             }
             else {
                 filters[index] = newFilter;
