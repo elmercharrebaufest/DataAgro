@@ -172,7 +172,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ComercialId == 0)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
-            }            
+            }             
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
             {
@@ -181,7 +181,11 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
-            }           
+            }
+            if (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value && oParam.DiasPesificado == null)
+            {
+                oErrorMessages.Error("CampanaId", "Se debe completar la los Días en negocios de Pago Diferido");
+            }
             if ( oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0 && 
                 oParam.MonedaId!= "ARP  " )
             {

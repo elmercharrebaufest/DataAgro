@@ -832,16 +832,18 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "SUSTENTABLE <br />";
                 }
-                if (contrato.StandardDeCalidad.Descripcion == "Grado 2")
+                if (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
+                    (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
+                    repositorio.Existe<Calidad>(x => x.ContratoId == contrato.ContratoId && x.CalidadEspecialId == 4 && x.Valor == 2)))
                 {
                     htmlBody += "CALIDAD GRADO 2<br />";
                 }
-                if (contrato.StandardDeCalidad.Descripcion == "Especial"
+                else if (contrato.StandardDeCalidad.Descripcion == "Especial"
                     || contrato.StandardDeCalidad.Descripcion == "Materia Extraña")
                 {
                     htmlBody += "CALIDAD ESPECIAL<br />";
                 }
-            }            
+            }       
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
