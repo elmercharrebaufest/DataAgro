@@ -95,11 +95,12 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Inicializar()
         {
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             return new JsonResult()
             {
                 Data = new DatosIniCompraNetModel
                 {
-                    Datos = mobjCompraNetManager.TraerDatosIniciales(GlobalVariables.Equipo)
+                    Datos = mobjCompraNetManager.TraerDatosIniciales(equipo)
                 },
                 MaxJsonLength = Int32.MaxValue
             };
@@ -389,7 +390,8 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult ListarComercial(string text = "")
         {
-            var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var comerciales = mobjComercialManager.ListarComercial(text, equipo);
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult TraerDescuentosPorContrato(int contratoId = 0)
@@ -471,9 +473,10 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult TraerContratosPendientes()
         {
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             return new JsonResult()
             {
-                Data = mobjContratoManager.TraerContratosPendientes(GlobalVariables.Equipo),
+                Data = mobjContratoManager.TraerContratosPendientes(equipo),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -614,12 +617,13 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult BuscarTotales(FilterObject[] filtros)
         {
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var request = new KendoGridMvcRequest();
             request.Take = 0;
             request.PageSize = 0;
             request.SortObjects = null;
             request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and",FilterObjects=filtros.AsEnumerable()}: null; 
-            var model = mobjContratoManager.TraerTotalesPesosDolares(request, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial);
+            var model = mobjContratoManager.TraerTotalesPesosDolares(request, equipo, GlobalVariables.CorredoresComercial);
              
             return Json(model);
         }
