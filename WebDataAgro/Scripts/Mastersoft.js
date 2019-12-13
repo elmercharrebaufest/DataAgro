@@ -61,7 +61,7 @@ function MSExecuteOnServer(url, datos, onCallBack) {
             respuesta = data;
         },
         error: function (error) {
-            MensErr("No se pudieron enviar los datos al servidor");
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
         },
         complete: function () {
             if (onCallBack) {
@@ -103,7 +103,8 @@ function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
             if (owait != null) {
                 owait.modal('hide');
             }
-            MensErr("No se pudieron enviar los datos al servidor");
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+
             //alert(kendo.stringify(error));
         }
     });
@@ -125,7 +126,8 @@ function MSExecuteURLOnServer(url) {
             respuesta = data;
         },
         error: function (error) {
-            MensErr("No se pudieron enviar los datos al servidor");
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+
         }
     });
 
@@ -150,7 +152,8 @@ function MSExecuteURLOnServerAsync(url, fncallback, htmlloading) {
         },
         error: function (error) {
             MSHideLoading(htmlloading);
-            MensErr("No se pudieron enviar los datos al servidor");
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+
             //alert(kendo.stringify(error));
         }
     });
