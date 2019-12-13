@@ -60,7 +60,6 @@ namespace WebDataAgro.Seguridad
                 foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
-                    log.Debug("Agregando permiso {0} para el usuario {1}", permiso.Permiso.DisplayEnum(), nombreUsuario);
                 }
             }
 

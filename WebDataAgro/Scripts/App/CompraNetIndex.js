@@ -403,7 +403,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusborrado)").attr('id', 'border-grey');
             $("td:has(div.statusreconfirmar)").attr('id', 'border-purple');
             $("td:has(div.statuseliminado)").attr('id', 'border-grey');
-            if (verMesa) {
+            if (!verMesa) {
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("Comercial");
                 $("#gridInformeCompraNet").data("kendoGrid").hideColumn("GrupoCompraDescripcion");
             }
@@ -424,9 +424,7 @@ function CreateGridInformeCompraNet() {
                 }
             }
             filasSeleccionadas = {}; 
-            if (verMesa) {
-                BuscarTotales();
-            }
+            BuscarTotales();
         },
 
         columns: [

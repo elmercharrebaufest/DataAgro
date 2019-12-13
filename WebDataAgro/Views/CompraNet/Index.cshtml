@@ -43,57 +43,56 @@
             </div>
         </div>
         <div id="totalizador-materiales" class="col-xs-12 col-md-7 text-xs-center">
-            @if (verMesa)
-            {
-                <div id="totalSoja" class="col-xs-12 col-sm-6 col-md-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Soja</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasSoja"></span>TN.</strong>
-                        </div>
+
+            <div id="totalSoja" class="col-xs-12 col-sm-6 col-md-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Soja</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladasSoja"></span>TN.</strong>
                     </div>
                 </div>
-                <div id="totalMaiz" class="col-xs-12 col-sm-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Maiz</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasMaiz"></span>TN.</strong>
-                        </div>
+            </div>
+            <div id="totalMaiz" class="col-xs-12 col-sm-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Maiz</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladasMaiz"></span>TN.</strong>
                     </div>
                 </div>
-                <div id="totalTrigo" class="col-xs-12 col-sm-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Trigo</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladastrigo"></span>TN.</strong>
-                        </div>
+            </div>
+            <div id="totalTrigo" class="col-xs-12 col-sm-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Trigo</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladastrigo"></span>TN.</strong>
                     </div>
                 </div>
-                <div id="totalGirasol" class="col-xs-12 col-sm-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasGirasol"></span>TN.</strong>
-                        </div>
+            </div>
+            <div id="totalGirasol" class="col-xs-12 col-sm-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladasGirasol"></span>TN.</strong>
                     </div>
                 </div>
-                <div id="totalGirasolAlto" class="col-xs-12 col-sm-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol AO</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasGirasolAlto"></span>TN.</strong>
-                        </div>
+            </div>
+            <div id="totalGirasolAlto" class="col-xs-12 col-sm-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Girasol AO</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladasGirasolAlto"></span>TN.</strong>
                     </div>
                 </div>
-                <div id="totalMaterial" class="col-xs-12 col-sm-2 noPadding" hidden>
-                    <div>
-                        <span class="col-md-12 col-xs-5 noPadding"><strong>Total</strong></span>
-                        <div class="col-md-12 col-xs-7 noPadding">
-                            <strong><span id="toneladasMaterial"></span>TN.</strong>
-                        </div>
+            </div>
+            <div id="totalMaterial" class="col-xs-12 col-sm-2 noPadding" hidden>
+                <div>
+                    <span class="col-md-12 col-xs-5 noPadding"><strong>Total</strong></span>
+                    <div class="col-md-12 col-xs-7 noPadding">
+                        <strong><span id="toneladasMaterial"></span>TN.</strong>
                     </div>
                 </div>
-            }
+            </div>
+
         </div>
         <div class="col-md-3">
             <div class="autoRecarga col-md-6 noPadding">
@@ -137,7 +136,7 @@
                         <td>#: Cantidad#</td>
                         <td>#: Precio# #: Moneda# </td>
                         <td>#: Fecha#</td>
-                        <td class="comercial-contrato-pendiente @(verMesa?"":"hide")"">#: NombreApellido# </td>
+                        <td class="comercial-contrato-pendiente @(verMesa?"":"hide")" ">#: NombreApellido# </td>
                     </tr>
                 </script>
             </div>
@@ -145,35 +144,35 @@
                 <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
                     @if (verMesa)
                     {
-                    <div id="inputZona" class="col-xs-6 col-md-4">
-                        <input id="buscadorFiltroZona" style="width:100%; padding:0px" type="text" placeholder="Buscar por Zona" />
-                    </div>
-                    <div class="col-xs-6 col-md-4">
-                        <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
-                            <span class="botonVarios">
-                                <i class="fa fa-search varios" aria-hidden="true"></i>
-                            </span>
-                            <span>Buscar</span>
+                        <div id="inputZona" class="col-xs-6 col-md-4">
+                            <input id="buscadorFiltroZona" style="width:100%; padding:0px" type="text" placeholder="Buscar por Zona" />
                         </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-4">
-                        <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
-                            <span class="botonVarios">
-                                <i id="negociosPropios" class="fa fa-user varios" aria-hidden="true"></i>
-                            </span>
-                            <span>Propios</span>
+                        <div class="col-xs-6 col-md-4">
+                            <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-search varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Buscar</span>
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
+                                <span class="botonVarios">
+                                    <i id="negociosPropios" class="fa fa-user varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Propios</span>
+                            </div>
+                        </div>
                     }
                 </div>
 
-                    @if (verMesa)
-                    {
-                <div id="totalesPesosDolares" class="col-xs-12 col-md-2 noRightPadding totales">
-                    <strong>Pesos:</strong> <span id="totalPesos"></span><br />
-                    <strong>Dólares:</strong> <span id="totalDolares"></span>
-                </div>
-                    }
+                @if (verMesa)
+                {
+                    <div id="totalesPesosDolares" class="col-xs-12 col-md-2 noRightPadding totales">
+                        <strong>Pesos:</strong> <span id="totalPesos"></span><br />
+                        <strong>Dólares:</strong> <span id="totalDolares"></span>
+                    </div>
+                }
 
                 <div id="variosDiv" class="col-xs-12 col-md-5 alinear-derecha">
                     <div class="col-xs-12 col-md-4">
