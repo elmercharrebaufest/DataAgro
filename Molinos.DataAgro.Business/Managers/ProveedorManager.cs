@@ -662,6 +662,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DiasPesificado != null)
             {
+                htmlBody += "PAGO DIFERIDO <br />";
                 htmlBody += "DÍAS DE DIFERIMIENTO " + oContrato.DiasPesificado + "<br />";
             }
             if (oContrato.CD == true)
