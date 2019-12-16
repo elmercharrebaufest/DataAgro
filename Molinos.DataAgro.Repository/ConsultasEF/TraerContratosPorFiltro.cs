@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     (request.CorredorId.Any() ? request.CorredorId.Contains(contrato.CorredorId) : true) &&
                     (request.TipoNegocioId != 0 ? request.TipoNegocioId == contrato.TipoNegocioId : true) &&
                     (request.CampaniaId != 0 ? request.CampaniaId == contrato.CampanaId : true) &&
+                    (request.ComercialId != 0 ? request.ComercialId == contrato.ComercialId : true) &&
                     (request.MaterialId != 0 ? request.MaterialId == contrato.MaterialId : true) &&
                     (request.GrupoDeCompraId != 0 ? request.GrupoDeCompraId == contrato.GrupoCompra : true) &&
                     (request.EstadoId != 0 ? request.EstadoId == contrato.Estado : true) &&

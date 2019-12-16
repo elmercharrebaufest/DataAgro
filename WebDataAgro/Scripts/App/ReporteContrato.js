@@ -37,6 +37,7 @@ function CreateGridInformeCompraNet() {
                     obj.ImporteSustentable = $("#ImporteSustentable").val();
                     obj.DiasDiferimiento = $("#DiasDiferimiento").val();
                     obj.FechaLimiteDolarizado = $("#fechalimiteId").val();
+                    obj.ComercialId = $("#ComercialId").val();
 
                     obj.Importe = $("#importeSustentableId").is(':checked');
                     obj.Diferimiento = $("#diferimientoId").is(':checked');
