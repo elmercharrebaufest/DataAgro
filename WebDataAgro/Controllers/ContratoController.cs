@@ -64,7 +64,8 @@ namespace WebDataAgro.Controllers
         
         public ActionResult ListarComercial(string text = "")
         {
-            var comerciales = mobjComercialManager.ListarComercial(text, GlobalVariables.Equipo);
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var comerciales = mobjComercialManager.ListarComercial(text, equipo);
             //tiene que coincidir ComercialId y Comercial con los campos configurados en el js linea 291
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
         }
