@@ -8,7 +8,10 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,9 +25,10 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IEliminarCupoAgent eliminarCupoAgent;
         private readonly IClienteStopAgent clienteStopAgent;
         private readonly IModificarCupoAgent modificarCupoAgent;
+        private readonly IProveedorManager proveedorManager;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
-            IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent)
+            IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent, IProveedorManager proveedorManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -32,6 +36,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.eliminarCupoAgent = eliminarCupoAgent;
             this.clienteStopAgent = clienteStopAgent;
             this.modificarCupoAgent = modificarCupoAgent;
+            this.proveedorManager = proveedorManager;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -84,6 +89,7 @@ namespace Molinos.DataAgro.Business.Managers
                             error.ListaCupos.AddRange(listaCupos);
                         }
                     }
+                    EnviarEmail(cupo, error.ListaCupos);
                     return error;
                 }
                 else
@@ -282,5 +288,153 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<Cupo, string>(x => x.Id == id, x => x.CupoSap);
         }
+
+        public void EnviarEmail(Cupo cupo,List<string> listaCupos)
+        {
+            try
+            {
+                var id = cupo.ProveedorId;
+                var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
+
+                string emailComercial = "";
+
+                if (cupo.Comercial != null)
+                {
+                    try { emailComercial =proveedorManager.GetEmailUserActiveDirectory(cupo.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                }
+
+                var oMensaje = new MailMessage
+                {
+                    From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
+                };
+
+                if (proveedorContacto.Count > 0)
+                {
+                    foreach (var contacto in proveedorContacto)
+                    {
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                        {
+                            oMensaje.To.Add(contacto.Email1);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(emailComercial)) oMensaje.CC.Add(emailComercial);
+                }
+                else if (!string.IsNullOrEmpty(emailComercial))
+                {
+                    oMensaje.To.Add(emailComercial);
+                }
+                else
+                {
+                    logger.Debug($"El contrato {cupo.Id} no tiene ContactoComercial para el proveedor {cupo.ProveedorId} ni email comercial");
+                    return;
+                }
+                oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);                
+                
+
+                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), listaCupos, cupo));
+                var subject = "";
+
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    subject += "Mail Pruebas - ";
+                }
+                subject += "Nuevo negocio Molinos Agro S.A. - ";
+                subject += cupo.Proveedor.RazonSocial;
+                oMensaje.Subject = subject;
+                oMensaje.BodyEncoding = Encoding.UTF8;
+
+                oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
+
+                SmtpClient oCliente = default(SmtpClient);
+
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                }
+                else
+                {
+                    oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+                }
+
+                if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+                {
+                    oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                        ConfigurationManager.AppSettings["CredentialPassword"]);
+                }
+
+                oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+
+                oCliente.Send(oMensaje);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
+        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var linea = 0;
+
+            string htmlBody = "";
+            
+            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A.: <br /><br />  ";
+            
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            foreach (var c in listaCupos)
+            {
+                htmlBody += "<tr>" + Td(ref linea) + c + "</td></tr>";
+            }
+            htmlBody += "<tr>" + Td(ref linea) + "Con destino "+ cupo.Centro.Descripcion + "</td></tr>";
+            if (cupo.Centro.CodigoSap == "1600" &&(cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+                htmlBody += "<tr>" + Td(ref linea)+"Observaciones: " + (cupo.MaterialId == 1? "Maíz Especial": cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable")+ "</td></tr>";
+            htmlBody += "</table>";
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres +" "+ cupo.Comercial.Apellido +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+        private string Td(ref int linea)
+        {
+            string td1 = "";
+            string td2 = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+            }
+            else
+            {
+                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #bba7da; padding: 5px 0; width: 250px;\">";
+                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #dccdea; padding: 5px 0; width: 250px;\">";
+            }
+            linea += 1;
+            if (linea % 2 == 0)
+            {
+                return td1;
+            }
+            else
+            {
+                return td2;
+            }
+        }
+
     }
 }

@@ -456,6 +456,9 @@
   <data name="RazonSocial" xml:space="preserve">
     <value>Razon Social</value>
   </data>
+  <data name="Reasignar_Flete" xml:space="preserve">
+    <value>Reasignar Flete Procedencia</value>
+  </data>
   <data name="Rechazar_Negocios" xml:space="preserve">
     <value>Rechazar Negocios</value>
   </data>
@@ -475,7 +478,7 @@
     <value>Ver Jerarquia Comercial</value>
   </data>
   <data name="Ver_Mesa" xml:space="preserve">
-    <value>Ver Informacion de Mesa</value>
+    <value>Ver Información de Mesa</value>
   </data>
   <data name="Ver_Solo_Corredores" xml:space="preserve">
     <value>Ver Solo Corredores</value>

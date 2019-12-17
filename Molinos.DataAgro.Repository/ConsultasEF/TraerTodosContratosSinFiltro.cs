@@ -124,7 +124,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                     NivelTarifa = contrato.NivelTarifa.Descripcion,
                     TarifaFlete = contrato.TarifaFlete,
-                    Compensacion = contrato.Compensacion.Value
+                    Compensacion = contrato.Compensacion.Value,
+                    Acuerdo = contrato.ContratoAcuerdoId
                 };
 
             var queryFijacion =
@@ -232,7 +233,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PorcentajeBonificacion = fijac.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                     NivelTarifa = "",
                     TarifaFlete = null,
-                    Compensacion = null
+                    Compensacion = null,
+                    Acuerdo = null
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
@@ -343,7 +345,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
                         TarifaFlete = null,
-                        Compensacion = null
+                        Compensacion = null,
+                        Acuerdo = null
+
                     };
 
                 queryContratos = queryContratos.Union(queryFason);
@@ -453,7 +457,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
                         TarifaFlete = null,
-                        Compensacion = null
+                        Compensacion = null,
+                        Acuerdo = null
+
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
@@ -562,7 +568,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeBonificacion = null,
                         NivelTarifa = "",
                         TarifaFlete = null,
-                        Compensacion = null
+                        Compensacion = null,
+                        Acuerdo = null
+
                     };
 
                 queryContratos = queryContratos.Union(queryAcuerdo);

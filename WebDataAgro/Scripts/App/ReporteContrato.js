@@ -65,7 +65,8 @@ function CreateGridInformeCompraNet() {
                 id: 'Id',
                 fields: {
                     Cuit: { type: "number" },
-                    Negocio: { type: "number" },
+                    Negocio: { type: "number" },    
+                    Acuerdo: { type: "number" },   
                     Fecha: { type: "date" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
@@ -133,6 +134,9 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Negocio", width: 90
+            },
+            {
+                field: "Acuerdo", width: 90
             },
             { field: "Fecha", title: "Operacion", width: 80, format: _DefaultDateTemplate },
             {
@@ -212,51 +216,51 @@ function CreateGridInformeCompraNet() {
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var templateHora = kendo.template(this.columns[5].template);
-            var templatePizarra = kendo.template(this.columns[12].template);
-            var templateSustentable = kendo.template(this.columns[25].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[26].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[27].columns[0].template);
-            var templateSIO = kendo.template(this.columns[28].template);
-            var templateTrigoEsp = kendo.template(this.columns[29].template);
+            var templateHora = kendo.template(this.columns[6].template);
+            var templatePizarra = kendo.template(this.columns[13].template);
+            var templateSustentable = kendo.template(this.columns[26].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[27].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[28].columns[0].template);
+            var templateSIO = kendo.template(this.columns[29].template);
+            var templateTrigoEsp = kendo.template(this.columns[30].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
-                    Hora: row.cells[5].value,
-                    Pizarra: row.cells[12].value,
-                    Sustentable: row.cells[26].value,
-                    Dolarizado: row.cells[29].value,
-                    Pesificado: row.cells[31].value,
-                    NoInformaSIO: row.cells[33].value,
-                    TrigoEspecial: row.cells[34].value,
+                    Hora: row.cells[6].value,
+                    Pizarra: row.cells[13].value,
+                    Sustentable: row.cells[27].value,
+                    Dolarizado: row.cells[30].value,
+                    Pesificado: row.cells[32].value,
+                    NoInformaSIO: row.cells[34].value,
+                    TrigoEspecial: row.cells[35].value,
                 };
 
-                var operacionFecha = row.cells[4].value;
+                var operacionFecha = row.cells[5].value;
                 operacionFecha.setHours(operacionFecha.getHours() + 1);
-                row.cells[4].value = operacionFecha;
+                row.cells[5].value = operacionFecha;
 
-                var fechaHasta = row.cells[22].value;
-                var fechaDesde = row.cells[23].value;
+                var fechaHasta = row.cells[23].value;
+                var fechaDesde = row.cells[24].value;
 
                 if (fechaHasta != null) {
 
                     fechaHasta.setHours(fechaHasta.getHours() + 1);
-                    row.cells[22].value = fechaHasta;
+                    row.cells[23].value = fechaHasta;
                 }
                 if (fechaDesde != null) {
                     fechaDesde.setHours(fechaDesde.getHours() + 1);
-                    row.cells[21].value = fechaDesde;
+                    row.cells[22].value = fechaDesde;
                 }
 
-                row.cells[5].value = templateHora(dataItem);
-                row.cells[12].value = templatePizarra(dataItem);
-                row.cells[26].value = templateSustentable(dataItem);
-                row.cells[29].value = templateDolarizado(dataItem);
-                row.cells[31].value = templatePesificado(dataItem);
-                row.cells[33].value = templateSIO(dataItem);
-                row.cells[34].value = templateTrigoEsp(dataItem);
+                row.cells[6].value = templateHora(dataItem);
+                row.cells[13].value = templatePizarra(dataItem);
+                row.cells[27].value = templateSustentable(dataItem);
+                row.cells[30].value = templateDolarizado(dataItem);
+                row.cells[32].value = templatePesificado(dataItem);
+                row.cells[34].value = templateSIO(dataItem);
+                row.cells[35].value = templateTrigoEsp(dataItem);
 
             }
         },

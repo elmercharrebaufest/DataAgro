@@ -36,6 +36,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
     
     }
+    public class CampaniaTableroCombo
+    {
+        public int CampaniaTableroId { get; set; }
+        public string Descripcion { get; set; }
+
+    }
 
 
     public class ComercialCombo 
@@ -120,6 +126,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Codigo;
         public string Descripcion;
         public int CampañaIdActual;
+        public int CampaniaTableroId;
     }
 
     public class DestinatarioQry

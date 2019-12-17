@@ -12,13 +12,16 @@ namespace WebDataAgro.Controllers
         private readonly IContratoManager contratoManager;
         private readonly IFijacionDePrecioContratoManager fijacionManager;
         private readonly ICupoManager cupoManager;
+        private readonly IContratoAcuerdoManager contratoAcuerdoManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager)
+
         {
             this.logger = logger;
             this.contratoManager = contratoManager;
             this.fijacionManager = fijacionManager;
             this.cupoManager = cupoManager;
+            this.contratoAcuerdoManager = contratoAcuerdoManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -58,6 +61,14 @@ namespace WebDataAgro.Controllers
             logger.Info($"Transmitiendo cupos a STOP");
              var result = cupoManager.ConsultarCuposDiarios();
             logger.Info($"Borrado Automatico - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult AnularAcuerdos()
+        {
+            logger.Info($"Anulando cantidad Pendiente de Acuerdos");
+             contratoAcuerdoManager.AnularAcuerdos();
+            logger.Info($"Anular - Finalizado");
             return Content("ok");
         }
     }

@@ -135,6 +135,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ImporteBonificacion { get; set; }
         public decimal? PorcentajeBonificacion { get; set; }     
         public bool? Compensacion { get; set; }
+        public int? Acuerdo { get; set; }
+
     }
 
     public class StoredPorContratoResult

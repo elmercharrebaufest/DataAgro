@@ -37,5 +37,19 @@ namespace Molinos.DataAgro.Agent
             return fecha;
         }
 
+        public DateTime UltimoDiaHabil()
+        {
+            var diaAnterior = new DateTime();
+            var diasHabiles = ObtenerDiasHabiles();
+            for (var i = 1; i < diasHabiles.Count; i++)
+            {
+                if (diasHabiles.Contains(DateTime.Now.Date.AddDays(-i)))
+                {
+                    diaAnterior = DateTime.Today.AddDays(-i);
+                    break;
+                }
+            }
+            return diaAnterior;
+        }
     }
 }

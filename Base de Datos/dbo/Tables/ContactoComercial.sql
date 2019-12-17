@@ -19,6 +19,7 @@
     [EsPrincipal]         BIT             NULL,
     [Cargo]               VARCHAR (100)   NULL,
 	[CompraNet]			  BIT			  NULL,
+    [Cupo]				  BIT			  NULL, 
     CONSTRAINT [PK_ContactoComercial] PRIMARY KEY CLUSTERED ([ContactoComercialId] ASC),
     CONSTRAINT [FK_ContactoComercial_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId])
 );

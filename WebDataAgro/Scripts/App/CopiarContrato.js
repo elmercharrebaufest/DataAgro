@@ -105,8 +105,12 @@ function InicializarAutocompletar() {
 function CargarCopiaContrato(contratoId, tipo) {
     var datos = { id: contratoId, tipo: tipo };
     contratoCopia = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
-    modificarContrato(contratoCopia);
-    CargarDatosCopiar(contratoCopia, null, tipo);
+    if (contratoCopia.HayError) {
+        MensErr(contratoCopia.Errores[0].Message);
+    } else {
+        modificarContrato(contratoCopia);
+        CargarDatosCopiar(contratoCopia, null, tipo);
+    }
 }
 
 function modificarContrato(contratoCopia) {
@@ -329,5 +333,8 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         };
         viewModel.Calidades.push(calidadKendo);
     });
+    if ($("#contratoAcuerdoId").val() != "") {
+        $("#precioId").data("kendoNumericTextBox").enable(false);
+    }
 }
 

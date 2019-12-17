@@ -352,6 +352,17 @@
 
                     </tr>
                 }
+            <tr>
+                <th></th>
+                <th>Total</th>
+                <th>@Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Sum(y => y.Cantidad)).ToString("N0")</th>
+                <th>@Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.PrecioPonderado).ToString("N0")</th>
+                @foreach (var op in Model.AgenteCompras.ListaOperadores)
+                {
+                    var cantidad = Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Where(y=>y.OperadorId == op.OperadorId).Sum(y => y.Cantidad));
+            <th> @cantidad </th>
+                }
+            </tr>
             </table>
         </div>
         <div class="table-responsive col-xs-6 col-md-3 @(Model.SojaSustentable.Total > 0 ?"":"hide")">

@@ -1,13 +1,13 @@
 ﻿var viewModel;
 var fecha;
 var zonaSeleccionada;
-var anularCupo;
-var modificarCupo; 
+var fleteProcedencia;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
-    
+    fleteProcedencia = ConvertirStringABool(fleteProcedencia);
+
     InicializarCargaCupos();
     $.unblockUI();
     checkFason();
@@ -111,7 +111,12 @@ function InicializarCargaCupos() {
         }
         $("#guardarBtn").attr('type', 'button');
         $("#guardarBtn").click(function () {
-            $('#fleteProcedenciaModal').modal('toggle');
+            if (fleteProcedencia) {
+                $('#fleteProcedenciaModal').modal('toggle');
+            } else {
+                $("#flete").removeAttr('disabled');
+                $("form").submit();
+            }
         });
         $("#boton-si").click(function () {
             $("#flete").removeAttr('disabled');

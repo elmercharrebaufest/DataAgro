@@ -242,6 +242,7 @@ function botonBorrar(dataItem, icono) {
             "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
             "'" + dataItem.FasonId + "'" + ',' +
             "'" + dataItem.AgenteId + "'" + ',' +
+            "'" + dataItem.AcuerdoId + "'" + ',' +
             "'" + dataItem.Estado + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
@@ -1696,7 +1697,7 @@ function visualizacionRowSimple(dato, idDiv, idText) {
     }
 }
 
-function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, estado) {
+function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId,acuerdoId, estado) {
     $("#proveedor_a_borrar").text(proveedor);
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
@@ -1709,6 +1710,8 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
         $("#agenteBorrarDivVisualizar").show();
         $("#contratoModalBorrar").val(agenteId);
         $("#agente_a_borrar").text(agenteId);
+    } else if (tipoNegocio === "6") {
+        $("#contratoModalBorrar").val(acuerdoId);
     } else {
         $("#contratoModalBorrar").val(id);
         $("#estadoModalBorrar").val(estado);

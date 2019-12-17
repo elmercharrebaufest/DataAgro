@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Interfaces
         ProveedorDto TraerProveedor(int? proveedorId);
 
         List<BusquedaHome> DevolverProveedores(string filtroProveedor, int corredor, List<int> equipo);
+        List<BusquedaHome> DevolverProveedoresCorredores(string filtroProveedor);
 
         List<BusquedaHome> DevolverProveedoresConCorredor(string filtroProveedor, string filtro);
 

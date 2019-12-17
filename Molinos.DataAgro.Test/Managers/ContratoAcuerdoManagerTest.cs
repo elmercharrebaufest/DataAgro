@@ -28,16 +28,17 @@ namespace Molinos.DataAgro.Test.Managers
         private ContratoAcuerdoManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
 
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object);
+            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object,diasHabilesAgentMock.Object);
         }
         [Test]
         public void BorrarAcuerdoTest()

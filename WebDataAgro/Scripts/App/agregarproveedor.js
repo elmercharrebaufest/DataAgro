@@ -2105,6 +2105,7 @@ function armarFuncionalidades() {
         obj.otrosIntereses = $("#concom-otrosintereses").val();
         obj.principal = $("#concom-principal").is(":checked") ? 1 : 0;
         obj.CompraNet = $("#concom-compranet").is(":checked") ? 1 : 0;
+        obj.Cupo = $("#concom-cupo").is(":checked") ? 1 : 0;
         obj.item = cantContactoComercial;
 
         if (obj.principal) {
@@ -2148,7 +2149,7 @@ function armarFuncionalidades() {
             (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-mails">' +
-            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") : "") : "No especifica mails") +
+            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "")  : "") : "No especifica mails") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-extras">' +
             '<div class="row">' +
@@ -2206,6 +2207,7 @@ function armarFuncionalidades() {
         $("#concom-id").val(0);
         $("#concom-principal").prop("checked", false);
         $("#concom-compranet").prop("checked", false);
+        $("#concom-cupo").prop("checked", false);
     });
 }
 
@@ -2243,6 +2245,11 @@ function editarContactoComercial(id) {
         $("#concom-compranet").prop("checked", true);
     } else {
         $("#concom-compranet").prop("checked", false);
+    }
+    if (obj.Cupo == 1) {
+        $("#concom-cupo").prop("checked", true);
+    } else {
+        $("#concom-cupo").prop("checked", false);
     }
     var cantEmails = obj.emails.length;
     $("#concom-email1").val(obj.emails[0]);

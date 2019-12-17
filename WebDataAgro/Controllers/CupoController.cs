@@ -147,7 +147,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult BuscarProveedor(string filtroProveedor)
         {
-            return Json(proveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+            return Json(proveedorManager.DevolverProveedoresCorredores(filtroProveedor), JsonRequestBehavior.AllowGet);
         }
         private void CargarViewBag() {
             var centros = centroManager.TraerTodoCentro();

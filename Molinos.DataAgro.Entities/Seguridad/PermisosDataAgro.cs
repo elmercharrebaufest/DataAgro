@@ -7,6 +7,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
     {
         [Display(ResourceType = typeof(Text), Name = "Ingreso_DataAgro")]
         IngresoDataAgro = 0,
+
         [Display(ResourceType = typeof(Text), Name = "Contador_Proveedores")]
         ContadorProveedores = 101,
         [Display(ResourceType = typeof(Text), Name = "Alta_Datos_Proveedor")]
@@ -29,6 +30,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AsignarProveedores = 110,
         [Display(ResourceType = typeof(Text), Name = "Filtrar_Administrativo")]
         FiltrarAdministrativo = 111,
+
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
         [Display(ResourceType = typeof(Text), Name = "Informe_Comercial")]
@@ -53,6 +55,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerTodosTiposNegocios = 211,
         [Display(ResourceType = typeof(Text), Name = "Lista_Comercial")]
         ListaComercial = 212 ,
+
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CompraNet")]
         VisualizarCompraNet = 300,
         [Display(ResourceType = typeof(Text), Name = "Nuevo_Negocios")]
@@ -79,6 +82,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfirmarNegocio = 311,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
         VerTodosNegocios = 312,
+
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Proveedor")]
@@ -97,6 +101,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarComprasDiarias = 408,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Cupos")]
         VisualizarReporteCupo = 409,
+
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
         ConfiguracionCanalOperacion = 501,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Entrega_A")]
@@ -129,12 +134,14 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionConstantes = 515,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Roles_Permisos")]
         ConfiguracionRolesPermisos = 516,
+
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
         DatosResearch = 601,
         [Display(ResourceType = typeof(Text), Name = "Reporte_Research")]
         ReporteResearch = 602,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Research")]
         NotificacionesResearch = 603,
+
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Cupos")]
         VisualizarCupos = 700,
         [Display(ResourceType = typeof(Text), Name = "Alta_Cupos")]
@@ -147,6 +154,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AdministracionCupos = 704,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Cupos")]
         VerTodosCupos = 705,
+        [Display(ResourceType = typeof(Text), Name = "Reasignar_Flete")]
+        ReasignarFlete = 706,
+
         [Display(ResourceType = typeof(Text), Name = "Home_Corredor")]
         HomeCorredor = 801,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Corredor")]

@@ -1078,6 +1078,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reasignar Flete Procedencia.
+        /// </summary>
+        public static string Reasignar_Flete {
+            get {
+                return ResourceManager.GetString("Reasignar_Flete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rechazar Negocios.
         /// </summary>
         public static string Rechazar_Negocios {
@@ -1132,7 +1141,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ver Informacion de Mesa.
+        ///   Looks up a localized string similar to Ver Información de Mesa.
         /// </summary>
         public static string Ver_Mesa {
             get {

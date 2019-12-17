@@ -186,6 +186,7 @@ function armarComercial(comerciales) {
             obj.otrosIntereses = comerciales[i].OtrosIntereses ? comerciales[i].OtrosIntereses : "";
             obj.principal = comerciales[i].EsPrincipal;
             obj.CompraNet = comerciales[i].CompraNet;
+            obj.Cupo = comerciales[i].Cupo;
             obj.item = cantContactoComercial;
             aGuardarContactoComercial.push(obj);
 
@@ -219,7 +220,7 @@ function armarComercial(comerciales) {
                 (comerciales[i].Telefono1 ? comerciales[i].Telefono1 + (comerciales[i].Telefono2 ? " - " + comerciales[i].Telefono2 : "") + (comerciales[i].Telefono3 ? " - " + comerciales[i].Telefono3 : "") : "No especifica teléfono") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-mails">' +
-                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.CompraNet == true ? " &#10004;" : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.CompraNet == true ? " &#10004;" : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.CompraNet == true ? " &#10004;" : "") : "") : "No especifica mails") +
+                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? " &#x2713;" : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? " &#x2713;" : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? " &#x2713;" : "")  : "") : "No especifica mails") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-extras">' +
                 '<div class="row">' +

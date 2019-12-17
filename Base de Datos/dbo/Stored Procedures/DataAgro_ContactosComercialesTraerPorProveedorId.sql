@@ -39,6 +39,7 @@ BEGIN
 		cc.ContactoComercialId,
 		cc.EsPrincipal,
 		CC.CompraNet,
+		CC.Cupo,
 		cc.ContactoComercialId
 	FROM ContactoComercial CC
 	WHERE CC.ProveedorId = @ProveedorId

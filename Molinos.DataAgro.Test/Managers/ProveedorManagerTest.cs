@@ -825,11 +825,11 @@ namespace Molinos.DataAgro.Test.Managers
                     new ContactosComercial {intereses=new List<int> {1,2 },
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
                         emails = new List<string>(){"","","" },
-                        CompraNet=false},
+                        CompraNet=false,Cupo=false},
                     new ContactosComercial {intereses=new List<int>(),
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
                         emails = new List<string>(){"","","" },
-                        CompraNet =false }
+                        CompraNet =false,Cupo=false }
                         },
                 ProveedorCorredorId = 0,
                 ProveedorId = 1
@@ -1193,13 +1193,13 @@ namespace Molinos.DataAgro.Test.Managers
                         intereses =new List<int> { 2 },
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
                         emails = new List<string>(){"","","" },
-                        CompraNet=false},
+                        CompraNet=false ,Cupo=false},
                     new ContactosComercial {
                         contactoComercialId=0,
                         intereses =new List<int>(){ 2,3 },
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
                         emails = new List<string>(){"","","" },
-                        CompraNet =false }
+                        CompraNet =false ,Cupo=false}
                         },
                 ProveedorCorredorId = 0,
                 ProveedorId = 1

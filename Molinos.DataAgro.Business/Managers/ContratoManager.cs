@@ -169,6 +169,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
             }
+            if (oParam.MonedaSustentableId == "USDM " && oParam.ImporteSustentable > 7)
+            {
+                oErrorMessages.Error("Importe", "Se excede Tarifa Sustentable");
+            }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
             var sisa = new SISA();
             if (oParam.ClasificacionId == 1)
@@ -828,15 +832,8 @@ namespace Molinos.DataAgro.Business.Managers
             
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
-                var diaAnterior = new DateTime();
-                var diasHabiles = diasHabilesAgent.ObtenerDiasHabiles();                
-                for (var i = 1; i < diasHabiles.Count; i++) {
-                    if (diasHabiles.Contains(DateTime.Now.Date.AddDays(-i)))
-                    {
-                        diaAnterior = DateTime.Now.Date.AddDays(-i);
-                        break;
-                    }
-                }
+                var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+
                 if (oContratoSave.Fecha < diaAnterior)
                 {
                     oEntityErrors.Error("", "Fecha del contrato debe ser la de hoy o día hábil anterior");
@@ -1506,6 +1503,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CorredorId = x.CorredorId ?? 0,
                 Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
                 ComercialId = x.ComercialCreadorId,
+                Fecha = x.Fecha,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
@@ -1560,7 +1558,15 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoMadre = null,
 
             });
-            return contrato;
+            var dia = diasHabilesAgent.UltimoDiaHabil();
+            if(contrato.Fecha < dia)
+            {
+                return new BasicoContrato();
+            }
+            else
+            {
+                return contrato;
+            }
         }
 
         public List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId)

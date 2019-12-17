@@ -3,9 +3,11 @@
     [Codigo]        VARCHAR (20) NOT NULL,
     [Descripcion]   VARCHAR (50) NOT NULL,
     [CampañaId]		INT          NULL,
-	[CodigoEspecie]	INT	NULL,
+	 [CampaniaTableroId] INT NULL, 
+	[CodigoEspecie]	INT	NULL,   
     CONSTRAINT [PK_Material] PRIMARY KEY CLUSTERED ([MaterialId] ASC),
-    CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId])
+    CONSTRAINT [FK_Material_Campania] FOREIGN KEY ([CampaniaTableroId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
+	CONSTRAINT [FK_Material_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId])
 );
 
 

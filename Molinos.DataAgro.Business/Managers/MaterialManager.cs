@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Business
 
         public MaterialDto TraerMaterial(int intMaterialId)
         {
-            return repositorio.Obtener<Material, MaterialDto>(x => x.MaterialId == intMaterialId, x => new MaterialDto { MaterialId = x.MaterialId, CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion}) ?? new MaterialDto();
+            return repositorio.Obtener<Material, MaterialDto>(x => x.MaterialId == intMaterialId, x => new MaterialDto { MaterialId = x.MaterialId, CampaniaTableroId = x.CampaniaTableroId, CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion}) ?? new MaterialDto();
         }
 
 
@@ -63,6 +63,7 @@ namespace Molinos.DataAgro.Business
                 oMaterialSave.Codigo = oMaterial.Codigo;
                 oMaterialSave.Descripcion = oMaterial.Descripcion;
                 oMaterialSave.CampañaId = oMaterial.CampañaId;
+                oMaterialSave.CampaniaTableroId = oMaterial.CampaniaTableroId;
             }
             else
             {
@@ -106,7 +107,8 @@ namespace Molinos.DataAgro.Business
             return new DatosIniAbmMaterial()
             {
                 Material = qry.GetAbmMaterialCombo(),
-                Campania = qry.GetAbmCampaniaCombo()
+                Campania = qry.GetAbmCampaniaCombo(),
+                CampaniaTablero = qry.GetAbmCampaniaTableroCombo()
             };
         }
 
@@ -120,7 +122,9 @@ namespace Molinos.DataAgro.Business
                     Descripcion = x.Descripcion,
                     Codigo = x.Codigo,
                     CampaniaActual = x.Campaña.Descripcion,
-                    CampaniaIdActual = x.CampañaId ?? 0
+                    CampaniaIdActual = x.CampañaId ?? 0,
+                    CampaniaTablero = x.CampaniaTablero.Descripcion,
+                    CampaniaTableroId = x.CampaniaTableroId ?? 0
                 }, null, 0, "Descripcion")
             };
         }

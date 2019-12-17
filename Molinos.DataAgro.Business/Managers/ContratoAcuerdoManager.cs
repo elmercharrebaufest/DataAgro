@@ -17,34 +17,43 @@ namespace Molinos.DataAgro.Business
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio)
+        public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
 
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
         {
             var oEntityErrors = new GrabarAcuerdoResult();
-            var oContratoSave = repositorio.Obtener<ContratoAcuerdo>(oAcuerdo.Id);
-
-            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            if (!repositorio.Existe<Contrato>(x=>x.ContratoAcuerdoId == oAcuerdo.Id))
             {
-                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+                var oContratoSave = repositorio.Obtener<ContratoAcuerdo>(oAcuerdo.Id);
 
-                try
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
-                    repositorio.GuardarCambios();
+                    oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+
+                    try
+                    {
+                        repositorio.GuardarCambios();
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    logger.Error(ex);
+                    oEntityErrors.Error("", "El Contrato Acuerdo no se puede rechazar");
                 }
             }
             else
             {
-                oEntityErrors.Error("", "El Contrato Acuerdo no se puede rechazar");
+                oEntityErrors.Error("", "El Contrato Acuerdo ya se ha utilizado y no se puede rechazar");
             }
             return oEntityErrors;
         }
@@ -284,6 +293,21 @@ namespace Molinos.DataAgro.Business
                 }
             }
             return oEntityErrors;
+        }
+
+        public void AnularAcuerdos()
+        {
+            var dia = diasHabilesAgent.UltimoDiaHabil();
+            var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == 2); 
+            
+            foreach(var acuerdo in listaAcuerdo)
+            {
+                var cantidad = repositorio.Listar<Contrato,double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
+                acuerdo.Cantidad = (int)cantidad;
+                acuerdo.EstadoId = 5;
+            }
+
+           repositorio.GuardarCambios();
         }
     }
 }

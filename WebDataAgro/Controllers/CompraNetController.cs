@@ -436,9 +436,20 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TraerContratoCompleto(int id, string tipo)
         {
+            var copia = (tipo != "acuerdo") ? mobjContratoManager.TraerContrato(id) : mobjContratoManager.TraerContratoAcuerdoACopiar(id);
+            if (copia.ContratoId == 0)
+            {
+                var err = new Resultado();
+                err.Error("acuerdo", "Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior");
+                return new JsonResult()
+                {
+                    Data = err,
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
             return new JsonResult()
             {
-                Data = (tipo != "acuerdo") ? mobjContratoManager.TraerContrato(id) : mobjContratoManager.TraerContratoAcuerdoACopiar(id),
+                Data = copia,
                 MaxJsonLength = Int32.MaxValue
             };
         }

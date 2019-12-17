@@ -15,6 +15,7 @@ $(document).ready(function () {
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
+   
 });
 
 function InicializarBordesRojos() {
@@ -1009,6 +1010,7 @@ function InicializarElementos() {
         }
     });
 
+
     $("#zonasGirasolAltoId").kendoDropDownList({
         optionLabel: "Zona",
         dataTextField: "Descripcion",
@@ -1551,12 +1553,21 @@ function CambioCalidades(calidades) {
         $(".calidadesEspecialesDatos").hide();
         LimpiarCalidades();
     }
+    
     if (calidades !== undefined && calidades.length == 1) {
         $("#valorEspecialesId").data("kendoNumericTextBox").value(calidades[0].Valor);
-    } else  {
+    } else {        
         if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
-            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);           
+            }else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
+                $(".calidadesEspecialesDatos").hide();
+                $(".calidad-no-grado").hide();
+            } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
+                $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+                $(".calidad-no-grado").hide();            
+        }
+        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
@@ -1670,6 +1681,9 @@ function CargarCalidadPorMaterial(value) {
         $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
     } else {
         $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+    }
+    if ($("#material").val() == 2) {
+        $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
     }
     CambioCalidades();
 }
@@ -2134,7 +2148,10 @@ function ObtenerDatos() {
     if (obj.MaterialId === "3") {
         obj.Calidad = viewModel.Calidades;
     } else {
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" || $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Materia Extraña") {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() == "Especial" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado 2" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Materia Extraña") {
             var err = [];
             if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
                 err = AgregarCalidades();
@@ -2297,7 +2314,8 @@ function validarDescuento(descuento) {
 }
 
 function AgregarCalidades() {
-    if ($("#valorEspecialesId").val() === ""
+    if ($("#material").val() == 3 &&
+        $("#valorEspecialesId").val() === ""
         && $("#porcentajeDesdeId").val() === ""
         && $("#porcentajeHastaId").val() === "") {
         var cal = ValorDeCalidad($("#calidadesEspecialesId").data("kendoDropDownList").value());
@@ -2365,10 +2383,12 @@ function AgregarCalidades() {
             Valor: $("#valorEspecialesId").val(),
             PorcentajeDesde: $("#porcentajeDesdeId").val() != "" ? $("#porcentajeDesdeId").val() : null,
             PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
-            StandardDeCalidadId: $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" && $("#valorEspecialesId").val() == 2 && $("#material").data("kendoDropDownList").value() == 2 ? 7 :
+            StandardDeCalidadId:
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ? 7 :
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
-                        $("#calidadesEspecialesId").val() === "" && viewModel.Calidades.length === 0 ? 0 : 2,
+                            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ?2:0,
+            
             Borrar: function () {
                 viewModel.Calidades.remove(this);
             }
