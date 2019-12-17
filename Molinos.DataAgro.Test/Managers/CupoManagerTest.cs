@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ICrearCupoAgent> crearCupoAgentMock;
         private Mock<IEliminarCupoAgent> eliminarCupoAgentMock;
         private Mock<IClienteStopAgent> clienteStopMock;
-        private Mock<IModificarCupoAgent> modificarCupoAgent;
+        private Mock<IModificarCupoAgent> modificarCupoAgentMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         [SetUp]
         public void SetUp()
@@ -42,10 +42,10 @@ namespace Molinos.DataAgro.Test.Managers
             crearCupoAgentMock = new Mock<ICrearCupoAgent>();
             eliminarCupoAgentMock = new Mock<IEliminarCupoAgent>();
             clienteStopMock = new Mock<IClienteStopAgent>();
-            modificarCupoAgent = new Mock<IModificarCupoAgent>();
+            modificarCupoAgentMock = new Mock<IModificarCupoAgent>();
             proveedorManagerMock = new Mock<IProveedorManager>();
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
-                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgent.Object, proveedorManagerMock.Object);
+                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
