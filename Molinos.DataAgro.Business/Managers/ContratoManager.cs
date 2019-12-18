@@ -566,7 +566,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             } else
             {
-                oContrato.Fecha = hoy;
+                oContrato.Fecha = oContrato.ContratoAcuerdoId == null|| oContrato.ContratoAcuerdoId == 0 ? hoy: repositorio.Obtener<ContratoAcuerdo, DateTime>(x=>x.Id == oContrato.ContratoAcuerdoId, x=>x.Fecha);
             }
 
             oContratoSave.MaterialId = oContrato.MaterialId;

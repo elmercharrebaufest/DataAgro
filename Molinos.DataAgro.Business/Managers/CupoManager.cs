@@ -337,7 +337,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);                
                 
 
-                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), listaCupos, cupo));
+                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), listaCupos, cupo, emailComercial));
                 var subject = "";
 
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
@@ -380,7 +380,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo)
+        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
@@ -408,7 +408,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.Centro.CodigoSap == "1600" &&(cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
                 htmlBody += "<tr>" + Td(ref linea)+"Observaciones: " + (cupo.MaterialId == 1? "Maíz Especial": cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable")+ "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres +" "+ cupo.Comercial.Apellido +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres +" "+ cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
