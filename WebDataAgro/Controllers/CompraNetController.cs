@@ -285,7 +285,7 @@ namespace WebDataAgro.Controllers
             }
             request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
+            var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial, true);
 
             return Json(model);
         }

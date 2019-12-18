@@ -771,9 +771,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial, bool? compranet = null)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial));
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial, compranet));
         }
         public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
