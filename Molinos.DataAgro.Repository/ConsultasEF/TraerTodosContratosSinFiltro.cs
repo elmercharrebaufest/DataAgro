@@ -14,15 +14,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public static class TraerTodosContratosSinFiltro
     {
-        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, bool corredor, List<int> equipo, List<int> corredoresComercial, bool? compranet= null)
+        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos =
                 from contrato in contexto.Set<Contrato>()
-                where (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
-                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) &&
-                compranet.HasValue && compranet.Value? contrato.ContratoAcuerdoId == null : true 
+                where equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)
                 select new BasicoContrato()
                 {
                     Id = contrato.ContratoId,

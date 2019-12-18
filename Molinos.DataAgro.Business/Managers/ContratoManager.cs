@@ -556,7 +556,11 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                if(oContrato.ContratoAcuerdoId != null || oContrato.ContratoAcuerdoId != 0)
+                {
+                    oContrato.EstadoId = 2;
+                }
+                else if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                 {
                     oContrato.EstadoId = 7;
                 }
@@ -771,9 +775,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial, bool? compranet = null)
+        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial, compranet));
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial));
         }
         public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {

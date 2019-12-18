@@ -344,7 +344,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     subject += "Mail Pruebas - ";
                 }
-                subject += "Nuevo negocio Molinos Agro S.A. - ";
+                subject += "Cupos Molinos Agro S.A. - ";
                 subject += cupo.Proveedor.RazonSocial;
                 oMensaje.Subject = subject;
                 oMensaje.BodyEncoding = Encoding.UTF8;

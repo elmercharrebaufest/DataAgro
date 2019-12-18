@@ -13,22 +13,20 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly List<int> equipo;
         private readonly bool corredor;
         private readonly List<int> corredoresComercial;
-        private readonly bool? compranet;
 
-        public TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial, bool? compranet = null)
+        public TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
             this.corredor = corredor;
             this.corredoresComercial = corredoresComercial;
-            this.compranet = compranet;
         }
 
-        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial, bool? compranet= null)
+        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, corredor, equipo, corredoresComercial, compranet);
+            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, corredor, equipo, corredoresComercial);
             return new KendoGrid<BasicoContrato>(request, queryContratos);
         }
         
@@ -36,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, corredor, equipo, corredoresComercial, compranet);
+                return Query(contexto, request, corredor, equipo, corredoresComercial);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IContratoManager
     {
-        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial,bool? compranet = null);
+        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
         KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
 
         DatosIniContrato TraerDatosCombo();
