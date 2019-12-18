@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.Password = PassSap;
                 logger.Debug("Finalizando Contrato Nro: " + contrato.ContratoId);
                 var listaDescuentos = new List<ZMPES5290>();
-                
+
                 foreach (var descBon in descuentoBonificacion)
                 {
                     if (descBon.TipoPeriodoDBId != 1)
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     if (cal.StandardDeCalidadId == 2)
                     {
-                        if (((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))|| cal.CalidadEspecial.Id == 10)
+                        if (((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5)) || cal.CalidadEspecial.Id == 10)
                         {
                             listaCalidades.Add(new ZMPES5300
                             {
@@ -167,14 +167,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         NO_INFORMAR_SIO = noInformaSioString,
                         PAGO_DIFERIDO = pagoDiferidoString,
                         MATERIAL = contrato.Material.Codigo,
-                        PAGO_DIF_ARP = contrato.PagoDiferido.HasValue&& contrato.PagoDiferido.Value? "X":"",
+                        PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                         PRECIO_PIZARRA = contrato.Precio,
                         PRECIO = contrato.PrecioNeto ?? contrato.Precio,
                         PROVEEDOR = contrato.Proveedor.CUIT,
                         PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
-                        ESPECIAL = contrato.StandardDeCalidad != null? contrato.StandardDeCalidad.CodigoSap: especialString,
-                        FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
+                        ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString,
+                        FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
+                        repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                         USUARIO = contrato.Comercial.IdActiveDirectory,
                         HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                         PROCEDENCIA = localidadString,
@@ -210,9 +211,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
                         CONTRATO_MADRE = contrato.ContratoMadre ?? "",
                         CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "",
-                        ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap:"",
+                        ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap : "",
                         COMPENSACION = contrato.Compensacion == true ? "X" : "",
-                        FLETE_NIVEL = contrato.NivelTarifa!= null? contrato.NivelTarifa.CodigoSap : "" ,
+                        FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "",
                         FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                     },
                     IM_TOPES_FIJ = new ZMPES5280
