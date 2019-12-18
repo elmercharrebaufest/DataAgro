@@ -18,5 +18,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int TerminalStopId { get; set; }
         public string CuitDestinoStop { get; set; }
         public int CodigoLocalidadStop { get; set; }
+        public decimal ImporteSustentable { get; set; }
     }
 }

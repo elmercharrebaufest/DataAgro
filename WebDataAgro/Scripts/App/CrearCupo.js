@@ -23,7 +23,7 @@ function InicializarCargaCupos() {
 
     $("#buscadorProveedor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+            '<p class="#:data.Corredor# buscar-nomb" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)</p>',
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "Filtro",
@@ -33,7 +33,6 @@ function InicializarCargaCupos() {
         change: function () {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
-
             }
         },
         select: function (e) {

@@ -30,7 +30,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             {
                                 Id = provs.Key.ProveedorId,
                                 Cuit = provs.Key.CUIT,
-                                RazonSocial = provs.Key.SegmentacionId==5|| provs.Key.SegmentacionId == 7 ? "C - " + provs.Key.RazonSocial: provs.Key.RazonSocial,
+                                RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + provs.Key.RazonSocial : provs.Key.RazonSocial,
+                                Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
                                 Filtro = filtro + "|" + provs.Key.RazonSocial + " (" + provs.Key.CUIT + ")"
                             };
 

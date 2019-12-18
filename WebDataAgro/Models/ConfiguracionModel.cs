@@ -21,6 +21,7 @@ namespace WebDataAgro.Models
         public int TerminalStopId { get; set; }
         public string CuitDestinoStop { get; set; }
         public int CodigoLocalidadStop { get; set; }
+        public decimal ImporteSustentable { get; set; }
         public Resultado Resultado { get; set; }
     }
 }

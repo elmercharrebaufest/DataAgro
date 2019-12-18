@@ -616,7 +616,7 @@ namespace Molinos.DataAgro.Business.Managers
                     listaAgentes.Add(agenteTemp);
                 }
             }
-            return listaAgentes.OrderBy(x => new DateTime(int.Parse(x.Posicion.Split('.')[1]), int.Parse(x.Posicion.Split('.')[0]), 1)).ToList();
+            return listaAgentes.OrderBy(x=>x.MaterialId).ThenBy(x => new DateTime(int.Parse(x.Posicion.Split('.')[1]), int.Parse(x.Posicion.Split('.')[0]), 1)).ToList();
         }
 
         public ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechadesde, DateTime fechaHasta, int? calidad, int centroId = 0)

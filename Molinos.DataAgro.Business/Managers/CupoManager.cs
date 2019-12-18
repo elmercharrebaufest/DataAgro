@@ -89,7 +89,10 @@ namespace Molinos.DataAgro.Business.Managers
                             error.ListaCupos.AddRange(listaCupos);
                         }
                     }
-                    EnviarEmail(cupo, error.ListaCupos);
+                    if (error.ListaCupos.Count > 0)
+                    {
+                        EnviarEmail(cupo, error.ListaCupos);
+                    }
                     return error;
                 }
                 else
@@ -289,13 +292,16 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<Cupo, string>(x => x.Id == id, x => x.CupoSap);
         }
 
-        public void EnviarEmail(Cupo cupo,List<string> listaCupos)
+        private void EnviarEmail(Cupo cupo,List<string> listaCupos)
         {
             try
             {
                 var id = cupo.ProveedorId;
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
-
+                if (proveedorContacto.Count == 0)
+                {
+                    return;
+                }
                 string emailComercial = "";
 
                 if (cupo.Comercial != null)

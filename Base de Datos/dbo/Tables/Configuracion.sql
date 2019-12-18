@@ -7,6 +7,7 @@
     [TerminalStopId]		INT NULL DEFAULT 12,
     [CuitDestinoStop]		VARCHAR(MAX) NULL DEFAULT '20005894582',
     [CodigoLocalidadStop] INT NULL DEFAULT 18794, 
+    [ImporteSustentable] DECIMAL(11, 2) NULL DEFAULT 8, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

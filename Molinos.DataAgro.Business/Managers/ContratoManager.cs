@@ -169,7 +169,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
             }
-            if (oParam.MonedaSustentableId == "USDM " && oParam.ImporteSustentable > 7)
+            var config = repositorio.Obtener<Configuracion>(1);
+            if (oParam.MonedaSustentableId == "USDM " && oParam.ImporteSustentable > config.ImporteSustentable)
             {
                 oErrorMessages.Error("Importe", "Se excede Tarifa Sustentable");
             }
@@ -458,7 +459,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
             }
-            var cantidadDias = configuracionManager.TraerConfiguraciones().CantidadDias;
+            var cantidadDias = config.CantidadDias;
             var fechaFijacion = oParam.HastaFijacion;
             var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
 

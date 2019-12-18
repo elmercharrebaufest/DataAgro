@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     if (cal.StandardDeCalidadId == 2)
                     {
-                        if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
+                        if (((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))|| cal.CalidadEspecial.Id == 10)
                         {
                             listaCalidades.Add(new ZMPES5300
                             {

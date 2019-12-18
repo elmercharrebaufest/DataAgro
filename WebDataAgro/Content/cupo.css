@@ -293,3 +293,7 @@ ul{
 span.k-widget.k-numerictextbox.cantidad-masiva {
     margin-bottom: 0;
 }
+
+[class^="COR"]{
+    font-weight:bold;
+}
