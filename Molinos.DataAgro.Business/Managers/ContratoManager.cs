@@ -390,10 +390,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
                 var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
-                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value).Sum(d => d.Cantidad);
+                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId ==1|| d.EstadoId == 2||d.EstadoId == 3||d.EstadoId == 4|| d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
-                    oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " tn)");
+                    oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
                 }
             }
             if (oParam.StandardDeCalidadId == 0 || oParam.StandardDeCalidadId == null)
