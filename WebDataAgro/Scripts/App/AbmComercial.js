@@ -44,23 +44,7 @@ function InicializarElementos() {
     $("#PerfilId").kendoDropDownList({
         dataTextField: "Descripcion",
         dataValueField: "PerfilId",
-        change: function (e) {
-            var idPerfil = this.dataItem().PerfilId;
-            var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
-
-            if (idPerfil == 4 || idPerfil == 5) {
-                $("#Administrador").prop("checked", false);
-                $("#Administrador").prop("disabled", true);
-                viewModel.set("Comercial.Administrador", false);
-                $("#EmpleadorACargo").data("kendoDropDownList").text("");
-                empleadoACargoDDList.enable(false);
-                viewModel.Comercial.EmpleadorACargo = null;
-            }
-            else {
-                empleadoACargoDDList.enable(true);
-                $("#Administrador").prop("disabled", false);
-            }
-        }
+        
     });
 
     $("#PerfilId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -318,8 +302,7 @@ function UpdateViewModel(model) {
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         "Administrador": model.Comercial.Administrador,
-        "Cupera": model.Comercial.Cupera
-        
+        "Cupera": model.Comercial.Cupera        
     };
     
     viewModel.set("Comercial", comercial);
@@ -423,25 +406,7 @@ function Modificar() {
             viewModel.set("isModifyDisabled", true);
             HabilitarEdicion();
             LimpiarValidaciones();
-            UpdateViewModel(result);
-
-            var idPerfil = $("#PerfilId").val();
-
-            if (idPerfil == 4 || idPerfil == 5) {
-                $("#Administrador").prop("checked", false);
-                $("#Administrador").prop("disabled", true);
-                viewModel.set("Comercial.Administrador", false);
-
-                $("#EmpleadorACargo").data("kendoDropDownList").text("");
-                var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
-                empleadoACargoDDList.enable(false);
-                viewModel.Comercial.EmpleadorACargo = null;
-            }
-            else {
-                var empleadoACargoDDList = $("#EmpleadorACargo").data("kendoDropDownList");
-                empleadoACargoDDList.enable(true);
-                $("#Administrador").prop("disabled", false);
-            }
+            UpdateViewModel(result);           
         }
     }
 }
