@@ -556,11 +556,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if(oContrato.ContratoAcuerdoId != null || oContrato.ContratoAcuerdoId != 0)
-                {
-                    oContrato.EstadoId = 2;
-                }
-                else if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                 {
                     oContrato.EstadoId = 7;
                 }
@@ -572,7 +568,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContrato.Fecha = hoy;
             }
-
+            if (oContrato.ContratoAcuerdoId != null || oContrato.ContratoAcuerdoId != 0)
+            {
+                oContrato.EstadoId = 2;
+            }
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
