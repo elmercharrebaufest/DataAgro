@@ -59,7 +59,7 @@ namespace WebDataAgro
         {
             var comercialManager = DependencyResolver.Current.GetService<IComercialManager>();
             var equipo = comercialManager.ListarEquipo(GlobalVariables.IdActiveDirectory);
-            GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
+            //GlobalVariables.Perfil = comercialManager.ObtenerPerfilDeUsuario(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsAdministrador = comercialManager.EsAdministrador(GlobalVariables.IdActiveDirectory);
             GlobalVariables.EsCupera = comercialManager.EsCupera(GlobalVariables.IdActiveDirectory);
             GlobalVariables.Equipo = equipo.Equipo;

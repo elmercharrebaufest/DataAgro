@@ -576,7 +576,15 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + Split(oContrato.Fecha.ToShortDateString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea);
+            if(oContrato.ContratoAcuerdoId!= null)
+            {
+                htmlBody += Split(oContrato.ContratoAcuerdo.Fecha.ToShortDateString()) + "</td></tr>";
+            }
+            else
+            {
+                htmlBody += Split(oContrato.Fecha.ToShortDateString()) + "</td></tr>";
+            }
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.DestinoId != null)
@@ -833,14 +841,14 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "SUSTENTABLE <br />";
                 }
-                if (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
+                if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
-                    repositorio.Existe<Calidad>(x => x.ContratoId == contrato.ContratoId && x.CalidadEspecialId == 4 && x.Valor == 2)))
+                    repositorio.Existe<Calidad>(x => x.ContratoId == contrato.ContratoId && x.CalidadEspecialId == 4 && x.Valor == 2))))
                 {
                     htmlBody += "CALIDAD GRADO 2<br />";
                 }
-                else if (contrato.StandardDeCalidad.Descripcion == "Especial"
-                    || contrato.StandardDeCalidad.Descripcion == "Materia Extraña")
+                else if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Especial"
+                    || contrato.StandardDeCalidad.Descripcion == "Materia Extraña"))
                 {
                     htmlBody += "CALIDAD ESPECIAL<br />";
                 }
