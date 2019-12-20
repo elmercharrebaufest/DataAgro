@@ -1093,7 +1093,6 @@ namespace Molinos.DataAgro.Business.Managers
                 PrecioNeto = x.Precio.ToString()
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
-             && (x.EstadoId == 2)
              && x.MaterialId == materialId
              && (!calidad.HasValue || calidad.Value == 3)
              && (centroId == 0 || x.DestinoId == centroId));
