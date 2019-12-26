@@ -304,10 +304,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                     client.BaseAddress = new Uri(urlStop);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                    logger.Debug("Iniciando consulta");
                     var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 6 && x.EstadoCupoId != 7 && !x.Centro.Acopio);
                     var token = ObtenerToken(datosConfiguracion.ClaveStop);
                     var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
+                    logger.Debug("Token obtenido. Consultando para fechas"+string.Join(", ", fechas) );
+
                     foreach (var fecha in fechas)
                     {
                         HttpResponseMessage response = client.PostAsJsonAsync(
@@ -316,7 +318,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var res = response.Content.ReadAsAsync<dynamic>().Result;
                         var jObject = JObject.Parse(res.ToString());
                         ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                        logger.Debug(fecha.ToString() + " " + respuesta.isError.ToString());
+                        logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
                         if (!respuesta.isError)
                         {
                             ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());

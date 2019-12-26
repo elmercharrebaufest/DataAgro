@@ -60,7 +60,7 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"Transmitiendo cupos a STOP");
              var result = cupoManager.ConsultarCuposDiarios();
-            logger.Info($"Borrado Automatico - Finalizado");
+            logger.Info($"Consulta Cupos a Stop - Finalizado");
             return Content("ok");
         }
 
