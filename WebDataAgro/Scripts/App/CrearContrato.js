@@ -2385,9 +2385,10 @@ function AgregarCalidades() {
             PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
             StandardDeCalidadId:
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ? 7 :
-                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
+                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
-                            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ?2:0,
+                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado"||
+                            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? 2 : 0,
             
             Borrar: function () {
                 viewModel.Calidades.remove(this);
