@@ -305,10 +305,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     logger.Debug("Iniciando consulta");
-                    var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 6 && x.EstadoCupoId != 7 && !x.Centro.Acopio);
+                    var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
                     var token = ObtenerToken(datosConfiguracion.ClaveStop);
                     var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
-                    logger.Debug("Token obtenido. Consultando para fechas"+string.Join(", ", fechas) );
+                    logger.Debug("Token obtenido. Consultando para fechas "+string.Join(", ", fechas) );
 
                     foreach (var fecha in fechas)
                     {
