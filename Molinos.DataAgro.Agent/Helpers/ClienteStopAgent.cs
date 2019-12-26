@@ -316,6 +316,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var res = response.Content.ReadAsAsync<dynamic>().Result;
                         var jObject = JObject.Parse(res.ToString());
                         ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                        logger.Debug(fecha.ToString() + " " + respuesta.isError.ToString());
                         if (!respuesta.isError)
                         {
                             ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());
