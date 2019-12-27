@@ -32,15 +32,22 @@
             </span>
         </div>
         <div class="float-right margen-15">
-            <span id="anularVarios" class="btnVarios" onclick="AnularSeleccionados()">
-                <i class="fa fa-trash"></i>
-                Anular
-            </span>
-        </div><div class="float-right margen-15">
+            @if (anularCupo)
+            {
+                <span id="anularVarios" class="btnVarios" onclick="AnularSeleccionados()">
+                    <i class="fa fa-trash"></i>
+                    Anular
+                </span>
+            }
+        </div>
+        <div class="float-right margen-15">
+        @if (modificarCupo)
+        {
             <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
                 <i class="fa fa-pencil"></i>
                 Modificar
             </span>
+        }
         </div>
         <div class="float-right margen-15">
             <span id="copiar" class="btnVarios" onclick="CopiarSeleccionados()">
