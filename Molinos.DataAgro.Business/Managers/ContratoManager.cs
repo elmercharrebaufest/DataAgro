@@ -562,6 +562,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
+                    logger.Debug("Contrato Confirmado por estado: " + oContratoSave.EstadoId);
+
                     oContrato.EstadoId = oContratoSave.EstadoId;
                 }
             } else
@@ -570,6 +572,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ContratoAcuerdoId != null || oContrato.ContratoAcuerdoId != 0)
             {
+                logger.Debug("Contrato Confirmado por contratoAcuerdo: " + oContrato.ContratoAcuerdoId);
                 oContrato.EstadoId = 2;
             }
             oContratoSave.MaterialId = oContrato.MaterialId;
