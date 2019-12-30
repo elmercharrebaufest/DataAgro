@@ -106,7 +106,7 @@ namespace WebDataAgro.Controllers
                     }
                 }
             }
-            else
+            else if (ViewData.ModelState.IsValid)
             {
                 var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.Dias);
                 if (cupoGrabado.HayError)
@@ -183,11 +183,11 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
+                    Selected = comercial.GrupoDeComprasId!= null && comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
                 });
             }
             ViewBag.Zona = listaZona;
-            ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
+            ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
             
             ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
                 new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
