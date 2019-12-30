@@ -570,7 +570,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContrato.Fecha = hoy;
             }
-            if (oContrato.ContratoAcuerdoId != null || oContrato.ContratoAcuerdoId != 0)
+            if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue)
             {
                 logger.Debug("Contrato Confirmado por contratoAcuerdo: " + oContrato.ContratoAcuerdoId);
                 oContrato.EstadoId = 2;
