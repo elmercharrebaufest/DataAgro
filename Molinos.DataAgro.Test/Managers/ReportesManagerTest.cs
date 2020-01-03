@@ -656,7 +656,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,Posicion = "02.2019" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha2, FechaHasta = fecha2 } });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), DirOrden.Asc))
+                .Returns(new List<PrecioPizarra>());
             var result = target.TraerPosicionCompras(fecha, fecha);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(7));
