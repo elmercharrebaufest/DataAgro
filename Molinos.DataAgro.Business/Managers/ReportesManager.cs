@@ -691,24 +691,26 @@ namespace Molinos.DataAgro.Business.Managers
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
+            var precioPizarra = repositorio.Listar<PrecioPizarra>(x=>x.MaterialId == materialId && x.FechaHasta <= fechaHasta);
+            var precio = precioPizarra.Count > 0 ? precioPizarra.OrderByDescending(x=>x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.FijacionDePrecioContratoId,
                 FechaDesde = x.FechaDesde,
                 FechaHasta = x.FechaHasta,
                 Cantidad = x.Cantidad,
-                Precio = x.Precio,
+                Precio = x.Pizarra == true ? precio.Precio : x.Precio,
                 CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
-                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                MonedaId = x.MonedaId
+                CantidadPonderada = x.Pizarra == true && precio.Precio > 0 ? x.Cantidad : x.Precio > 0 ? x.Cantidad : 0,
+                MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
-                x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
-                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
-                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
-                && x.MaterialId == materialId
-                && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 3 && x.TrigoEspecial == false))
-                && (centroId == 0 || centroId == x.DestinoId));
+            x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
+            && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
+            && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+            && x.MaterialId == materialId
+            && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 3 && x.TrigoEspecial == false))
+            && (centroId == 0 || centroId == x.DestinoId));
             foreach (var cont in fijaciones)
             {
                 var posicion = cont.FechaDesde - DateTime.Now;
