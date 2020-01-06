@@ -1001,7 +1001,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 TipoNegocio = "FASÓN",
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
-                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                Cantidad = SqlFunctions.StringConvert(x.Cantidad),
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1039,7 +1039,7 @@ namespace Molinos.DataAgro.Business.Managers
              && (centroId == 0 || centroId == 1));
             foreach (var i in fasones)
             {
-                var fechaDesde = DateTime.Parse(i.FechaDesde);
+                var fechaDesde = DateTime.Parse(i.Fecha);
                 var posicion = new DateTime(fechaDesde.Year, fechaDesde.Month, 1);
                 var hoy = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 if (posicion <= hoy)
@@ -1054,7 +1054,6 @@ namespace Molinos.DataAgro.Business.Managers
                     data.Add(i);
                 }
             }
-            data.AddRange(fasones);
 
             var acuerdos = repositorio.Listar<ContratoAcuerdo, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1225,7 +1224,7 @@ namespace Molinos.DataAgro.Business.Managers
         public string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0)
         {
             var detalle = TraerDetallePosicion(materialId, mes, anio, fechaDesde, fechaHasta, calidad, centroId);
-            detalle.ForEach(x => x.Cantidad = int.Parse(x.Cantidad).ToString("n0"));
+            detalle.ForEach(x => x.Cantidad = (int.Parse(x.Cantidad)).ToString("n0"));
             detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio.Replace('.', ',')).ToString("n2"));
             detalle.ForEach(x => x.PrecioNeto = decimal.Parse(x.PrecioNeto.Replace('.', ',')).ToString("n2"));
             return JsonConvert.SerializeObject(new { items = detalle, total = detalle.Count() }); ;
