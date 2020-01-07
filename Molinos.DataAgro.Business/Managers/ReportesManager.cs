@@ -645,6 +645,8 @@ namespace Molinos.DataAgro.Business.Managers
         private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0)
         {
             var standard = calidad.HasValue ? calidad.Value : 1;
+            var precioPizarra = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == materialId && x.FechaHasta <= fechaHasta);
+            var precio = precioPizarra.Count > 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
@@ -655,12 +657,12 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesde = x.FechaDesde,
                 FechaHasta = x.FechaHasta,
                 Cantidad = x.Cantidad,
-                Precio = x.Precio,
+                Precio = x.Pizarra == true ? precio.Precio : x.Precio,
                 TipoNegocioId = x.TipoNegocioId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
                 CampanaId = x.CampanaId,
-                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
-                MonedaId = x.MonedaId
+                CantidadPonderada = x.Pizarra == true && precio.Precio > 0 ? x.Cantidad : x.Precio > 0 ? x.Cantidad : 0,
+                MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -691,8 +693,6 @@ namespace Molinos.DataAgro.Business.Managers
                 cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
             }
 
-            var precioPizarra = repositorio.Listar<PrecioPizarra>(x=>x.MaterialId == materialId && x.FechaHasta <= fechaHasta);
-            var precio = precioPizarra.Count > 0 ? precioPizarra.OrderByDescending(x=>x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PosicionPorMaterial>(x => new PosicionPorMaterial
             {
                 Id = x.FijacionDePrecioContratoId,
@@ -1141,21 +1141,7 @@ namespace Molinos.DataAgro.Business.Managers
             var listaDatos = new List<string[]>();
             foreach (var cont in contratos)
             {
-                var fechaDesde = DateTime.Parse(cont.FechaDesde);
-                var fechaHasta = DateTime.Parse(cont.FechaHasta);
-                var dato = new string[34];
-                if ((DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) >= 10 && fechaDesde.Month == mes && fechaDesde.Year == anio)
-                {
-                    listaDatos.Add(CrearArray(cont));
-                }
-                else if (fechaDesde.AddMonths(1).Month <= fechaHasta.Month && fechaDesde.AddMonths(1).Month == mes && fechaDesde.Year == anio && (DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) < 10)
-                {
-                    listaDatos.Add(CrearArray(cont));
-                }
-                else if (fechaDesde.AddMonths(1).Month > fechaHasta.Month && fechaHasta.Month == mes && fechaDesde.Year == anio && (DateTime.DaysInMonth(fechaDesde.Year, fechaDesde.Month) - fechaDesde.Day) < 10)
-                {
-                    listaDatos.Add(CrearArray(cont));
-                }
+                listaDatos.Add(CrearArray(cont));               
             }
             return listaDatos;
         }
