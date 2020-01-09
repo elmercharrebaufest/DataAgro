@@ -18,18 +18,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly FiltroReporteNegocioDto request;
         private readonly List<int> equipo;
-        private readonly bool corredor;
-        private readonly List<int> corredoresComercial;
 
-        public TraerContratosPorFiltro(FiltroReporteNegocioDto request, bool corredor, List<int> equipo, List<int> corredoresComercial)
+        public TraerContratosPorFiltro(FiltroReporteNegocioDto request, List<int> equipo)
         {
             this.request = request;
             this.equipo = equipo;
-            this.corredor = corredor;
-            this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGridContratoDto Query(DbContext contexto, FiltroReporteNegocioDto request, bool corredor, List<int> equipo, List<int> corredoresComercial)
+        private static KendoGridContratoDto Query(DbContext contexto, FiltroReporteNegocioDto request, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaEntregaDesde = (!string.IsNullOrEmpty(request.FechaEntregaDesde) ? (DateTime?)DateTime.ParseExact(request.FechaEntregaDesde, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
@@ -40,19 +36,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var FechaLimiteDolarizado = (!string.IsNullOrEmpty(request.FechaLimiteDolarizado) ? (DateTime?)DateTime.ParseExact(request.FechaLimiteDolarizado, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             request.ProveedorId = request.ProveedorId ?? (new int[0]);
             request.CorredorId = request.CorredorId ?? (new int[0]);
-            var listaContrato = new List<string>();
-            if (!string.IsNullOrEmpty(request.ContratoSAP))
-            {
-                request.ContratoSAPHasta = string.IsNullOrEmpty(request.ContratoSAPHasta) ? request.ContratoSAP : request.ContratoSAPHasta;
-                for (var i = int.Parse(request.ContratoSAP); i <= int.Parse(request.ContratoSAPHasta); i++)
-                {
-                    listaContrato.Add(i.ToString().PadLeft(10, '0'));
-                }
-            }
-            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, corredor, equipo, corredoresComercial);
-
+            
+            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto,  equipo);
+            var listaId = request.ListaContratos != null && request.ListaContratos.Any();
             queryContratos = queryContratos.Where(contrato =>
-                    (!string.IsNullOrEmpty(request.ContratoSAP) ? listaContrato.Contains(contrato.ContratoSAP) : true) &&
+                    (listaId ? request.ListaContratos.Contains(contrato.ContratoId) : true) &&
                     (request.ProveedorId.Any() ? request.ProveedorId.Contains(contrato.ProveedorId) : true) &&
                     (request.CorredorId.Any() ? request.CorredorId.Contains(contrato.CorredorId) : true) &&
                     (request.TipoNegocioId != 0 ? request.TipoNegocioId == contrato.TipoNegocioId : true) &&
@@ -116,7 +104,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, corredor, equipo, corredoresComercial);
+                return Query(contexto, request, equipo);
             }
         }
     }

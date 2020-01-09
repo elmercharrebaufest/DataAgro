@@ -78,6 +78,8 @@
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
     <Compile Include="Dto\ConfiguracionDto.cs" />
     <Compile Include="Dto\AltaTempranaNRCODto.cs" />
+    <Compile Include="Dto\ContratoIdDto.cs" />
+    <Compile Include="Dto\ContratoSAPDto.cs" />
     <Compile Include="Dto\CupoResult.cs" />
     <Compile Include="Dto\DiaCupo.cs" />
     <Compile Include="Dto\KendoGridContratoDto.cs" />

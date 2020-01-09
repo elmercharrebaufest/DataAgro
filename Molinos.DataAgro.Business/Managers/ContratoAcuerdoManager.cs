@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -33,7 +34,11 @@ namespace Molinos.DataAgro.Business
             {
                 var oContratoSave = repositorio.Obtener<ContratoAcuerdo>(oAcuerdo.Id);
 
-                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || 
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || 
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || 
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
                     oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 
@@ -100,10 +105,12 @@ namespace Molinos.DataAgro.Business
 
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
+            var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
 
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
+                oContratoAcuerdo.EstadoId = estado;
                 repositorio.Agregar(oContratoAcuerdo);
             }
             else
@@ -114,7 +121,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.DestinoId = oContratoAcuerdo.DestinoId;
                 objContratoAcuerdo.FechaDesde = oContratoAcuerdo.FechaDesde;
                 objContratoAcuerdo.FechaHasta = oContratoAcuerdo.FechaHasta;
-                objContratoAcuerdo.EstadoId = oContratoAcuerdo.EstadoId;
+                objContratoAcuerdo.EstadoId = estado == 1? 7:2;
                 objContratoAcuerdo.ComercialCreadorId = oContratoAcuerdo.ComercialCreadorId;
                 objContratoAcuerdo.Precio = oContratoAcuerdo.Precio;
                 objContratoAcuerdo.Cantidad = oContratoAcuerdo.Cantidad;

@@ -146,6 +146,9 @@ function botonConfirmadoTilde(dataItem, icono) {
 }
 
 function botonFinalizado(dataItem, icono) {
+    if (dataItem.TipoNegocioId == 6) {
+        return '<div></div>';
+    }
     if (finalizaNegocios) {
         return '<button data-toggle="tooltip" title="Finalizar" onclick="ModalFinalizado(' +
             "'" + dataItem.ContratoId + "'" + ',' +
@@ -233,7 +236,7 @@ function botonVisualizar(dataItem, icono) {
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
-function botonBorrar(dataItem, icono) {
+function botonBorrar(dataItem, icono) {   
     if (eliminaNegocios) {
         return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
             "'" + dataItem.Proveedor + "'" + ',' +
@@ -1574,7 +1577,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
-    if (standardDeCalidadDescripcion == "Grado 2") $("#calidadesDivVisualizar").hide();
+    if (standardDeCalidadDescripcion == "Grado 2" || standardDeCalidadDescripcion == "Bonif. SECO de 7% a 10% Por punto") $("#calidadesDivVisualizar").hide();
 
     if (zona !== "undefined" && zona !=="") {
         $("#visualizar-zona-girasol").text(zona);

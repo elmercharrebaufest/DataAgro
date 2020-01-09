@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -96,9 +97,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
                     return oEntityErrors;
                 }
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
                 oFasonSave.Precio = oAgente.Precio;
                 oFasonSave.Cantidad = oAgente.Cantidad;
-                oFasonSave.EstadoId = 2;
+                oFasonSave.EstadoId = estado;
                 oFasonSave.OperadorId = oAgente.OperadorId;
                 oFasonSave.ComercialId = oAgente.ComercialId;
                 oFasonSave.MonedaId = oAgente.MonedaId;
@@ -108,7 +110,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
                 oAgente.Fecha = DateTime.Now;
+                oAgente.EstadoId = estado;
                 repositorio.Agregar(oAgente);
             }
 
@@ -129,7 +133,10 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarAgenteResult();
             var oFasonSave = repositorio.Obtener<AgenteCompra>(agenteId);
 
-            if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.EstadoId == (int)EnumEstadoContrato.Con_Error)
+            if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Confirmado ||
+                oFasonSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
+                oFasonSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar ||
+                oFasonSave.EstadoId == (int)EnumEstadoContrato.Con_Error)
             {
                 try
                 {

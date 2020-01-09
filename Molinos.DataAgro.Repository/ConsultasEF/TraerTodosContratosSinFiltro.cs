@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public static class TraerTodosContratosSinFiltro
     {
-        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, bool corredor, List<int> equipo, List<int> corredoresComercial)
+        public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
@@ -238,7 +238,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 };
 
             queryContratos = queryContratos.Union(queryFijacion);
-            if (PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
+            if (PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
             {
                 var queryFason =
                     from fas in contexto.Set<Fason>()
@@ -350,8 +350,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                     };
 
-                queryContratos = queryContratos.Union(queryFason);
-
+                queryContratos = queryContratos.Union(queryFason); 
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
+            {
                 var queryAgente =
                     from age in contexto.Set<AgenteCompra>()
                     where equipo.Contains(age.ComercialId)
@@ -463,6 +465,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     };
 
                 queryContratos = queryContratos.Union(queryAgente);
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos))
+            {
                 var queryAcuerdo =
                     from acu in contexto.Set<ContratoAcuerdo>()
                     where equipo.Contains(acu.ComercialCreadorId)
@@ -570,9 +575,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TarifaFlete = null,
                         Compensacion = null,
                         Acuerdo = null
-
                     };
-
                 queryContratos = queryContratos.Union(queryAcuerdo);
             }
             return queryContratos;

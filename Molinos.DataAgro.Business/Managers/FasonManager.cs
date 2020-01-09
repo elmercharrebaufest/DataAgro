@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -96,9 +97,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El Negocio Fasón no se puede modificar");
                     return oEntityErrors;
                 }
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
                 oFasonSave.Precio = oFason.Precio;
                 oFasonSave.Cantidad = oFason.Cantidad;
-                oFasonSave.EstadoId = 2;
+                oFasonSave.EstadoId = estado;
                 oFasonSave.FasoneroId = oFason.FasoneroId;
                 oFasonSave.ComercialId = oFason.ComercialId;
                 oFasonSave.MonedaId = oFason.MonedaId;
@@ -113,7 +115,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
                 oFason.Fecha = DateTime.Now;
+                oFason.EstadoId = estado;
                 repositorio.Agregar(oFason);
             }
 
@@ -171,7 +175,11 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarFasonResult();
             var oContratoSave = repositorio.Obtener<Fason>(oFason.Id);
 
-            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
+            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar 
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado 
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error 
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 

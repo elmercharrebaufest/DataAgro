@@ -102,10 +102,16 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
-            if (!PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios))
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
+            }
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
+            {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 5));
+            }
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos))
+            {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 6));
             }
             datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -783,7 +789,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, corredor, listComercialesId, corredoresComercial));
+            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, listComercialesId));
         }
         public GrabarContratoResult ConfirmarContrato(int contratoId)
         {
@@ -1637,6 +1643,120 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var proveedor = repositorio.Obtener<Proveedor>(proveedorId);
             return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);            
+        }
+
+        public Resultado ActualizarContratoSAP(Contrato contrato)
+        {
+            var error = new Resultado();
+            
+            var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoId == contrato.ContratoId);
+            if(contratoSave==null && contratoSave.ContratoId == 0) 
+            {
+                error.Error("Contrato", "No existe contrato en DataAgro");
+            }
+            
+            Validar(contrato, error);
+
+            if (error.Errores.Count > 0)
+            {
+                return error;
+            }
+            contratoSave.MaterialId = contrato.MaterialId;
+            contratoSave.TipoNegocioId = contrato.TipoNegocioId;
+            contratoSave.Cantidad = contrato.Cantidad;
+            contratoSave.Precio = contrato.Precio;
+            contratoSave.FechaEntrega = contrato.FechaEntrega;
+            contratoSave.CampanaId = contrato.CampanaId;
+            contratoSave.FechaDesde = contrato.FechaDesde;
+            contratoSave.FechaHasta = contrato.FechaHasta;
+            contratoSave.ProveedorId = contrato.ProveedorId;
+            contratoSave.MonedaId = contrato.MonedaId;
+            contratoSave.GrupoCompra = contrato.GrupoCompra;
+            contratoSave.ComercialId = contrato.ComercialId;
+            contratoSave.LocalidadId = contrato.LocalidadId;
+            contratoSave.UsuarioId = contrato.UsuarioId;
+            contratoSave.ProvinciaId = contrato.ProvinciaId;
+            contratoSave.Base = contrato.Base;
+            contratoSave.ImporteSustentable = contrato.ImporteSustentable;
+            contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
+            contratoSave.FechaDolarizado = contrato.FechaDolarizado;
+            contratoSave.DiasPesificado = contrato.DiasPesificado;
+            contratoSave.NoInformaSio = contrato.NoInformaSio;
+            contratoSave.TrigoEspecial = contrato.TrigoEspecial;
+            contratoSave.EstadoId = contrato.EstadoId;
+            contratoSave.UsuarioId = contrato.UsuarioId;
+            contratoSave.Ampliaciones = contrato.Ampliaciones;
+            contratoSave.Observacion = contrato.Observacion;
+            contratoSave.DestinoId = contrato.DestinoId;
+            contratoSave.CantidadCamiones = contrato.CantidadCamiones;
+            contratoSave.Consignatario = contrato.Consignatario;
+            contratoSave.PlanCanje = contrato.PlanCanje;
+            contratoSave.CondicionFijacionId = contrato.CondicionFijacionId;
+            contratoSave.CD = contrato.CD;
+            contratoSave.Warrant = contrato.Warrant;
+            contratoSave.PagoDirectoVendedor = contrato.PagoDirectoVendedor;
+            contratoSave.EstablecimientoPropio = contrato.EstablecimientoPropio != null ? contrato.EstablecimientoPropio : null;
+            contratoSave.ClasificacionId = contrato.ClasificacionId;
+            contratoSave.CantidadCamiones = contrato.CantidadCamiones;
+            contratoSave.BoletoId = contrato.BoletoId;
+            contratoSave.BolsaId = contrato.BolsaId == 0 ? null : contrato.BolsaId;
+            contratoSave.DesdeFijacion = contrato.DesdeFijacion;
+            contratoSave.HastaFijacion = contrato.HastaFijacion;
+            contratoSave.MercsDeposito = contrato.MercsDeposito;
+            contratoSave.ComercialCreadorId = contrato.ComercialCreadorId;
+            contratoSave.CorredorId = contrato.CorredorId;
+            contratoSave.PorcentajeComision = contrato.PorcentajeComision;
+            contratoSave.ContratoVendedor = contrato.ContratoVendedor;
+            contratoSave.ContratoCorredor = contrato.ContratoCorredor;
+            contratoSave.SelCargoVendedor = contrato.SelCargoVendedor;
+            contratoSave.SelCargoMOA = contrato.SelCargoMOA;
+            contratoSave.Madre = contrato.Madre;
+            contratoSave.ContratoMadre = contrato.ContratoMadre?.PadLeft(10, '0');
+            contratoSave.PrecioNeto = contrato.PrecioNeto;
+            contratoSave.StandardDeCalidadId = contrato.StandardDeCalidadId;
+            contratoSave.Pizarra = contrato.Pizarra;
+            contratoSave.PagoDiferido = contrato.PagoDiferido;
+            contratoSave.ZonaId = contrato.ZonaId;
+            contratoSave.Compensacion = contrato.Compensacion;
+            contratoSave.TarifaFlete = contrato.TarifaFlete;
+            contratoSave.NivelTarifaId = contrato.NivelTarifaId == 0 ? null : contrato.NivelTarifaId;
+
+            var calidades = repositorio.Listar<Calidad>(x => x.ContratoId == contratoSave.ContratoId);
+            repositorio.RemoverTodos(calidades);
+            var descuentos = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoSave.ContratoId);
+            repositorio.RemoverTodos(descuentos);
+            var aperturas = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == contratoSave.ContratoId);
+            repositorio.RemoverTodos(aperturas);
+
+            contratoSave.Calidad = contrato.Calidad;
+            contratoSave.Descuentos = contrato.Descuentos;
+            contratoSave.AperturaPrecio = contrato.AperturaPrecio;
+            repositorio.GuardarCambios();
+            return error;
+        }
+
+        public GrabarContratoResult ActualizarContratoFinalizado(Contrato contrato)
+        {
+            var error = new GrabarContratoResult();
+            contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.ContratoId == contrato.ContratoId, x => x.ContratoSAP);
+            var res = /* modificarContratoAgent.Modificar(contrato);*/ "";
+            if (res != null)
+            {
+                error.Error("SAP", res);
+                return error;
+            }
+            var listaErrores = ActualizarContratoSAP(contrato);
+            error.Errores.AddRange(listaErrores.Errores);
+            return error;
+        }
+
+        public List<ContratoIdDto> TraerContratosSAP(string desde, string hasta)
+        {
+            var desdeId = !string.IsNullOrEmpty(desde)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(desde), x => x.ContratoId):0;
+            var hastaId = !string.IsNullOrEmpty(hasta)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(hasta), x => x.ContratoId):
+                repositorio.ObtenerMayor<Contrato,int,int>(x=>true, x=>x.ContratoId, x=>x.ContratoId);
+            return repositorio.Listar<Contrato, ContratoIdDto >(x =>new ContratoIdDto {ContratoId=x.ContratoId, ContratoSAP = x.ContratoSAP }
+            , x => x.ContratoId >= desdeId && x.ContratoId <= hastaId && !string.IsNullOrEmpty(x.ContratoSAP));
         }
     }
 }

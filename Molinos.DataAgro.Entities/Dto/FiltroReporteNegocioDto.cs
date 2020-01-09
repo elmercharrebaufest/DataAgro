@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }
         public string ContratoSAP { get; set; }
         public string ContratoSAPHasta { get; set; }
+        public int[] ListaContratos { get; set; }
         public int TipoNegocioId { get; set; }
         public string FechaCarga { get; set; }
         public string FechaCargaHasta { get; set; }
@@ -35,7 +36,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Page { get; set; }
         public int PageSize { get; set; }
         public IEnumerable<OrdenarFiltros> Sort { get; set; }
-
+        public FiltroReporteNegocioDto()
+        {
+            this.ListaContratos = new int[0];
+        }
         public override bool Equals(Object obj)
         {
             var result = false;

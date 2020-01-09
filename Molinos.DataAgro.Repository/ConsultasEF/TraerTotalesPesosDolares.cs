@@ -30,9 +30,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var corredor = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
+            var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
+
             var queryContratos = 
                 from contrato in contexto.Set<Contrato>()
-                where contrato.TipoNegocioId == 2 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && !corredor ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                where contrato.TipoNegocioId == 2 && contrato.Pizarra != true &&(contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && !corredor ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
                     (corredor &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
@@ -66,10 +68,48 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
                     TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad  : 0
                 };
+            var queryContratosPizarra =
+                from contrato in contexto.Set<Contrato>()
+                where contrato.TipoNegocioId == 2 && contrato.Pizarra == true && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5) && contrato.ContratoAcuerdo == null && !corredor ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
+                    (corredor &&
+                    (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                    corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
+                select new TotalPesosDolares()
+                {
+                    Cantidad = Math.Round(contrato.Cantidad / 1000),
+                    FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
+                    FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
+                    Fecha = DbFunctions.TruncateTime(contrato.Fecha),
+                    GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
+                    Estado_Contrato = contrato.Estado.Descripcion,
+                    Ampliaciones = contrato.Ampliaciones,
+                    Proveedor = contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
+                    Corredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
+                    ProveedorId = contrato.ProveedorId,
+                    CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
+                    Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
+                    Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
+                    Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
+                    TipoNegocio = contrato.TipoNegocio == null ? "" : contrato.Madre == true ? "CONVENIO" : contrato.Madre == false ? "FIJ. CONVENIO" : contrato.TipoNegocio.Descripcion,
+                    Negocio = contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
+                    DestinoDescripcion = contrato.Destino.Descripcion,
+                    ComercialId = contrato.ComercialId,
+                    ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
+                    TotalDolares = precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "USDM " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0,
+                    TotalPesos = precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0,
+                    TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
+                    TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
+                    TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
+                    TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
+                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0
+                };
+            queryContratos = queryContratos.Union(queryContratosPizarra);
 
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
-                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && fijac.Pizarra != true 
+                && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
                         (corredor && (corredoresComercial.Contains(fijac.ComercialId) ||
                         corredoresComercial.Contains(fijac.ComercialCreadorId)))
                 select new TotalPesosDolares()
@@ -97,11 +137,48 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalPesos = fijac.MonedaId == "ARP  " ? fijac.PrecioNeto != null ? fijac.PrecioNeto.Value : fijac.Precio : 0,
                     TotalGirasolAlto = fijac.MaterialId == 5 ? fijac.Cantidad : 0,
                     TotalGirasol = fijac.MaterialId == 4 ? fijac.Cantidad : 0,
-                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad: 0,
+                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad : 0,
                     TotalSoja = fijac.MaterialId == 3 ? fijac.Cantidad : 0,
                     TotalTrigo = fijac.MaterialId == 2 ? fijac.Cantidad : 0
                 };
             queryContratos = queryContratos.Union(queryFijacion);
+
+            var queryFijacionPizarra =
+                from fijac in contexto.Set<FijacionDePrecioContrato>()
+                where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && fijac.Pizarra == true
+                && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                        (corredor && (corredoresComercial.Contains(fijac.ComercialId) ||
+                        corredoresComercial.Contains(fijac.ComercialCreadorId)))
+                select new TotalPesosDolares()
+                {
+                    Cantidad = Math.Round(fijac.Cantidad / 1000),
+                    FechaDesde = null,
+                    FechaHasta = null,
+                    Fecha = DbFunctions.TruncateTime(fijac.Fecha),
+                    GrupoCompraDescripcion = null,
+                    Estado_Contrato = fijac.Estado.Descripcion,
+                    Ampliaciones = fijac.Ampliaciones,
+                    Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial,
+                    Corredor = fijac.Corredor == null ? "" : fijac.Corredor.RazonSocial,
+                    ProveedorId = fijac.ProveedorId,
+                    CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
+                    Comercial = fijac.Comercial == null ? "" : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido,
+                    Material = fijac.Material == null ? "" : fijac.Material.Descripcion,
+                    Campania = "",
+                    TipoNegocio = "FIJACION",
+                    Negocio = fijac.EstadoId == (int)EnumEstadoContrato.Finalizado ? fijac.FijacionSAP : fijac.ContratoSAP,
+                    DestinoDescripcion = fijac.Destino != null ? fijac.Destino.Descripcion : "",
+                    ComercialId = fijac.ComercialId,
+                    ComercialCreador = fijac.ComercialCreador == null ? fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
+                    TotalDolares = precioPizarraPorMaterial.Any(y => y.MaterialId == fijac.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == fijac.MaterialId).MonedaId == "USDM " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == fijac.MaterialId).Precio : 0,
+                    TotalPesos = precioPizarraPorMaterial.Any(y => y.MaterialId == fijac.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == fijac.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == fijac.MaterialId).Precio : 0,
+                    TotalGirasolAlto = fijac.MaterialId == 5 ? fijac.Cantidad : 0,
+                    TotalGirasol = fijac.MaterialId == 4 ? fijac.Cantidad : 0,
+                    TotalMaiz = fijac.MaterialId == 1 ? fijac.Cantidad : 0,
+                    TotalSoja = fijac.MaterialId == 3 ? fijac.Cantidad : 0,
+                    TotalTrigo = fijac.MaterialId == 2 ? fijac.Cantidad : 0
+                };
+            queryContratos = queryContratos.Union(queryFijacionPizarra);
 
             var queryFason =
                 from fas in contexto.Set<Fason>()

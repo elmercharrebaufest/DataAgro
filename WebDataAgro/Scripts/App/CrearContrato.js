@@ -1540,10 +1540,12 @@ function InicializarElementos() {
 
 
 function CambioCalidades(calidades) {
-    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara" && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica" && $("#calidadesEspecialesId").val() !== "") {
+    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara"
+        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica"
+        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Bonif. SECO de 7% a 10% Por punto"
+        && $("#calidadesEspecialesId").val() !== "") {
         $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ) {
             $(".calidad-no-grado").hide();
             LimpiarCalidades();
         } else {
@@ -1567,14 +1569,14 @@ function CambioCalidades(calidades) {
                 $("#valorEspecialesId").data("kendoNumericTextBox").value("");
                 $(".calidad-no-grado").hide();            
         }
-        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+        else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
         } else {
             $("#valorEspecialesId").data("kendoNumericTextBox").value("");
         }        
-    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña") {
+    } if ($("#material").val() == 5 && $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
         $(".no-girasol-alto").hide();
-        $(".girasol-alto").show();
+        $(".girasol-alto").hide();
         $("#valorEspecialesId").data("kendoNumericTextBox").value("");
     } else {
         $(".girasol-alto").hide();
@@ -2151,7 +2153,7 @@ function ObtenerDatos() {
         if ($("#calidadesEspecialesId").data("kendoDropDownList").text() == "Especial" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado 2" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" ||
-            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Materia Extraña") {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Bonif. SECO de 7% a 10% Por punto") {
             var err = [];
             if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
                 err = AgregarCalidades();
@@ -2385,7 +2387,7 @@ function AgregarCalidades() {
             PorcentajeHasta: $("#porcentajeHastaId").val() != "" ? $("#porcentajeHastaId").val() : null,
             StandardDeCalidadId:
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ? 7 :
-                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ? 6 :
+                    $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto" ? 6 :
                     $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado"||
                             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? 2 : 0,

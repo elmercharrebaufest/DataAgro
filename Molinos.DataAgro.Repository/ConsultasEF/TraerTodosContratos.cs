@@ -22,11 +22,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial)
+        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request,  List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
-            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, corredor, equipo, corredoresComercial);
+            var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto,  equipo);
             return new KendoGrid<BasicoContrato>(request, queryContratos);
         }
         
@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request, corredor, equipo, corredoresComercial);
+                return Query(contexto, request, equipo);
             }
         }
     }

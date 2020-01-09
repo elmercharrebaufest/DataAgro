@@ -38,11 +38,10 @@ function CreateGridInformeCompraNet() {
                     obj.DiasDiferimiento = $("#DiasDiferimiento").val();
                     obj.FechaLimiteDolarizado = $("#fechalimiteId").val();
                     obj.ComercialId = $("#ComercialId").val();
-
                     obj.Importe = $("#importeSustentableId").is(':checked');
                     obj.Diferimiento = $("#diferimientoId").is(':checked');
                     obj.Dolarizado = $("#dolarizadoId").is(':checked');
-
+                    obj.ListaContratos = SeleccionarContratosSAP();
 
                     var lista = [];
                     lista = $("#buscadorProveedor").data("kendoMultiSelect").value();
@@ -168,6 +167,7 @@ function CreateGridInformeCompraNet() {
                 field: "Moneda", title: "Moneda"
             },
             { field: "PrecioNeto", title: "Precio Neto", type: "number", format: "{0:n2}" },
+            { field: "DestinoDescripcion", title:"Centro" },
             { field: "Pizarra", title: "Pizarra", template: function (dataItem) { return dataItem.Pizarra ? "Si" : "No"; } },
             { field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}" },
             { field: "ImporteRedespacho", title: "Importe Redespacho", type: "number", format: "{0:n2}" },
@@ -217,50 +217,50 @@ function CreateGridInformeCompraNet() {
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var templateHora = kendo.template(this.columns[6].template);
-            var templatePizarra = kendo.template(this.columns[13].template);
-            var templateSustentable = kendo.template(this.columns[26].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[27].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[28].columns[0].template);
-            var templateSIO = kendo.template(this.columns[29].template);
-            var templateTrigoEsp = kendo.template(this.columns[30].template);
+            var templatePizarra = kendo.template(this.columns[14].template);
+            var templateSustentable = kendo.template(this.columns[27].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[28].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[29].columns[0].template);
+            var templateSIO = kendo.template(this.columns[30].template);
+            var templateTrigoEsp = kendo.template(this.columns[31].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataItem = {
                     Hora: row.cells[6].value,
-                    Pizarra: row.cells[13].value,
-                    Sustentable: row.cells[27].value,
-                    Dolarizado: row.cells[30].value,
-                    Pesificado: row.cells[32].value,
-                    NoInformaSIO: row.cells[34].value,
-                    TrigoEspecial: row.cells[35].value,
+                    Pizarra: row.cells[14].value,
+                    Sustentable: row.cells[28].value,
+                    Dolarizado: row.cells[31].value,
+                    Pesificado: row.cells[33].value,
+                    NoInformaSIO: row.cells[35].value,
+                    TrigoEspecial: row.cells[36].value
                 };
 
                 var operacionFecha = row.cells[5].value;
                 operacionFecha.setHours(operacionFecha.getHours() + 1);
                 row.cells[5].value = operacionFecha;
 
-                var fechaHasta = row.cells[23].value;
-                var fechaDesde = row.cells[24].value;
+                var fechaHasta = row.cells[24].value;
+                var fechaDesde = row.cells[25].value;
 
                 if (fechaHasta != null) {
 
                     fechaHasta.setHours(fechaHasta.getHours() + 1);
-                    row.cells[23].value = fechaHasta;
+                    row.cells[25].value = fechaHasta;
                 }
                 if (fechaDesde != null) {
                     fechaDesde.setHours(fechaDesde.getHours() + 1);
-                    row.cells[22].value = fechaDesde;
+                    row.cells[24].value = fechaDesde;
                 }
 
                 row.cells[6].value = templateHora(dataItem);
-                row.cells[13].value = templatePizarra(dataItem);
-                row.cells[27].value = templateSustentable(dataItem);
-                row.cells[30].value = templateDolarizado(dataItem);
-                row.cells[32].value = templatePesificado(dataItem);
-                row.cells[34].value = templateSIO(dataItem);
-                row.cells[35].value = templateTrigoEsp(dataItem);
+                row.cells[14].value = templatePizarra(dataItem);
+                row.cells[28].value = templateSustentable(dataItem);
+                row.cells[31].value = templateDolarizado(dataItem);
+                row.cells[33].value = templatePesificado(dataItem);
+                row.cells[35].value = templateSIO(dataItem);
+                row.cells[36].value = templateTrigoEsp(dataItem);
 
             }
         },
@@ -440,8 +440,13 @@ function InicializarDate() {
 
     $("#ContratoSAP").click(function () {
         $("#ContratoSAP").val("");
+        $("#ContratoSAPHasta").val("");
+        $("#contratos-table").empty();
     });
-
+    $("#ContratoSAPHasta").click(function () {
+        $("#ContratoSAPHasta").val("");
+    });
+    
     $("#ImporteSustentable").click(function () {
         $("#ImporteSustentable").val("");
     });
@@ -556,8 +561,49 @@ function InicializarElementos() {
             $("#fechalimiteId").prop('disabled', false);
         }
     });
+
+    ModalContrato();
+    $("#ContratoSAP").change(function () { ArmarTabla($("#ContratoSAP").val(), $("#ContratoSAPHasta").val());});
+    $("#ContratoSAPHasta").change(function () { ArmarTabla($("#ContratoSAP").val(), $("#ContratoSAPHasta").val()); });
 }
 
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
+}
+
+function ModalContrato() {
+    $("#contratos").click(function () {
+        $("#CargaContratos").modal('toggle');
+    });
+}
+
+function SeleccionarContratosSAP() {
+    console.log("seleccionando contratos");
+    var lista = [];
+    $("input:checkbox[name='ListaContratos']").each(function () {
+        if ($(this).is(':checked')) {
+            console.log($(this).val());
+            lista.push($(this).val());
+        }
+    });
+    return lista;
+}
+
+function ArmarTabla(desde, hasta) {
+    $("#contratos-table").empty();
+    var contratos = MSExecuteOnServer('/Contrato/ObtenerContratosSap', { desde: desde, hasta: hasta });
+    var tabla = '<tr><th>Contratos</th><th><input type="checkbox" id="todos" checked></th></tr>';
+    if (contratos) {
+        for (var i = 0; i < contratos.length; i++) {
+            tabla += '<tr><td>' + contratos[i].ContratoSAP + '</td><td><input type="checkbox" id="contrato' + [i] + '" name="ListaContratos" value="' + contratos[i].ContratoId + '" checked/></td></tr>';
+        }
+    }
+    $("#contratos-table").append(tabla);
+    $("#todos").click(function () {
+        if ($(this).is(':checked')) {
+            $("input:checkbox[name='ListaContratos']").prop('checked', true);
+        } else {
+            $("input:checkbox[name='ListaContratos']").prop('checked', false);
+        }
+    });
 }

@@ -55,7 +55,7 @@ namespace WebDataAgro.Controllers
             {
                 filtro.FechaCarga = DateTime.Now.Date.ToString("dd-MM-yyyy");
             }
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var equipo = GlobalVariables.EquipoReal;
 
             var model = mobjContratoManager.TraerContratosFiltrados(filtro, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
@@ -174,6 +174,13 @@ namespace WebDataAgro.Controllers
                    Selected = false
                }).OrderBy(x => x.Value);
             ViewBag.Comercial = comercialListItems;
+        }
+    
+        public ActionResult ObtenerContratosSap(string desde, string hasta)
+        {
+            var model = mobjContratoManager.TraerContratosSAP(desde, hasta);
+
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
     }
 }

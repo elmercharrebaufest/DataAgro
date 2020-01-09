@@ -448,6 +448,42 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crear Contratos Acuerdo.
+        /// </summary>
+        public static string Crear_Negocios_Acuerdos {
+            get {
+                return ResourceManager.GetString("Crear_Negocios_Acuerdos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crear Negocios Agentes de Compras.
+        /// </summary>
+        public static string Crear_Negocios_Agente {
+            get {
+                return ResourceManager.GetString("Crear_Negocios_Agente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crear Negocios Confirmados.
+        /// </summary>
+        public static string Crear_Negocios_Confirmados {
+            get {
+                return ResourceManager.GetString("Crear_Negocios_Confirmados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crear Negocios Fason.
+        /// </summary>
+        public static string Crear_Negocios_Fason {
+            get {
+                return ResourceManager.GetString("Crear_Negocios_Fason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CUIT.
         /// </summary>
         public static string Cuit {
@@ -1173,15 +1209,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Ver_Todos_Cupos {
             get {
                 return ResourceManager.GetString("Ver_Todos_Cupos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ver Todos los Negocios CompraNet.
-        /// </summary>
-        public static string Ver_Todos_Negocios {
-            get {
-                return ResourceManager.GetString("Ver_Todos_Negocios", resourceCulture);
             }
         }
         

@@ -246,6 +246,18 @@
   <data name="Contrato" xml:space="preserve">
     <value>Nro Contrato</value>
   </data>
+  <data name="Crear_Negocios_Acuerdos" xml:space="preserve">
+    <value>Crear Contratos Acuerdo</value>
+  </data>
+  <data name="Crear_Negocios_Agente" xml:space="preserve">
+    <value>Crear Negocios Agentes de Compras</value>
+  </data>
+  <data name="Crear_Negocios_Confirmados" xml:space="preserve">
+    <value>Crear Negocios Confirmados</value>
+  </data>
+  <data name="Crear_Negocios_Fason" xml:space="preserve">
+    <value>Crear Negocios Fason</value>
+  </data>
   <data name="Cuit" xml:space="preserve">
     <value>CUIT</value>
   </data>
@@ -488,9 +500,6 @@
   </data>
   <data name="Ver_Todos_Cupos" xml:space="preserve">
     <value>Ver Todos los Cupos</value>
-  </data>
-  <data name="Ver_Todos_Negocios" xml:space="preserve">
-    <value>Ver Todos los Negocios CompraNet</value>
   </data>
   <data name="Ver_Todos_Tipos_Negocios" xml:space="preserve">
     <value>Ver Todos los Tipos de Negocios CompraNet</value>
