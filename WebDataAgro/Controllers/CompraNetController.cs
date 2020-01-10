@@ -226,7 +226,33 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        public ActionResult ConfirmarAcuerdo(int fijacionDePrecioContratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(fijacionDePrecioContratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        public ActionResult ConfirmarAgente(int fijacionDePrecioContratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjAgenteManager.ConfirmarAgenteCompra(fijacionDePrecioContratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        public ActionResult ConfirmarFason(int fijacionDePrecioContratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFasonManager.ConfirmarFason(fijacionDePrecioContratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult FinalizarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()

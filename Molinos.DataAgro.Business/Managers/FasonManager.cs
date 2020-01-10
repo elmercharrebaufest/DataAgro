@@ -257,6 +257,33 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
+        public Resultado ConfirmarFason(int id)
+        {
+            var oEntityErrors = new Resultado();
+
+            var contrato = repositorio.Obtener<Fason>(id);
+            if (contrato.EstadoId == (int)EnumEstadoContrato.Pendiente || contrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+            {
+                contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
+
+                logger.Debug("Confirmando el Fason:" + id);
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("Confirmar", "El Fason no se puede confirmar");
+            }
+            return oEntityErrors;
+        }
     }
 }
 

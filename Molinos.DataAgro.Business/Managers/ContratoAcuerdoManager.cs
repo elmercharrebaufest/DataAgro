@@ -253,17 +253,24 @@ namespace Molinos.DataAgro.Business
             var oEntityErrors = new Resultado();
 
             var contrato = repositorio.Obtener<ContratoAcuerdo>(id);
-            contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
+            if (contrato.EstadoId == (int)EnumEstadoContrato.Pendiente || contrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+            {
+                contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
-            logger.Debug("Confirmando el ContratoAcuerdo:" + id);
-            try
-            {
-                repositorio.GuardarCambios();
+                logger.Debug("Confirmando el Acuerdo: " + id);
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                logger.Error(ex);
-                throw;
+                oEntityErrors.Error("Confirmar", "El Contrato Acuerdo no se puede confirmar");
             }
             return oEntityErrors;
         }

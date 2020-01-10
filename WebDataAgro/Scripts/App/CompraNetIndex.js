@@ -137,7 +137,10 @@ function botonConfirmadoTilde(dataItem, icono) {
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.ContratoSAP + "'" + ',' +
             "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-            "'" + dataItem.TipoNegocioId + "'" +
+            "'" + dataItem.TipoNegocioId + "'" + ',' +
+            "'" + dataItem.AcuerdoId + "'" + ',' +
+            "'" + dataItem.AgenteId + "'" + ',' +
+            "'" + dataItem.FasonId + "'" +
             ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
     } else {
         return "<div</div>";
@@ -1221,6 +1224,12 @@ function ObtenerDatosModalConfirmado() {
 
     if ($("#tipoNegocioModalConTilde").val() === '3') {
         objConfirmado.fijacionDePrecioContratoId = $("#contratoModalConTilde").val();
+    } else if ($("#tipoNegocioModalConTilde").val() === '6') {
+        objConfirmado.fijacionDePrecioContratoId = $("#contratoModalConTilde").val();
+    } else if ($("#tipoNegocioModalConTilde").val() === '5') {
+        objConfirmado.fijacionDePrecioContratoId = $("#contratoModalConTilde").val();
+    } else if ($("#tipoNegocioModalConTilde").val() === '4') {
+        objConfirmado.fijacionDePrecioContratoId = $("#contratoModalConTilde").val();
     } else {
         objConfirmado.contratoId = $("#contratoModalConTilde").val();
     }
@@ -1231,6 +1240,12 @@ function Confirmar(confirmarContratoFijacion) {
     var result = null;
     if ($("#tipoNegocioModalConTilde").val() === '3') {
         result = MSExecuteOnServer('/CompraNet/ConfirmarFijacion', confirmarContratoFijacion);
+    } else if ($("#tipoNegocioModalConTilde").val() === '6') {
+        result = MSExecuteOnServer('/CompraNet/ConfirmarAcuerdo', confirmarContratoFijacion);
+    } else if ($("#tipoNegocioModalConTilde").val() === '5') {
+        result = MSExecuteOnServer('/CompraNet/ConfirmarAgenteCompra', confirmarContratoFijacion);
+    } else if ($("#tipoNegocioModalConTilde").val() === '4') {
+        result = MSExecuteOnServer('/CompraNet/ConfirmarFason', confirmarContratoFijacion);
     } else {
         result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
     }
@@ -1304,12 +1319,21 @@ function ObtenerDatosModalConError() {
     Finalizar(objFinalizado);
 }
 
-function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId) {
+function ModalConfirmadoTilde(estado, contratoId, nroSAP, fijacionDePrecioContratoId, tipoId, acuerdoId,agenteId, fasonId) {
     $(".modal-title-confirmadoTilde").empty();
 
     if (tipoId === '3') {
         $("#contratoModalConTilde").val(fijacionDePrecioContratoId);
         $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + contratoId);
+    } else if (tipoId === '6') {
+        $("#contratoModalConTilde").val(acuerdoId);
+        $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + acuerdoId);
+    } else if (tipoId === '5') {
+        $("#contratoModalConTilde").val(agenteId);
+        $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + agenteId);
+    } else if (tipoId === '4') {
+        $("#contratoModalConTilde").val(fasonId);
+        $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + fasonId);
     } else {
         $("#contratoModalConTilde").val(contratoId);
         $(".modal-title-confirmadoTilde").append("Contrato DataAgro: " + contratoId);

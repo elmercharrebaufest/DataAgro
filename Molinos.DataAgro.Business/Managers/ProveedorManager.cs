@@ -383,6 +383,13 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug($"El contrato {oContrato.ContratoId} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
                     return;
                 }
+                var mailCreador = "";
+                    try { mailCreador = GetEmailUserActiveDirectory(oContrato.ComercialCreador.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+
+                if (!string.IsNullOrEmpty(mailCreador)&& mailCreador != emailComercial)
+                {
+                    oMensaje.CC.Add(mailCreador);
+                }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 var emailComerciales = "";
                 if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
@@ -766,7 +773,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.ComercialCreador != null ? oContrato.ComercialCreador.Nombres + " " + oContrato.ComercialCreador.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
