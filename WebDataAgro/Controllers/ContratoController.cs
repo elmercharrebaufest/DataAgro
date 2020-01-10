@@ -176,11 +176,5 @@ namespace WebDataAgro.Controllers
             ViewBag.Comercial = comercialListItems;
         }
     
-        public ActionResult ObtenerContratosSap(string desde, string hasta)
-        {
-            var model = mobjContratoManager.TraerContratosSAP(desde, hasta);
-
-            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
-        }
     }
 }

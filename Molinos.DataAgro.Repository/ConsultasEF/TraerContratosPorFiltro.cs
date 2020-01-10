@@ -36,11 +36,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var FechaLimiteDolarizado = (!string.IsNullOrEmpty(request.FechaLimiteDolarizado) ? (DateTime?)DateTime.ParseExact(request.FechaLimiteDolarizado, "dd-MM-yyyy", CultureInfo.InvariantCulture) : null);
             request.ProveedorId = request.ProveedorId ?? (new int[0]);
             request.CorredorId = request.CorredorId ?? (new int[0]);
+            var listaContrato = new List<string>();
+            if (!string.IsNullOrEmpty(request.ContratoSAP))
+            {
+                request.ContratoSAPHasta = string.IsNullOrEmpty(request.ContratoSAPHasta) ? request.ContratoSAP : request.ContratoSAPHasta;
+                for (var i = int.Parse(request.ContratoSAP); i <= int.Parse(request.ContratoSAPHasta); i++)
+                {
+                    listaContrato.Add(i.ToString().PadLeft(10, '0'));
+                }
+            }
             
+            foreach(var cont in request.ListaContratos)
+            {
+                var c = cont.PadLeft(10, '0');
+                listaContrato.Add(c);
+            }
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto,  equipo);
-            var listaId = request.ListaContratos != null && request.ListaContratos.Any();
             queryContratos = queryContratos.Where(contrato =>
-                    (listaId ? request.ListaContratos.Contains(contrato.ContratoId) : true) &&
+                    (listaContrato.Any() ? listaContrato.Contains(contrato.ContratoSAP) : true) &&
                     (request.ProveedorId.Any() ? request.ProveedorId.Contains(contrato.ProveedorId) : true) &&
                     (request.CorredorId.Any() ? request.CorredorId.Contains(contrato.CorredorId) : true) &&
                     (request.TipoNegocioId != 0 ? request.TipoNegocioId == contrato.TipoNegocioId : true) &&

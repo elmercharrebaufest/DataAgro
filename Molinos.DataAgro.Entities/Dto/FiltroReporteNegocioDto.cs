@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ComercialId { get; set; }
         public string ContratoSAP { get; set; }
         public string ContratoSAPHasta { get; set; }
-        public int[] ListaContratos { get; set; }
+        public string[] ListaContratos { get; set; }
         public int TipoNegocioId { get; set; }
         public string FechaCarga { get; set; }
         public string FechaCargaHasta { get; set; }
@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public IEnumerable<OrdenarFiltros> Sort { get; set; }
         public FiltroReporteNegocioDto()
         {
-            this.ListaContratos = new int[0];
+            this.ListaContratos = new string[0];
         }
         public override bool Equals(Object obj)
         {
@@ -78,6 +78,11 @@ namespace Molinos.DataAgro.Entities.Dto
                         value = (int[])pi.GetValue(obj);
                         result = value == null || value.Length == 0? false : true;
                     }
+                    else if (pi.PropertyType == typeof(string[]))
+                    {
+                        value = (string[])pi.GetValue(obj);
+                        result = value == null || value.Length == 0 ? false : true;
+                    }
                 }
                 else
                 {
@@ -93,3 +98,4 @@ namespace Molinos.DataAgro.Entities.Dto
         public string dir { get; set; }
     }
 }
+
