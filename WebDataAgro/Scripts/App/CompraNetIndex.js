@@ -1084,7 +1084,8 @@ function ModalFinalizarVarios() {
     $("#finalizarVarios").addClass('myBtn').removeClass('myBtn-disabled');
 
     var negocios = SeleccionarElementos();
-    if (negocios.length > 0) {
+    negocios = negocios.filter(function (neg) { neg.TipoNegocioId != 6; });
+    if (negocios.length > 0 ) {
         for (var i in negocios) {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
             if (negocios[i].Estado === 2 || negocios[i].Estado === 4) {
@@ -1094,8 +1095,6 @@ function ModalFinalizarVarios() {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Fas&oacute;n: ' + negocios[i].FasonId + '</div>' + loader + '</div>');
                 } else if (negocios[i].TipoNegocioId === 5) {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Agente de Compras: ' + negocios[i].AgenteId + '</div>' + loader + '</div>');
-                } else if (negocios[i].TipoNegocioId === 6) {
-                    $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Agente de Compras: ' + negocios[i].AcuerdoId + '</div>' + loader + '</div>');
                 } else {
                     $("#negocioFinalizado-modal").append('<div class="row"><div class="col-xs-4">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
                 }
