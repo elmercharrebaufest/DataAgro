@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IAltaTempranaAgent> altaTempranaAgentMock;
         private Mock<ICapacidadProductivaAgent> capacidadProductivaAgentMock;
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
+        private Mock<IModificarContratoAgent> modificarContratoMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -73,7 +74,8 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
-            
+            modificarContratoMock = new Mock<IModificarContratoAgent>();
+
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
                 oMSCampaniaManagerMock.Object, provinciaManagerMock.Object,
@@ -87,7 +89,7 @@ namespace Molinos.DataAgro.Test.Managers
                 configuracionManagermock.Object,
                 capacidadProductivaAgentMock.Object,
                 altaTempranaAgentMock.Object, 
-                diasHabilesAgentMock.Object);
+                diasHabilesAgentMock.Object, modificarContratoMock.Object);
         }
 
         [Test]
