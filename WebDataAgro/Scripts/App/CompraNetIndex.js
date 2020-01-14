@@ -1095,7 +1095,7 @@ function ModalFinalizarVarios() {
     $("#finalizarVarios").addClass('myBtn').removeClass('myBtn-disabled');
 
     var negocios = SeleccionarElementos();
-    negocios = negocios.filter(function (neg) { neg.TipoNegocioId != 6; });
+    negocios = negocios.filter(function (neg) { return neg.TipoNegocioId != 6; });
     if (negocios.length > 0 ) {
         for (var i in negocios) {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
