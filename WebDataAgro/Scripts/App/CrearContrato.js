@@ -2057,7 +2057,7 @@ function ObtenerDatos() {
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
-    obj.EstadoId = $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 && obj.TipoNegocioId != 6 ? "1" : "2";
+    obj.EstadoId = $("#estado").val() == "" ? $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 && obj.TipoNegocioId != 6 ? "1" : "2" : $("#estado").val();
     obj.Observacion = $("#observacionId").val();
     obj.ClasificacionId = $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val();
@@ -2502,7 +2502,7 @@ function CargarDatosEditar(contrato, hijo) {
     InicializarBordesRojos();
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
-
+    $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
     $("#fechaDesdeId").val(formatearFecha(contrato.FechaDesdeFormateado));

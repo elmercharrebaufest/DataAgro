@@ -9,7 +9,7 @@ var eliminaNegocios;
 var finalizaNegocios;
 var ampliaNegocios;
 var verMesa;
-
+var modificaFinalizados;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
@@ -19,6 +19,7 @@ $(document).ready(function () {
     confirmaNegocios = ConvertirStringABool(confirmaNegocios);
     ampliaNegocios = ConvertirStringABool(ampliaNegocios);
     verMesa = ConvertirStringABool(verMesa);
+    modificaFinalizados = ConvertirStringABool(modificaFinalizados);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     CrearViewModel();
@@ -129,7 +130,15 @@ function botonPendiente(dataItem, icono) {
         return "<div</div>";
     }
 }
-
+function botonModificarFinalizados(dataItem, icono) {
+    if (modificaFinalizados && dataItem.ContratoId) {
+        return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
+            "'" + dataItem.Id + "'" + ',' +
+            "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
+    } else {
+        return "<div</div>";
+    }
+}
 function botonConfirmadoTilde(dataItem, icono) {
     if (confirmaNegocios) {
         return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTilde(' +
@@ -639,10 +648,12 @@ function CreateGridInformeCompraNet() {
                         if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId) && !dataItem.FijacionDePrecioContratoId) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
-                                botonBorrar(dataItem, 'fa-trash fin');
+                                botonBorrar(dataItem, 'fa-trash fin') +
+                                botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         } else {
                             return '<div class="status finalizado">Finalizado</div>' +
-                                botonVisualizar(dataItem, 'fa-eye fin');
+                                botonVisualizar(dataItem, 'fa-eye fin')+
+                                botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         }
                     }
                     if (dataItem.Estado == 6) { //Rechazado

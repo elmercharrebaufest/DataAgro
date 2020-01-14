@@ -925,6 +925,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Negocios Finalizados.
+        /// </summary>
+        public static string Modificar_Neg_Finalizados {
+            get {
+                return ResourceManager.GetString("Modificar_Neg_Finalizados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modificar Negocio Corredor.
         /// </summary>
         public static string Modificar_Negocio_Corredor {

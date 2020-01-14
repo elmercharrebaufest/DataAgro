@@ -8,14 +8,14 @@ namespace WebDataAgro.Controllers
 {
     public class ErrorController : Controller
     {
-        public ActionResult Index(string jsonx = "",bool esJson = false ,bool esMsj = false )
+        public ActionResult Index(string jsonx = "", bool esJson = false, bool esMsj = false)
         {
-          if ( jsonx == "")
+            if (jsonx == "")
             {
                 ViewBag.Title = "Error-";
-                ViewBag.Description = "La Peticion No Ha Podido Ser Procesada";                 
+                ViewBag.Description = "La Peticion No Ha Podido Ser Procesada";
             }
-          else if (esJson)
+            else if (esJson)
             {
                 jsonx = jsonx.Replace(((Char)34).ToString(), "'");
                 jsonx = jsonx.Replace(((Char)13).ToString(), "");
@@ -23,17 +23,23 @@ namespace WebDataAgro.Controllers
                 ViewBag.Title = Mierror.Errores[0].Source;
                 ViewBag.Description = Mierror.Errores[0].Message;
             }
-          else if (esMsj)
+            else if (esMsj)
             {
                 ViewBag.Title = "Error-";
                 ViewBag.Description = "La Peticion No Ha Podido Ser Procesada";
             }
-          else
+            else
             {
                 ViewBag.Title = "Error-";
                 ViewBag.Description = jsonx;
             }
             ViewBag.Usuario = GlobalVariables.IdActiveDirectoryCompleto;
+            return View();
+        }
+
+
+        public ActionResult Errores()
+        {
             return View();
         }
     }

@@ -15,6 +15,7 @@
     var ampliaNegocios = PermisosHelper.Is(PermisosDataAgro.AmpliarNegocios) || PermisosHelper.Is(PermisosDataAgro.AmpliarNegocioCorredor);
     var finalizaNegocios = PermisosHelper.Is(PermisosDataAgro.FinalizarNegocios);
     var verMesa = PermisosHelper.Is(PermisosDataAgro.VerMesa);
+    var modificaFinalizados = PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados);
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -24,7 +25,8 @@
     eliminaNegocios = '@eliminaNegocios';
     ampliaNegocios = '@ampliaNegocios';
     finalizaNegocios = '@finalizaNegocios';
-    verMesa = '@verMesa'
+    verMesa = '@verMesa';
+    modificaFinalizados = '@modificaFinalizados';
 </script>
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />

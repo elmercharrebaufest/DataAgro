@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -22,6 +23,9 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoSap ActualizarEstadoComercial(List<InformeComercialSAPDTO> oInformeComercialSAP);
+       
+        [OperationContract]
+        ResultadoSap ActualizarContratoSAP(ContratoSAPDto contratoSAP);
 
         #endregion
     }

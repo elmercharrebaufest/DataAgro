@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ClienteStopAgent.cs" />
+    <Compile Include="Helpers\ModificarContratoAgent.cs" />
     <Compile Include="Helpers\ModificarCupoAgent.cs" />
     <Compile Include="Helpers\EliminarCupoAgent.cs" />
     <Compile Include="Helpers\CrearCupoAgent.cs" />
@@ -150,6 +151,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\FinalizarFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ModificarContratoFinalizado\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -262,6 +268,13 @@
     </None>
     <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION.wsdl" />
     <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION11.wsdl" />
+    <None Include="Service References\ModificarContratoFinalizado\Molinos.DataAgro.Agent.ModificarContratoFinalizado.SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarContratoFinalizado\Molinos.DataAgro.Agent.ModificarContratoFinalizado.Z_MPRFC_MODIFICAR_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarContratoFinalizado\SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO.wsdl" />
     <None Include="Service References\ModificarCupos\Molinos.DataAgro.Agent.ModificarCupos.SI_ZMPWS_DATAAGRO_MODIFICAR_CUPOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -303,6 +316,7 @@
     <WCFMetadataStorage Include="Service References\DatosDelProveedor\" />
     <WCFMetadataStorage Include="Service References\FinalizarContrato\" />
     <WCFMetadataStorage Include="Service References\FinalizarFijacion\" />
+    <WCFMetadataStorage Include="Service References\ModificarContratoFinalizado\" />
     <WCFMetadataStorage Include="Service References\ModificarCupos\" />
     <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
@@ -498,6 +512,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ModificarCupos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

@@ -111,19 +111,19 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("FinDelDiaId")]
         public virtual FinDelDia FinDelDia { get; set; }
 
-        [InverseProperty("Contrato")]
-        public ICollection<DescuentoBonificacion> Descuentos { get; set; }
-        [InverseProperty("Contrato")]
-        public ICollection<Calidad> Calidad { get; set; }
 
         [ForeignKey("GrupoCompra")]
         public virtual GrupoDeCompras GrupoDeCompras { get; set; }
 
         [ForeignKey("ContratoAcuerdoId")]
         public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
+        [InverseProperty("Contrato")]
+        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
+        [InverseProperty("Contrato")]
+        public virtual ICollection<Calidad> Calidad { get; set; }
 
         [InverseProperty("Contrato")]
-        public List<AperturaPrecio> AperturaPrecio { get; set; }
+        public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
 
         [ForeignKey("StandardDeCalidadId")]
         public virtual StandardDeCalidad StandardDeCalidad { get; set; }

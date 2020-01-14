@@ -3,7 +3,6 @@
     InicializarDate();
     InicializarElementos();
     CreateGridInformeCompraNet();
-        
 });
 
 function CreateGridInformeCompraNet() {
@@ -379,7 +378,6 @@ function CreateGridInformeCompraNet() {
     }
 }
 
-
 function InicializarDate() {
     kendo.culture("es-AR");   
     var dateCarga = ObtenerFecha();
@@ -446,6 +444,7 @@ function InicializarDate() {
     $("#ContratoSAP").click(function () {
         $("#ContratoSAP").val("");
         $("#ContratoSAPHasta").val("");
+        $("#ContratoSAPHasta").removeAttr('disabled');
         $("#contratos-table").empty();
     });
     $("#ContratoSAPHasta").click(function () {
@@ -578,20 +577,52 @@ function InicializarElementos() {
     });
     ModalContrato();
     $("#ContratoSAP").change(CambioVariosContratos);
+    $("#ContratoSAPHasta").change(CambioVariosContratos);
+        
+    $(document).on("click", ".agregarContrato", function () {
+        var num = $(".nuevoNumContrato").val();
+        if ($.isNumeric(num)) {
+            $("#contratos-table").append('<tr><td>' + num + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr></td></tr>');
+            $(".nuevoNumContrato").val('');
+            $(".nuevoNumContrato").focus();
+            GenerarContratoSAPDesde();
+        }
+    });
 
-   
+    $(document).on("click", ".borrarContrato", function () {
+        $(this).parent().parent().remove();
+        GenerarContratoSAPDesde();
+    });
 }
+
+function GenerarContratoSAPDesde() {
+    var arr = "";
+    $("#contratos-table tr").each(function () {
+        if (arr != "") {
+            arr += ";";
+        }
+        arr += $(this).find("td:first").text(); //put elements into array
+    });
+    $("#ContratoSAP").val(arr);
+    $("#ContratoSAPHasta").attr('disabled', 'disabled');
+    $("#ContratoSAPHasta").val('');
+}
+
 function CambioVariosContratos() {
         var lista = [];
         lista = $("#ContratoSAP").val().split(';');
         if (lista.length > 1) {
             $("#ContratoSAPHasta").attr('disabled', 'disabled');
-            $("#contratos").removeAttr('disabled');
             ArmarTabla(lista);
-        } else {
-            $("#contratos").attr('disabled', 'disabled');
+        } else if ($.isNumeric($("#ContratoSAP").val()) && $.isNumeric($("#ContratoSAPHasta").val())) {
+            lista = [];
+            for (var i = parseInt($("#ContratoSAP").val()); i <= parseInt($("#ContratoSAPHasta").val()); i++) {
+                lista.push(i);
+            }
+            ArmarTabla(lista);
+        }
+        else{
             $("#ContratoSAPHasta").removeAttr('disabled');
-
         }
     }
 function Filtrar() {
@@ -610,7 +641,7 @@ function ArmarTabla(contratos) {
     var tabla = '<tr><th>Contratos</th></tr>';
     if (contratos) {
         for (var i = 0; i < contratos.length; i++) {
-            tabla += '<tr><td>' + contratos[i] + '</td></tr>';
+            tabla += '<tr><td>' + contratos[i] + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr>';
         }
     }
     $("#contratos-table").append(tabla);

@@ -411,6 +411,9 @@
   <data name="Modificar_Negocio_Corredor" xml:space="preserve">
     <value>Modificar Negocio Corredor</value>
   </data>
+  <data name="Modificar_Neg_Finalizados" xml:space="preserve">
+    <value>Modificar Negocios Finalizados</value>
+  </data>
   <data name="Moneda" xml:space="preserve">
     <value>Moneda</value>
   </data>

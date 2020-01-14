@@ -44,6 +44,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ICapacidadProductivaAgent capacidadProductiva;
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly IModificarContratoAgent modificarContratoAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -58,7 +59,7 @@ namespace Molinos.DataAgro.Business.Managers
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager, 
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
-            IDiasHabilesAgent diasHabilesAgent)
+            IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -79,6 +80,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.configuracionManager = configuracionManager;
             this.altaTempranaAgent = altaTempranaAgent;
             this.diasHabilesAgent = diasHabilesAgent;
+            this.modificarContratoAgent = modificarContratoAgent;
             this.capacidadProductiva = capacidadProductiva;
         }
 
@@ -300,7 +302,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             
-            if (oParam.ContratoMadre != null)
+            if (!string.IsNullOrEmpty(oParam.ContratoMadre))
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);

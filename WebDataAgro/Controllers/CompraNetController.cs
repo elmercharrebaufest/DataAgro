@@ -83,7 +83,7 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioCorredor)]
+        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioCorredor,PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
         {
             ViewBag.ComercialId = GlobalVariables.ComercialId;
@@ -143,9 +143,15 @@ namespace WebDataAgro.Controllers
             }
 
             oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
-
-            var model = mobjContratoManager.GrabarContrato(oParam);
-
+            GrabarContratoResult model;
+            if (oParam.EstadoId == 5)
+            {
+                model = mobjContratoManager.ActualizarContratoFinalizado(oParam);
+            }
+            else
+            {
+                model = mobjContratoManager.GrabarContrato(oParam);
+            }
             return new JsonResult()
             {
                 Data = model,

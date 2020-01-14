@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation />
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO" />
+  <wsdl:types>
+    <xsd:schema xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Z_MPRFC_MODIFICAR_CONTRATO">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="IM_APERTURA" type="rfc:ZMPTT7960" />
+            <xsd:element name="IM_CALIDAD" type="rfc:ZMPTT7820" />
+            <xsd:element name="IM_CONTRATO" type="rfc:ZMPES5560" />
+            <xsd:element name="IM_DESC_BONIF" type="rfc:ZMPTT7810" />
+            <xsd:element name="IM_MODIFICACION" type="rfc:ZMPES5570" />
+            <xsd:element name="IM_TOPES_FIJ" type="rfc:ZMPES5280" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Z_MPRFC_MODIFICAR_CONTRATOResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="EX_MENSAJE" type="rfc:char100" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="curr13.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="curr11.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="11" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="cuky5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char20">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="20" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="time">
+        <xsd:restriction base="xsd:time">
+          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal5.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="5" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal25.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="25" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal3.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="3" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char8">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="8" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char100">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="100" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char120">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="120" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPES5570">
+        <xsd:sequence>
+          <xsd:element name="CONTRATO" type="rfc:char1" />
+          <xsd:element name="DESC_BONIF" type="rfc:char1" />
+          <xsd:element name="CALIDAD" type="rfc:char1" />
+          <xsd:element name="APERTURA" type="rfc:char1" />
+          <xsd:element name="TOPES_FIJ" type="rfc:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT7820">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5300" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5440">
+        <xsd:sequence>
+          <xsd:element name="CONCEPTO" type="rfc:char2" />
+          <xsd:element name="IMPORTE" type="rfc:curr13.2" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="PORC" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT7810">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5290" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5270">
+        <xsd:sequence>
+          <xsd:element name="MATERIAL" type="rfc:char18" />
+          <xsd:element name="COSECHA" type="rfc:char5" />
+          <xsd:element name="CANTIDAD" type="rfc:decimal25.0" />
+          <xsd:element name="CENTRO" type="rfc:char4" />
+          <xsd:element name="PRECIO" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="FECHA_DESDE" type="rfc:date10" />
+          <xsd:element name="FECHA_HASTA" type="rfc:date10" />
+          <xsd:element name="FECHA_ENTREGA" type="rfc:date10" />
+          <xsd:element name="FECHA_LIMITE" type="rfc:date10" />
+          <xsd:element name="PROVEEDOR" type="rfc:char16" />
+          <xsd:element name="GRUPO_COMPRAS" type="rfc:char3" />
+          <xsd:element name="USUARIO" type="rfc:char12" />
+          <xsd:element name="PROVINCIA" type="rfc:char3" />
+          <xsd:element name="SUSTENTABLE" type="rfc:char1" />
+          <xsd:element name="PAGO_DIFERIDO" type="rfc:char1" />
+          <xsd:element name="PROCEDENCIA" type="rfc:char5" />
+          <xsd:element name="PAGO_DIF_ARP" type="rfc:char1" />
+          <xsd:element name="DIAS_DIFERIM" type="rfc:numeric3" />
+          <xsd:element name="NO_INFORMAR_SIO" type="rfc:char1" />
+          <xsd:element name="ESPECIAL" type="rfc:char1" />
+          <xsd:element name="CONTR_DATAAGRO" type="rfc:char10" />
+          <xsd:element name="FECHA" type="rfc:date10" />
+          <xsd:element name="HORAACT" type="rfc:time" />
+          <xsd:element name="CLASIFICACION" type="rfc:char20" />
+          <xsd:element name="IND_OP_CANJE" type="rfc:char1" />
+          <xsd:element name="CONSIGNATARIO" type="rfc:char1" />
+          <xsd:element name="COND_FIJACION" type="rfc:char2" />
+          <xsd:element name="CAMIONES" type="rfc:decimal3.0" />
+          <xsd:element name="CONFIRMA" type="rfc:char1" />
+          <xsd:element name="BOLSA" type="rfc:char2" />
+          <xsd:element name="BOL_FISICO" type="rfc:char1" />
+          <xsd:element name="NINGUNO" type="rfc:char1" />
+          <xsd:element name="AUT_CG" type="rfc:char1" />
+          <xsd:element name="AUR_CD" type="rfc:char1" />
+          <xsd:element name="PAGO_DIR_VEND" type="rfc:char1" />
+          <xsd:element name="IMPORTE_S_PRECIO" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA_S_PRECIO" type="rfc:cuky5" />
+          <xsd:element name="PORC_S_PRECIO" type="rfc:decimal5.2" />
+          <xsd:element name="IMPORTE_A_PRECIO" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA_A_PRECIO" type="rfc:cuky5" />
+          <xsd:element name="PORC_A_PRECIO" type="rfc:decimal5.2" />
+          <xsd:element name="ESTAB_PROPIO" type="rfc:char1" />
+          <xsd:element name="ESTAB_ARRENDADO" type="rfc:char1" />
+          <xsd:element name="MERC_DESCARGADA" type="rfc:char1" />
+          <xsd:element name="OBSERVACION_CAL1" type="rfc:char120" />
+          <xsd:element name="CARTA_OFERTA" type="rfc:char1" />
+          <xsd:element name="CUIT_CORREDOR" type="rfc:char16" />
+          <xsd:element name="PORC_COMISION" type="rfc:decimal5.2" />
+          <xsd:element name="CONTRVEND" type="rfc:char10" />
+          <xsd:element name="CONTRCORR" type="rfc:char10" />
+          <xsd:element name="SEL_CARGO_VEND" type="rfc:char1" />
+          <xsd:element name="SEL_CARGO_MOA" type="rfc:char1" />
+          <xsd:element name="CONTRATO_MADRE" type="rfc:char10" />
+          <xsd:element name="PRECIO_PIZARRA" type="rfc:curr11.2" />
+          <xsd:element name="COMPENSACION" type="rfc:char1" />
+          <xsd:element name="FLETE_TARIFA" type="rfc:curr11.2" />
+          <xsd:element name="FLETE_NIVEL" type="rfc:char3" />
+          <xsd:element name="ZONA" type="rfc:char4" />
+          <xsd:element name="CREADOR" type="rfc:char12" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5280">
+        <xsd:sequence>
+          <xsd:element name="FE_DESDE" type="rfc:date10" />
+          <xsd:element name="FE_HASTA" type="rfc:date10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5290">
+        <xsd:sequence>
+          <xsd:element name="FEDESDE" type="rfc:date10" />
+          <xsd:element name="FEHASTA" type="rfc:date10" />
+          <xsd:element name="TIPO_PERIODO" type="rfc:char1" />
+          <xsd:element name="TIPO_DB" type="rfc:char1" />
+          <xsd:element name="IMPORTE_DB" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA_DB" type="rfc:cuky5" />
+          <xsd:element name="PORC_DB" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT7960">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5440" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5300">
+        <xsd:sequence>
+          <xsd:element name="CODIGO" type="rfc:char8" />
+          <xsd:element name="PORC_DESDE" type="rfc:decimal5.2" />
+          <xsd:element name="PORC_HASTA" type="rfc:decimal5.2" />
+          <xsd:element name="VALOR" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5560">
+        <xsd:sequence>
+          <xsd:element name="CONTRATO" type="rfc:char10" />
+          <xsd:element name="DETALLE" type="rfc:ZMPES5270" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="rfc.Z_MPRFC_MODIFICAR_CONTRATO">
+    <wsdl:documentation />
+    <wsdl:part name="parameters" element="rfc:Z_MPRFC_MODIFICAR_CONTRATO" />
+  </wsdl:message>
+  <wsdl:message name="rfc.Z_MPRFC_MODIFICAR_CONTRATOResponse">
+    <wsdl:documentation />
+    <wsdl:part name="parameter" element="rfc:Z_MPRFC_MODIFICAR_CONTRATOResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO">
+    <wsdl:documentation />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO">
+      <wsdl:documentation />
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO" />
+      </wsp:Policy>
+      <wsdl:input message="p1:rfc.Z_MPRFC_MODIFICAR_CONTRATO" />
+      <wsdl:output message="p1:rfc.Z_MPRFC_MODIFICAR_CONTRATOResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOBinding" type="p1:SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO">
+    <binding transport="http://schemas.xmlsoap.org/soap/http" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO">
+      <operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <wsdl:input>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:input>
+      <wsdl:output>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOService">
+    <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOBinding">
+      <address location="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+    <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOBinding">
+      <address location="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
