@@ -93,6 +93,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NegociosConfirmados = 315,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Neg_Finalizados")]
         ModificarNegFinalizados = 316,
+        //[Display(ResourceType = typeof(Text), Name = "Configuraciones_Internas")]
+        //ConfiguracionesInternas = 317,
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
+        VerTodosNegocios = 318,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
