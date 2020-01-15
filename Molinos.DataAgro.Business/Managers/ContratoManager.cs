@@ -1740,15 +1740,23 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult ActualizarContratoFinalizado(Contrato contrato)
         {
             var error = new GrabarContratoResult();
-            contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.ContratoId == contrato.ContratoId, x => x.ContratoSAP);
-            var res = /* modificarContratoAgent.Modificar(contrato);*/ "";
-            if (res != null)
+            try
             {
-                error.Error("SAP", res);
-                return error;
+                contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.ContratoId == contrato.ContratoId, x => x.ContratoSAP);
+                var res = modificarContratoAgent.Modificar(contrato);
+                if (res.Contains("Error"))
+                {
+                    error.Error("SAP", res);
+                    return error;
+                }
+                var listaErrores = ActualizarContratoSAP(contrato);
+                error.Errores.AddRange(listaErrores.Errores);
             }
-            var listaErrores = ActualizarContratoSAP(contrato);
-            error.Errores.AddRange(listaErrores.Errores);
+            catch(Exception e)
+            {
+                logger.Error(e.Message);
+                error.Error("", e.Message);
+            }
             return error;
         }
 
