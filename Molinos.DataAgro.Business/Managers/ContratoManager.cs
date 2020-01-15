@@ -770,7 +770,7 @@ namespace Molinos.DataAgro.Business.Managers
             cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == rango.MaterialId));
             var total = cantidad.Sum();
-            var precioContrato = contrato.PrecioNeto ?? contrato.Precio;
+            var precioContrato = contrato.Precio;
 
                 var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
                     contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&

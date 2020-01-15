@@ -177,7 +177,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                         USUARIO = contrato.Comercial.IdActiveDirectory,
-                        HORAACT = contrato.Fecha,
+                        HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                         PROCEDENCIA = localidadString,
                         CENTRO = contrato.Destino.CodigoSap,
                         CLASIFICACION = contrato.Clasificacion.Descripcion,

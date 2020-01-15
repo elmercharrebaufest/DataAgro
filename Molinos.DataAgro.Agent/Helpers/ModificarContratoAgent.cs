@@ -271,7 +271,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString,
                             FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
                             USUARIO = contrato.Comercial.IdActiveDirectory,
-                            HORAACT = contrato.Fecha,
+                            HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                             PROCEDENCIA = localidadString,
                             CENTRO = contrato.Destino.CodigoSap,
                             CLASIFICACION = contrato.Clasificacion.Descripcion,

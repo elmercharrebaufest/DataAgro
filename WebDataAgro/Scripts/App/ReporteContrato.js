@@ -538,7 +538,17 @@ function InicializarElementos() {
         min: 0
     });
     kendo.culture("es-AR");
-    
+
+    $("#nuevoNumContrato").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "######################",
+        value: " ",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
     CrearMultiSelectFiltro("#buscadorCorredor", "Corredor", "CorredorId", "/Contrato/ListarCorredor");
     $("#importeSustentableId").click(function () {
@@ -580,7 +590,7 @@ function InicializarElementos() {
     $("#ContratoSAPHasta").change(CambioVariosContratos);
         
     $(document).on("click", ".agregarContrato", function () {
-        var num = $(".nuevoNumContrato").val();
+        var num = $("#nuevoNumContrato").val();
         if ($.isNumeric(num)) {
             $("#contratos-table").append('<tr><td>' + num + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr></td></tr>');
             $(".nuevoNumContrato").val('');

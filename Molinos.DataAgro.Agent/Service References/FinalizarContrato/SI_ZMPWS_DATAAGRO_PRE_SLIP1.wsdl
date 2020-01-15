@@ -72,11 +72,6 @@
           <xsd:maxLength value="10" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="time">
-        <xsd:restriction base="xsd:time">
-          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="string">
         <xsd:restriction base="xsd:string" />
       </xsd:simpleType>
@@ -183,7 +178,7 @@
           <xsd:element name="ESPECIAL" type="rfc:char1" />
           <xsd:element name="CONTR_DATAAGRO" type="rfc:char10" />
           <xsd:element name="FECHA" type="rfc:date10" />
-          <xsd:element name="HORAACT" type="rfc:time" />
+          <xsd:element name="HORAACT" type="rfc:char8" />
           <xsd:element name="CLASIFICACION" type="rfc:char20" />
           <xsd:element name="IND_OP_CANJE" type="rfc:char1" />
           <xsd:element name="CONSIGNATARIO" type="rfc:char1" />

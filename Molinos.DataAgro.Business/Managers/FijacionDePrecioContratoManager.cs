@@ -313,7 +313,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.MaterialId == rango.MaterialId));
 
                 var total = cantidad.Sum();
-                var precioContrato = contrato.PrecioNeto ?? contrato.Precio;
+                var precioContrato = contrato.Precio;
 
                 var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
                     contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
