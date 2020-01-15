@@ -44,14 +44,16 @@
             <label>Contrato SAP</label>
         </div>
         <div class="col-md-4">
-            <div class="col-xs-5 noLeftPadding front">
-                @Html.TextBoxFor(x => x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
-            </div>
-            <div class="col-xs-5 noLeftPadding noRightPadding front">
-                @Html.TextBoxFor(x => x.ContratoSAPHasta, new { @class = "form-control", style = "width:100%" })
-            </div>
-            <div id="lista-contratos" class="col-xs-2 front">
-                <button type="button" id="contratos" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+            <div class="row">
+                <div class="col-xs-5 noRightPadding">
+                    @Html.TextBoxFor(x => x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
+                </div>
+                <div class="col-xs-5">
+                    @Html.TextBoxFor(x => x.ContratoSAPHasta, new { @class = "form-control", style = "width:100%" })
+                </div>
+                <div id="lista-contratos" class="col-xs-2 noLeftPadding">
+                    <button type="button" id="contratos" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                </div>
             </div>
         </div>
         <div class="col-md-2">
