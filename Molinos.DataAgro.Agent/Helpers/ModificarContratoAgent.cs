@@ -184,7 +184,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string especialString = contratoGuardado.Calidad.Count > 0 ? "4" : "1";
 
-                string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
+                var localidad = repositorio.Obtener<Localidad>(contrato.LocalidadId);
+                string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
                 logger.Debug("Cargando contrato");
                 var conModificado =
@@ -251,33 +252,34 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
                             CONTR_DATAAGRO = contrato.ContratoId.ToString(),
-                            COSECHA = contrato.Campana.Descripcion,
+                            COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion),
                             DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
                             FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
                             FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
                             FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                             FECHA_LIMITE = fechaDolarizadoString,
                             GRUPO_COMPRAS = "",
-                            MONEDA = contrato.Moneda?.MonedaId,
+                            MONEDA = repositorio.Obtener<Moneda, string>(x => contrato.MonedaId == x.MonedaId, x => x.MonedaId),                            
                             NO_INFORMAR_SIO = noInformaSioString,
                             PAGO_DIFERIDO = pagoDiferidoString,
-                            MATERIAL = contrato.Material.Codigo,
+                            MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
                             PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                             PRECIO_PIZARRA = contrato.Precio,
                             PRECIO = contrato.PrecioNeto ?? contrato.Precio,
-                            PROVEEDOR = contrato.Proveedor.CUIT,
+                            PROVEEDOR = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT),
                             PROVINCIA = contrato.ProvinciaId.ToString(),
                             SUSTENTABLE = sustentableString,
-                            ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString,
+                            ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap),
                             FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
-                            USUARIO = contrato.Comercial.IdActiveDirectory,
+                            USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory),
                             HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
                             PROCEDENCIA = localidadString,
-                            CENTRO = contrato.Destino.CodigoSap,
-                            CLASIFICACION = contrato.Clasificacion.Descripcion,
+                            CENTRO = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
+                            CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion),
                             IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
                             CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
-                            COND_FIJACION = contrato.CondicionFijacion?.CodigoSap,
+                            COND_FIJACION = contrato.CondicionFijacionId.HasValue?
+                            repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap):"",
                             CAMIONES = cantidadCamiones,
                             CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
                             BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
@@ -297,17 +299,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
                             MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
                             OBSERVACION_CAL1 = contrato.Observacion,
-                            CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT : "",
-                            PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value : 0,
+                            CUIT_CORREDOR = contrato.CorredorId.HasValue? 
+                            repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "",                            
+                            PORC_COMISION = contrato.CorredorId.HasValue? contrato.PorcentajeComision.Value : 0,
                             CONTRCORR = contrato.ContratoCorredor ?? "",
                             CONTRVEND = contrato.ContratoVendedor ?? "",
                             SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
                             SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
                             CONTRATO_MADRE = contrato.ContratoMadre ?? "",
-                            CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "",
-                            ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap : "",
+                            CREADOR = contrato.ComercialCreadorId.HasValue?
+                            repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory): "",
+                            ZONA = contrato.ZonaId.HasValue ? 
+                            repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "",
                             COMPENSACION = contrato.Compensacion == true ? "X" : "",
-                            FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "",
+                            FLETE_NIVEL = contrato.NivelTarifaId.HasValue?
+                            repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "",
                             FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                         }
                     }
