@@ -36,6 +36,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var listaDescuentos = new List<ZMPES5290>();
                 var contratoGuardado = repositorio.Obtener<Contrato>(contrato.ContratoId);
                 var descModificado = false;
+                var listaMonedas = repositorio.Listar<Moneda>();
                 foreach (var descBon in contratoGuardado.Descuentos)
                 {
                     if (!contrato.Descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
@@ -51,14 +52,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     if (descBon.TipoPeriodoDBId != 1)
                     {
+                        var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
+                        var listaTipo = repositorio.Listar<TipoDB>();
                         listaDescuentos.Add(new ZMPES5290
                         {
-                            TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
-                            TIPO_DB = descBon.TipoDB.CodigoSap,
+                            TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
+                            TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
                             FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = descBon.Moneda.MonedaId ?? "",
+                            MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ? 
+                            listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
                             PORC_DB = descBon.Porcentaje
                         }
                         );
@@ -94,13 +98,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var listaCalidades = new List<ZMPES5300>();
                 foreach (var cal in contratoGuardado.Calidad)
                 {
+                    var listaCalidadEspecial = repositorio.Listar<CalidadEspecial>();
                     if (cal.StandardDeCalidadId == 2)
                     {
                         if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
                         {
                             listaCalidades.Add(new ZMPES5300
                             {
-                                CODIGO = cal.CalidadEspecial.CodigoSap,
+                                CODIGO = listaCalidadEspecial.FirstOrDefault(x=> x.Id == cal.CalidadEspecialId).CodigoSap,
                                 VALOR = 0,
                                 PORC_DESDE = 1,
                                 PORC_HASTA = 1
@@ -113,7 +118,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 listaCalidades.Add(new ZMPES5300
                                 {
-                                    CODIGO = cal.CalidadEspecial.CodigoSap,
+                                    CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
                                     VALOR = cal.Valor,
                                     PORC_DESDE = cal.PorcentajeDesde ?? 0,
                                     PORC_HASTA = 51
@@ -124,7 +129,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 listaCalidades.Add(new ZMPES5300
                                 {
-                                    CODIGO = cal.CalidadEspecial.CodigoSap,
+                                    CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
                                     VALOR = cal.Valor,
                                     PORC_DESDE = cal.PorcentajeDesde ?? 0,
                                     PORC_HASTA = cal.PorcentajeHasta ?? 0
@@ -137,7 +142,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         listaCalidades.Add(new ZMPES5300
                         {
-                            CODIGO = cal.CalidadEspecial.CodigoSap,
+                            CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
                             VALOR = 0,
                             PORC_DESDE = 1,
                             PORC_HASTA = 1
@@ -146,12 +151,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }         
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
-                foreach (var cal in contratoGuardado.Calidad)
+                foreach (var ap in contratoGuardado.AperturaPrecio)
                 {
-                    if (!contrato.Calidad.Any(x => x.Valor == cal.Valor
-                    && x.StandardDeCalidadId == cal.StandardDeCalidadId
-                    && x.CalidadEspecialId == cal.CalidadEspecialId
-                    && x.PorcentajeDesde == cal.PorcentajeDesde && x.PorcentajeHasta == cal.PorcentajeHasta))
+                    if (!contrato.AperturaPrecio.Any(x => x.Importe == ap.Importe
+                    && x.MonedaId == ap.MonedaId
+                    && x.Porcentaje == ap.Porcentaje
+                    && x.ConceptoAperturaPrecioId == ap.ConceptoAperturaPrecioId))
                     {
                         apModificado = true;
                         break;
@@ -160,13 +165,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var listaApertura = new List<ZMPES5440>();
                 if (contrato.TipoNegocioId == 2)
                 {
+                    var listaAperturaPrecios = repositorio.Listar<ConceptoAperturaPrecio>();
                     foreach (AperturaPrecio apertura in contratoGuardado.AperturaPrecio)
                     {
                         if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
                             listaApertura.Add(new ZMPES5440
                             {
-                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                                CONCEPTO = listaAperturaPrecios.FirstOrDefault(x => x.Id == apertura.ConceptoAperturaPrecioId).CodigoSap,
                                 IMPORTE = apertura.Importe,
                                 MONEDA = contrato.Moneda?.MonedaId,
                                 PORC = apertura.Porcentaje
