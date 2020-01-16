@@ -190,13 +190,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
+                if(contrato.Descuentos == null)
+                {
+                    contrato.Descuentos = new List<DescuentoBonificacion>();
+                }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd"): "";
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
-                string especialString = contrato.Calidad.Count > 0 ? "4" : "1";
+                string especialString = contrato.Calidad != null || contrato.Calidad.Count > 0 ? "4" : "1";
 
                 var localidad = repositorio.Obtener<Localidad>(contrato.LocalidadId);
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
