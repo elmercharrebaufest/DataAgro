@@ -32,9 +32,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                logger.Debug("Finalizando Contrato Nro: " + contrato.ContratoId);
+                logger.Debug("Modificando Contrato Nro: " + contrato.ContratoId);
                 var listaDescuentos = new List<ZMPES5290>();
                 var contratoGuardado = repositorio.Obtener<Contrato>(contrato.ContratoId);
+                logger.Debug("Contrato Obtenido: " + contratoGuardado.ContratoId);
+
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
                 foreach (var descBon in contratoGuardado.Descuentos)
@@ -47,8 +49,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         break;
                     }
                 }
-
-                foreach (var descBon in contratoGuardado.Descuentos)
+                foreach (var descBon in contrato.Descuentos)
                 {
                     if (descBon.TipoPeriodoDBId != 1)
                     {
@@ -81,9 +82,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
-                
+                logger.Debug("Descuentos modificados");
+
                 var calModificado = false;
-                foreach (var cal in contratoGuardado.Calidad)
+                foreach (var cal in contrato.Calidad)
                 {
                     if (!contrato.Calidad.Any(x => x.Valor == cal.Valor
                     && x.StandardDeCalidadId == cal.StandardDeCalidadId
@@ -96,7 +98,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
 
                 var listaCalidades = new List<ZMPES5300>();
-                foreach (var cal in contratoGuardado.Calidad)
+                foreach (var cal in contrato.Calidad)
                 {
                     var listaCalidadEspecial = repositorio.Listar<CalidadEspecial>();
                     if (cal.StandardDeCalidadId == 2)
@@ -151,7 +153,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }         
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
-                foreach (var ap in contratoGuardado.AperturaPrecio)
+                foreach (var ap in contrato.AperturaPrecio)
                 {
                     if (!contrato.AperturaPrecio.Any(x => x.Importe == ap.Importe
                     && x.MonedaId == ap.MonedaId
@@ -166,7 +168,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 if (contrato.TipoNegocioId == 2)
                 {
                     var listaAperturaPrecios = repositorio.Listar<ConceptoAperturaPrecio>();
-                    foreach (AperturaPrecio apertura in contratoGuardado.AperturaPrecio)
+                    foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
                     {
                         if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
@@ -181,14 +183,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
                 
-                logger.Debug("Apertura: " + contratoGuardado.AperturaPrecio);
-                var descuentoGeneralSobrePrecio = contratoGuardado.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
-                var descuentoGeneralFueraPrecio = contratoGuardado.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
+                logger.Debug("Apertura: " + contrato.AperturaPrecio);
+                var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
-                string especialString = contratoGuardado.Calidad.Count > 0 ? "4" : "1";
+                string especialString = contrato.Calidad.Count > 0 ? "4" : "1";
 
                 var localidad = repositorio.Obtener<Localidad>(contrato.LocalidadId);
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
@@ -265,7 +267,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                             FECHA_LIMITE = fechaDolarizadoString,
                             GRUPO_COMPRAS = "",
-                            MONEDA = repositorio.Obtener<Moneda, string>(x => contrato.MonedaId == x.MonedaId, x => x.MonedaId),                            
+                            MONEDA = contrato.MonedaId,                            
                             NO_INFORMAR_SIO = noInformaSioString,
                             PAGO_DIFERIDO = pagoDiferidoString,
                             MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
