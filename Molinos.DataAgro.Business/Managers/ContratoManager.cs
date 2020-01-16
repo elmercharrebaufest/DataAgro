@@ -1650,7 +1650,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ActualizarContratoSAP(Contrato contrato)
         {
             var error = new Resultado();
-            
+            logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.ContratoId);
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoId == contrato.ContratoId);
             if(contratoSave==null && contratoSave.ContratoId == 0) 
             {
@@ -1749,6 +1749,7 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Error("SAP", res);
                     return error;
                 }
+                logger.Debug("Actualizacion SAP ok");
                 var listaErrores = ActualizarContratoSAP(contrato);
                 error.Errores.AddRange(listaErrores.Errores);
             }
