@@ -2750,6 +2750,10 @@ function CargarDatosEditar(contrato, hijo) {
         GuardarAperturaDePrecio();
         contrato.Compensacion === true ? $("#compensacionId").prop("checked", true) : $("#compensacionId").prop("checked", false);
     }
+    if (contrato.Estado == 5) {
+        $("#tipoId").data("kendoDropDownList").enable(false);
+        $("#material").data("kendoDropDownList").enable(false);
+    }
 }
 
 function LimpiarApertura(){
