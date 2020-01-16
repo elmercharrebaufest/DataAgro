@@ -49,25 +49,28 @@ namespace Molinos.DataAgro.Agent.Helpers
                         break;
                     }
                 }
-                foreach (var descBon in contrato.Descuentos)
+                if (contrato.Descuentos != null)
                 {
-                    if (descBon.TipoPeriodoDBId != 1)
+                    foreach (var descBon in contrato.Descuentos)
                     {
-                        var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
-                        var listaTipo = repositorio.Listar<TipoDB>();
-                        listaDescuentos.Add(new ZMPES5290
+                        if (descBon.TipoPeriodoDBId != 1)
                         {
-                            TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
-                            TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
-                            FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
-                            FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
-                            IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ? 
-                            listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
-                            PORC_DB = descBon.Porcentaje
-                        }
-                        );
-                    };
+                            var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
+                            var listaTipo = repositorio.Listar<TipoDB>();
+                            listaDescuentos.Add(new ZMPES5290
+                            {
+                                TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
+                                TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
+                                FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
+                                FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
+                                IMPORTE_DB = descBon.Importe,
+                                MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ?
+                                listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
+                                PORC_DB = descBon.Porcentaje
+                            }
+                            );
+                        };
+                    }
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable != 0)
                 {
@@ -85,7 +88,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Descuentos modificados");
 
                 var calModificado = false;
-                foreach (var cal in contrato.Calidad)
+                foreach (var cal in contratoGuardado.Calidad)
                 {
                     if (!contrato.Calidad.Any(x => x.Valor == cal.Valor
                     && x.StandardDeCalidadId == cal.StandardDeCalidadId
@@ -98,62 +101,65 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
 
                 var listaCalidades = new List<ZMPES5300>();
-                foreach (var cal in contrato.Calidad)
+                if (contrato.Calidad != null)
                 {
-                    var listaCalidadEspecial = repositorio.Listar<CalidadEspecial>();
-                    if (cal.StandardDeCalidadId == 2)
+                    foreach (var cal in contrato.Calidad)
                     {
-                        if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
+                        var listaCalidadEspecial = repositorio.Listar<CalidadEspecial>();
+                        if (cal.StandardDeCalidadId == 2)
                         {
-                            listaCalidades.Add(new ZMPES5300
-                            {
-                                CODIGO = listaCalidadEspecial.FirstOrDefault(x=> x.Id == cal.CalidadEspecialId).CodigoSap,
-                                VALOR = 0,
-                                PORC_DESDE = 1,
-                                PORC_HASTA = 1
-                            }
-                        );
-                        }
-                        else
-                        {
-                            if (cal.CalidadEspecialId == 1 && cal.PorcentajeHasta == 40)
+                            if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
                             {
                                 listaCalidades.Add(new ZMPES5300
                                 {
                                     CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                                    VALOR = cal.Valor,
-                                    PORC_DESDE = cal.PorcentajeDesde ?? 0,
-                                    PORC_HASTA = 51
+                                    VALOR = 0,
+                                    PORC_DESDE = 1,
+                                    PORC_HASTA = 1
                                 }
-                                );
+                            );
                             }
                             else
                             {
-                                listaCalidades.Add(new ZMPES5300
+                                if (cal.CalidadEspecialId == 1 && cal.PorcentajeHasta == 40)
                                 {
-                                    CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                                    VALOR = cal.Valor,
-                                    PORC_DESDE = cal.PorcentajeDesde ?? 0,
-                                    PORC_HASTA = cal.PorcentajeHasta ?? 0
+                                    listaCalidades.Add(new ZMPES5300
+                                    {
+                                        CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                        VALOR = cal.Valor,
+                                        PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                                        PORC_HASTA = 51
+                                    }
+                                    );
                                 }
-                                );
+                                else
+                                {
+                                    listaCalidades.Add(new ZMPES5300
+                                    {
+                                        CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                        VALOR = cal.Valor,
+                                        PORC_DESDE = cal.PorcentajeDesde ?? 0,
+                                        PORC_HASTA = cal.PorcentajeHasta ?? 0
+                                    }
+                                    );
+                                }
                             }
                         }
-                    }
-                    else if (cal.StandardDeCalidadId == 7)
-                    {
-                        listaCalidades.Add(new ZMPES5300
+                        else if (cal.StandardDeCalidadId == 7)
                         {
-                            CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
-                            VALOR = 0,
-                            PORC_DESDE = 1,
-                            PORC_HASTA = 1
-                        });
+                            listaCalidades.Add(new ZMPES5300
+                            {
+                                CODIGO = listaCalidadEspecial.FirstOrDefault(x => x.Id == cal.CalidadEspecialId).CodigoSap,
+                                VALOR = 0,
+                                PORC_DESDE = 1,
+                                PORC_HASTA = 1
+                            });
+                        }
                     }
-                }         
+                }
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
-                foreach (var ap in contrato.AperturaPrecio)
+                foreach (var ap in contratoGuardado.AperturaPrecio)
                 {
                     if (!contrato.AperturaPrecio.Any(x => x.Importe == ap.Importe
                     && x.MonedaId == ap.MonedaId
@@ -165,7 +171,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
                 var listaApertura = new List<ZMPES5440>();
-                if (contrato.TipoNegocioId == 2)
+                if (contrato.TipoNegocioId == 2 && contrato.AperturaPrecio!= null)
                 {
                     var listaAperturaPrecios = repositorio.Listar<ConceptoAperturaPrecio>();
                     foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
