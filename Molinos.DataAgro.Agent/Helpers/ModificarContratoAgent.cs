@@ -200,9 +200,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
-                string especialString = contrato.Calidad != null || contrato.Calidad.Count > 0 ? "4" : "1";
+                string especialString = contrato.Calidad != null && contrato.Calidad.Count > 0 ? "4" : "1";
 
-                var localidad = repositorio.Obtener<Localidad>(contrato.LocalidadId);
+                var localidad = repositorio.Obtener<Localidad>(contrato.LocalidadId ?? 0);
+                logger.Debug("Localidad obtenida");
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
                 logger.Debug("Cargando contrato");
