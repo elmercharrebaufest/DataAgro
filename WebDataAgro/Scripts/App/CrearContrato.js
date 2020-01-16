@@ -2753,6 +2753,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.Estado == 5) {
         $("#tipoId").data("kendoDropDownList").enable(false);
         $("#material").data("kendoDropDownList").enable(false);
+        $("#contrato-modificado").html("<h3>CONTRATO " + contrato.ContratoSAP.replace('000', '') +"</h3>");
     }
 }
 
