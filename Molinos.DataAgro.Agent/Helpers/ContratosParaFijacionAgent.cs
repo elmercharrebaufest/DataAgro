@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Agent
 
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (CuitCorredor != "" ? x.Corredor.CUIT == CuitCorredor : x.Corredor.CUIT == null)&& x.ContratoSAP!= null);
+                var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (!string.IsNullOrEmpty(CuitCorredor) ? x.Corredor.CUIT == CuitCorredor : x.CorredorId == null)&& x.ContratoSAP!= null);
                 if (contratos != null)
                 {
                     var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));

@@ -87,20 +87,32 @@ namespace Molinos.DataAgro.Business.Managers
         public DatosIniContrato TraerDatosCombo()
         {
             var datosCombo = new DatosIniContrato();
+            var hoy = DateTime.Today;
 
             datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden }, null, 0, "Orden");
 
             datosCombo.loc = new List<LocalidadQry>();
 
             datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
-
-            datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
-
+            if (!PermisosHelper.Is(PermisosDataAgro.PruebaCorredor, PermisosDataAgro.PruebaProveedor))
+            {
+                datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
+            }
+            else
+            {
+                datosCombo.material = repositorio.Listar<HabilitacionFijacion, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                    x=>x.Dia == hoy);
+            }
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
-
-            datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
-                (x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso == PermisosDataAgro.ListaComercialCompraNet))), 0, "Comercial");
-
+            if (!PermisosHelper.Is(PermisosDataAgro.PruebaCorredor, PermisosDataAgro.PruebaProveedor))
+            {
+                datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
+                (x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet))), 0, "Comercial");
+            }
+            else
+            {
+                datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido });
+            }
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });

@@ -15,6 +15,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId);
 
         GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato);
+        GrabarContratoResult BorrarFijacionPreAprobacion(int id, string motivo);
 
         GrabarFijacionResult FinalizarFijacion(int fijacionDePrecioContratoId, string activeDiretoryId);
 
@@ -22,6 +23,7 @@ namespace Molinos.DataAgro.Interfaces
         List<DatosFijacionDeContratoDto> TraerDatosFijacion(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorFijacion(int fijacionId);
         void FinalizacionAutomatica(string idActiveDirectory);
+        GrabarFijacionResult AprobarFijacion(int id);
     }
 }
 

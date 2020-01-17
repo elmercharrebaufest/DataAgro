@@ -1027,7 +1027,7 @@ namespace Molinos.DataAgro.Business.Managers
             var proveedor = new ProveedorQry();
             if (corredor)
             {
-                proveedor = repositorio.Obtener<Proveedor, ProveedorQry>(x => x.CUIT == cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7), x => new ProveedorQry() { ProveedorId = x.ProveedorId, Descripcion = x.RazonSocial });
+                proveedor = repositorio.Obtener<CorredorProveedor, ProveedorQry>(x => x.Corredor.CUIT == cuit, x => new ProveedorQry() { ProveedorId = x.CorredorId, Descripcion = x.Corredor.RazonSocial });
             }
             else
             {

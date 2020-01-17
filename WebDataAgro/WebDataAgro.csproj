@@ -203,6 +203,7 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
     <Compile Include="Models\AgenteCompraModel.cs" />
+    <Compile Include="Models\ConfiguracionInternaModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
     <Compile Include="Models\CupoModel.cs" />
     <Compile Include="Models\ConfiguracionModel.cs" />
@@ -914,6 +916,7 @@
     <Content Include="Content\reportes.css" />
     <Content Include="Content\reportesResponsive.css" />
     <Content Include="Content\configuracionCupo.css" />
+    <Content Include="Content\ConfiguracionInterna.css" />
     <Content Include="Content\research.css" />
     <Content Include="Content\rol.css" />
     <Content Include="Content\SiteResponsive.css" />
@@ -957,8 +960,10 @@
     <Content Include="Scripts\App\agregarproveedor.js" />
     <Content Include="Scripts\App\agregarproveedoredit.js" />
     <Content Include="Scripts\App\CompraNetIndex.js" />
+    <Content Include="Scripts\App\ConfiguracionInterna.js" />
     <Content Include="Scripts\App\Configuracion.js" />
     <Content Include="Scripts\App\CopiarContrato.js" />
+    <Content Include="Scripts\App\CrearContratoExterno.js" />
     <Content Include="Scripts\App\CrearContrato.js" />
     <Content Include="Scripts\App\Cubproveedores.js" />
     <Content Include="Scripts\App\CrearCupo.js" />
@@ -2505,6 +2510,15 @@
     <Content Include="Views\Home\BorrarCookie.cshtml" />
     <Content Include="Views\ReporteCupo\Index.cshtml" />
     <Content Include="Views\Cupo\ModalBorrarVarios.cshtml" />
+    <Content Include="Views\CompraNet\CrearContratoExterno.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\Index.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarPrecioPartial.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarFijacionPartial.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarPizarraPartial.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaPrecio.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaPizarra.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaFijacion.cshtml" />
+    <Content Include="Views\CompraNet\_ModalAprobar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

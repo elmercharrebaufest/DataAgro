@@ -43,6 +43,7 @@ namespace WebDataAgro.Controllers
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
+        private readonly IConfiguracionInternaManager configuracionInternaManager;
 
 
 
@@ -51,10 +52,11 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
 
         public CompraNetController(IHomeManager oHomeManager, ILocalidadManager ojLocalidadManager,
-            IProveedorManager oProveedorManager, IMaterialManager oMaterialManager, 
-            IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, 
-            ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager, 
-            ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager)
+            IProveedorManager oProveedorManager, IMaterialManager oMaterialManager,
+            IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
+            ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
+            ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
+            IConfiguracionInternaManager configuracionInternaManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -69,6 +71,7 @@ namespace WebDataAgro.Controllers
             mobjFasonManager = oFasonManager;
             mobjAgenteManager = oAgenteManager;
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
+            this.configuracionInternaManager = configuracionInternaManager;
         }
 
         //-----------------------------------------------------
@@ -79,17 +82,38 @@ namespace WebDataAgro.Controllers
         public ActionResult Index()
         {
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
-            ViewBag.comercialId = GlobalVariables.ComercialId; 
+            ViewBag.comercialId = GlobalVariables.ComercialId;
             return View();
         }
 
-        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioCorredor,PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados)]
+        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
         {
+            if (PermisosHelper.Is(PermisosDataAgro.PruebaProveedor, PermisosDataAgro.PruebaCorredor))
+            {
+                return RedirectToAction("CrearContratoExterno");
+            }
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
             ViewBag.Siguientes = siguientes;
+            return View();
+        }
+        [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
+        public ActionResult CrearContratoExterno(int? id, int? tipoId)
+        {
+            ViewBag.ComercialId = GlobalVariables.ComercialId;
+            ViewBag.Id = id;
+            ViewBag.TipoId = tipoId;
+            ViewBag.Rol = PermisosHelper.Is(PermisosDataAgro.PruebaCorredor) ? "Corredor" : PermisosHelper.Is(PermisosDataAgro.PruebaProveedor) ? "Proveedor" : "";
+            if (PermisosHelper.Is(PermisosDataAgro.PruebaCorredor))
+            {
+                ViewBag.Corredor = "ACA (30500120882)";
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.PruebaProveedor))
+            {
+                ViewBag.Proveedor = "CHS DE ARGENTINA S.A. (30711160163)";
+            }
             return View();
         }
 
@@ -196,6 +220,15 @@ namespace WebDataAgro.Controllers
             };
 
         }
+        public ActionResult BorrarFijacionPreAprobacion(int id, string motivoRechazo)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.BorrarFijacionPreAprobacion(id, motivoRechazo),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
         public ActionResult BorrarFason(Fason oParam)
         {
             return new JsonResult()
@@ -297,6 +330,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarFijacion(FijacionDePrecioContrato oParam)
         {
+            oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId);
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam),
@@ -531,7 +565,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro,int fijacionId)
+        public ActionResult ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId)
         {
             return new JsonResult()
             {
@@ -665,17 +699,51 @@ namespace WebDataAgro.Controllers
             request.Take = 0;
             request.PageSize = 0;
             request.SortObjects = null;
-            request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and",FilterObjects=filtros.AsEnumerable()}: null; 
+            request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and", FilterObjects = filtros.AsEnumerable() } : null;
             var model = mobjContratoManager.TraerTotalesPesosDolares(request, equipo, GlobalVariables.CorredoresComercial);
-             
+
             return Json(model);
         }
 
-        public ActionResult ValidarProveedor(int proveedorId )
+        public ActionResult ValidarProveedor(int proveedorId)
         {
             return new JsonResult()
             {
                 Data = mobjContratoManager.ValidarProveedor(proveedorId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerPrecioMoa()
+        {
+            return new JsonResult()
+            {
+                Data = configuracionInternaManager.TraerPrecioCompraNet(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult TraerPrecioMOAPorMaterialMoneda(int materialId, string monedaId)
+        {
+            var precio = configuracionInternaManager.TraerPrecioCompraNet(materialId, monedaId);
+
+            return new JsonResult()
+            {
+                Data = precio,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult HabilitarPizarra()
+        {
+            return new JsonResult()
+            {
+                Data = configuracionInternaManager.HabilitarPizarra(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult AprobarFijacion(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.AprobarFijacion(id),
                 MaxJsonLength = Int32.MaxValue
             };
         }

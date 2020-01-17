@@ -335,6 +335,11 @@ namespace Molinos.DataAgro.Business
                 return repositorio.Listar<GrupoDeCompras>();
             }
         }
+        public int ComercialAsociado(int proveedorId)
+        {
+            var comercial = repositorio.Obtener<ProveedorComercial, int>(x => x.ProveedorId == proveedorId, x => x.ComercialId);
+            return comercial;
+        }
     }
 }
 

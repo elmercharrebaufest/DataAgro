@@ -1,0 +1,31 @@
+﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+
+    @using (Ajax.BeginForm("GuardarFijacion", null, new AjaxOptions { UpdateTargetId = "listaFijacion", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+        <div id="form">
+            <div class="row-botones-material row">
+                <div class="col-md-2">
+                    <label>Día Fijación</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.FijacionDia, new { @class = " form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Material Fijación</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.DropDownListFor(x => x.MaterialFijacionId, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-9">
+                    <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+                </div>
+            </div>
+        </div>
+    }
+<div id="listaFijacion">
+    @Html.Partial("_ListaFijacion", Model)
+</div>
+
+

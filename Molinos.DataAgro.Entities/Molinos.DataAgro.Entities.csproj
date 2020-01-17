@@ -78,6 +78,11 @@
     <Compile Include="Dto\ConfiguracionCupoDto.cs" />
     <Compile Include="Dto\ConfiguracionDto.cs" />
     <Compile Include="Dto\AltaTempranaNRCODto.cs" />
+    <Compile Include="Dto\HabilitacionFijacionDto.cs" />
+    <Compile Include="Dto\HabilitacionPizarraDto.cs" />
+    <Compile Include="Dto\PrecioMoaCompraNetDto.cs" />
+    <Compile Include="Dto\PrecioMoaDto.cs" />
+    <Compile Include="Dto\LogProveedorDto.cs" />
     <Compile Include="Dto\ContratoIdDto.cs" />
     <Compile Include="Dto\ContratoSAPDto.cs" />
     <Compile Include="Dto\CupoResult.cs" />
@@ -195,6 +200,10 @@
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
     <Compile Include="Entities\AperturaPrecio.cs" />
+    <Compile Include="Entities\LogProveedor.cs" />
+    <Compile Include="Entities\HabilitacionPizarra.cs" />
+    <Compile Include="Entities\HabilitacionFijacion.cs" />
+    <Compile Include="Entities\PrecioMoa.cs" />
     <Compile Include="Entities\Estadio.cs" />
     <Compile Include="Entities\ConfiguracionCupo.cs" />
     <Compile Include="Entities\EstadoCupo.cs" />

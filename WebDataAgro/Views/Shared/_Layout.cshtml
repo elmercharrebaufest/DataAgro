@@ -341,6 +341,7 @@
                     }
                     @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet)||
                         PermisosHelper.Is(PermisosDataAgro.VisualizarHedge)||
+                        PermisosHelper.Is(PermisosDataAgro.VisualizarPizarra)||
                         PermisosHelper.Is(PermisosDataAgro.VisualizarPizarra))
                     {
                         <li class="dropdown">
@@ -367,6 +368,14 @@
                                     <li>
                                         <a href="~/PrecioPizarra" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Precio Pizarra
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas))
+                                {
+                                    <li>
+                                        <a href="~/ConfiguracionInterna" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuraciones Internas
                                         </a>
                                     </li>
                                 }

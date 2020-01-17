@@ -403,6 +403,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuraciones Internas.
+        /// </summary>
+        public static string Configuraciones_Internas {
+            get {
+                return ResourceManager.GetString("Configuraciones_Internas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmar Negocios.
         /// </summary>
         public static string Confirmar_Negocio {
@@ -754,15 +763,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mis Contactos Corredor.
-        /// </summary>
-        public static string Home_Corredor {
-            get {
-                return ResourceManager.GetString("Home_Corredor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Importe Sustentable.
         /// </summary>
         public static string ImporteSustentable {
@@ -934,11 +934,11 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Negocio Corredor.
+        ///   Looks up a localized string similar to Modificar Negocio Externo.
         /// </summary>
-        public static string Modificar_Negocio_Corredor {
+        public static string Modificar_Negocio_Externo {
             get {
-                return ResourceManager.GetString("Modificar_Negocio_Corredor", resourceCulture);
+                return ResourceManager.GetString("Modificar_Negocio_Externo", resourceCulture);
             }
         }
         
@@ -1015,11 +1015,11 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nuevo Negocio Corredor.
+        ///   Looks up a localized string similar to Nuevo Negocio Externos.
         /// </summary>
-        public static string Nuevo_Negocio_Corredor {
+        public static string Nuevo_Negocio_Externo {
             get {
-                return ResourceManager.GetString("Nuevo_Negocio_Corredor", resourceCulture);
+                return ResourceManager.GetString("Nuevo_Negocio_Externo", resourceCulture);
             }
         }
         
@@ -1110,6 +1110,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Provincia {
             get {
                 return ResourceManager.GetString("Provincia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ingreso como Corredor - Pruebas.
+        /// </summary>
+        public static string Prueba_Corredor {
+            get {
+                return ResourceManager.GetString("Prueba_Corredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ingreso como Proveedor - Pruebas.
+        /// </summary>
+        public static string Prueba_Proveedor {
+            get {
+                return ResourceManager.GetString("Prueba_Proveedor", resourceCulture);
             }
         }
         
@@ -1357,11 +1375,11 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Reporte CompraNet Corredor.
+        ///   Looks up a localized string similar to Visualizar Reporte CompraNet Externo.
         /// </summary>
-        public static string Visualizar_Reporte_CompraNet_Corredor {
+        public static string Visualizar_Reporte_CompraNet_Externo {
             get {
-                return ResourceManager.GetString("Visualizar_Reporte_CompraNet_Corredor", resourceCulture);
+                return ResourceManager.GetString("Visualizar_Reporte_CompraNet_Externo", resourceCulture);
             }
         }
         

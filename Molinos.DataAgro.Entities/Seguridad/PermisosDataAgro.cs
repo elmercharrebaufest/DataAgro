@@ -93,8 +93,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NegociosConfirmados = 315,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Neg_Finalizados")]
         ModificarNegFinalizados = 316,
-        //[Display(ResourceType = typeof(Text), Name = "Configuraciones_Internas")]
-        //ConfiguracionesInternas = 317,
+        [Display(ResourceType = typeof(Text), Name = "Configuraciones_Internas")]
+        ConfiguracionesInternas = 317,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
         VerTodosNegocios = 318,
 
@@ -176,20 +176,16 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Reasignar_Flete")]
         ReasignarFlete = 706,
 
-        //Corredores
-        [Display(ResourceType = typeof(Text), Name = "Home_Corredor")]
-        HomeCorredor = 801,
-        [Display(ResourceType = typeof(Text), Name = "Notificaciones_Corredor")]
-        NotificacionesCorredor = 802,
-        [Display(ResourceType = typeof(Text), Name = "Visualizar_Proveedor_De_Corredor")]
-        VisualizarProveedorDeCorredor = 803,
-        [Display(ResourceType = typeof(Text), Name = "Nuevo_Negocio_Corredor")]
-        NuevoNegocioCorredor = 804,
-        [Display(ResourceType = typeof(Text), Name = "Modificar_Negocio_Corredor")]
-        ModificarNegocioCorredor = 805,
-        [Display(ResourceType = typeof(Text), Name = "Ampliar_Negocio_Corredor")]
-        AmpliarNegocioCorredor = 806,
-        [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_CompraNet_Corredor")]
-        VisualizarReporteCompraNetCorredor = 807,
+        //Externos
+        [Display(ResourceType = typeof(Text), Name = "Prueba_Proveedor")]
+        PruebaProveedor = 801,
+        [Display(ResourceType = typeof(Text), Name = "Prueba_Corredor")]
+        PruebaCorredor = 802,
+        [Display(ResourceType = typeof(Text), Name = "Nuevo_Negocio_Externo")]
+        NuevoNegocioExterno = 803,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_Negocio_Externo")]
+        ModificarNegocioExterno = 804,
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_CompraNet_Externo")]
+        VisualizarReporteCompraNetExterno = 805,
     }
 }

@@ -227,6 +227,14 @@ label {
     background-color: #ac67ca;
     color: #ffffff;
 }
+.status.preaprobacion {
+    background-color: #15deca;
+    color: #FFFFFF;
+}
+
+.pre { /*icons*/
+    color: #15deca;
+}
 
 .reconf { /*icons*/
     color: #ac67ca;
@@ -258,6 +266,9 @@ label {
 
 #border-purple {
     border-bottom: 5px solid #ac67ca;
+}
+#border-turquoise {
+    border-bottom: 5px solid #15deca;
 }
 
 .divtop {
@@ -454,6 +465,10 @@ label {
 
 .modal .reconfirmar-modal div {
     background: #ac67ca !important;
+}
+
+.modal .aprobacion-modal div {
+    background: #15deca !important;
 }
 
 .modal .close {
@@ -1164,4 +1179,31 @@ body {
     .text-xs-center {
         text-align: center;
     }
+}
+
+#tabla-precio-moa th {
+    text-align: center;
+    border: 1px solid black;
+    border-bottom: none;
+}
+
+#tabla-precio-moa td {
+    text-align: center;
+    border: 1px solid black;
+    border-top:none;
+}
+
+#tabla-precio-moa th:first-of-type {
+    vertical-align: middle;
+    border: 1px solid black;
+}
+
+.retirado{
+    color:red;
+    font-weight:bold;
+}
+
+.precio {
+    font-weight: normal;
+    font-size: small;
 }

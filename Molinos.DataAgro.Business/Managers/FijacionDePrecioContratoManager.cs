@@ -482,7 +482,40 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        public GrabarContratoResult BorrarFijacionPreAprobacion(int id, string motivo)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+            var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(id);
 
+            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
+            {
+                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+                oContratoSave.MotivoRechazo = motivo;
+                try
+                {
+                    repositorio.GuardarCambios();
+                    var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oContratoSave);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "La Fijación no se puede rechazar");
+            }
+            return oEntityErrors;
+        }
         private void EnviarNotificacion(int comercialId, FijacionDePrecioContrato fijacion)
         {
             var tokens = repositorio.Listar<SuscripcionComercial>(x => x.ComercialId == comercialId);
@@ -652,6 +685,31 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", ex.Message);
                 }
             }
+        }
+        public GrabarFijacionResult AprobarFijacion(int id)
+        {
+            var oEntityErrors = new GrabarFijacionResult();
+            var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(id);
+
+            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
+            {
+                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "La Fijación no se puede aprobar");
+            }
+
+            return oEntityErrors;
         }
     }
 }

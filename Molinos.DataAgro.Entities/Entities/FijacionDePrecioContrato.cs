@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? Ampliaciones { get; set; }
         public int EstadoId { get; set; }
         public string Observacion { get; set; }
-        public int ComercialCreadorId { get; set; }
+        public int? ComercialCreadorId { get; set; }
         public int? CorredorId { get; set; }
         public string FijacionSAP { get; set; }
         public DateTime FechaDesde { get; set; }
@@ -37,7 +37,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? PagoDiferidoContrato { get; set; }
         public bool? PagoDiferido { get; set; }
         public int? DestinoId { get; set; }
-
+        public int? ProveedorCreadorId { get; set; }
+        public string MotivoRechazo { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]
@@ -63,6 +64,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public List<AperturaPrecio> AperturaPrecio { get; set; }
         [ForeignKey("DestinoId")]
         public virtual Centro Destino { get; set; }
+        [ForeignKey("ProveedorCreadorId")]
+        public virtual Proveedor ProveedorCreador { get; set; }
     }
 }
 

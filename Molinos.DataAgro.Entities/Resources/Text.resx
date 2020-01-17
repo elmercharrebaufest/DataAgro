@@ -183,6 +183,9 @@
   <data name="CondicionFijacion" xml:space="preserve">
     <value>Condición Fijacion</value>
   </data>
+  <data name="Configuraciones_Internas" xml:space="preserve">
+    <value>Configuraciones Internas</value>
+  </data>
   <data name="Configuracion_Canal_Operacion" xml:space="preserve">
     <value>Configuración Canal Operacion</value>
   </data>
@@ -348,9 +351,6 @@
   <data name="HastaFijacion" xml:space="preserve">
     <value>Hasta Fijación</value>
   </data>
-  <data name="Home_Corredor" xml:space="preserve">
-    <value>Mis Contactos Corredor</value>
-  </data>
   <data name="ImporteSustentable" xml:space="preserve">
     <value>Importe Sustentable</value>
   </data>
@@ -408,8 +408,8 @@
   <data name="Modificar_Negocios" xml:space="preserve">
     <value>Modificar Negocios</value>
   </data>
-  <data name="Modificar_Negocio_Corredor" xml:space="preserve">
-    <value>Modificar Negocio Corredor</value>
+  <data name="Modificar_Negocio_Externo" xml:space="preserve">
+    <value>Modificar Negocio Externo</value>
   </data>
   <data name="Modificar_Neg_Finalizados" xml:space="preserve">
     <value>Modificar Negocios Finalizados</value>
@@ -438,8 +438,8 @@
   <data name="Nuevo_Negocios" xml:space="preserve">
     <value>Nuevos Negocios</value>
   </data>
-  <data name="Nuevo_Negocio_Corredor" xml:space="preserve">
-    <value>Nuevo Negocio Corredor</value>
+  <data name="Nuevo_Negocio_Externo" xml:space="preserve">
+    <value>Nuevo Negocio Externos</value>
   </data>
   <data name="Observacion" xml:space="preserve">
     <value>Observación</value>
@@ -467,6 +467,12 @@
   </data>
   <data name="Provincia" xml:space="preserve">
     <value>Provincia</value>
+  </data>
+  <data name="Prueba_Corredor" xml:space="preserve">
+    <value>Ingreso como Corredor - Pruebas</value>
+  </data>
+  <data name="Prueba_Proveedor" xml:space="preserve">
+    <value>Ingreso como Proveedor - Pruebas</value>
   </data>
   <data name="RazonSocial" xml:space="preserve">
     <value>Razon Social</value>
@@ -549,8 +555,8 @@
   <data name="Visualizar_Reporte_CompraNet" xml:space="preserve">
     <value>Visualizar Reporte CompraNet</value>
   </data>
-  <data name="Visualizar_Reporte_CompraNet_Corredor" xml:space="preserve">
-    <value>Visualizar Reporte CompraNet Corredor</value>
+  <data name="Visualizar_Reporte_CompraNet_Externo" xml:space="preserve">
+    <value>Visualizar Reporte CompraNet Externo</value>
   </data>
   <data name="Visualizar_Reporte_Cupos" xml:space="preserve">
     <value>Visualizar Reporte Cupos</value>

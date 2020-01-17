@@ -109,9 +109,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var queryFijacion =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
                 where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && fijac.Pizarra != true 
-                && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                && !corredor ? equipo.Contains(fijac.ComercialId) || (fijac.ComercialCreadorId.HasValue ? equipo.Contains(fijac.ComercialCreadorId.Value) : true) :
                         (corredor && (corredoresComercial.Contains(fijac.ComercialId) ||
-                        corredoresComercial.Contains(fijac.ComercialCreadorId)))
+                        (fijac.ComercialCreadorId.HasValue ? corredoresComercial.Contains(fijac.ComercialCreadorId.Value) : true)  ))
                 select new TotalPesosDolares()
                 {
                     Cantidad = Math.Round(fijac.Cantidad / 1000),
@@ -146,9 +146,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var queryFijacionPizarra =
                 from fijac in contexto.Set<FijacionDePrecioContrato>()
                 where (fijac.EstadoId == 2 || fijac.EstadoId == 4 || fijac.EstadoId == 5) && fijac.Pizarra == true
-                && !corredor ? equipo.Contains(fijac.ComercialId) || equipo.Contains(fijac.ComercialCreadorId) :
+                  && !corredor ? equipo.Contains(fijac.ComercialId) || (fijac.ComercialCreadorId.HasValue ? equipo.Contains(fijac.ComercialCreadorId.Value) : true) :
                         (corredor && (corredoresComercial.Contains(fijac.ComercialId) ||
-                        corredoresComercial.Contains(fijac.ComercialCreadorId)))
+                        (fijac.ComercialCreadorId.HasValue ? corredoresComercial.Contains(fijac.ComercialCreadorId.Value) : true)))
                 select new TotalPesosDolares()
                 {
                     Cantidad = Math.Round(fijac.Cantidad / 1000),

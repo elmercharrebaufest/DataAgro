@@ -37,6 +37,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IFasonManager> fasonManagerMock;
         private Mock<IAgenteCompraManager> agenteManagerMock;
         private Mock<IContratoAcuerdoManager> acuerdoManagerMock;
+        private Mock<IConfiguracionInternaManager> configuracionInternaMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -55,12 +56,13 @@ namespace Molinos.DataAgro.Test.Controllers
             fasonManagerMock = new Mock<IFasonManager>();
             agenteManagerMock = new Mock<IAgenteCompraManager>();
             acuerdoManagerMock = new Mock<IContratoAcuerdoManager>();
+            configuracionInternaMock = new Mock<IConfiguracionInternaManager>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object, 
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
-                acuerdoManagerMock.Object);
+                acuerdoManagerMock.Object, configuracionInternaMock.Object);
         }
 
         [Test]

@@ -110,6 +110,7 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statuserror)").css('border-bottom', '5px solid #d00707');
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
+            $("td:has(div.statuspreaprobacion)").css('border-bottom', '5px solid #15deca');
         },
         columns: [
             {
@@ -126,6 +127,8 @@ function CreateGridInformeCompraNet() {
                         return '<div class="statusfinalizado "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 6) {
                         return '<div class="statusborrado "></div>' + dataItem.Cuit;
+                    } else if (dataItem.Estado === 9) {
+                        return '<div class="statuspreaprobacion "></div>' + dataItem.Cuit;
                     }
                 }
             },
