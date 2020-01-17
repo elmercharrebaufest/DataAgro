@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             HttpContext.Current.Session["perfil"] = 7;
             var request = new FiltroReporteNegocioDto();
-            contratoManagerMock.Setup(x => x.TraerContratosFiltrados(request, It.IsAny<bool>(), GlobalVariables.Equipo, GlobalVariables.CorredoresComercial))
+            contratoManagerMock.Setup(x => x.TraerContratosFiltrados(request, It.IsAny<bool>(), GlobalVariables.EquipoReal, GlobalVariables.CorredoresComercial))
                 .Returns(new KendoGridContratoDto { Data = new List<BasicoContrato>() { new BasicoContrato { ContratoId = 1, ComercialId = 1 } } });
             var result = target.BuscaDatosTabla(request);
             Assert.NotNull(result);

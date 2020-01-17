@@ -623,12 +623,12 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerProveedorPorCuitCorredorOkTest()
         {
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, ProveedorQry>>>()))
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, ProveedorQry>>>()))
                 .Returns(new ProveedorQry { ProveedorId = 1, Descripcion = "b" });
 
             var result = target.TraerProveedorPorCuit("a", true);
 
-            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, ProveedorQry>>>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), It.IsAny<Expression<Func<CorredorProveedor, ProveedorQry>>>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.AreEqual(1, result.ProveedorId);

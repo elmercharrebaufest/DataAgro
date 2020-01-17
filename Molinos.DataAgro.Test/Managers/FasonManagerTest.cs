@@ -350,8 +350,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Posicion = "01/2019",
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
-                EstadoId = (int)EnumEstadoContrato.Pendiente,
-                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente }
+                EstadoId = (int)EnumEstadoContrato.Rechazado,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Rechazado }
             };
 
             repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);

@@ -185,7 +185,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void ConfirmarContratoAcuerdoTest()
         {
             repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
-                .Returns(new ContratoAcuerdo { Id = 1 ,EstadoId=2});
+                .Returns(new ContratoAcuerdo { Id = 1 ,EstadoId=1});
             var resultado = target.ConfirmarContratoAcuerdo(1);
 
             Assert.That(!resultado.HayError);
