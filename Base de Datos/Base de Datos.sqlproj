@@ -267,7 +267,6 @@
     <Build Include="dbo\Tables\RolPermiso.sql" />
     <Build Include="dbo\Tables\ComercialRol.sql" />
     <Build Include="dbo\Tables\ObjetivoComercial.sql" />
-    <Build Include="dbo\Tables\LogProveedor.sql" />
     <Build Include="dbo\Tables\HabilitacionPizarra.sql" />
     <Build Include="dbo\Tables\PrecioMoa.sql" />
     <Build Include="dbo\Tables\HabilitacionFijacion.sql" />
