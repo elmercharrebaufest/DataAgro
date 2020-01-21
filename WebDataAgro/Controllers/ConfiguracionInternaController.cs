@@ -106,7 +106,8 @@ namespace WebDataAgro.Controllers
             {
                 Dia = DateTime.Parse(configuracion.DiaPizarra),
                 DesdeVigencia = DateTime.Parse(configuracion.PizarraDesde),
-                HastaVigencia = DateTime.Parse(configuracion.PizarraHasta)
+                HastaVigencia = DateTime.Parse(configuracion.PizarraHasta),
+                MaterialId = configuracion.MaterialPizarra
             };
             return entidad;
         }

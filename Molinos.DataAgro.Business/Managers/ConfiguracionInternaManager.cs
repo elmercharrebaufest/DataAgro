@@ -287,7 +287,7 @@ namespace Molinos.DataAgro.Business.Managers
         public IEnumerable<IGrouping<int,PrecioMoaCompraNetDto>> TraerPrecioCompraNet()
         {
             var listaPrecio = new List<PrecioMoaCompraNetDto>();
-            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion=x.Descripcion});
+            var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion=x.Descripcion}, x=>x.MaterialId!=5);
             var monedas = repositorio.Listar<Moneda, MonedaDto>(x => new MonedaDto { MonedaId = x.MonedaId,Descripcion = x.Descripcion });
             var ahora = DateTime.Now;
             var preciosMoa = repositorio.Listar<PrecioMoa, PrecioMoaCompraNetDto>(x => new PrecioMoaCompraNetDto
@@ -322,10 +322,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (precio == null) precio = new PrecioMoaCompraNetDto {MaterialId= materialId, MonedaId = monedaId, Precio = 0 };
             return precio;
         }        
-        public bool HabilitarPizarra()
+        public bool HabilitarPizarra(int material)
         {
             var ahora = DateTime.Now;
-            return repositorio.Existe<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
+            return repositorio.Existe<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && x.MaterialId==material);
         }
     }
 }

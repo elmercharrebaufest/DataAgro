@@ -11,6 +11,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime Dia { get; set; }
         public DateTime DesdeVigencia { get; set; }
         public DateTime HastaVigencia { get; set; }
-
+        public int MaterialId { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; }
     }
 }

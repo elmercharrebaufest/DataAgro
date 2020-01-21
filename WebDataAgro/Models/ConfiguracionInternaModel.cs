@@ -19,6 +19,7 @@ namespace WebDataAgro.Models
         public string DiaPizarra { get; set; }
         public string PizarraDesde { get; set; }
         public string PizarraHasta { get; set; }
+        public int MaterialPizarra { get; set; }
         public string FijacionDia { get; set; }
         public int MaterialFijacionId { get; set; }
         public Resultado ResultadoPrecio { get; set; }

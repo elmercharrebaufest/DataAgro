@@ -29,6 +29,7 @@
         <div id="historialPizarra" class="collapse tabla-research">
             <table class="tabla-historial table">
                 <tr>
+                    <th>Material</th>
                     <th>Dia</th>
                     <th>Desde</th>
                     <th>Hasta</th>
@@ -37,6 +38,7 @@
                 @foreach (var pr in Model.HabilitacionPizarra)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(model => pr.Material)</td>
                         @{
                             var dia = pr.Dia.ToString("dd/MM/yyyy");
                             var desde = pr.DesdeVigencia.ToString("hh\\:mm tt");

@@ -112,7 +112,7 @@ namespace WebDataAgro.Controllers
             }
             if (PermisosHelper.Is(PermisosDataAgro.PruebaProveedor))
             {
-                ViewBag.Proveedor = "CHS DE ARGENTINA S.A. (30711160163)";
+                ViewBag.Proveedor = "Compañía de insumos y granos (30668299462)";
             }
             return View();
         }
@@ -731,11 +731,11 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult HabilitarPizarra()
+        public ActionResult HabilitarPizarra(int material)
         {
             return new JsonResult()
             {
-                Data = configuracionInternaManager.HabilitarPizarra(),
+                Data = configuracionInternaManager.HabilitarPizarra(material),
                 MaxJsonLength = Int32.MaxValue
             };
         }

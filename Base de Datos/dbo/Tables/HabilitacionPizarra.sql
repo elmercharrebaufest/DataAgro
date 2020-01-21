@@ -3,6 +3,8 @@
     [Dia]                   DATETIME NOT NULL,
     [DesdeVigencia]		    DATETIME NOT NULL,
     [HastaVigencia]		    DATETIME NOT NULL,    
-    CONSTRAINT [PK_HabilitacionPizarra] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [MaterialId]              INT NOT NULL, 
+    CONSTRAINT [PK_HabilitacionPizarra] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_HabilitacionPizarra_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId])
 );
 

@@ -18,7 +18,6 @@ $(document).ready(function () {
     InicializarDatos();
     AutocompleteProcedencia();
 
-    HabilitarPizarra();
 });
 
 function InicializarBordesRojos() {
@@ -655,6 +654,7 @@ function InicializarElementos() {
             if ($("#material").val() !== "") {
                 //CargarCampaniaPorMaterial($("#material").val());
                 CargarPrecioMoa();
+                HabilitarPizarra();
             }            
             $("#contratoId").val("");
             $("#datosContrato").hide();
@@ -3125,7 +3125,8 @@ function CargarPrecioMoa() {
 }
 
 function HabilitarPizarra() {
-    var pizarra = MSExecuteOnServer('/CompraNet/HabilitarPizarra');
+    var material = $('#material').data("kendoDropDownList").value();
+    var pizarra = MSExecuteOnServer('/CompraNet/HabilitarPizarra', {material: material});
     if (pizarra != true) {
         $("#pizarraId").attr('disabled', 'disabled');
     } else {
