@@ -583,7 +583,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
             else
             {
-                var cuit = PermisosHelper.Is(PermisosDataAgro.PruebaCorredor) ? "30500120882" : "30711160163";
+                var cuit = PermisosHelper.Is(PermisosDataAgro.PruebaCorredor) ? "30500120882" : "30668299462";
                 var queryFijacion =
                     from fijac in contexto.Set<FijacionDePrecioContrato>()
                     where fijac.ProveedorCreador.CUIT == cuit
