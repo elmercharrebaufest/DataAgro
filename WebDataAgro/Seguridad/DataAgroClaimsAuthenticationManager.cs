@@ -49,17 +49,41 @@ namespace WebDataAgro.Seguridad
                 throw new SecurityException(string.Format("No se encontró el nombre de usuario en los claims recibidos. No se puede continuar con la autenticación. Claims recibidos: {0}", sb));
             }
             log.Debug("Claim Value: {0}", claim.Value);
-            var nombreUsuario = claim.Value.Split('\\')[1];
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, nombreUsuario));
+            var nombrearr = claim.Value.Split('\\');
+            var nombreUsuario = string.Empty;
+            bool esExterno = false;
+            if (nombrearr.Length > 1)
+            {
+                nombreUsuario = claim.Value.Split('\\')[1];
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, nombreUsuario));
+            }
+            else
+            {
+                nombreUsuario = claim.Value;
+                esExterno = true;
+            }
 
             log.Debug("Agregando claims de permisos del Orquestador para el usuario {0}", nombreUsuario);
-
-            var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
-            if (usuario != null)
+            if (esExterno)
             {
-                foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                var usuario = repositorio.ObtenerNoTracking<Proveedor>(u => u.CUIT == nombreUsuario);
+                if (usuario != null)
                 {
-                    identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                    foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                    }
+                }
+            }
+            else
+            {
+                var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
+                if (usuario != null)
+                {
+                    foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                    }
                 }
             }
 

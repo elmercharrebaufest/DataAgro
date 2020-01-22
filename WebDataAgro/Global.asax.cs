@@ -35,6 +35,7 @@ namespace WebDataAgro
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly).PropertiesAutowired();
             builder.RegisterType<DataAgroServices>().As<IDataAgroServices>().InstancePerLifetimeScope();
+            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
 
             builder.RegisterType<DataAgroDbContext>().As<DbContext>().InstancePerLifetimeScope();
             builder.RegisterType<RepositorioEF>().As<IRepositorio>().InstancePerLifetimeScope();
@@ -167,7 +168,7 @@ namespace WebDataAgro
             {
                 get
                 {
-                    return IdActiveDirectoryCompleto.Split('\\')[1];
+                    return IdActiveDirectoryCompleto.Split('\\').Length > 1 ? IdActiveDirectoryCompleto.Split('\\')[1] : IdActiveDirectoryCompleto;
                 }
             }
 

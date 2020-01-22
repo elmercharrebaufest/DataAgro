@@ -17,7 +17,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -200,6 +200,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Atributos\AutorizacionAttribute.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
@@ -296,6 +297,7 @@
     <Compile Include="Models\ZonaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seguridad\AjaxOnlyAttribute.cs" />
+    <Compile Include="Seguridad\AuthorizationAuthManager.cs" />
     <Compile Include="Seguridad\ClaimsTransformationHttpModule.cs" />
     <Compile Include="Seguridad\AuthorizationManager.cs" />
     <Compile Include="Seguridad\DataAgroClaimsAuthenticationManager.cs" />
@@ -304,9 +306,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\AuthService.svc.cs">
+      <DependentUpon>AuthService.svc</DependentUpon>
+    </Compile>
     <Compile Include="Services\DataAgroServices.svc.cs">
       <DependentUpon>DataAgroServices.svc</DependentUpon>
     </Compile>
+    <Compile Include="Services\IAuthService.cs" />
     <Compile Include="Services\IDataAgroServices.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1788,6 +1794,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Services\AuthService.svc" />
     <Content Include="Services\DataAgroServices.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -2611,7 +2618,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52498</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52498/</IISUrl>
+          <IISUrl>http://localhost/WebDataAgro</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

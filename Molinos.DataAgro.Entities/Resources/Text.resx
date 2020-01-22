@@ -564,4 +564,7 @@
   <data name="Visualizar_Reporte_Proveedor" xml:space="preserve">
     <value>Visualizar Reporte Proveedor</value>
   </data>
+  <data name="Servicio_Auth" xml:space="preserve">
+    <value>Servicio Auth</value>
+  </data>
 </root>

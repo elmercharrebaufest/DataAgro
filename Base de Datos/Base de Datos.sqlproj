@@ -270,6 +270,8 @@
     <Build Include="dbo\Tables\HabilitacionPizarra.sql" />
     <Build Include="dbo\Tables\PrecioMoa.sql" />
     <Build Include="dbo\Tables\HabilitacionFijacion.sql" />
+    <Build Include="dbo\Tables\TokenAuth.sql" />
+    <Build Include="dbo\Tables\ProveedorRol.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

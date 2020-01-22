@@ -14,6 +14,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual int Id { get; set; }
         public virtual string Descripcion { get; set; }
         public virtual ICollection<RolPermiso> PermisosAsociados { get; set; }
+        
         public virtual ICollection<Comercial> ComercialesAsociados { get; set; }
+
+        public virtual ICollection<Proveedor> ProveedoresAsociados { get; set; }
     }
 }

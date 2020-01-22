@@ -71,6 +71,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
+    <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
     <Compile Include="Dto\BoletoCompraNetDto.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
     <Compile Include="Entities\AperturaPrecio.cs" />
     <Compile Include="Entities\HabilitacionPizarra.cs" />

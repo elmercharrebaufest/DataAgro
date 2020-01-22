@@ -294,6 +294,18 @@ namespace Molinos.DataAgro.Repository
             return SelStorePaginado<TEntidad>(store, maxResultados, 0, parameters);
         }
 
+        public void EliminarTokens(long cuit)
+        {
+            context.Database.SqlQuery<int>(@"
+                    begin 
+                        DELETE FROM TokenAuth WHERE Cuit = @cuit or Vencimiento < @fecha
+		                select 1 
+		            end
+                "
+                , new SqlParameter("@cuit", cuit)
+                , new SqlParameter("@fecha", DateTime.Now)).First();
+        }
+
         private static IQueryable<TProyeccion> ListarProyeccionQueryable<TProyeccion>(IQueryable<TProyeccion> resultadoFinal, string orden, DirOrden direccionOrden, int maxResultados)
         {
 

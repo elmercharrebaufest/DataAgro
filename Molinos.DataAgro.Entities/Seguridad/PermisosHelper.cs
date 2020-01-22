@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Seguridad;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 
 namespace Molinos.DataAgro.Entities.Seguridad

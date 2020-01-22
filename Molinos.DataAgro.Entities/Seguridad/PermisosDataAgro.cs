@@ -177,6 +177,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ReasignarFlete = 706,
 
         //Externos
+        [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]
+        ServicioAuth = 800,
         [Display(ResourceType = typeof(Text), Name = "Prueba_Proveedor")]
         PruebaProveedor = 801,
         [Display(ResourceType = typeof(Text), Name = "Prueba_Corredor")]
