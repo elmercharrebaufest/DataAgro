@@ -150,7 +150,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Id= x.Id,
                 Dia=x.Dia,
                 DesdeVigencia=x.DesdeVigencia,
-                HastaVigencia=x.HastaVigencia
+                HastaVigencia=x.HastaVigencia,
+                Material= x.Material.Descripcion,
+                MaterialId = x.MaterialId
             },
             x => x.Dia >= hoy)
                 .OrderBy(x => x.Dia).ThenBy(x=>x.DesdeVigencia).ToList();
