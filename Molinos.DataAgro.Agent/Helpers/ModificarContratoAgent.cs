@@ -267,7 +267,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     IM_CONTRATO = new ZMPES5560
                     {
-                        CONTRATO = contrato.ContratoSAP,
+                        CONTRATO = contrato.ContratoSAP.TrimStart('0'),
                         DETALLE = new ZMPES5270
                         {
                             CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
