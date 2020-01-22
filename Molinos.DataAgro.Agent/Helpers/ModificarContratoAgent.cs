@@ -262,6 +262,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.UsuarioId != contrato.UsuarioId ||
                     contratoGuardado.Warrant != contrato.Warrant ||
                     contratoGuardado.ZonaId != contrato.ZonaId;
+                var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.ContratoId == contrato.ContratoId, x => x.Fecha);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560
@@ -289,9 +290,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PROVINCIA = contrato.ProvinciaId.ToString(),
                             SUSTENTABLE = sustentableString,
                             ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap),
-                            FECHA = contrato.Fecha.ToString("yyyy-MM-dd"),
+                            FECHA = fechaContrato.ToString("yyyy-MM-dd"),
                             USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory),
-                            HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
+                            HORAACT = fechaContrato.ToString("HH:mm:ss"),
                             PROCEDENCIA = localidadString,
                             CENTRO = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
                             CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion),
@@ -301,7 +302,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap):"",
                             CAMIONES = cantidadCamiones,
                             CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
-                            BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
+                            BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ?
+                            repositorio.Obtener<BolsaCompraNet, string>(x => contrato.BolsaId == x.Id, x => x.CodigoSap) : null,
                             BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
                             CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "",
                             NINGUNO = contrato.BoletoId == 3 ? "X" : "",
