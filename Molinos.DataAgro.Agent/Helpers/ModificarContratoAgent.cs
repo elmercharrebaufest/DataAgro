@@ -39,14 +39,21 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
-                foreach (var descBon in contratoGuardado.Descuentos)
+                if (contratoGuardado.Descuentos != null && contrato.Descuentos != null && contratoGuardado.Descuentos.Count != contrato.Descuentos.Count)
                 {
-                    if (!contrato.Descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
-                     && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
-                     && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
+                    descModificado = true;
+                }
+                else
+                {
+                    foreach (var descBon in contratoGuardado.Descuentos)
                     {
-                        descModificado = true;
-                        break;
+                        if (!contrato.Descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
+                         && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
+                         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
+                        {
+                            descModificado = true;
+                            break;
+                        }
                     }
                 }
                 if (contrato.Descuentos != null)
@@ -88,18 +95,24 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Descuentos modificados");
 
                 var calModificado = false;
-                foreach (var cal in contratoGuardado.Calidad)
+                if (contratoGuardado.Calidad != null && contrato.Calidad != null && contratoGuardado.Calidad.Count != contrato.Calidad.Count)
                 {
-                    if (!contrato.Calidad.Any(x => x.Valor == cal.Valor
-                    && x.StandardDeCalidadId == cal.StandardDeCalidadId
-                    && x.CalidadEspecialId == cal.CalidadEspecialId
-                    && x.PorcentajeDesde == cal.PorcentajeDesde && x.PorcentajeHasta == cal.PorcentajeHasta))
+                    calModificado = true;
+                }
+                else
+                {
+                    foreach (var cal in contratoGuardado.Calidad)
                     {
-                        calModificado = true;
-                        break;
+                        if (!contrato.Calidad.Any(x => x.Valor == cal.Valor
+                        && x.StandardDeCalidadId == cal.StandardDeCalidadId
+                        && x.CalidadEspecialId == cal.CalidadEspecialId
+                        && x.PorcentajeDesde == cal.PorcentajeDesde && x.PorcentajeHasta == cal.PorcentajeHasta))
+                        {
+                            calModificado = true;
+                            break;
+                        }
                     }
                 }
-
                 var listaCalidades = new List<ZMPES5300>();
                 if (contrato.Calidad != null)
                 {
@@ -108,7 +121,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var listaCalidadEspecial = repositorio.Listar<CalidadEspecial>();
                         if (cal.StandardDeCalidadId == 2)
                         {
-                            if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecial.Id == 4 || cal.CalidadEspecial.Id == 5))
+                            if ((cal.Valor >= 2 && cal.Valor <= 3) && (cal.CalidadEspecialId == 4 || cal.CalidadEspecialId == 5))
                             {
                                 listaCalidades.Add(new ZMPES5300
                                 {
@@ -159,15 +172,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
-                foreach (var ap in contratoGuardado.AperturaPrecio)
+                if (contratoGuardado.AperturaPrecio != null && contrato.AperturaPrecio != null && contratoGuardado.AperturaPrecio.Count != contrato.AperturaPrecio.Count)
                 {
-                    if (!contrato.AperturaPrecio.Any(x => x.Importe == ap.Importe
-                    && x.MonedaId == ap.MonedaId
-                    && x.Porcentaje == ap.Porcentaje
-                    && x.ConceptoAperturaPrecioId == ap.ConceptoAperturaPrecioId))
+                    apModificado = true;
+                }
+                else
+                {
+                    foreach (var ap in contratoGuardado.AperturaPrecio)
                     {
-                        apModificado = true;
-                        break;
+                        if (!contrato.AperturaPrecio.Any(x => x.Importe == ap.Importe
+                        && x.MonedaId == ap.MonedaId
+                        && x.Porcentaje == ap.Porcentaje
+                        && x.ConceptoAperturaPrecioId == ap.ConceptoAperturaPrecioId))
+                        {
+                            apModificado = true;
+                            break;
+                        }
                     }
                 }
                 var listaApertura = new List<ZMPES5440>();
