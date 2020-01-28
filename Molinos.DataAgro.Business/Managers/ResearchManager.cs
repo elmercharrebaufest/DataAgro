@@ -290,7 +290,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "Debe llenar todos los campos"));
             }
-            if (researchVentaStock.Almacenado == 0)
+            if (researchVentaStock.Almacenado == null)
             {
                 error.Errores.Add(new ErrorMessage(400, "El campo Almacenado no debe estar vacío"));
             }

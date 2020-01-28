@@ -77,7 +77,6 @@ namespace WebDataAgro.Controllers
             {
                 VentaStock = TransformarAModel(ventaStock),
                 HistorialVentaStock = ventaStock.OrderByDescending(x => x.FechaHora).ToList()
-
             });
         }
         [HttpPost]
