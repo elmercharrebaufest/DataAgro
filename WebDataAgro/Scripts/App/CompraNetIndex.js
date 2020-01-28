@@ -1332,7 +1332,7 @@ function ObtenerDatosModalBorrado() {
     var objConfirmado = {};
     var result;
     if ($("#tipoNegocioModalBorrar").val() === '3') {
-        if ($("#estadoModalBorrar").val() == '9') {
+        if ($("#estadoModalBorrar").val() != '9') {
             objConfirmado.FijacionDePrecioContratoId = $("#contratoModalBorrar").val();
             result = MSExecuteOnServer('/CompraNet/BorrarFijacion', objConfirmado);
         } else {

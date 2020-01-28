@@ -330,7 +330,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarFijacion(FijacionDePrecioContrato oParam)
         {
-            oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId);
+            oParam.ComercialId = oParam.ComercialId == 0 ? mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId): oParam.ComercialId;
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam),
