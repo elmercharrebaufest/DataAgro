@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
-                if (contratoGuardado.Descuentos != null && contrato.Descuentos != null && contratoGuardado.Descuentos.Count != contrato.Descuentos.Count)
+                if ((contrato.Descuentos == null && contratoGuardado.Descuentos.Count > 0) || contrato.Descuentos != null && contratoGuardado.Descuentos.Count != contrato.Descuentos.Count)
                 {
                     descModificado = true;
                 }
@@ -60,24 +60,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     foreach (var descBon in contrato.Descuentos)
                     {
-                        if (descBon.TipoPeriodoDBId != 1)
+                        var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
+                        var listaTipo = repositorio.Listar<TipoDB>();
+                        listaDescuentos.Add(new ZMPES5290
                         {
-                            var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
-                            var listaTipo = repositorio.Listar<TipoDB>();
-                            listaDescuentos.Add(new ZMPES5290
-                            {
-                                TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
-                                TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
-                                FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
-                                FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
-                                IMPORTE_DB = descBon.Importe,
-                                MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ?
-                                listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
-                                PORC_DB = descBon.Porcentaje
-                            }
-                            );
-                        };
-                    }
+                            TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
+                            TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
+                            FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
+                            FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
+                            IMPORTE_DB = descBon.Importe,
+                            MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ?
+                            listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
+                            PORC_DB = descBon.Porcentaje
+                        }
+                        );
+                    };
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable != 0)
                 {
@@ -95,7 +92,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Descuentos modificados");
 
                 var calModificado = false;
-                if (contratoGuardado.Calidad != null && contrato.Calidad != null && contratoGuardado.Calidad.Count != contrato.Calidad.Count)
+                if ((contrato.Calidad == null && contratoGuardado.Calidad.Count > 0) || contrato.Calidad != null && contratoGuardado.Calidad.Count != contrato.Calidad.Count)
                 {
                     calModificado = true;
                 }
@@ -172,7 +169,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
-                if (contratoGuardado.AperturaPrecio != null && contrato.AperturaPrecio != null && contratoGuardado.AperturaPrecio.Count != contrato.AperturaPrecio.Count)
+                if ((contrato.AperturaPrecio == null && contratoGuardado.AperturaPrecio.Count > 0) || contrato.AperturaPrecio != null && contratoGuardado.AperturaPrecio.Count != contrato.AperturaPrecio.Count)
                 {
                     apModificado = true;
                 }
