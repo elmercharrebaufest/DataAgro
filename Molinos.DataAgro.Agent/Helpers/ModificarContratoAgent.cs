@@ -199,7 +199,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 CONCEPTO = listaAperturaPrecios.FirstOrDefault(x => x.Id == apertura.ConceptoAperturaPrecioId).CodigoSap,
                                 IMPORTE = apertura.Importe,
-                                MONEDA = contrato.Moneda?.MonedaId,
+                                MONEDA = contrato.MonedaId,
                                 PORC = apertura.Porcentaje
                             });
                         }
