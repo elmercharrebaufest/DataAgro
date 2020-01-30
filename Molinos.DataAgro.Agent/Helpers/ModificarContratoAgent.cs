@@ -39,41 +39,52 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
-                if ((contrato.Descuentos == null && contratoGuardado.Descuentos.Count > 0) || contrato.Descuentos != null && contratoGuardado.Descuentos.Count != contrato.Descuentos.Count)
+                var descuentosGenerales = new List<DescuentoBonificacion>();
+                var descuentos = new List<DescuentoBonificacion>();
+                if (contrato.Descuentos != null)
+                {
+                    descuentosGenerales = contrato.Descuentos.Where(x => x.TipoPeriodoDBId == 1).ToList();
+                    descuentos = contrato.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList();
+                }
+                if ((descuentos == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
+                    descuentos != null && descuentos.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count ||
+                         contrato.ImporteSustentable != contratoGuardado.ImporteSustentable ||
+                         contrato.MonedaId != contratoGuardado.MonedaId )
                 {
                     descModificado = true;
                 }
                 else
                 {
-                    foreach (var descBon in contratoGuardado.Descuentos)
+                    foreach (var descBon in contratoGuardado.Descuentos.Where(x=> x.TipoPeriodoDBId != 1))
                     {
-                        if (!contrato.Descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
+                        if (!descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
                          && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
-                         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
+                         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId)
+                         )
                         {
                             descModificado = true;
                             break;
                         }
                     }
                 }
-                if (contrato.Descuentos != null)
+                if (descuentos != null)
                 {
-                    foreach (var descBon in contrato.Descuentos)
+                    foreach (var descBon in descuentos)
                     {
                         var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
                         var listaTipo = repositorio.Listar<TipoDB>();
+
                         listaDescuentos.Add(new ZMPES5290
                         {
-                            TIPO_PERIODO = listaPeriodo.FirstOrDefault(x => x.Id == descBon.TipoPeriodoDBId).CodigoSap,
-                            TIPO_DB = listaTipo.FirstOrDefault(x => x.Id == descBon.TipoDBId).CodigoSap,
-                            FEDESDE = descBon.FechaDesde?.ToString("yyyy-MM-dd"),
+                            TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
+                            TIPO_DB = descBon.TipoDB.CodigoSap,
+                            FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = listaMonedas.Any(x => x.MonedaId == descBon.MonedaId) ?
-                            listaMonedas.FirstOrDefault(x => x.MonedaId == descBon.MonedaId).MonedaId : "",
+                            MONEDA_DB = descBon.Moneda.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
-                        }
-                        );
+                        });
+
                     };
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable != 0)
@@ -279,7 +290,27 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.UsuarioId != contrato.UsuarioId ||
                     contratoGuardado.Warrant != contrato.Warrant ||
                     contratoGuardado.ZonaId != contrato.ZonaId;
-                var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.ContratoId == contrato.ContratoId, x => x.Fecha);
+                
+
+                if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
+                    descuentosGenerales != null && descuentosGenerales.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
+                {
+                    conModificado = true;
+                }
+                else
+                {
+                    foreach (var descBon in contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId == 1))
+                    {
+                        if (!descuentosGenerales.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
+                         && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
+                         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
+                        {
+                            conModificado = true;
+                            break;
+                        }
+                    }
+                }
+            var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.ContratoId == contrato.ContratoId, x => x.Fecha);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560

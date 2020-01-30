@@ -1754,6 +1754,12 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new GrabarContratoResult();
             try
             {
+                Validar(contrato, error);
+
+                if (error.Errores.Count > 0)
+                {
+                    return error;
+                }
                 contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.ContratoId == contrato.ContratoId, x => x.ContratoSAP);
                 var res = modificarContratoAgent.Modificar(contrato);
                 if (res.Contains("Error"))

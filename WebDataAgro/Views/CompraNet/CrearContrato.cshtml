@@ -36,16 +36,14 @@
 
     </div>
 
-    <div class="row ampliar">
-        <div>
+    <div class="copia-contratos">
+        <div class="row ampliar">
             <div class="col-sm-2">
                 <label>Copiar Contrato</label>
             </div>
             <div class="col-md-4 col-sm-5">
                 <input type="text" class="k-textbox" style="width:100%" id="contratoACopiarId" />
             </div>
-        </div>
-        <div>
             <div class="col-sm-1 ">
                 <label>Acuerdo</label>
             </div>
@@ -462,8 +460,8 @@
     <div class="datos-adicionales ampliar-adicionales noFason noAgente noAcuerdo" display="block">
         <div class="row">
             <div class="col-sm-2 ">
-                <label style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
+                <label class="sojaSustentable" style="width:120px">Sustentable</label>
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
 
