@@ -8,10 +8,12 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -24,6 +26,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IFinalizarFijacionAgent oFinalizarFijacionAgent;
         private readonly IContratosParaFijacionAgent oContratosParaFijacionAgent;
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
+        private readonly IMailManager mailManager;
         private readonly ILogger logger;
 
         public FijacionDePrecioContratoManager(
@@ -34,7 +37,8 @@ namespace Molinos.DataAgro.Business.Managers
             IPushNotificationManager oMSNotification,
             IFinalizarFijacionAgent oFinalizarFijacionAgent,
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
-            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent)
+            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
+            IMailManager mailManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -44,6 +48,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oFinalizarFijacionAgent = oFinalizarFijacionAgent;
             this.oContratosParaFijacionAgent = oContratosParaFijacionAgent;
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
+            this.mailManager = mailManager;
         }
 
         //--------------------------------------------------
@@ -498,12 +503,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.MotivoRechazo = motivo;
                 try
                 {
-                    repositorio.GuardarCambios();
-                    var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
-                    foreach (var comercialId in comerciales)
-                    {
-                        EnviarNotificacion(comercialId, oContratoSave);
-                    }
+                    EnviarMailRechazo(oContratoSave); 
                 }
                 catch (Exception ex)
                 {
@@ -710,6 +710,36 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oEntityErrors;
+        }
+        private void EnviarMailRechazo(FijacionDePrecioContrato fijacion) {
+            var id = fijacion.CorredorId.HasValue ? fijacion.CorredorId : fijacion.ProveedorId;
+            var enviarA = repositorio.Listar<ContactoComercial,string>(x=>x.Email1,x => x.ProveedorId == id && x.CompraNet == true);
+            var asunto = ConfigurationManager.AppSettings["AmbientePruebas"] != "1"? "":"Prueba - ";
+            asunto += "Rechazo Fijación Molinos Agro S.A. –  " + fijacion.Proveedor.RazonSocial;
+            var copia = new List<string>() { fijacion.Comercial.IdActiveDirectory, ConfigurationManager.AppSettings["CredentialUserName"] };
+            var vista = CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), fijacion);
+            mailManager.EnviarMail(enviarA, asunto,"",copia,vista);
+        }
+        private AlternateView CuerpoMailFijacion(string filePath, FijacionDePrecioContrato fijacion)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();            
+            var mail = "";
+                try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); }catch(Exception e) { logger.Error("No existe mail para el usuario en AD" + e.Message); }
+            
+            var contacto = fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (!string.IsNullOrEmpty(mail)? " (" + mail + ")." : ".") : "Mesa de Ayuda.";
+            var htmlBody = $"En el presente mail, se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado <br />" +
+                $"Motivo: <br />  {fijacion.MotivoRechazo} <br />" +
+                $"Ante cualquier consulta contactarse con {contacto}"+
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            htmlBody += "<style> table, th, td{ }</style>";
+
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
         }
     }
 }

@@ -135,6 +135,7 @@
     <Compile Include="Managers\ICampaniaActualManager.cs" />
     <Compile Include="Managers\ICampaniaMaterialManager.cs" />
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
+    <Compile Include="Managers\IUsuarioManager.cs" />
     <Compile Include="Managers\ITokenManager.cs" />
     <Compile Include="Managers\IObjetivoManager.cs" />
     <Compile Include="Managers\ICampañaManager.cs" />

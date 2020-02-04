@@ -203,15 +203,6 @@
             </div>
         </div>
 
-        <div id="tipoAgenteCompraDiv" class="agente noAcuerdo" hidden>
-            <div class="col-sm-1">
-                <label>Tipo Agente</label>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <select id="tipoAgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra, disabled: isControlDisabled"></select>
-                <img id="errAgenteCompraId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
-        </div>
     </div>
     <div id="ContratoDiv" hidden class="noFason noAgente noAcuerdo row">
         <div class="col-sm-2 ">
@@ -273,18 +264,20 @@
                 <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div id="posicionFasonDiv" class="fason agente" hidden>
+
+        <div id="tipoAgenteCompraDiv" class="agente noAcuerdo" hidden>
             <div class="col-sm-1">
-                <label>Posición</label>
+                <label>Tipo Agente</label>
             </div>
-            <div class="col-sm-4">
-                <input id="posicionFasonId" class="k-input contratoinput" type="text" data-bind="value: Parametros.Posicion" />
-                <img id="errPosicionFasonId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="col-md-4 col-sm-4">
+                <select id="tipoAgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra, disabled: isControlDisabled"></select>
+                <img id="errAgenteCompraId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
     </div>
 
     <div class="row">
+
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio Base</label>
         </div>
@@ -310,6 +303,16 @@
             </div>
 
         </div>
+        <div id="posicionFasonDiv" class="fason agente" hidden>
+            <div class="col-sm-1">
+                <label>Posición</label>
+            </div>
+            <div class="col-sm-4">
+                <input id="posicionFasonId" class="k-input contratoinput" type="text" data-bind="value: Parametros.Posicion" />
+                <img id="errPosicionFasonId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
+
 
         <div class="col-xs-10 col-sm-5 noFason noAgente noAcuerdo ampliar ampliar-fijacion">
             <span id="baseDiv" style="display:inline-block">
@@ -718,11 +721,14 @@
             <i class="fa fa-plus"></i> Calidad
         </div>
     </div>
-    <div class="noFason noAgente noAcuerdo datos-calidades ampliar-adicionales" display="block">
+    <div class="noFason noAgente datos-calidades calidades-acuerdo ampliar-adicionales" display="block">
         <div class="row">
             <div id="especialesId">
                 <div>
-                    <div class="col-md-3 col-md-offset-2">
+                    <div class="calidades-acuerdo col-md-2" hidden>
+                        <label>Calidad</label>
+                    </div>
+                    <div id="calidadesDiv" class="col-md-3 col-md-offset-2">
                         <select id="calidadesEspecialesId" data-bind="source: EspecialesCombo, value: Parametros.calidadesEspecialesId, disabled: isControlDisabled"></select>
                         <img id="errcalidadesEspecialesId" src="~/Content/Images/error.png" style="display:none" />
                     </div>

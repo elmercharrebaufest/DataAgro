@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IClienteStopAgent> clienteStopMock;
         private Mock<IModificarCupoAgent> modificarCupoAgentMock;
         private Mock<IProveedorManager> proveedorManagerMock;
+        private Mock<IMailManager> mailManagerMock;
         [SetUp]
         public void SetUp()
         {
@@ -44,8 +45,10 @@ namespace Molinos.DataAgro.Test.Managers
             clienteStopMock = new Mock<IClienteStopAgent>();
             modificarCupoAgentMock = new Mock<IModificarCupoAgent>();
             proveedorManagerMock = new Mock<IProveedorManager>();
+            mailManagerMock = new Mock<IMailManager>();
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
-                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object);
+                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
+                mailManagerMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -73,6 +76,9 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<LimiteCupo, bool>>>())).Returns(new LimiteCupo {ConfiguracionCupoId=1,ZonaCupoId=1,CantidadCupo=1 });
             repositorioMock.Setup(y => y.Contar(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(0);
 
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1="b@b.com"} });
+            mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("a@a.com");
             crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>()))
                 .Returns(new List<string>() { "a" });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
@@ -161,7 +167,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns("a");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA());
-            var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1 }, 0,null);
+            var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1,FechaIngreso = new DateTime(2019,12,30) }, 0, new DateTime(2019, 12, 1));
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()), Times.Once);

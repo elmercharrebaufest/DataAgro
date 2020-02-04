@@ -12,9 +12,10 @@
 	[EstadoId] INT NOT NULL,
 	[Ampliaciones] FLOAT NULL,
 	[TipoAgenteCompraId] INT NOT NULL,
-	[ComercialCreadorId] INT NULL
-  
+	[ComercialCreadorId] INT NULL,
+    [CampanaId]  INT NOT NULL
     CONSTRAINT [FK_AgenteCompra_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]) DEFAULT 1,  
+    CONSTRAINT [FK_AgenteCompra_Campana] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),  
     CONSTRAINT [FK_AgenteCompra_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
     CONSTRAINT [FK_AgenteCompra_Operador] FOREIGN KEY ([OperadorId]) REFERENCES [Operador]([Id]), 
     CONSTRAINT [FK_AgenteCompra_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),  

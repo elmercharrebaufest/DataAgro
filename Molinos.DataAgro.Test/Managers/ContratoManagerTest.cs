@@ -45,7 +45,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IAltaTempranaAgent> altaTempranaAgentMock;
         private Mock<ICapacidadProductivaAgent> capacidadProductivaAgentMock;
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
-        private Mock<IModificarContratoAgent> modificarContratoMock;
+        private Mock<IModificarContratoAgent> modificarContratoAgentMock;
+        private Mock<IMailManager> mailManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -74,8 +75,8 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
-            modificarContratoMock = new Mock<IModificarContratoAgent>();
-
+            modificarContratoAgentMock = new Mock<IModificarContratoAgent>();
+            mailManagerMock = new Mock<IMailManager>();
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
                 oMSCampaniaManagerMock.Object, provinciaManagerMock.Object,
@@ -89,7 +90,8 @@ namespace Molinos.DataAgro.Test.Managers
                 configuracionManagermock.Object,
                 capacidadProductivaAgentMock.Object,
                 altaTempranaAgentMock.Object, 
-                diasHabilesAgentMock.Object, modificarContratoMock.Object);
+                diasHabilesAgentMock.Object, modificarContratoAgentMock.Object,
+                mailManagerMock.Object);
         }
 
         [Test]
@@ -1234,7 +1236,7 @@ namespace Molinos.DataAgro.Test.Managers
                     ComercialId = 1,
                     IdActiveDirectory = "dsanchez"
               }});
-            proveedorManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("mparisi@baufest.com");
+            mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("mparisi@baufest.com");
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, string>>>()))
                 .Returns("marcos ignacio");
@@ -1272,7 +1274,7 @@ namespace Molinos.DataAgro.Test.Managers
                     ComercialId = 1,
                     IdActiveDirectory = "mparisi"
               }});
-            proveedorManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Throws(new Exception("Error GetEmailUserActiveDirectory"));
+            mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Throws(new Exception("Error GetEmailUserActiveDirectory"));
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, string>>>()))
                 .Returns("marcos ignacio");

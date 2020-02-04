@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IFinalizarFijacionAgent> finalizarFijacionAgentMock;
         private Mock<IRelacionCorredorProveedorAgent> relacionCorredorProveedorAgentMock;
         private Mock<IContratosParaFijacionAgent> contratosParaFijacionMock;
+        private Mock<IMailManager> mailManagerMock;
+
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -47,12 +49,14 @@ namespace Molinos.DataAgro.Test.Managers
             finalizarFijacionAgentMock = new Mock<IFinalizarFijacionAgent>();
             relacionCorredorProveedorAgentMock = new Mock<IRelacionCorredorProveedorAgent>();
             contratosParaFijacionMock = new Mock<IContratosParaFijacionAgent>();
+            mailManagerMock = new Mock<IMailManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
                 pushNotificacionManagerMock.Object, finalizarFijacionAgentMock.Object,
-                contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object);
+                contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
+                mailManagerMock.Object);
         }
 
         [Test]

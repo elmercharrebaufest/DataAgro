@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly IModificarContratoAgent modificarContratoAgent;
+        private readonly IMailManager mailManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -59,7 +60,8 @@ namespace Molinos.DataAgro.Business.Managers
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager, 
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
-            IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent)
+            IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
+            IMailManager mailManager) 
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -81,38 +83,36 @@ namespace Molinos.DataAgro.Business.Managers
             this.altaTempranaAgent = altaTempranaAgent;
             this.diasHabilesAgent = diasHabilesAgent;
             this.modificarContratoAgent = modificarContratoAgent;
+            this.mailManager = mailManager;
             this.capacidadProductiva = capacidadProductiva;
         }
 
         public DatosIniContrato TraerDatosCombo()
         {
             var datosCombo = new DatosIniContrato();
-            var hoy = DateTime.Today;
+            var hoy = DateTime.Now;
 
             datosCombo.prov = repositorio.Listar<Provincia, ProvinciaQry>(x => new ProvinciaQry() { Provinciaid = x.ProvinciaId, Nombre = x.Nombre, Orden = x.Orden }, null, 0, "Orden");
 
             datosCombo.loc = new List<LocalidadQry>();
 
             datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
-            if (!PermisosHelper.Is(PermisosDataAgro.PruebaCorredor, PermisosDataAgro.PruebaProveedor))
+            if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
-            }
-            else
-            {
-                datosCombo.material = repositorio.Listar<HabilitacionFijacion, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
-                    x=>x.Dia == hoy);
-            }
-            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
-            if (!PermisosHelper.Is(PermisosDataAgro.PruebaCorredor, PermisosDataAgro.PruebaProveedor))
-            {
                 datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
-                (x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet))), 0, "Comercial");
+                   (x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet))), 0, "Comercial");
             }
             else
             {
+                var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                    x=>x.DesdeVigencia <= hoy&& x.HastaVigencia >= hoy);
+                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                    x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy));
+                datosCombo.material = listaMaterial.GroupBy(y => y.MaterialId).Select(y => y.FirstOrDefault()).ToList();
                 datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido });
             }
+            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });            
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
@@ -1041,7 +1041,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Listar<Calidad, CalidadDto>(cal => new CalidadDto()
             {
-                ContratoId = cal.ContratoId,
+                ContratoId = cal.ContratoId.Value,
                 Id = cal.Id,
                 CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
                 CalidadEspecialId = cal.CalidadEspecialId,
@@ -1155,7 +1155,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
-                    mailComercialesMesa.Add(mobjProveedorManager.GetEmailUserActiveDirectory(mesa.IdActiveDirectory));
+                    mailComercialesMesa.Add(mailManager.GetEmailUserActiveDirectory(mesa.IdActiveDirectory));
                 }
                 catch (Exception e)
                 {
@@ -1180,7 +1180,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             try
                             {
-                                emailComercial = mobjProveedorManager.GetEmailUserActiveDirectory(contratosPorCreador.Key);
+                                emailComercial = mailManager.GetEmailUserActiveDirectory(contratosPorCreador.Key);
                                 if (!string.IsNullOrEmpty(emailComercial))
                                 {
                                     oMensaje.To.Add(emailComercial);
@@ -1427,7 +1427,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var com in administrativo)
                     {
-                        try { emailComercial.Add(mobjProveedorManager.GetEmailUserActiveDirectory(com.IdActiveDirectory)); }
+                        try { emailComercial.Add(mailManager.GetEmailUserActiveDirectory(com.IdActiveDirectory)); }
                         catch (Exception e) { logger.Error(e); }
                     }
                 }
@@ -1583,7 +1583,8 @@ namespace Molinos.DataAgro.Business.Managers
                 SelCargoVendedor = null,
                 Madre = null,
                 ContratoMadre = null,
-
+                Calidades = x.Calidad.Select(y=>new CalidadDto {Valor= y.Valor, CalidadEspecialId=y.CalidadEspecialId,CalidadEspecialDesc= y.CalidadEspecial.Descripcion,PorcentajeDesde=y.PorcentajeDesde,
+                PorcentajeHasta=y.PorcentajeHasta}).ToList()
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
             if(contrato.Fecha < dia)

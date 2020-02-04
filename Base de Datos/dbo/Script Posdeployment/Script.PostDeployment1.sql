@@ -172,3 +172,13 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Arribado') BEGIN in
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Sin STOP', 6); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Error STOP', 7); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
+
+--Segmentacion
+update Segmentacion set Descripcion ='Tradicional' where SegmentacionId = '7'
+update Segmentacion set Descripcion ='Grande' where SegmentacionId = '2'
+update Segmentacion set Descripcion ='Mediano' where SegmentacionId = '3'
+update Segmentacion set Descripcion ='Chico' where SegmentacionId = '4'
+update Segmentacion set Descripcion ='Chico' where SegmentacionId = '9'
+update Segmentacion set Descripcion ='Mediano' where SegmentacionId = '10'
+update Segmentacion set Descripcion ='Grande' where SegmentacionId = '11'
+IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Mega' and Grupo = 'Acopiadores') BEGIN insert into Segmentacion values ('Mega','Acopiadores'); END

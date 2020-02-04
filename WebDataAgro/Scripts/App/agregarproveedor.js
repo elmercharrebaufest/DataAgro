@@ -236,6 +236,7 @@ function armarSelects(result) {
 
     var htmlSegmentacion = "";
     htmlSegmentacion += '<select class="campo-input-select" id="segmentacion">';
+    htmlSegmentacion += '<option value="null">Seleccione...</option>'
     if (grupos[null]) {
         var nulo = grupos[null];
         for (var ii in nulo) {
@@ -2149,7 +2150,7 @@ function armarFuncionalidades() {
             (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-mails">' +
-            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "")  : "") : "No especifica mails") +
+            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") : "No especifica mails") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-extras">' +
             '<div class="row">' +
@@ -2426,6 +2427,55 @@ function ObtenerDatos() {
     }
     obj.contactocomercial = aGuardarContactoComercial;
 
+    if (obj.basicos.segmentacion == "null") {
+        var tonsMaxProduccion = 0;
+
+        for (var i = 0; i < obj.produccion.CamposProduccion.length; i++) {
+            for (var j = 0; j < obj.produccion.CamposProduccion[i].granos.length; j++) {
+                tonsMaxProduccion += Number(obj.produccion.CamposProduccion[i].granos[j].toneladas);
+            }
+        }
+
+        var tonsMaxAlamacenamiento = 0;
+        for (var i = 0; i < obj.almacenamiento.CamposAlmacenamiento.length; i++) {
+            for (var j = 0; j < obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamientoGrano.length; j++) {//grano
+                tonsMaxAlamacenamiento += Number(obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamientoGrano[j].toneladasAlmacenamiento);
+            }
+            //for (var j = 0; j < obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamiento.length; j++) {//campaña
+            //    tonsMaxAlamacenamiento += Number(obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamiento[j].toneladasAlmacenamiento);
+            //}
+        }
+        if (tonsMaxAlamacenamiento > 0) {
+            if (tonsMaxAlamacenamiento > 0 && tonsMaxAlamacenamiento <= 20000) {
+                obj.basicos.segmentacion = 9;
+            }
+            if (tonsMaxAlamacenamiento > 20000 && tonsMaxAlamacenamiento <= 50000) {
+                obj.basicos.segmentacion = 10;
+            }
+            if (tonsMaxAlamacenamiento > 50000 && tonsMaxAlamacenamiento <= 150000) {
+                obj.basicos.segmentacion = 11;
+            }
+            if (tonsMaxAlamacenamiento > 150000) {
+                obj.basicos.segmentacion = 15;
+            }
+        }
+
+        if (tonsMaxProduccion > 0) {
+            if (tonsMaxProduccion > 0 && tonsMaxProduccion <= 3000) {
+                obj.basicos.segmentacion = 2;
+            }
+            if (tonsMaxProduccion > 3000 && tonsMaxProduccion <= 10000) {
+                obj.basicos.segmentacion = 3;
+            }
+            if (tonsMaxProduccion > 10000) {
+                obj.basicos.segmentacion = 4;
+            }
+        }
+        $("#segmentacion").val(obj.basicos.segmentacion);
+    }
+    //console.log("produccion",tonsMaxProduccion);
+    //console.log("almacenamiento",tonsMaxAlamacenamiento);
+    //console.log("segmentacion", obj.basicos.segmentacion);
     GrabarProveedor(obj);
 }
 

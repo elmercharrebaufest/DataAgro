@@ -468,12 +468,6 @@
   <data name="Provincia" xml:space="preserve">
     <value>Provincia</value>
   </data>
-  <data name="Prueba_Corredor" xml:space="preserve">
-    <value>Ingreso como Corredor - Pruebas</value>
-  </data>
-  <data name="Prueba_Proveedor" xml:space="preserve">
-    <value>Ingreso como Proveedor - Pruebas</value>
-  </data>
   <data name="RazonSocial" xml:space="preserve">
     <value>Razon Social</value>
   </data>
@@ -566,5 +560,30 @@
   </data>
   <data name="Servicio_Auth" xml:space="preserve">
     <value>Servicio Auth</value>
+  </data>
+  <data name="Administracion_Proveedores" xml:space="preserve">
+    <value>Configurar Administración Proveedores</value>
+  </data>
+  <data name="Ingreso_Externo" xml:space="preserve">
+    <value>Ingreso de Externos</value>
+  </data>
+  <data name="Visualizar_Reporte_Comercial" xml:space="preserve">
+    <value>Visualizar Reporte Comercial</value>
+  </data>
+  <data name="Visualizar_Reporte_Dinamico" xml:space="preserve">
+    <value>Visualizar Reporte Dinamico</value>
+  </data>
+  <data name="CuitCorredor" xml:space="preserve">
+    <value>CUIT Corredor</value>
+  </data>
+  <data name="RazonCorredor" xml:space="preserve">
+    <value>Corredor</value>
+  </data>
+  <data name="Terminos_Y_Condiciones" xml:space="preserve">
+    <value>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Justo eget magna fermentum iaculis eu non diam phasellus vestibulum. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Diam maecenas ultricies mi eget mauris pharetra et ultrices. Viverra accumsan in nisl nisi scelerisque eu ultrices vitae. Orci dapibus ultrices in iaculis. Aliquam ultrices sagittis orci a. Amet porttitor eget dolor morbi. Vel eros donec ac odio. Vel pharetra vel turpis nunc eget lorem dolor sed. Arcu cursus vitae congue mauris rhoncus aenean vel.
+
+Lacus suspendisse faucibus interdum posuere lorem. Nisi est sit amet facilisis magna. Sed elementum tempus egestas sed sed risus pretium. Habitant morbi tristique senectus et netus et. Bibendum at varius vel pharetra vel. Augue mauris augue neque gravida in fermentum et sollicitudin. Volutpat maecenas volutpat blandit aliquam. Malesuada bibendum arcu vitae elementum curabitur vitae. Id aliquet lectus proin nibh nisl condimentum id. Semper auctor neque vitae tempus quam pellentesque nec nam. Placerat vestibulum lectus mauris ultrices eros. Nullam eget felis eget nunc lobortis mattis.
+
+Euismod elementum nisi quis eleifend. Rutrum quisque non tellus orci ac auctor augue mauris augue. Habitant morbi tristique senectus et. Viverra adipiscing at in tellus integer. Gravida in fermentum et sollicitudin ac. Id faucibus nisl tincidunt eget nullam non nisi est sit. Morbi enim nunc faucibus a pellentesque sit amet. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Urna nunc id cursus metus. Eu mi bibendum neque egestas congue quisque egestas. Posuere lorem ipsum dolor sit. Ultricies mi eget mauris pharetra et ultrices.</value>
   </data>
 </root>

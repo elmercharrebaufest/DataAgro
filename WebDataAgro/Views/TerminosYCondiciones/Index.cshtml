@@ -1,0 +1,42 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@Styles.Render("~/Content/bootstrap/css")
+<link rel="stylesheet" href="~/Content/terminos.css" />
+<html>
+@using Molinos.DataAgro.Entities.Resources;
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Terminos Y Condiciones</title>
+</head>
+<body class="external-page sb-l-c sb-r-c">
+
+    <div id="main" class="animated fadeIn">
+        <section class="col-xs-12 col-md-4 col-md-offset-4" id="content_wrapper">
+            <div class="terminos-header row md-center">
+                <div class="col-md-3">
+                    <img src="~/Content/Images/agro2.png" id="imgLogo" alt="DataAgro" width="100" />
+                </div>
+                <div class="col-md-9 terminos-titulo">
+                    <strong>TERMINOS Y CONDICIONES</strong>
+                </div>
+            </div>
+            <div class="terminos-body col-xs-12">
+                <p style="white-space: pre-line">@Text.Terminos_Y_Condiciones</p>
+            </div>
+            <div class="col-xs-12">
+                <input type="button"
+                       value="Aceptar"
+                       class="boton-volver"
+                       onclick="location.href='@Url.Action("Aceptar", "TerminosYCondiciones" )'" />
+            </div>
+        </section>
+    </div>
+</body>
+
+
+</html>
+

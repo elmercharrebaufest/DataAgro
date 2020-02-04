@@ -109,7 +109,7 @@ function CargarCopiaContrato(contratoId, tipo) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {
         modificarContrato(contratoCopia);
-        CargarDatosCopiar(contratoCopia, null, tipo);
+        CargarDatosEditar(contratoCopia);
     }
 }
 

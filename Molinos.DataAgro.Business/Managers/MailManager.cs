@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Business
             }
         }
 
-        private string GetEmailUserActiveDirectory(string UserName)
+        public string GetEmailUserActiveDirectory(string UserName)
         {
             DirectoryEntry entry = new DirectoryEntry();
             string userName = UserName;
@@ -143,7 +143,6 @@ namespace Molinos.DataAgro.Business
                 logger.Error($"Fallo el SmtpClient con error:  {ex.Message}");
             }
         }
-
         public void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
         {
             List<string> enviarAstring = new List<string>();
@@ -168,9 +167,8 @@ namespace Molinos.DataAgro.Business
                     try { copiaAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
                 }
             }
-            this.EnviarMail(desde, enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
+            this.EnviarMail( enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
         }
-
         public void ReenviarMailCierreDia(string asuntoABuscar, string asuntoNuevoMail, string cuerpo)
         {
             try
@@ -243,6 +241,57 @@ namespace Molinos.DataAgro.Business
             {
                 logger.Error("Error reenvio de mail", e);
             }
+        }
+
+        public void EnviarMail(List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
+        {
+            List<string> enviarAstring = new List<string>();
+            List<string> copiaAstring = new List<string>();
+            foreach (var enviar in enviarA)
+            {
+                if (enviar.Split('@').Length == 2)
+                {
+                    enviarAstring.Add(enviar);
+                }
+                else
+                {
+                    try
+                    {
+                        var mail = GetEmailUserActiveDirectory(enviar);
+                        enviarAstring.Add(mail);
+                        logger.Info("Se envia en copia el mail {0} dia a {1}, con idad {2}", asunto, mail, enviar);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }
+
+                }
+            }            
+            if (copia != null)
+            {
+                foreach (var cc in copia)
+                {
+                    if (cc.Split('@').Length == 2)
+                    {
+                        copiaAstring.Add(cc);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var mail = GetEmailUserActiveDirectory(cc);
+                            copiaAstring.Add(mail);
+                            logger.Info("Se envia en copia el mail {0} dia a {1}, con idad {2}", asunto, mail, cc);
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(e);
+                        }
+                    }
+                }
+            }
+            this.EnviarMail(new Comercial(), enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
         }
     }
 }

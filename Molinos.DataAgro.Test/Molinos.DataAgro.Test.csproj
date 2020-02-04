@@ -120,6 +120,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CupoControllerTest.cs" />
+    <Compile Include="Controllers\AdministracionProveedorControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />
     <Compile Include="Controllers\ContratoAcuerdoControllerTest.cs" />
     <Compile Include="Controllers\PrecioPizarraControllerTest.cs" />
@@ -160,6 +162,7 @@
     <Compile Include="Managers\AreaInfluenciaManagerTest.cs" />
     <Compile Include="Managers\ComercialManagerTest.cs" />
     <Compile Include="Managers\CompraNetManagerTest.cs" />
+    <Compile Include="Managers\ConfiguracionInternaManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionManagerTest.cs" />
     <Compile Include="Managers\EstadioManagerTest.cs" />
     <Compile Include="Managers\CupoManagerTest.cs" />

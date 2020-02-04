@@ -10,6 +10,8 @@ using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
@@ -89,7 +91,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
         {
-            if (PermisosHelper.Is(PermisosDataAgro.PruebaProveedor, PermisosDataAgro.PruebaCorredor))
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 return RedirectToAction("CrearContratoExterno");
             }
@@ -105,14 +107,17 @@ namespace WebDataAgro.Controllers
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
-            ViewBag.Rol = PermisosHelper.Is(PermisosDataAgro.PruebaCorredor) ? "Corredor" : PermisosHelper.Is(PermisosDataAgro.PruebaProveedor) ? "Proveedor" : "";
-            if (PermisosHelper.Is(PermisosDataAgro.PruebaCorredor))
+            var cuit = PermisosHelper.ObtenerCuit();
+            var directo = mobjProveedorManager.ValidarDirecto(cuit);
+            if (directo)
             {
-                ViewBag.Corredor = "ACA (30500120882)";
+                ViewBag.Proveedor = $"Externo({cuit})";
+                ViewBag.Rol = "Proveedor";
             }
-            if (PermisosHelper.Is(PermisosDataAgro.PruebaProveedor))
+            else
             {
-                ViewBag.Proveedor = "Compañía de insumos y granos (30668299462)";
+                ViewBag.Corredor = $"Externo({cuit})";
+                ViewBag.Rol = "Corredor";
             }
             return View();
         }
@@ -330,7 +335,11 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarFijacion(FijacionDePrecioContrato oParam)
         {
-            oParam.ComercialId = oParam.ComercialId == 0 ? mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId): oParam.ComercialId;
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId);
+                oParam.UsuarioCreador = PermisosHelper.ObtenerUsuario();
+            }
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam),

@@ -3,7 +3,20 @@
         MensErr("El CUIT debe estar cargado.");
         return false;
     }
-    if (!$("#segmentacion").val() || $("#segmentacion").val() === "null") {
+    var tonsProduccion = 0;
+    for (var i = 0; i < aGuardar.length; i++) {
+        for (var j = 0; j < aGuardar[i].granos.length; j++) {
+            tonsProduccion += aGuardar[i].granos[j].toneladas;
+        }
+    }
+    var tonsAlmacenamiento = 0;
+    for (var i = 0; i < aGuardarAlmacenamiento.length; i++) {
+        for (var j = 0; j < aGuardarAlmacenamiento[i].granosAlmacenamientoGrano.length; j++) {
+            tonsAlmacenamiento += aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].toneladasAlmacenamiento;
+        }
+    }
+    console.log(aGuardarAlmacenamiento, tonsAlmacenamiento);
+    if ((!$("#segmentacion").val() || $("#segmentacion").val() === "null") && (tonsProduccion == 0 && tonsAlmacenamiento == 0)) {
         MensErr("El campo Segmentacion debe estar cargado.");
         return false;
     }

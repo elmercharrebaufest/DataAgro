@@ -2084,7 +2084,7 @@ function ObtenerDatos() {
     //obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     //obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
     obj.EstadoId = 9;
-    //obj.Observacion = $("#observacionId").val();
+    obj.Observacion = $("#observacionId").val();
     //obj.ClasificacionId = $("#clasificacion").val();
     //obj.CantidadCamiones = $("#cantidadCamionesId").val();
     //obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;

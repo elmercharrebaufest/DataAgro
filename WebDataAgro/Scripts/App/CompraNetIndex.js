@@ -11,6 +11,7 @@ var ampliaNegocios;
 var verMesa;
 var modificaFinalizados;
 var externo;
+var precioMoa;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
@@ -30,6 +31,7 @@ $(document).ready(function () {
     } else {
         InicializarPrecioMOA();
     }
+    SetearPrecioMoa();
     CreateGridInformeCompraNet();
     AutoRecargar();
 
@@ -263,7 +265,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ZonaDescripcion + "'" + ',' +
         "'" + dataItem.NivelTarifa + "'" + ',' +
         "'" + dataItem.TarifaFlete + "'" + ',' +
-        "'" + dataItem.Compensacion + "'" + 
+        "'" + dataItem.Compensacion + "'" + ',' +
+        "'" + dataItem.Rechazo + "'" + 
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
@@ -567,11 +570,8 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 70, filterable: false, sortable: false, template: function (dataItem) {
-                    if (dataItem.TipoNegocioId !== 1) {
-                        return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
-                    } else {
-                        return dataItem.PrecioPlazo;
-                    }
+                    var p = ArmarPrecio(dataItem);                    
+                    return p;
                 }
             },
             { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
@@ -1486,7 +1486,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
-    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona,nivelTarifa, tarifaFlete,compensacion) {
+    contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
+    compensacion,rechazo) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1747,6 +1748,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
     }                       
     compensacion ? $("#compensacionVisualizar").show() : $("#compensacionVisualizar").hide();
+    if (rechazo != "null") {
+        $(".rechazo").show();
+        $("#visualizar_rechazo").text(rechazo);
+    } else {
+        $(".rechazo").hide();
+        $("#visualizar_rechazo").text("");
+    }
 }
 
 function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {
@@ -1917,17 +1925,51 @@ function InicializarPrecioMOA() {
     table += '</tr>';
     for (i = 0; i < precio.length; i++) {
         table += '<td>';
-        table += precio[i][0].Retirado == true ? '<span class="retirado">Retirado</span>' :
-            '<span class="precio">' + kendo.toString(precio[i][0].Precio, "n") + ' ' +
-            precio[i][0].MonedaId + '</span><br/><span class="precio">' + kendo.toString(precio[i][1].Precio, "n") + ' ' + precio[i][1].MonedaId + '</span>';
-        table += '</td>';
-        if (precio[i][0].Retirado == false) {
+        var matRetirado = true;
+        if (precio[i][0].Retirado == false ||
+            precio[i][1].Retirado == false ||
+            precio[i][0].Pizarra == true ) {
             retirados = false;
+            matRetirado = false;
         }
+        if (matRetirado == true) {
+            table += '<span class="retirado">Retirado</span>';
+        }else {
+            table += precio[i][0].Retirado == false ? '<span class="precio">' + kendo.toString(precio[i][0].Precio, "n") + ' ' + precio[i][0].MonedaId +'</span><br/>': '';
+            table += precio[i][1].Retirado == false ? '<span class="precio">' + kendo.toString(precio[i][1].Precio, "n") + ' ' + precio[i][1].MonedaId + '</span><br/>' : '';
+            table += precio[i][0].Pizarra == true ? '<span class="precio"> Pizarra </span><br/>' : '';
+        }
+        table += '</td>';
+        
     }
     if (retirados == false) {
         $("#crearContrato").show();
     }
 
     $("#tabla-precio-moa").html(table);
+}
+
+function SetearPrecioMoa() {
+    precioMoa = MSExecuteOnServer('/CompraNet/TraerPrecioMoa');
+}
+
+function ArmarPrecio(dataItem) {
+    if (dataItem.TipoNegocioId !== 1) {
+        if (!externo && dataItem.TipoNegocioId === 3 && dataItem.Estado === 9) {
+            var esPrecioMoa = false;
+            for (i = 0; i < precioMoa.length; i++) {
+                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && e.Moneda === e.Moneda; })[0];
+                if (p)
+                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo;
+            }
+            if (esPrecioMoa === true) {
+                return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
+            } else {
+                return '<strong style="color:red;">'+FormatearString(dataItem.PrecioPlazo, dataItem.Moneda)+'</strong>';
+            }
+        }
+        return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
+    } else {
+        return dataItem.PrecioPlazo;
+    }
 }

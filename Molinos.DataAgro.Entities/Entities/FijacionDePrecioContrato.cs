@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? DestinoId { get; set; }
         public int? ProveedorCreadorId { get; set; }
         public string MotivoRechazo { get; set; }
+        public string UsuarioCreador { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
         [ForeignKey("ContratoId")]

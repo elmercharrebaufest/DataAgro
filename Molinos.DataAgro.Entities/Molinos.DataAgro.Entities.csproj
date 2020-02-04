@@ -83,6 +83,7 @@
     <Compile Include="Dto\HabilitacionPizarraDto.cs" />
     <Compile Include="Dto\PrecioMoaCompraNetDto.cs" />
     <Compile Include="Dto\PrecioMoaDto.cs" />
+    <Compile Include="Dto\LogProveedorDto.cs" />
     <Compile Include="Dto\ContratoIdDto.cs" />
     <Compile Include="Dto\ContratoSAPDto.cs" />
     <Compile Include="Dto\CupoResult.cs" />
@@ -198,9 +199,11 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
     <Compile Include="Entities\AperturaPrecio.cs" />
+    <Compile Include="Entities\LogProveedor.cs" />
     <Compile Include="Entities\HabilitacionPizarra.cs" />
     <Compile Include="Entities\HabilitacionFijacion.cs" />
     <Compile Include="Entities\PrecioMoa.cs" />

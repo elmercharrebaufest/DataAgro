@@ -85,6 +85,8 @@
                         <th>MATERIAL</th>
                         <th>CAMPAÑA</th>
                         <th>PRICING</th>
+                        <th class="@(Model.PricingCampania.Any(x=>x.SanLorenzo>0)? "":"hide")">SL</th>
+                        <th class="@(Model.PricingCampania.Any(x=>x.Acopio>0)? "":"hide")">Acopios</th>
                     </tr>
                     @foreach (var datos in Model.PricingCampania)
                     {
@@ -92,34 +94,34 @@
                         switch (datos.Id)
                         {
                             case 11:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==1).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Maiz").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
                                 break;
                             case 12:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==1).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Maiz").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.NewAgente)).ToString("N0");
                                 break;
                             case 21:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo Cámara"||x.Material=="Trigo Calidad").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
                                 break;
                             case 22:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==2).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Trigo Cámara"||x.Material=="Trigo Calidad").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.NewAgente)).ToString("N0");
                                 break;
                             case 31:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Soja").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
                                 break;
                             case 32:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==3).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Soja").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.NewAgente)).ToString("N0");
                                 break;
                             case 41:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==4).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
                                 break;
                             case 42:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==4).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.NewAgente)).ToString("N0");
                                 break;
                             case 51:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==5).Select(x => x.PosicionKilos.Sum(y=>y.DispAPrecio+y.DispFijac+y.FrwAPrecio+y.FrwFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol Alto Oleico").Sum(x=>x.DispAgente+x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
                                 break;
                             case 52:
-                                sumaPricing = (Model.PosicionCompras.Where(x=>x.MaterialId==5).Select(x => x.PosicionKilos.Sum(y=>y.NewAPrecio+y.NewFijac)).Sum()+Model.ToneladasGranoTipo.Where(x=>x.Material=="Girasol Alto Oleico").Sum(x=>x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente)).ToString("N0");
                                 break;
                             default:
                                 sumaPricing = "0";
@@ -129,6 +131,8 @@
                             <td>@datos.Material</td>
                             <td>@datos.Campania</td>
                             <td>@sumaPricing</td>
+                            <td class="@(Model.PricingCampania.Any(x=>x.SanLorenzo>0)? "":"hide")"> @(Model.PricingCampania.Any(x => x.SanLorenzo >0 && x.Id == datos.Id) ?  datos.SanLorenzo.ToString("N0"):"")</td>
+                            <td class="@(Model.PricingCampania.Any(x=>x.Acopio>0)? "":"hide")"> @(Model.PricingCampania.Any(x => x.Acopio >0 && x.Id == datos.Id) ?  datos.Acopio.ToString("N0"):"" )</td>
                         </tr>
                     }
                 </table>
@@ -199,7 +203,6 @@
                                 <td class="@(newcFijacion ? "" : "hide")">@(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0"))</td>
                                 <td class="@(newcAgente ? "" : "hide")">@toneladaPrecio.NewAgente.ToString("N0")</td>
                                 <td class="@(newc == 0 ? "hide" : "") borde-derecho-oscuro">@totalNewC.ToString("N0")</td>
-
                             </tr>
                         }
                     }

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -17,7 +19,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         public static IQueryable<BasicoContrato> QueryBase(DbContext contexto, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            if (!PermisosHelper.Is(PermisosDataAgro.PruebaCorredor, PermisosDataAgro.PruebaProveedor))
+            if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 var queryContratos =
                     from contrato in contexto.Set<Contrato>()
@@ -126,12 +128,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         NivelTarifa = contrato.NivelTarifa.Descripcion,
                         TarifaFlete = contrato.TarifaFlete,
                         Compensacion = contrato.Compensacion.Value,
-                        Acuerdo = contrato.ContratoAcuerdoId
+                        Acuerdo = contrato.ContratoAcuerdoId,
+                        Rechazo = null
                     };
 
                 var queryFijacion =
                     from fijac in contexto.Set<FijacionDePrecioContrato>()
-                    where equipo.Contains(fijac.ComercialId) || (fijac.ComercialCreadorId.HasValue ? equipo.Contains(fijac.ComercialCreadorId.Value) : true)
+                    where equipo.Contains(fijac.ComercialId) || 
+                    (fijac.ComercialCreadorId.HasValue ? equipo.Contains(fijac.ComercialCreadorId.Value) : true)
                     select new BasicoContrato()
                     {
                         Id = fijac.FijacionDePrecioContratoId,
@@ -207,7 +211,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CalidadDescripcion = "",
                         MercsDeposito = null,
                         ComercialCreadorId = fijac.ComercialCreadorId,
-                        ComercialCreador = fijac.ComercialCreador == null ? fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
+                        ComercialCreador = fijac.UsuarioCreador!= null? fijac.UsuarioCreador : fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial : fijac.ComercialCreador == null ?  fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido : fijac.ComercialCreador.Nombres + " " + fijac.ComercialCreador.Apellido,
                         ContratoCorredor = "",
                         ContratoVendedor = "",
                         SelCargoMOA = null,
@@ -235,7 +239,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         NivelTarifa = "",
                         TarifaFlete = null,
                         Compensacion = null,
-                        Acuerdo = null
+                        Acuerdo = null,
+                        Rechazo = fijac.MotivoRechazo
                     };
 
                 queryContratos = queryContratos.Union(queryFijacion);
@@ -347,8 +352,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             NivelTarifa = "",
                             TarifaFlete = null,
                             Compensacion = null,
-                            Acuerdo = null
-
+                            Acuerdo = null,
+                            Rechazo = null
                         };
 
                     queryContratos = queryContratos.Union(queryFason);
@@ -461,8 +466,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             NivelTarifa = "",
                             TarifaFlete = null,
                             Compensacion = null,
-                            Acuerdo = null
-
+                            Acuerdo = null,
+                            Rechazo = null
                         };
 
                     queryContratos = queryContratos.Union(queryAgente);
@@ -575,7 +580,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             NivelTarifa = "",
                             TarifaFlete = null,
                             Compensacion = null,
-                            Acuerdo = null
+                            Acuerdo = null,
+                            Rechazo = null
                         };
                     queryContratos = queryContratos.Union(queryAcuerdo);
                 }
@@ -583,7 +589,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
             else
             {
-                var cuit = PermisosHelper.Is(PermisosDataAgro.PruebaCorredor) ? "30500120882" : "30668299462";
+                var cuit = PermisosHelper.ObtenerCuit();
                 var queryFijacion =
                     from fijac in contexto.Set<FijacionDePrecioContrato>()
                     where fijac.ProveedorCreador.CUIT == cuit
@@ -662,7 +668,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CalidadDescripcion = "",
                         MercsDeposito = null,
                         ComercialCreadorId = fijac.ProveedorCreadorId,
-                        ComercialCreador = fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial :  " " ,
+                        ComercialCreador = fijac.UsuarioCreador != null ? fijac.UsuarioCreador: fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial :  " " ,
                         ContratoCorredor = "",
                         ContratoVendedor = "",
                         SelCargoMOA = null,
@@ -690,7 +696,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         NivelTarifa = "",
                         TarifaFlete = null,
                         Compensacion = null,
-                        Acuerdo = null
+                        Acuerdo = null,
+                        Rechazo = fijac.MotivoRechazo
                     };
                 return queryFijacion;
             }

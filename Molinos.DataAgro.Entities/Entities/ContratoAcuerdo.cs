@@ -22,7 +22,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime Fecha { get; set; }
         public int ComercialCreadorId { get; set; }
         public string MonedaId { get; set; }
-
         public int? CorredorId { get; set; }
         public int EstadoId { get; set; }
 
@@ -36,12 +35,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Material Material { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
-
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
-
         [ForeignKey("CorredorId")]
         public virtual Proveedor Corredor { get; set; }
+        [InverseProperty("Acuerdo")]
+        public virtual ICollection<Calidad> Calidad { get; set; }
 
     }
 }

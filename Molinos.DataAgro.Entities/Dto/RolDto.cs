@@ -10,5 +10,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
         public string Permisos{ get; set; }
         public IEnumerable<PermisosDataAgro> PermisosEnum { get; set; }
+        public bool Disabled { get; set; }
     }
 }

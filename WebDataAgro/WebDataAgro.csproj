@@ -204,9 +204,11 @@
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
+    <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
+    <Compile Include="Controllers\TerminosYCondicionesController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
     <Compile Include="Controllers\CupoController.cs" />
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
@@ -358,6 +360,7 @@
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
+    <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
     <Content Include="Content\cupo.css" />
     <Content Include="Content\dataAgro.css" />
@@ -945,6 +948,7 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AdministracionProveedor.js" />
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
@@ -2526,6 +2530,8 @@
     <Content Include="Views\ConfiguracionInterna\_ListaPizarra.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_ListaFijacion.cshtml" />
     <Content Include="Views\CompraNet\_ModalAprobar.cshtml" />
+    <Content Include="Views\AdministracionProveedor\Index.cshtml" />
+    <Content Include="Views\TerminosYCondiciones\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2618,7 +2624,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52498</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/WebDataAgro</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost/WebDataAgro</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

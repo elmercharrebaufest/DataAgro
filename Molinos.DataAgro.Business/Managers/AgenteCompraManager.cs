@@ -35,32 +35,36 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (oParam.MaterialId == 0)
             {
-                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
+                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacío");
             }
 
             if (oParam.Cantidad == 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacío");
             }
             if (oParam.Precio == 0)
             {
-                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
+                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacío");
+            }
+            if (oParam.CampanaId == 0)
+            {
+                oErrorMessages.Error("Campaña", "El campo 'Campaña' no debe estar vacío");
             }
             if (oParam.MonedaId == null)
             {
-                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
+                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacío");
             }
             if (oParam.OperadorId == 0)
             {
-                oErrorMessages.Error("OperadorId", "El campo 'Operador' no debe estar vacio");
+                oErrorMessages.Error("OperadorId", "El campo 'Operador' no debe estar vacío");
             }
             if (oParam.TipoAgenteCompraId == 0)
             {
-                oErrorMessages.Error("TipoAgenteCompraId", "El campo 'Tipo Agente' no debe estar vacio");
+                oErrorMessages.Error("TipoAgenteCompraId", "El campo 'Tipo Agente' no debe estar vacío");
             }
             if (oParam.Posicion == "" || oParam.Posicion == null)
             {
-                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
+                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacío");
             }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
@@ -107,6 +111,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.MaterialId = oAgente.MaterialId;
                 oFasonSave.Posicion = oAgente.Posicion;
                 oFasonSave.ComercialCreadorId = oAgente.ComercialCreadorId;
+                oFasonSave.CampanaId = oAgente.CampanaId;
             }
             else
             {
@@ -210,7 +215,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Posicion = x.Posicion,
                 Operador = x.Operador.Descripcion,
                 OperadorId = x.OperadorId,
-                AgenteId = x.Id
+                AgenteId = x.Id,
+                CampanaId = x.CampanaId
             });
             return contrato;
         }

@@ -40,7 +40,7 @@ namespace WebDataAgro.Controllers
             mobjCentroManager = oCentroManager;            
         }
 
-        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet)]
+        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet,PermisosDataAgro.VisualizarReporteCompraNetExterno)]
         public ActionResult Index()
         {
             FillViewBag();

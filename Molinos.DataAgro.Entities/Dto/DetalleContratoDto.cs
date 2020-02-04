@@ -7,6 +7,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Contrato { get; set; } // ContratoId (Primary key)
         public string RazonSocial { get; set; } // ProveedorId
         public string Cuit { get; set; }
+        public string RazonCorredor { get; set; }
+        public string CuitCorredor { get; set; }
         public string Material { get; set; } // MaterialId
         public string TipoNegocio { get; set; } // TipoNegocioId
         public string Comercial { get; set; } // ComercialId

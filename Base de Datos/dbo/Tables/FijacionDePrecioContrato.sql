@@ -30,6 +30,7 @@
 	[DestinoId] INT NULL,
     [ProveedorCreadorId] INT NULL, 
     [MotivoRechazo] NVARCHAR(MAX) NULL, 
+    [UsuarioCreador] NVARCHAR(50) NULL
     CONSTRAINT [FK_FijacionDePrecioContrato_Material] FOREIGN KEY (MaterialId) REFERENCES [Material]([MaterialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Moneda] FOREIGN KEY (MonedaId) REFERENCES Moneda(MonedaId), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Comercial] FOREIGN KEY (ComercialId) REFERENCES Comercial(ComercialId), 

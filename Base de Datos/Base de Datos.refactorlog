@@ -175,4 +175,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ConexionABMStop" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="062169aa-3096-483a-aa82-30a9d42a32d7" ChangeDateTime="01/08/2020 15:18:19">
+    <Property Name="ElementName" Value="[dbo].[LogProveedor].[ComercialId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[LogProveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProveedorId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bc47c53a-64d9-4cae-8828-2c75e3448bc7" ChangeDateTime="01/08/2020 15:43:17">
+    <Property Name="ElementName" Value="[dbo].[LogProveedor].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[LogProveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LogProveedorId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b9b94b2a-34f4-42cd-97bb-262e105a622c" ChangeDateTime="01/29/2020 15:01:14">
+    <Property Name="ElementName" Value="[dbo].[UsuarioExterno].[Acepto]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UsuarioExterno]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AceptaTyC" />
+  </Operation>
 </Operations>

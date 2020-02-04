@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -66,6 +66,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Administracion_Cupos {
             get {
                 return ResourceManager.GetString("Administracion_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configurar Administración Proveedores.
+        /// </summary>
+        public static string Administracion_Proveedores {
+            get {
+                return ResourceManager.GetString("Administracion_Proveedores", resourceCulture);
             }
         }
         
@@ -502,6 +511,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CUIT Corredor.
+        /// </summary>
+        public static string CuitCorredor {
+            get {
+                return ResourceManager.GetString("CuitCorredor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datos Research.
         /// </summary>
         public static string Datos_Research {
@@ -786,6 +804,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Ingreso_DataAgro {
             get {
                 return ResourceManager.GetString("Ingreso_DataAgro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ingreso de Externos.
+        /// </summary>
+        public static string Ingreso_Externo {
+            get {
+                return ResourceManager.GetString("Ingreso_Externo", resourceCulture);
             }
         }
         
@@ -1114,20 +1141,11 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingreso como Corredor - Pruebas.
+        ///   Looks up a localized string similar to Corredor.
         /// </summary>
-        public static string Prueba_Corredor {
+        public static string RazonCorredor {
             get {
-                return ResourceManager.GetString("Prueba_Corredor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ingreso como Proveedor - Pruebas.
-        /// </summary>
-        public static string Prueba_Proveedor {
-            get {
-                return ResourceManager.GetString("Prueba_Proveedor", resourceCulture);
+                return ResourceManager.GetString("RazonCorredor", resourceCulture);
             }
         }
         
@@ -1182,6 +1200,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Servicio_Auth {
             get {
                 return ResourceManager.GetString("Servicio_Auth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Justo eget magna fermentum iaculis eu non diam phasellus vestibulum. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Diam maecenas ultricies mi eget mauris pharetra et ultrices. Viverra accumsan in nisl nisi scelerisque eu ultrices vitae. Orci dapibus ultrices in iaculis. Aliquam ultrices sagittis orci a. Amet porttitor eget dolor morbi. Vel eros donec ac od [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Terminos_Y_Condiciones {
+            get {
+                return ResourceManager.GetString("Terminos_Y_Condiciones", resourceCulture);
             }
         }
         
@@ -1375,6 +1402,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Comercial.
+        /// </summary>
+        public static string Visualizar_Reporte_Comercial {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Comercial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visualizar Reporte CompraNet.
         /// </summary>
         public static string Visualizar_Reporte_CompraNet {
@@ -1398,6 +1434,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Visualizar_Reporte_Cupos {
             get {
                 return ResourceManager.GetString("Visualizar_Reporte_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Dinamico.
+        /// </summary>
+        public static string Visualizar_Reporte_Dinamico {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Dinamico", resourceCulture);
             }
         }
         

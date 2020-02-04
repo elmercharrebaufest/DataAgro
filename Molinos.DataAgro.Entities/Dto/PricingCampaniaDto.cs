@@ -14,5 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campania { get; set; }
         public int CampaniaId { get; set; }
         public double Pricing { get; set; }
+        public double SanLorenzo { get; set; }
+        public double Acopio { get; set; }
     }
 }

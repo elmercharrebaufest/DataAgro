@@ -146,7 +146,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
             var agente = contexto.Set<AgenteCompra>().Where(x => fechaHoy==fechaManana && DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (centroId == 0 || centroId == 1) && (calidad == null || calidad == 3))
-                .Select(x => new NegocioToneladasPosicionDto { Id = x.Id, Fecha = x.Fecha, TipoNegocioId = 5, Cantidad = x.Cantidad, PosicionString = x.Posicion }).ToList();
+                .Select(x => new NegocioToneladasPosicionDto
+                {
+                    Id = x.Id,
+                    Fecha = x.Fecha,
+                    TipoNegocioId = 5,
+                    Cantidad = x.Cantidad,
+                    PosicionString = x.Posicion,
+                    CampanaId = x.CampanaId,
+                    MaterialCampanaId = x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0
+                }).ToList();
             foreach(var age in agente)
             {
                 var pos = age.PosicionString.Split('.');
@@ -154,11 +163,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 var fechaAñoSiguiente = new DateTime(DateTime.Now.AddYears(1).Year, materialId == 3 ? 4 : materialId == 1 ? 3 : 11, 1);
                 var fechaMesSiguiente = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1);
 
-                if (fecha >= fechaAñoSiguiente)
+                if (age.CampanaId > age.MaterialCampanaId)
                 {
                     toneladasPorGrano.NewAgente += Math.Round(age.Cantidad / 1000);
                 }
-                else if (fecha < fechaAñoSiguiente && (fechaMesSiguiente >= fecha))                    
+                else if (age.CampanaId <= age.MaterialCampanaId && (fechaMesSiguiente >= fecha))                    
                 {
                     toneladasPorGrano.DispAgente += Math.Round(age.Cantidad / 1000);
                 }

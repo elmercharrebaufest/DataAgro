@@ -7,6 +7,7 @@ using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
@@ -128,8 +129,32 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.ProveedorId = oContratoAcuerdo.ProveedorId;
                 objContratoAcuerdo.CorredorId = oContratoAcuerdo.CorredorId;
                 objContratoAcuerdo.MonedaId = oContratoAcuerdo.MonedaId;
+                if (objContratoAcuerdo.Calidad != null)
+                {
+                    foreach (var cal in objContratoAcuerdo.Calidad.ToList())
+                    {
+                        repositorio.Remover(cal);
+                    }
+                }
+                else
+                {
+                    objContratoAcuerdo.Calidad = new List<Calidad>();
+                }
+                if (oContratoAcuerdo.Calidad != null)
+                {
+                    foreach (var cal in oContratoAcuerdo.Calidad)
+                    {
+                        objContratoAcuerdo.Calidad.Add(new Calidad
+                        {
+                            CalidadEspecialId = cal.CalidadEspecialId,
+                            PorcentajeDesde = cal.PorcentajeDesde,
+                            PorcentajeHasta = cal.PorcentajeHasta,
+                            StandardDeCalidadId = cal.StandardDeCalidadId,
+                            Valor = cal.Valor
+                        });
+                    }
+                }
             }
-
             try
             {
                 repositorio.GuardarCambios();
@@ -173,7 +198,8 @@ namespace Molinos.DataAgro.Business
                 FechaDesde = x.FechaDesde,
                 Estado = x.EstadoId,
                 MonedaId = x.MonedaId,
-                Moneda = x.Moneda.Descripcion
+                Moneda = x.Moneda.Descripcion,
+                Calidades = x.Calidad.Select(y=>new CalidadDto {Valor= y.Valor, CalidadEspecialId = y.CalidadEspecialId, CalidadEspecialDesc=y.CalidadEspecial.Descripcion }).ToList()
             });
             return contrato;            
         }

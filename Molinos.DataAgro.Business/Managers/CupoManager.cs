@@ -26,9 +26,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IClienteStopAgent clienteStopAgent;
         private readonly IModificarCupoAgent modificarCupoAgent;
         private readonly IProveedorManager proveedorManager;
+        private readonly IMailManager mailManager;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
-            IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent, IProveedorManager proveedorManager)
+            IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
+            IProveedorManager proveedorManager,IMailManager mailManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -37,6 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.clienteStopAgent = clienteStopAgent;
             this.modificarCupoAgent = modificarCupoAgent;
             this.proveedorManager = proveedorManager;
+            this.mailManager = mailManager;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -200,7 +203,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}"); ;
+                    nuevoResultado.Error("", $"Error al anular cupo en SAP: {resultado}");
                 }
                 if (!cupoSap.Centro.Acopio)
                 {
@@ -315,7 +318,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (cupo.Comercial != null)
                 {
-                    try { emailComercial =proveedorManager.GetEmailUserActiveDirectory(cupo.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try
+                    {
+                        emailComercial = mailManager.GetEmailUserActiveDirectory(cupo.Comercial.IdActiveDirectory);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }
                 }
 
                 var oMensaje = new MailMessage
@@ -332,7 +342,8 @@ namespace Molinos.DataAgro.Business.Managers
                             oMensaje.To.Add(contacto.Email1);
                         }
                     }
-                    if (!string.IsNullOrEmpty(emailComercial)) oMensaje.CC.Add(emailComercial);
+                    if (!string.IsNullOrEmpty(emailComercial)) 
+                        oMensaje.CC.Add(emailComercial);
                 }
                 else if (!string.IsNullOrEmpty(emailComercial))
                 {

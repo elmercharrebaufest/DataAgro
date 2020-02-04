@@ -25,14 +25,18 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IComercialManager mobComercial;
         private readonly IRiesgoComercialAgent oRiesgoComercialAgent;
         private readonly IDatosProveedorAgent oDatosProveedorAgent;
+        private readonly IMailManager mailManager;
         private readonly ILogger logger;
 
-        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent)
+        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, 
+            IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
+            IMailManager mailManager)
         {
             this.logger = logger;
             mobComercial = oComercial;
             this.oRiesgoComercialAgent = oRiesgoComercialAgent;
             this.oDatosProveedorAgent = oDatosProveedorAgent;
+            this.mailManager = mailManager;
             this.repositorio = repositorio;
         }
 
@@ -249,7 +253,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    oMensaje.To.Add(GetEmailUserActiveDirectory(oParam.UserName));
+                    oMensaje.To.Add(mailManager.GetEmailUserActiveDirectory(oParam.UserName));
                 }
 
                 if ((oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
@@ -260,7 +264,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
                 var comercial = repositorio.Obtener<ContactoComercial>(x => x.ProveedorId == oParam.ProveedorId && x.ContactoComercialId == oParam.contacto);
-                
+
                 oMensaje.Body = "CUIT: " + proveedor.CUIT + "\r\nRazón Social: " + proveedor.RazonSocial;
                 if (comercial != null)
                 {
@@ -355,7 +359,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oContrato.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try { emailComercial = mailManager.GetEmailUserActiveDirectory(oContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
                 var oMensaje = new MailMessage
@@ -384,9 +388,9 @@ namespace Molinos.DataAgro.Business.Managers
                     return;
                 }
                 var mailCreador = "";
-                    try { mailCreador = GetEmailUserActiveDirectory(oContrato.ComercialCreador.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                try { mailCreador = mailManager.GetEmailUserActiveDirectory(oContrato.ComercialCreador.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
 
-                if (!string.IsNullOrEmpty(mailCreador)&& mailCreador != emailComercial)
+                if (!string.IsNullOrEmpty(mailCreador) && mailCreador != emailComercial)
                 {
                     oMensaje.CC.Add(mailCreador);
                 }
@@ -396,12 +400,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var corredoresComerciales = mobComercial.ListarComercialesCorredor();
                     corredoresComerciales.Remove(oContrato.Comercial);
-                    logger.Debug("Enviando mail a " + string.Join(", ",corredoresComerciales));
+                    logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales));
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try
                         {
-                            emailComerciales = GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                            emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
                             oMensaje.To.Add(emailComerciales);
                         }
                         catch (Exception e) { logger.Error(e); }
@@ -468,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oFijacionDePrecioContrato.Comercial != null)
                 {
-                    try { emailComercial = GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
+                    try { emailComercial = mailManager.GetEmailUserActiveDirectory(oFijacionDePrecioContrato.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
                 }
 
                 var oMensaje = new MailMessage
@@ -507,7 +511,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
-                            emailComerciales = GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                            emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
                             oMensaje.To.Add(emailComerciales);
                         }
                         catch (Exception e) { logger.Error(e); }
@@ -521,9 +525,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    subject += "Mail Pruebas - Nueva fijación Molinos Agro S.A. –  " ;
+                    subject += "Mail Pruebas - Nueva fijación Molinos Agro S.A. –  ";
                 }
-                subject += oFijacionDePrecioContrato.Corredor!= null? oFijacionDePrecioContrato.Corredor.RazonSocial: oFijacionDePrecioContrato.Proveedor.RazonSocial;
+                subject += oFijacionDePrecioContrato.Corredor != null ? oFijacionDePrecioContrato.Corredor.RazonSocial : oFijacionDePrecioContrato.Proveedor.RazonSocial;
                 oMensaje.Subject = subject;
                 var tipoNegocio = repositorio.Obtener<TipoNegocio>(3);
 
@@ -584,7 +588,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea);
-            if(oContrato.ContratoAcuerdoId!= null)
+            if (oContrato.ContratoAcuerdoId != null)
             {
                 htmlBody += Split(oContrato.ContratoAcuerdo.Fecha.ToShortDateString()) + "</td></tr>";
             }
@@ -667,7 +671,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
-            if(oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
+            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
             {
                 htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
@@ -762,7 +766,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += " NEGOCIO COMPENSACIÓN " + "<br />";
             }
-            if ((oContrato.NivelTarifa!= null)&&oContrato.TarifaFlete>0)
+            if ((oContrato.NivelTarifa != null) && oContrato.TarifaFlete > 0)
             {
                 htmlBody += " NIVEL DE TARIFA: " + oContrato.NivelTarifa.Descripcion.ToUpper() + "<br />" +
                     "TARIFA DE FLETE: " + oContrato.TarifaFlete + "<br />";
@@ -810,11 +814,11 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Corredor.RazonSocial.ToUpper() + "</td></tr>";
                 htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oFijacionDePrecioContrato.Corredor.CUIT.ToString()) + "</td></tr>";
             }
-            
+
             htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
 
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
-            
+
             if (oFijacionDePrecioContrato.Pizarra.HasValue && oFijacionDePrecioContrato.Pizarra.Value)
             {
                 htmlBody += "Pizarra";
@@ -834,7 +838,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oFijacionDePrecioContrato.DiasPesificado.HasValue)
             {
-                htmlBody += "DÍAS DE DIFERIMIENTO: " + oFijacionDePrecioContrato.DiasPesificado.ToString()+ "<br /> ";
+                htmlBody += "DÍAS DE DIFERIMIENTO: " + oFijacionDePrecioContrato.DiasPesificado.ToString() + "<br /> ";
             }
             //var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
             //if ((oFijacionDePrecioContrato.AperturaPrecio.Count >0 || oFijacionDePrecioContrato.AperturaPrecio != null) && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
@@ -859,7 +863,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "CALIDAD ESPECIAL<br />";
                 }
-            }       
+            }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
@@ -913,40 +917,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return td2;
             }
         }
-        public string GetEmailUserActiveDirectory(string UserName)
-        {
-            DirectoryEntry entry = new DirectoryEntry();
-            string userName = UserName;
-
-            try
-            {
-                var userNameArray = UserName.Split('\\');
-                userName = userNameArray.Length == 1 ? userNameArray[0] : userNameArray[1];
-
-            }
-            catch { }
-
-
-            DirectorySearcher search = new DirectorySearcher(entry);
-            search.Filter = String.Format("(sAMAccountName={0})", userName);
-
-
-            search.PropertiesToLoad.Add("givenName");   // first name
-            search.PropertiesToLoad.Add("sn");          // last name
-            search.PropertiesToLoad.Add("mail");        // smtp mail address
-
-            // perform the search
-            SearchResult result = search.FindOne();
-            try
-            {
-                return result.Properties.Contains("mail") ? result.Properties["mail"][0].ToString() : result.Properties["userPrincipalName"][0].ToString();
-            }
-            catch
-            {
-                logger.Error($"No se encontró el mail en AD para el usuario {userName}");
-            }
-            return string.Empty;
-        }
+        
         public Resultado EliminarRecordatorio(int Id)
         {
             var oEntityErrors = new Resultado();
@@ -960,8 +931,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 segm = repositorio.Listar<Segmentacion, SegmentacionQry>(
                     x => new SegmentacionQry { SegmentacionId = x.SegmentacionId,
-                        Descripcion = x.Descripcion, Grupo = x.Grupo }, 
-                    x => !noFiltrarAdministrativo || x.Grupo == "Corredores"),
+                        Descripcion = x.Descripcion, Grupo = x.Grupo },
+                    x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
+                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Exportadores" && x.Grupo != "Canjeadores"),
                 tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
                     x => new TipoTelefonoQry { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
                 prov = repositorio.Listar<Provincia, ProvinciaQry>(
@@ -1071,14 +1043,14 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarProveedorResult();
-            oEntityErrors = ValidarProveedor(oParam, oEntityErrors,false);
+            oEntityErrors = ValidarProveedor(oParam, oEntityErrors, false);
             if (oEntityErrors.HayError)
             {
                 return oEntityErrors;
             }
             var proveedor = new Proveedor
             {
-                AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? 
+                AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ?
                     Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null,
                 AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust,
                 AlmacTonsMaxSojaSust = oParam.produccion.TonsMaxAprobSojaSust,
@@ -1114,7 +1086,7 @@ namespace Molinos.DataAgro.Business.Managers
                     foreach (var lista in list)
                     {
                         var comercialLista = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == lista.USUARIO);
-                        
+
                         if (comercialLista != null)
                         {
                             repositorio.Agregar(new ProveedorEstado
@@ -1331,6 +1303,13 @@ namespace Molinos.DataAgro.Business.Managers
                     });
                 }
             }
+
+            repositorio.Agregar(new LogProveedor()
+            {
+                Comercial = comercial,
+                Fecha = DateTime.Now,
+                Proveedor = proveedor
+            });
             try
             {
                 repositorio.GuardarCambios();
@@ -1376,6 +1355,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return resultado;
             }
+            var log = new LogProveedor { Fecha = DateTime.Now, ComercialId = comercialId, ProveedorId = oParam.ProveedorId.Value };
+            repositorio.Agregar(log);
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
 
             try
             {
@@ -1394,7 +1379,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private GrabarProveedorResult ValidarProveedor(NuevoProveedor oParam, GrabarProveedorResult oEntityErrors, bool paraCorredor)
         {
-            if (!paraCorredor )
+            if (!paraCorredor)
             {
                 if (repositorio.Existe<Proveedor>(x => x.CUIT == oParam.basicos.cuit && (x.SegmentacionId != 5 && x.SegmentacionId != 7)) && (oParam.basicos.segmentacion != 5 && oParam.basicos.segmentacion != 7))
                 {
@@ -1415,7 +1400,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (repositorio.Existe<FACACOP>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Error("FACACOP", "El CUIT " + oParam.basicos.cuit + " es Apocrifo" );
+                oEntityErrors.Error("FACACOP", "El CUIT " + oParam.basicos.cuit + " es Apocrifo");
                 return oEntityErrors;
             }
             return oEntityErrors;
@@ -1438,12 +1423,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var oProveedorSave = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
 
-                var clasificacion = oParam.basicos.ClasificacionCompraNet != null ? 
-                    oParam.basicos.ClasificacionCompraNet : 
-                    (oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any()) ? 1 : 
+                var clasificacion = oParam.basicos.ClasificacionCompraNet != null ?
+                    oParam.basicos.ClasificacionCompraNet :
+                    (oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any()) ? 1 :
                     (oParam.almacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento != null && oParam.almacenamiento.CamposAlmacenamiento.Any()) ? 2 :
                     oProveedorSave.ClasificacionCompraNetId;
-                oProveedorSave.AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ? 
+                oProveedorSave.AlmacHabilitadoSojaSust = oParam.produccion.habilitaoSojaSust != null && oParam.produccion.habilitaoSojaSust != "null" ?
                     Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)) : (bool?)null;
                 oProveedorSave.AlmacVolAnualTotal = oParam.produccion.volumenAnualTotalTns;
                 oProveedorSave.AlmacHectSojaSust = oParam.produccion.hasAprobSojaSust;
@@ -1456,7 +1441,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.Intermediario = oParam.contacto.intermediario;
                 oProveedorSave.LocalidadId = oParam.contacto.localidad;
                 oProveedorSave.ProvinciaId = oParam.contacto.provincia;
-                oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ? 
+                oProveedorSave.AreaInfluenciaId = oParam.contacto.areaDeInfluencia != null && oParam.contacto.areaDeInfluencia != "null" ?
                     Convert.ToInt32(oParam.contacto.areaDeInfluencia) : (int?)null;
                 oProveedorSave.ClasificacionCompraNetId = clasificacion;
                 oProveedorSave.BoletoCompraNetId = oParam.basicos.BoletoCompraNet;
@@ -1470,15 +1455,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
                 var oEstados = repositorio.Listar<Estado>();
                 if (ConfigurationManager.AppSettings["SinConexionSap"].ToString() != "1")
-                {                     
-                    var cuit = repositorio.Obtener<Proveedor, string>(x=>x.CUIT == oParam.basicos.cuit, x=>x.CUIT);
-                    List<string> comerciales = repositorio.Listar<Comercial,string>(y => y.IdActiveDirectory, y => equipo.Contains(y.ComercialId));
+                {
+                    var cuit = repositorio.Obtener<Proveedor, string>(x => x.CUIT == oParam.basicos.cuit, x => x.CUIT);
+                    List<string> comerciales = repositorio.Listar<Comercial, string>(y => y.IdActiveDirectory, y => equipo.Contains(y.ComercialId));
                     var listaDeCuit = new List<Datos>();
-                    foreach(var com in comerciales)
+                    foreach (var com in comerciales)
                     {
-                        listaDeCuit.Add(new Datos { CUIT= cuit, UsuarioDirectory = com});
+                        listaDeCuit.Add(new Datos { CUIT = cuit, UsuarioDirectory = com });
                     }
-                    
+
                     var list = oDatosProveedorAgent.ObtenerDatosDeProveedor(listaDeCuit);
 
                     if (list.Count > 0)
@@ -2405,7 +2390,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Cuit = x.Key.Cuit,
                 Filtro = x.Key.Filtro,
-                RazonSocial = resultado.FirstOrDefault(y=>y.Cuit== x.Key.Cuit).RazonSocial,
+                RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
             }).ToList();
             return resultado;
@@ -2637,7 +2622,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        
+
                         var nuevoProveedorParaCorredor = new Proveedor
                         {
                             CUIT = proveedor.basicos.cuit,
@@ -2656,7 +2641,7 @@ namespace Molinos.DataAgro.Business.Managers
                             EstadoId = 1,
                             FechaAlta = DateTime.Now
                         };
-                        var res= new GrabarProveedorResult();
+                        var res = new GrabarProveedorResult();
                         res = ValidarProveedor(proveedor, res, true);
                         if (res.HayError)
                         {
@@ -2668,7 +2653,7 @@ namespace Molinos.DataAgro.Business.Managers
                             sinError.Add(proveedor);
                         }
                         if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
-                        {                            
+                        {
                             var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
                             proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
                             proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
@@ -2684,7 +2669,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         }
                         else
-                        {                            
+                        {
                             var entidad = repositorio.Agregar(nuevoProveedorParaCorredor);
                             repositorio.GuardarCambios();
                             proveedor.ProveedorId = entidad.ProveedorId;
@@ -2759,7 +2744,39 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string TraerCuit(int id)
         {
-            return repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == id, x=>x.CUIT);
+            return repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == id, x => x.CUIT);
+        }
+        public GrabarProveedorResult GrabarRol(int id, List<Rol> roles)
+        {
+            var resultado = new GrabarProveedorResult();
+            var proveedor = repositorio.Obtener<Proveedor>(id);
+            var listaRoles = roles.Select(y => y.Id).ToList();
+            if (proveedor.RolesAsociados != null)
+            {
+                proveedor.RolesAsociados.Clear();
+            }
+            else
+            {
+                proveedor.RolesAsociados = new List<Rol>();
+            }
+            proveedor.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
+            try
+            {
+                repositorio.GuardarCambios();
+            } catch (Exception e)
+            {
+                resultado.Error("Roles", e.Message);
+            }
+            return resultado;
+        }
+
+        public List<RolBasicoDto> TraerRolesProveedor(int id)
+        {
+            var roles = repositorio.Obtener<Proveedor, ICollection<Rol>>(x => x.ProveedorId == id, x => x.RolesAsociados);
+            return roles.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList();
+        }
+        public bool ValidarDirecto(string cuit){
+            return !repositorio.Existe<CorredorProveedor>(x => x.Corredor.CUIT == cuit);
         }
     }
 }

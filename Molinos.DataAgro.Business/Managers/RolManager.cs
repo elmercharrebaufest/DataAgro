@@ -173,7 +173,8 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Listar<Rol, RolDto>(x => new RolDto()
             {
                 Id = x.Id,
-                Descripcion = x.Descripcion
+                Descripcion = x.Descripcion,
+                Disabled = false
             });
         }
     }

@@ -10,6 +10,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int Id { get; set; }
         public int MaterialId { get; set; }
+        public int CampanaId { get; set; }
+
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
         public string MonedaId { get; set; }
@@ -23,6 +25,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ComercialCreadorId { get; set; }
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }
+        [ForeignKey("CampanaId")]
+        public virtual Campaña Campana { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MonedaId")]

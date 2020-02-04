@@ -9,10 +9,10 @@ using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
-    public partial class ConfiguracionInternaManager : IConfiguracionInternaManager
+    public class ConfiguracionInternaManager : IConfiguracionInternaManager
     {
         private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private readonly ILogger logger;
         public ConfiguracionInternaManager(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
@@ -20,8 +20,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado GrabarPrecio(PrecioMoa oConfiguracion)
         {
-            var oEntityErrors = new Resultado();
-            oEntityErrors = ValidarPrecio(oConfiguracion);
+            var oEntityErrors = ValidarPrecio(oConfiguracion);
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -49,8 +48,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion)
         {
-            var oEntityErrors = new Resultado();
-            oEntityErrors = ValidarPizarra(oConfiguracion);
+            var oEntityErrors = ValidarPizarra(oConfiguracion);
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -80,8 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado GrabarFijacion(HabilitacionFijacion oConfiguracion)
         {
-            var oEntityErrors = new Resultado();
-            oEntityErrors = ValidarFijacion(oConfiguracion);
+            var oEntityErrors = ValidarFijacion(oConfiguracion);
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -262,9 +259,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Error("Vigencia", "La vigencia desde no puede ser mayor al hasta");
             }
-            if (repositorio.Existe<HabilitacionPizarra>(x=>x.Dia == pizarra.Dia && x.HastaVigencia > pizarra.DesdeVigencia))
+            if (repositorio.Existe<HabilitacionPizarra>(x=>x.Dia == pizarra.Dia && x.HastaVigencia > pizarra.DesdeVigencia&& x.MaterialId== pizarra.MaterialId))
             {
-                error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha");
+                error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha y material");
             }
             return error;
         }
@@ -300,17 +297,18 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.Moneda.Descripcion
             }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
             var hoy = DateTime.Today;
-            var existe = repositorio.Listar<HabilitacionFijacion>(x => x.Dia == hoy);
+            //var existe = repositorio.Listar<HabilitacionFijacion>(x => x.Dia == hoy);
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
             foreach (var mat in materiales)
-            {
+            {                
                 foreach (var mon in monedas)
                 {
                     var precio = preciosMoa.Where(x => x.MonedaId == mon.Descripcion && x.MaterialId == mat.MaterialId).FirstOrDefault();
                     if(precio == null)
                     {
-                        precio = new PrecioMoaCompraNetDto { MaterialId= mat.MaterialId,MonedaId=mon.Descripcion,Material=mat.Descripcion};
+                        precio = new PrecioMoaCompraNetDto { MaterialId= mat.MaterialId,MonedaId=mon.Descripcion,Material=mat.Descripcion, Retirado = true};                        
                     }
-                    precio.Retirado = !existe.Any(x => x.MaterialId == mat.MaterialId);
+                    precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId);
                     listaPrecio.Add(precio);
                 }
             }

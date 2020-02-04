@@ -117,6 +117,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarComprasDiarias = 408,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Cupos")]
         VisualizarReporteCupo = 409,
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Comercial")]
+        VisualizarReporteComercial = 410,
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Dinamico")]
+        VisualizarReporteDinamico = 411,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
@@ -151,6 +155,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionConstantes = 515,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Roles_Permisos")]
         ConfiguracionRolesPermisos = 516,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_Proveedores")]
+        AdministracionProveedores = 517,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
@@ -179,10 +185,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]
         ServicioAuth = 800,
-        [Display(ResourceType = typeof(Text), Name = "Prueba_Proveedor")]
-        PruebaProveedor = 801,
-        [Display(ResourceType = typeof(Text), Name = "Prueba_Corredor")]
-        PruebaCorredor = 802,
+        [Display(ResourceType = typeof(Text), Name = "Ingreso_Externo")]
+        IngresoExterno = 801,
+
         [Display(ResourceType = typeof(Text), Name = "Nuevo_Negocio_Externo")]
         NuevoNegocioExterno = 803,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Negocio_Externo")]

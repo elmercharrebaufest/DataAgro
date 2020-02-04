@@ -3,6 +3,7 @@ using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
@@ -26,6 +27,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IRiesgoComercialAgent> riesgoComercialAgentMock;
         private Mock<IDatosProveedorAgent> datosProveedorMock;
+        private Mock<IMailManager> mailManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -37,7 +39,8 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock = new Mock<IComercialManager>();
             riesgoComercialAgentMock = new Mock<IRiesgoComercialAgent>();
             datosProveedorMock = new Mock<IDatosProveedorAgent>();
-            target = new ProveedorManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object,riesgoComercialAgentMock.Object,datosProveedorMock.Object);
+            mailManagerMock = new Mock<IMailManager>();
+            target = new ProveedorManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object,riesgoComercialAgentMock.Object,datosProveedorMock.Object, mailManagerMock.Object);
         }
 
         [Test]
@@ -1750,6 +1753,56 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Once);
             Assert.NotNull(result);
             Assert.IsTrue(result);
+        }
+        [Test]
+        public void TraerCuitOkTest()
+        {
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()))
+                .Returns("a");
+
+            var result = target.TraerCuit(1);
+
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()), Times.Once);
+            Assert.NotNull(result);
+            Assert.AreEqual("a",result);
+        }
+        [Test]
+        public void GrabarRolOkTest()
+        {
+            repositorioMock.Setup(x => x.Obtener<Proveedor>(It.IsAny<int>()))
+                .Returns(new Proveedor());
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Rol,bool>>>(),It.IsAny<int>(),It.IsAny<string>(),It.IsAny<DirOrden>()))
+                .Returns(new List<Rol>() { new Rol() });
+
+            var result = target.GrabarRol(1, new List<Rol>());
+
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Rol, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+        }
+        [Test]
+        public void TraerRolesProveedorOkTest()
+        {
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, ICollection<Rol>>>>()))
+                .Returns(new List<Rol>() { new Rol() });
+
+            var result = target.TraerRolesProveedor(1);
+
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, ICollection<Rol>>>>()), Times.Once);
+            Assert.AreEqual(1, result.Count);
+        }
+        [Test]
+        public void ValidarDirectoOkTest()
+        {
+            repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>()))
+                .Returns(true);
+
+            var result = target.ValidarDirecto("a");
+
+            repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>()), Times.Once);
+            Assert.IsFalse(result);
         }
     }
 }

@@ -219,6 +219,14 @@ function crearGrilladetallePosicion(href) {
                 field: "Cuit",
                 title: "CUIT",
                 width: 120
+            },{
+                field: "RazonCorredor",
+                title: "Corredor",
+                width: 150
+            }, {
+                field: "CuitCorredor",
+                title: "CUIT Corredor",
+                width: 120
             }, {
                 field: "Material",
                 title: "Material",

@@ -66,7 +66,6 @@
         <div class="col-md-4 col-sm-5">
             <div>
                 <select id="tipoId" class="required-box" data-bind="source: TipoCombo, value: Parametros.tipoId, disabled: isControlDisabled" required="required"></select>
-                <img id="errtipoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
 
@@ -76,7 +75,6 @@
             </div>
             <div class="col-md-4 col-sm-4">
                 <select id="destinoId" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled"></select>
-                <img id="errDestinoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         @*<div id="tipoFasonDiv" class="fason" hidden>
@@ -171,7 +169,6 @@
         <div class="col-sm-5 col-md-4">
             <div>
                 <select id="material" class="required-box" data-bind="source: MaterialCombo, value: Parametros.material, disabled: isControlDisabled"></select>
-                <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
 
@@ -181,7 +178,6 @@
             </div>
             <div class="col-sm-4">
                 <select id="campanaId" data-bind="source: CampanaCombo, value: Parametros.campanaId, disabled: isControlDisabled"></select>
-                <img id="errcampanaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
 
@@ -201,7 +197,6 @@
         </div>
         <div class="col-sm-10 col-md-4">
             <input type="number" class="k-textbox" style="width:100%" id="contratoId" />
-            <img id="contratoId" src="~/Content/Images/error.png" style="display:none" />
             <input type="checkbox" id="trigoEspecialFijacion" hidden />
         </div>
         <div class="col-sm-6" id="datosContrato" hidden>
@@ -242,26 +237,24 @@
         </div>
         <div class="col-sm-5 col-md-4 required-box-parent">
             <input id="cantidadId" class="required-box" style="width:100%" />
-            <img id="errcantidadId" src="~/Content/Images/error.png" style="display:none" />
         </div>
 
         @*<div id="CantidadCamionesDiv" class="noFason noAgente noAcuerdo" hidden>
-            <div class="col-sm-1">
-                    <label>Camiones</label>
-                </div>
-                <div class="col-sm-4">
-                    <input id="cantidadCamionesId" style="width:100%" />
-                    <input type="checkbox" id="cargarCantidadCamiones" style="position:absolute; right:20px;top:6px">
-                    <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-        </div>*@
+                <div class="col-sm-1">
+                        <label>Camiones</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="cantidadCamionesId" style="width:100%" />
+                        <input type="checkbox" id="cargarCantidadCamiones" style="position:absolute; right:20px;top:6px">
+                        <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+            </div>*@
         <div id="posicionFasonDiv" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
             </div>
             <div class="col-sm-4">
                 <input id="posicionFasonId" class="k-input contratoinput" type="text" data-bind="value: Parametros.Posicion" />
-                <img id="errPosicionFasonId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
     </div>
@@ -273,13 +266,10 @@
         <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
             <div class="col-xs-8 col-md-8 noPadding">
                 <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-xs-4 col-md-4 text-right" style="padding-right: 0;">
                 <div id="ocultarAperturaMoneda" class="w100">
                     <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
-                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-
                 </div>
                 @*<div class="w30" id="ocultarAperturaBtn">
                         <span style="display:inline-block" id="botonAperturaDePrecio">
@@ -306,7 +296,6 @@
             <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion">
                 <label style="width:100px">Pago diferido</label>
                 <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
-                <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
                 <div id="diasDiferidoFijacionDiv" class="pagoFijacion" hidden>
                     <input id="diasDiferidoFijacionId" placeholder="Días" />
                 </div>
@@ -392,13 +381,11 @@
             <div class="col-sm-5 col-md-2">
                 <span id="fechaDesdeDiv" class="fason acuerdo">
                     <input id="fechaDesdeId" type="date" data-bind="value: Parametros.fechaDesdeId" style="width:100%" />
-                    <img id="errfechaDesdeId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
             <div class="col-sm-5 col-md-2">
                 <span id="fechaHastaDiv" class="fason acuerdo">
                     <input id="fechaHastaId" type="date" data-bind="value: Parametros.fechaHastaId" style="width:100%" />
-                    <img id="errfechaHastaId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
         </div>
@@ -410,6 +397,14 @@
                 </div>
             </div>*@
     </div>
+    <div class="row">
+        <div class="col-sm-2 ">
+            <label>Observaci&oacute;n</label>
+        </div>
+        <div id="observacionDiv" class="col-sm-4">
+            <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>
+        </div>
+    </div>
     @*<div id="ComercialDiv" class="row fason acuerdo" hidden>
             <div class="col-sm-2">
                 <label>Comercial</label>
@@ -420,13 +415,7 @@
             </div>
         </div>*@
     @*<div class="row ampliar noFason noAgente noAcuerdo">
-                    <div class="col-sm-2 ">
-                        <label>Observaci&oacute;n</label>
-                    </div>
-                    <div id="observacionDiv" class="col-sm-10 col-md-9">
-                        <textarea type="text" class="campo-input-text k-textbox" id="observacionId" rows="3" maxlength="100"></textarea>
-                        <img id="errobservacionId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
+
                     <div id="operacionDiv" style="display:none">
                         <div>
                             <input id="fechaOperacionId" placeholder="0" type="date" data-bind="value: Parametros.fechaOperacionId" hidden />

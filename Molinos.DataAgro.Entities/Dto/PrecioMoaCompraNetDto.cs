@@ -11,5 +11,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public string Material { get; set; }
         public bool Retirado { get; set; }
+        public bool Pizarra { get; set; }
     }
 }

@@ -519,8 +519,9 @@ function InicializarElementos() {
             } else if (this.value() == 5) {
                
                 $(".noAgente").hide();
-                $(".agente").show();
                 $("#boton-ampliar").hide();
+                $("#campanaDiv").show();
+                $(".agente").show();
                 RemoverFondosGrises();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Agente");
@@ -611,6 +612,7 @@ function InicializarElementos() {
                 }
                 CalcularPrecioTotalApertura();
             }
+            CalidadAcuerdoTrigo()
             ClickEnPizarra();
         }
     });
@@ -656,17 +658,36 @@ function InicializarElementos() {
                     viewModel.Calidades.pop();
                 }
             }
+            if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2")) {
+                $(".sojaSustentable").show();
+            } else {
+                $(".sojaSustentable").hide();
+                $(".sustentableDiv").hide();
+                $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
+                $("#sustentableId").prop('checked', false);
+            }
             if ($("#material").val() === "2" && $("#tipoId").val() === "4") {
                 $("#fasonEspecial").show();
             } else {
                 $("#fasonEspecial").hide();
             }
+            CalidadAcuerdoTrigo();
             $("#contratoId").val("");
             $("#datosContrato").hide();
 
         }
     });
-
+    function CalidadAcuerdoTrigo() {
+        if ($("#material").val() === "2" && $("#tipoId").val() === "6") {
+            $(".datos-calidades").show();
+            $(".calidades-acuerdo").show();
+            $("#calidadesDiv").removeClass("col-md-3 col-md-offset-2").addClass("col-md-4");
+        } else {
+            $(".datos-calidades").hide();
+            $(".calidades-acuerdo").hide();
+            $("#calidadesDiv").removeClass("col-md-4").addClass("col-md-3 col-md-offset-2");
+        }
+    }
     $("#material").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             var dropdownlist = $("#material").data("kendoDropDownList");
@@ -1549,7 +1570,7 @@ function CambioCalidades(calidades) {
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Bonif. SECO de 7% a 10% Por punto"
         && $("#calidadesEspecialesId").val() !== "") {
         $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ) {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ) {
             $(".calidad-no-grado").hide();
             LimpiarCalidades();
         } else {
@@ -2722,7 +2743,7 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    if (contrato.Calidades !== null) {
+    if (contrato.Calidades !== null && contrato.Calidades.length>0) {
         var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
         $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
         CambioCalidades(contrato.Calidades);

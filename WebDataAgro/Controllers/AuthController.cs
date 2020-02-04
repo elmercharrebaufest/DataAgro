@@ -12,10 +12,12 @@ namespace WebDataAgro.Controllers
     public class AuthController : Controller
     {
         private readonly ITokenManager tokenManager;
+        private readonly IUsuarioManager usuarioManager;
 
-        public AuthController(ITokenManager tokenManager)
+        public AuthController(ITokenManager tokenManager, IUsuarioManager usuarioManager)
         {
             this.tokenManager = tokenManager;
+            this.usuarioManager = usuarioManager;
         }
         
         public ActionResult Index(string t)
@@ -39,8 +41,11 @@ namespace WebDataAgro.Controllers
                     HttpContext.User = transformedPrincipal;
                     Thread.CurrentPrincipal = transformedPrincipal;
                 }
-
-                if(PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
+                if (!usuarioManager.AceptoTerminosYCondiciones(token.NombreUsuario, token.Cuit.ToString()))
+                {
+                    return RedirectToAction("Index", "TerminosYCondiciones");
+                }
+                else if(PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
                 {
                     return RedirectToAction("Index", "CompraNet");
                 }
