@@ -54,6 +54,11 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (d.Cantidad > 0)
                         {
+                            if (d.Fecha<DateTime.Today)
+                            {
+                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() +": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
+                                continue;
+                            }
                             cupo.FechaIngreso = d.Fecha;
                             var listaCupos = new List<string>();
                             var errorSap = new Resultado();
@@ -164,7 +169,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacío cuando elige Fasón/Préstamo Devolución"));
             }
-            if (cupo.FechaIngreso.Date < DateTime.Today)
+            if (cupo.FechaIngreso.Date < DateTime.Today && fechaHasta.HasValue && fechaHasta < DateTime.Today)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha de Ingreso no debe ser una fecha menor al día de hoy"));
             }
