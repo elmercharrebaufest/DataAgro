@@ -59,7 +59,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 CentroId = 1,
                 ZonaCupoId = 1,
-                FechaIngreso = new DateTime(2019,11,19)
+                FechaIngreso = new DateTime(2099,11,19)
             };
             
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
@@ -77,9 +77,9 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<string>() { "a" });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
             var result = target.GrabarCupo(cupo, new List<DiaCupo>() {
-                new DiaCupo { Cantidad=1, Fecha = new DateTime(2019,11,10)},
-                new DiaCupo { Fecha= new DateTime(2019,11,10),Cantidad=0},
-            new DiaCupo { Fecha= new DateTime(2019,11,10),Cantidad=1}});
+                new DiaCupo { Cantidad=1, Fecha = new DateTime(2099,11,10)},
+                new DiaCupo { Fecha= new DateTime(2099,11,10),Cantidad=0},
+            new DiaCupo { Fecha= new DateTime(2099,11,10),Cantidad=1}});
            
             repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Material>(It.IsAny<int>()), Times.Once);
@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Test.Managers
             
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(4, result.Errores.Count);
+            Assert.AreEqual(6, result.Errores.Count);
         }
         [Test]
         public void TraerCuposTablaTestOk()
