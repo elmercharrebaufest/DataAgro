@@ -164,7 +164,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "CUIT Destinatario no debe estar vacío cuando elige Fasón/Préstamo Devolución"));
             }
-            if(cupo.Id == 0 && fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
+            if (cupo.FechaIngreso.Date < DateTime.Today)
+            {
+                error.Errores.Add(new ErrorMessage(400, "La Fecha de Ingreso no debe ser una fecha menor al día de hoy"));
+            }
+            if (cupo.Id == 0 && fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
