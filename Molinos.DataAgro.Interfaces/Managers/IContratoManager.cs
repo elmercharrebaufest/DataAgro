@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
 
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
-        List<CalidadDto> TraerCalidadesPorContrato(int contratoId);
+        List<CalidadDto> TraerCalidadesPorContrato(int contratoId,int acuerdoId);
         BasicoContrato TraerContrato(int contratoId);
 
         void EnviarMailPendiente();

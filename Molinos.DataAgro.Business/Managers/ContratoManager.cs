@@ -1037,8 +1037,10 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.ContratoId == contratoId);
         }
-        public List<CalidadDto> TraerCalidadesPorContrato(int contratoId)
+        public List<CalidadDto> TraerCalidadesPorContrato(int contratoId, int acuerdoId)
         {
+            var c = contratoId == 0 ? (int?)null : contratoId;
+            var a = acuerdoId == 0 ? (int?)null : acuerdoId;
             return repositorio.Listar<Calidad, CalidadDto>(cal => new CalidadDto()
             {
                 ContratoId = cal.ContratoId.Value,
@@ -1049,7 +1051,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PorcentajeDesde = cal.PorcentajeDesde,
                 PorcentajeHasta = cal.PorcentajeHasta,                
             },
-            x => x.ContratoId == contratoId);
+            x => x.ContratoId == c && x.AcuerdoId == a);
         }
         public BasicoContrato TraerContrato(int contratoId)
         {
@@ -1121,17 +1123,50 @@ namespace Molinos.DataAgro.Business.Managers
                 Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-                PagoDiferido= x.PagoDiferido,
+                PagoDiferido = x.PagoDiferido,
                 ZonaId = x.ZonaId,
                 ZonaDescripcion = x.Zona.Descripcion,
-                Compensacion=x.Compensacion,
+                Compensacion = x.Compensacion,
                 NivelTarifaId = x.NivelTarifaId,
-                TarifaFlete = x.TarifaFlete
-                
+                TarifaFlete = x.TarifaFlete,
+                Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Id = y.Id,
+                    Porcentaje= y.Porcentaje,
+                    TipoDBDesc=y.TipoDB.Descripcion,
+                    TipoDBId= y.TipoDBId,
+                    TipoPeriodoDBDesc= y.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId= y.TipoPeriodoDBId
+                }).ToList(),
+                Calidades = x.Calidad.Select(y=> new CalidadDto
+                {
+                    Id=y.Id,
+                    CalidadEspecialDesc= y.CalidadEspecial.Descripcion,
+                    CalidadEspecialId= y.CalidadEspecialId,
+                    PorcentajeDesde=y.PorcentajeDesde,
+                    PorcentajeHasta= y.PorcentajeHasta,
+                    Valor= y.Valor,
+                }).ToList(),
+                AperturaPrecios = x.AperturaPrecio.Select(y=> new AperturaPrecioDto 
+                {
+                    contratoId = y.ContratoId,
+                    Id = y.Id,
+                    ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
+                    ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Porcentaje = y.Porcentaje
+                }).ToList()
             });
-            contrato.Descuentos = TraerDescuentosPorContrato(contratoId);
-            contrato.Calidades = TraerCalidadesPorContrato(contratoId);
-            contrato.AperturaPrecios = TraerAperturaDePrecioPorContrato(contratoId);
             return contrato;
         }
 
@@ -1584,7 +1619,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Madre = null,
                 ContratoMadre = null,
                 Calidades = x.Calidad.Select(y=>new CalidadDto {Valor= y.Valor, CalidadEspecialId=y.CalidadEspecialId,CalidadEspecialDesc= y.CalidadEspecial.Descripcion,PorcentajeDesde=y.PorcentajeDesde,
-                PorcentajeHasta=y.PorcentajeHasta}).ToList()
+                PorcentajeHasta=y.PorcentajeHasta}).ToList(),
+                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
             if(contrato.Fecha < dia)

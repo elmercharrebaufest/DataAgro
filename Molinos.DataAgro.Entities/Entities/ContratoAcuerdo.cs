@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string MonedaId { get; set; }
         public int? CorredorId { get; set; }
         public int EstadoId { get; set; }
-
+        public int? StandardDeCalidadId { get; set; }
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
         [ForeignKey("DestinoId")]
@@ -39,6 +39,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Moneda Moneda { get; set; }
         [ForeignKey("CorredorId")]
         public virtual Proveedor Corredor { get; set; }
+        [ForeignKey("StandardDeCalidadId")]
+        public virtual StandardDeCalidad StandardDeCalidad { get; set; }
         [InverseProperty("Acuerdo")]
         public virtual ICollection<Calidad> Calidad { get; set; }
 

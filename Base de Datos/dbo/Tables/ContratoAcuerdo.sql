@@ -13,7 +13,7 @@
 	[EstadoId] INT NOT NULL,
 	[MonedaId] CHAR(5) NOT NULL,
 	[CorredorId] INT NULL,
-
+    [StandardDeCalidadId] INT NULL,
     CONSTRAINT [FK_ContratoAcuerdo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
 	CONSTRAINT [FK_ContratoAcuerdo_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
 	CONSTRAINT [FK_ContratoAcuerdo_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro]([Id]),
@@ -21,5 +21,6 @@
     CONSTRAINT [PK_ContratoAcuerdo] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_ContratoAcuerdo_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
 	CONSTRAINT [FK_ContratoAcuerdo_Moneda] FOREIGN KEY (MonedaId) REFERENCES [Moneda]([MonedaId]),
-	CONSTRAINT [FK_ContratoAcuerdo_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId])
+	CONSTRAINT [FK_ContratoAcuerdo_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
+	CONSTRAINT [FK_ContratoAcuerdo_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad]([Id]),
 )

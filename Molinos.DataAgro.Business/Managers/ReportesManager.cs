@@ -773,7 +773,7 @@ namespace Molinos.DataAgro.Business.Managers
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                && (x.EstadoId == 2 || x.EstadoId == 5)
                && x.MaterialId == materialId
-               && (calidad == null || (calidad.Value!= 7 && calidad.Value != 2))
+               && (calidad == null || (calidad != null && x.StandardDeCalidadId == standard))
                && (centroId == 0 || x.DestinoId == centroId));
 
             foreach (var cont in acuerdos)
@@ -926,7 +926,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = x.Consignatario == true ? "X" : "",
                 PlanCanje = x.PlanCanje == true ? "X" : "",
                 Pago = x.PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : x.Warrant == true ? "Warrant" : "",
-                CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
+                CalidadEspecial = x.StandardDeCalidad.Descripcion!= "Fabrica" || x.StandardDeCalidad.Descripcion != "Camara" ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
@@ -1096,14 +1096,14 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = "",
                 PlanCanje = "",
                 Pago = "",
-                CalidadEspecial = "",
+                CalidadEspecial = x.StandardDeCalidadId==2|| x.StandardDeCalidadId == 7? "X":"",
                 EstablecimientoPropio = "",
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString()
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && x.MaterialId == materialId
-             && (!calidad.HasValue || calidad.Value == 3)
+             && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId));
             foreach (var i in acuerdos)
             {

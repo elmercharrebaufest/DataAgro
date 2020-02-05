@@ -1568,9 +1568,12 @@ function CambioCalidades(calidades) {
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara"
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica"
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Bonif. SECO de 7% a 10% Por punto"
+        && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Grado 2"
         && $("#calidadesEspecialesId").val() !== "") {
         $(".calidadesEspecialesDatos").show();
-        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ) {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
             $(".calidad-no-grado").hide();
             LimpiarCalidades();
         } else {
@@ -1586,13 +1589,13 @@ function CambioCalidades(calidades) {
     } else {        
         if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(2);           
-            }else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2") {
-                $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
-                $(".calidadesEspecialesDatos").hide();
-                $(".calidad-no-grado").hide();
-            } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
-                $("#valorEspecialesId").data("kendoNumericTextBox").value("");
-                $(".calidad-no-grado").hide();            
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2") {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value(2);
+            $(".calidadesEspecialesDatos").hide();
+            $(".calidad-no-grado").hide();
+        } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
+            $("#valorEspecialesId").data("kendoNumericTextBox").value("");
+            $(".calidad-no-grado").hide();
         }
         else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Bonif. SECO de 7% a 10% Por punto") {
             $("#valorEspecialesId").data("kendoNumericTextBox").value(1);
@@ -2198,7 +2201,7 @@ function ObtenerDatos() {
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
         if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
         else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
-        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 3;
+        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 1;
     } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
         obj.StandardDeCalidadId = 3;
     } else if (viewModel.Calidades.length > 0) {
@@ -2743,9 +2746,9 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    if (contrato.Calidades !== null && contrato.Calidades.length>0) {
+    if (contrato.Calidades !== null) {
         var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
-        $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+        if (descripcion!= null)$("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
         CambioCalidades(contrato.Calidades);
         $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);
     }

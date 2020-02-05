@@ -107,7 +107,11 @@ namespace Molinos.DataAgro.Business
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
-
+            if(oContratoAcuerdo.MaterialId != 2)
+            {
+                oContratoAcuerdo.Calidad = null;
+                oContratoAcuerdo.StandardDeCalidadId = null;
+            }
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
@@ -129,6 +133,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.ProveedorId = oContratoAcuerdo.ProveedorId;
                 objContratoAcuerdo.CorredorId = oContratoAcuerdo.CorredorId;
                 objContratoAcuerdo.MonedaId = oContratoAcuerdo.MonedaId;
+                objContratoAcuerdo.StandardDeCalidadId = oContratoAcuerdo.StandardDeCalidadId;
                 if (objContratoAcuerdo.Calidad != null)
                 {
                     foreach (var cal in objContratoAcuerdo.Calidad.ToList())
@@ -199,6 +204,8 @@ namespace Molinos.DataAgro.Business
                 Estado = x.EstadoId,
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion,
+                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 Calidades = x.Calidad.Select(y=>new CalidadDto {Valor= y.Valor, CalidadEspecialId = y.CalidadEspecialId, CalidadEspecialDesc=y.CalidadEspecial.Descripcion }).ToList()
             });
             return contrato;            

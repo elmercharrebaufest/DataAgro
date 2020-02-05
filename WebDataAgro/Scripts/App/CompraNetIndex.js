@@ -1661,7 +1661,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.CalidadesVisualizar.pop();
     }
 
-    var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato });
+    var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
 
     $("#visualizar_calidad").text(standardDeCalidadDescripcion);
 
@@ -1678,7 +1678,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
-    if (standardDeCalidadDescripcion == "Grado 2" || standardDeCalidadDescripcion == "Bonif. SECO de 7% a 10% Por punto") $("#calidadesDivVisualizar").hide();
+    if (standardDeCalidadDescripcion == "null") $("#tipoCalidadDiv").hide();
+    if (standardDeCalidadDescripcion == "Grado 2" || standardDeCalidadDescripcion == "Bonif. SECO de 7% a 10% Por punto" ) $("#calidadesDivVisualizar").hide();
 
     if (zona !== "undefined" && zona !=="") {
         $("#visualizar-zona-girasol").text(zona);
