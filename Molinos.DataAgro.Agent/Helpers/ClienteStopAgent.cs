@@ -64,8 +64,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                 HttpResponseMessage response = client.PostAsJsonAsync(
                     $"v1.1.0/auths/{clave}", new { }).Result;
                 response.EnsureSuccessStatusCode();
+                var res = response.Content.ReadAsAsync<dynamic>().Result;
+                var jObject = JObject.Parse(res.ToString());
 
-                return response.Content.ReadAsAsync<TokenStop>().Result;
+                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                if (!respuesta.isError)
+                {
+                    return response.Content.ReadAsAsync<TokenStop>().Result;
+                }
+                else
+                {
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                    logger.Debug(error.ToJson());
+                    throw new Exception(error.userMessage);
+                }
             }
             catch (Exception e)
             {
