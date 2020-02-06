@@ -70,11 +70,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
                 if (!respuesta.isError)
                 {
-                    return response.Content.ReadAsAsync<TokenStop>().Result;
+                    TokenStop r = JsonConvert.DeserializeObject<TokenStop>(jObject.ToString());
+                    return r;
                 }
                 else
                 {
-                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject.ToString());
                     logger.Debug(error.ToJson());
                     throw new Exception(error.userMessage);
                 }

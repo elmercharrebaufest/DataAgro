@@ -205,6 +205,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar<Formula>(It.IsAny<Expression<Func<Formula, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                     .Returns(new List<Formula>() { new Formula { Id = 5, CantDias = 3, Inicio = 5 }, new Formula { Id = 1, CantDias = 10, Inicio = 11 } });
 
+            repositorioMock.Setup(y => y.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
+                  .Returns(new Formula { Id = 5, CantDias = 3, Inicio = 5 } );
 
             var nuevosDias = new FormulaIni { CantDias = 7, Inicio = 7 };
 

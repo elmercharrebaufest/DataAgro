@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock = new Mock<IMailManager>();
             servicioCriterioMock = new Mock<IServicioCriterios>();
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
-                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgent.Object, proveedorManagerMock.Object,
+                eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
@@ -67,7 +67,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 CentroId = 1,
                 ZonaCupoId = 1,
-                FechaIngreso = new DateTime(2099,11,19)
+                FechaIngreso = new DateTime(2099, 11, 19)
             };
 
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Contar(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(0);
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1="b@b.com"} });
+                .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "b@b.com" } });
             mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("a@a.com");
             crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>()))
                 .Returns(new List<string>() { "a" });
@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Test.Managers
                 new DiaCupo { Cantidad=1, Fecha = new DateTime(2099,11,10)},
                 new DiaCupo { Fecha= new DateTime(2099,11,10),Cantidad=0},
             new DiaCupo { Fecha= new DateTime(2099,11,10),Cantidad=1}});
-           
+
             repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Material>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Centro>(It.IsAny<int>()), Times.Once);
@@ -172,7 +172,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns("a");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA());
-            var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1,FechaIngreso = new DateTime(2019,12,30) }, 0, new DateTime(2019, 12, 1));
+            var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1, FechaIngreso = new DateTime(2019, 12, 30) }, 0, new DateTime(2019, 12, 1));
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()), Times.Once);
@@ -502,7 +502,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Formula>(It.IsAny<int>()))
            .Returns(formula);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-            .Returns(new List<PrecioPizarra>(){ new PrecioPizarra { Id = 1, FechaDesde = DateTime.Now.Date, FechaHasta = DateTime.Now.Date.AddDays(1), MaterialId = 1, MonedaId = "ARP  ", PizarraId = 1, Precio = 600, UnidadMedida = "Tons" } });
+            .Returns(new List<PrecioPizarra>() { new PrecioPizarra { Id = 1, FechaDesde = DateTime.Now.Date, FechaHasta = DateTime.Now.Date.AddDays(1), MaterialId = 1, MonedaId = "ARP  ", PizarraId = 1, Precio = 600, UnidadMedida = "Tons" } });
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
            .Returns(new Proveedor { ProveedorId = 1 });
             repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>()))
@@ -512,7 +512,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<ZonaCupo>() { new ZonaCupo { Id = 1, Descripcion = "" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<LimiteCupo, bool>>>())).Returns(new LimiteCupo { ConfiguracionCupoId = 1, ZonaCupoId = 1, CantidadCupo = 1 });
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, SugerenciaCupoDto>>>(),It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, SugerenciaCupoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<SugerenciaCupoDto>() {new SugerenciaCupoDto
                 {
                     StandardDeCalidad =  "",
@@ -555,12 +555,12 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.CrearSugerenciaCupo();
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-           
+
             repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.First().ContratoId == 1 && y.First().CantidadDeCupos == 2), null), Times.Once);
             repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.Last().ConfiguracionEspacioDinamicoId == 1 && y.Last().CantidadDeCupos == 7), null), Times.Once);
 
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SugerenciaCupo>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);
-            
+
         }
     }
 }
