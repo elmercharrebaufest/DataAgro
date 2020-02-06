@@ -1748,7 +1748,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_tarifaFlete").text(tarifaFlete);
         $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
     }                       
-    compensacion ? $("#compensacionVisualizar").show() : $("#compensacionVisualizar").hide();
+    compensacion!="null" ? $("#compensacionVisualizar").show() : $("#compensacionVisualizar").hide();
     if (rechazo != "null") {
         $(".rechazo").show();
         $("#visualizar_rechazo").text(rechazo);
