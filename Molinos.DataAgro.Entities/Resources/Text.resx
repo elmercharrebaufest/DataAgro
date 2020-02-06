@@ -120,6 +120,12 @@
   <data name="Administracion_Cupos" xml:space="preserve">
     <value>Administración Cupos</value>
   </data>
+  <data name="Administracion_Formula" xml:space="preserve">
+    <value>Administración Fórmula</value>
+  </data>
+  <data name="Administracion_EspacioDinamico" xml:space="preserve">
+    <value>Administración de Espacio Dinámico</value>
+  </data>
   <data name="Agenda_Comercial" xml:space="preserve">
     <value>Visualizar Agenda Comercial</value>
   </data>
@@ -294,11 +300,17 @@
   <data name="DiasPesificado" xml:space="preserve">
     <value>Días Pesificado</value>
   </data>
+  <data name="Error_CantidadCupoRequerido" xml:space="preserve">
+    <value>Debe agregar cantidad de Cupos</value>
+  </data>
   <data name="Error_CentroRequerido" xml:space="preserve">
     <value>El Centro no debe estar vacío</value>
   </data>
   <data name="Error_ClaveStop" xml:space="preserve">
     <value>La clave no debe estar vacía</value>
+  </data>
+  <data name="Error_ComercialRequerido" xml:space="preserve">
+    <value>El Comercial no debe estar vacio</value>
   </data>
   <data name="Error_Dias" xml:space="preserve">
     <value>El campo cantidad de días no debe estar vacío</value>
@@ -557,6 +569,9 @@
   </data>
   <data name="Visualizar_Reporte_Proveedor" xml:space="preserve">
     <value>Visualizar Reporte Proveedor</value>
+  </data>
+  <data name="Visualizar_SugerenciaDeCupos" xml:space="preserve">
+    <value>Sugerencia de Cupos</value>
   </data>
   <data name="Servicio_Auth" xml:space="preserve">
     <value>Servicio Auth</value>

@@ -271,6 +271,10 @@
     <Build Include="dbo\Tables\HabilitacionPizarra.sql" />
     <Build Include="dbo\Tables\PrecioMoa.sql" />
     <Build Include="dbo\Tables\HabilitacionFijacion.sql" />
+    <Build Include="dbo\Tables\SugerenciaCupo.sql" />
+    <Build Include="dbo\Tables\Criterio.sql" />
+    <Build Include="dbo\Tables\Formula.sql" />
+    <Build Include="dbo\Tables\ConfiguracionEspacioDinamico.sql" />
     <Build Include="dbo\Tables\TokenAuth.sql" />
     <Build Include="dbo\Tables\ProveedorRol.sql" />
     <Build Include="dbo\Tables\UsuarioExterno.sql" />

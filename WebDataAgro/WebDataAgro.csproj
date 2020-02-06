@@ -17,7 +17,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -205,10 +205,12 @@
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
+    <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
     <Compile Include="Controllers\TerminosYCondicionesController.cs" />
+    <Compile Include="Controllers\FormulaController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
     <Compile Include="Controllers\CupoController.cs" />
     <Compile Include="Controllers\ContratoAcuerdoController.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Controllers\RolController.cs" />
     <Compile Include="Controllers\SincronizarMaestrosController.cs" />
     <Compile Include="Controllers\TareaProgramadaController.cs" />
+    <Compile Include="Controllers\SugerenciaCupoController.cs" />
     <Compile Include="Controllers\TareasProgramadasController.cs" />
     <Compile Include="Controllers\ZonaController.cs" />
     <Compile Include="Controllers\ZonaCupoController.cs" />
@@ -265,10 +268,12 @@
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
     <Compile Include="Models\AgenteCompraModel.cs" />
+    <Compile Include="Models\ConfiguracionEspacioDinamicoModel.cs" />
     <Compile Include="Models\ConfiguracionInternaModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
     <Compile Include="Models\CupoModel.cs" />
     <Compile Include="Models\ConfiguracionModel.cs" />
+    <Compile Include="Models\FormulaModel.cs" />
     <Compile Include="Models\NotificacionModel.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\OperadorModel.cs" />
@@ -950,8 +955,11 @@
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
+    <Content Include="Scripts\App\AbmFormula.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
+    <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
+    <Content Include="Scripts\App\SugerenciaCupo.js" />
     <Content Include="Scripts\App\AbmRol.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
     <Content Include="Scripts\App\AbmRangoPrecio.js" />
@@ -2529,6 +2537,10 @@
     <Content Include="Views\ConfiguracionInterna\_ListaPrecio.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_ListaPizarra.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_ListaFijacion.cshtml" />
+    <Content Include="Views\SugerenciaCupo\Index.cshtml" />
+    <Content Include="Views\ConfiguracionEspacioDinamico\_ListaConfiguracionEspacioDinamico.cshtml" />
+    <Content Include="Views\ConfiguracionEspacioDinamico\Index.cshtml" />
+    <Content Include="Views\Formula\Index.cshtml" />
     <Content Include="Views\CompraNet\_ModalAprobar.cshtml" />
     <Content Include="Views\AdministracionProveedor\Index.cshtml" />
     <Content Include="Views\TerminosYCondiciones\Index.cshtml" />
@@ -2624,9 +2636,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52498</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost/WebDataAgro</IISAppRootUrl>
+          <IISUrl>http://localhost:52498/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

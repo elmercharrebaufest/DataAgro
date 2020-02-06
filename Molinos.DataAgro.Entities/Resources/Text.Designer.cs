@@ -70,6 +70,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Administración Fórmula.
+        /// </summary>
+        public static string Administracion_Formula {
+            get {
+                return ResourceManager.GetString("Administracion_Formula", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administración de Espacio Dinámico.
+        /// </summary>
+        public static string Administracion_EspacioDinamico {
+            get {
+                return ResourceManager.GetString("Administracion_EspacioDinamico", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configurar Administración Proveedores.
         /// </summary>
         public static string Administracion_Proveedores {
@@ -610,6 +628,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debe agregar cantidad de Cupos.
+        /// </summary>
+        public static string Error_CantidadCupoRequerido {
+            get {
+                return ResourceManager.GetString("Error_CantidadCupoRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El Centro no debe estar vacío.
         /// </summary>
         public static string Error_CentroRequerido {
@@ -624,6 +651,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Error_ClaveStop {
             get {
                 return ResourceManager.GetString("Error_ClaveStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El Comercial no debe estar vacio.
+        /// </summary>
+        public static string Error_ComercialRequerido {
+            get {
+                return ResourceManager.GetString("Error_ComercialRequerido", resourceCulture);
             }
         }
         
@@ -1452,6 +1488,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Visualizar_Reporte_Proveedor {
             get {
                 return ResourceManager.GetString("Visualizar_Reporte_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sugerencia de Cupos.
+        /// </summary>
+        public static string Visualizar_SugerenciaDeCupos {
+            get {
+                return ResourceManager.GetString("Visualizar_SugerenciaDeCupos", resourceCulture);
             }
         }
     }

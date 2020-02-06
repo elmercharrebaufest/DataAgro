@@ -102,8 +102,10 @@
     <Compile Include="ConsultasEF\ConsultaActividadHistoriaTraerPorProveedorId.cs" />
     <Compile Include="ConsultasEF\DevolverContratos.cs" />
     <Compile Include="ConsultasEF\DevolverProveedoresConCorredor.cs" />
+    <Compile Include="ConsultasEF\ObtenerUltimaFormula.cs" />
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
+    <Compile Include="ConsultasEF\TraerConfiguracionesEspacioDinamico.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesCupo.cs" />
     <Compile Include="ConsultasEF\TraerRol.cs" />
     <Compile Include="ConsultasEF\TraerComerciales.cs" />

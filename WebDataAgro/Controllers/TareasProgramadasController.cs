@@ -3,6 +3,10 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
+using System.Web.Script.Serialization;
+using Molinos.DataAgro.Entities.Entities;
+using System.Collections.Generic;
+using System;
 
 namespace WebDataAgro.Controllers
 {
@@ -14,7 +18,7 @@ namespace WebDataAgro.Controllers
         private readonly ICupoManager cupoManager;
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager,IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager)
 
         {
             this.logger = logger;
@@ -67,9 +71,18 @@ namespace WebDataAgro.Controllers
         public ActionResult AnularAcuerdos()
         {
             logger.Info($"Anulando cantidad Pendiente de Acuerdos");
-             contratoAcuerdoManager.AnularAcuerdos();
+            contratoAcuerdoManager.AnularAcuerdos();
             logger.Info($"Anular - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult CrearSugerenciaCupo()
+        {
+            logger.Info($"CrearSugerenciaCupo");
+            cupoManager.CrearSugerenciaCupo();
+            logger.Info($"CrearSugerenciaCupo - Finalizado");
+            return Content("ok");
+        }
+
     }
 }

@@ -1,0 +1,113 @@
+﻿@model WebDataAgro.Models.ConfiguracionEspacioDinamicoModel
+@{
+    ViewBag.Title = "Administración de Espacio Dinámico";
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+    <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
+}
+
+<script src="~/Scripts/KendoExtensions.js"></script>
+<script src="~/Scripts/kendo/messages/kendo.messages.es-AR.min.js"></script>
+<script src="~/Scripts/App/ConfiguracionEspacioDinamico.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<div class="container">
+
+    <h3>@ViewBag.Title</h3>
+    <br />
+    @if (!Html.ViewData.ModelState.IsValid)
+    {
+        <div id="errorModal">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Html.ValidationSummary()
+            </div>
+        </div>
+    }
+    else
+    {
+        <script>$(document).ready(LimpiarConfiguracion)</script>
+    }
+    <div class="alert alert-success alert-dismissible" role="alert" hidden>
+        <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+        <span>Grabación Correcta</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 m-grid-col-xs-offset-1">
+            <div class="desplegable">
+                <span class="historial">Alta</span>
+            </div>
+
+
+            @using (Html.BeginForm("Grabar", null, FormMethod.Post))
+            {
+
+                <div class="row">
+                    @Html.HiddenFor(x => x.Id)
+                    <div class="col-xs-2">
+                        <span>Centro</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(x => x.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Material</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row" style="padding-top:8px;">
+                    <div class="col-xs-2">
+                        <span>Fecha</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.Fecha, new { @class = "w100" })
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Cantidad de Cupos</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.CantidadCupo, new { @class = "w100" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Proveedor</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="buscadorProveedor" class="k-textbox required-box required-box-parent w100" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                        @Html.HiddenFor(x => x.ProveedorId)
+
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Comecial</span>
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.DropDownListFor(x => x.ComercialId, new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione Comercial", new { @class = "form-control" })
+                    </div>
+                    <div id="buscadorResult"></div>
+                </div>
+                <div class="row">
+                    <div id="calidadDiv">
+                        <div class="col-sm-2">
+                            <label>Calidad</label>
+                        </div>
+                        <div class="col-sm-4">
+                            @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btnSubmit" type="submit">Grabar</button>
+                </div>
+            }
+        </div>
+    </div>
+    <div id="tablaCupos">
+        @Html.Action("TablaConfiguracionEspacioDinamico", "ConfiguracionEspacioDinamico")
+    </div>
+</div>

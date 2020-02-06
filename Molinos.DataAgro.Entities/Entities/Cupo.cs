@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class Cupo:ICloneable
+    public partial class Cupo : ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -25,7 +25,15 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CupoStop { get; set; }
         public string CreacionStop { get; set; }
         public string ErrorStop { get; set; }
+        public int? FasonId { get; set; }
+        public int? ContratoId { get; set; }
+        public int? AgenteCompraId { get; set; }
+        public int? FijacionDePrecioContratoId { get; set; }
 
+        public int? TipoNegocioId { get; set; }
+        public int? ConfiguracionEspacioDinamicoId { get; set; }
+        [ForeignKey("ConfiguracionEspacioDinamicoId")]
+        public virtual ConfiguracionEspacioDinamico ConfiguracionEspacioDinamico { get; set; }
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
         [ForeignKey("CentroId")]
@@ -38,6 +46,17 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ZonaCupo ZonaCupo { get; set; }
         [ForeignKey("EstadoCupoId")]
         public virtual EstadoCupo EstadoCupo { get; set; }
+
+        [ForeignKey("FasonId")]
+        public virtual Fason FasonEntidad { get; set; }
+        [ForeignKey("ContratoId")]
+        public virtual Contrato Contrato { get; set; }
+        [ForeignKey("AgenteCompraId")]
+        public virtual AgenteCompra AgenteCompra { get; set; }
+        [ForeignKey("FijacionDePrecioContratoId")]
+        public virtual FijacionDePrecioContrato FijacionDePrecioContrato { get; set; }
+        [ForeignKey("TipoNegocioId")]
+        public virtual TipoNegocio TipoNegocio { get; set; }
 
         public object Clone()
         {

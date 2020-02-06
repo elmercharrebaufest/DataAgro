@@ -19,6 +19,6 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("CentroId")]
         public virtual Centro Centro { get; set; }
         [InverseProperty("ConfiguracionCupo")]
-        public ICollection<LimiteCupo> CantidadCupo { get; set; }
+        public virtual ICollection<LimiteCupo> CantidadCupo { get; set; }
     }
 }

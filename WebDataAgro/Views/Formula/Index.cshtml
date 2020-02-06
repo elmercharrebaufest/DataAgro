@@ -1,0 +1,125 @@
+﻿
+@section Scripts {
+    @Scripts.Render("~/bundles/AbmFormula")
+}
+
+
+
+<h2 style="margin-bottom:2%; color: grey;
+    text-align: left; margin-left:20px">
+    Fórmula
+</h2>
+
+
+
+<label class="dias"> Inicio </label>
+<input placeholder="Inicio" id="inicio" />
+
+<label class="dias"> Cantidad de Días </label>
+<input data-decimals="0" placeholder="Cantidad de Días" id="cantdias" />
+
+
+
+<div id="treelist"></div>
+
+
+
+<div id="popUpAgregarCriterio" style="text-align: center;">
+    <input type="hidden" id="padreid" />
+    <input type="hidden" id="maximo" />
+
+    <input type="text" required id="dropdown" style="margin-bottom: 10%; width: 200px" />
+    <input type="number" id="prioridad" placeholder="Prioridad" /> <b>%</b>
+
+    <br />
+    <input type='button' id="agregarCriterio" class="k-primary" onclick="agregar()" value='Agregar' />
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+    div.k-window-content {
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .k-grid tbody .k-button {
+        min-width: 40px;
+        width: auto;
+    }
+
+    .k-button.k-state-hover, .k-button:hover {
+        border-color: white;
+    }
+
+    .k-window-titlebar .k-window-action {
+        width: auto;
+        height: auto;
+        opacity: 1;
+    }
+
+    .k-window-title {
+        text-align: center;
+        background-color: #017940;
+        font-size: 12px;
+        text-align: left;
+        margin: 10px 0;
+        border: 0;
+        color: #FFF;
+        padding: 3px;
+        font-weight: 700;
+    }
+
+    .k-button, .k-widget {
+        margin-top: 2%;
+    }
+
+    .k-edit-field, .k-edit-form-container .editor-field {
+        margin-top: 3.7%;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .dias {
+        font-weight: bold;
+        color: grey;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .editor-label, .k-edit-label {
+        text-align: center;
+    }
+    /*.k-textbox {
+    width: 100px;
+    text-align: center;
+}*/
+
+
+    input.k-textbox, textarea.k-textbox {
+        width: 100px;
+        text-align: center;
+
+}
+
+</style>
+

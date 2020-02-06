@@ -73,6 +73,7 @@ IF NOT EXISTS (select 1 from TipoPeriodoDB where Descripcion = 'Generales') BEGI
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'FASON') BEGIN insert into TipoNegocio (Descripcion) values ('FASON'); END
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'AGENTE DE COMPRAS') BEGIN insert into TipoNegocio (Descripcion) values ('AGENTE DE COMPRAS'); END
 IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'CONTRATO ACUERDO') BEGIN insert into TipoNegocio (Descripcion) values ('CONTRATO ACUERDO'); END
+IF NOT EXISTS (select 1 from TipoNegocio where Descripcion = 'ESPACIO DINAMICO') BEGIN insert into TipoNegocio (Descripcion) values ('ESPACIO DINAMICO'); END
 
 --Tipo Fason
 IF NOT EXISTS (select 1 from TipoFason where Descripcion = 'FAS') BEGIN insert into TipoFason (Descripcion) values ('FAS'); END
@@ -174,11 +175,12 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN 
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
 
 --Segmentacion
-update Segmentacion set Descripcion ='Tradicional' where SegmentacionId = '7'
-update Segmentacion set Descripcion ='Grande' where SegmentacionId = '2'
-update Segmentacion set Descripcion ='Mediano' where SegmentacionId = '3'
-update Segmentacion set Descripcion ='Chico' where SegmentacionId = '4'
-update Segmentacion set Descripcion ='Chico' where SegmentacionId = '9'
-update Segmentacion set Descripcion ='Mediano' where SegmentacionId = '10'
-update Segmentacion set Descripcion ='Grande' where SegmentacionId = '11'
-IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Mega' and Grupo = 'Acopiadores') BEGIN insert into Segmentacion values ('Mega','Acopiadores'); END
+update Segmentacion set Descripcion ='Tradicional: incluiría las cooperativas' where SegmentacionId = '7'
+update Segmentacion set Descripcion ='Grande: Más de 10.000 tns' where SegmentacionId = '2'
+update Segmentacion set Descripcion ='Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
+update Segmentacion set Descripcion ='Chico: menos de 3.000 tns' where SegmentacionId = '4'
+update Segmentacion set Descripcion ='Chico: menos de 20.000 tns' where SegmentacionId = '9'
+update Segmentacion set Descripcion ='Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
+update Segmentacion set Descripcion ='Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
+--IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Mega' and Grupo = 'Acopiadores') BEGIN insert into Segmentacion values ('Mega','Acopiadores'); END
+update Segmentacion set Descripcion ='Mega: más de 150.000 tns' where SegmentacionId = '15'

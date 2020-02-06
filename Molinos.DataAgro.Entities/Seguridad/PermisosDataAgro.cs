@@ -181,6 +181,12 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerTodosCupos = 705,
         [Display(ResourceType = typeof(Text), Name = "Reasignar_Flete")]
         ReasignarFlete = 706,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_EspacioDinamico")]
+        AdministracionEspacioDinamico = 707,
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_SugerenciaDeCupos")]
+        SugerenciaDeCupos =708,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_Formula")]
+        Formula = 709,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

@@ -115,7 +115,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });            
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion });
+            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).Where(a=>a.Descripcion != "ESPACIO DINAMICO").ToList();
             if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));

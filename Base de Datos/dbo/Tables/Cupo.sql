@@ -19,6 +19,12 @@
 	[CreacionStop]			VARCHAR(50) NULL,
 	[ErrorStop]				VARCHAR(MAX) NULL,
 
+    [FasonId] INT NULL, 
+    [ContratoId] INT NULL, 
+    [AgenteCompraId] INT NULL, 
+    [FijacionDePrecioContratoId] INT NULL, 
+    [TipoNegocioId] INT NULL , 
+    [ConfiguracionEspacioDinamicoId] INT NULL, 
     CONSTRAINT [PK_Cupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Cupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Cupo_Centro] FOREIGN KEY (CentroId) REFERENCES [Centro]([Id]),
@@ -26,4 +32,11 @@
     CONSTRAINT [FK_Cupo_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_Cupo_ZonaCupo] FOREIGN KEY (ZonaCupoId) REFERENCES [ZonaCupo]([Id]),
     CONSTRAINT [FK_Cupo_EstadoCupo] FOREIGN KEY (estadoCupoId) REFERENCES [EstadoCupo]([Id]),
+    CONSTRAINT [FK_Cupo_Fason] FOREIGN KEY (FasonId) REFERENCES [Fason]([Id]),
+    CONSTRAINT [FK_Cupo_Contrato] FOREIGN KEY (ContratoId) REFERENCES [Contrato]([ContratoId]),
+    CONSTRAINT [FK_Cupo_FijacionDePrecioContrato] FOREIGN KEY (FijacionDePrecioContratoId) REFERENCES [FijacionDePrecioContrato]([FijacionDePrecioContratoId]),
+    CONSTRAINT [FK_Cupo_AgenteCompra] FOREIGN KEY (AgenteCompraId) REFERENCES [AgenteCompra]([Id]),
+    CONSTRAINT [FK_Cupo_TipoNegocio] FOREIGN KEY (TipoNegocioId) REFERENCES [TipoNegocio]([TipoNegocioId]),
+    CONSTRAINT [FK_Cupo_ConfiguracionEspacioDinamico] FOREIGN KEY (ConfiguracionEspacioDinamicoId) REFERENCES [ConfiguracionEspacioDinamico]([Id]),
+	
 )

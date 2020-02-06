@@ -219,9 +219,11 @@
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos) ||
                          PermisosHelper.Is(PermisosDataAgro.AdministracionCupos) ||
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes) ||
-                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) ||
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas) ||
-                         PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores))
+                         PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores) ||
+                         PermisosHelper.Is(PermisosDataAgro.Formula) ||
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) || 
+                         PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
@@ -355,6 +357,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
+                                {
+                                    <li>
+                                        <a href="/ConfiguracionEspacioDinamico" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Administración de Espacio Dinamico
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
                                 {
                                     <li>
@@ -384,6 +394,14 @@
                                     <li>
                                         <a href="~/AdministracionProveedor" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Roles de Proveedores
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Formula))
+                                {
+                                    <li>
+                                        <a href="/Formula" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Administración Fórmula
                                         </a>
                                     </li>
                                 }
@@ -425,16 +443,28 @@
                             </ul>
                         </li>
                     }
-                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos))
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos) || PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="cupos-a" class="dropdown-toggle nav-text6 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Cupos <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="cupos">
-                                <li>
-                                    <a href="~/Cupo" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Cupos
-                                    </a>
-                                </li>
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCupos))
+                                {
+                                    <li>
+                                        <a href="~/Cupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Cupos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
+                                {
+                                    <li>
+                                        <a href="~/SugerenciaCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Sugerencia de Cupos
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </li>
                     }

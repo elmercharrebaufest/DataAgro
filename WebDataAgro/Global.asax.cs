@@ -49,6 +49,14 @@ namespace WebDataAgro
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
             builder.RegisterModule<NLogModule>();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                   .Where(t => t.Name.EndsWith("Criterios"))
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                   .Where(t => t.Name.StartsWith("Procesador"))
+                   .InstancePerLifetimeScope();
+
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

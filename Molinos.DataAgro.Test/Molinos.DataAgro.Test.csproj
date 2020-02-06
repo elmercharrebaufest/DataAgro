@@ -122,8 +122,11 @@
   <ItemGroup>
     <Compile Include="Controllers\CupoControllerTest.cs" />
     <Compile Include="Controllers\AdministracionProveedorControllerTest.cs" />
+    <Compile Include="Controllers\SugerenciaCupoControllerTest.cs" />
+    <Compile Include="Controllers\ConfiguracionEspacioDinamicoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />
     <Compile Include="Controllers\ContratoAcuerdoControllerTest.cs" />
+    <Compile Include="Controllers\FormulaControllerTest.cs" />
     <Compile Include="Controllers\PrecioPizarraControllerTest.cs" />
     <Compile Include="Controllers\ReporteResearchControllerTest.cs" />
     <Compile Include="Controllers\ResearchControllerTest.cs" />
@@ -162,12 +165,14 @@
     <Compile Include="Managers\AreaInfluenciaManagerTest.cs" />
     <Compile Include="Managers\ComercialManagerTest.cs" />
     <Compile Include="Managers\CompraNetManagerTest.cs" />
+    <Compile Include="Managers\ConfiguracionEspacioDinamicoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionInternaManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionManagerTest.cs" />
     <Compile Include="Managers\EstadioManagerTest.cs" />
     <Compile Include="Managers\CupoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionCupoManagerTest.cs" />
     <Compile Include="Managers\ContratoAcuerdoManagerTest.cs" />
+    <Compile Include="Managers\FormulaManagerTest.cs" />
     <Compile Include="Managers\InformeComercialManagerTest.cs" />
     <Compile Include="Managers\ComprasManagerTest.cs" />
     <Compile Include="Managers\ObjetivoManagerTest.cs" />
@@ -198,6 +203,15 @@
     <Compile Include="Managers\RiesgoComercialManagerTest.cs" />
     <Compile Include="Managers\TipoNegocioManagerTest.cs" />
     <Compile Include="Mock\FakeHttpContext.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAFijarTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecioTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsAgenteCompraTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioDeltaDePrecioTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsPrimerNegocioTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioFechaDeEntregaTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsFijacionDePrecioContratoTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsFasonTest.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioEsEspacioDinamicoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -189,6 +189,76 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="LogProveedorId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="10e16572-2e01-490c-b591-7d942767da3f" ChangeDateTime="01/14/2020 15:51:04">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[TipoNegocioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FasonId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a96c35b0-ca4c-4267-9d71-62b70dba6a41" ChangeDateTime="01/17/2020 16:12:47">
+    <Property Name="ElementName" Value="[dbo].[Criterio].[TipoActividadId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Criterio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Discriminator" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e422f02f-afa0-4d77-aecf-1223a248a4eb" ChangeDateTime="01/17/2020 16:53:34">
+    <Property Name="ElementName" Value="[dbo].[Criterio].[HijoId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Criterio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PadreId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a4efdb37-3970-44c2-a201-0899c763bae0" ChangeDateTime="01/17/2020 17:19:35">
+    <Property Name="ElementName" Value="[dbo].[Criterio].[CriterioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Criterio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f1548776-f482-4b25-a7d6-6c413e16b798" ChangeDateTime="01/20/2020 14:57:53">
+    <Property Name="ElementName" Value="[dbo].[Formula].[ComercialId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CriterioId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b1599f9f-efa9-4f33-9391-0033f633e7eb" ChangeDateTime="01/20/2020 14:57:59">
+    <Property Name="ElementName" Value="[dbo].[Formula].[Dia]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Inicio" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5af531d8-4e31-4ad0-8d30-2b684c85b7bd" ChangeDateTime="01/20/2020 14:58:05">
+    <Property Name="ElementName" Value="[dbo].[Formula].[Cerrado]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CantDias" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8c2b48a7-65dc-4537-86f9-ddd5eb27d735" ChangeDateTime="01/27/2020 14:45:23">
+    <Property Name="ElementName" Value="[dbo].[SugerenciaCupo].[Precio]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[SugerenciaCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PrecioARP" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="477b6706-edca-4a16-8ecf-54a7a102b103" ChangeDateTime="01/31/2020 12:11:35">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionEspacioDinamico].[LimiteCupo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionEspacioDinamico]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CantidadDeCupo" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ff2b3538-9012-4284-a057-43031ddff489" ChangeDateTime="01/31/2020 18:03:59">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionEspacioDinamico].[StandardDeCalidad]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionEspacioDinamico]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Calidad" />
+  </Operation>
   <Operation Name="Rename Refactor" Key="b9b94b2a-34f4-42cd-97bb-262e105a622c" ChangeDateTime="01/29/2020 15:01:14">
     <Property Name="ElementName" Value="[dbo].[UsuarioExterno].[Acepto]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />

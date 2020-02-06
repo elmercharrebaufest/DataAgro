@@ -82,6 +82,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -130,13 +131,16 @@
     <Compile Include="Agent\IFinalizarFijacionAgent.cs" />
     <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
     <Compile Include="Agent\IRiesgoComercialAgent.cs" />
+    <Compile Include="Criterios\IServicioCriterios.cs" />
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />
     <Compile Include="Managers\ICampaniaActualManager.cs" />
     <Compile Include="Managers\ICampaniaMaterialManager.cs" />
+    <Compile Include="Managers\IConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
     <Compile Include="Managers\IUsuarioManager.cs" />
     <Compile Include="Managers\ITokenManager.cs" />
+    <Compile Include="Managers\IFormulaManager.cs" />
     <Compile Include="Managers\IObjetivoManager.cs" />
     <Compile Include="Managers\ICampañaManager.cs" />
     <Compile Include="Managers\ICanalOperacionManager.cs" />
