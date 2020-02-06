@@ -926,7 +926,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = x.Consignatario == true ? "X" : "",
                 PlanCanje = x.PlanCanje == true ? "X" : "",
                 Pago = x.PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : x.Warrant == true ? "Warrant" : "",
-                CalidadEspecial = x.StandardDeCalidad.Descripcion!= "Fabrica" || x.StandardDeCalidad.Descripcion != "Camara" ? "X" : "",
+                CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 6 || x.StandardDeCalidadId == 7 ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
@@ -942,9 +942,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
-                Contrato = x.ContratoId.ToString(),
+                Contrato = x.FijacionDePrecioContratoId.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
+                RazonCorredor = x.Corredor.RazonSocial,
+                CuitCorredor = x.Corredor.CUIT,
                 Material = x.Material.Descripcion,
                 TipoNegocio = "FIJACION",
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
