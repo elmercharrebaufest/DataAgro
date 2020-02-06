@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Seguridad;
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
 using Newtonsoft.Json;
 using System;
@@ -11,10 +12,12 @@ namespace WebDataAgro.Controllers
     public class TerminosYCondicionesController : Controller
     {
         private readonly IUsuarioManager usuarioManager;
+        private readonly ILogger logger;
 
-        public TerminosYCondicionesController(IUsuarioManager usuarioManager)
+        public TerminosYCondicionesController(IUsuarioManager usuarioManager, ILogger logger)
         {
             this.usuarioManager = usuarioManager;
+            this.logger = logger;
         }
         public ActionResult Index()
         {
@@ -22,7 +25,15 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult Aceptar()
         {
-            usuarioManager.Aceptar(PermisosHelper.ObtenerUsuario(),PermisosHelper.ObtenerCuit());
+            try
+            {
+                usuarioManager.Aceptar(PermisosHelper.ObtenerUsuario(), PermisosHelper.ObtenerCuit());
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+                return RedirectToAction("Index", "Error");
+            }
             if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompraNet))
             {
                 return RedirectToAction("Index", "CompraNet");
