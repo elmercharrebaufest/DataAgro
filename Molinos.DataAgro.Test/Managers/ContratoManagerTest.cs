@@ -1109,7 +1109,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<CalidadDto>() { new CalidadDto { ContratoId=1,Id = 1,CalidadEspecialDesc = "FABRICA",CalidadEspecialId = 2,
                                                                 PorcentajeDesde = 0 , PorcentajeHasta =1 ,Valor = 20} });
 
-            var resultado = target.TraerCalidadesPorContrato(1);
+            var resultado = target.TraerCalidadesPorContrato(1,1);
 
             Assert.That(resultado.Count == 1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -1132,6 +1132,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerContratoOk()
         {
+            var ap = new List<AperturaPrecioDto>() { new AperturaPrecioDto { Id = 1,ConceptoAperturaPrecioId = 1, ConceptoAperturaPrecio = "FINANCIERO",contratoId = 2, Importe =200, Moneda = "ARS  ",MonedaId = "ARS  ",Porcentaje = 0
+              } };
+            var cal = new List<CalidadDto>() { new CalidadDto { ContratoId=1,Id = 1,CalidadEspecialDesc = "FABRICA",CalidadEspecialId = 2,
+                                                                PorcentajeDesde = 0 , PorcentajeHasta =1 ,Valor = 20} };
+            var desc = new List<DescuentoBonificacionDto>() { new DescuentoBonificacionDto { ContratoId=1,Id = 1, FechaDesde = DateTime.Now.ToString(), FechaHasta = DateTime.Now.ToString(),
+                                                                Importe = 100, Porcentaje = 10, MonedaId = "ARS  ", TipoDBId = 1, TipoDBDesc = "111",
+                                                                TipoPeriodoDBDesc = "222",TipoPeriodoDBId = 2} };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<DescuentoBonificacion, DescuentoBonificacionDto>>>(), It.IsAny<Expression<Func<DescuentoBonificacion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<DescuentoBonificacionDto>() { new DescuentoBonificacionDto { ContratoId=1,Id = 1, FechaDesde = DateTime.Now.ToString(), FechaHasta = DateTime.Now.ToString(),
                                                                 Importe = 100, Porcentaje = 10, MonedaId = "ARS  ", TipoDBId = 1, TipoDBDesc = "111",
@@ -1200,7 +1207,10 @@ namespace Molinos.DataAgro.Test.Managers
                     Madre = false,
                     ContratoMadre = "",
                     Pizarra = false,
-                    StandardCalidadId = 2
+                    StandardCalidadId = 2,
+                    Calidades= cal,
+                    Descuentos = desc,
+                    AperturaPrecios = ap
                 });
 
             var resultado = target.TraerContrato(1);

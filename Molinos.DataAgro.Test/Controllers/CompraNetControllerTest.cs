@@ -510,14 +510,14 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerCalidadesPorContratoTest()
         {
-            contratoManagerMock.Setup(x => x.TraerCalidadesPorContrato(1)).Returns(new List<CalidadDto>() { new CalidadDto { ContratoId=1, CalidadEspecialDesc ="A",CalidadEspecialId=1,Valor=1,Id=1} });
+            contratoManagerMock.Setup(x => x.TraerCalidadesPorContrato(1,0)).Returns(new List<CalidadDto>() { new CalidadDto { ContratoId=1, CalidadEspecialDesc ="A",CalidadEspecialId=1,Valor=1,Id=1} });
             var result = target.TraerCalidadesPorContrato(1);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.TraerCalidadesPorContrato(It.IsAny<int>()), Times.Once);
+            contratoManagerMock.Verify(x => x.TraerCalidadesPorContrato(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"CalidadEspecialId\":1,\"CalidadEspecialDesc\":\"A\",\"Valor\":1,\"ContratoId\":1,\"PorcentajeDesde\":null,\"PorcentajeHasta\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"CalidadEspecialId\":1,\"CalidadEspecialDesc\":\"A\",\"Valor\":1,\"ContratoId\":1,\"AcuerdoId\":null,\"PorcentajeDesde\":null,\"PorcentajeHasta\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
