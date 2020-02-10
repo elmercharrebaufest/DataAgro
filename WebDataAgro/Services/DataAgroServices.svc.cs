@@ -159,6 +159,8 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
+                var Id = repositorio.Obtener<Contrato,int>(x=> x.ContratoSAP== contratoSAP .ContratoSAP, x=>x.ContratoId);
+
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
                 var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
@@ -167,7 +169,7 @@ namespace WebDataAgro.Services
                 {
                     var calidad = new Calidad
                     {
-                        ContratoId = contratoSAP.ContratoId,
+                        ContratoId = Id,
                         CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
                         StandardDeCalidadId = standardCalidadList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
                         Valor = cal.Valor,
@@ -186,7 +188,7 @@ namespace WebDataAgro.Services
                     {
                         var descuento = new DescuentoBonificacion
                         {
-                            ContratoId = contratoSAP.ContratoId,
+                            ContratoId = Id,
                             FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             Importe = desc.Importe,
@@ -205,7 +207,7 @@ namespace WebDataAgro.Services
                 {
                     var apertura = new AperturaPrecio
                     {
-                        ContratoId = contratoSAP.ContratoId,
+                        ContratoId = Id,
                         ConceptoAperturaPrecioId= conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id,
                         Importe =aper.Importe,
                         MonedaId = aper.Moneda,
@@ -217,7 +219,7 @@ namespace WebDataAgro.Services
                     contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).Sum(x => x.Porcentaje * contratoSAP.Precio):0;
                 var contrato = new Contrato
                 {
-                    ContratoId = contratoSAP.ContratoId,
+                    ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10,'0'),
                     BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3,
                     BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => x.CodigoSap == contratoSAP.Bolsa, x => x.Id),
                     CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId),

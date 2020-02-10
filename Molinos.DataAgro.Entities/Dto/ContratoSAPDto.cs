@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class ContratoSAPDto
     {
-        public int ContratoId { get; set; }
+        public string ContratoSAP { get; set; }
         public decimal Cantidad { get; set; }
         public string Cosecha { get; set; }
         public int DiasDiferimiento { get; set; }
