@@ -467,61 +467,70 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void CrearSugerenciaCupo()
         {
-            DateTime hoy = DateTime.Now.Date;
-
-            Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
-
-            var formulaSave = repositorio.Obtener<Formula>(formula.Id);
-            formulaSave.Inicio = formula.Inicio;
-            formulaSave.CantDias = formula.CantDias;
-            formulaSave.CriterioId = formula.CriterioId;
-            formulaSave.CentroId = formula.CentroId;
-            formulaSave.Fecha = formula.Fecha;
-            formulaSave.Usada = true;
-
-            //cupos en rango de fecha
-            List<Cupo> cupos = repositorio.Listar<Cupo>(x => x.FechaIngreso >= formula.FechaDesde && x.FechaIngreso <= formula.FechaHasta && x.CentroId == formula.CentroId);
-
-
-            List<ConfiguracionCupoDto> disponibilidadEnPlantas = ObtenerDisponibilidadEnPlantas(formula, cupos);
-
-            List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
-
-            ObtenerNegocios(hoy, formula, cupos, negocios);
-
-
-            ObtenerPuntajes(formula, negocios);
-
-            PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
-
-            List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
+            try
             {
-                AgenteCompraId = a.AgenteCompraId,
-                ZonaCupoId = a.ZonaCupoId ?? 0,
-                CantidadDeCupos = a.CantidadDeCupos,
-                CentroId = a.DestinoId,
-                ContratoId = a.ContratoId,
-                FasonId = a.FasonId,
-                FechaSugerida = a.FechaSugerida,
-                FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
-                ConfiguracionEspacioDinamicoId = a.ConfiguracionEspacioDinamicoId,
-                MaterialId = a.MaterialId,
-                MonedaId = a.MonedaId,
-                PrecioARP = a.Precio,
-                TipoNegocioId = a.TipoNegocioId,
-                Puntuacion = a.PuntuacionTotal,
-                ProveedorId = a.ProveedorId,
-                Destinatario = a.Destinatario,
-                ComercialId = a.ComercialId,
-                StandardDeCalidad = a.StandardDeCalidad,
-                Aceptado = null,
-                Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
-                ContratoSAP = a.ContratoSAP
-            }).ToList();
+                DateTime hoy = DateTime.Now.Date;
 
-            repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false);
-            repositorio.AgregarTodos(sugerencias);
-            repositorio.GuardarCambios();
+                Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
+
+                var formulaSave = repositorio.Obtener<Formula>(formula.Id);
+                formulaSave.Inicio = formula.Inicio;
+                formulaSave.CantDias = formula.CantDias;
+                formulaSave.CriterioId = formula.CriterioId;
+                formulaSave.CentroId = formula.CentroId;
+                formulaSave.Fecha = formula.Fecha;
+                formulaSave.Usada = true;
+
+                //cupos en rango de fecha
+                List<Cupo> cupos = repositorio.Listar<Cupo>(x => x.FechaIngreso >= formula.FechaDesde && x.FechaIngreso <= formula.FechaHasta && x.CentroId == formula.CentroId);
+
+
+                List<ConfiguracionCupoDto> disponibilidadEnPlantas = ObtenerDisponibilidadEnPlantas(formula, cupos);
+
+                List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
+
+                ObtenerNegocios(hoy, formula, cupos, negocios);
+
+
+                ObtenerPuntajes(formula, negocios);
+
+                PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
+
+                List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
+                {
+                    AgenteCompraId = a.AgenteCompraId,
+                    ZonaCupoId = a.ZonaCupoId ?? 0,
+                    CantidadDeCupos = a.CantidadDeCupos,
+                    CentroId = a.DestinoId,
+                    ContratoId = a.ContratoId,
+                    FasonId = a.FasonId,
+                    FechaSugerida = a.FechaSugerida,
+                    FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
+                    ConfiguracionEspacioDinamicoId = a.ConfiguracionEspacioDinamicoId,
+                    MaterialId = a.MaterialId,
+                    MonedaId = a.MonedaId,
+                    PrecioARP = a.Precio,
+                    TipoNegocioId = a.TipoNegocioId,
+                    Puntuacion = a.PuntuacionTotal,
+                    ProveedorId = a.ProveedorId,
+                    Destinatario = a.Destinatario,
+                    ComercialId = a.ComercialId,
+                    StandardDeCalidad = a.StandardDeCalidad,
+                    Aceptado = null,
+                    Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
+                    ContratoSAP = a.ContratoSAP
+                }).ToList();
+
+                repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false);
+                repositorio.AgregarTodos(sugerencias);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                throw;
+            }
+           
 
         }
 

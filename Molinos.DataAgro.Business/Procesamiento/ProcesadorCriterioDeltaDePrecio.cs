@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Business
             decimal precioPizarra = 1;
             if (pizarra == null)
             {
-                pizarra = Repositorio.Listar<PrecioPizarra>(a => a.MaterialId == criterio.Dto.MaterialId && a.FechaDesde > hoy).OrderByDescending(a => a.FechaDesde).Take(1).Single();
+                pizarra = Repositorio.Listar<PrecioPizarra>(a => a.MaterialId == criterio.Dto.MaterialId).OrderByDescending(a => a.FechaDesde).Take(1).Single();
                 pizarraLista.Add(pizarra);
             }
 
