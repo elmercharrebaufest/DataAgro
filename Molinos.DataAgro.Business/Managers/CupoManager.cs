@@ -502,7 +502,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
                 PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
                 logger.Debug("CrearSugerenciaCupo - negocios priorizados: "+ negocios.Where(a => a.Priorizado).Count());
-                logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
+                logger.Debug("CrearSugerenciaCupo - fin de PriorizarSegunDisponibilidad.");
 
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
@@ -517,7 +517,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ConfiguracionEspacioDinamicoId = a.ConfiguracionEspacioDinamicoId,
                     MaterialId = a.MaterialId,
                     MonedaId = a.MonedaId,
-                    PrecioARP = a.Precio,
+                    Precio = a.Precio,
                     TipoNegocioId = a.TipoNegocioId,
                     Puntuacion = a.PuntuacionTotal,
                     ProveedorId = a.ProveedorId,
@@ -832,7 +832,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<SugerenciaCupoDto> resultado = repositorio.Listar<SugerenciaCupo, SugerenciaCupoDto>(a => new SugerenciaCupoDto
             {
                 Id = a.Id,
-                Precio = a.PrecioARP,
+                Precio = a.Precio,
                 TipoNegocioId = a.TipoNegocioId,
                 TipoNegocioDesc = a.TipoNegocio.Descripcion,
                 CentroId = a.CentroId,
@@ -846,7 +846,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = a.MaterialId,
                 MaterialDesc = a.Material.Descripcion,
                 MonedaId = a.MonedaId,
-                MonedaDesc = a.Moneda.Descripcion,
+                MonedaDesc = a.MonedaId == null?"": a.Moneda.Descripcion,
                 PuntuacionTotal = a.Puntuacion,
                 ProveedorId = a.ProveedorId,
                 ProveedorDesc = a.ProveedorId.HasValue ? a.Proveedor.RazonSocial : "",

@@ -18,6 +18,10 @@ namespace Molinos.DataAgro.Business
         }
         public override decimal Calcular(CriterioDeltaDePrecio criterio)
         {
+            if (String.IsNullOrEmpty( criterio.Dto.MonedaId)  || criterio.Dto.Precio == null)
+            {
+                return 0;
+            }
             DateTime hoy = DateTime.Now.Date;
             var pizarraLista = Repositorio.Listar<PrecioPizarra>(x => x.FechaDesde <= hoy && x.FechaHasta >= hoy);
 
@@ -33,8 +37,8 @@ namespace Molinos.DataAgro.Business
             precioPizarra = pizarra.MonedaId == "ARP  " ? pizarra.Precio : pizarra.Precio * dolarCotizacion;
 
             criterio.Dto.PrecioPizarra = precioPizarra;
-            criterio.Dto.Precio = criterio.Dto.MonedaId == "ARP  " ? criterio.Dto.Precio : criterio.Dto.Precio * dolarCotizacion;
-            decimal puntos = (criterio.Dto.Precio - precioPizarra) / -precioPizarra;
+            var precio = criterio.Dto.MonedaId == "ARP  " ? criterio.Dto.Precio : criterio.Dto.Precio * dolarCotizacion;
+            decimal puntos = (precio.Value - precioPizarra) / -precioPizarra;
 
             return puntos;
         }

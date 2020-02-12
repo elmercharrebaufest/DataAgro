@@ -17,7 +17,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? AgenteCompraId { get; set; }
         public int? FijacionDePrecioContratoId { get; set; }
         public int TipoNegocioId { get; set; }
-        public decimal PrecioARP { get; set; }
+        public decimal? Precio { get; set; }
         public string MonedaId { get; set; }
         public decimal Puntuacion { get; set; }
         public int? ProveedorId { get; set; }
