@@ -7,6 +7,6 @@ namespace Molinos.DataAgro.Entities.Entities
     [DisplayName("Es Contrato A Precio")]
     public class CriterioEsContratoAPrecio : Criterio
     {
-        public bool Concreta { get { return true; } }
+        public override bool Concreta { get { return true; } }
     }
 }

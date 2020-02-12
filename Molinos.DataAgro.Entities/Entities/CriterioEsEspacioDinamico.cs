@@ -8,6 +8,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
     public class CriterioEsEspacioDinamico : Criterio
     {
-        public bool Concreta { get { return true; } }
+        public override bool Concreta { get { return true; } }
     }
 }

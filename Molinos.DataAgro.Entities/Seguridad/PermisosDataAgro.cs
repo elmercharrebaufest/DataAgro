@@ -185,8 +185,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AdministracionEspacioDinamico = 707,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_SugerenciaDeCupos")]
         SugerenciaDeCupos =708,
-        [Display(ResourceType = typeof(Text), Name = "Administracion_Formula")]
-        Formula = 709,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_AlgoritimoDeCupos")]
+        AlgoritimoDeCupos = 709,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

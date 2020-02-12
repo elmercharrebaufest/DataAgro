@@ -1070,6 +1070,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Contrato = x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
+                RazonCorredor = x.Corredor.RazonSocial,
+                CuitCorredor = x.Corredor.CUIT,
                 Material = x.Material.Descripcion,
                 TipoNegocio = "Acuerdo",
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",

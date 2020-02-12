@@ -25,7 +25,7 @@ namespace WebDataAgro.Controllers
         {
             mobjFormulaManager = oFormulaManager;
         }
-        [Autorizacion(PermisosDataAgro.Formula)]
+        [Autorizacion(PermisosDataAgro.AlgoritimoDeCupos)]
         public ActionResult Index()
         {
             return View();

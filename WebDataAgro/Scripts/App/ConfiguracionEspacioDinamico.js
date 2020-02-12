@@ -56,7 +56,7 @@ function InicializarElementos() {
 
     $("#buscadorProveedor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+            '<p class="#:data.Corredor# buscar-nomb" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)</p>',
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "Filtro",
@@ -67,8 +67,6 @@ function InicializarElementos() {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
-
-            InicializarBordesRojos();
         },
         select: function (e) {
             $("#ProveedorId").val(e.dataItem.Id);
@@ -80,10 +78,10 @@ function InicializarElementos() {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: "/Proveedor/BuscarProveedoresConCorredor"
+                    url: "/Cupo/BuscarProveedor"
                 },
                 parameterMap: function (data, type) {
-                    return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+                    return { filtroProveedor: $('#buscadorProveedor').val() };
                 }
             }
 
@@ -93,6 +91,44 @@ function InicializarElementos() {
                 e.preventDefault();
             }
         }
+        //template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
+        //    '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+        //minLength: 3,
+        //enforceMinLength: true,
+        //dataTextField: "Filtro",
+        //dataValueField: "Id",
+        //autoWidth: true,
+        //filter: "contains",
+        //change: function () {
+        //    if ($("#buscadorProveedor").val().split('|').length > 1) {
+        //        $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+        //    }
+
+        //    InicializarBordesRojos();
+        //},
+        //select: function (e) {
+        //    $("#ProveedorId").val(e.dataItem.Id);
+        //},
+        //dataSource: {
+        //    severFiltering: true,
+        //    serverPaging: true,
+        //    transport: {
+        //        read: {
+        //            type: 'post',
+        //            dataType: 'json',
+        //            url: "/Proveedor/BuscarProveedoresConCorredor"
+        //        },
+        //        parameterMap: function (data, type) {
+        //            return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+        //        }
+        //    }
+
+        //},
+        //filtering: function (e) {
+        //    if (!e.filter.value) {
+        //        e.preventDefault();
+        //    }
+        //}
     });
     $("#MaterialId").change(function () {
         checkSoja();

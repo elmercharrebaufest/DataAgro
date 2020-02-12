@@ -120,8 +120,8 @@
   <data name="Administracion_Cupos" xml:space="preserve">
     <value>Administración Cupos</value>
   </data>
-  <data name="Administracion_Formula" xml:space="preserve">
-    <value>Administración Fórmula</value>
+  <data name="Administracion_AlgoritimoDeCupos" xml:space="preserve">
+    <value>Algoritimo de Cupos</value>
   </data>
   <data name="Administracion_EspacioDinamico" xml:space="preserve">
     <value>Administración de Espacio Dinámico</value>

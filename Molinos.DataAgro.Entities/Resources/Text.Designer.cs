@@ -61,20 +61,20 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Algoritimo de Cupos.
+        /// </summary>
+        public static string Administracion_AlgoritimoDeCupos {
+            get {
+                return ResourceManager.GetString("Administracion_AlgoritimoDeCupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Administración Cupos.
         /// </summary>
         public static string Administracion_Cupos {
             get {
                 return ResourceManager.GetString("Administracion_Cupos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Administración Fórmula.
-        /// </summary>
-        public static string Administracion_Formula {
-            get {
-                return ResourceManager.GetString("Administracion_Formula", resourceCulture);
             }
         }
         

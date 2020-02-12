@@ -54,16 +54,32 @@
 <script src="~/Scripts/kendo/messages/kendo.messages.es-AR.min.js"></script>
 <script src="~/Scripts/App/SugerenciaCupo.js"></script>
 
-<link href="~/Content/compraNet.css" rel="stylesheet" />
+@*<link href="~/Content/compraNet.css" rel="stylesheet" />*@
+<link href="~/Content/cupo.css" rel="stylesheet" />
 
-<div class="container">
+<div class="container-fluid" >
 
-    <h3>Sugerencia de Cupos</h3>
-    <br />
-    <div class="row">
-        <button class="btn k-button" type="button" id="btnAceptar">Aceptar</button>
-        <button class="btn k-button" type="button" data-toggle="modal" data-target="#ModalRechazo">Rechazar</button>
+    <div class="panelflotante">
+        <div class="row">
+            <div class="float-right margen-15">
+                <span data-toggle="modal" data-target="#ModalRechazo" class="btnVarios">
+                    <i class="fa fa-mail-forward"></i>
+                    Rechazar
+                </span>
+            </div>
+            <div class="float-right margen-15">
+                <span id="btnAceptar" class="btnVarios">
+                    <i class="fa fa-copy"></i>
+                    Aceptar
+                </span>
+            </div>
+        </div>
     </div>
+    <br />
+    @*<div class="row">
+            <button class="btn k-button" type="button" id="btnAceptar">Aceptar</button>
+            <button class="btn k-button" type="button" data-toggle="modal" data-target="#ModalRechazo">Rechazar</button>
+        </div>*@
     <div class="row">
         <div class="col-xs-12" style="padding:0;">
             <div id="gridSugerenciaCupo" class="table-responsive">
@@ -72,6 +88,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalRechazo" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-mio mod">
         <div class="modal-content">

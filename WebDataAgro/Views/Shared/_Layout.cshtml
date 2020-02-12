@@ -221,7 +221,7 @@
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes) ||
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas) ||
                          PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores) ||
-                         PermisosHelper.Is(PermisosDataAgro.Formula) ||
+                         PermisosHelper.Is(PermisosDataAgro.AlgoritimoDeCupos) ||
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) || 
                          PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
                     {
@@ -357,14 +357,7 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
-                                {
-                                    <li>
-                                        <a href="/ConfiguracionEspacioDinamico" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Administración de Espacio Dinamico
-                                        </a>
-                                    </li>
-                                }
+
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
                                 {
                                     <li>
@@ -397,11 +390,19 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.Formula))
+                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
+                                {
+                                    <li>
+                                        <a href="/ConfiguracionEspacioDinamico" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Administración de Espacio Dinamico
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AlgoritimoDeCupos))
                                 {
                                     <li>
                                         <a href="/Formula" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Administración Fórmula
+                                            <i class="icon-bar-chart"></i> Algoritimo de Cupos
                                         </a>
                                     </li>
                                 }
