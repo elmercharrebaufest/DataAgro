@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
-            IProveedorManager proveedorManager,IMailManager mailManager, IServicioCriterios servicioCriterios)
+            IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -60,9 +60,9 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (d.Cantidad > 0)
                         {
-                            if (d.Fecha<DateTime.Today)
+                            if (d.Fecha < DateTime.Today)
                             {
-                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() +": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
+                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                 continue;
                             }
                             cupo.FechaIngreso = d.Fecha;
@@ -179,7 +179,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha de Ingreso no debe ser una fecha menor al día de hoy"));
             }
-            if (cupo.Id == 0 && fechaHasta.HasValue && fechaHasta< cupo.FechaIngreso)
+            if (cupo.Id == 0 && fechaHasta.HasValue && fechaHasta < cupo.FechaIngreso)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
@@ -345,7 +345,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oMensaje.To.Add(contacto.Email1);
                         }
                     }
-                    if (!string.IsNullOrEmpty(emailComercial)) 
+                    if (!string.IsNullOrEmpty(emailComercial))
                         oMensaje.CC.Add(emailComercial);
                 }
                 else if (!string.IsNullOrEmpty(emailComercial))
@@ -472,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DateTime hoy = DateTime.Now.Date;
 
                 Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
-
+                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula: " + JsonConvert.SerializeObject(formula));
                 var formulaSave = repositorio.Obtener<Formula>(formula.Id);
                 formulaSave.Inicio = formula.Inicio;
                 formulaSave.CantDias = formula.CantDias;
@@ -483,18 +483,26 @@ namespace Molinos.DataAgro.Business.Managers
 
                 //cupos en rango de fecha
                 List<Cupo> cupos = repositorio.Listar<Cupo>(x => x.FechaIngreso >= formula.FechaDesde && x.FechaIngreso <= formula.FechaHasta && x.CentroId == formula.CentroId);
+                logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos.");
 
-
+                logger.Debug("CrearSugerenciaCupo - inicio de disponibilidad en planta.");
                 List<ConfiguracionCupoDto> disponibilidadEnPlantas = ObtenerDisponibilidadEnPlantas(formula, cupos);
+                logger.Debug("CrearSugerenciaCupo - fin de disponibilidad en planta.");
 
                 List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
 
+                logger.Debug("CrearSugerenciaCupo - inicio de obtener negocios.");
                 ObtenerNegocios(hoy, formula, cupos, negocios);
+                logger.Debug("CrearSugerenciaCupo - fin de obtener negocios.");
 
-
+                logger.Debug("CrearSugerenciaCupo - inicio de ObtenerPuntajes.");
                 ObtenerPuntajes(formula, negocios);
+                logger.Debug("CrearSugerenciaCupo - fin de ObtenerPuntajes.");
 
+                logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
                 PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
+                logger.Debug("CrearSugerenciaCupo - negocios priorizados: "+ negocios.Where(a => a.Priorizado).Count());
+                logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
 
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
@@ -520,17 +528,17 @@ namespace Molinos.DataAgro.Business.Managers
                     Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
                     ContratoSAP = a.ContratoSAP
                 }).ToList();
-
                 repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false);
                 repositorio.AgregarTodos(sugerencias);
                 repositorio.GuardarCambios();
+                logger.Debug("CrearSugerenciaCupo - GuardarCambios.");
             }
             catch (Exception e)
             {
                 logger.Error(e);
                 throw;
             }
-           
+
 
         }
 
@@ -552,7 +560,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-
+            logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlantas." + JsonConvert.SerializeObject(disponibilidadEnPlantas));
             return disponibilidadEnPlantas;
         }
 
@@ -703,6 +711,22 @@ namespace Molinos.DataAgro.Business.Managers
             //}
             //fijaciones = fijaciones.Where(a => a.CantidadCupos > 0).ToList();
             //negocios.AddRange(fijaciones);
+            //logger.Debug("CrearSugerenciaCupo - fijaciones obtenidos: " + fijaciones.Count());
+
+
+            //foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3 && a.Precio == 0).ToList())
+            //{
+            //    var pizarra = pizarraLista.Where(a => a.MaterialId == fijacion.MaterialId).SingleOrDefault();
+            //    if (pizarra == null)
+            //    {
+            //        pizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == fijacion.MaterialId ).OrderByDescending(a => a.FechaDesde).Take(1).Single();
+            //        pizarraLista.Add(pizarra);
+            //    }
+            //    fijacion.MonedaId = pizarra.MonedaId;
+            //    fijacion.Precio = pizarra.Precio;
+
+            //}
+            //logger.Debug("CrearSugerenciaCupo - pongo precio pizarra a FijacionDePrecioContrato que no tienen precio");
 
             Dictionary<int, int> contratoUsados = cupos.Where(x => x.ContratoId != null && x.ComercialId != null).GroupBy(x => x.ContratoId.Value).ToDictionary(a => a.Key, a => a.Count());
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
@@ -736,23 +760,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
+            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
 
-
-
-
-            ////pongo precio pizarra a FijacionDePrecioContrato que no tienen precio
-            //foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3 && a.Precio == 0).ToList())
-            //{
-            //    var pizarra = pizarraLista.Where(a => a.MaterialId == fijacion.MaterialId).SingleOrDefault();
-            //    if (pizarra == null)
-            //    {
-            //        pizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == fijacion.MaterialId && a.FechaDesde > hoy).OrderByDescending(a => a.FechaDesde).Take(1).Single();
-            //        pizarraLista.Add(pizarra);
-            //    }
-            //    fijacion.MonedaId = pizarra.MonedaId;
-            //    fijacion.Precio = pizarra.Precio;
-
-            //}
 
             Dictionary<int, int> espacioDinamicoUsados = cupos.Where(x => x.ConfiguracionEspacioDinamicoId != null).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
@@ -788,7 +797,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var preciopizarra = pizarraLista.Where(a => a.MaterialId == item.MaterialId && a.FechaDesde >= item.FechaDesde && a.FechaHasta <= item.FechaDesde).SingleOrDefault();
                     if (preciopizarra == null)
                     {
-                        preciopizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == item.MaterialId && a.FechaDesde > hoy).OrderByDescending(a => a.FechaDesde).Take(1).Single();
+                        preciopizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == item.MaterialId).OrderByDescending(a => a.FechaDesde).Take(1).Single();
                     }
                     item.Precio = preciopizarra.Precio;
                     item.MonedaId = preciopizarra.MonedaId;
@@ -797,6 +806,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             espacioDinamicoLista = espacioDinamicoLista.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(espacioDinamicoLista);
+
+            logger.Debug("CrearSugerenciaCupo - Espacio Dinamico obtenidos: " + espacioDinamicoLista.Count());
         }
 
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
