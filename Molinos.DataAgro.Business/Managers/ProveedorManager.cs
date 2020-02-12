@@ -933,7 +933,7 @@ namespace Molinos.DataAgro.Business.Managers
                     x => new SegmentacionQry { SegmentacionId = x.SegmentacionId,
                         Descripcion = x.Descripcion, Grupo = x.Grupo },
                     x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
-                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Exportadores" && x.Grupo != "Canjeadores"),
+                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores"),
                 tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
                     x => new TipoTelefonoQry { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
                 prov = repositorio.Listar<Provincia, ProvinciaQry>(
