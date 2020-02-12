@@ -472,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DateTime hoy = DateTime.Now.Date;
 
                 Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
-                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula: " + JsonConvert.SerializeObject(formula));
+                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula: " );
                 var formulaSave = repositorio.Obtener<Formula>(formula.Id);
                 formulaSave.Inicio = formula.Inicio;
                 formulaSave.CantDias = formula.CantDias;
@@ -560,7 +560,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlantas." + JsonConvert.SerializeObject(disponibilidadEnPlantas));
+
+            foreach (var item in disponibilidadEnPlantas)
+            {
+                logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta:" + item.Fecha.ToString("dd/MM/yyyy") + ",cantidad:"+item.LimiteCupo+"materialid:"+item.MaterialId);
+            }
             return disponibilidadEnPlantas;
         }
 
