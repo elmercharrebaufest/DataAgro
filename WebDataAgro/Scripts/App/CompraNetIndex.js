@@ -430,7 +430,7 @@ function CreateGridInformeCompraNet() {
         pageSize: 20,
         filter: defaultFilter
     };
-
+    var classExterno = externo ? "hide" : "";
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
         dataBound: function () {
@@ -470,8 +470,11 @@ function CreateGridInformeCompraNet() {
         columns: [
             { selectable: true, width: "50px" },
             {
-                field: "Proveedor", type: "string", width: 150, attributes: {
-                    "id": "line"
+                field: "Proveedor", type: "string", width: 150, headerAttributes: {
+                    "class": classExterno
+                },attributes: {
+                    "id": "line",
+                    "class": classExterno
                 },
                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
@@ -497,7 +500,13 @@ function CreateGridInformeCompraNet() {
                 filterable: { ui: createMultiSelectProveedor }
             },
             {
-                field: "Corredor", type: "string", width: 150, filterable: { ui: createMultiSelectCorredor }
+                field: "Corredor", type: "string", width: 150, filterable: { ui: createMultiSelectCorredor },
+                headerAttributes: {
+                    "class": classExterno
+                },
+                attributes: {
+                    "class": classExterno
+                }
             },
             {
                 field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: {
@@ -589,13 +598,23 @@ function CreateGridInformeCompraNet() {
                 field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" }
             },
             {
-                field: "GrupoCompraDescripcion", type: "string", title: "Zona", width: 70, attributes: { "class": "mobile-xs mobile-md" }
+                field: "GrupoCompraDescripcion", type: "string", title: "Zona", width: 70,
+                headerAttributes: {
+                    "class": classExterno
+                },
+                attributes: { "class": "mobile-xs mobile-md " + classExterno}
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
+                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                    "class": classExterno
+                },
+                attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "ComercialCreador", type: "string", title: "Creador", width: 70, filterable: { ui: createMultiSelectComercial }, attributes: { "class": "mobile-xs" }
+                field: "ComercialCreador", type: "string", title: "Creador", width: 70, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                    "class": classExterno
+                },
+                attributes: { "class": "mobile-xs " + classExterno }
             },
             {
                 field: "DestinoDescripcion", type: "string", title: "Destino", attributes: { "class": "mobile-xs mobile-md" }
@@ -1813,6 +1832,7 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
     $("#proveedor_a_borrar").text(proveedor);
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
+    $("#estadoModalBorrar").val(estado);
     if (tipoNegocio === "3") {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
     } else if (tipoNegocio === "4") {
@@ -1826,7 +1846,6 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
         $("#contratoModalBorrar").val(acuerdoId);
     } else {
         $("#contratoModalBorrar").val(id);
-        $("#estadoModalBorrar").val(estado);
     }
 
     $("#motivo-rechazo").val("");
@@ -1935,9 +1954,9 @@ function InicializarPrecioMOA() {
         }
         if (matRetirado == true) {
             table += '<span class="retirado">Retirado</span>';
-        }else {
-            table += precio[i][0].Retirado == false ? '<span class="precio">' + kendo.toString(precio[i][0].Precio, "n") + ' ' + precio[i][0].MonedaId +'</span><br/>': '';
-            table += precio[i][1].Retirado == false ? '<span class="precio">' + kendo.toString(precio[i][1].Precio, "n") + ' ' + precio[i][1].MonedaId + '</span><br/>' : '';
+        } else {
+            table += precio[i][0].Precio > 0 ? '<span class="precio">' + kendo.toString(precio[i][0].Precio, "n") + ' ' + precio[i][0].MonedaId + '</span><br/>' : '';
+            table += precio[i][1].Precio > 0 ? '<span class="precio">' + kendo.toString(precio[i][1].Precio, "n") + ' ' + precio[i][1].MonedaId + '</span><br/>' : '';
             table += precio[i][0].Pizarra == true ? '<span class="precio"> Pizarra </span><br/>' : '';
         }
         table += '</td>';
@@ -1959,7 +1978,7 @@ function ArmarPrecio(dataItem) {
         if (!externo && dataItem.TipoNegocioId === 3 && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && e.Moneda === e.Moneda; })[0];
+                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && e.MonedaId === dataItem.Moneda; })[0];
                 if (p)
                     esPrecioMoa = p.Precio == dataItem.PrecioPlazo;
             }

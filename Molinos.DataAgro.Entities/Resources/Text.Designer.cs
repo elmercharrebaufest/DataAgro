@@ -1240,11 +1240,13 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Justo eget magna fermentum iaculis eu non diam phasellus vestibulum. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Diam maecenas ultricies mi eget mauris pharetra et ultrices. Viverra accumsan in nisl nisi scelerisque eu ultrices vitae. Orci dapibus ultrices in iaculis. Aliquam ultrices sagittis orci a. Amet porttitor eget dolor morbi. Vel eros donec ac od [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Bienvenido a la Plataforma DataAgro  (la “Plataforma DataAgro”), que opera desde el sitio Web www.molinosagro.com.ar (el “Sitio Web”), de propiedad de Molinos Agro S.A., C.U.I.T. 30-71511877-3, con domicilio en Uruguay 4075, (B1644HKG) Victoria, partido de San Fernando, provincia de Buenos Aires (en lo sucesivo, “MOA”).
+        ///
+        ///La Plataforma DataAgro es un sistema de carga de los datos de las operaciones comerciales de compraventa de granos y oleaginosas previamente pactadas en forma telefónica entre MOA y los p [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string Terminos_Y_Condiciones {
+        public static string TerminosYCondiciones {
             get {
-                return ResourceManager.GetString("Terminos_Y_Condiciones", resourceCulture);
+                return ResourceManager.GetString("TerminosYCondiciones", resourceCulture);
             }
         }
         

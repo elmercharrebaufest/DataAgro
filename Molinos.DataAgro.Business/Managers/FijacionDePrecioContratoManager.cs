@@ -142,7 +142,7 @@ namespace Molinos.DataAgro.Business.Managers
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value):"";
             var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId);
             var listaContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "", oParam.FijacionDePrecioContratoId);
-            if (oParam.ContratoSAP == "")
+            if (string.IsNullOrEmpty(oParam.ContratoSAP))
             {
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
                 return oErrorMessages;
@@ -280,7 +280,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.Agregar(oFijacionDePrecioSave);
             }
-            if (ConfirmacionAutomatica(oFijacionDePrecioSave))
+            if (oFijacionDePrecio.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oFijacionDePrecioSave))
             {
                 oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                 logger.Debug("El contrato " + oFijacionDePrecioSave.FijacionDePrecioContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
@@ -503,6 +503,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.MotivoRechazo = motivo;
                 try
                 {
+                    repositorio.GuardarCambios();
                     EnviarMailRechazo(oContratoSave); 
                 }
                 catch (Exception ex)

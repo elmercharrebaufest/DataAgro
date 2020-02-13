@@ -594,11 +594,8 @@
   <data name="RazonCorredor" xml:space="preserve">
     <value>Corredor</value>
   </data>
-  <data name="Terminos_Y_Condiciones" xml:space="preserve">
-    <value>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Justo eget magna fermentum iaculis eu non diam phasellus vestibulum. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Diam maecenas ultricies mi eget mauris pharetra et ultrices. Viverra accumsan in nisl nisi scelerisque eu ultrices vitae. Orci dapibus ultrices in iaculis. Aliquam ultrices sagittis orci a. Amet porttitor eget dolor morbi. Vel eros donec ac odio. Vel pharetra vel turpis nunc eget lorem dolor sed. Arcu cursus vitae congue mauris rhoncus aenean vel.
-
-Lacus suspendisse faucibus interdum posuere lorem. Nisi est sit amet facilisis magna. Sed elementum tempus egestas sed sed risus pretium. Habitant morbi tristique senectus et netus et. Bibendum at varius vel pharetra vel. Augue mauris augue neque gravida in fermentum et sollicitudin. Volutpat maecenas volutpat blandit aliquam. Malesuada bibendum arcu vitae elementum curabitur vitae. Id aliquet lectus proin nibh nisl condimentum id. Semper auctor neque vitae tempus quam pellentesque nec nam. Placerat vestibulum lectus mauris ultrices eros. Nullam eget felis eget nunc lobortis mattis.
-
-Euismod elementum nisi quis eleifend. Rutrum quisque non tellus orci ac auctor augue mauris augue. Habitant morbi tristique senectus et. Viverra adipiscing at in tellus integer. Gravida in fermentum et sollicitudin ac. Id faucibus nisl tincidunt eget nullam non nisi est sit. Morbi enim nunc faucibus a pellentesque sit amet. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Urna nunc id cursus metus. Eu mi bibendum neque egestas congue quisque egestas. Posuere lorem ipsum dolor sit. Ultricies mi eget mauris pharetra et ultrices.</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

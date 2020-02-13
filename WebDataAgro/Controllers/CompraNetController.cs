@@ -730,9 +730,9 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult TraerPrecioMOAPorMaterialMoneda(int materialId, string monedaId)
+        public ActionResult TraerPrecioMOAPorMaterial(int materialId)
         {
-            var precio = configuracionInternaManager.TraerPrecioCompraNet(materialId, monedaId);
+            var precio = configuracionInternaManager.TraerPrecioCompraNet(materialId);
 
             return new JsonResult()
             {

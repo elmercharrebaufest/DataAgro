@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado EliminarPizarra(int id);
         Resultado EliminarFijacion(int id);
         IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioCompraNet();
-        PrecioMoaCompraNetDto TraerPrecioCompraNet(int materialId, string monedaId);
+        List<PrecioMoaCompraNetDto> TraerPrecioCompraNet(int materialId);
         bool HabilitarPizarra(int material);
     }
 }

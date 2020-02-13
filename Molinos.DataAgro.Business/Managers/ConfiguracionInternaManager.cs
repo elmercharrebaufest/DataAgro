@@ -297,7 +297,6 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.Moneda.Descripcion
             }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
             var hoy = DateTime.Today;
-            //var existe = repositorio.Listar<HabilitacionFijacion>(x => x.Dia == hoy);
             var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
             foreach (var mat in materiales)
             {                
@@ -311,16 +310,22 @@ namespace Molinos.DataAgro.Business.Managers
                     precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId);
                     listaPrecio.Add(precio);
                 }
-            }
+            }            
             return listaPrecio.GroupBy(x=>x.MaterialId);
         }
-        public PrecioMoaCompraNetDto TraerPrecioCompraNet(int materialId, string monedaId)
+        public List<PrecioMoaCompraNetDto> TraerPrecioCompraNet(int materialId)
         {
             var ahora = DateTime.Now;
-            var precio = repositorio.Obtener<PrecioMoa, PrecioMoaCompraNetDto>(x => x.MaterialId == materialId && x.MonedaId == monedaId && x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora,
-                x => new PrecioMoaCompraNetDto { MaterialId = x.MaterialId, MonedaId = x.MonedaId, Material = x.Material.Descripcion, Precio = x.Precio });
-            if (precio == null) precio = new PrecioMoaCompraNetDto {MaterialId= materialId, MonedaId = monedaId, Precio = 0 };
-            return precio;
+            var monedas = repositorio.Listar<Moneda, string>(x => x.MonedaId);
+            var precios = new  List<PrecioMoaCompraNetDto>();
+            foreach (var monedaId in monedas)
+            {
+                var precio = repositorio.Obtener<PrecioMoa, PrecioMoaCompraNetDto>(x => x.MaterialId == materialId && x.MonedaId == monedaId && x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora,
+                    x => new PrecioMoaCompraNetDto { MaterialId = x.MaterialId, MonedaId = x.MonedaId, Material = x.Material.Descripcion, Precio = x.Precio });
+                if (precio == null) precio = new PrecioMoaCompraNetDto { MaterialId = materialId, MonedaId = monedaId, Precio = 0 };
+                precios.Add(precio);
+            }
+            return precios;
         }        
         public bool HabilitarPizarra(int material)
         {
