@@ -970,6 +970,7 @@ function armarSelects(result) {
         aEliminarGranos = [];
 
         capProdCant++;
+        recalcularSegmentacion();
     });
 
     $("#guardarCapProd-almacenamiento").click(function () {
@@ -1134,6 +1135,7 @@ function armarSelects(result) {
         aEliminarGranosAlmacenamiento = [];
         aEliminarGranosAlmacenamientoGrano = [];
         capProdCantAlmacenamiento++;
+        recalcularSegmentacion();
     });
 
     $("#provincia").change(function () {
@@ -1163,6 +1165,7 @@ function eliminarCampoProduccion(val) {
     aGuardar = aGuardar.filter(function (el) {
         return el.item !== parseInt(item);
     });
+    recalcularSegmentacion();
 }
 
 function eliminarAlmacenamiento(val) {
@@ -1171,6 +1174,8 @@ function eliminarAlmacenamiento(val) {
     aGuardarAlmacenamiento = aGuardarAlmacenamiento.filter(function (el) {
         return el.item !== parseInt(item);
     });
+
+    recalcularSegmentacion();
 }
 
 function editarCampoProduccion(id) {
@@ -2428,55 +2433,106 @@ function ObtenerDatos() {
     obj.contactocomercial = aGuardarContactoComercial;
 
     if (obj.basicos.segmentacion == "null") {
-        var tonsMaxProduccion = 0;
-
-        for (var i = 0; i < obj.produccion.CamposProduccion.length; i++) {
-            for (var j = 0; j < obj.produccion.CamposProduccion[i].granos.length; j++) {
-                tonsMaxProduccion += Number(obj.produccion.CamposProduccion[i].granos[j].toneladas);
-            }
-        }
-
-        var tonsMaxAlamacenamiento = 0;
-        for (var i = 0; i < obj.almacenamiento.CamposAlmacenamiento.length; i++) {
-            for (var j = 0; j < obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamientoGrano.length; j++) {//grano
-                tonsMaxAlamacenamiento += Number(obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamientoGrano[j].toneladasAlmacenamiento);
-            }
-            //for (var j = 0; j < obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamiento.length; j++) {//campaña
-            //    tonsMaxAlamacenamiento += Number(obj.almacenamiento.CamposAlmacenamiento[i].granosAlmacenamiento[j].toneladasAlmacenamiento);
-            //}
-        }
-        if (tonsMaxAlamacenamiento > 0) {
-            if (tonsMaxAlamacenamiento > 0 && tonsMaxAlamacenamiento <= 20000) {
-                obj.basicos.segmentacion = 9;
-            }
-            if (tonsMaxAlamacenamiento > 20000 && tonsMaxAlamacenamiento <= 50000) {
-                obj.basicos.segmentacion = 10;
-            }
-            if (tonsMaxAlamacenamiento > 50000 && tonsMaxAlamacenamiento <= 150000) {
-                obj.basicos.segmentacion = 11;
-            }
-            if (tonsMaxAlamacenamiento > 150000) {
-                obj.basicos.segmentacion = 15;
-            }
-        }
-
-        if (tonsMaxProduccion > 0) {
-            if (tonsMaxProduccion > 0 && tonsMaxProduccion <= 3000) {
-                obj.basicos.segmentacion = 2;
-            }
-            if (tonsMaxProduccion > 3000 && tonsMaxProduccion <= 10000) {
-                obj.basicos.segmentacion = 3;
-            }
-            if (tonsMaxProduccion > 10000) {
-                obj.basicos.segmentacion = 4;
-            }
-        }
-        $("#segmentacion").val(obj.basicos.segmentacion);
+        recalcularSegmentacion();
+        obj.basicos.segmentacion = $("#segmentacion").val();
     }
-    //console.log("produccion",tonsMaxProduccion);
-    //console.log("almacenamiento",tonsMaxAlamacenamiento);
-    //console.log("segmentacion", obj.basicos.segmentacion);
     GrabarProveedor(obj);
+}
+
+function recalcularSegmentacion() {
+
+    var segmentacion;
+    var maxCampaña = new Array();
+
+    //produccion
+    var tonsMaxProduccion = 0;
+    $("#grano0 option").each(function () {
+        if (this.value != null) {
+            maxCampaña.push( { granoId: this.value, campañaId: 0 });
+        }
+
+    });
+    for (var i = 0; i < aGuardar.length; i++) {
+        for (var j = 0; j < aGuardar[i].granos.length; j++) {
+            for (var k = 0; k < maxCampaña.length; k++) {
+                if (maxCampaña[k].granoId == aGuardar[i].granos[j].granoId && aGuardar[i].granos[j].campañaId > maxCampaña[k].campañaId) {
+                    maxCampaña[k].campañaId = aGuardar[i].granos[j].campañaId;
+                }
+            }
+        }
+    }
+
+
+    for (var i = 0; i < aGuardar.length; i++) {
+        for (var j = 0; j < aGuardar[i].granos.length; j++) {
+            for (var k = 0; k < maxCampaña.length; k++) {
+                if (maxCampaña[k].granoId == aGuardar[i].granos[j].granoId && aGuardar[i].granos[j].campañaId == maxCampaña[k].campañaId) {
+                    tonsMaxProduccion += Number(aGuardar[i].granos[j].toneladas);
+                }
+            }
+        }
+    }
+
+    //almacenamiento
+    maxCampaña = new Array();
+    $("#grano0 option").each(function () {
+        if (this.value != null) {
+            maxCampaña.push({ granoId: this.value, campañaId: 0 });
+        }
+    });
+
+    var tonsMaxAlamacenamiento = 0;
+    for (var i = 0; i < aGuardarAlmacenamiento.length; i++) {
+        for (var j = 0; j < aGuardarAlmacenamiento[i].granosAlmacenamientoGrano.length; j++) {//grano
+            for (var k = 0; k < maxCampaña.length; k++) {
+                if (maxCampaña[k].granoId == aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].granoId && aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].campañaId > maxCampaña[k].campañaId) {
+                    maxCampaña[k].campañaId = aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].campañaId;
+                }
+            }
+        }
+    }
+
+    for (var i = 0; i < aGuardarAlmacenamiento.length; i++) {
+        for (var j = 0; j < aGuardarAlmacenamiento[i].granosAlmacenamientoGrano.length; j++) {//grano
+            for (var k = 0; k < maxCampaña.length; k++) {
+                if (maxCampaña[k].granoId == aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].granoId && aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].campañaId == maxCampaña[k].campañaId) {
+                    tonsMaxAlamacenamiento += Number(aGuardarAlmacenamiento[i].granosAlmacenamientoGrano[j].toneladasAlmacenamiento);
+                }
+            }
+        }
+    }
+
+    if (tonsMaxAlamacenamiento > 0) {
+        if (tonsMaxAlamacenamiento > 0 && tonsMaxAlamacenamiento <= 20000) {
+            segmentacion = 9;
+        }
+        if (tonsMaxAlamacenamiento > 20000 && tonsMaxAlamacenamiento <= 50000) {
+            segmentacion = 10;
+        }
+        if (tonsMaxAlamacenamiento > 50000 && tonsMaxAlamacenamiento <= 150000) {
+            segmentacion = 11;
+        }
+        if (tonsMaxAlamacenamiento > 150000) {
+            segmentacion = 15;
+        }
+    }
+
+    if (tonsMaxProduccion > 0) {
+        if (tonsMaxProduccion > 0 && tonsMaxProduccion <= 3000) {
+            segmentacion = 4;
+        }
+        if (tonsMaxProduccion > 3000 && tonsMaxProduccion <= 10000) {
+            segmentacion = 3;
+        }
+        if (tonsMaxProduccion > 10000) {
+            segmentacion = 2;
+        }
+    }
+    console.log("produccion", tonsMaxProduccion);
+    console.log("almacenamiento", tonsMaxAlamacenamiento);
+    console.log("segmentacion", segmentacion);
+    $("#segmentacion").val(segmentacion);
+
 }
 
 function GrabarProveedor(nuevoProveedor) {
