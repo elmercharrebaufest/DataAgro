@@ -189,6 +189,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerPrecioCompraNetTestOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, string>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<string>() { "a", "b" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<Expression<Func<PrecioMoa, PrecioMoaCompraNetDto>>>()))
                .Returns(new PrecioMoaCompraNetDto
                {
@@ -197,9 +199,9 @@ namespace Molinos.DataAgro.Test.Managers
                    Precio = 23,
                    MonedaId = "a"
                });
-            var resultado = target.TraerPrecioCompraNet(1, "a");
+            var resultado = target.TraerPrecioCompraNet(1);
 
-            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<Expression<Func<PrecioMoa, PrecioMoaCompraNetDto>>>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<Expression<Func<PrecioMoa, PrecioMoaCompraNetDto>>>()), Times.Exactly(2));
             Assert.IsNotNull(resultado);
         }
         [Test]
