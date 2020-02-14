@@ -694,8 +694,15 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
             {
-                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                if (ConfirmacionAutomatica(oFijacionDePrecioSave))
+                {
+                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
 
+                }
+                else
+                {
+                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                }
                 try
                 {
                     repositorio.GuardarCambios();

@@ -390,7 +390,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionMaiz,
                 Total = kilosPosicionMaiz.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionTrigoCamara = TraerPosicionMaterial(2, fechaDesde, fechaHasta, 3, centroId);
+            var kilosPosicionTrigoCamara = TraerPosicionMaterial(2, fechaDesde, fechaHasta, 1, centroId);
             var posicionTrigoCamara = new PosicionComprasDto
             {
                 Material = "Trigo Cámara",

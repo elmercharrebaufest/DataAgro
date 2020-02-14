@@ -567,7 +567,9 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Ampliaciones", type: "number", width: 60, title: "Ampl.", attributes: {
-                    "class": "mobile-sm"
+                    "class": "mobile-sm" + classExterno
+                }, headerAttributes: {
+                    "class": classExterno
                 }, template: function (dataItem) {
                     if (ampliaNegocios && dataItem.Estado == 2 && !externo) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
