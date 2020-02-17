@@ -1714,7 +1714,6 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             contratoSave.MaterialId = contrato.MaterialId;
-            contratoSave.TipoNegocioId = contrato.TipoNegocioId;
             contratoSave.Cantidad = contrato.Cantidad;
             contratoSave.Precio = contrato.Precio;
             contratoSave.FechaEntrega = contrato.FechaEntrega;
@@ -1762,7 +1761,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ContratoCorredor = contrato.ContratoCorredor;
             contratoSave.SelCargoVendedor = contrato.SelCargoVendedor;
             contratoSave.SelCargoMOA = contrato.SelCargoMOA;
-            contratoSave.Madre = contrato.Madre;
             contratoSave.ContratoMadre = contrato.ContratoMadre?.PadLeft(10, '0');
             contratoSave.PrecioNeto = contrato.PrecioNeto;
             contratoSave.StandardDeCalidadId = contrato.StandardDeCalidadId;

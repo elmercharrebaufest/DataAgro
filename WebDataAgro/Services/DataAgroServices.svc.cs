@@ -217,71 +217,68 @@ namespace WebDataAgro.Services
                 }
                 var porcentaje = contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).ToList().Count >0?
                     contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).Sum(x => x.Porcentaje * contratoSAP.Precio):0;
-                var contrato = new Contrato
-                {
-                    ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10,'0'),
-                    BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3,
-                    BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => x.CodigoSap == contratoSAP.Bolsa, x => x.Id),
-                    CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId),
-                    Cantidad = (double)contratoSAP.Cantidad,
-                    CantidadCamiones = contratoSAP.Camiones,
-                    CD = contratoSAP.AurCd == "X",
-                    ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id),
-                    ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Creador, x => x.ComercialId),
-                    ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Usuario, x => x.ComercialId),
-                    Compensacion = contratoSAP.Compensacion == "X",
-                    DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id),
-                    CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null,
-                    Consignatario = contratoSAP.Consignatario == "X",
-                    ContratoCorredor = contratoSAP.ContrCorr,
-                    ContratoMadre = contratoSAP.ContratoMadre,
-                    ContratoVendedor = contratoSAP.ContrVend,
-                    CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null,
-                    DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                    DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento,
-                    Dolarizado = contratoSAP.PagoDiferido == "X",
-                    EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null,
-                    FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                    Fecha = DateTime.ParseExact(contratoSAP.Fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                    ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
-                    contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null,
-                    LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId),
-                    Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null,
-                    MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId),
-                    MercsDeposito = contratoSAP.MercDescargada == "X",
-                    MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId),
-                    MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
-                    contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "",
-                    NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null,
-                    NoInformaSio = contratoSAP.NoInformaSio == "X",
-                    Observacion = contratoSAP.ObservacionCal1,
-                    PagoDiferido = contratoSAP.PagoDiferido == "X",
-                    PagoDirectoVendedor = contratoSAP.PagoDirVend == "X",
-                    PlanCanje = contratoSAP.IndOpCanje == "X",
-                    PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision,
-                    Precio = contratoSAP.Precio,
-                    PrecioNeto = contratoSAP.Precio + contratoSAP.Apertura.Where(x => x.Concepto == "RE" || x.Concepto == "FI" || x.Concepto == "CO" || x.Concepto == "BO").Sum(x => x.Importe)
-                    + porcentaje + contratoSAP.FleteTarifa,
-                    ProveedorId = repositorio.Obtener<CorredorProveedor, int>(x => x.Proveedor.CUIT == contratoSAP.Proveedor, x => x.ProveedorId),
-                    ProvinciaId = contratoSAP.Provincia,
-                    SelCargoMOA = contratoSAP.SelCargoMOA == "X",
-                    SelCargoVendedor = contratoSAP.SelCargoVend == "X",
-                    StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => x.CodigoSap == contratoSAP.Especial, x => x.Id),
-                    Sustentable = contratoSAP.Sustentable == "X",
-                    TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa,
-                    TipoNegocioId = contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "HIJO" ? 2 :
-                    repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId),
-                    UsuarioId = contratoSAP.Usuario,
-                    Warrant = contratoSAP.AutCg == "X",
-                    ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null,
-                    Calidad = calidades,
-                    AperturaPrecio = aperturas,
-                    Descuentos = descuentos
-                };
+                var contrato = new Contrato();
+
+                contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
+                contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3;
+                contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
+                contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
+                contrato.Cantidad = (double)contratoSAP.Cantidad;
+                contrato.CantidadCamiones = contratoSAP.Camiones;
+                contrato.CD = contratoSAP.AurCd == "X";
+                contrato.ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id);
+                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Creador, x => x.ComercialId);
+                contrato.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Usuario, x => x.ComercialId);
+                contrato.Compensacion = contratoSAP.Compensacion == "X";
+                contrato.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id);
+                contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
+                contrato.Consignatario = contratoSAP.Consignatario == "X";
+                contrato.ContratoCorredor = contratoSAP.ContrCorr;
+                contrato.ContratoMadre = contratoSAP.ContratoMadre;
+                contrato.ContratoVendedor = contratoSAP.ContrVend;
+                contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
+                contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+                contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
+                contrato.Dolarizado = contratoSAP.PagoDiferido == "X";
+                contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
+                contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+                contrato.Fecha = DateTime.ParseExact(contratoSAP.Fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+                contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
+                contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
+                contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
+                contrato.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId);
+                contrato.MercsDeposito = contratoSAP.MercDescargada == "X";
+                contrato.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId);
+                contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
+                contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
+                contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
+                contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
+                contrato.Observacion = contratoSAP.ObservacionCal1;
+                contrato.PagoDiferido = contratoSAP.PagoDiferido == "X";
+                contrato.PagoDirectoVendedor = contratoSAP.PagoDirVend == "X";
+                contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
+                contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
+                contrato.Precio = contratoSAP.Precio;
+                contrato.PrecioNeto = contratoSAP.Precio + contratoSAP.Apertura.Where(x => x.Concepto == "RE" || x.Concepto == "FI" || x.Concepto == "CO" || x.Concepto == "BO").Sum(x => x.Importe)
+                 + porcentaje + contratoSAP.FleteTarifa;
+                contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor, x => x.ProveedorId);
+                contrato.ProvinciaId = contratoSAP.Provincia;
+                contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
+                contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
+                contrato.StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
+                contrato.Sustentable = contratoSAP.Sustentable == "X";
+                contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
+                contrato.UsuarioId = contratoSAP.Usuario.ToLower();
+                contrato.Warrant = contratoSAP.AutCg == "X";
+                contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
+                contrato.Calidad = calidades;
+                contrato.AperturaPrecio = aperturas;
+                contrato.Descuentos = descuentos;
+                contrato.TipoNegocioId = 3;
                 var resultado = contratoManager.ActualizarContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }

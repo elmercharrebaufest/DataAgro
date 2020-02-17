@@ -175,19 +175,21 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN 
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
 
 --Segmentacion
-update Segmentacion set Descripcion ='Tradicional: incluiría las cooperativas' where SegmentacionId = '7'
-update Segmentacion set Descripcion ='Grande: Más de 10.000 tns' where SegmentacionId = '2'
-update Segmentacion set Descripcion ='Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
-update Segmentacion set Descripcion ='Chico: menos de 3.000 tns' where SegmentacionId = '4'
-update Segmentacion set Descripcion ='Chico: menos de 20.000 tns' where SegmentacionId = '9'
-update Segmentacion set Descripcion ='Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
-update Segmentacion set Descripcion ='Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
---IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Mega' and Grupo = 'Acopiadores') BEGIN insert into Segmentacion values ('Mega','Acopiadores'); END
-update Segmentacion set Descripcion ='Mega: más de 150.000 tns' where SegmentacionId = '15'
+update Segmentacion set Descripcion ='Corredor Tradicional: incluiría las cooperativas' where SegmentacionId = '7'
+update Segmentacion set Descripcion ='Corredor Correacopios' where SegmentacionId = '5'
+
+update Segmentacion set Descripcion ='Productor Grande: Más de 10.000 tns' where SegmentacionId = '2'
+update Segmentacion set Descripcion ='Productor Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
+update Segmentacion set Descripcion ='Productor Chico: menos de 3.000 tns' where SegmentacionId = '4'
+
+update Segmentacion set Descripcion ='Acopio Chico: menos de 20.000 tns' where SegmentacionId = '9'
+update Segmentacion set Descripcion ='Acopio Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
+update Segmentacion set Descripcion ='Acopio Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
+update Segmentacion set Descripcion ='Acopio Mega: más de 150.000 tns' where SegmentacionId = '15'
 
 
 --Material 
---update Material set Descripcion = 'Soja' where MaterialId = 3
+update Material set Descripcion = 'Soja' where MaterialId = 3
 
 
 --CondicionFijacion
