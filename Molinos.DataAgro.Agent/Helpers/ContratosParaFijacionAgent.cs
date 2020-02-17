@@ -68,10 +68,10 @@ namespace Molinos.DataAgro.Agent
                         contrato.ARecibirSinPrecio = 10000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.RecibidoSinFijar = 19000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.ImporteAPrecio = 0;
-                        contrato.ImporteSobrePrecio = 100;
+                        contrato.ImporteSobrePrecio = 0;
                         contrato.MonedaAPrecio = "ARP  ";
                         contrato.MonedaSobrePrecio = "ARP  ";
-                        contrato.PorcentajeAPrecio = 50;
+                        contrato.PorcentajeAPrecio = 0;
                         contrato.PorcentajeSobrePrecio = 0;
                         contrato.CondicionFijacionCod = "07";
                         contrato.CondicionPagoCod = "10";

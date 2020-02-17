@@ -223,12 +223,12 @@ function InicializarElementos() {
                 $("#fechaHastaId").val(e.dataItem.HastaEntrega);
                 $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
                 $("#destinoId").data("kendoDropDownList").value(e.dataItem.Centro);
-                if (e.dataItem.ImporteAPrecio==0) {
+                if (e.dataItem.ImporteAPrecio== 0) {
                     $("#impo-a-precio").hide();
                 }
                 $("#importe-a-precio").text(e.dataItem.ImporteAPrecio + " " + e.dataItem.MonedaAPrecio + " ");
-                if (e.dataItem.ImporteSobrePrecio ==0) {
-                    $("#impo-a-precio").hide();
+                if (e.dataItem.ImporteSobrePrecio == 0) {
+                    $("#impo-sobre-precio").hide();
                 }
                 $("#importe-sobre-precio").text(e.dataItem.ImporteSobrePrecio + " " + e.dataItem.MonedaSobrePrecio + " ");
                 if (e.dataItem.PorcentajeAPrecio == 0) {
@@ -236,7 +236,7 @@ function InicializarElementos() {
                 }
                 $("#porc-a-precio").text(e.dataItem.PorcentajeAPrecio + " ");
                 if (e.dataItem.PorcentajeSobrePrecio == 0) {
-                    $("#porcenteaje-a-precio").hide();
+                    $("#porcenteaje-sobre-precio").hide();
                 }
                 $("#porc-sobre-precio").text(e.dataItem.PorcentajeSobrePrecio);
                 $("#cond-fijacion").text(e.dataItem.CondicionFijacionDescripcion);
