@@ -57,8 +57,8 @@ namespace Molinos.DataAgro.Agent
                             Campana = x.Campana.Descripcion,
                             PagoDiferido = x.PagoDiferido ?? false,
                             Centro = x.DestinoId,
+                            CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null,
                             
-                            CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null
                         });
                         contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
@@ -67,6 +67,16 @@ namespace Molinos.DataAgro.Agent
                         contrato.Filtro = filtro + "|" + contrato.ContratoId;
                         contrato.ARecibirSinPrecio = 10000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.RecibidoSinFijar = 19000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
+                        contrato.ImporteAPrecio = 0;
+                        contrato.ImporteSobrePrecio = 100;
+                        contrato.MonedaAPrecio = "ARP  ";
+                        contrato.MonedaSobrePrecio = "ARP  ";
+                        contrato.PorcentajeAPrecio = 50;
+                        contrato.PorcentajeSobrePrecio = 0;
+                        contrato.CondicionFijacionCod = "07";
+                        contrato.CondicionPagoCod = "10";
+                        contrato.CondicionFijacionDescripcion = "HASTA 14.30 HS POR PIZ / MERCADERIA";
+                        contrato.CondicionPagoDescripcion = "10 DÍAS HÁBILES DE FECHA DE FIJACIÓN";
                         if (double.Parse(contrato.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contrato);
@@ -118,8 +128,17 @@ namespace Molinos.DataAgro.Agent
                             ARecibirSinPrecio = contrato.A_RECIBIR_SIN_PRECIO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             RecibidoSinFijar = contrato.RECIBIDO_SIN_FIJAR.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             CentroDescripcion = centro.Descripcion,
-
-                            Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0')
+                            ImporteAPrecio = contrato.IMPORTE_A_PRECIO,
+                            ImporteSobrePrecio = contrato.IMPORTE_S_PRECIO,
+                            MonedaAPrecio = contrato.MONEDA_A_PRECIO,
+                            MonedaSobrePrecio = contrato.MONEDA_S_PRECIO,
+                            PorcentajeAPrecio = contrato.PORC_A_PRECIO,
+                            PorcentajeSobrePrecio = contrato.PORC_S_PRECIO,
+                            CondicionFijacionCod = contrato.COND_FIJACION,
+                            CondicionPagoCod = contrato.COND_PAGO,
+                            CondicionFijacionDescripcion = repositorio.Obtener<CondicionFijacion, string>(x => x.CodigoSap == contrato.COND_FIJACION,x=>x.Descripcion),
+                            CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_FIJACION, x => x.Descripcion),
+                            Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
                         };
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                         {

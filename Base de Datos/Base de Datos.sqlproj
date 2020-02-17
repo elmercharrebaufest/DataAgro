@@ -278,6 +278,7 @@
     <Build Include="dbo\Tables\TokenAuth.sql" />
     <Build Include="dbo\Tables\ProveedorRol.sql" />
     <Build Include="dbo\Tables\UsuarioExterno.sql" />
+    <Build Include="dbo\Tables\CondicionPago.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

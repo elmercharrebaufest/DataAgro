@@ -212,7 +212,7 @@ function InicializarElementos() {
                 MensErr("No estan habilitadas las Fijaciones de pago diferido – Contactarse con el comercial");
                 $(this).data('kendoAutoComplete').value("");
             } else {
-                $("#datosContrato").show();
+                $(".datoscontrato").show();
                 $("#kgspendientescontrato").text(e.dataItem.KilosPendiente);
                 $("#kgsaplicadoscontrato").text(e.dataItem.KilosAplicados);
                 $("#desdecontrato").text(e.dataItem.FechaDesde);
@@ -223,6 +223,24 @@ function InicializarElementos() {
                 $("#fechaHastaId").val(e.dataItem.HastaEntrega);
                 $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
                 $("#destinoId").data("kendoDropDownList").value(e.dataItem.Centro);
+                if (e.dataItem.ImporteAPrecio==0) {
+                    $("#impo-a-precio").hide();
+                }
+                $("#importe-a-precio").text(e.dataItem.ImporteAPrecio + " " + e.dataItem.MonedaAPrecio + " ");
+                if (e.dataItem.ImporteSobrePrecio ==0) {
+                    $("#impo-a-precio").hide();
+                }
+                $("#importe-sobre-precio").text(e.dataItem.ImporteSobrePrecio + " " + e.dataItem.MonedaSobrePrecio + " ");
+                if (e.dataItem.PorcentajeAPrecio == 0) {
+                    $("#porcenteaje-a-precio").hide();
+                }
+                $("#porc-a-precio").text(e.dataItem.PorcentajeAPrecio + " ");
+                if (e.dataItem.PorcentajeSobrePrecio == 0) {
+                    $("#porcenteaje-a-precio").hide();
+                }
+                $("#porc-sobre-precio").text(e.dataItem.PorcentajeSobrePrecio);
+                $("#cond-fijacion").text(e.dataItem.CondicionFijacionDescripcion);
+                $("#cond-pago").text(e.dataItem.CondicionPagoDescripcion);
                 e.dataItem.Calidad === true ? $("#trigoEspecialFijacion").prop("checked", true) : $("#trigoEspecialFijacion").prop("checked", false);
             }
         },
@@ -260,7 +278,7 @@ function InicializarElementos() {
     $('#contratoId').click(function (e) {
         $('#contratoId').val("");
         $("#contratoId").data("kendoAutoComplete").search("");
-        $("#datosContrato").hide();
+        $(".datoscontrato").hide();
     });
     $("#contratoId").on("keypress keyup blur", function (event) {
         $(this).val($(this).val().replace(/[^\d].+/, ""));

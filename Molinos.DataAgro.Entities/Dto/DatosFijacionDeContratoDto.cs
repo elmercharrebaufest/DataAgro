@@ -21,6 +21,16 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CentroDescripcion { get; set; }
         public string ARecibirSinPrecio { get; set; }
         public string RecibidoSinFijar { get; set; }
+        public decimal ImporteAPrecio { get; set; }
+        public decimal ImporteSobrePrecio { get; set; }
+        public string MonedaAPrecio { get; set; }
+        public string MonedaSobrePrecio { get; set; }
+        public decimal PorcentajeAPrecio { get; set; }
+        public decimal PorcentajeSobrePrecio { get; set; }
+        public string CondicionFijacionCod { get; set; }
+        public string CondicionFijacionDescripcion { get; set; }
+        public string CondicionPagoCod { get; set; }
+        public string CondicionPagoDescripcion { get; set; }
     }
 }
 

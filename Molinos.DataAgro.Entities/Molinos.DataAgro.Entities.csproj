@@ -205,6 +205,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\CondicionPago.cs" />
     <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />

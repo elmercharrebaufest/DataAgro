@@ -1702,7 +1702,7 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new Resultado();
             logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.ContratoId);
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP);
-            if(contratoSave==null && contratoSave.ContratoId == 0) 
+            if(contratoSave==null || contratoSave.ContratoId == 0) 
             {
                 error.Error("Contrato", "No existe contrato en DataAgro");
             }

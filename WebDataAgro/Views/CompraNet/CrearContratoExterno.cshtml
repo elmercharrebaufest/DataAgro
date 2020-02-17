@@ -24,19 +24,6 @@
 
 <div id="CrearContrato" class="container">
     <br />
-
-    @*<div class="row">
-            <div>
-                <div class="col-sm-2">
-                    <span class="k-button k-button-icontext" id="boton-ampliar" type="button">+ AMPLIAR</span>
-                </div>
-                <div class="col-md-4 col-sm-5">
-
-                </div>
-            </div>
-
-        </div>*@
-
     <br />
     <br />
     <div class="proveedores row no-gutter noAgente" hidden>
@@ -199,7 +186,7 @@
             <input type="number" class="k-textbox" style="width:100%" id="contratoId" />
             <input type="checkbox" id="trigoEspecialFijacion" hidden />
         </div>
-        <div class="col-sm-6" id="datosContrato" hidden>
+        <div class="col-sm-6 datoscontrato" id="datosContrato"  hidden>
             <div class="datoscontrato row">
                 <div class="col-xs-12">
                     <div style="display:inline-block">
@@ -238,17 +225,35 @@
         <div class="col-sm-5 col-md-4 required-box-parent">
             <input id="cantidadId" class="required-box" style="width:100%" />
         </div>
+        <div class="datoscontrato" hidden>
+            <div class="col-sm-6">
+                <div id="impo-a-precio" style="display:inline-block">
+                    <label>
+                        Bonif a Precio:
+                    </label>
+                    <span id="importe-a-precio"></span>
+                </div>
+                <div id="impo-sobre-precio" style="display:inline-block">
+                    <label>
+                        Bonif Sobre Precio:
+                    </label>
+                    <span id="importe-sobre-precio"></span>
+                </div>
+                <div id="porcenteaje-a-precio" style="display:inline-block">
+                    <label>
+                        Porc. a Precio:
+                    </label>
+                    <span id="porc-a-precio"></span>
+                </div>
+                <div id="porcenteaje-sobre-precio" style="display:inline-block">
+                    <label>
+                        Porc. Sobre Precio:
+                    </label>
+                    <span id="porc-sobre-precio"></span>
+                </div>
+            </div>
+        </div>
 
-        @*<div id="CantidadCamionesDiv" class="noFason noAgente noAcuerdo" hidden>
-                <div class="col-sm-1">
-                        <label>Camiones</label>
-                    </div>
-                    <div class="col-sm-4">
-                        <input id="cantidadCamionesId" style="width:100%" />
-                        <input type="checkbox" id="cargarCantidadCamiones" style="position:absolute; right:20px;top:6px">
-                        <img id="errcantidadCamionesId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-            </div>*@
         <div id="posicionFasonDiv" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
@@ -258,7 +263,20 @@
             </div>
         </div>
     </div>
-
+    <div class="row datoscontrato" hidden>
+        <div class="col-sm-6" style="display:inline-block">
+            <label style="padding:0;">
+                Cond fijacion:
+            </label>
+            <span id="cond-fijacion"></span>
+        </div>
+        <div class="col-sm-6" style="display:inline-block">
+            <label style="padding:0;">
+                Cond Pago:
+            </label>
+            <span id="cond-pago"></span>
+        </div>
+    </div>
     <div class="row">
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio</label>
@@ -752,21 +770,22 @@
                 </script>
             </div>
             </div>*@
-    <br />
-    <div class="row">
-        <div class="col-md-offset-2 col-md-4 text-right">
-            <span id="guardarBtn" class="formulario-footer-guardar-contrato k-button k-button-icontext" type="button">
-                Guardar Negocio
-            </span>
-            <span class="formulario-footer-cancelar k-button k-button-icontext" type="button">
-                Volver
-            </span>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-offset-2 col-md-4 text-right">
+        <span id="guardarBtn" class="formulario-footer-guardar-contrato k-button k-button-icontext" type="button">
+            Guardar Negocio
+        </span>
+        <span class="formulario-footer-cancelar k-button k-button-icontext" type="button">
+            Volver
+        </span>
 
-        </div>
-        <div class=" col-md-6">
-
-        </div>
     </div>
+    <div class=" col-md-6">
 
-    <!-- Modal Apertura Precio-->
-    @*@Html.Partial("ModalAperturaPrecio")*@
+    </div>
+</div>
+
+<!-- Modal Apertura Precio-->
+@*@Html.Partial("ModalAperturaPrecio")*@

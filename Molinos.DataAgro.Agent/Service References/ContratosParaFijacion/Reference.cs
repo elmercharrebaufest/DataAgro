@@ -122,6 +122,24 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         
         private decimal rECIBIDO_SIN_FIJARField;
         
+        private decimal iMPORTE_S_PRECIOField;
+        
+        private string mONEDA_S_PRECIOField;
+        
+        private decimal pORC_S_PRECIOField;
+        
+        private decimal iMPORTE_A_PRECIOField;
+        
+        private string mONEDA_A_PRECIOField;
+        
+        private decimal pORC_A_PRECIOField;
+        
+        private string cOND_FIJACIONField;
+        
+        private string gRUPO_COMPRASField;
+        
+        private string cOND_PAGOField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CONTRATO {
@@ -299,6 +317,114 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.rECIBIDO_SIN_FIJARField = value;
                 this.RaisePropertyChanged("RECIBIDO_SIN_FIJAR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=15)]
+        public decimal IMPORTE_S_PRECIO {
+            get {
+                return this.iMPORTE_S_PRECIOField;
+            }
+            set {
+                this.iMPORTE_S_PRECIOField = value;
+                this.RaisePropertyChanged("IMPORTE_S_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
+        public string MONEDA_S_PRECIO {
+            get {
+                return this.mONEDA_S_PRECIOField;
+            }
+            set {
+                this.mONEDA_S_PRECIOField = value;
+                this.RaisePropertyChanged("MONEDA_S_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
+        public decimal PORC_S_PRECIO {
+            get {
+                return this.pORC_S_PRECIOField;
+            }
+            set {
+                this.pORC_S_PRECIOField = value;
+                this.RaisePropertyChanged("PORC_S_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
+        public decimal IMPORTE_A_PRECIO {
+            get {
+                return this.iMPORTE_A_PRECIOField;
+            }
+            set {
+                this.iMPORTE_A_PRECIOField = value;
+                this.RaisePropertyChanged("IMPORTE_A_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=19)]
+        public string MONEDA_A_PRECIO {
+            get {
+                return this.mONEDA_A_PRECIOField;
+            }
+            set {
+                this.mONEDA_A_PRECIOField = value;
+                this.RaisePropertyChanged("MONEDA_A_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=20)]
+        public decimal PORC_A_PRECIO {
+            get {
+                return this.pORC_A_PRECIOField;
+            }
+            set {
+                this.pORC_A_PRECIOField = value;
+                this.RaisePropertyChanged("PORC_A_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=21)]
+        public string COND_FIJACION {
+            get {
+                return this.cOND_FIJACIONField;
+            }
+            set {
+                this.cOND_FIJACIONField = value;
+                this.RaisePropertyChanged("COND_FIJACION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=22)]
+        public string GRUPO_COMPRAS {
+            get {
+                return this.gRUPO_COMPRASField;
+            }
+            set {
+                this.gRUPO_COMPRASField = value;
+                this.RaisePropertyChanged("GRUPO_COMPRAS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=23)]
+        public string COND_PAGO {
+            get {
+                return this.cOND_PAGOField;
+            }
+            set {
+                this.cOND_PAGOField = value;
+                this.RaisePropertyChanged("COND_PAGO");
             }
         }
         
