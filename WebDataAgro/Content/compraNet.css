@@ -1207,3 +1207,12 @@ body {
     font-weight: normal;
     font-size: small;
 }
+
+.condicion {
+    font-size: 10px;
+    margin-right: 10px;
+}
+.importe-porcentaje label{
+    margin-bottom:0;
+    padding-top:0;
+}

@@ -1723,9 +1723,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ProveedorId = contrato.ProveedorId;
             contratoSave.MonedaId = contrato.MonedaId;
             contratoSave.GrupoCompra = contrato.GrupoCompra;
-            contratoSave.ComercialId = contrato.ComercialId;
             contratoSave.LocalidadId = contrato.LocalidadId;
-            contratoSave.UsuarioId = contrato.UsuarioId;
             contratoSave.ProvinciaId = contrato.ProvinciaId;
             contratoSave.Base = contrato.Base;
             contratoSave.ImporteSustentable = contrato.ImporteSustentable;
@@ -1735,7 +1733,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.NoInformaSio = contrato.NoInformaSio;
             contratoSave.TrigoEspecial = contrato.TrigoEspecial;
             contratoSave.EstadoId = contrato.EstadoId;
-            contratoSave.UsuarioId = contrato.UsuarioId;
             contratoSave.Ampliaciones = contrato.Ampliaciones;
             contratoSave.Observacion = contrato.Observacion;
             contratoSave.DestinoId = contrato.DestinoId;
@@ -1754,7 +1751,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.DesdeFijacion = contrato.DesdeFijacion;
             contratoSave.HastaFijacion = contrato.HastaFijacion;
             contratoSave.MercsDeposito = contrato.MercsDeposito;
-            contratoSave.ComercialCreadorId = contrato.ComercialCreadorId;
             contratoSave.CorredorId = contrato.CorredorId;
             contratoSave.PorcentajeComision = contrato.PorcentajeComision;
             contratoSave.ContratoVendedor = contrato.ContratoVendedor;

@@ -67,12 +67,12 @@ namespace Molinos.DataAgro.Agent
                         contrato.Filtro = filtro + "|" + contrato.ContratoId;
                         contrato.ARecibirSinPrecio = 10000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.RecibidoSinFijar = 19000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
-                        contrato.ImporteAPrecio = 0;
-                        contrato.ImporteSobrePrecio = 0;
+                        contrato.ImporteAPrecio = 100;
+                        contrato.ImporteSobrePrecio = 100;
                         contrato.MonedaAPrecio = "ARP  ";
                         contrato.MonedaSobrePrecio = "ARP  ";
-                        contrato.PorcentajeAPrecio = 0;
-                        contrato.PorcentajeSobrePrecio = 0;
+                        contrato.PorcentajeAPrecio = 5;
+                        contrato.PorcentajeSobrePrecio = 10;
                         contrato.CondicionFijacionCod = "07";
                         contrato.CondicionPagoCod = "10";
                         contrato.CondicionFijacionDescripcion = "HASTA 14.30 HS POR PIZ / MERCADERIA";
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Agent
                             CondicionFijacionCod = contrato.COND_FIJACION,
                             CondicionPagoCod = contrato.COND_PAGO,
                             CondicionFijacionDescripcion = repositorio.Obtener<CondicionFijacion, string>(x => x.CodigoSap == contrato.COND_FIJACION,x=>x.Descripcion),
-                            CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_FIJACION, x => x.Descripcion),
+                            CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_PAGO, x => x.Descripcion),
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
                         };
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)

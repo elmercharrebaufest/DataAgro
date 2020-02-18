@@ -227,8 +227,6 @@ namespace WebDataAgro.Services
                 contrato.CantidadCamiones = contratoSAP.Camiones;
                 contrato.CD = contratoSAP.AurCd == "X";
                 contrato.ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id);
-                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Creador, x => x.ComercialId);
-                contrato.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.Usuario, x => x.ComercialId);
                 contrato.Compensacion = contratoSAP.Compensacion == "X";
                 contrato.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id);
                 contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
@@ -242,7 +240,6 @@ namespace WebDataAgro.Services
                 contrato.Dolarizado = contratoSAP.PagoDiferido == "X";
                 contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
                 contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.Fecha = DateTime.ParseExact(contratoSAP.Fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -272,13 +269,15 @@ namespace WebDataAgro.Services
                 contrato.StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
                 contrato.Sustentable = contratoSAP.Sustentable == "X";
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
-                contrato.UsuarioId = contratoSAP.Usuario.ToLower();
                 contrato.Warrant = contratoSAP.AutCg == "X";
                 contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
                 contrato.Calidad = calidades;
                 contrato.AperturaPrecio = aperturas;
                 contrato.Descuentos = descuentos;
                 contrato.TipoNegocioId = 3;
+                contrato.ComercialId = 1;
+                contrato.Fecha = DateTime.Now;
+                
                 var resultado = contratoManager.ActualizarContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }

@@ -63,92 +63,8 @@
             <div class="col-md-4 col-sm-4">
                 <select id="destinoId" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled"></select>
             </div>
-        </div>
-        @*<div id="tipoFasonDiv" class="fason" hidden>
-                <div class="col-sm-1">
-                    <label>Tipo Fasón</label>
-                </div>
-                <div class="col-md-4 col-sm-4">
-                    <select id="tipoFasonId" data-bind="source: tipoFasonCombo, value: Parametros.TipoFason, disabled: isControlDisabled"></select>
-                    <img id="errTipoFasonId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-            <div id="operadorDiv" class="agente" hidden>
-                <div class="col-sm-1">
-                    <label>Operador</label>
-                </div>
-                <div class="col-md-4 col-sm-4">
-                    <select id="operadorId" data-bind="source: operadorCombo, value: Parametros.Operador, disabled: isControlDisabled"></select>
-                    <img id="errOperadorId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>*@
-    </div>
-
-    @*<div id="plazosYTopesFijacion" class="noFason noAgente noAcuerdo contratoAFijar contratoAPrecio">
-            <div class="row ">
-                <div class="contratoAFijar">
-                    <div class="col-sm-2 ">
-                        <label>Fijación Desde-Hasta</label>
-                    </div>
-                    <div class="col-sm-5 col-md-2">
-                        <span id="fechaDesdeTopeDiv">
-                            <input id="fechaDesdeTopeId" type="date" style="width: 100%" />
-                            <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
-                        </span>
-                    </div>
-                </div>
-                <div class="contratoAFijar">
-                    <div class="col-sm-5 col-md-2">
-                        <span id="fechaHastaTopeDiv">
-                            <input id="fechaHastaTopeId" type="date" style="width: 100%" />
-                            <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
-                        </span>
-                    </div>
-                </div>
-                <div class="col-sm-5 col-md-3 contratoAFijar ampliar">
-                    <div class="madreDiv " style="padding-right:0">
-                        <label style="width:60px">Convenio</label>
-                        <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
-                        <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-                </div>
-            </div>
-            <div class="row ampliar">
-                <div class="contratoAFijar noFason noAgente ampliar">
-                    <div class="col-sm-2 ">
-                        <label>Condición fijación</label>
-                    </div>
-                    <div class="col-sm-10 col-md-4">
-                        <select id="condicionFijacionId" data-bind="source:CondicionFijacionCombo, value: Parametros.CondicionFijacionId, disabled: isControlDisabled"></select>
-                        <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-                </div>
-                <div id="pagosDiv" class="noFason noAgente ampliar ">
-                    <div class="col-sm-2 ">
-                        <label>Pago</label>
-                    </div>
-                    <div class="col-sm-5 col-md-3">
-                        <label style="width:80px">CD</label>
-                        <input id="CDId" class="campo-input-input" data-bind="checked:Parametros.CD, disabled: isControlDisabled" type="checkbox" />
-                        <img id="errCDId" src="~/Content/Images/error.png" style="display:none" />
-                        <div style="float:right; width:110px">
-                            <label style="width:80px">Warrant </label>
-                            <input id="WarrantId" class="campo-input-input" data-bind="checked:Parametros.Warrant, disabled: isControlDisabled" type="checkbox" />
-                            <img id="errWarrantId" src="~/Content/Images/error.png" style="display:none" />
-                        </div>
-                    </div>
-                </div>
-                <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
-                    <label style="width:65px">Fij. Conv.</label>
-                    <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-                <div class="noFason  noAgente col-sm-4 contratoMadreDiv" hidden>
-                    <input id="contMadreId" placeholder="Contrato Madre" class="k-input contratoinput" type="text" s data-bind="value: Parametros.contMadreId" maxlength="10" style="width:100%" />
-                    <img id="errcontMadreId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>
-        </div>*@
+        </div>        
+    </div>   
     <div class="row">
         <div class="col-sm-2 ">
             <label>Material</label>
@@ -167,16 +83,6 @@
                 <select id="campanaId" data-bind="source: CampanaCombo, value: Parametros.campanaId, disabled: isControlDisabled"></select>
             </div>
         </div>
-
-        @*<div id="tipoAgenteCompraDiv" class="agente noAcuerdo" hidden>
-                    <div class="col-sm-1">
-                        <label>Tipo Agente</label>
-                    </div>
-                    <div class="col-md-4 col-sm-4">
-                        <select id="tipoAgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra, disabled: isControlDisabled"></select>
-                        <img id="errAgenteCompraId" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-            </div>*@
     </div>
     <div id="ContratoDiv" class="row">
         <div class="col-sm-2 ">
@@ -227,29 +133,43 @@
         </div>
         <div class="datoscontrato" hidden>
             <div class="col-sm-6">
-                <div id="impo-a-precio" style="display:inline-block">
+                <div id="impo-a-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
                         Bonif a Precio:
                     </label>
                     <span id="importe-a-precio"></span>
                 </div>
-                <div id="impo-sobre-precio" style="display:inline-block">
+                <div id="impo-sobre-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
                         Bonif Sobre Precio:
                     </label>
                     <span id="importe-sobre-precio"></span>
                 </div>
-                <div id="porcenteaje-a-precio" style="display:inline-block">
+                <div id="porcenteaje-a-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
                         Porc. a Precio:
                     </label>
                     <span id="porc-a-precio"></span>
                 </div>
-                <div id="porcenteaje-sobre-precio" style="display:inline-block">
+                <div id="porcenteaje-sobre-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
                         Porc. Sobre Precio:
                     </label>
                     <span id="porc-sobre-precio"></span>
+                </div>
+                <div style="display:inline-block">
+                    <div class="condicion" style="display:inline-block">
+                        <label style="padding:0;">
+                            Cond fijacion:
+                        </label>
+                        <span id="cond-fijacion"></span>
+                    </div>
+                    <div class="condicion" style="display:inline-block">
+                        <label style="padding:0;">
+                            Cond Pago:
+                        </label>
+                        <span id="cond-pago"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -263,20 +183,9 @@
             </div>
         </div>
     </div>
-    <div class="row datoscontrato" hidden>
-        <div class="col-sm-6" style="display:inline-block">
-            <label style="padding:0;">
-                Cond fijacion:
-            </label>
-            <span id="cond-fijacion"></span>
-        </div>
-        <div class="col-sm-6" style="display:inline-block">
-            <label style="padding:0;">
-                Cond Pago:
-            </label>
-            <span id="cond-pago"></span>
-        </div>
-    </div>
+    @*<div class="row datoscontrato" hidden>
+        
+    </div>*@
     <div class="row">
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio</label>

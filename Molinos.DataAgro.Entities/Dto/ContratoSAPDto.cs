@@ -25,9 +25,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Provincia { get; set; }
         public string Sustentable { get; set; }
         public string Especial { get; set; }
-        public string Fecha { get; set; }
-        public string Usuario { get; set; }
-        public string HoraAct { get; set; }
         public string Procedencia { get; set; }
         public string Centro { get; set; }
         public string Clasificacion { get; set; }
@@ -60,7 +57,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string SelCargoMOA { get; set; }
         public string SelCargoVend { get; set; }
         public string ContratoMadre { get; set; }
-        public string Creador { get; set; }
         public string Zona { get; set; }
         public string Compensacion { get; set; }
         public string FleteNivel { get; set; }
