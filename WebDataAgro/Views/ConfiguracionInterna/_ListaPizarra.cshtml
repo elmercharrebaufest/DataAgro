@@ -1,0 +1,58 @@
+﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+
+<div id="formulario" class="table-container">
+
+    @if (Model.ResultadoPizarra != null && Model.ResultadoPizarra.HayError)
+    {
+        if (Model.ResultadoPizarra.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoPizarra.Errores[0]
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoPizarra.Errores[0]
+            </div>
+            <script>LimpiarPizarraForm()</script>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-xs-10 m-grid-col-xs-offset-1">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialPizarra" onclick="mostrarocultar('#mostrarPizarra')">
+            <span class="historial">Historial</span> <span id="mostrarPizarra" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialPizarra" class="collapse tabla-research">
+            <table class="tabla-historial table">
+                <tr>
+                    <th>Material</th>
+                    <th>Dia</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                    <th></th>
+                </tr>
+                @foreach (var pr in Model.HabilitacionPizarra)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => pr.Material)</td>
+                        @{
+                            var dia = pr.Dia.ToString("dd/MM/yyyy");
+                            var desde = pr.DesdeVigencia.ToString("hh\\:mm tt");
+                            var hasta = pr.HastaVigencia.ToString("hh\\:mm tt");
+                        }
+                        <td>@Html.DisplayFor(model => dia)</td>
+                        <td>@Html.DisplayFor(model => desde)</td>
+                        <td>@Html.DisplayFor(model => hasta)</td>
+                        <td>
+                            @Ajax.ActionLink(" ", "EliminarPizarra", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPizarra", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

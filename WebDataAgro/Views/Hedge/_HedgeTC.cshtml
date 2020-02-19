@@ -1,0 +1,82 @@
+﻿@model WebDataAgro.Models.HedgeModel
+
+<div class="container">
+    @using (Ajax.BeginForm("GrabarHedgeTC", null, new AjaxOptions { UpdateTargetId = "hedgeTC", InsertionMode = InsertionMode.Replace, OnSuccess = "tcInput" }, new { }))
+    {
+
+    <div id="formularioHedgeTC" class="table-container">
+        @if (Model.Resultado.HayError)
+        {
+            if (Model.Resultado.Errores[0].ErrorCode != 200)
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+            }
+            
+        }
+        <table id="tabla-tc" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>TC</th>
+                    <th>HEDGE $</th>
+                    <th>COMERCIAL</th>
+                    <th class="fin-dia"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.HedgeTC.HedgeTC.Count; i++)
+                {
+                    var hora = Model.HedgeTC.HedgeTC[i].Fecha.TimeOfDay.ToString("hh\\:mm");
+                    var TC = Model.HedgeTC.HedgeTC[i].TC.ToString("n2");
+                    var HedgePesos = Model.HedgeTC.HedgeTC[i].HedgePesos.ToString("n2");
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => hora)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => TC)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => HedgePesos)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => Model.HedgeTC.HedgeTC[i].Comercial)
+                        </td>
+                        <td class="fin-dia">
+                            @Ajax.ActionLink(" ", "EliminarHedgeTC", new { id = Model.HedgeTC.HedgeTC[i].Id }, new AjaxOptions { UpdateTargetId = "hedgeTC", InsertionMode = InsertionMode.Replace, OnSuccess = "tcInput" }, new { @class = "fa fa-minus-circle danger" })
+                        </td>
+                    </tr>
+
+                }
+                <tr class="fin-dia">
+                    <td class="tr-input"></td>
+                    <td class="td-input">
+                        @Html.TextBoxFor(model => model.TCModel.TC, new { @class = "number-input number-input-tc", @id = "tc" })
+                    </td>
+                    <td class="td-input">
+                        @Html.TextBoxFor(model => model.TCModel.HedgePesos, new { @class = "number-input number-input-tc", @id = "hedgepesos" })
+                    </td>
+                    <td class="tr-input">
+                        <input id="guardarHedgeTCBtn" type="submit" class="fa fa-plus-circle" value="&#xf055" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>@Model.HedgeTC.TotalTC.ToString("N2")</td>
+                    <td>@Model.HedgeTC.TotalHedge.ToString("N2")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    }
+</div>

@@ -1,0 +1,243 @@
+﻿@media (min-width:1026px) and (max-width:1199px) {
+    #theBody > div.page-container > div.page-content-wrapper > div > div > div > div.bordertopbottom.grafico > div {
+        position: relative;
+        top: 100%;
+    }
+}
+
+@media (min-width: 768px) and (max-width:1025px) {
+    .bordertopbottom:first-of-type{
+        height:120px;
+    }
+
+    .page-container,
+    .page-content{
+        padding-left:0!important;
+        padding-right:0!important;
+    }
+
+    .contenedor-grafico-filtros{
+        margin-top:10px;   
+    }
+
+    .filtro{
+        margin-top:0;
+    }
+	
+	.derecha{
+		min-height:1100px;
+	}
+
+    .filtro .wizard-header-contenedor{
+        width:100%;
+        margin-left:0;
+        margin-right:0;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    select, input{
+        width:80%;
+    }
+
+    #graficoR{
+        height:1200px;
+    }
+
+    #graficoR td{
+        display:block;
+
+    }
+
+    
+    #graficoR table {
+        margin:0 auto;
+    }
+
+    #fdesde span.k-widget.k-datepicker.k-header,
+    #fhasta span.k-widget.k-datepicker.k-header{
+        width:90%;
+    }
+
+	
+	.tabla{
+		margin-top:20px;
+	}
+	
+	.tdhead{
+		border-bottom: 2px solid #017940;
+	}
+	
+	.tdhead:first-of-type {
+		width: 20%;
+		text-align: center;
+		display: inline-block;
+		height:30px;
+		vertical-align:middle;
+		font-weight:bold;
+	}
+	
+	
+	
+	.tdhead:last-of-type {
+		width: 80%;
+		display: inline-block;
+		text-align: center;
+		height:30px;
+		padding-bottom:5px;
+		vertical-align:middle;
+		font-weight:bold;
+	}
+	
+	.tbody{
+		padding-bottom:5px;
+		padding-top:5px;
+		border-bottom: 2px solid #017940;
+	}
+	
+	.tbody:last-of-type{
+		border-bottom: none;
+	}
+	
+	.tdbodyuno {
+		width: 20%;
+		height: 30px;
+		display: inline-block;
+		vertical-align:top;
+	}
+
+	.tdbodydos {
+		width: 80%;
+		height: 30px;
+		display: inline-block;
+		font-size:12px;
+		padding-left: 15px;
+		padding-right:15px;
+		text-align:center;
+		font-weight:bold;
+	}
+	
+	
+}
+
+
+@media (max-width: 767px) {
+    .bordertopbottom:first-of-type{
+        height:auto;
+        margin-left:0;
+        margin-right:0;
+    }
+    .wizard-header-contenedor{
+        margin-left:3px;
+        margin-right :2px;
+    }
+
+    .bordertopbottom.grafico{
+        margin-left:0;
+        margin-right:0;
+        height:auto;
+    }
+
+    .filtro{
+        width:100%;
+    }
+
+    .filtro .wizard-header-contenedor{
+        width:100%;
+        text-align:center;
+    }
+    select, input{
+        width:70%;
+    }
+
+
+    #graficoR{
+        width:100%;
+        display:block;
+        padding-left:0!important;
+        /*height:1200px;*/
+		height:450px;
+        text-align:center;
+    }
+
+
+    #graficoR td{
+        display:block!important;
+        width:100%!important;
+
+    }
+
+    .derecha{
+        display:block;
+        width:100%;
+		padding-left:5px;
+		padding-right:5px;
+		min-height:1100px;
+    }
+	
+	.page-content
+	{
+		padding-left:0!important;
+		padding-right:0!important;
+	}
+	
+	.tabla{
+		margin-top:20px;
+	}
+	
+	.tdhead{
+		border-bottom: 2px solid #017940;
+	}
+	
+	.tdhead:first-of-type {
+		width: 20%;
+		text-align: center;
+		display: inline-block;
+		height:30px;
+		vertical-align:middle;
+		font-weight:bold;
+	}
+	
+	
+	
+	.tdhead:last-of-type {
+		width: 80%;
+		display: inline-block;
+		text-align: center;
+		height:30px;
+		padding-bottom:5px;
+		vertical-align:middle;
+		font-weight:bold;
+	}
+	
+	.tbody{
+		padding-bottom:5px;
+		padding-top:5px;
+		border-bottom: 2px solid #017940;
+	}
+	
+	.tbody:last-of-type{
+		border-bottom: none;
+	}
+	
+	.tdbodyuno {
+		width: 20%;
+		height: 30px;
+		display: inline-block;
+		vertical-align:top;
+	}
+
+	.tdbodydos {
+		width: 80%;
+		height: 30px;
+		display: inline-block;
+		font-size:12px;
+		padding-left: 15px;
+		padding-right:15px;
+		text-align:center;
+		font-weight:bold;
+	}
+	
+	
+
+}

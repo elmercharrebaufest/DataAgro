@@ -1,0 +1,44 @@
+﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+    @using (Ajax.BeginForm("GuardarPrecio", null, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+        <div id="form-precio">
+            <div class="row-botones-material row">
+                <div class="col-md-2">
+                    <label>Precio</label>
+                </div>
+                <div class="col-md-3" id="CantidadDiasId">
+                    @Html.TextBoxFor(m => m.Precio,new { @class = "w100" })
+                </div>
+                <div class="col-sm-3">
+                    @Html.DropDownListFor(x => x.MonedaId, new SelectList(ViewBag.Moneda, "Value", "Text"), "Seleccione Moneda", new { @class = "form-control" })
+                </div>
+                <div class="col-md-1">
+                    <label>Material</label>
+                </div>
+                <div class="col-sm-3">
+                    @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row-botones-material row">
+
+                <div class="col-md-2">
+                    <label>Horas Vigencia</label>
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.DesdeVigencia, new { @class = "w100"})
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.HastaVigencia, new { @class = "w100" })
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-md-offset-9">
+                    <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+                </div>
+            </div>
+        </div>
+    }
+<div id="listaPrecio">
+    @Html.Partial("_ListaPrecio", Model)
+</div>
+   

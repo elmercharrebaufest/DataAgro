@@ -1,0 +1,42 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalAmpliaciones" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-ampliaciones" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div>CONFIRMADO</div>
+                </div>
+            </div>
+            <input id="contratoIdAmpliaciones" type="hidden">
+            <input id="tipoNegocioIdAmpliaciones" type="hidden">
+            <div class="modal-body clearfix ">
+                <div class="col-xs-12 noPadding">
+                    <div class="col-xs-12 noPadding">
+                        <div class="col-xs-4 noPaddingLeft">
+                            <h3>Ampliaciones:</h3>
+                        </div>
+                        <div class="col-xs-8 noPaddingRight">
+                            <div class="campo clearfix">
+                                <input id="inputAmpliaciones" placeholder="0" type="text">
+                                <i class="fas fa-pencil-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <button type="button" id="guardarAmpliaciones" class="myBtn btnSubmit" data-dismiss="modal">Guardar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="cancelarAmpliaciones" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

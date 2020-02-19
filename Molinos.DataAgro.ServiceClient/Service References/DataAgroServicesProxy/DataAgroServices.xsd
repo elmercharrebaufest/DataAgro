@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49414/DataAgroServices.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" />
+  <xs:import schemaLocation="http://localhost:49414/DataAgroServices.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.Entities" />
+  <xs:complexType name="WcfResultIniDestinatario">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" minOccurs="0" name="EntityErrors" nillable="true" type="q1:EntityErrors" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.Entities" minOccurs="0" name="ResultIniDestinatario" nillable="true" type="q2:ResultIniDestinatario" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WcfResultIniDestinatario" nillable="true" type="tns:WcfResultIniDestinatario" />
+  <xs:complexType name="WcfDestinatario">
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.Entities" minOccurs="0" name="Destinatario" nillable="true" type="q3:Destinatario" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" minOccurs="0" name="EntityErrors" nillable="true" type="q4:EntityErrors" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WcfDestinatario" nillable="true" type="tns:WcfDestinatario" />
+</xs:schema>

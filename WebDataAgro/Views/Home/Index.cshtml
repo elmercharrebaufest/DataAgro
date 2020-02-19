@@ -1,0 +1,275 @@
+﻿@{
+    ViewBag.Title = "Data Agro";
+}
+
+<link rel="stylesheet" href="~/Content/home.css" />
+<link rel="stylesheet" href="~/Content/homeResponsive.css" />
+<script type="text/javascript" src="~/Scripts/App/home.js"></script>
+@{ 
+    var visualiza = PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor);
+}
+<script>visualiza = '@visualiza'</script>
+<div class="row contenedor-principal">
+    <div class="col-lg-3 contenedor-principal-widget">
+
+    </div>
+
+    <div class="col-lg-6 contenedor-principal-miscontactos">
+        <div class="contenedor-principal-miscontactos-titulo">
+            Mis Contactos
+        </div>
+        <div class="contenedor-principal-miscontactos-subtitulo">
+            Estado de mi agenda de proveedores
+        </div>
+        <div id="indicadores" class="row">
+            <div class="contactos col-lg-3 col-md-3 col-sm-3" id="sinAlta">
+                SIN ALTA
+            </div>
+            <div class="contactos col-lg-5 col-md-5 col-sm-5" id="conAlta">
+                CON ALTA
+            </div>
+        </div>
+        <div class="contenedor-principal-miscontactos-grupo">
+            <a class="cont-agend-det">
+                <div class="contenedor-principal-miscontactos-detalle miscontactos-selected">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont1.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad verde cont-agend">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>Total de contactos agendados</b>
+                    </div>
+                </div>
+            </a>
+            <a class="cont-op-det">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont23.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-op">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>Operando</b> <i>(últimos 2 años)</i>
+                    </div>
+                </div>
+            </a>
+            <a class="cont-no-op-det">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont4.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-no-op">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>No operando</b> <i>(últimos 2 años)</i>
+                    </div>
+                </div>
+            </a>
+
+            <a class="cont-baj-det">
+                <div class="contenedor-principal-miscontactos-detalle con-alta">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont4.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad gris cont-baj">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>Bajas</b> <i>(borrados SAP)</i>
+                    </div>
+                </div>
+            </a>
+
+            <a class="cont-alta-det">
+                <div class="contenedor-principal-miscontactos-detalle ">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont23.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-alta">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>Potenciales</b>
+                    </div>
+                </div>
+            </a>
+
+            <a class="cont-alta-no-clie">
+                <div class="contenedor-principal-miscontactos-detalle ">
+                    <div class="contenedor-principal-miscontactos-detalle-titulo">
+                        <img src="~/Content/Images/contprinc-cont23.png" />
+                        <span class="contenedor-principal-miscontactos-detalle-cantidad cont-no-clie">
+
+                        </span>
+                    </div>
+                    <div class="contenedor-principal-miscontactos-detalle-descripcion">
+                        <b>Sin interés de operar</b>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 contenedor-principal-campanas">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="pill" href="#Compras" class="contenedor-principal-campanas-titulo">Compras</a></li>
+            <li><a data-toggle="pill" href="#Objetivos" class="contenedor-principal-campanas-titulo">Objetivos</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="Compras" class="tab-pane fade in active">
+                <div class="contenedor-principal-campanas-subtitulo">
+                    Total granos comprados (TNs)
+                </div>
+                <div class="contenedor-principal-campanas-grupo">
+                    <div class="contenedor-principal-campanas-detalle">
+
+                    </div>
+                </div>
+            </div>
+            <div id="Objetivos" class="tab-pane fade in">
+                <div class="contenedor-principal-campanas-subtitulo">
+                    Objetivo granos (TNs)
+                    <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-modal"></button>
+                    <button class="ajax-editar-link fa fa-eye btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-detalle-modal"></button>
+                    <div class="contenedor-principal-objetivo-detalle">
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="contenedor-segundo">
+    <div class="contenedor-segundo-titulos">
+        <div class="col-lg-3">
+            <span class="contenedor-segundo-titulo">Filtrar por</span>
+        </div>
+        <div class="col-lg-4">
+            <span class="contenedor-segundo-titulo">Lista de contactos</span>
+        </div>
+        <div class="col-lg-5" style="text-align:right;min-height: 22px;">
+            <a id="exportarPDF" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaPdf)?"":"hide") "><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
+            <a id="exportarExcel" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaExcel)?"":"hide") "><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar a Excel</span></a>
+
+            <a id="exportarAll" class="exportar-contactos @(PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial) || PermisosHelper.Is(PermisosDataAgro.DescargaExportAllVisualizador)?"":"hide")"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Export All</span></a>
+        </div>
+
+
+    </div>
+    <div class="row r-relative">
+        <div class="col-md-3 absoluto-mt20">
+            <div class="col-lg-12 mostrar-filtro puntero">
+                <span class="puntero">Ocultar filtro -</span>
+            </div>
+            <div id="form-filtro">
+                <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Comercial
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo filtro-comercial">
+
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Zona
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo filtro-zona">
+
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12 ">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Grano
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo material-granos">
+
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Período de tiempo
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo periodo-tiempo">
+
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Segmentación
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-segmentacion">
+
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Condicion Preferentes
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-condicion">
+
+                    </div>
+                </div>
+                <!--<div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Tipo de Actividad
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo campo-tipoactividad">
+
+                    </div>
+                </div>-->
+
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Hectareas (Has)
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo">
+                        <label for="has-Indistinto"><input type="checkbox" value="null" name="Indistinto" id="has-Indistinto" /> <b>Indistinto</b></label>
+                        <label for="has-unoados"><input type="checkbox" value="1" name="unoados" id="has-unoados" /> 1 a 500</label>
+                        <label for="has-dosacinco"><input type="checkbox" value="2" name="dosacinco" id="has-dosacinco" /> 501 a 1.000</label>
+                        <label for="has-masdecinco"><input type="checkbox" value="3" name="masdecinco" id="has-masdecinco" /> Más de 1.000</label>
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Toneladas (TNs)
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo">
+                        <label for="tns-Indistinto"><input type="checkbox" value="null" name="Indistinto" id="tns-Indistinto" /> <b>Indistinto</b></label>
+                        <label for="tns-unoados"><input type="checkbox" value="1" name="unoados" id="tns-unoados" /> 1 a 2.500</label>
+                        <label for="tns-dosacinco"><input type="checkbox" value="2" name="dosacinco" id="tns-dosacinco" /> 2.501 a 5.000</label>
+                        <label for="tns-masdecinco"><input type="checkbox" value="3" name="masdecinco" id="tns-masdecinco" /> Más de 5.000</label>
+                    </div>
+                </div>
+                <div class="contenedor-segundo-filtro-grupo col-lg-12">
+                    <div class="contenedor-segundo-filtro-titulo color-titulo">
+                        Calificación
+                    </div>
+                    <div class="contenedor-segundo-filtro-campo">
+                        <label for="cal-Indistinto"><input type="checkbox" value="null" name="Indistinto" id="cal-Indistinto" /> <b>Indistinto</b></label>
+                        <label for="cal-cinco"><input type="checkbox" value="5" name="cinco" id="cal-cinco" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /></label>
+                        <label for="cal-cuatro"><input type="checkbox" value="4" name="cuatro" id="cal-cuatro" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /></label>
+                        <label for="cal-tres"><input type="checkbox" value="3" name="tres" id="cal-tres" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /></label>
+                        <label for="cal-dos"><input type="checkbox" value="2" name="dos" id="cal-dos" /><img src="~/Content/Images/estrellacalificacion.png" /><img src="~/Content/Images/estrellacalificacion.png" /></label>
+                        <label for="cal-uno"><input type="checkbox" value="1" name="uno" id="cal-uno" /><img src="~/Content/Images/estrellacalificacion.png" /></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 contactosHome ">
+            <div class="lista-contactos-general "></div>
+            <div class="text-center">
+                <button id="verMasContactos" onclick="TraerSiguiente()" class="k-button k-button-icontext" type="button" style="display:none">Ver Más </button>
+                <div id="cargandoContactos" class="lds-roller" style="display:none"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
+@Html.Partial("ModalObjetivo")
+@Html.Partial("ModalObjetivoDetalle")

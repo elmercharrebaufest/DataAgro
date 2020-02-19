@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalConfirmadoTilde" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmadoTilde" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div> A CONFIRMAR</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div class="col-xs-12 noPadding">
+                    <div class="col-xs-12 noPadding"> ¿Desea Confirmar? </div>
+                </div>
+            </div>
+            <input type="hidden" id="contratoModalConTilde" />
+            <input type="hidden" id="tipoNegocioModalConTilde" />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <button type="button" id="finalizarConfirmado" onclick="ObtenerDatosModalConfirmado()" class="myBtn btnSubmit" data-dismiss="modal">Confirmar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

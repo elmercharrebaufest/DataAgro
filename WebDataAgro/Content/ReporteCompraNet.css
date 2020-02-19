@@ -1,0 +1,262 @@
+﻿table {
+    margin: 15px 0;
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 2px solid black;
+    width: 100%;
+}
+
+    table tr {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+.titulos {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    background: #017940;
+    color: white;
+    font-size: 12px
+}
+
+td, th {
+    text-align: center;
+}
+
+.row {
+    background: white;
+}
+
+#MonedaKilo th {
+    background: #017940;
+    color: white;
+    font-size: 12px
+}
+
+#MonedaKilo td {
+    background: white;
+    color: black;
+}
+
+#MonedaKilo {
+    border-top: 2px solid black;
+}
+
+a.Descarga {
+    background: url(../Content/Images/Excel.png) no-repeat top left;
+    display: block;
+    width: 17px;
+    text-indent: -9999px;
+}
+
+#ComprasToneladasTipo {
+    width: 100%;
+}
+
+#MonedaKilo th {
+    width: 115px;
+}
+
+.borde-derecho {
+    border-right: 1px solid black !important; 
+}
+.borde-izq-der {
+    border-right: 1px solid black !important;
+    border-left: 1px solid black !important;
+}
+.borde-izquierdo {
+    border-left: 2px solid black !important;
+}
+
+.borde-derecho-oscuro,
+.borde-derecho-oscuro {
+    border-right: 2px solid black !important;
+}
+
+#fecha-buscador-reporte {
+    padding: 15px 0 0 10px;
+}
+
+#Soja .titulosPosicion {
+    background: rgb(153, 204, 0);
+}
+#SojaTable {
+    z-index: 200;
+}
+#Maiz .titulosPosicion {
+    background: rgb(255, 204, 153);
+}
+#MaizTable {
+    z-index: 175;
+}
+#TrigoCámara .titulosPosicion {
+    background: rgb(153, 153, 255);
+}
+#TrigoCámaraTable {
+    z-index: 150;
+}
+#TrigoCalidad .titulosPosicion {
+    background: rgb(153, 204, 255);
+}
+#TrigoCalidadTable {
+    z-index: 125;
+}
+#TrigoGrado2 .titulosPosicion {
+    background: rgb(106, 230, 190);
+}
+#TrigoGrado2Table {
+    z-index: 100;
+}
+#Girasol .titulosPosicion {
+    background: rgb(211, 96, 212);
+}
+#GirasolTable {
+    z-index: 75;
+}
+#GirasolAltoOleico .titulosPosicion {
+    background: rgb(244, 193, 247);
+}
+#GirasolAltoOleicoTable {
+    z-index: 50;
+}
+
+table#Soja th, table#Soja td,
+table#Maíz th, table#Maíz td,
+table#TrigoCámara th, table#TrigoCámara td,
+table#TrigoCalidad th, table#TrigoCalidad td,
+table#Girasol th, table#Girasol td,
+table#GirasolAltoOleico th, table#GirasolAltoOleico td {
+    vertical-align: middle;
+}
+
+.table thead > tr > th,
+.table tbody > tr > th,
+.table tfoot > tr > th,
+.table thead > tr > td,
+.table tbody > tr > td,
+.table tfoot > tr > td{
+    border-top:1px solid #000
+}
+
+/*#TrigoCalidadTable, #TrigoCámaraTable {
+    float: right;
+}*/
+#ComprasToneladasTipo td, #ComprasToneladasTipo th {
+    border-left: 1px solid black;
+}
+
+.container-reporte {
+    margin: 0;
+    padding: 0 10PX;
+}
+
+.page-container, .page-content-wrapper .page-content {
+    padding: 0;
+}
+
+.page-footer {
+    margin-top: 0;
+}
+
+.noRightPadding {
+    padding-right: 0;
+}
+
+.sideMargin-15 {
+    margin: 0 15px;
+}
+
+.modal-mio {
+    width: 90%;
+    margin: auto;
+}
+
+.scrollInside {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.trPar {
+    background-color: #eaeaea;
+}
+
+.trTitulo {
+    font-weight: bold;
+}
+
+.tituloPosicion {
+    font-weight: bolder;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+}
+
+.abrirModal {
+    background: url(../Content/Images/Tablas.png) no-repeat top left;
+    display: block;
+    width: 17px;
+    text-indent: -9999px;
+}
+
+#HedgeObjetivo {
+    margin: 15px 0 5px 0;
+}
+
+.trTitulo td {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+#HedgeTC td {
+    border: 1px solid black;
+    border-top: 2px solid black;
+}
+
+.titulos.hedgemat {
+    background: darkcyan;
+}
+
+.titulos.hedgeobj {
+    background: plum;
+}
+
+.titulos.agente {
+    background: gold;
+    color: black;
+}
+
+.titulos.pricing {
+    background: mediumvioletred;
+}
+
+#grillaAgente > .k-grid-header, #grillaAgente .k-grid-header .k-header {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+#grilla > .k-grid-header, #grilla .k-grid-header .k-header {
+    background-color: yellowgreen;
+    font-weight: bold;
+}
+
+.abrirModalDetallePosicion {
+    font-size: 23px;
+    color:black;
+}
+
+.descargarDetallePosicion {
+    font-size: 18px;
+    color: #151515;
+}
+
+.espacio {
+    background-color: white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-right: 2px solid black;
+    border-left:  1px solid  black;
+}
+
+#agenteCompras td{
+    font-size:12px;
+}

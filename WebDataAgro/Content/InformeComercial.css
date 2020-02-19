@@ -1,0 +1,136 @@
+﻿.buscar-nav-Prov{
+    width:21px;
+    height:21px;
+    position:absolute;
+    top:8px;
+    right: 170px;
+}
+
+#limpiarinput{
+	right:220px;
+	cursor:pointer;
+}
+
+.buscador-nav-Inf{
+    border:1px solid #DEDEDE;
+    width:350px;
+    height:40px;
+    margin-top: 10px;
+    position:relative;
+}
+
+
+.proveedor-input
+{
+    padding-left: 5px;
+    border:none;
+    display:inline-block;
+    width: 433px;
+    height:38px;
+	padding-right:40px;
+}
+
+.proveedor-input::-webkit-input-placeholder{
+   font-style:italic;
+   color:#b8b8b8;
+}
+.proveedor-input:-moz-placeholder{
+   font-style:italic;
+   color:#b8b8b8;
+}
+.proveedor-input::-moz-placeholder{
+   font-style:italic;
+   color:#b8b8b8;
+}
+.proveedor-input:-ms-input-placeholder{
+   font-style:italic;
+   color:#b8b8b8;
+}
+
+#butAceptar,
+#butVolver{
+    display:none;
+}
+
+#tab2{
+    display:none;
+	margin-bottom:50px;
+}
+
+.formulario-campo{
+    vertical-align:top;
+    margin-top:20px;
+}
+
+.formulario-label{
+    display:inline-block;
+    /*vertical-align:top;*/
+	color: #b8b8b8;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: "G-Open Sans-n4", Arial;
+    float: left;
+    height: 38px;
+    padding-top: 7px;
+	
+}
+
+.titulo{
+	font-weight:bold;
+	margin-top:20px;
+	margin-bottom:20px;
+	font-size:18px;
+	text-decoration:underline;
+}
+h3{
+	text-decoration:underline;
+}
+
+.formulario-input{
+    display:inline-block;
+	margin-left:15px;
+}
+
+.formulario-input input[type="text"]{
+	border-color: rgb(209, 209, 209);
+    border-width: 1px;
+    color: rgb(51, 51, 51);
+    padding: 0px 10px;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    border-radius: 3px!important;
+    border-style: solid;
+    width: 274px;
+    height: 38px;
+    margin-right: 0px;
+}
+
+ #EmplRelDepCant,
+ #RodadosOtros,
+ #ChacraOtros{
+	margin-left:10px;
+ }
+ 
+ #Comentarios{
+     background-color: rgb(255, 255, 255);
+    border-color: rgb(209, 209, 209);
+    border-width: 1px;
+    color: rgb(51, 51, 51);
+    padding: 0px 10px;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    /* font-family: Roboto; */
+    border-radius: 3px!important;
+    border-style: solid;
+    width: 274px;
+    height: 80px;
+    margin-right: 50px;
+ }
+ input[type="radio"]{
+	margin-right:7px;
+ }
+ #nuevotab{
+	display:none;
+ }

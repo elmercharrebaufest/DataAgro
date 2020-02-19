@@ -1,0 +1,30 @@
+﻿.tabla-result {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+.boton-buscar {
+    width: 100px;
+    padding: 5px;
+    border-radius: 3px !important;
+    border: 1px solid #017940;
+    text-align: center;
+    margin: 30px auto;
+    color: #000;
+    cursor: pointer;
+    float: right;
+}
+
+    .boton-buscar:hover {
+        background-color: #017940;
+        color: #fff;
+    }
+
+.resultado-reporteagenda {
+    display: none;
+}
+
+.mostrar-filtro {
+    display: none;
+}

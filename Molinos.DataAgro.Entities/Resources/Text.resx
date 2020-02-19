@@ -1,0 +1,601 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Administracion_Cupos" xml:space="preserve">
+    <value>Administración Cupos</value>
+  </data>
+  <data name="Administracion_AlgoritimoDeCupos" xml:space="preserve">
+    <value>Algoritimo de Cupos</value>
+  </data>
+  <data name="Administracion_EspacioDinamico" xml:space="preserve">
+    <value>Administración de Espacio Dinámico</value>
+  </data>
+  <data name="Agenda_Comercial" xml:space="preserve">
+    <value>Visualizar Agenda Comercial</value>
+  </data>
+  <data name="Agente" xml:space="preserve">
+    <value>Agente</value>
+  </data>
+  <data name="Alta_Cupos" xml:space="preserve">
+    <value>Alta Cupos</value>
+  </data>
+  <data name="Alta_Datos_Proveedor" xml:space="preserve">
+    <value>Alta de Proveedores</value>
+  </data>
+  <data name="Ampliaciones" xml:space="preserve">
+    <value>Ampliaciones</value>
+  </data>
+  <data name="Ampliar_Negocios" xml:space="preserve">
+    <value>Ampliar Negocios</value>
+  </data>
+  <data name="Ampliar_Negocio_Corredor" xml:space="preserve">
+    <value>Ampliar Negocio Corredor</value>
+  </data>
+  <data name="Anular_Cupos" xml:space="preserve">
+    <value>Anular Cupos</value>
+  </data>
+  <data name="April" xml:space="preserve">
+    <value>Abril</value>
+  </data>
+  <data name="Asignar_Proveedores" xml:space="preserve">
+    <value>Asignar Proveedores a Comerciales</value>
+  </data>
+  <data name="August" xml:space="preserve">
+    <value>Agosto</value>
+  </data>
+  <data name="Base" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="Boleto" xml:space="preserve">
+    <value>Boleto</value>
+  </data>
+  <data name="Bolsa" xml:space="preserve">
+    <value>Bolsa</value>
+  </data>
+  <data name="CalidadEspecial" xml:space="preserve">
+    <value>Calidad Especial</value>
+  </data>
+  <data name="Campana" xml:space="preserve">
+    <value>Campaña</value>
+  </data>
+  <data name="Canal_Notificaciones" xml:space="preserve">
+    <value>Canal de Notificaciones</value>
+  </data>
+  <data name="Cantidad" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="CantidadCamiones" xml:space="preserve">
+    <value>Cantidad Camiones</value>
+  </data>
+  <data name="Comercial" xml:space="preserve">
+    <value>Comercial</value>
+  </data>
+  <data name="CondicionFijacion" xml:space="preserve">
+    <value>Condición Fijacion</value>
+  </data>
+  <data name="Configuraciones_Internas" xml:space="preserve">
+    <value>Configuraciones Internas</value>
+  </data>
+  <data name="Configuracion_Canal_Operacion" xml:space="preserve">
+    <value>Configuración Canal Operacion</value>
+  </data>
+  <data name="Configuracion_Centros" xml:space="preserve">
+    <value>Configuración Centros</value>
+  </data>
+  <data name="Configuracion_Condicion" xml:space="preserve">
+    <value>Configuración Condición</value>
+  </data>
+  <data name="Configuracion_Constantes" xml:space="preserve">
+    <value>Configuración Constantes</value>
+  </data>
+  <data name="Configuracion_Diferencial" xml:space="preserve">
+    <value>Configuración Diferencial Hedge</value>
+  </data>
+  <data name="Configuracion_Entrega_A" xml:space="preserve">
+    <value>Configuración Entrega A</value>
+  </data>
+  <data name="Configuracion_Logs" xml:space="preserve">
+    <value>Configuración Logs</value>
+  </data>
+  <data name="Configuracion_Material" xml:space="preserve">
+    <value>Configuración Material</value>
+  </data>
+  <data name="Configuracion_Operador" xml:space="preserve">
+    <value>Configuracion Operadores</value>
+  </data>
+  <data name="Configuracion_Rangos_Confirmacion" xml:space="preserve">
+    <value>Configuración Rangos Confirmacion</value>
+  </data>
+  <data name="Configuracion_Rangos_Precios" xml:space="preserve">
+    <value>Configuración Rangos Precios</value>
+  </data>
+  <data name="Configuracion_Roles_Permisos" xml:space="preserve">
+    <value>Configuración Roles y Permisos</value>
+  </data>
+  <data name="Configuracion_Tareas_Programadas" xml:space="preserve">
+    <value>Configuración Tareas Programadas</value>
+  </data>
+  <data name="Configuracion_Usuarios" xml:space="preserve">
+    <value>Configuración Usuarios</value>
+  </data>
+  <data name="Configuracion_Zona_Cupos" xml:space="preserve">
+    <value>Configuración Zona Cupos</value>
+  </data>
+  <data name="Configuracion_Zona_Girasol" xml:space="preserve">
+    <value>Configuración Zona Girasol</value>
+  </data>
+  <data name="Confirmar_Negocio" xml:space="preserve">
+    <value>Confirmar Negocios</value>
+  </data>
+  <data name="Consignatario" xml:space="preserve">
+    <value>Consignatario</value>
+  </data>
+  <data name="Contador_CompraNet" xml:space="preserve">
+    <value>Visualizar Contadores CompraNet</value>
+  </data>
+  <data name="Contador_Proveedores" xml:space="preserve">
+    <value>Visualizar Contador Home </value>
+  </data>
+  <data name="Contrato" xml:space="preserve">
+    <value>Nro Contrato</value>
+  </data>
+  <data name="Crear_Negocios_Acuerdos" xml:space="preserve">
+    <value>Crear Contratos Acuerdo</value>
+  </data>
+  <data name="Crear_Negocios_Agente" xml:space="preserve">
+    <value>Crear Negocios Agentes de Compras</value>
+  </data>
+  <data name="Crear_Negocios_Confirmados" xml:space="preserve">
+    <value>Crear Negocios Confirmados</value>
+  </data>
+  <data name="Crear_Negocios_Fason" xml:space="preserve">
+    <value>Crear Negocios Fason</value>
+  </data>
+  <data name="Cuit" xml:space="preserve">
+    <value>CUIT</value>
+  </data>
+  <data name="Datos_Research" xml:space="preserve">
+    <value>Datos Research</value>
+  </data>
+  <data name="December" xml:space="preserve">
+    <value>Diciembre</value>
+  </data>
+  <data name="Descargar_Informe_Administrativo" xml:space="preserve">
+    <value>Descargar Informe Administrativo</value>
+  </data>
+  <data name="Descarga_Excel" xml:space="preserve">
+    <value>Descargar Excel Proveedores</value>
+  </data>
+  <data name="Descarga_Export_All_Comercial" xml:space="preserve">
+    <value>Export All de Comerciales</value>
+  </data>
+  <data name="Descarga_Export_All_Visualizador" xml:space="preserve">
+    <value>Export All de Visualizador</value>
+  </data>
+  <data name="Descarga_Pdf" xml:space="preserve">
+    <value>Descargar PDF Proveedores</value>
+  </data>
+  <data name="DesdeFijacion" xml:space="preserve">
+    <value>Desde Fijacion</value>
+  </data>
+  <data name="Destino" xml:space="preserve">
+    <value>Destino</value>
+  </data>
+  <data name="DiasPesificado" xml:space="preserve">
+    <value>Días Pesificado</value>
+  </data>
+  <data name="Error_CantidadCupoRequerido" xml:space="preserve">
+    <value>Debe agregar cantidad de Cupos</value>
+  </data>
+  <data name="Error_CentroRequerido" xml:space="preserve">
+    <value>El Centro no debe estar vacío</value>
+  </data>
+  <data name="Error_ClaveStop" xml:space="preserve">
+    <value>La clave no debe estar vacía</value>
+  </data>
+  <data name="Error_ComercialRequerido" xml:space="preserve">
+    <value>El Comercial no debe estar vacio</value>
+  </data>
+  <data name="Error_Dias" xml:space="preserve">
+    <value>El campo cantidad de días no debe estar vacío</value>
+  </data>
+  <data name="Error_FechaEntregaRequerido" xml:space="preserve">
+    <value>La Fecha de Ingreso no debe estar vacío</value>
+  </data>
+  <data name="Error_FechaRequerido" xml:space="preserve">
+    <value>Soporte correspondiente al mes de Julio 2019</value>
+  </data>
+  <data name="Error_FleteRequerido" xml:space="preserve">
+    <value>Debe elegir Flete</value>
+  </data>
+  <data name="Error_MaterialRequerido" xml:space="preserve">
+    <value>El Material no debe estar vacío</value>
+  </data>
+  <data name="Error_PlantaRequerido" xml:space="preserve">
+    <value>La Planta no debe estar vacía</value>
+  </data>
+  <data name="Error_ProveedorRequerido" xml:space="preserve">
+    <value>El Proveedor no debe estar vacío</value>
+  </data>
+  <data name="Error_ZonaRequerido" xml:space="preserve">
+    <value>La Zona no debe estar vacía</value>
+  </data>
+  <data name="EstablecimientoPropio" xml:space="preserve">
+    <value>Establecimiento</value>
+  </data>
+  <data name="February" xml:space="preserve">
+    <value>Febrero</value>
+  </data>
+  <data name="Fecha" xml:space="preserve">
+    <value>Fecha Operación</value>
+  </data>
+  <data name="FechaDesde" xml:space="preserve">
+    <value>Fecha Desde</value>
+  </data>
+  <data name="FechaDolarizado" xml:space="preserve">
+    <value>Fecha Dolarizado</value>
+  </data>
+  <data name="FechaHasta" xml:space="preserve">
+    <value>Fecha Hasta</value>
+  </data>
+  <data name="Filtrar_Administrativo" xml:space="preserve">
+    <value>Filtrar Administrativo</value>
+  </data>
+  <data name="Finalizar_Negocios" xml:space="preserve">
+    <value>Finalizar Negocios</value>
+  </data>
+  <data name="HastaFijacion" xml:space="preserve">
+    <value>Hasta Fijación</value>
+  </data>
+  <data name="ImporteSustentable" xml:space="preserve">
+    <value>Importe Sustentable</value>
+  </data>
+  <data name="Informe_Comercial" xml:space="preserve">
+    <value>Generar Informe Comercial</value>
+  </data>
+  <data name="Ingreso_DataAgro" xml:space="preserve">
+    <value>Acesso DataAgro</value>
+  </data>
+  <data name="January" xml:space="preserve">
+    <value>Enero</value>
+  </data>
+  <data name="July" xml:space="preserve">
+    <value>Julio</value>
+  </data>
+  <data name="June" xml:space="preserve">
+    <value>Junio</value>
+  </data>
+  <data name="Lista_Comercial" xml:space="preserve">
+    <value>Listar en Abm Comerciales</value>
+  </data>
+  <data name="Lista_Comercial_CompraNet" xml:space="preserve">
+    <value>Listar en Comercial CompraNet</value>
+  </data>
+  <data name="Localidad" xml:space="preserve">
+    <value>Localidad</value>
+  </data>
+  <data name="Mail_Hedge" xml:space="preserve">
+    <value>Recibir Mail Fin del Dia Hedge</value>
+  </data>
+  <data name="Mail_SIO" xml:space="preserve">
+    <value>Recibir Mail SIO</value>
+  </data>
+  <data name="March" xml:space="preserve">
+    <value>Marzo</value>
+  </data>
+  <data name="Material" xml:space="preserve">
+    <value>Material</value>
+  </data>
+  <data name="May" xml:space="preserve">
+    <value>Mayo</value>
+  </data>
+  <data name="Mes" xml:space="preserve">
+    <value>Mes</value>
+  </data>
+  <data name="Modificar_Cupos" xml:space="preserve">
+    <value>Modificar Cupos</value>
+  </data>
+  <data name="Modificar_Datos_Proveedor" xml:space="preserve">
+    <value>Modificar Proveedores</value>
+  </data>
+  <data name="Modificar_Interes" xml:space="preserve">
+    <value>Modificar Links de Interes</value>
+  </data>
+  <data name="Modificar_Negocios" xml:space="preserve">
+    <value>Modificar Negocios</value>
+  </data>
+  <data name="Modificar_Negocio_Externo" xml:space="preserve">
+    <value>Modificar Negocio Externo</value>
+  </data>
+  <data name="Modificar_Neg_Finalizados" xml:space="preserve">
+    <value>Modificar Negocios Finalizados</value>
+  </data>
+  <data name="Moneda" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
+  <data name="NoInformaSio" xml:space="preserve">
+    <value>No Informa Sio</value>
+  </data>
+  <data name="Notificaciones_Corredor" xml:space="preserve">
+    <value>Visualizar Notificaciones Corredor</value>
+  </data>
+  <data name="Notificaciones_Mail_Jerarquia" xml:space="preserve">
+    <value>Recibir Notificaciones Mail por Jerarquia</value>
+  </data>
+  <data name="Notificaciones_Mail_Todos" xml:space="preserve">
+    <value>Recibir Todas Notificaciones Mail</value>
+  </data>
+  <data name="Notificaciones_Research" xml:space="preserve">
+    <value>Notificaciones Research</value>
+  </data>
+  <data name="November" xml:space="preserve">
+    <value>Noviembre</value>
+  </data>
+  <data name="Nuevo_Negocios" xml:space="preserve">
+    <value>Nuevos Negocios</value>
+  </data>
+  <data name="Nuevo_Negocio_Externo" xml:space="preserve">
+    <value>Nuevo Negocio Externos</value>
+  </data>
+  <data name="Observacion" xml:space="preserve">
+    <value>Observación</value>
+  </data>
+  <data name="October" xml:space="preserve">
+    <value>Octubre</value>
+  </data>
+  <data name="Operador" xml:space="preserve">
+    <value>Operador</value>
+  </data>
+  <data name="Pago" xml:space="preserve">
+    <value>Pago</value>
+  </data>
+  <data name="PlanCanje" xml:space="preserve">
+    <value>Plan Canje</value>
+  </data>
+  <data name="Posicion" xml:space="preserve">
+    <value>Posición</value>
+  </data>
+  <data name="Precio" xml:space="preserve">
+    <value>Precio</value>
+  </data>
+  <data name="PrecioNeto" xml:space="preserve">
+    <value>Precio Neto</value>
+  </data>
+  <data name="Provincia" xml:space="preserve">
+    <value>Provincia</value>
+  </data>
+  <data name="RazonSocial" xml:space="preserve">
+    <value>Razon Social</value>
+  </data>
+  <data name="Reasignar_Flete" xml:space="preserve">
+    <value>Reasignar Flete Procedencia</value>
+  </data>
+  <data name="Rechazar_Negocios" xml:space="preserve">
+    <value>Rechazar Negocios</value>
+  </data>
+  <data name="Reporte_Research" xml:space="preserve">
+    <value>Reporte Research</value>
+  </data>
+  <data name="September" xml:space="preserve">
+    <value>Septiembre</value>
+  </data>
+  <data name="TipoNegocio" xml:space="preserve">
+    <value>Tipo Negocio</value>
+  </data>
+  <data name="Ver_Corredor_Comercial" xml:space="preserve">
+    <value>Ver Corredor Comercial</value>
+  </data>
+  <data name="Ver_Jerarquia" xml:space="preserve">
+    <value>Ver Jerarquia Comercial</value>
+  </data>
+  <data name="Ver_Mesa" xml:space="preserve">
+    <value>Ver Información de Mesa</value>
+  </data>
+  <data name="Ver_Solo_Corredores" xml:space="preserve">
+    <value>Ver Solo Corredores</value>
+  </data>
+  <data name="Ver_Todos_Comercial" xml:space="preserve">
+    <value>Ver Todo Comercial</value>
+  </data>
+  <data name="Ver_Todos_Cupos" xml:space="preserve">
+    <value>Ver Todos los Cupos</value>
+  </data>
+  <data name="Ver_Todos_Negocios" xml:space="preserve">
+    <value>Ver Todos los Negocios</value>
+  </data>
+  <data name="Ver_Todos_Tipos_Negocios" xml:space="preserve">
+    <value>Ver Todos los Tipos de Negocios CompraNet</value>
+  </data>
+  <data name="Visualizar_CompraNet" xml:space="preserve">
+    <value>Visualizar CompraNet</value>
+  </data>
+  <data name="Visualizar_Compras_Diarias" xml:space="preserve">
+    <value>Visualizar Compras Diarias</value>
+  </data>
+  <data name="Visualizar_Compras_Proveedor" xml:space="preserve">
+    <value>Visualizar Compras de Proveedores</value>
+  </data>
+  <data name="Visualizar_Cupos" xml:space="preserve">
+    <value>Acceder a Cupos</value>
+  </data>
+  <data name="Visualizar_Datos_Proveedor" xml:space="preserve">
+    <value>Visualizar Proveedores</value>
+  </data>
+  <data name="Visualizar_Hedge" xml:space="preserve">
+    <value>Visualizar Hedge</value>
+  </data>
+  <data name="Visualizar_Indicadores" xml:space="preserve">
+    <value>Visualizar Indicadores</value>
+  </data>
+  <data name="Visualizar_Informe_Administrativo" xml:space="preserve">
+    <value>Visualizar Informe Administrativo</value>
+  </data>
+  <data name="Visualizar_Informe_Comercial" xml:space="preserve">
+    <value>Visualizar Informe Comercial</value>
+  </data>
+  <data name="Visualizar_Pizarra" xml:space="preserve">
+    <value>Acceder a Precio Pizarra</value>
+  </data>
+  <data name="Visualizar_Proveedor_De_Corredor" xml:space="preserve">
+    <value>Visualizar Proveedor De Corredor</value>
+  </data>
+  <data name="Visualizar_Reporte_Agenda" xml:space="preserve">
+    <value>Visualizar Reporte Agenda</value>
+  </data>
+  <data name="Visualizar_Reporte_CompraNet" xml:space="preserve">
+    <value>Visualizar Reporte CompraNet</value>
+  </data>
+  <data name="Visualizar_Reporte_CompraNet_Externo" xml:space="preserve">
+    <value>Visualizar Reporte CompraNet Externo</value>
+  </data>
+  <data name="Visualizar_Reporte_Cupos" xml:space="preserve">
+    <value>Visualizar Reporte Cupos</value>
+  </data>
+  <data name="Visualizar_Reporte_Proveedor" xml:space="preserve">
+    <value>Visualizar Reporte Proveedor</value>
+  </data>
+  <data name="Visualizar_SugerenciaDeCupos" xml:space="preserve">
+    <value>Sugerencia de Cupos</value>
+  </data>
+  <data name="Servicio_Auth" xml:space="preserve">
+    <value>Servicio Auth</value>
+  </data>
+  <data name="Administracion_Proveedores" xml:space="preserve">
+    <value>Configurar Administración Proveedores</value>
+  </data>
+  <data name="Ingreso_Externo" xml:space="preserve">
+    <value>Ingreso de Externos</value>
+  </data>
+  <data name="Visualizar_Reporte_Comercial" xml:space="preserve">
+    <value>Visualizar Reporte Comercial</value>
+  </data>
+  <data name="Visualizar_Reporte_Dinamico" xml:space="preserve">
+    <value>Visualizar Reporte Dinamico</value>
+  </data>
+  <data name="CuitCorredor" xml:space="preserve">
+    <value>CUIT Corredor</value>
+  </data>
+  <data name="RazonCorredor" xml:space="preserve">
+    <value>Corredor</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+</root>

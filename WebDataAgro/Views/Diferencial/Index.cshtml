@@ -1,0 +1,18 @@
+﻿@model Molinos.DataAgro.Entities.Dto.DiferencialDto
+@{
+    ViewBag.Title = "Diferencial";
+}
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/hedge.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script type="text/javascript" src="~/Scripts/App/diferencial.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+    <div class="container" >
+        <div id="diferencialActual">
+            @Html.Action("AbmDiferencialPartial", "Diferencial")
+        </div>
+    </div>

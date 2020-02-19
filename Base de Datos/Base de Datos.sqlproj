@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Base_de_Datos</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{067ea2d6-5865-4413-8811-e45a0f91c482}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Base_de_Datos</RootNamespace>
+    <AssemblyName>Base_de_Datos</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Jenkins|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\Script Posdeployment" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\AreaInfluencia.sql" />
+    <Build Include="dbo\Tables\ContactoComercialInteres.sql" />
+    <Build Include="dbo\Tables\CampañaMaterialHistorico.sql" />
+    <Build Include="dbo\Tables\Zona.sql" />
+    <Build Include="dbo\Tables\Provincia.sql" />
+    <Build Include="dbo\Tables\CanalOperacion.sql" />
+    <Build Include="dbo\Tables\ComercialZona.sql" />
+    <Build Include="dbo\Tables\Destinatario.sql" />
+    <Build Include="dbo\Tables\Proveedor.sql" />
+    <Build Include="dbo\Tables\Condicion.sql" />
+    <Build Include="dbo\Tables\Material.sql" />
+    <Build Include="dbo\Tables\Segmentacion.sql" />
+    <Build Include="dbo\Tables\AcopioCampaña.sql" />
+    <Build Include="dbo\Tables\AcopioMaterial.sql" />
+    <Build Include="dbo\Tables\Interes.sql" />
+    <Build Include="dbo\Tables\Comercial.sql" />
+    <Build Include="dbo\Tables\Perfil.sql" />
+    <Build Include="dbo\Tables\ProveedorComercial.sql" />
+    <Build Include="dbo\Tables\TipoActividad.sql" />
+    <Build Include="dbo\Tables\GrupoDeCompras.sql" />
+    <Build Include="dbo\Tables\Reportes.sql" />
+    <Build Include="dbo\Tables\TipoTelefono.sql" />
+    <Build Include="dbo\Tables\Estado.sql" />
+    <Build Include="dbo\Tables\Campaña.sql" />
+    <Build Include="dbo\Tables\CampañaMaterial.sql" />
+    <Build Include="dbo\Tables\ProveedorCanalOperacion.sql" />
+    <Build Include="dbo\Tables\Objetivo.sql" />
+    <Build Include="dbo\Tables\CampañaMaterialPorMes.sql" />
+    <Build Include="dbo\Tables\ProveedorEstado.sql" />
+    <Build Include="dbo\Tables\Actividad.sql" />
+    <Build Include="dbo\Tables\PostIt.sql" />
+    <Build Include="dbo\Tables\Campo.sql" />
+    <Build Include="dbo\Tables\ProveedorCondicion.sql" />
+    <Build Include="dbo\Tables\RG2300.sql" />
+    <Build Include="dbo\Tables\ProveedorDestinatario.sql" />
+    <Build Include="dbo\Tables\Acopio.sql" />
+    <Build Include="dbo\Tables\Localidad.sql" />
+    <Build Include="dbo\Tables\ContactoComercial.sql" />
+    <Build Include="dbo\Tables\CampoMaterial.sql" />
+    <Build Include="dbo\Tables\FACACOP.sql" />
+    <Build Include="dbo\Functions\Split.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ValidarProveedor_PorComercial.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_CampoProduccionAcopioPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ObjetivosTraerPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_AcopioMaterialPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaHome.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaContactos.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ReporteProveedor.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ContactosComercialesTraerPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ActividadTraerPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ActualizarComercialHome.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Proveedores_Cubo.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Contactos_Exportar.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ComprasPorComercialId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ActividadHistoriaTraerPorProveedorId.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_TraerAgenda.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_TraerProveedorPorComercial.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Zona_TraerPorComerciales.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Comercial_TraerPorComerciales.sql" />
+    <Build Include="dbo\Stored Procedures\Reporte_ComprasBarra_TraerExcel.sql" />
+    <Build Include="dbo\Stored Procedures\Reporte_ComprasBarra_Traer.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresProductivaBarra.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionMapaProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionMapaAcopio.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionBarraProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionBarraAcopio.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresExportacionAcopio.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresComprasTorta.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresComprasMapa.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresComprasExportacionTorta.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresComprasExportacionMapa.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresBaseDeDatos_Traer.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresAcopioBarra.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_IndicadoresAcopio.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Gauget_TraerExcel.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_Gauget_Traer.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Produccion.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Objetivos.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_ContactosPrincipales.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Contacto.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Compras.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Almacenamiento.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ExportAll_Actividades.sql" />
+    <Build Include="dbo\Tables\InformeComercialProduccion.sql" />
+    <Build Include="dbo\Tables\InformeComercialEstado.sql" />
+    <Build Include="dbo\Tables\InformeComercialAlmacenamiento.sql" />
+    <Build Include="dbo\Tables\InformeComercial.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerExcelGeneracion.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerCapacidadProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_Traer.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_Reporte.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_GrabarCapacidadProductiva.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ComercialesJerarquicos_Traer.sql" />
+    <Build Include="dbo\Tables\FijacionDePrecio.sql" />
+    <Build Include="dbo\Tables\Moneda.sql" />
+    <Build Include="dbo\Tables\TipoNegocio.sql" />
+    <Build Include="dbo\Tables\Contrato.sql" />
+    <Build Include="dbo\Tables\FijacionDePrecioContrato.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BasicoProveedorTraerPorCuit.sql" />
+    <Build Include="dbo\Tables\EstadoContrato.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerAlmacenamiento.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerMaterialesAModificar.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_InformeComercial_TraerInformesGenerado.sql" />
+    <Build Include="dbo\Tables\Centro.sql" />
+    <Build Include="dbo\Tables\BoletoCompraNet.sql" />
+    <Build Include="dbo\Tables\ClasificacionCompraNet.sql" />
+    <Build Include="dbo\Tables\BolsaCompraNet.sql" />
+    <Build Include="dbo\Tables\CondicionFijacion.sql" />
+    <Build Include="dbo\Tables\StandardDeCalidad.sql" />
+    <Build Include="dbo\Tables\CalidadEspecial.sql" />
+    <Build Include="dbo\Tables\DescuentoBonificacion.sql" />
+    <Build Include="dbo\Tables\TipoDB.sql" />
+    <Build Include="dbo\Tables\TipoPeriodoDB.sql" />
+    <Build Include="dbo\Tables\Calidad.sql" />
+    <Build Include="dbo\Tables\RangoPrecio.sql" />
+    <Build Include="dbo\Tables\SuscripcionComercial.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_ActualizarEstadoProveedor.sql" />
+    <Build Include="dbo\Tables\RangoConfirmacionAutomatica.sql" />
+    <Build Include="dbo\Stored Procedures\DataAgro_BusquedaLocalidades.sql" />
+    <Build Include="dbo\Tables\FechaFeriado.sql" />
+    <Build Include="dbo\Tables\SISA.sql" />
+    <Build Include="dbo\Tables\CorredorProveedor.sql" />
+    <Build Include="dbo\Tables\Fason.sql" />
+    <Build Include="dbo\Tables\TipoFason.sql" />
+    <Build Include="dbo\Tables\TipoHedgeMaterial.sql" />
+    <Build Include="dbo\Tables\HedgeMaterial.sql" />
+    <Build Include="dbo\Tables\TipoObjetivo.sql" />
+    <Build Include="dbo\Tables\HedgeObjetivo.sql" />
+    <Build Include="dbo\Tables\HedgeTC.sql" />
+    <Build Include="dbo\Tables\FinDelDia.sql" />
+    <Build Include="dbo\Tables\Operador.sql" />
+    <Build Include="dbo\Tables\AgenteCompra.sql" />
+    <Build Include="dbo\Tables\TipoAgenteCompra.sql" />
+    <Build Include="dbo\Tables\Diferencial.sql" />
+    <Build Include="dbo\Tables\ContratoAcuerdo.sql" />
+    <Build Include="dbo\Tables\AperturaPrecio.sql" />
+    <Build Include="dbo\Tables\ConceptoAperturaPrecio.sql" />
+    <Build Include="dbo\Tables\ZonaCupo.sql" />
+    <Build Include="dbo\Tables\Cupo.sql" />
+    <Build Include="dbo\Tables\Partido.sql" />
+    <Build Include="dbo\Tables\ResearchAvanceSiembra.sql" />
+    <Build Include="dbo\Tables\ResearchAvanceCosecha.sql" />
+    <Build Include="dbo\Tables\ResearchSituacionCultivo.sql" />
+    <Build Include="dbo\Tables\ResearchVentaStock.sql" />
+    <Build Include="dbo\Tables\NotificacionResearch.sql" />
+    <Build Include="dbo\Tables\TipoResearch.sql" />
+    <Build Include="dbo\Tables\Log.sql" />
+    <Build Include="dbo\Tables\NivelTarifa.sql" />
+    <Build Include="dbo\Tables\Estadio.sql" />
+    <Build Include="dbo\Tables\Pizarra.sql" />
+    <Build Include="dbo\Tables\PrecioPizarra.sql" />
+    <Build Include="dbo\Tables\ConfiguracionCupo.sql" />
+    <Build Include="dbo\Tables\LimiteCupo.sql" />
+    <Build Include="dbo\Tables\EstadoCupo.sql" />
+    <Build Include="dbo\Tables\Configuracion.sql" />
+    <Build Include="dbo\Tables\Rol.sql" />
+    <Build Include="dbo\Tables\RolPermiso.sql" />
+    <Build Include="dbo\Tables\ComercialRol.sql" />
+    <Build Include="dbo\Tables\ObjetivoComercial.sql" />
+    <Build Include="dbo\Tables\LogProveedor.sql" />
+    <Build Include="dbo\Tables\HabilitacionPizarra.sql" />
+    <Build Include="dbo\Tables\PrecioMoa.sql" />
+    <Build Include="dbo\Tables\HabilitacionFijacion.sql" />
+    <Build Include="dbo\Tables\SugerenciaCupo.sql" />
+    <Build Include="dbo\Tables\Criterio.sql" />
+    <Build Include="dbo\Tables\Formula.sql" />
+    <Build Include="dbo\Tables\ConfiguracionEspacioDinamico.sql" />
+    <Build Include="dbo\Tables\TokenAuth.sql" />
+    <Build Include="dbo\Tables\ProveedorRol.sql" />
+    <Build Include="dbo\Tables\UsuarioExterno.sql" />
+    <Build Include="dbo\Tables\CondicionPago.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Comparacion.scmp" />
+    <None Include="Molinos.DataAgro.Database.bfdev226.publish.xml" />
+    <None Include="Molinos.DataAgro.Database.gvicsqlTest2016.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Base de Datos.refactorlog" />
+  </ItemGroup>
+</Project>

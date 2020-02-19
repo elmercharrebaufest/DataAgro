@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalBorrarVarios" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="status confirmado-modal">
+                    <div>¿Está seguro que desea eliminar los siguientes cupos?</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="cupos-seleccionados-a-borrar"></div>
+            </div>
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="BorrarVarios" class="myBtn btnSubmit" data-dismiss="modal">Aceptar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="cancelarBorrarVarios" class="myBtn " data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

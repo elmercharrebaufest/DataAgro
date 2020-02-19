@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "Data Agro";
+}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<link rel="stylesheet" href="~/Content/reportes.css" />
+<link rel="stylesheet" href="~/Content/reportesResponsive.css" />
+<script type="text/javascript" src="~/Scripts/App/reportes.js"></script>
+
+<div class="container">  
+        <div class="bordertopbottom">
+            <div class="wizard-header-contenedor-grupo" id="tabs-container">
+                <div class="wizard-header-contenedor" id="compras">
+                    Compras
+                </div>
+                <div class="wizard-header-contenedor" id="capacidadproductiva">
+                    Capacidad Productiva
+                </div>
+                <div class="wizard-header-contenedor" id="capacidadacopio">
+                    Capacidad Acopio
+                </div>
+                <div class="wizard-header-contenedor" id="objetivoscomercial">
+                    Objetivos por Comercial
+                </div>
+                <div class="wizard-header-contenedor" id="basededatos">
+                    Base de Datos
+                </div>
+            </div>
+        </div>
+        <div class="bordertopbottom grafico">
+            <div class="wizard-header-contenedor-grupo">
+                <div class="wizard-header-contenedor" id="mapa">
+                    Mapa
+                </div>
+                <div class="wizard-header-contenedor" id="torta">
+                    Torta
+                </div>
+                <div class="wizard-header-contenedor" id="barras">
+                    Gráfico de Barras
+                </div>
+                <div class="wizard-header-contenedor" id="gaudge">
+                    Objetivos por CUIT
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="contenedor-grafico-filtros">
+            <div class="filtro">
+                <div class="wizard-header-contenedor-grupo">
+                    <div class="wizard-header-contenedor" id="filtros-titulo">
+                        <div>Filtros</div>
+                    </div>
+                    <div class="wizard-header-contenedor" id="fdesde">
+                        <div>Fecha Desde</div>
+                        <input type="datetime" id="txtdesde" />
+                    </div>
+                    <div class="wizard-header-contenedor" id="fhasta">
+                        <div>Fecha Hasta</div>
+                        <input type="datetime" type="datetime-local" id="txthasta" />
+                    </div>
+                    <div class="wizard-header-contenedor" id="grano">
+                        <div>Grano</div>
+                        <select id="txtgrano"></select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="cosecha">
+                        <div>Cosecha</div>
+                        <select id="txtcosecha"></select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="provincia">
+                        <div>Provincia</div>
+                        <select id="txtprovincia"></select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="segmentacion">
+                        <div>Segmentación</div>
+                        <div class="contenedor-segundo-filtro-campo-segmentacion">
+
+                        </div>
+                        @*<select id="txtsegmentacion">
+                            </select>*@
+                    </div>
+                    <div class="wizard-header-contenedor" id="comercial">
+                        <div>Comercial</div>
+                        <select id="txtcomercial"></select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="mes">
+                        <div>Mes</div>
+                        <select id="txtmes">
+                            <option value="null">- Elegir</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="toneladas">
+                        <div>Toneladas</div>
+                        <select id="txttoneladas">
+                            <option value="null">- Elegir</option>
+                            <option value="1">Menos de 2500</option>
+                            <option value="2">Entre 2500 y 5000</option>
+                            <option value="3">Mas de 5000</option>
+                        </select>
+                    </div>
+                    <div class="wizard-header-contenedor" id="objetivos">
+                        <div>Objetivos</div>
+                        <input id="txtobjetivos" />
+                    </div>
+                    @*<div class="wizard-header-contenedor" id="cuit">
+                            <div>CUIT</div>
+                            <input id="txtcuit" />
+                        </div>*@
+                </div>
+
+                <div class="botones">
+                    <div id="btn-filtrar">
+                        Ejecutar
+                    </div>
+                    <div id="btn-exportar">
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="derecha">
+                <div id="graficoGR">
+
+                </div>
+                <div class="graficos" id="graficoR">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>

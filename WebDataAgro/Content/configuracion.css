@@ -1,0 +1,11 @@
+﻿.padding {
+    padding: 20px 20px 0 !important;
+}
+.CantidadDeDias {
+    width: 100%;
+}
+h4 {
+    border-bottom: 2px solid #017940;
+    margin-bottom: 10px;
+    padding: 0 0 5px 0px;
+}

@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "Cubo de Proveedores";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/CubProveedores")
+}
+
+
+<div id="rootwizard">
+
+<div id="CubProveedores">
+
+    <ul>
+        <li style="display:none"><a href="#tab1" data-toggle="tab"></a></li>
+        <li style="display:none"><a href="#tab2" data-toggle="tab"></a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane" id="tab1">
+
+            <h3>Reporte Dinámico</h3>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Proveedor</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="proveedorId" data-bind="source: ProveedorCombo, value: Parametros.proveedorId, disabled: isControlDisabled" style="max-width:310px"></select>
+                    <img id="errproveedorId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Provincia</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="provinciaId" data-bind="source: ProvinciaCombo, value: Parametros.provinciaId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errprovinciaId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Localidad</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="LocalidadId" data-bind="source: LocalidadCombo, value: Parametros.LocalidadId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errLocalidadId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Estado</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="EstadoId" data-bind="source: EstadoCombo, value: Parametros.EstadoId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errEstadoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Segmentación</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="SegmentacionId" data-bind="source: SegmentacionCombo, value: Parametros.SegmentacionId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errSegmentacionId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Material</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="material" data-bind="source: MaterialCombo, value: Parametros.material, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>     
+                       
+            <br />
+
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-10">
+                    <button id="butAceptar" class="k-button margen-cubo" type="button" data-role="button" data-bind="disabled: isControlDisabled">Aceptar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane" id="tab2">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#menu1">Reporte Dinámico</a></li>
+                <li><a data-toggle="tab" href="#menu2">Configuración</a></li>
+            </ul>
+
+            <div class="tab-content">
+
+                <div id="menu1" class="tab-pane fade in active">
+
+                    <div style="overflow-x:auto">
+                        <div id="pivotgrid"></div>
+                    </div>
+
+                </div>
+
+                <div id="menu2" class="tab-pane fade">
+
+                    <div id="configurator"></div>
+
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butCancelar" class="k-button" type="button" data-role="button">Cancelar</button>
+                    <button id="butExcelExport" class="k-button" type="button" data-role="button" style="margin-left:15px;">Exportar a Excel</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+@Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
+
+
+<style>
+
+    #pivotgrid {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+    }
+
+    #configurator {
+        display: inline-block;
+        vertical-align: top;
+        width:2500px;
+    }
+
+    .k-pivot-table .k-grid-content td {
+          text-align: right;
+      }
+
+</style>

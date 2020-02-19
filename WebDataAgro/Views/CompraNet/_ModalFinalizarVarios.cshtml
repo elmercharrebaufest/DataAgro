@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="ModalFinalizarVarios" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close blancoCerrarModalFinalizar" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status finalizado-modal">
+                    <div>FINALIZAR</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div id="DivConfirmado" class="col-xs-12 noPadding">
+                    <div id="negocioFinalizado-modal" class="campo clearfix">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <button id="finalizarVarios" onclick="FinalizarVariosContratos()" class="myBtn">Finalizar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button id="cancelarVariosFinalizado" type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-xs-12 noPaddingLeft">
+                    <button id="cerrarVariosFinalizado" class="myBtn" hidden>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

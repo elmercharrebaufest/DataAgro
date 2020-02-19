@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49414/DataAgroServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.DataContracts" />
+  <xs:import schemaLocation="http://localhost:49414/DataAgroServices.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.Entities" />
+  <xs:import schemaLocation="http://localhost:49414/DataAgroServices.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" />
+  <xs:element name="TraerTodoDestinatario">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TraerTodoDestinatarioResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.DataContracts" minOccurs="0" name="TraerTodoDestinatarioResult" nillable="true" type="q1:WcfResultIniDestinatario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TraerDestinatario">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="intDestinatarioId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TraerDestinatarioResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.DataContracts" minOccurs="0" name="TraerDestinatarioResult" nillable="true" type="q2:WcfDestinatario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GrabarDestinatario">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Molinos.DataAgro.Entities" minOccurs="0" name="oDestinatario" nillable="true" type="q3:Destinatario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GrabarDestinatarioResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" minOccurs="0" name="GrabarDestinatarioResult" nillable="true" type="q4:EntityErrors" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EliminarDestinatario">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="intDestinatarioId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EliminarDestinatarioResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Mastersoft.Framework.Standard" minOccurs="0" name="EliminarDestinatarioResult" nillable="true" type="q5:EntityErrors" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

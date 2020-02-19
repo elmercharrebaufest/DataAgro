@@ -1633,7 +1633,8 @@ function ClickEnPizarra() {
         $("#pagoDiferidoDiv").hide();
         $("#pesificadoDiv").hide();
         $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
-        $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");        
+        $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
         precioRojo.removeClass("required-border");
     }
     else {

@@ -1,0 +1,192 @@
+﻿var diaCerrado;
+var matLen;
+var objLen;
+var diferencial;
+
+$(document).ready(function () {
+    $('#rootwizard').bootstrapWizard({
+        'withVisible': false
+    });
+    InicializarElementos();  
+});
+
+function TimeOut() {
+    window.setTimeout(function () {
+        $(".alert").fadeTo(1000, 0, function () {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+
+function InicializarElementos() {
+    $(".number-input-material").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals:true,
+        spinners: false,
+        min: 0
+    });
+    $(".number-input-objetivo").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    $(".number-input-tc").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        decimals: 2,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    $("#diferencial").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+
+    $("#HedgeMaterialTab").click(function (){
+        DeseleccionarForms();
+        $("#HedgeMaterialTab").children().addClass("whc-selected");
+        $("#hedgeMaterial").show();
+    });
+    $("#ObjetivosTab").click(function (){
+        DeseleccionarForms();
+        $("#ObjetivosTab").children().addClass("whc-selected");
+        $("#objetivos").show();
+    });
+    $("#HedgeTCTab").click(function (){
+        DeseleccionarForms();
+        $("#HedgeTCTab").children().addClass("whc-selected");
+        $("#hedgeTC").show();
+    });
+    if (diaCerrado === "True") {
+        $("#tc").data("kendoNumericTextBox").enable(false);
+        $("#hedgepesos").data("kendoNumericTextBox").enable(false);
+        for (var i = 0; i < matLen; i++) {
+            $("#disponible" + i).data("kendoNumericTextBox").enable(false);
+            $("#forward" + i).data("kendoNumericTextBox").enable(false);
+            $("#new-crop" + i).data("kendoNumericTextBox").enable(false);
+        }
+        for (var h = 0; h < objLen; h++) {
+            $("#pricing" + h).data("kendoNumericTextBox").enable(false);
+            $("#remitir" + h).data("kendoNumericTextBox").enable(false);
+        }
+        $(".number-input").addClass("inhabilitado");
+        $(".number-input").children().addClass("inhabilitado");
+        $(".fin-dia").hide();
+        $("#fin-dia").hide();
+        $("#reabrir-dia").show();
+
+        $("#row-botones-material").hide();
+        $("#row-botones-objetivo").hide();
+    } else {
+        $("#row-botones-material").show();
+        $("#row-botones-objetivo").show();
+        $("#reabrir-dia").hide();
+    }
+    if (diferencial) {
+        $("#diferencial-dia").show();
+    } else {
+        $("#diferencial-dia").hide();
+    }    
+}
+function mostrarocultar(element) {
+    if ($(element).text() == "Mostrar") {
+        $(element).text("Ocultar");
+    } else {
+        $(element).text("Mostrar");
+    }
+}
+
+function DeseleccionarForms() {
+    $("#HedgeMaterialTab").children().removeClass("whc-selected");
+    $("#hedgeMaterial").hide();
+    $("#ObjetivosTab").children().removeClass("whc-selected");
+    $("#objetivos").hide();
+    $("#HedgeTCTab").children().removeClass("whc-selected");
+    $("#hedgeTC").hide();
+}
+
+function materialInput() {
+    $(".number-input-material").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    TimeOut();
+    if (diaCerrado === "True") {
+        $("#tc").data("kendoNumericTextBox").enable(false);
+        $("#hedgepesos").data("kendoNumericTextBox").enable(false);
+        for (var i = 0; i < matLen; i++) {
+            $("#disponible" + i).data("kendoNumericTextBox").enable(false);
+            $("#forward" + i).data("kendoNumericTextBox").enable(false);
+            $("#new-crop" + i).data("kendoNumericTextBox").enable(false);
+        }
+        $(".number-input").addClass("inhabilitado");
+        $(".number-input").children().addClass("inhabilitado");
+    }    
+}
+function objetivoInput() {
+    $(".number-input-objetivo").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    TimeOut();
+    if (diaCerrado === "True") {
+        $("#tc").data("kendoNumericTextBox").enable(false);
+        $("#hedgepesos").data("kendoNumericTextBox").enable(false);
+        for (var h = 0; h < objLen; h++) {
+            $("#pricing" + h).data("kendoNumericTextBox").enable(false);
+            $("#remitir" + h).data("kendoNumericTextBox").enable(false);
+        }
+        $(".number-input").addClass("inhabilitado");
+        $(".number-input").children().addClass("inhabilitado");
+    }    
+}
+function tcInput() {
+    $(".number-input-tc").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        decimals: 2,
+        restrictDecimals: true,
+        spinners: false,
+        value:"",
+        min: 0        
+    });
+    TimeOut();
+}
+
+function ShowModal() {    
+    $("#modalDiferencial").modal('show');
+}
+function ShowCerrarDia() {
+    var result = MSExecuteOnServer('/Hedge/Diferencial');
+    if (result.Errores !== null) {
+
+        $("#cierreDelDia").html(result.Errores[0].Message);
+        if (result.Errores[0].ErrorCode === 1) {
+            $("#fin-dia-con-mail").show();
+            $("#fin-dia-sin-mail").html("Cerrar sin enviar");
+        } else {
+            $("#fin-dia-con-mail").hide();
+            $("#fin-dia-sin-mail").html("Aceptar");
+        }
+        $("#modalCierreDia").modal('show');
+    }
+}

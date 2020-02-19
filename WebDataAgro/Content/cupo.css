@@ -1,0 +1,300 @@
+﻿.cupo-input {
+    background-color: #fff;
+    color: #787878;
+    width: 100%;
+    height: 1.94em;
+    padding: .167em 0;
+    text-indent: .8em;
+}
+.form-control {
+    margin-bottom: 6px;
+    display: inline-block;
+    color: #787878;
+    font-size: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    text-indent: .8em;
+}
+.w100 {
+    width:100%
+}
+.w95 {
+    width: 95%;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
+}
+.close {
+    width: 20px;
+    height: 20px;
+    background-image: url('images/cancelar.png') !important;
+}
+.alert {
+    border-radius: 5px !important;
+}
+#gridCupo {
+    font-size: 12px;
+    overflow-x: auto;
+}
+
+
+#gridCupo td button {
+    border: 0;
+    margin: 5px;
+    padding: 0;
+    background-color: transparent;
+    color: #aaa;
+    font-size: 23px;
+}
+
+.flete-procedencia {
+    background-color: #ffe5aa;
+}
+.btnAzul {
+    background-color: #26337B;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px !important;
+}
+.btnAzul:hover {
+    background-color: #151f52;
+    cursor: pointer;
+}
+
+.btnVarios {
+    border: 1px solid #848484;
+    border-radius: 5px !important;
+    background: white;
+    text-align: center;
+    margin: 0 0 15px 0;
+    cursor: pointer;
+    padding: 10px;
+}
+
+    .btnVarios:hover {
+        background: #ccc;
+        border: 1px solid #017940;
+    }
+
+
+.espaciolineas {
+    line-height: 1.6;
+}
+
+.campo h3 {
+    float: left;
+    margin: 0;
+    font-weight: 700;
+    padding-top: 3px;
+    font-size: 14px;
+    margin: 5px 0 0;
+}
+.modal-content {
+    border-radius: 0 !important;
+    padding: 10px 15px 15px 15px;
+}
+
+#gridCupo td .status,
+#gridCupo td .status:hover {
+    /*background:#787878;*/
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 1px 5px 1px 8px;
+    /*border-right: 6px solid;*/
+    font-weight: 700;
+    text-align: right;
+    /*color: #4c4b4b;*/
+    margin-bottom: 3px;
+    line-height: 1.2em;
+}
+
+.status.sinctg {
+    background-color: #179e2b;
+    color: #fff;
+}
+.ctg { /*icons*/
+    color: #179e2b;
+}
+
+.status.activado {
+    background-color: #ffc100;
+    color: #fff;
+}
+.act { /*icons*/
+    color: #ffc100;
+}
+
+.status.arribado {
+    background-color: #00adf5;
+    color: #fff;
+}
+.arr { /*icons*/
+    color: #00adf5;
+}
+
+.status.descargado {
+    background-color: #000000;
+    color: #dbdbdb;
+}
+.des { /*icons*/
+    color: #d00707;
+}
+
+.status.sinstop {
+    background-color: #ac67ca;
+    color: #ffffff;
+}
+.sto { /*icons*/
+    color: #ac67ca;
+}
+
+.status.anulado {
+    background-color: #848484;
+    color: #fff;
+}
+.anu { /*icons*/
+    color: #848484;
+}
+
+.status.error {
+    background-color: #d00707;
+    color: #ffffff;
+}
+.err { /*icons*/
+    color: #d00707;
+}
+
+
+.noRightPadding{
+    padding-right:0;
+}
+.noLeftPadding {
+    padding-left: 0;
+}
+.k-filter-menu{
+    width:inherit;
+}
+div > label {
+    margin-left: 10px;
+}
+
+.status div {
+    font-size: 12px;
+    text-align: left;
+    margin: 10px 0;
+    border: 0;
+    color: #FFF;
+    padding: 3px;
+    font-weight: 700;
+}
+
+.confirmado-modal div {
+    background: #008e61 !important;
+}
+
+.modal .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    background: none !important;
+    text-indent: 0;
+}
+
+.modal .modal-header .cerrar {
+    margin-top: 0.8rem !important;
+    margin-right: 0.5rem;
+}
+.modal .modal-header {
+    padding: 6px;
+    border-bottom: none;
+}
+.modal .modal-body {
+    padding: 0 15px 0px 15px;
+}
+
+.modal .modal-footer {
+    border: none;
+    padding: 15px 15px 0px 15px;
+    margin: 0;
+}
+#error-modal {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+}
+
+.myBtn {    
+    text-decoration: none;
+    color: #787878;
+    text-align: center;
+    box-shadow: none !important;
+    padding: 6px;
+    color: #000;
+    border: 1px solid #017940;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: 400 !important;
+    background-color: #fff;
+}
+
+    .myBtn:hover, .myBtn:active {
+        color: #FFF;
+        background: #017940;
+        border-color: #017940;
+    }
+#cupos-generados-modal {
+    max-height: 240px;
+    overflow-y: auto;
+    text-align: center;
+}
+@media screen and (min-width: 768px) {
+    #resultadoCupo .modal-dialog {
+        width: 500px;
+    }
+}
+.margen-15{
+    margin:15px;
+}
+
+#boton-si,
+#boton-no {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+ul{
+    padding:0;
+}
+
+#cupos-seleccionados-a-borrar {
+    max-height: 240px;
+    overflow-y: auto;
+    max-width:550px;
+    text-align:center;
+}
+
+#CargaCupos .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#carga-cupos-table td, #carga-cupos-table th {
+    padding: 0px;
+    text-align: center;
+}
+
+span.k-widget.k-numerictextbox.cantidad-masiva {
+    margin-bottom: 0;
+}
+
+[class^="COR"]{
+    font-weight:bold;
+    color:black;
+}

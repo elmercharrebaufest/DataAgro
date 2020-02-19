@@ -1,0 +1,713 @@
+﻿
+@{
+    ViewBag.Title = "Nuevo Proveedor";
+}
+
+<script>
+    var ProveedorId = '@ViewBag.ProveedorId';
+</script>
+
+@{
+    Random randAgregar = new Random();
+    string jsAgregar = randAgregar.Next().ToString();
+}
+
+<link rel="stylesheet" href="~/Content/agregarproveedor.css" />
+<link rel="stylesheet" href="~/Content/agregarproveedorResponsive.css" />
+
+<script type="text/javascript" src="~/Scripts/App/AgregarCorredor.js"></script>
+<script type="text/javascript" src="~/Scripts/App/agregarproveedor.js"></script>
+<script type="text/javascript" src="~/Scripts/App/agregarproveedoredit.js"></script>
+<script type="text/javascript" src="~/Scripts/App/ValidacionProveedor.js"></script>
+
+<div class="container">
+    <div class="row bordertopbottom">
+        <div class="wizard-header-contenedor-grupo">
+            <div class="wizard-header-contenedor whc-selected" id="contacto">
+                Datos generales
+            </div>
+            <div class="wizard-header-contenedor" id="contactocomercial">
+                Contacto Comercial
+            </div>
+            <div class="wizard-header-contenedor noCorredor" id="produccion">
+                Producción
+            </div>
+            <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
+                Almacenamiento
+            </div>
+            <div class="wizard-header-contenedor" id="proveedores-corredor" style="display:none;">
+                Proveedores
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="formulario">
+
+    <div id="formulario-contacto">
+        <h2>Datos básicos</h2>
+        <div class="formulario-campo">
+            <span class="campo-span">CUIT (*)</span>
+            <input type="text" class="campo-input-text" id="cuit" />
+        </div>
+        <div class="formulario-campo campo-razonsocial">
+            <span class="campo-span">Razón Social</span>
+            <input type="text" disabled class="campo-input-text" id="razonsocial" />
+            <div class="campo-estadoafip">
+                <span class="campo-estadoafip-span">
+                    Estado Registro AFIP
+                </span>
+                <img id="imgOperable" src="" />
+                <span class="campo-estadoafip-span-operable" id="Operable-agregar" onmouseover="mostrarTooltip(this)" onmouseout="ocultarTooltip(this)">
+
+                </span>
+
+                <div id="tooltip" class="lista-contacto-no-operable">
+                    <div class="lista-contacto-no-operable-tooltip">
+                        <span class="span-contacto-no-operable-tooltip"> </span>
+                    </div>
+                    <div class="lista-contacto-no-operable-tooltip-arrow"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="formulario-campo" style="height:38px;">
+            <div class="campo-span">
+                Sin interés de operar
+            </div>
+            <input id="nocliente" class="campo-input-text input-nocliente" type="checkbox" />
+        </div>
+        <div class="formulario-campo campo-segmentacion">
+            <span class="campo-span">Segmentación (*)</span>
+
+        </div>
+
+        <div class="formulario-campo campo-calificacion noCorredor">
+            <span class="campo-span">Calificación</span>
+            <select multiple id="calificacion">
+                <option class="multSelktrImg" image="../Content/Images/1estr.png" value="1"></option>
+                <option class="multSelktrImg" image="../Content/Images/2estr.png" value="2"></option>
+                <option class="multSelktrImg" image="../Content/Images/3estr.png" value="3"></option>
+                <option class="multSelktrImg" image="../Content/Images/4estr.png" value="4"></option>
+                <option class="multSelktrImg" image="../Content/Images/5estr.png" value="5"></option>
+            </select>
+        </div>
+
+        <h2 id="datos">Datos proveedor</h2>
+        <div class="datos-basicos-comentario">
+            Domicilio Actividad
+        </div>
+        <div class="formulario-campo campo-provincia">
+
+        </div>
+        <div class="formulario-campo campo-localidad">
+
+        </div>
+        <div class="formulario-campo">
+            <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion" />
+            <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost" />
+        </div>
+        <div class="noCorredor">
+            <div class="datos-basicos-comentario">
+                Información comercial
+            </div>
+            <div class="formulario-campo campo-operacion">
+                <span class="campo-span">Canales de operación</span>
+
+            </div>
+            <div class="formulario-campo campo-destinatario">
+                <span class="campo-span">Entrega a</span>
+
+            </div>
+            <div class="formulario-campo campo-condicion">
+                <span class="campo-span">Condiciones preferentes</span>
+
+            </div>
+            <div class="formulario-campo">
+                <span class="campo-span">Intermediario</span>
+                <input type="text" class="campo-input-text" id="intermediario" />
+            </div>
+            <div class="formulario-campo">
+                <span class="campo-span">Area de influencia</span>
+                <div class="formulario-campo-radio">
+                    <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
+                    <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+                </div>
+            </div>
+        </div>
+        <div class="datos-basicos-comentario">
+            CompraNet
+        </div>
+
+        <div class="datos-produccion-cap-prod-editor-contenedor">
+            <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
+                <div class="formulario-campo campo-clasificacion-compranet noCorredor">
+                    <span class="campo-span">Clasificación</span>
+                </div>
+                <div class="formulario-campo campo-tipo-boleto-compranet">
+                    <span class="campo-span">Tipo de Boleto</span>
+
+                </div>
+                <div class="formulario-campo campo-bolsa-compranet">
+                    <span class="campo-span">Bolsa</span>
+
+                </div>
+                <div class="formulario-campo campo-provincia-compranet noCorredor">
+                    <span class="campo-span">Provincia</span>
+                </div>
+                <div class="formulario-campo campo-localidad-compranet noCorredor">
+                    <span class="campo-span">Localidad</span>
+                </div>
+                <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
+                    <span class="campo-span">Consignatario </span>
+                </div>
+                <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor" >
+                    <span class="campo-span">Comisión %</span>
+                </div>
+            </div>
+        </div>
+        <div class="noCorredor">
+            <div class="datos-basicos-comentario">
+                Objetivos
+            </div>
+
+            <div class="datos-produccion-cap-prod-editor-contenedor">
+                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
+                    <div class="datos-produccion-cap-prod-editor-granos-titulos">
+                        <div class="produccion-titulo-grano">Grano</div>
+                        <div class="produccion-titulo-grano">Campaña</div>
+                        <div class="produccion-titulo-grano">Toneladas Objetivo</div>
+                    </div>
+                    <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
+                        <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
+                            <div class="lineaObjetivos0 campo-granos-objetivo ObjetivoGranos">
+
+                                <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivo" id="eliminarObjetivo0" />
+                            </div>
+                        </div>
+                        <div class="agregargranoObjetivo">
+                            + Agregar Objetivo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="datos-basicos-comentario">
+            Comentario
+        </div>
+        <div class="formulario-campo">
+            <textarea id="comentario"></textarea>
+        </div>
+    </div>
+
+    <div id="formulario-contactocomercial">
+        <h2>Contactos Comerciales</h2>
+
+        <div class="contenedor-grupo-contactos-comerciales-edit">
+            <div class="contenedor-contacto-comercial">
+                <div class="row concom-form">
+                    <input type="hidden" id="concom-id" />
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Nombre
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="concom-nombre" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Apellido
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="concom-apellido" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Email
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto concom-campo-email">
+                            <input type="text" id="concom-email1" />
+                            <img src="~/Content/Images/agregar-tel-mail.png" id="concom-agregarMail" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form concom-campo-telefono">
+
+
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Fecha nacimiento
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <select id="concom-fechanacimientodia">
+                                <option value="null">Dia</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+                            <select id="concom-fechanacimientomes">
+                                <option value="null">Mes</option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <select id="concom-anionacimientomes"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Profesión
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="concom-cargo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Puesto
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="concom-puesto" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Intereses
+                        </div>
+                    </div>
+                    <div class="col-lg-7 campo-intereses">
+                        <div class="value-contacto concom-intereses">
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Otros Intereses
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="text" id="concom-otrosintereses" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Principal
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="value-contacto">
+                            <input type="checkbox" id="concom-principal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row concom-form">
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            CompraNet
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="value-contacto">
+                            <input type="checkbox" id="concom-compranet" />
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="label-contacto">
+                            Cupos
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="value-contacto">
+                            <input type="checkbox" id="concom-cupo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="guardar-contacto-basico">
+                    <div id="GuardarContactoComercial">
+                        Agregar
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="datos-contactocomercial-guardados">
+
+        </div>
+    </div>
+
+    <div id="formulario-produccion">
+        <h2>Producción</h2>
+        <div class="datos-produccion-cap-prod">
+            Capacidad Productiva
+        </div>
+        <div class="datos-produccion-cap-prod-guardados">
+
+        </div>
+        <div class="datos-produccion-cap-prod-editor-contenedor">
+            <div class="datos-produccion-cap-prod-editor-titulo">
+                Agregar detalle de capacidad productiva
+            </div>
+            <input type="hidden" id="campoid" />
+            <div class="formulario-campo ubicacionkmz">
+                <span class="campo-span">Ubicación</span>
+                <input type="text" placeholder="Coordenadas..." class="campo-input-text" id="coordenadas" />
+                <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+                <input type="file" name="kmz" id="kmz" class="inputfile" />
+                <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
+            </div>
+            <div class="formulario-campo campo-provincia-produccion">
+
+            </div>
+            <div class="formulario-campo campo-localidad-produccion">
+
+            </div>
+            <div class="formulario-campo">
+                <span class="campo-span">Hectareas</span>
+                <div class="formulario-campo-radio">
+                    <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="0"> Alquiladas</label>
+                    <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="1"> Propias</label>
+                </div>
+            </div>
+            <div class="datos-produccion-cap-prod-editor-granos-contenedor">
+                <div class="datos-produccion-cap-prod-editor-granos-titulos">
+                    <div class="produccion-titulo-grano">Grano</div>
+                    <div class="produccion-titulo-grano">Campaña</div>
+                    <div class="produccion-titulo-hastn">Has</div>
+                    <div class="produccion-titulo-hastn">TNs</div>
+                </div>
+                <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
+                    <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
+                        <div class="linea0 campo-granos">
+
+                            <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarGrano" id="eliminarGrano0" />
+                        </div>
+                    </div>
+                    <div class="agregargrano">
+                        + Agregar campaña
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div class="datos-produccion-cap-prod-editor-contenedor-guardar" id="guardarCapProd">
+                    Guardar
+                </div>
+            </div>
+        </div>
+
+        <div class="formulario-campo">
+            <span class="campo-span">Tons. Máx. Aprobadas Soja Sustentable</span>
+            <input type="text" class="campo-input-text" id="tons-max-aprob-sojasust" />
+        </div>
+        <div class="formulario-campo">
+            <span class="campo-span">Has. Aprobadas Soja Sustentable </span>
+            <input type="text" class="campo-input-text" id="has-aprob-sojasust" />
+        </div>
+    </div>
+
+    <div id="formulario-almacenamiento">
+        <h2>Almacenamiento</h2>
+        <div class="datos-produccion-cap-prod">
+            Almacenamiento
+        </div>
+        <div class="datos-almacenamiento-cap-prod-guardados">
+
+        </div>
+        <div class="datos-almacenamiento-cap-prod-editor-contenedor">
+            <div class="datos-almacenamiento-cap-prod-editor-titulo">
+                Agregar detalle de Almacenamiento Estático
+            </div>
+            <input type="hidden" id="campo-almacenamientoid" />
+            <div class="formulario-campo ubicacionkmzalmacenamiento">
+                <span class="campo-span">Ubicación</span>
+                <input type="text" placeholder="Coordenadas..." class="campo-input-text" id="coordenadas-almacenamiento" />
+                <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+                <input type="file" name="kmz-almacenamiento" id="kmz-almacenamiento" class="inputfile" />
+                <label for="kmz-almacenamiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field almacenamiento">Subir un Archivo</span></label>
+            </div>
+            <div class="formulario-campo campo-provincia-almacenamiento">
+
+            </div>
+            <div class="formulario-campo campo-localidad-almacenamiento">
+
+            </div>
+            <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor">
+                <div class="datos-almacenamiento-cap-prod-editor-granos-titulos">
+                    <div class="produccion-titulo-grano">Campaña</div>
+                    <div class="produccion-titulo-grano">Capacidad planta TNs</div>
+                </div>
+                <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-contenedor">
+                    <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-grupo">
+                        <div class="lineaAlmacenamiento0 campo-granos-almacenamiento" style="position:relative;">
+                        </div>
+
+                    </div>
+                    <div class="agregargrano-almacenamiento">
+                        + Agregar campaña a este campo
+                    </div>
+                </div>
+            </div>
+            
+            <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor">
+                <div class="datos-almacenamiento-cap-prod-editor-titulo">
+                    Agregar Volumen comercial por campaña
+                </div>
+                <div class="datos-almacenamiento-cap-prod-editor-granos-titulos">
+                    <div class="produccion-titulo-grano">Grano</div>
+                    <div class="produccion-titulo-grano">Campaña</div>
+                    <div class="produccion-titulo-grano">Toneladas</div>
+                </div>
+                <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-contenedor">
+                    <div class="datos-almacenamiento-cap-prod-editor-granosalm-cantidades-grupo">
+                        <div class="lineaAlmacenamientoGranos0 campo-granos-almacenamientograno" style="position:relative;">
+
+                        </div>
+                    </div>
+                    <div class="agregargrano-almacenamientograno">
+                        + Agregar grano a este campo
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div class="datos-produccion-cap-prod-editor-contenedor-guardar" id="guardarCapProd-almacenamiento">
+                    Guardar
+                </div>
+            </div>
+        </div>
+        <div class="formulario-campo">
+            <span class="campo-span">Volumen Anual Total (TNs)</span>
+            <input type="text" class="campo-input-text" id="volumen-anual-total-tns" />
+        </div>
+        <div class="formulario-campo">
+            <span class="campo-span">Habilitado para Soja Sustentable</span>
+            <div class="formulario-campo-radio">
+                <label for="sojasust-si"><input id="sojasust-si" type="radio" name="sojasustentable" value="1"> Si</label>
+                <label for="sojasust-no"><input id="sojasust-no" type="radio" name="sojasustentable" value="0"> No</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="formulario-proveedorescorredor">
+
+        <div class="contenedor-grupo-proveedorescorredor-edit">
+            <div class="contenedor-proveedorescorredor-comercial">
+                <div class="row provcorr-form">
+                    <input type="hidden" id="provcorrId" />
+                    <input type="hidden" id="corredorId" />
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor">
+                            CUIT
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto">
+                            <input type="text" id="provcorr-cuit" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor">
+                            Razón Social
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto">
+                            <input type="text" id="provcorr-razonsocial" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3"></div>
+                    <div class="campo-estadoafip-corredor col-lg-9">
+                        <span class="campo-estadoafip-span-corredor">
+                            Estado Registro AFIP
+                        </span>
+                        <img id="imgOperableCorr" src="" />
+                        <span class="campo-estadoafip-span-operable-corredor" id="Operable-agregar-corredor">
+                        </span>
+                        <div id="tooltip-corredor" class="lista-contacto-no-operable">
+                            <div class="lista-contacto-no-operable-tooltip">
+                                <span class="span-contacto-no-operable-tooltip-corredor"> </span>
+                            </div>
+                            <div class="lista-contacto-no-operable-tooltip-arrow"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor">
+                            Domicilio
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto procedencia-corr">
+                            <input type="text" style="width:100%" id="procedencia" placeholder="Buscar por Localidad" />
+                            <input type="hidden" id="provinciacorrId" />
+                            <input type="hidden" id="localidadcorrId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-md-3"></div>
+                    <div class="formulario-campo">
+                        <div class="col-md-6">
+                            <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion-provcorr" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost-provcorr" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor" style="padding-top:0">
+                            Procedencia CompraNet
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="value-contacto procedencia-corr">
+                            <input type="text" style="width:100%" id="procedenciaCompranet" placeholder="Buscar por Localidad" />
+                            <input type="hidden" id="provinciacorrCompranetId" />
+                            <input type="hidden" id="localidadcorrCompranetId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row provcorr-form">
+                    <div class="col-lg-3">
+                        <div class="label-proveedorescorredor">
+                            Clasificación
+                        </div>
+                    </div>
+                    <div class="col-lg-9 campo-clasificacion-proveedor">
+
+                    </div>
+                </div>
+                <div class="row provcorr-form " id="consignatarioProveedorDiv" hidden>
+                    <div class="col-lg-3">
+                        <div id="consignatarioProveedorCompraNet" class="campo-consignatario-proveedor-compranet">
+                            <div class="label-proveedorescorredor">
+                                Consignatario
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 campo-consignatario-proveedor">
+
+                    </div>
+                </div>
+
+                <div class="guardar-proveedorescorredor">
+                    <div id="GuardarProveedorCorredor">
+                        Agregar
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="datos-proveedores-guardados">
+        </div>
+
+    </div>
+    <div class="formulario-footer">
+        <div class="formulario-footer-cancelar">
+            Cancelar
+        </div>
+        <div class="formulario-footer-guardar-contacto guardar-proveedor">
+            Guardar
+        </div>
+        <div class="formulario-footer-siguiente">
+            Siguiente
+        </div>
+    </div>
+</div>
+
+
+<div id="modalSalir" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Agregar contacto</h4>
+            </div>
+            <div class="modal-body">
+                <p>Quiere guardar los cambios antes de salir?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-salir-sin-guardar">
+                    Salir sin Guardar
+                </div>
+                <div class="modal-cancelar">
+                    Cancelar
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "Contrato Acuerdo";
+    var modifica = PermisosHelper.Is(PermisosDataAgro.ModificarNegocios);
+    var elimina = PermisosHelper.Is(PermisosDataAgro.RechazarNegocios);
+}
+
+<script>
+    modifica = '@modifica';
+    elimina = '@elimina';
+    comercialId = '@ViewBag.ComercialId';
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/AbmContratoAcuerdo");
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+}
+<div class="contenedor-contratoAcuerdo">
+
+    <h3>@ViewBag.Title</h3>
+
+    <br />
+    <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
+    <div id="rootwizard">
+
+        <div id="Abm">
+
+            <div class="tab-content">
+                <div class="row">
+                    <div>
+                        <div class="col-sm-2 " id="corredorLabelId">
+                            <label id="corredorLabel">Corredor</label>
+                        </div>
+                        <div class="col-sm-4 required-box-parent">
+                            <input id="buscadorCorredor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                            <div id="buscadorCorredorResult"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="col-sm-2 " id="proveedorLabelId">
+                            <label id="proveedorLabel">Proveedor</label>
+                        </div>
+                        <div class="col-sm-4 required-box-parent">
+                            <input id="buscadorProveedor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+                            <div id="buscadorResult"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-md-2">
+                        <label>Cantidad</label>
+                    </div>
+                    <div class="col-md-4 required-box-parent">
+                        <input id="Cantidad" type="number" class="k-textbox  required-box" style="width:100%" data-bind="value: ContratoAcuerdo.Cantidad, disabled: isControlDisabled" maxlength="50" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Precio</label>
+                    </div>
+                    <div class="col-md-4 required-box-parent">
+                        <input id="Precio" type="number" class="k-textbox  required-box " style="width:100%" data-bind="value: ContratoAcuerdo.Precio, disabled: isControlDisabled" maxlength="50" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 ">
+                        <label>Moneda</label>
+                    </div>
+                    <div class="col-sm-5 col-md-4 required-box-parent">
+                        <div>
+                            <select id="moneda" class="required-box" data-bind="source: MonedaCombo, value: Resultados.moneda, disabled: isControlDisabled"></select>
+                            <img id="errmoneda" src="~/Content/Images/error.png" style="display:none" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 ">
+                        <label>Material</label>
+                    </div>
+                    <div class="col-sm-5 col-md-4">
+                        <div>
+                            <select id="material" class="required-box" data-bind="source: MaterialCombo, value: Resultados.material, disabled: isControlDisabled"></select>
+                            <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>Destino</label>
+                    </div>
+                    <div class="col-sm-5 col-md-4">
+                        <select id="destinoId" data-bind="source: DestinoCombo, value: Resultados.destinoId, disabled: isControlDisabled"></select>
+                        <img id="errdestinoId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-sm-2 noRightPadding">
+                        <label>Fecha Entrega Desde</label>
+                    </div>
+                    <div class="col-sm-4 col-md-2">
+                        <span id="fechaDesdeReporte">
+                            <input id="fechaDesde" name="fechaDesdeString" type="date" style="width: 100%" />
+                        </span>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-sm-2 noRightPadding">
+                        <label>Fecha Entrega Hasta</label>
+                    </div>
+                    <div class="col-sm-4 col-md-2">
+                        <span id="fechaHastaReporte">
+                            <input id="fechaHasta" name="fechaHastaString" type="date" style="width: 100%" />
+                        </span>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:5px">
+                    <div class="col-sm-2">
+                        <label>Comercial</label>
+                    </div>
+                    <div class="col-sm-5 col-md-4">
+                        <select id="comercialId" data-bind="source: ComercialCombo, value: Resultados.comercialId, disabled: isControlDisabled"></select>
+                        <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
+                        <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

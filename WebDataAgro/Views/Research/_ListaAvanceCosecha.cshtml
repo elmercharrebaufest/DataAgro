@@ -1,0 +1,63 @@
+﻿@model WebDataAgro.Models.ResearchAvanceCosechaModel
+
+    <div id="formulario" class="table-container">
+
+        @if (Model.Resultado != null && Model.Resultado.HayError)
+        {
+            if (Model.Resultado.Errores[0].ErrorCode != 200)
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Model.Resultado.Errores[0]
+                </div>
+                <script>LimpiarForm()</script>
+            }
+        }
+    </div>
+<div class="row">
+    <div class="col-xs-10 m-grid-col-xs-offset-1">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialCosecha" onclick="mostrarocultar('#mostrarCosecha')">
+            <span class="historial">Historial</span> <span id="mostrarCosecha" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialCosecha" class="collapse tabla-research">
+            <table class="tabla-historial table">
+                <tr>
+                    <th>Cultivo</th>
+                    <th>Campaña</th>
+                    <th>Localidad</th>
+                    <th>Avance %</th>
+                    <th>Rango Desde</th>
+                    <th>Rango Hasta</th>
+                    <th>Rendimiento (Tn)</th>
+                    <th>Comercial</th>
+                    <th>Fecha/Hora</th>
+                </tr>
+                @foreach (var mat in Model.HistorialAvanceCosecha)
+                {
+            <tr>
+                <td>@Html.DisplayFor(model => mat.Material)</td>
+                <td>@Html.DisplayFor(model => mat.Campania)</td>
+                <td>@Html.DisplayFor(model => mat.Localidad)</td>
+                <td class="text-right">@Html.DisplayFor(model => mat.Avance)</td>
+                <td class="text-right">@Html.DisplayFor(model => mat.RangoDesde)</td>
+                <td class="text-right">@Html.DisplayFor(model => mat.RangoHasta)</td>
+                <td class="text-right">@Html.DisplayFor(model => mat.Rendimiento)</td>
+                <td>@Html.DisplayFor(model => mat.Comercial)</td>
+                @{var fecha = mat.FechaHora.ToString("dd/MM/yyyy hh\\:mm tt");}
+                <td>@Html.DisplayFor(model => fecha)</td>
+                <td class="fin-dia">
+                    @Ajax.ActionLink(" ", "EliminarAvanceCosecha", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceCosecha", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                </td>
+            </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

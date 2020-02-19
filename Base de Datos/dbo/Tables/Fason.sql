@@ -1,0 +1,30 @@
+﻿CREATE TABLE [dbo].[Fason]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY (1, 1), 
+	[TipoFasonId] INT NOT NULL,
+	[FasoneroId] INT NOT NULL,
+    [MaterialId] INT NOT NULL , 
+    [CampanaId] INT NOT NULL,	 
+    [Cantidad] FLOAT NOT NULL, 
+    [Precio] DECIMAL(11, 2) NOT NULL, 
+    [MonedaId] CHAR(5) NOT NULL, 
+	[Posicion] NVARCHAR(10) NOT NULL,	
+    [Fecha] DATETIME NOT NULL, 
+    [ComercialId] INT NULL, 
+	[EstadoId] INT NOT NULL,
+	[Ampliaciones] FLOAT NULL,
+	[FechaDesde] DATETIME NULL, 
+    [FechaHasta] DATETIME NULL,
+	[Especial] BIT NULL,
+    [FinDelDiaId] INT NULL,
+	[ComercialCreadorId] INT NULL
+
+    CONSTRAINT [FK_Fason_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),  
+    CONSTRAINT [FK_Fason_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),  
+    CONSTRAINT [FK_Fason_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]), 
+    CONSTRAINT [FK_Fason_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),  
+    CONSTRAINT [FK_Fason_Fasonero] FOREIGN KEY (FasoneroId) REFERENCES [Proveedor]([ProveedorId]),
+    CONSTRAINT [FK_Fason_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
+	CONSTRAINT [FK_Fason_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
+	CONSTRAINT [FK_Fason_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId])
+)

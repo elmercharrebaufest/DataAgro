@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "ABM de FijacionDePrecio";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/AbmFijacionDePrecio")
+}
+
+
+<h3>ABM de FijacionDePrecio</h3>
+<br />
+
+<div id="rootwizard">
+
+<div id="Abm">
+
+    <ul>
+        <li style="display:none"><a href="#tab1" data-toggle="tab"></a></li>
+        <li style="display:none"><a href="#tab2" data-toggle="tab"></a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane" id="tab1">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="gridIniFijacionDePrecio" data-bind="source: Resultados" style="height:320px;"></div>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAgregar" class="k-button" type="button" data-role="button" data-bind="disabled: isAddNewDisabled">Agregar</button>
+                    <button id="butModificar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Modificar</button>
+                    <button id="butEliminar" class="k-button" type="button" data-role="button" data-bind="disabled: isDeleteDisabled" style="margin-left:15px;">Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-pane" id="tab2">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Material</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="MaterialId" data-bind="source: MaterialCombo, value: FijacionDePrecio.MaterialId, disabled: isControlDisabled"  style="max-width:310px"></select>
+                    <img id="errMaterialId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Precio</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Precio" data-bind="value: FijacionDePrecio.Precio, disabled: isControlDisabled" style="max-width:134px" />
+                    <img id="errPrecio" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Fecha</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="Fecha" data-bind="value: FijacionDePrecio.Fecha, disabled: isControlDisabled" style="max-width:134px" />
+                    <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Proveedor</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="ProveedorId" data-bind="value: FijacionDePrecio.ProveedorId, disabled: isControlDisabled" style="max-width:134px" />
+                    <img id="errProveedorId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
+                    <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+<br />

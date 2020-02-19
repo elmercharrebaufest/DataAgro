@@ -1,0 +1,47 @@
+﻿#Localidad {
+    width: 100%
+}
+.mostrar {
+    font-size: 12px !important 
+}
+.w100{
+    width: 100%
+}
+.w48 {
+    width: 48.07%
+}
+
+.historial {
+    color: #017940;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans",sans-serif;
+    text-align: center;
+}
+
+.historial-desplegable {
+    border-bottom: 3px solid #017940;
+    margin-bottom: 10px;
+    padding: 0 0 5px 20px;
+    cursor: pointer;
+}
+.mostrar-historial {
+    margin-left: 15px;
+    font-size: 12px;
+}
+.alert {
+    z-index: 100;
+    border-radius: 5px !important;
+    width: 600px;
+}
+.k-grid {
+    font-size: 11px;
+}
+
+.k-input, .k-autocomplete{
+    font-size:14px;
+}
+
+#gridAvanceCosecha, #gridAvanceSiembra, #gridSituacionCultivoParcial, #gridReporteVentaStock, .tabla-research {
+    overflow: auto;
+}

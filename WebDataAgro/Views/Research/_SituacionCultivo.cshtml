@@ -1,0 +1,76 @@
+﻿@model WebDataAgro.Models.ResearchSituacionCultivoModel
+<br />
+<br />
+
+<div class="container">
+    @using (Ajax.BeginForm("GrabarSituacionCultivo", null, new AjaxOptions { UpdateTargetId = "listaSituacionCultivo", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Procedencia</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                <input class="w100" id="LocalidadSituacionCultivo" placeholder="Buscar por Localidad" />
+                @Html.HiddenFor(x => x.LocalidadId, new { @Id = "LocalidadIdSituacionCultivo" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Partido</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.TextBox("Partido", "", new { disabled = "disabled", @id = "PartidoSituacionCultivo", @class = "form-control limpiar" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Cultivo</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Cultivo", new { @class = "form-control", @id = "MaterialSituacionCultivoId" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Campaña</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.CampaniaId, new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione Campaña", new { @class = "form-control", @id = "CampaniaSituacionCultivoId" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Situación</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.Situacion, new SelectList(ViewBag.Situacion, "Value", "Text"), "Seleccione Situación", new { @class = "form-control", @id = "SituacionId" })
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <label>Estadío</label>
+            </div>
+            <div class="col-sm-3 col-md-4">
+                @Html.DropDownListFor(m => m.EstadioId, new SelectList(ViewBag.Estadio, "Value", "Text"), "Seleccione Estadío", new { @class = "form-control", @id = "EstadioId" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <label>Observaciones</label>
+            </div>
+            <div class="col-sm-10 col-md-10">
+                @Html.TextBoxFor(m => m.Observaciones, new { @class = "w100 form-control limpiar" })
+            </div>
+        </div>
+        <br />
+
+        <div id="row-botones-material">
+            <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            <button type="button" class="formulario-footer-cancelar k-button k-button-icontext cancelar">Cancelar</button>
+
+        </div>
+    }
+    <div id="listaSituacionCultivo">
+        @Html.Partial("_ListaSituacionCultivo", Model)
+    </div>
+</div>
+
+

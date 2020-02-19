@@ -1,0 +1,49 @@
+﻿
+/*CELULAR*/
+@media (max-width: 767px) { 
+
+    .nav-bar-segundo .navbar-collapse ul:first-of-type {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width:1024px) {
+    .navbar.navbar-inverse.navbar-fixed-top.nav-bar-segundo .container ul {
+        display: block;        
+        text-align: center;
+    }
+}
+@media (min-width: 768px) and (max-width:800px) {
+    #notas {
+        display: none;
+    }
+}
+
+@media (max-width:340px) {
+    #notas {
+        display: none;
+    }
+}
+   
+
+    @media (max-width: 1022px) {
+        .nav-bar-segundo .navbar-collapse ul:first-of-type {
+        display: none !important;
+    }
+
+    .navbar.navbar-inverse.navbar-fixed-top.nav-bar-segundo .container ul {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    #links {
+        display: none !important;
+    }
+}
+
+
+
+
+
+

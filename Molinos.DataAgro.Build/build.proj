@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Sets the default environment to 'dv' in case it was not set -->
+  <PropertyGroup>
+    <Environment Condition="'$(Environment)' == ''">dev</Environment>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>true</DebugType>
+  </PropertyGroup>
+
+  <!-- Import the MSBuild Tasks -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <!-- Import the customized-by-project targets -->
+  <Import Project="$(MSBuildProjectDirectory)\build.targets" />
+
+  <!-- Add Using to report generation -->
+  <UsingTask TaskName="ReportGenerator" AssemblyFile="$(ReportGeneratorTool)" />
+
+  <!-- Build projects by calling the Project solution -->
+  <Target Name="Build">
+    <MSBuild Projects="$(ProjectSolution)" />
+  </Target>
+
+  <Target Name="RestorePackages">
+    <Exec Command="$(MSBuildProjectDirectory)\.nuget\nuget.exe restore $(ProjectSolution)"/>
+  </Target>
+
+  <Target Name="CI">
+
+    <Message Text="*** Performing restoring ***" />
+    <CallTarget Targets="RestorePackages"/>
+
+    <Message Text="*** Performing build ***" />
+    <CallTarget Targets="Build"/>
+
+    <Message Text="*** Performing Testing ***" />
+    <ItemGroup>
+      <UnitTestProjects Include="$(NUnitProject)"/>
+    </ItemGroup>
+
+    <!--Build all the projects in UnitTestProjects-->
+    <MSBuild Projects="$(UnitTestProjects)"/>
+
+    <Message Text="*** Executing Unit Tests and Performing Test Coverage ***" />
+    <Exec Command="&quot;$(OpenCoverTool)&quot; -register:administrator -filter:&quot;$(OpenCoverFilter)&quot; -target:&quot;$(NUnitToolPath)\nunit3-console.exe&quot; -targetargs:&quot; /config:Jenkins $(NUnitProject)&quot; -output:coverage.xml" />
+
+    <!--Generate solution coverage report-->
+    <RemoveDir Directories="report" />
+    <ReportGenerator ReportFiles="coverage.xml" TargetDirectory="report/opencover" />
+
+    <!-- Create Deploy directory -->
+    <Message Text="*** Creating Output Directory ***"/>
+    <RemoveDir Directories="$(OutputDir)"/>
+    <MakeDir Directories="$(OutputDir)" />
+
+    <!-- Copy the Package's files to Output Directory -->
+    <Message Text="*** Copying files to Output Directory ***"/>
+    <ItemGroup>
+      <SourceFilesWeb Include="$(PackageWeb)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(SourceFilesWeb)"
+      DestinationFiles="@(SourceFilesWeb->'$(OutputDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    
+    <Message Text="*** Creating Output DirectoryPack ***"/>
+    <MakeDir Directories="$(OutputPackDir)" />
+    <MakeDir Directories="$(OutputPackWebDir)" />
+
+    <ItemGroup>
+      <ZipDir Include="$(ZipDir)"/>
+      <CmdDir Include="$(CmdDir)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ZipDir)" DestinationFiles="@(ZipDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(CmdDir)" DestinationFiles="@(CmdDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
+
+    
+    <ItemGroup>
+      <DeployParametersWeb Include="$(DeployParametersWeb)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(DeployParametersWeb)" DestinationFiles="@(DeployParametersWeb->'$(OutputPackWebDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
+
+    <ItemGroup>
+      <BatDir Include="$(BatDir)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)Prod%(Extension)')" />
+    <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)Qa%(Extension)')" />
+
+    <ItemGroup>
+      <BatProdPackDir Include="$(OutputPackDir)\*Prod.bat"/>
+      <BatQaPackDir Include="$(OutputPackDir)\*Qa.bat"/>
+      <OutputPackDir Include="$(OutputPackDir)\**\*.*"/>
+    </ItemGroup>
+    <!-- 
+    <FileUpdate Files="@(BatProdPackDir)"
+                Regex="(.*\\)([^\\]*)(.DeployParameters.xml&quot;)$"
+                ReplacementText="$1Prod$3" />
+
+    <FileUpdate Files="@(BatQaPackDir)"
+                Regex="(.*\\)([^\\]*)(.DeployParameters.xml&quot;)$"
+                ReplacementText="$1Qa$3" />
+    <Zip Files="@(OutputPackDir)" WorkingDirectory="$(OutputPackDir)" ZipFileName="$(OutputPackDir).zip" />
+
+    <RemoveDir Directories="$(OutputPackDir)"/>
+-->
+    <!-- Finish Build-->
+    <Message Text="*** Build Finished ***" />
+  </Target>
+</Project>

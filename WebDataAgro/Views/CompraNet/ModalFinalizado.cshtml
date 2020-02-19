@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalFinalizado" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-finalizado" id="lineModalLabel"></h1>
+                <div class="status finalizado-modal">
+                    <div>A FINALIZAR</div>
+                </div>
+            </div>           
+            <input type="hidden" id="contratoModalFinalizado" />
+            <input type="hidden" id="tipoNegocioModalFinalizado" />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft text-center">
+                    <button type="button" id="reenviarMails" class="myBtn btnSubmit">Finalizar</button>
+                    <i id="reenviarMailsSpinner" class="fa fa-spinner fa-pulse fa-lg fa-fw" style="display: none"></i>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

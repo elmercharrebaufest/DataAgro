@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FE1CA20E-E24A-4781-BE45-390FA7185581}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Molinos.DataAgro.Agent</RootNamespace>
+    <AssemblyName>Molinos.DataAgro.Agent</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Jenkins|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Jenkins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.0.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Extras.NLog, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Extras.NLog.1.3.0\lib\net451\Autofac.Extras.NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helpers\ClienteStopAgent.cs" />
+    <Compile Include="Helpers\ModificarContratoAgent.cs" />
+    <Compile Include="Helpers\ModificarCupoAgent.cs" />
+    <Compile Include="Helpers\EliminarCupoAgent.cs" />
+    <Compile Include="Helpers\CrearCupoAgent.cs" />
+    <Compile Include="Helpers\AltaTempranaAgent.cs" />
+    <Compile Include="Helpers\CapacidadProductivaAgent.cs" />
+    <Compile Include="Helpers\TipoDeCambioAgent.cs" />
+    <Compile Include="Helpers\ComprasAgent.cs" />
+    <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
+    <Compile Include="Helpers\DatoDelComercialAgent.cs" />
+    <Compile Include="Helpers\DatosProveedorAgent.cs" />
+    <Compile Include="Helpers\DiasHabilesAgent.cs" />
+    <Compile Include="Helpers\EliminarContratoAgent.cs" />
+    <Compile Include="Helpers\FinalizarContratoAgent.cs" />
+    <Compile Include="Helpers\FinalizarFijacionAgent.cs" />
+    <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
+    <Compile Include="Helpers\RiesgoComercialAgent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\AltaTempranaNosisBolsaRuca\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\AnulacionContratos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\AnularCupo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CapacidadProductiva\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\Compras\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ContratosParaFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CrearCupo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DatosDelComercial\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DatosDelProveedor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\FinalizarContrato\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\FinalizarFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ModificarContratoFinalizado\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ModificarCupos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\RelacionCorredorProveedor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\RiesgoComercial\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\TipoDeCambio\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca.SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_COResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca.Z_MPRFC_ALTA_TEMPRANA_N_R_COResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO.wsdl" />
+    <None Include="Service References\AnulacionContratos\Molinos.DataAgro.Agent.AnulacionContratos.SI_ZMPWS_DATAAGRO_ANULACION_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnulacionContratos\Molinos.DataAgro.Agent.AnulacionContratos.Z_MPRFC_ANULACION_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnulacionContratos\SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO.wsdl" />
+    <None Include="Service References\AnularCupo\Molinos.DataAgro.Agent.AnularCupo.SI_ZMPWS_DATAAGRO_ANULAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnularCupo\Molinos.DataAgro.Agent.AnularCupo.Z_MPRFC_ANULAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnularCupo\SI_ZMPWS_DATAAGRO_ANULAR_CUPOS1.wsdl" />
+    <None Include="Service References\CapacidadProductiva\Molinos.DataAgro.Agent.CapacidadProductiva.SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CapacidadProductiva\Molinos.DataAgro.Agent.CapacidadProductiva.Z_MPRFC_CAPACIDAD_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CapacidadProductiva\SI_ZMPWS_DATAAGRO_CAPACIDAD_PRODUCTIVA.wsdl" />
+    <None Include="Service References\Compras\Molinos.DataAgro.Agent.Compras.SI_ZMPWS_DATAAGRO_DATOS_COMPRASResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Compras\Molinos.DataAgro.Agent.Compras.Z_MPRFC_DATOS_COMPRASResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Compras\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS.wsdl" />
+    <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.Z_MPRFC_CONTRATO_PEND_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION.wsdl" />
+    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION1.wsdl" />
+    <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.SI_ZMPWS_DATAAGRO_CREAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.Z_MPRFC_CREAR_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrearCupo\SI_ZMPWS_DATAAGRO_CREAR_CUPOS1.wsdl" />
+    <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.Z_MPRFC_DATOS_COMERCIALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DatosDelComercial\SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES.wsdl" />
+    <None Include="Service References\DatosDelProveedor\Molinos.DataAgro.Agent.DatosDelProveedor.SI_ZMPWS_DATAAGRO_DATOS_PROVEEDORResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DatosDelProveedor\Molinos.DataAgro.Agent.DatosDelProveedor.Z_MPRFC_DATOS_PROVEEDORResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DatosDelProveedor\SI_ZMPWS_DATAAGRO_DATOS_PROVEEDOR.wsdl" />
+    <None Include="Service References\FinalizarContrato\Molinos.DataAgro.Agent.FinalizarContrato.SI_ZMPWS_DATAAGRO_PRE_SLIPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarContrato\Molinos.DataAgro.Agent.FinalizarContrato.Z_MPRFC_PRE_SLIPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP1.wsdl" />
+    <None Include="Service References\FinalizarFijacion\Molinos.DataAgro.Agent.FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarFijacion\Molinos.DataAgro.Agent.FinalizarFijacion.Z_MPRFC_REGISTRAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION.wsdl" />
+    <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION11.wsdl" />
+    <None Include="Service References\ModificarContratoFinalizado\Molinos.DataAgro.Agent.ModificarContratoFinalizado.SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarContratoFinalizado\Molinos.DataAgro.Agent.ModificarContratoFinalizado.Z_MPRFC_MODIFICAR_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarContratoFinalizado\SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO.wsdl" />
+    <None Include="Service References\ModificarCupos\Molinos.DataAgro.Agent.ModificarCupos.SI_ZMPWS_DATAAGRO_MODIFICAR_CUPOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarCupos\Molinos.DataAgro.Agent.ModificarCupos.Z_MPRFC_MODIFICAR_CUPOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarCupos\SI_ZMPWS_DATAAGRO_MODIFICAR_CUPO.wsdl" />
+    <None Include="Service References\RelacionCorredorProveedor\Molinos.DataAgro.Agent.RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RelacionCorredorProveedor\Molinos.DataAgro.Agent.RelacionCorredorProveedor.Z_MPRFC_CONSULTAR_RPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RelacionCorredorProveedor\SI_ZMPWS_DATAAGRO_CONSULTAR_RP.wsdl" />
+    <None Include="Service References\RiesgoComercial\Molinos.DataAgro.Agent.RiesgoComercial.SI_ZMPWS_DATAAGRO_RIESGO_COMERCIALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RiesgoComercial\Molinos.DataAgro.Agent.RiesgoComercial.Z_MPRFC_RIESGO_COMERCIALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" />
+    <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.Z_MPRFC_TIPO_DE_CAMBIOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
+    <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
+    <WCFMetadataStorage Include="Service References\AnularCupo\" />
+    <WCFMetadataStorage Include="Service References\CapacidadProductiva\" />
+    <WCFMetadataStorage Include="Service References\Compras\" />
+    <WCFMetadataStorage Include="Service References\ContratosParaFijacion\" />
+    <WCFMetadataStorage Include="Service References\CrearCupo\" />
+    <WCFMetadataStorage Include="Service References\DatosDelComercial\" />
+    <WCFMetadataStorage Include="Service References\DatosDelProveedor\" />
+    <WCFMetadataStorage Include="Service References\FinalizarContrato\" />
+    <WCFMetadataStorage Include="Service References\FinalizarFijacion\" />
+    <WCFMetadataStorage Include="Service References\ModificarContratoFinalizado\" />
+    <WCFMetadataStorage Include="Service References\ModificarCupos\" />
+    <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
+    <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
+    <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Compras\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Compras\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Compras\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Molinos.DataAgro.Entities\Molinos.DataAgro.Entities.csproj">
+      <Project>{E940ADB2-18F1-436C-B24F-B18CEE04F6C0}</Project>
+      <Name>Molinos.DataAgro.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Interfaces\Molinos.DataAgro.Interfaces.csproj">
+      <Project>{748944e7-1fa4-4c63-9f4a-12a92c0eb481}</Project>
+      <Name>Molinos.DataAgro.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Molinos.DataAgro.Repository\Molinos.DataAgro.Repository.csproj">
+      <Project>{1780AE7C-4C4C-49A2-96FA-19A86DB3D220}</Project>
+      <Name>Molinos.DataAgro.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RiesgoComercial\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RiesgoComercial\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RiesgoComercial\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelProveedor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelProveedor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelComercial\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelComercial\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DatosDelComercial\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarContrato\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarContrato\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarContrato\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RelacionCorredorProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosParaFijacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FinalizarFijacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulacionContratos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulacionContratos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulacionContratos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\TipoDeCambio\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrearCupo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnularCupo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CapacidadProductiva\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarCupos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarCupos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarCupos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarContratoFinalizado\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
