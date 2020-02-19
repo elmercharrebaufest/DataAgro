@@ -1204,7 +1204,8 @@ body {
 }
 
 .precio {
-    font-weight: normal;
+    color: #017940;
+    font-weight: bolder;
     font-size: small;
 }
 
