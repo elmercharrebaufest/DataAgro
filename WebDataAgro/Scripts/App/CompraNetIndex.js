@@ -567,7 +567,7 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Ampliaciones", type: "number", width: 60, title: "Ampl.", attributes: {
-                    "class": "mobile-sm" + classExterno
+                    "class": "mobile-sm " + classExterno
                 }, headerAttributes: {
                     "class": classExterno
                 }, template: function (dataItem) {
@@ -1980,9 +1980,9 @@ function ArmarPrecio(dataItem) {
         if (!externo && dataItem.TipoNegocioId === 3 && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && e.MonedaId === dataItem.Moneda; })[0];
+                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && ( e.Pizarra==true || e.MonedaId === dataItem.Moneda); })[0];
                 if (p)
-                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo;
+                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo || (p.Pizarra == true && dataItem.Precio==0);
             }
             if (esPrecioMoa === true) {
                 return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);

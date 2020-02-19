@@ -1208,7 +1208,7 @@ body {
     font-size: small;
 }
 
-.condicion {
+.condicion, .importe-porcentaje {
     font-size: 10px;
     margin-right: 10px;
 }

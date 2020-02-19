@@ -2749,23 +2749,29 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarProveedorResult GrabarRol(int id, List<Rol> roles)
         {
             var resultado = new GrabarProveedorResult();
-            var proveedor = repositorio.Obtener<Proveedor>(id);
-            var listaRoles = roles.Select(y => y.Id).ToList();
-            if (proveedor.RolesAsociados != null)
+            var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId ==id, x => x.CUIT);
+            var proveedores = repositorio.Listar<Proveedor>(x => x.CUIT == cuit);
+
+            foreach (var proveedor in proveedores)
             {
-                proveedor.RolesAsociados.Clear();
-            }
-            else
-            {
-                proveedor.RolesAsociados = new List<Rol>();
-            }
-            proveedor.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
-            try
-            {
-                repositorio.GuardarCambios();
-            } catch (Exception e)
-            {
-                resultado.Error("Roles", e.Message);
+                var listaRoles = roles.Select(y => y.Id).ToList();
+                if (proveedor.RolesAsociados != null)
+                {
+                    proveedor.RolesAsociados.Clear();
+                }
+                else
+                {
+                    proveedor.RolesAsociados = new List<Rol>();
+                }
+                proveedor.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    resultado.Error("Roles", e.Message);
+                }
             }
             return resultado;
         }

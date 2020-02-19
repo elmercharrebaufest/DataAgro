@@ -1769,14 +1769,15 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarRolOkTest()
         {
-            repositorioMock.Setup(x => x.Obtener<Proveedor>(It.IsAny<int>()))
-                .Returns(new Proveedor());
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor,string>>>()))
+                .Returns("00000000");
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<Proveedor>() { new Proveedor() });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Rol,bool>>>(),It.IsAny<int>(),It.IsAny<string>(),It.IsAny<DirOrden>()))
                 .Returns(new List<Rol>() { new Rol() });
 
             var result = target.GrabarRol(1, new List<Rol>());
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Rol, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.NotNull(result);
