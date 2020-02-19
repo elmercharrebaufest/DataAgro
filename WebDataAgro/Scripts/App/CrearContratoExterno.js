@@ -225,18 +225,26 @@ function InicializarElementos() {
                 $("#destinoId").data("kendoDropDownList").value(e.dataItem.Centro);
                 if (e.dataItem.ImporteAPrecio== 0) {
                     $("#impo-a-precio").hide();
+                } else {
+                    $("#impo-a-precio").show();
                 }
                 $("#importe-a-precio").text(e.dataItem.ImporteAPrecio + " " + e.dataItem.MonedaAPrecio + " ");
                 if (e.dataItem.ImporteSobrePrecio == 0) {
                     $("#impo-sobre-precio").hide();
+                } else {
+                    $("#impo-sobre-precio").show();
                 }
                 $("#importe-sobre-precio").text(e.dataItem.ImporteSobrePrecio + " " + e.dataItem.MonedaSobrePrecio + " ");
                 if (e.dataItem.PorcentajeAPrecio == 0) {
                     $("#porcenteaje-a-precio").hide();
+                } else {
+                    $("#porcenteaje-a-precio").show();
                 }
                 $("#porc-a-precio").text(e.dataItem.PorcentajeAPrecio + " ");
                 if (e.dataItem.PorcentajeSobrePrecio == 0) {
                     $("#porcenteaje-sobre-precio").hide();
+                } else {
+                    $("#porcenteaje-sobre-precio").show();
                 }
                 $("#porc-sobre-precio").text(e.dataItem.PorcentajeSobrePrecio);
                 $("#cond-fijacion").text(e.dataItem.CondicionFijacionDescripcion);
