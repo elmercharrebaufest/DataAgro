@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IAgenteCompraManager> agenteManagerMock;
         private Mock<IContratoAcuerdoManager> acuerdoManagerMock;
         private Mock<IConfiguracionInternaManager> configuracionInternaMock;
+        private Mock<IConfiguracionManager> configuracionMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -57,12 +58,13 @@ namespace Molinos.DataAgro.Test.Controllers
             agenteManagerMock = new Mock<IAgenteCompraManager>();
             acuerdoManagerMock = new Mock<IContratoAcuerdoManager>();
             configuracionInternaMock = new Mock<IConfiguracionInternaManager>();
+            configuracionMock = new Mock<IConfiguracionManager>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object, 
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
-                acuerdoManagerMock.Object, configuracionInternaMock.Object);
+                acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object);
         }
 
         [Test]
@@ -82,6 +84,8 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
+            configuracionMock.Setup(x => x.TraerConfiguraciones()).Returns(new Configuracion());
+
             var result = target.CrearContrato(1,1,"") as ViewResult;
 
             Assert.NotNull(result);
@@ -611,7 +615,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(),It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null,\"Color\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

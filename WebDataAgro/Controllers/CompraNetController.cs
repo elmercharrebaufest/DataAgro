@@ -46,7 +46,7 @@ namespace WebDataAgro.Controllers
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
-
+        private IConfiguracionManager mobjConfiguracionManager;
 
 
         //-----------------------------------------------------
@@ -58,7 +58,7 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager)
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -73,6 +73,7 @@ namespace WebDataAgro.Controllers
             mobjFasonManager = oFasonManager;
             mobjAgenteManager = oAgenteManager;
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
+            mobjConfiguracionManager = configuracionManager;
             this.configuracionInternaManager = configuracionInternaManager;
         }
 
@@ -99,6 +100,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
             ViewBag.Siguientes = siguientes;
+            ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo; 
             return View();
         }
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]

@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionFijacionDescripcion { get; set; }
         public string CondicionPagoCod { get; set; }
         public string CondicionPagoDescripcion { get; set; }
+        public string Color { get; set; }
     }
 }
 

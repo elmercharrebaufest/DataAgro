@@ -175,7 +175,7 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN 
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
 
 --Segmentacion
-update Segmentacion set Descripcion ='Corredor Tradicional: incluiría las cooperativas' where SegmentacionId = '7'
+update Segmentacion set Descripcion ='Corredores tradicionales (cooperativas)' where SegmentacionId = '7'
 update Segmentacion set Descripcion ='Corredor Correacopios' where SegmentacionId = '5'
 
 update Segmentacion set Descripcion ='Productor Grande: Más de 10.000 tns' where SegmentacionId = '2'

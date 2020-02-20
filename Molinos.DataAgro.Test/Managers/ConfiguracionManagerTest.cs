@@ -52,7 +52,8 @@ namespace Molinos.DataAgro.Test.Managers
                 ConexionABMStop = true,
                 ConexionConsultaStop = true,
                 CuitDestinoStop = "a",
-                TerminalStopId = 1
+                TerminalStopId = 1,
+                ContratoAperturaPrecioPorcentajeDeComisionMaximo = 3
             };
             repositorioMock.Setup(x => x.Obtener<Configuracion>(It.IsAny<int>())).Returns(config);
             var resultado = target.GrabarFechaPesificacionDolarizado(config);

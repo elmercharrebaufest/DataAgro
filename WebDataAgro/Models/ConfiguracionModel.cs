@@ -23,5 +23,6 @@ namespace WebDataAgro.Models
         public int CodigoLocalidadStop { get; set; }
         public decimal ImporteSustentable { get; set; }
         public Resultado Resultado { get; set; }
+        public decimal? ContratoAperturaPrecioPorcentajeDeComisionMaximo { get; set; }
     }
 }

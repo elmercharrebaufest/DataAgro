@@ -31,7 +31,8 @@ namespace WebDataAgro.Controllers
                 ConexionABMStop = conf != null ? conf.ConexionABMStop.Value : true,
                 ClaveStop = conf.ClaveStop,
                 CodigoLocalidadStop = conf.CodigoLocalidadStop,
-                ImporteSustentable = conf.ImporteSustentable
+                ImporteSustentable = conf.ImporteSustentable,
+                ContratoAperturaPrecioPorcentajeDeComisionMaximo = conf.ContratoAperturaPrecioPorcentajeDeComisionMaximo
             });
         }
         [HttpPost]
@@ -61,7 +62,8 @@ namespace WebDataAgro.Controllers
                 CuitDestinoStop = configuracion.CuitDestinoStop,
                 TerminalStopId = configuracion.TerminalStopId,
                 CodigoLocalidadStop = configuracion.CodigoLocalidadStop,
-                ImporteSustentable = configuracion.ImporteSustentable
+                ImporteSustentable = configuracion.ImporteSustentable,
+                ContratoAperturaPrecioPorcentajeDeComisionMaximo = configuracion.ContratoAperturaPrecioPorcentajeDeComisionMaximo
             };
             return entidad;
         }

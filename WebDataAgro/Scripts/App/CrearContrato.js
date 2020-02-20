@@ -6,6 +6,7 @@ var Siguientes;
 var posicionFijacion;
 var aperturaPrecio = [];
 var altaTemprana;
+var AperturaPrecioPorcentajeDeComision;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -290,7 +291,7 @@ function InicializarElementos() {
     });
 
     $("#contratoId").kendoAutoComplete({
-        template: '<p class="buscar-nomb"><strong>#: data.ContratoId#</strong> - ' +
+        template: '<p class="buscar-nomb" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
             'KG CTO: #: data.KilosContrato# ' +
             ' - KGS SIN PRECIO : #: data.ARecibirSinPrecio# - KGS SIN FIJAR : #: data.RecibidoSinFijar#' +
             ' - KILOS A FIJAR: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
@@ -2853,6 +2854,14 @@ function HabilitarEstablecimiento() {
 
 
 function GuardarAperturaDePrecio() {
+   
+    if (AperturaPrecioPorcentajeDeComision != null && AperturaPrecioPorcentajeDeComision != '') {
+        var num = Number(AperturaPrecioPorcentajeDeComision.replace(',', '.'));
+        if ($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() > num) {
+            MensErr("El Porcentaje de Comision no puede ser mayor a " + AperturaPrecioPorcentajeDeComision);
+            return false;
+        }
+    }
     var total = CalcularPrecioTotalApertura();
     if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3) && !$("#pizarraId").is(':checked')) {
         MensErr("El Precio Total no puede ser menor o igual a 0");

@@ -296,15 +296,19 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        
+
         private bool ConfirmacionAutomatica(FijacionDePrecioContrato contrato)
         {
             var hoy = DateTime.Now;
+            var precioContrato = contrato.Precio;
             var rango = repositorio.Obtener<RangoConfirmacionAutomatica>(x =>
             x.FechaDesde <= hoy &&
             x.FechaHasta >= hoy &&
             x.MaterialId == contrato.MaterialId &&
-            x.MonedaId == contrato.MonedaId);
+            x.MonedaId == contrato.MonedaId &&
+                     precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo &&
+                     contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
+                    contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes)));
 
             if (rango != null)
             {
@@ -314,17 +318,13 @@ namespace Molinos.DataAgro.Business.Managers
                  (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 2
                  && x.MaterialId == rango.MaterialId);
                 cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId 
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId
                 && x.MaterialId == rango.MaterialId));
 
                 var total = cantidad.Sum();
-                var precioContrato = contrato.Precio;
-
-                var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
-                    contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
+                var valor =
                     (total + contrato.Cantidad) <= rango.Cantidad &&
-                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId) &&
-                     precioContrato >= rango.PrecioMinimo && precioContrato <= rango.PrecioMaximo;
+                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId);
                 return valor;
             }
             else

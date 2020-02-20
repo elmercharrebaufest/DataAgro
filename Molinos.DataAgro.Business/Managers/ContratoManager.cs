@@ -766,29 +766,30 @@ namespace Molinos.DataAgro.Business.Managers
         private bool ConfirmacionAutomatica(Contrato contrato)
         {
             var hoy = DateTime.Now;
+            var precioContrato = contrato.Precio;
             var rango = repositorio.Obtener<RangoConfirmacionAutomatica>(x =>
             x.FechaDesde <= hoy &&
             x.FechaHasta >= hoy &&
             x.MaterialId == contrato.MaterialId &&
-            x.MonedaId == contrato.MonedaId);
+            x.MonedaId == contrato.MonedaId &&
+            precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo &&
+            contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
+                    contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes)));
 
             if (rango != null)
             {
-            var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
-            var cantidad =
-                repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
-             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.ContratoId != contrato.ContratoId && x.TipoNegocioId == 2
-             && x.MaterialId== rango.MaterialId);
-            cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
-            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == rango.MaterialId));
-            var total = cantidad.Sum();
-            var precioContrato = contrato.Precio;
+                var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
+                var cantidad =
+                    repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
+                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.ContratoId != contrato.ContratoId && x.TipoNegocioId == 2
+                 && x.MaterialId == rango.MaterialId);
+                cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == rango.MaterialId));
+                var total = cantidad.Sum();
 
-                var valor = contrato.FechaDesde >= new DateTime(rango.DesdeAnio, rango.DesdeMes, 1) &&
-                    contrato.FechaHasta <= new DateTime(rango.HastaAnio, rango.HastaMes, DateTime.DaysInMonth(rango.HastaAnio, rango.HastaMes)) &&
+                var valor =
                     (total + contrato.Cantidad) <= rango.Cantidad &&
-                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId) &&
-                     precioContrato >= rango.PrecioMinimo && precioContrato <= rango.PrecioMaximo;
+                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId);
                 return valor;
             }
             else

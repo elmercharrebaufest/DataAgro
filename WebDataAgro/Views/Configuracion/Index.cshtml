@@ -41,6 +41,12 @@
                 <div class="col-md-2" id="CantidadDiasId">
                     @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number" })
                 </div>
+                <div class="col-md-2">
+                    <label>Apertura de Precio Porcentaje de Comisión Máximo</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.ContratoAperturaPrecioPorcentajeDeComisionMaximo, new { @class = "number" })
+                </div>
             </div>
             <h4>Stop</h4>
 
