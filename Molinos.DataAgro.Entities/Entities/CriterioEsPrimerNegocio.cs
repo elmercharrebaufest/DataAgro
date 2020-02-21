@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace Molinos.DataAgro.Entities.Entities
 {
     [Concreta(true)]
-    [DisplayName("Primer Negocio")]
+    [DisplayName("Es Primer Negocio")]
     public class CriterioEsPrimerNegocio : Criterio
     {
         public override bool Concreta { get { return true; } }

@@ -5,6 +5,11 @@ var comercialId;
 var creaNegocios;
 var modificaNegocios;
 var confirmaNegocios;
+var confirmarNegocioCorredoresBsAs;
+var confirmaNegocios;
+var confirmaNegocios;
+var confirmaNegocios;
+var confirmaNegocios;
 var eliminaNegocios;
 var finalizaNegocios;
 var ampliaNegocios;
@@ -638,11 +643,11 @@ function CreateGridInformeCompraNet() {
                         Estado_Contrato: "Rechazado"
                     }, {
                         Estado_Contrato: "Reconfirmar"
-                        }, {
-                            Estado_Contrato: "Eliminado"
-                        }, {
-                            Estado_Contrato: "PreAprobacion"
-                        }]
+                    }, {
+                        Estado_Contrato: "Eliminado"
+                    }, {
+                        Estado_Contrato: "Carga"
+                    }]
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>";
                 }, template: function (dataItem) {
@@ -660,7 +665,8 @@ function CreateGridInformeCompraNet() {
                                 botonVisualizar(dataItem, 'fa-eye conf') +
                                 botonBorrar(dataItem, 'fa-trash conf');
                         } else {
-                            return '<div class="status confirmado">Confirmado</div>' +
+                            var descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n aprobada por MOA" ' : '';
+                            return '<div' + descripcion + ' class="status confirmado">Confirmado</div>' +
                                 botonPendiente(dataItem, 'fa-pencil conf') +
                                 botonFinalizado(dataItem, 'fa-flag-checkered conf') +
                                 botonVisualizar(dataItem, 'fa-eye conf') +
@@ -697,13 +703,17 @@ function CreateGridInformeCompraNet() {
                                 botonBorrar(dataItem, 'fa-trash fin') +
                                 botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         } else {
-                            return '<div class="status finalizado">Finalizado</div>' +
-                                botonVisualizar(dataItem, 'fa-eye fin')+
+                            descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
+
+                            return '<div ' + descripcion + 'class="status finalizado">Finalizado</div>' +
+                                botonVisualizar(dataItem, 'fa-eye fin') +
                                 botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         }
                     }
                     if (dataItem.Estado == 6) { //Rechazado
-                        return '<div class="status borrado">Rechazado</div>' +
+                        descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n rechazada por MOA" ' : '';
+
+                        return '<div ' + descripcion+' class="status borrado">Rechazado</div>' +
                             botonVisualizar(dataItem, 'fa-eye bor');
                     }
                     if (dataItem.Estado == 7) { //reconfirmar
@@ -718,7 +728,8 @@ function CreateGridInformeCompraNet() {
                             botonVisualizar(dataItem, 'fa-eye anu');
                     }
                     if (dataItem.Estado == 9) { //Anulado
-                        return '<div class="status preaprobacion">PreAprobacion</div>' +
+                        descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n pendiente aprobaci&oacute;n MOA" ' : '';
+                        return '<div' + descripcion + ' class="status preaprobacion">Carga</div>' +
                             botonAprobar(dataItem, ' fa-check-square-o pre') +
                             botonVisualizar(dataItem, 'fa-eye pre')+
                             botonBorrar(dataItem, 'fa-trash pre');

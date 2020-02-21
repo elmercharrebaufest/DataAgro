@@ -146,7 +146,7 @@ function crearArbol() {
         columns: [
 
             { field: "DisplayName", title: "Descripción", width: 280 },
-            { field: "Prioridad", title: "Prioridad ( % )", width: 280 },
+            { field: "Prioridad", title: "Prioridad (Puntos)", width: 280 },
             {
                 command: [
 

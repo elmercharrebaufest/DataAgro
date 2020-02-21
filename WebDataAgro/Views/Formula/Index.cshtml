@@ -14,11 +14,13 @@
 
 <label class="dias"> Inicio </label>
 <input placeholder="Inicio" id="inicio" />
-
+<label><i> Es la cantidad dias en la que el algorimo va a empezar a buscar negocios</i></label>
+<br />
 <label class="dias"> Cantidad de Días </label>
 <input data-decimals="0" placeholder="Cantidad de Días" id="cantdias" />
-
-
+<label><i> Es la cantidad dias desde el "Inicio" a tener en cuenta para buscar los negocios</i></label>
+<br />
+<label><i> Ejemplo: Inicio 1, Cantidad de Días 3, va a buscar los negocios que esten entre las fechas <b>@DateTime.Now.Date.AddDays(1).ToString("dd/MM/yyyy")</b> y <b>@DateTime.Now.Date.AddDays(4).ToString("dd/MM/yyyy")</b> </i></label>
 
 <div id="treelist"></div>
 
@@ -29,29 +31,11 @@
     <input type="hidden" id="maximo" />
 
     <input type="text" required id="dropdown" style="margin-bottom: 10%; width: 200px" />
-    <input type="number" id="prioridad" placeholder="Prioridad" /> <b>%</b>
+    <input type="number" id="prioridad" placeholder="Prioridad" /> <b>Puntos</b>
 
     <br />
     <input type='button' id="agregarCriterio" class="k-primary" onclick="agregar()" value='Agregar' />
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -104,6 +88,7 @@
         color: grey;
         margin-left: 20px;
         margin-right: 20px;
+        width:120px;
     }
 
     .editor-label, .k-edit-label {

@@ -783,7 +783,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ConfiguracionEspacioDinamicoId = x.Id,
                 MaterialId = x.MaterialId,
                 MonedaId = "",
-                Precio = 0,
+                Precio = null,
                 FechaDesde = x.Fecha,
                 FechaHasta = x.Fecha,
                 TipoNegocioId = tipoNegocioEspacioDinamico.TipoNegocioId,
@@ -796,16 +796,16 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.CantidadDeCupos -= espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
                 }
-                if (item.CantidadDeCupos > 0)
-                {
-                    var preciopizarra = pizarraLista.Where(a => a.MaterialId == item.MaterialId && a.FechaDesde >= item.FechaDesde && a.FechaHasta <= item.FechaDesde).SingleOrDefault();
-                    if (preciopizarra == null)
-                    {
-                        preciopizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == item.MaterialId).OrderByDescending(a => a.FechaDesde).Take(1).Single();
-                    }
-                    item.Precio = preciopizarra.Precio;
-                    item.MonedaId = preciopizarra.MonedaId;
-                }
+                //if (item.CantidadDeCupos > 0)
+                //{
+                //    var preciopizarra = pizarraLista.Where(a => a.MaterialId == item.MaterialId && a.FechaDesde >= item.FechaDesde && a.FechaHasta <= item.FechaDesde).SingleOrDefault();
+                //    if (preciopizarra == null)
+                //    {
+                //        preciopizarra = repositorio.Listar<PrecioPizarra>(a => a.MaterialId == item.MaterialId).OrderByDescending(a => a.FechaDesde).Take(1).Single();
+                //    }
+                //    item.Precio = preciopizarra.Precio;
+                //    item.MonedaId = preciopizarra.MonedaId;
+                //}
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
             }
             espacioDinamicoLista = espacioDinamicoLista.Where(a => a.CantidadDeCupos > 0).ToList();
@@ -817,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
         {
             string guion = new String('-', guiones);
-            puntuaciones.Add(guion + criterio.GetType().BaseType.Name, criterio.Puntuacion);
+            puntuaciones.Add(guion + criterio.DisplayName, criterio.Puntuacion);
             if (criterio.Hijos != null && criterio.Hijos.Count > 0)
             {
                 foreach (var hijo in criterio.Hijos)
@@ -845,7 +845,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
                 MaterialId = a.MaterialId,
                 MaterialDesc = a.Material.Descripcion,
-                MonedaId = a.MonedaId,
+                MonedaId = a.MonedaId == null ? "": a.MonedaId,
                 MonedaDesc = a.MonedaId == null?"": a.Moneda.Descripcion,
                 PuntuacionTotal = a.Puntuacion,
                 ProveedorId = a.ProveedorId,

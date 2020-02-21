@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace Molinos.DataAgro.Entities.Entities
 {
     [Concreta(true)]
-    [DisplayName("Fijación de Precio Contrato")]
+    [DisplayName("Es Fijación de Precio Contrato")]
     public class CriterioEsFijacionDePrecioContrato : Criterio
     {
         public override bool Concreta { get { return true; } }

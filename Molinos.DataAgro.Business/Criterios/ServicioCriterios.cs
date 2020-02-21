@@ -20,20 +20,27 @@ namespace Molinos.DataAgro.Business.Criterios
 
         public decimal Calcular(Criterio criterio)
         {
-            if (criterio.Hijos != null && criterio.Hijos.Count>0)
+            if (criterio.Hijos != null && criterio.Hijos.Count > 0)
             {
                 decimal resultado = 0;
                 foreach (var hijo in criterio.Hijos)
                 {
                     hijo.Dto = criterio.Dto;
                     var result = Calcular(hijo);
-                    var resultCalcular = result * hijo.Prioridad / 100;
+                    var resultCalcular = result * hijo.Prioridad;
                     hijo.Puntuacion = resultCalcular;
                     resultado += resultCalcular;
                 }
 
-                criterio.Puntuacion = resultado ;
 
+                if (criterio.GetType().BaseType.ToString() != typeof(CriterioRaiz).ToString())
+                {
+                    criterio.Puntuacion = resultado / 100;
+                }
+                else
+                {
+                    criterio.Puntuacion = resultado;
+                }
                 return criterio.Puntuacion;
             }
             else

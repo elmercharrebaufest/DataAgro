@@ -149,7 +149,7 @@ function CargarGrillaConfig() {
                     MaterialDesc: { type: "string", editable: false },
                     TipoNegocioDesc: { type: "string", editable: false },
                     Precio: { type: "number", editable: false },
-                    Moneda: { type: "number", editable: false },
+                    MonedaId: { type: "string", editable: false },
                     ProveedorCUIT: { type: "number", editable: false },
                     ProveedorDesc: { type: "string", editable: false },
                     ContratoSAP: { type: "string", editable: false },
@@ -175,7 +175,8 @@ function CargarGrillaConfig() {
             { field: "FechaSugerida", type: "date", format: _DefaultDateTemplate, title: "Fecha <br> Sugerida", width: "110px" },
             { field: "ProveedorCUIT", title: "CUIT", width: "100px" },
             { field: "ProveedorDesc", title: "Razon Social" },
-            { field: "Precio", width: "88px" },
+            { field: "MonedaId", title: "Moneda", width: "88px"},            
+            { field: "Precio", width: "88px", format: "{0:n0}" },
             { field: "TipoNegocioDesc", title: "Negocio", width: "100px" },
             { field: "ContratoSAP", title: "ContratoSAP", width: "125px" },
             {
@@ -251,7 +252,7 @@ function CargarGrillaConfig() {
     });
 
     $("#gridSugerenciaCupo").kendoTooltip({
-        filter: "td:nth-child(10)",
+        filter: "td:nth-child(11)",
         //filter: "td", 
         position: "left",
         content: function (e) {

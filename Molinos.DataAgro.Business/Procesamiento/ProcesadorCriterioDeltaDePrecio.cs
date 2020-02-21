@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Business
         }
         public override decimal Calcular(CriterioDeltaDePrecio criterio)
         {
-            if (String.IsNullOrEmpty( criterio.Dto.MonedaId)  || criterio.Dto.Precio == null)
+            if (String.IsNullOrEmpty( criterio.Dto.MonedaId)  || criterio.Dto.Precio == null || criterio.Dto.Precio == 0)
             {
                 return 0;
             }
