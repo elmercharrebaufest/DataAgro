@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Test.Procesamiento
             criterio = new CriterioDeltaDePrecio { Dto = new SugerenciaCupoDto { Precio = 0, FechaHasta = DateTime.Now.Date, MaterialId = 1, MonedaId = "ARP  " } };
             resultado = target.Calcular(criterio);
             Assert.That(resultado, Is.Not.Null);
-            Assert.AreEqual(resultado, 1);
+            Assert.AreEqual(resultado, 0);
 
         }
 
