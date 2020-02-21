@@ -140,7 +140,7 @@ var hoy = DateTime.Now.Date;
                             CondicionFijacionDescripcion = repositorio.Obtener<CondicionFijacion, string>(x => x.CodigoSap == contrato.COND_FIJACION,x=>x.Descripcion),
                             CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_PAGO, x => x.Descripcion),
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
-                            Color = DateTime.Parse(contrato.ENTREGA_HASTA) < hoy ? "Red" : "#26337b",
+                            Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",
                         };
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                         {
