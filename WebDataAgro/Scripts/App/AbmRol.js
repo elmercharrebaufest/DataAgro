@@ -76,7 +76,7 @@ function CreateGridRol() {
     });
 }
 function Eliminar (id) {
-    MSExecuteOnServerAsync('/Rol/Eliminar', { id }, function (result) {
+    MSExecuteOnServerAsync('/Rol/Eliminar', { id: id }, function (result) {
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
                 MensErr(result.Errores[0].Message);
