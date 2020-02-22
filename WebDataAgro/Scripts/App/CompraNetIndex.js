@@ -305,7 +305,10 @@ function AutoRecargar() {
 
 function recargarGrilla() {
     $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
-    AvisoContratosPendientes();
+    if (viewModel.ContratosPendientes.length > 0) {
+        AvisoContratosPendientes();
+    }
+    
 }
 
 function filtrarZona() {

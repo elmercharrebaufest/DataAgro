@@ -9,7 +9,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public double Cantidad { get; set; } // Cantidad
         public decimal Precio { get; set; } // Precio
         public string Moneda { get; set; } // MonedaId (length: 5) 
-        public string Fecha { get; set; } // Fecha
+        public string Fecha { get { return FechaDb.ToString("dd/MM/yyy"); } } // Fecha
+        public DateTime FechaDb { get; set; } // Fecha
+
         public string ComercialCreadorAD { get; set; }
         public string NombreApellido { get; set; }
     }

@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Repository
                 resultado = resultado.Where(filtro);
             }
 
-            var resultadoFinal = resultado.GroupBy(proyeccion).Select(g => g.FirstOrDefault()).Select(proyeccion);
+            var resultadoFinal = resultado.GroupBy(proyeccion).Select(g => g.Key);
             resultadoFinal = ListarProyeccionQueryable(resultadoFinal, orden, direccionOrden, maxResultados);
             return resultadoFinal.ToList();
         }

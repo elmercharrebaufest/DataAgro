@@ -1185,7 +1185,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 Moneda = x.MonedaId,
-                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy);
@@ -1369,6 +1369,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo)
         {
             var fechaHoy = DateTime.Now.Date;
+            var fechaAteAyer = DateTime.Now.Date.AddDays(-2);
             return repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.ContratoId,
@@ -1376,10 +1377,10 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 Moneda = x.MonedaId,
-                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy);
+            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy && x.Fecha > fechaAteAyer);
         }
 
         public DatosCompraNetDto TraerDatosCompraNet(int id)

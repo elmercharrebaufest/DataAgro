@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Contrato]
 (
-	[ContratoId] INT NOT NULL PRIMARY KEY IDENTITY (1, 1), 
+	[ContratoId] INT  IDENTITY (1, 1) NOT NULL, 
     [MaterialId] INT NOT NULL , 
     [TipoNegocioId] INT NOT NULL DEFAULT 1, 
     [Cantidad] FLOAT NOT NULL, 
@@ -65,6 +65,7 @@
 	[Compensacion] BIT NULL,
     [Dolarizado] BIT NULL, 
     [Sustentable] BIT NULL, 
+	    CONSTRAINT [PK_dbo.Contrato] PRIMARY KEY CLUSTERED ([ContratoId] ASC),
     CONSTRAINT [FK_Contrato_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
     CONSTRAINT [FK_Contrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]), 
     CONSTRAINT [FK_Contrato_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
@@ -86,3 +87,9 @@
 	CONSTRAINT [FK_Contrato_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id]),
 	CONSTRAINT [FK_Contrato_NivelTarifa] FOREIGN KEY (NivelTarifaId) REFERENCES [NivelTarifa]([Id])
 )
+
+GO
+CREATE NONCLUSTERED INDEX IX_Fecha_ComercialId_EstadoId
+ON [dbo].[Contrato] ([Fecha],[ComercialId],[EstadoId])
+INCLUDE ([ContratoId],[Cantidad],[Precio],[ProveedorId],[MonedaId],[ComercialCreadorId])
+GO
