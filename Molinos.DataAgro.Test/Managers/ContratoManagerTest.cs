@@ -1231,7 +1231,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = 2,
                 Precio = 1,
                 Moneda = "ARS  ",
-                Fecha = "01-02-2019",
+                FechaDb = new DateTime(2019,2,1),
                 ComercialCreadorAD = "pari",
                 NombreApellido = "si eme"
               } });
@@ -1273,7 +1273,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = 2,
                 Precio = 1,
                 Moneda = "ARS  ",
-                Fecha = "01-02-2019",
+                FechaDb = new DateTime(2019,2,1),
                 ComercialCreadorAD = "pari",
                 NombreApellido = "si eme"
               } });
@@ -1444,7 +1444,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = 2,
                 Precio = 1,
                 Moneda = "ARS  ",
-                Fecha = "01-02-2019",
+                FechaDb = new DateTime(2019,2,1),
                 ComercialCreadorAD = "pari",
                 NombreApellido = "si eme"
               },
@@ -1454,7 +1454,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = 2,
                 Precio = 1,
                 Moneda = "ARS  ",
-                Fecha = "01-02-2012",
+                FechaDb = new DateTime(2019,2,1),
                 ComercialCreadorAD = "palacios",
                 NombreApellido = "claudio"
               }});

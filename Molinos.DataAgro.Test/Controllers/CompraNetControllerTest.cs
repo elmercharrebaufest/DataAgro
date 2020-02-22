@@ -589,7 +589,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerContratosPendientes(It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":1,\"RazonSocial\":null,\"Cantidad\":1,\"Precio\":12,\"Moneda\":\"a\",\"Fecha\":null,\"ComercialCreadorAD\":\"ad\",\"NombreApellido\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":1,\"RazonSocial\":null,\"Cantidad\":1,\"Precio\":12,\"Moneda\":\"a\",\"Fecha\":null,\"FechaDb\":\"\\/Date(-62135586000000)\\/\",\"ComercialCreadorAD\":\"ad\",\"NombreApellido\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
