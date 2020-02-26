@@ -225,6 +225,8 @@
           <xsd:element name="FLETE_NIVEL" type="rfc:char3" />
           <xsd:element name="ZONA" type="rfc:char4" />
           <xsd:element name="CREADOR" type="rfc:char12" />
+          <xsd:element name="DOL_EXPRESS" type="rfc:char1" />
+          <xsd:element name="FECHA_CIERTA" type="rfc:date10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">
