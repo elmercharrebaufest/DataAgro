@@ -137,6 +137,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Compensacion { get; set; }
         public int? Acuerdo { get; set; }
         public string Rechazo { get; set; }
+        public int? ComercialZonaId { get; set; }
+        public string ComercialZonaDescripcion { get; set; }
     }
 
     public class StoredPorContratoResult

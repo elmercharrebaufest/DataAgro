@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsultasEF\BusquedaLocalidades.cs" />
     <Compile Include="ConsultasEF\EliminarToken.cs" />
     <Compile Include="ConsultasEF\ActualizarComercialHome.cs" />
     <Compile Include="ConsultasEF\DevolverContratosAcuerdo.cs" />

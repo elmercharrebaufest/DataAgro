@@ -182,11 +182,22 @@ function ShowCerrarDia() {
         $("#cierreDelDia").html(result.Errores[0].Message);
         if (result.Errores[0].ErrorCode === 1) {
             $("#fin-dia-con-mail").show();
+            $("#ObservacionesDiv").show();
             $("#fin-dia-sin-mail").html("Cerrar sin enviar");
         } else {
             $("#fin-dia-con-mail").hide();
+            $("#ObservacionesDiv").hide();
             $("#fin-dia-sin-mail").html("Aceptar");
         }
         $("#modalCierreDia").modal('show');
     }
+}
+function cierreDelDiaClick() {
+    var observaciones = $("#cierreDelDiaObservaciones").val().replace(/(?:\r\n|\r|\n)/g, ' ');
+    if (observaciones.length > 2000) {
+        MensErr("La observacion es demaciado larga.");
+        return false;
+    }
+    var url = "/Hedge/CerrarDia?mail=True&observaciones=" + observaciones;
+    window.location.href = url;
 }

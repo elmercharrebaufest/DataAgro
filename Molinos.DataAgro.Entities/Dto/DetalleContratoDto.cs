@@ -1,4 +1,5 @@
 ﻿using System;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -41,7 +42,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CalidadEspecial { get; set; }
         public string EstablecimientoPropio { get; set; }
         public string Observacion { get; set; }
-
+        public int TipoNegocioId { get; set; }
+        public int? CampanaMaterialId { get; set; }
+        public int? CampanaId { get; set; }
+        public DateTime FechaDesdeDate { get; set; }
+        public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
+        public DateTime FechaHastaDate { get; set; }
     }
 }
 

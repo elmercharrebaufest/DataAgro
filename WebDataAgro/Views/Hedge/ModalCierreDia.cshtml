@@ -11,9 +11,13 @@
             </div>
             <div class="modal-body">
                 <p id="cierreDelDia"> </p>
+                <div id="ObservacionesDiv">
+                    Observaciones
+                    @Html.TextArea("cierreDelDiaObservaciones", new { @class = "k-textbox" })
+                </div>
             </div>
             <div class="modal-footer">
-                @Html.ActionLink("Aceptar", "CerrarDia", "Hedge", new { mail = true }, new { @class = "formulario-footer-cancelar k-button k-button-icontext", @id = "fin-dia-con-mail" })
+                <button type="button" class="formulario-footer-cancelar k-button k-button-icontext" onclick="cierreDelDiaClick();" id="fin-dia-con-mail">Aceptar</button>
                 @Html.ActionLink("Cerrar sin enviar", "CerrarDia", "Hedge", new { mail = false }, new { @class = "formulario-footer-cancelar k-button k-button-icontext", @id = "fin-dia-sin-mail" })
                 <button type="button" class="formulario-footer-cancelar k-button k-button-icontext" data-dismiss="modal">Cancelar</button>
             </div>

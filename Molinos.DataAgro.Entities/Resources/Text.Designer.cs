@@ -448,6 +448,51 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirmar negocios Corredores Bs As.
+        /// </summary>
+        public static string Confirmar_NegocioCorredoresBsAs {
+            get {
+                return ResourceManager.GetString("Confirmar_NegocioCorredoresBsAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar negocios Corredores Rosario.
+        /// </summary>
+        public static string Confirmar_NegocioCorredoresRosario {
+            get {
+                return ResourceManager.GetString("Confirmar_NegocioCorredoresRosario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar negocios Orig Centro.
+        /// </summary>
+        public static string Confirmar_NegocioOrigCentro {
+            get {
+                return ResourceManager.GetString("Confirmar_NegocioOrigCentro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar negocios Orig Norte.
+        /// </summary>
+        public static string Confirmar_NegocioOrigNorte {
+            get {
+                return ResourceManager.GetString("Confirmar_NegocioOrigNorte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar negocios Orig Sur.
+        /// </summary>
+        public static string Confirmar_NegocioOrigSur {
+            get {
+                return ResourceManager.GetString("Confirmar_NegocioOrigSur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Consignatario.
         /// </summary>
         public static string Consignatario {

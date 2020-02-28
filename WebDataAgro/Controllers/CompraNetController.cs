@@ -100,7 +100,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
             ViewBag.Siguientes = siguientes;
-            ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo; 
+            ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
             return View();
         }
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
@@ -199,7 +199,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarContrato(int contratoId)
         {
             return new JsonResult()
@@ -263,7 +263,7 @@ namespace WebDataAgro.Controllers
             };
 
         }
-        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
@@ -272,7 +272,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarAcuerdo(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
@@ -281,7 +281,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarAgente(int fijacionDePrecioContratoId)
         {
             return new JsonResult()
@@ -290,7 +290,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        [Autorizacion(PermisosDataAgro.ConfirmarNegocio)]
+        [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarFason(int fijacionDePrecioContratoId)
         {
             return new JsonResult()

@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
@@ -71,7 +72,7 @@ namespace WebDataAgro.Controllers
             objetivos.PricingObjetivo = objetivos.PricingObjetivo;
             objetivos.RemitirCumplido = objetivos.RemitirCumplido;
             objetivos.RemitirObjetivo = objetivos.RemitirObjetivo;
-            return new ReporteCompraNetModel
+            var result = new ReporteCompraNetModel
             {
                 ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta, idCentro),
                 SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro),
@@ -83,6 +84,7 @@ namespace WebDataAgro.Controllers
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
             };
+            return result;
         }
         private List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat)
         {
@@ -100,14 +102,30 @@ namespace WebDataAgro.Controllers
             return lista;
         }
 
-        public JsonResult DetalleExcelModal(int mes, int anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
+        public JsonResult DetalleExcelModal(int? mes, int? anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion,  string centroId = "0")
         {
             DateTime fecha;
             DateTime.TryParse(fechaString, out fecha);
             DateTime fechaHasta;
             DateTime.TryParse(fechaHastaString, out fechaHasta);
+            
+            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion,  int.Parse(centroId)), JsonRequestBehavior.AllowGet);
+        }
 
-            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
+        public JsonResult DetalleIdsModal(string tiponegocioids,string negocioids,string moneda)
+        {
+            tiponegocioids = tiponegocioids == "" ? "0" : tiponegocioids;
+            negocioids = negocioids == "" ? "0" : negocioids;
+            var listtiponegocioids = tiponegocioids.Split(',').Select(a=>int.Parse(a)).ToList();
+            var listnegocioids = negocioids.Split(',').Select(a => int.Parse(a)).ToList();
+            var items = new List<KeyValuePair<int, int>>();
+            for (int i = 0; i < listtiponegocioids.Count(); i++)
+            {
+                items.Add(new KeyValuePair<int, int> ( listtiponegocioids[i], listnegocioids[i] ));
+            }
+          
+            var result = mobjReportesManager.DetallePosicionModalIds(items,moneda);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         public ExcelResult ExcelAgente(string fechaString)
         {

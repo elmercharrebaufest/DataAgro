@@ -19,7 +19,9 @@ IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Acopiad
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Otros') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Otros'); END
 
 --Centro
-IF NOT EXISTS (select 1 from Centro where Descripcion = 'San Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('San Lorenzo', '1029'); END
+update Centro set  Descripcion = 'S. Lorenzo' where id = 1
+update Centro set  Descripcion = 'S. Lorenzo Especial' where id = 14
+IF NOT EXISTS (select 1 from Centro where Descripcion = 'S. Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('S. Lorenzo', '1029'); END
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'Pergamino') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Pergamino', '1035'); END
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'Bandera') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Bandera', '1127'); END
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'La Cautiva') BEGIN insert into Centro(Descripcion,CodigoSap) values ('La Cautiva', '1126'); END
@@ -34,9 +36,11 @@ IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Finalizado') BE
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Rechazado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Rechazado', 6); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Reconfirmar') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Reconfirmar', 7); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Eliminado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Eliminado', 8); END
-IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Carga') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Carga', 9); END
-															    
-update EstadoContrato set Descripcion = 'Carga' where Descripcion = 'PreAprobacion'
+IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'PreAprobacion') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('PreAprobacion', 9); END
+
+update EstadoContrato set Orden  = 1 where EstadoContratoId = 7--reconfirmar
+update EstadoContrato set Orden  = 2 where EstadoContratoId = 1-- pendiente
+update EstadoContrato set Orden  = 3 where EstadoContratoId = 2--confirmado
 
 
 --StandardDeCalidad
@@ -176,24 +180,6 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Arribado') BEGIN in
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Sin STOP', 6); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Error STOP', 7); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
-
---Segmentacion
-update Segmentacion set Descripcion ='Corredores tradicionales (cooperativas)' where SegmentacionId = '7'
-update Segmentacion set Descripcion ='Corredor Correacopios' where SegmentacionId = '5'
-
-update Segmentacion set Descripcion ='Productor Grande: Más de 10.000 tns' where SegmentacionId = '2'
-update Segmentacion set Descripcion ='Productor Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
-update Segmentacion set Descripcion ='Productor Chico: menos de 3.000 tns' where SegmentacionId = '4'
-
-update Segmentacion set Descripcion ='Acopio Chico: menos de 20.000 tns' where SegmentacionId = '9'
-update Segmentacion set Descripcion ='Acopio Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
-update Segmentacion set Descripcion ='Acopio Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
-update Segmentacion set Descripcion ='Acopio Mega: más de 150.000 tns' where SegmentacionId = '15'
-
-
---Material 
-update Material set Descripcion = 'Soja' where MaterialId = 3
-
 
 --CondicionFijacion
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '3 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('3 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '03'); END 

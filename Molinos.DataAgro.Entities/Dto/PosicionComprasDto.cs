@@ -33,5 +33,16 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? PrecioPonderadoPesos { get; set; }
         public decimal? PrecioPonderadoDolares { get; set; }
         public double? CantidadPonderada { get; set; }
+        public int TipoNegocioId { get; set; }
+        public int NegocioId { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListDispAFijar { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListDispAPrecio { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListDispFijac { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListFrwAFijar { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListFrwAPrecio { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListFrwFijac { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListNewAFijar { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListNewAPrecio { get; set; }
+        public IEnumerable<KeyValuePair<int, int>> ListNewFijac { get; set; }
     }
 }

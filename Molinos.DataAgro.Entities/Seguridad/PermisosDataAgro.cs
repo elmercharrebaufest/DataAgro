@@ -81,8 +81,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerMesa = 309,
         [Display(ResourceType = typeof(Text), Name = "Mail_Hedge")]
         MailHedge = 310,
-        [Display(ResourceType = typeof(Text), Name = "Confirmar_Negocio")]
-        ConfirmarNegocio = 311,
+        
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Fason")]
         CrearNegociosFason = 312,
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Agente")]
@@ -97,7 +96,19 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionesInternas = 317,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Negocios")]
         VerTodosNegocios = 318,
-
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioOrigNorte")]
+        ConfirmarNegocioOrigNorte = 319,
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioOrigSur")]
+        ConfirmarNegocioOrigSur = 320,
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioOrigCentro")]
+        ConfirmarNegocioOrigCentro = 321,
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioCorredoresBsAs")]
+        ConfirmarNegocioCorredoresBsAs = 322,
+        [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioCorredoresRosario")]
+        ConfirmarNegocioCorredoresRosario = 323,
+        
+        
+        
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,

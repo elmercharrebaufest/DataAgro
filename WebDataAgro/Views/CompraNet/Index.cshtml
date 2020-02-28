@@ -11,7 +11,12 @@
     var creaNegocios = PermisosHelper.Is(PermisosDataAgro.NuevoNegocios) || PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno);
     var modificaNegocios = PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegocioExterno);
     var eliminaNegocios = PermisosHelper.Is(PermisosDataAgro.RechazarNegocios);
-    var confirmaNegocios = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocio);
+    var confirmarNegocioCorredoresBsAs = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs);
+    var confirmarNegocioCorredoresRosario = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocioCorredoresRosario);
+    var confirmarNegocioOrigCentro = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocioOrigCentro);
+    var confirmarNegocioOrigNorte = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocioOrigNorte);
+    var confirmarNegocioOrigSur = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegocioOrigSur);
+    var confirmarNegocios = confirmarNegocioCorredoresBsAs || confirmarNegocioCorredoresRosario || confirmarNegocioOrigCentro || confirmarNegocioOrigNorte || confirmarNegocioOrigSur;
     var ampliaNegocios = PermisosHelper.Is(PermisosDataAgro.AmpliarNegocios);
     var finalizaNegocios = PermisosHelper.Is(PermisosDataAgro.FinalizarNegocios);
     var verMesa = PermisosHelper.Is(PermisosDataAgro.VerMesa);
@@ -22,8 +27,13 @@
     comercialId = '@ViewBag.comercialId';
     creaNegocios = '@creaNegocios';
 
-    modificaNegocios ='@modificaNegocios';
-    confirmaNegocios ='@confirmaNegocios';
+    modificaNegocios = '@modificaNegocios';
+    confirmaNegocios = '@confirmarNegocios';
+    confirmaNegocioCorredoresBsAs ='@confirmarNegocioCorredoresBsAs';
+    confirmaNegocioCorredoresRosario ='@confirmarNegocioCorredoresRosario';
+    confirmaNegocioOrigCentro ='@confirmarNegocioOrigCentro';
+    confirmaNegocioOrigNorte ='@confirmarNegocioOrigNorte';
+    confirmaNegocioOrigSur ='@confirmarNegocioOrigSur';
     eliminaNegocios = '@eliminaNegocios';
     ampliaNegocios = '@ampliaNegocios';
     finalizaNegocios = '@finalizaNegocios';
@@ -203,7 +213,7 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-4">
-                            <div id="confirmarVariosDiv" class="@(confirmaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
+                            <div id="confirmarVariosDiv" class="@(confirmarNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
                                 <span class="botonVarios">
                                     <i class="fa fa-check varios" aria-hidden="true"></i>
                                 </span>

@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,8 @@ namespace Molinos.DataAgro.Interfaces
         ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0);
         ExcelDetallePosicionDto DetalleAgente(DateTime fecha);
         List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta);
-        string DetallePosicionModal(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0);
+        string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0);
         string DetalleAgenteModal(DateTime fecha);
+        string DetallePosicionModalIds(List<KeyValuePair<int, int>> negocios,string moneda);
     }
 }

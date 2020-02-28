@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class ToneladasGranoTipoDto
     {
         public string Material { get; set; }
+        public int MaterialId { get; set; }
         public double DispAFijar { get; set; }
         public double DispAPrecio { get; set; }
         public double DispFijac { get; set; }
@@ -25,6 +26,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public double NewFason { get; set; }
         public double NewAgente { get; set; }
         public double Total { get; set; }
+        public List<KeyValuePair<int, int>> ListNewAgente { get; set; }
+        public List<KeyValuePair<int, int>> ListDispAgente { get; set; }
+        public List<KeyValuePair<int, int>> ListFrwAgente { get; set; }
     }
 
     public class NegocioToneladasPosicionDto

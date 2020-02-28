@@ -122,7 +122,7 @@ namespace Molinos.DataAgro.Test.Managers
               .Returns(new List<BolsaCompraNetQry>() { new BolsaCompraNetQry { Id = 1, Descripcion = "ROSARIO" } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Centro, CentroQry>>>(), It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-             .Returns(new List<CentroQry>() { new CentroQry { Id = 1, Descripcion = "SAN LORENZO" } });
+             .Returns(new List<CentroQry>() { new CentroQry { Id = 1, Descripcion = "S. Lorenzo" } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CondicionFijacion, CondicionFijacionQry>>>(), It.IsAny<Expression<Func<CondicionFijacion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
             .Returns(new List<CondicionFijacionQry>() { new CondicionFijacionQry { Id = 1, Descripcion = "HASTA QUE DIGA YA" } });

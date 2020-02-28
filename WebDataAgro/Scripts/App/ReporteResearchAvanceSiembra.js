@@ -60,7 +60,7 @@ function CreateGridAvanceSiembra() {
                     }, {
                         Material: "Trigo Pan"
                     }, {
-                        Material: "Semilla de Soja"
+                        Material: "Soja"
                     }, {
                         Material: "Girasol"
                     }, {

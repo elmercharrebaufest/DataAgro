@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +136,8 @@ namespace Molinos.DataAgro.Business
 
         public List<BusquedaLocalidad> DevolverLocalidades(string filtro)
         {
-            var resultado = repositorio.SelStore<BusquedaLocalidad>("DataAgro_BusquedaLocalidades", 20, filtro);
+            //var resultado = repositorio.SelStore<BusquedaLocalidad>("DataAgro_BusquedaLocalidades", 20, filtro);
+            var resultado = repositorio.ListarConsulta(new BusquedaLocalidades(filtro));
             foreach (var r in resultado)
             {
                 r.Filtro = filtro + "|" + r.Localidad + " (" + r.Provincia + ")";

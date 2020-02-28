@@ -598,4 +598,19 @@
   <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="Confirmar_NegocioCorredoresBsAs" xml:space="preserve">
+    <value>Confirmar negocios Corredores Bs As</value>
+  </data>
+  <data name="Confirmar_NegocioCorredoresRosario" xml:space="preserve">
+    <value>Confirmar negocios Corredores Rosario</value>
+  </data>
+  <data name="Confirmar_NegocioOrigCentro" xml:space="preserve">
+    <value>Confirmar negocios Orig Centro</value>
+  </data>
+  <data name="Confirmar_NegocioOrigNorte" xml:space="preserve">
+    <value>Confirmar negocios Orig Norte</value>
+  </data>
+  <data name="Confirmar_NegocioOrigSur" xml:space="preserve">
+    <value>Confirmar negocios Orig Sur</value>
+  </data>
 </root>

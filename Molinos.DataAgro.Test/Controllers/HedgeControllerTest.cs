@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHedgeManager> hedgeManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<IDiferencialManager> diferencialManagerMock;
+        private Mock<ICentroManager> centroManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -32,11 +33,12 @@ namespace Molinos.DataAgro.Test.Controllers
             hedgeManagerMock = new Mock<IHedgeManager>();
             reportesManagerMock = new Mock<IReportesManager>();
             diferencialManagerMock = new Mock<IDiferencialManager>();
+            centroManagerMock = new Mock<ICentroManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             HttpContext.Current.Session["perfil"] = 7;
             HttpContext.Current.Session["comercialId"] = 1;
-            target = new HedgeController(hedgeManagerMock.Object, reportesManagerMock.Object, diferencialManagerMock.Object);
+            target = new HedgeController(hedgeManagerMock.Object, reportesManagerMock.Object, diferencialManagerMock.Object, centroManagerMock.Object);
         }
 
         [Test]
@@ -180,8 +182,10 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new HedgeTCPromedioDto());
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<ExcelPosicionMaterialDto>());
+            reportesManagerMock.Setup(x => x.TraerPricingCampania(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new List<PricingCampaniaDto>());
             diferencialManagerMock.Setup(x => x.TraerDiferencial()).Returns(new DiferencialDto());
-            var result = target.CerrarDia(false) as RedirectToRouteResult;
+
+            var result = target.CerrarDia(false, "") as RedirectToRouteResult;
 
             Assert.NotNull(result);
 

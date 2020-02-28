@@ -84,7 +84,19 @@ function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre,
     else calidad = null;
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
-    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad;
+    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad ;
+    
+    $.get(href, function (data) { crearGrilladetallePosicion(data); });
+    return false;
+}
+function AbrirModalIds(anio,materialNombre,mesNombre,negocioids,tiponegocioids,moneda) {
+    setearTituloModal(materialNombre, mesNombre, anio);
+    var href = window.location.href;
+    if (moneda == null) {
+        moneda = "";
+    }
+    href = href + "/DetalleIdsModal?" + "&tiponegocioids=" + tiponegocioids + "&negocioids=" + negocioids + "&moneda=" + moneda;
+   
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }

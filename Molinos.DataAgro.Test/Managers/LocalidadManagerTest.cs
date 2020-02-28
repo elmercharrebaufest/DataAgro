@@ -139,10 +139,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void DevolverLocalidadesOk()
         {
-            repositorioMock.Setup(x => x.SelStore<BusquedaLocalidad>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()))
+            repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<BusquedaLocalidades>()))
                 .Returns(new List<BusquedaLocalidad>() { new BusquedaLocalidad { ProvinciaId = 1, Localidad="a",Provincia="a",Filtro="a",Id=1 } });
             var resultado = target.DevolverLocalidades("a");
-            repositorioMock.Verify(x => x.SelStore<BusquedaLocalidad>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<BusquedaLocalidades>()), Times.Once);
 
             Assert.NotNull(resultado);
             Assert.AreEqual(1, resultado.Count);
