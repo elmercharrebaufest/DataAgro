@@ -524,7 +524,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     Campania = e.Key.Campania,
                     CampaniaId = e.Select(x => x.CampaniaId).FirstOrDefault(),
-                    Material = e.Key.Material == "Soja" ? "Soja" : e.Key.Material == "Maiz Duro Dentado" ? "Maiz" : e.Key.Material,
+                    Material = e.Key.Material,
                     MaterialId = e.Select(x => x.MaterialId).FirstOrDefault(),
                     Pricing = e.Sum(x => x.Pricing),
                     PricingIds = e.Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id)).ToList(),

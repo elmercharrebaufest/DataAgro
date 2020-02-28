@@ -84,15 +84,15 @@ function CargarGrillaConfig() {
             {
                 field: "Material", title: "Cultivo", filterable: {
                     multi: true, dataSource: [{
-                        Material: "Maiz Duro Dentado"
+                        Material: "Maiz"
                     }, {
-                        Material: "Trigo Pan"
+                        Material: "Trigo"
                     }, {
                         Material: "Soja"
                     }, {
                         Material: "Girasol"
                     }, {
-                        Material: "Girasol Alto Oleico"
+                        Material: "Girasol AO"
                     }]
                 }, width: 130, template: "#=Material#"
             },
