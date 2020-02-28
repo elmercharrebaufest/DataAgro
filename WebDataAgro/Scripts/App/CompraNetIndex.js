@@ -480,15 +480,16 @@ function CreateGridInformeCompraNet() {
                             .prop('checked', true);
                     }
                 }
-                if ((view[i].DestinoDescripcion != "S. Lorenzo" && view[i].DestinoDescripcion != "")
-                    || (view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)
+                if (view[i].DestinoDescripcion != "S. Lorenzo" && view[i].DestinoDescripcion != "") {
+                    grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                        .addClass("otroDestino");
+                } else if ((view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)
                     || (view[i].MaterialId == 1 && view[i].StandardCalidadId == 1)
                     || (view[i].MaterialId == 2 && (view[i].StandardCalidadId == 1 || view[i].StandardCalidadId == 2))
                     || (view[i].MaterialId == 3 && (view[i].StandardCalidadId == 2 || view[i].Sustentable == true))
-                    || ((view[i].MaterialId == 4 || view[i].MaterialId == 5) && view[i].StandardCalidadId == 6)
-                ) {
+                    || ((view[i].MaterialId == 4 || view[i].MaterialId == 5) && view[i].StandardCalidadId == 6)) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
-                        .addClass("otroDestino");
+                        .addClass("calidadEspecialOSustentable");
                 }
             }
             filasSeleccionadas = {};

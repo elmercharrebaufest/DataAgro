@@ -877,6 +877,10 @@ body {
     background-color: #ffe5aa;
 }
 
+.calidadEspecialOSustentable {
+    background-color: #bde6b5;
+}
+
 #gridIni td .status,
 #gridIni td .status:hover {
     /*background:#787878;*/
