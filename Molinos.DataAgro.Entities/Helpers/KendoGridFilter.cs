@@ -141,28 +141,32 @@ namespace Molinos.DataAgro.Entities.Helpers
     {
         public static void ProcessFilters<T>(Filter filter, ref IQueryable<T> queryable)
         {
-            var whereClause = string.Empty;
-            var filters = filter.Filters;
-            var parameters = new List<object>();
-            for (int i = 0; i < filters.Count(); i++)
+            if (filter != null && filter.Filters != null)
             {
-                var f = filters.ToList()[i];
-
-                if (f.Filters == null)
+                var whereClause = string.Empty;
+                var filters = filter.Filters;
+                var parameters = new List<object>();
+                for (int i = 0; i < filters.Count(); i++)
                 {
-                    if (i == 0)
-                        whereClause += BuildWherePredicate<T>(f, i, parameters) + " ";
-                    if (i != 0)
-                        whereClause += ToLinqOperator(filter.Logic) + BuildWherePredicate<T>(f, i, parameters) + " ";
-                    if (i == (filters.Count() - 1))
+                    var f = filters.ToList()[i];
+
+                    if (f.Filters == null)
                     {
-                        TrimWherePredicate(ref whereClause);
-                        queryable = queryable.Where(whereClause, parameters.ToArray());
+                        if (i == 0)
+                            whereClause += BuildWherePredicate<T>(f, i, parameters) + " ";
+                        if (i != 0)
+                            whereClause += ToLinqOperator(filter.Logic) + BuildWherePredicate<T>(f, i, parameters) + " ";
+                        if (i == (filters.Count() - 1))
+                        {
+                            TrimWherePredicate(ref whereClause);
+                            queryable = queryable.Where(whereClause, parameters.ToArray());
+                        }
                     }
+                    else
+                        ProcessFilters(f, ref queryable);
                 }
-                else
-                    ProcessFilters(f, ref queryable);
             }
+
         }
 
         public static string TrimWherePredicate(ref string whereClause)

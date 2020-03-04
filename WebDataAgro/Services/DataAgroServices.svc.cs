@@ -164,6 +164,7 @@ namespace WebDataAgro.Services
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
                 var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
+                logger.Debug("ActualizandoContrato1");
 
                 foreach (var cal in contratoSAP.Calidad)
                 {
@@ -178,6 +179,7 @@ namespace WebDataAgro.Services
                     };
                     calidades.Add(calidad);
                 }
+                logger.Debug("ActualizandoContrato2");
 
                 var descuentos = new List<DescuentoBonificacion>();
                 var tipoDescuentoList = repositorio.Listar<TipoDB>();
@@ -200,6 +202,7 @@ namespace WebDataAgro.Services
                         descuentos.Add(descuento);
                     }
                 }
+                logger.Debug("ActualizandoContrato3");
 
                 var aperturas = new List<AperturaPrecio>();
                 var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
@@ -215,6 +218,8 @@ namespace WebDataAgro.Services
                     };
                     aperturas.Add(apertura);
                 }
+                logger.Debug("ActualizandoContrato4");
+
                 var porcentaje = contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).ToList().Count >0?
                     contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).Sum(x => x.Porcentaje * contratoSAP.Precio):0;
                 var contrato = new Contrato();
@@ -277,17 +282,22 @@ namespace WebDataAgro.Services
                 contrato.TipoNegocioId = 3;
                 contrato.ComercialId = 1;
                 contrato.Fecha = DateTime.Now;
-                
+                logger.Debug("ActualizandoContrato5");
+
                 var resultado = contratoManager.ActualizarContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)
             {
+                logger.Debug(oEntityErrors.ListaErrores.ToXml());
+
                 oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
                     Message = ex.Message
                 });
             }
+            logger.Debug("ActualizandoContrato7");
+
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
