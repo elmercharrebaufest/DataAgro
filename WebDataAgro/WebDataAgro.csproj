@@ -270,6 +270,7 @@
     <Compile Include="Helpers\Excel\ExcelResult.cs" />
     <Compile Include="Helpers\Excel\ExcelResultBase.cs" />
     <Compile Include="Helpers\Excel\IDataForExcel.cs" />
+    <Compile Include="Helpers\ExtensionesUrl.cs" />
     <Compile Include="Models\ActividadesModel.cs" />
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />

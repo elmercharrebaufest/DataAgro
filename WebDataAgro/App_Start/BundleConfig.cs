@@ -11,6 +11,9 @@ namespace WebDataAgro
             // -------------------------------------------------
             //   Estilos generales
             // -------------------------------------------------
+            var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Styles.DefaultTagFormat = "<link href='{0}?v=" + assemblyVersion + "' rel='stylesheet'/>";
+            Scripts.DefaultTagFormat = "<script src='{0}?v=" + assemblyVersion + "'></script>";
 
             bundles.Add(new StyleBundle("~/Content/awesome/css").Include(
                         "~/Content/assets/global/plugins/font-awesome/css/font-awesome.min.css",
