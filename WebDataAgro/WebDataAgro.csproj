@@ -81,6 +81,9 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
+    </Reference>
     <Reference Include="KendoGridBinder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\KendoGridBinder.2.0.0\lib\net45\KendoGridBinder.dll</HintPath>
     </Reference>
@@ -122,6 +125,9 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Services" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.0\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="System.Linq.Dynamic.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.8.2\lib\net45\System.Linq.Dynamic.Core.dll</HintPath>
     </Reference>
@@ -250,6 +256,7 @@
     <Compile Include="Controllers\ZonaController.cs" />
     <Compile Include="Controllers\ZonaCupoController.cs" />
     <Compile Include="Core\Atributes.cs" />
+    <Compile Include="Core\JsonNetValueProviderFactory.cs" />
     <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
     <Compile Include="Filters\CustomExceptionHandlerAttribute.cs" />

@@ -1,4 +1,5 @@
-﻿using KendoGridBinder;
+﻿using Kendo.DynamicLinq;
+using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -9,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IContratoManager
     {
-        KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
+        DataSourceResult TraerTodosContratos(DataSourceRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
         KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
 
         DatosIniContrato TraerDatosCombo();
@@ -39,7 +40,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
-        TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, List<int> listComercialesId, List<int> corredoresComercial);
+        TotalPesosDolares TraerTotalesPesosDolares(DataSourceRequest request, List<int> listComercialesId, List<int> corredoresComercial);
         List<EstadoContratoDto> TraerTodoLosEstados();
         List<BoletoCompraNetDto> TraerTodosLosBoletos();
         List<GrupoDeComprasDto> TraerTodoGrupoDeCompras();

@@ -173,9 +173,9 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FinDelDia, bool>>>()))
                 .Returns(new FinDelDia { Id = 1, ComercialId = 1 });
             repositorioMock.Setup(y => y.Listar( It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<Contrato>() { new Contrato { ContratoId = 1 } });
+                .Returns(new List<Contrato>() { new Contrato { Id = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1 } });
+                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<Fason>() { new Fason { Id = 1 } });
 
@@ -218,9 +218,9 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<FinDelDia>() { new FinDelDia { Id = 1, Diferencial = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Contrato>() { new Contrato { ContratoId = 1, Cantidad = 10 } });
+                            .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, Cantidad = 10 } });
+                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1, Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<Fason>() { new Fason { Id = 1, Cantidad = 10 } });
 
@@ -246,9 +246,9 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<FinDelDia>() { new FinDelDia { Id = 1, Diferencial = 100 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Contrato>() { new Contrato { ContratoId = 1, Cantidad = 10 } });
+                            .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, Cantidad = 10 } });
+                            .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1, Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<Fason>() { new Fason { Id = 1, Cantidad = 10 } });
 

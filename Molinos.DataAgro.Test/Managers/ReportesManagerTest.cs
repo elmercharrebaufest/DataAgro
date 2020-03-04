@@ -717,9 +717,9 @@ namespace Molinos.DataAgro.Test.Managers
                     new HedgeObjetivo { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, TipoObjetivoId = 1 },
                     new HedgeObjetivo { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, TipoObjetivoId = 2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<Contrato>() { new Contrato { ContratoId = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, CampanaId = 7, EstadoId = 5, TipoNegocioId = 1 } });
+                .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, CampanaId = 7, EstadoId = 5, TipoNegocioId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, CampanaId = 7, EstadoId = 5 } });
+                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, CampanaId = 7, EstadoId = 5 } });
 
             var result = target.TraerHedgeObjetivo(fecha, fecha);
 
@@ -755,9 +755,9 @@ namespace Molinos.DataAgro.Test.Managers
                     new HedgeTC { Id = 1, Fecha = fecha, TipoCambio = 10, HedgePesos = 10 },
                     new HedgeTC { Id = 2, Fecha = fecha, TipoCambio = 20, HedgePesos = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<Contrato>() { new Contrato { ContratoId = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId= "ARP  ",CampanaId=1, EstadoId = 5, TipoNegocioId = 1,Material = mat, Precio = 1 } });
+                .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId= "ARP  ",CampanaId=1, EstadoId = 5, TipoNegocioId = 1,Material = mat, Precio = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat, Precio = 2 } });
+                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat, Precio = 2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                             .Returns(new List<Fason>() { new Fason { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat,Precio =2 } });
 

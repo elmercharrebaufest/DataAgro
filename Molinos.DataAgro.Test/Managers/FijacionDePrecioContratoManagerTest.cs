@@ -124,7 +124,7 @@ namespace Molinos.DataAgro.Test.Managers
 
                        });
 
-            var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { FijacionDePrecioContratoId = It.IsAny<int>(), Ampliaciones = 2 });
+            var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { Id = It.IsAny<int>(), Ampliaciones = 2 });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.That(!result.HayError);
@@ -139,7 +139,7 @@ namespace Molinos.DataAgro.Test.Managers
                             Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Finalizado, Descripcion = "Finalizado" },
                             Ampliaciones = 2
                         });
-            var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { FijacionDePrecioContratoId = It.IsAny<int>(), Ampliaciones = 2 });
+            var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { Id = It.IsAny<int>(), Ampliaciones = 2 });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.That(result.HayError);
@@ -211,7 +211,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var fijacion = new FijacionDePrecioContrato
             {
-                FijacionDePrecioContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1,
@@ -265,7 +265,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var fijacion = new FijacionDePrecioContrato
             {
-                FijacionDePrecioContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1,
@@ -622,7 +622,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var fijacionSave = new FijacionDePrecioContrato
             {
-                FijacionDePrecioContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Rechazado,
                 Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente },
                 Comercial = new Comercial { ComercialId = 1 }
@@ -647,7 +647,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var fijacionSave = new FijacionDePrecioContrato
             {
-                FijacionDePrecioContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Rechazado,
                 Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente },
                 Comercial = new Comercial { ComercialId = 1 }
@@ -689,7 +689,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void FinalizacionAutomaticaOk()
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato{FijacionDePrecioContratoId=1} });
+                .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato{Id=1} });
 
             var fijacionSave = new FijacionDePrecioContrato
             {

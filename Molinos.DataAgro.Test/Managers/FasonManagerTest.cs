@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 0,
-                FasoneroId = 0,
+                ProveedorId = 0,
                 MaterialId = 0,
                 Cantidad = 0,
                 Precio = 0,
@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 1,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -105,7 +105,7 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaHasta = DateTime.Now,
                 ComercialCreadorId = 1,
                 ComercialId = 2,
-                Especial = true,
+                TrigoEspecial = true,
                 Estado = new EstadoContrato { EstadoContratoId = 1 }
             };
 
@@ -123,7 +123,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 1,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -135,7 +135,7 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaHasta = DateTime.Now,
                 ComercialCreadorId = 1,
                 ComercialId = 2,
-                Especial = true,
+                TrigoEspecial = true,
                 Estado = new EstadoContrato { EstadoContratoId = 5 }
             };
 
@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -189,7 +189,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -221,7 +221,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -251,7 +251,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -282,7 +282,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -312,7 +312,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -340,7 +340,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Ampliaciones = 2,
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -379,7 +379,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,
@@ -406,7 +406,7 @@ namespace Molinos.DataAgro.Test.Managers
             var oFason = new Fason
             {
                 Id = 0,
-                FasoneroId = 1,
+                ProveedorId = 1,
                 MaterialId = 1,
                 Cantidad = 1000,
                 Precio = 1000,

@@ -61,6 +61,9 @@ namespace WebDataAgro
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             AutofacHostFactory.Container = container;
+
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
         }
 
 

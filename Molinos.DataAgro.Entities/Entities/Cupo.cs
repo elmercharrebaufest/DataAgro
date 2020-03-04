@@ -25,10 +25,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CupoStop { get; set; }
         public string CreacionStop { get; set; }
         public string ErrorStop { get; set; }
-        public int? FasonId { get; set; }
-        public int? ContratoId { get; set; }
-        public int? AgenteCompraId { get; set; }
-        public int? FijacionDePrecioContratoId { get; set; }
+        //public int? FasonId { get; set; }
+        //public int? ContratoId { get; set; }
+        //public int? AgenteCompraId { get; set; }
+        //public int? FijacionDePrecioContratoId { get; set; }
 
         public int? TipoNegocioId { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
@@ -47,16 +47,21 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("EstadoCupoId")]
         public virtual EstadoCupo EstadoCupo { get; set; }
 
-        [ForeignKey("FasonId")]
-        public virtual Fason FasonEntidad { get; set; }
-        [ForeignKey("ContratoId")]
-        public virtual Contrato Contrato { get; set; }
-        [ForeignKey("AgenteCompraId")]
-        public virtual AgenteCompra AgenteCompra { get; set; }
-        [ForeignKey("FijacionDePrecioContratoId")]
-        public virtual FijacionDePrecioContrato FijacionDePrecioContrato { get; set; }
+        //[ForeignKey("FasonId")]
+        //public virtual Fason FasonEntidad { get; set; }
+        //[ForeignKey("ContratoId")]
+        //public virtual Contrato Contrato { get; set; }
+        //[ForeignKey("AgenteCompraId")]
+        //public virtual AgenteCompra AgenteCompra { get; set; }
+        //[ForeignKey("FijacionDePrecioContratoId")]
+        //public virtual FijacionDePrecioContrato FijacionDePrecioContrato { get; set; }
+
+        [ForeignKey("NegocioId")]
+        public virtual Negocio Negocio { get; set; }
+
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
+        public int? NegocioId { get; set; }
 
         public object Clone()
         {

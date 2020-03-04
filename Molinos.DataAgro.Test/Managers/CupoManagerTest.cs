@@ -508,7 +508,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>()))
                 .Returns(new Material { MaterialId = 1 });
             repositorioMock.Setup(y => y.ObtenerPrimero<TipoNegocio>(It.IsAny<Expression<Func<TipoNegocio, bool>>>()))
-                .Returns(new TipoNegocio { TipoNegocioId = 1010, Descripcion = "ESPACIO DINAMICO" });
+                .Returns(new TipoNegocio { TipoNegocioId = 7, Descripcion = "ESPACIO DINAMICO" });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<ZonaCupo>() { new ZonaCupo { Id = 1, Descripcion = "" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<LimiteCupo, bool>>>())).Returns(new LimiteCupo { ConfiguracionCupoId = 1, ZonaCupoId = 1, CantidadCupo = 1 });
@@ -522,7 +522,7 @@ namespace Molinos.DataAgro.Test.Managers
                     ZonaDescrip ="",
                     CantidadDeCupos = 2,
                     DestinoId = 1,
-                    ContratoId = 1,
+                    NegocioId = 1,
                     MaterialId = 1,
                     MonedaId = "ARP  ",
                     Precio = 500,
@@ -556,7 +556,7 @@ namespace Molinos.DataAgro.Test.Managers
             target.CrearSugerenciaCupo();
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
-            repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.First().ContratoId == 1 && y.First().CantidadDeCupos == 2), null), Times.Once);
+            repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.First().NegocioId == 1 && y.First().CantidadDeCupos == 2), null), Times.Once);
             repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.Last().ConfiguracionEspacioDinamicoId == 1 && y.Last().CantidadDeCupos == 7), null), Times.Once);
 
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SugerenciaCupo>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);

@@ -38,7 +38,7 @@
 	CONSTRAINT [FK_FijacionDePrecioContrato_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
     CONSTRAINT [FK_FijacionDePrecioContrato_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_FijacionDePrecioContrato_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
-    CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Contrato]([ContratoId]),
+    --CONSTRAINT [FK_FijacionDePrecioContrato_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]),
     CONSTRAINT [FK_FijacioDePrecioContrato_Campaña] FOREIGN KEY ([CampanaId]) REFERENCES [Campaña]([CampañaId]),
 	CONSTRAINT [FK_FijacioDePrecioContrato_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
     CONSTRAINT [FK_FijacioDePrecioContrato_Centro] FOREIGN KEY ([DestinoId]) REFERENCES [Centro]([Id]),

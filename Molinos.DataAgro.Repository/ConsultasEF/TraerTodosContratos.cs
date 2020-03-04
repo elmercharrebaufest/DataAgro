@@ -1,4 +1,5 @@
-﻿using KendoGridBinder;
+﻿using Kendo.DynamicLinq;
+using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
@@ -7,14 +8,14 @@ using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    public class TraerTodosContratos : IConsultaEscalar<KendoGrid<BasicoContrato>>
+    public class TraerTodosContratos : IConsultaEscalar<DataSourceResult>
     {
-        private readonly KendoGridMvcRequest request;
+        private readonly DataSourceRequest request;
         private readonly List<int> equipo;
         private readonly bool corredor;
         private readonly List<int> corredoresComercial;
 
-        public TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial)
+        public TraerTodosContratos(DataSourceRequest request, bool corredor, List<int> equipo, List<int> corredoresComercial)
         {
             this.request = request;
             this.equipo = equipo;
@@ -22,15 +23,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             this.corredoresComercial = corredoresComercial;
         }
 
-        private static KendoGrid<BasicoContrato> Query(DbContext contexto, KendoGridMvcRequest request,  List<int> equipo)
+        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request,  List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto,  equipo);
-            return new KendoGrid<BasicoContrato>(request, queryContratos);
+            return queryContratos.ToDataSourceResult(request);
         }
         
-        public virtual KendoGrid<BasicoContrato> Ejecutar(DbContext contexto)
+        public virtual DataSourceResult Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {

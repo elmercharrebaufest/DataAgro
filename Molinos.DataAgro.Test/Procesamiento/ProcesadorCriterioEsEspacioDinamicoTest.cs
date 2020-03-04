@@ -31,8 +31,8 @@ namespace Molinos.DataAgro.Test.Procesamiento
         public void CalcularTest()
         {
             repositorioMock.Setup(y => y.ObtenerPrimero<TipoNegocio>(It.IsAny<Expression<Func<TipoNegocio, bool>>>()))
-               .Returns(new TipoNegocio { TipoNegocioId = 1010, Descripcion = "ESPACIO DINAMICO" });
-            var criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto {TipoNegocioId=1010 } };
+               .Returns(new TipoNegocio { TipoNegocioId = 7, Descripcion = "ESPACIO DINAMICO" });
+            var criterio = new CriterioEsEspacioDinamico { Dto = new SugerenciaCupoDto {TipoNegocioId=7 } };
             var resultado = target.Calcular(criterio);
             
             Assert.That(resultado, Is.Not.Null);

@@ -42,7 +42,7 @@ var hoy = DateTime.Now.Date;
                     {
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
-                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == idFijacion && x.ContratoSAP == id, x => x.Cantidad) : 0;
+                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.Id == idFijacion && x.ContratoSAP == id, x => x.Cantidad) : 0;
                         var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1, x => new DatosFijacionDeContratoDto()
                         {
                             ContratoId = id.ToString(),
@@ -109,7 +109,7 @@ var hoy = DateTime.Now.Date;
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == contrato.CONTRATO
                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
-                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.FijacionDePrecioContratoId == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad) : 0;
+                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad) : 0;
 
                         var contratoParaFijacion = new DatosFijacionDeContratoDto
                         {

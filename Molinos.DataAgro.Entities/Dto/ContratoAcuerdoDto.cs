@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ProveedorId { get; set; }
         public string Corredor { get; set; }
         public int CorredorId { get; set; }
-        public int Cantidad { get; set; }
+        public double Cantidad { get; set; }
         public decimal Precio { get; set; }
         public string Material { get; set; }
         public int MaterialId { get; set; }

@@ -4,10 +4,6 @@
 	[CentroId] [int] NOT NULL,
 	[FechaSugerida] [datetime] NOT NULL,
 	[CantidadDeCupos] [int] NOT NULL,
-	[FasonId] [int] NULL,
-	[ContratoId] [int] NULL,
-	[AgenteCompraId] [int] NULL,
-	[FijacionDePrecioContratoId] [int] NULL,
 	[TipoNegocioId] [int] NOT NULL,
  [Puntuacion] DECIMAL(9, 2) NOT NULL, 
     [MonedaId] CHAR(5) NULL, 
@@ -22,6 +18,7 @@
     [ContratoSAP] NVARCHAR(30) NULL, 
     [MotivoRechazo] VARCHAR(500) NULL, 
     [ConfiguracionEspacioDinamicoId] INT NULL, 
+    [NegocioId] INT NULL, 
     CONSTRAINT [PK_SugerenciaCupo] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -29,33 +26,13 @@
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_AgenteCompra] FOREIGN KEY([AgenteCompraId])
-REFERENCES [dbo].[AgenteCompra] ([Id])
+ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Negocio] FOREIGN KEY([NegocioId])
+REFERENCES [dbo].[Negocio] ([Id])
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_AgenteCompra]
+ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Negocio]
 GO
 
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Contrato] FOREIGN KEY([ContratoId])
-REFERENCES [dbo].[Contrato] ([ContratoId])
-GO
-
-ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Contrato]
-GO
-
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Fason] FOREIGN KEY([FasonId])
-REFERENCES [dbo].[Fason] ([Id])
-GO
-
-ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_Fason]
-GO
-
-ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_FijacionDePrecioContrato] FOREIGN KEY([FijacionDePrecioContratoId])
-REFERENCES [dbo].[FijacionDePrecioContrato] ([FijacionDePrecioContratoId])
-GO
-
-ALTER TABLE [dbo].[SugerenciaCupo] CHECK CONSTRAINT [FK_SugerenciaCupo_FijacionDePrecioContrato]
-GO
 
 ALTER TABLE [dbo].[SugerenciaCupo]  WITH CHECK ADD  CONSTRAINT [FK_SugerenciaCupo_Material] FOREIGN KEY([MaterialId])
 REFERENCES [dbo].[Material] ([MaterialId])

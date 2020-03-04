@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(Fason oParam, Resultado oErrorMessages) {
 
-            if (oParam.FasoneroId == 0)
+            if (!oParam.ProveedorId.HasValue || oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Fasonero' no debe estar vacio");
             }
@@ -101,7 +101,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.Precio = oFason.Precio;
                 oFasonSave.Cantidad = oFason.Cantidad;
                 oFasonSave.EstadoId = estado;
-                oFasonSave.FasoneroId = oFason.FasoneroId;
+                oFasonSave.Proveedor = oFason.Proveedor;
                 oFasonSave.ComercialId = oFason.ComercialId;
                 oFasonSave.MonedaId = oFason.MonedaId;
                 oFasonSave.MaterialId = oFason.MaterialId;
@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.TipoFasonId = oFason.TipoFasonId;
                 oFasonSave.FechaDesde = oFason.FechaDesde;
                 oFasonSave.FechaHasta = oFason.FechaHasta;
-                oFasonSave.Especial = oFason.Especial;
+                oFasonSave.TrigoEspecial = oFason.TrigoEspecial;
                 oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
             }
             else
@@ -204,8 +204,8 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Fason, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
                 
-                ProveedorId = x.FasoneroId,
-                Proveedor = x.Fasonero == null ? "" : x.Fasonero.RazonSocial + " " + "(" + x.Fasonero.CUIT + ")",
+                ProveedorId = x.ProveedorId ?? 0,
+                Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
                 ComercialId = x.ComercialId,
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
@@ -215,13 +215,13 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
-                CampanaId = x.CampanaId,
+                CampanaId = x.CampanaId ?? 0,
                 Estado = x.EstadoId,
                 Posicion = x.Posicion,
                 TipoFason = x.TipoFason.Descripcion,
                 TipoFasonId = x.TipoFasonId,
                 FasonId = x.Id,
-                TrigoEspecial = x.Especial,
+                TrigoEspecial = x.TrigoEspecial,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),

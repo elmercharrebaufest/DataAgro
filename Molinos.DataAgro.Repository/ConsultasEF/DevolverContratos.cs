@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                              select new ContratoCopiar
                              {
-                                 Id = c.ContratoId,
+                                 Id = c.Id,
                                  Comercial = c.Comercial.Nombres + " " + c.Comercial.Apellido,
                                  RazonSocial = c.Proveedor.RazonSocial,
                                  Filtro = c.ContratoSAP,

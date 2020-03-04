@@ -384,7 +384,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    logger.Debug($"El contrato {oContrato.ContratoId} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
+                    logger.Debug($"El contrato {oContrato.Id} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
                     return;
                 }
                 var mailCreador = "";
@@ -854,7 +854,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
-                    repositorio.Existe<Calidad>(x => x.ContratoId == contrato.ContratoId && x.CalidadEspecialId == 4 && x.Valor == 2))))
+                    repositorio.Existe<Calidad>(x => x.NegocioId == contrato.Id && x.CalidadEspecialId == 4 && x.Valor == 2))))
                 {
                     htmlBody += "CALIDAD GRADO 2<br />";
                 }

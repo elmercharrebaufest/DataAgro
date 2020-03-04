@@ -1,0 +1,88 @@
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Molinos.DataAgro.Entities.Entities
+{
+    public partial class Negocio
+    {
+        [Key]
+        public int Id { get; set; }
+        public int MaterialId { get; set; } // MaterialId
+        public int TipoNegocioId { get; set; } // TipoNegocioId
+        public double Cantidad { get; set; } // Cantidad
+        public decimal Precio { get; set; } // Precio
+        public int? CampanaId { get; set; } // CampañaId
+        public DateTime FechaDesde { get; set; } // FechaDesde
+        public DateTime FechaHasta { get; set; } // FechaHasta
+        public int? ProveedorId { get; set; } // ProveedorId
+        public string MonedaId { get; set; } // MonedaId (length: 5) 
+        public DateTime Fecha { get; set; } // Fecha
+        public int? GrupoCompra { get; set; } // GrupoCompra
+        public int? ComercialId { get; set; } // ComercialId
+        public int? DiasPesificado { get; set; } // Dias_Pesificado
+        public bool? TrigoEspecial { get; set; } // TrigoEspecial
+        public int EstadoId { get; set; } // Estado (length: 50)
+        public string UsuarioId { get; set; } // UsuarioId (length: 100)
+        public string ContratoSAP { get; set; }
+        public double? Ampliaciones { get; set; } // Cantidad
+        public string Observacion { get; set; }
+        public int? DestinoId { get; set; }
+        public int? ComercialCreadorId { get; set; }
+        public int? CorredorId { get; set; }
+        public int? FinDelDiaId { get; set; }
+        public bool? Pizarra { get; set; }
+        public decimal? PrecioNeto { get; set; }
+        public bool? PagoDiferido { get; set; }
+        public int? StandardDeCalidadId { get; set; }
+        public string Posicion { get; set; }
+
+
+
+        [ForeignKey("EstadoId")]
+        public virtual EstadoContrato Estado { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual Material Material { get; set; } // MaterialId
+        [ForeignKey("TipoNegocioId")]
+        public virtual TipoNegocio TipoNegocio { get; set; } // TipoNegocioId
+        [ForeignKey("CampanaId")]
+        public virtual Campaña Campana { get; set; } // CampañaId
+        [ForeignKey("ProveedorId")]
+        public virtual Proveedor Proveedor { get; set; } // ProveedorId
+        [ForeignKey("MonedaId")]
+        public virtual Moneda Moneda { get; set; } // MonedaId (length: 5)
+        [ForeignKey("ComercialId")]
+        public virtual Comercial Comercial { get; set; } // ComercialId
+        [ForeignKey("DestinoId")]
+        public virtual Centro Destino { get; set; }
+        [ForeignKey("ComercialCreadorId")]
+        public virtual Comercial ComercialCreador { get; set; }
+        [ForeignKey("CorredorId")]
+        public virtual Proveedor Corredor { get; set; }
+        [ForeignKey("FinDelDiaId")]
+        public virtual FinDelDia FinDelDia { get; set; }
+        [ForeignKey("GrupoCompra")]
+        public virtual GrupoDeCompras GrupoDeCompras { get; set; }
+        [ForeignKey("StandardDeCalidadId")]
+        public virtual StandardDeCalidad StandardDeCalidad { get; set; }
+
+        [InverseProperty("Negocio")]
+        public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
+
+        public Negocio()
+        {
+            Cantidad = 0;
+            Precio = 0;
+            TrigoEspecial = false;
+            EstadoId = (int)EnumEstadoContrato.Pendiente;
+            ContratoSAP = "";
+            Ampliaciones = 0;
+            Pizarra = false;
+        }
+    }
+}
+
+
+

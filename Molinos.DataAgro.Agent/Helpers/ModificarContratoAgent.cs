@@ -32,10 +32,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                logger.Debug("Modificando Contrato Nro: " + contrato.ContratoId);
+                logger.Debug("Modificando Contrato Nro: " + contrato.Id);
                 var listaDescuentos = new List<ZMPES5290>();
-                var contratoGuardado = repositorio.Obtener<Contrato>(contrato.ContratoId);
-                logger.Debug("Contrato Obtenido: " + contratoGuardado.ContratoId);
+                var contratoGuardado = repositorio.Obtener<Contrato>(contrato.Id);
+                logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
 
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
@@ -310,7 +310,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
-            var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.ContratoId == contrato.ContratoId, x => x.Fecha);
+            var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560
@@ -319,7 +319,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         DETALLE = new ZMPES5270
                         {
                             CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
-                            CONTR_DATAAGRO = contrato.ContratoId.ToString(),
+                            CONTR_DATAAGRO = contrato.Id.ToString(),
                             COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion),
                             DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
                             FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),

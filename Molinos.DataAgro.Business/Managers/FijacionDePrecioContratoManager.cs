@@ -91,7 +91,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
         {
-            var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.FijacionDePrecioContratoId);
+            var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.Id);
             var oEntityErrors = new GrabarContratoResult();
 
             if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Finalizado && oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Rechazado)
@@ -140,8 +140,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
             }
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value):"";
-            var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId);
-            var listaContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId.Value, "", oParam.FijacionDePrecioContratoId);
+            var cuitProveedor =  mobjProveedorManager.TraerCuit(oParam.ProveedorId ?? 0);
+            var listaContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, "", oParam.Id);
             if (string.IsNullOrEmpty(oParam.ContratoSAP))
             {
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
@@ -225,10 +225,10 @@ namespace Molinos.DataAgro.Business.Managers
             var hoy = DateTime.Now;
         
             var oFijacionDePrecioSave = oFijacionDePrecio;
-            var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.ContratoId);
-            if (oFijacionDePrecio.FijacionDePrecioContratoId != 0)
+            var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.Id);
+            if (oFijacionDePrecio.Id != 0)
             {
-                oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.FijacionDePrecioContratoId);
+                oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
                 if (oFijacionDePrecioSave.EstadoId == 5 || oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
@@ -261,7 +261,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
-                    var aperturas = repositorio.Listar<AperturaPrecio>(x => x.FijacionId != null && x.FijacionId == oFijacionDePrecioSave.FijacionDePrecioContratoId);
+                    var aperturas = repositorio.Listar<AperturaPrecio>(x => x.NegocioId != null && x.NegocioId == oFijacionDePrecioSave.Id);
                     repositorio.RemoverTodos(aperturas);
                     oFijacionDePrecioSave.AperturaPrecio = oFijacionDePrecio.AperturaPrecio;
                 }
@@ -283,7 +283,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecio.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oFijacionDePrecioSave))
             {
                 oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                logger.Debug("El contrato " + oFijacionDePrecioSave.FijacionDePrecioContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
+                logger.Debug("El contrato " + oFijacionDePrecioSave.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
             }
             try
             {
@@ -321,7 +321,7 @@ namespace Molinos.DataAgro.Business.Managers
                  (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 2
                  && x.MaterialId == rango.MaterialId);
                 cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.FijacionDePrecioContratoId != contrato.FijacionDePrecioContratoId
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id
                 && x.MaterialId == rango.MaterialId));
 
                 var total = cantidad.Sum();
@@ -382,7 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
-                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.FijacionId == oFijacionDePrecioSave.FijacionDePrecioContratoId);
+                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.NegocioId == oFijacionDePrecioSave.Id);
 
                     if (objApertura == null)
                     {
@@ -464,7 +464,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.FijacionDePrecioContratoId);
+            var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
 
             if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado)
             {
@@ -551,15 +551,15 @@ namespace Molinos.DataAgro.Business.Managers
         public BasicoContrato TraerFijacion(int id)
         {
             var sap = repositorio.Obtener<FijacionDePrecioContrato>(id);
-            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoSAP && x.FijacionDePrecioContratoId != id).Sum();
-            var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.FijacionDePrecioContratoId == id, fijac => new BasicoContrato
+            var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == sap.ContratoSAP && x.Id != id).Sum();
+            var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.Id == id, fijac => new BasicoContrato
             {
-                Id = fijac.FijacionDePrecioContratoId,
+                Id = fijac.Id,
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
                 ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
-                ProveedorId = fijac.ProveedorId,
+                ProveedorId = fijac.ProveedorId ?? 0,
                 ComercialId = fijac.ComercialId,
-                MaterialId = fijac.MaterialId != null ? fijac.MaterialId.Value : 0,
+                MaterialId = fijac.MaterialId,
                 TipoNegocioId = 3,
                 Cantidad = fijac.Cantidad,
                 Precio = fijac.Precio,
@@ -586,13 +586,13 @@ namespace Molinos.DataAgro.Business.Managers
                 Cuit = fijac.Proveedor == null ? "" : fijac.Proveedor.CUIT,
                 Comercial = fijac.Comercial == null ? "" : fijac.Comercial.Nombres + " " + fijac.Comercial.Apellido,
                 Material = fijac.Material == null ? "" : fijac.Material.Descripcion,
-                CampanaId = fijac.CampanaId,
+                CampanaId = fijac.CampanaId??0,
                 Campania = fijac.Campana.Descripcion,
                 Provincia = "",
                 TipoNegocio = "FIJACION",
                 Localidad = "",
                 Observacion = fijac.Observacion ?? "",
-                FijacionDePrecioContratoId = fijac.FijacionDePrecioContratoId,
+                FijacionDePrecioContratoId = fijac.Id,
                 Sustentable = false,
                 Dolarizado = false,
                 Pesificado = false,
@@ -662,7 +662,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(apertura => new AperturaPrecioDto()
             {
-                contratoId = apertura.ContratoId,
+                contratoId = apertura.NegocioId,
                 Id = apertura.Id,
                 ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
                 ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
@@ -670,7 +670,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = apertura.MonedaId,
                 Porcentaje = apertura.Porcentaje
             },
-            x => x.FijacionId == fijacionId);
+            x => x.NegocioId == fijacionId);
         }
         public void FinalizacionAutomatica(string idActiveDirectory)
         {
@@ -681,7 +681,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
-                    var error = FinalizarFijacion(fijacion.FijacionDePrecioContratoId, idActiveDirectory);
+                    var error = FinalizarFijacion(fijacion.Id, idActiveDirectory);
                 }
                 catch (Exception ex)
                 {

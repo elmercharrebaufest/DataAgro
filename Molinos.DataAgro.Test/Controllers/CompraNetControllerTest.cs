@@ -159,11 +159,10 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarContratoSinComercialTest()
         {
             var contrato = new Contrato { MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1};
-
             contratoManagerMock.Setup(x => x.GrabarContrato(contrato)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarContrato(contrato);
             Assert.NotNull(result);
-            Assert.AreEqual(contrato.GrupoCompra, 0);
+            Assert.IsNull(contrato.GrupoCompra);
             Assert.AreEqual(contrato.Base.Value, false);
             Assert.AreEqual(contrato.NoInformaSio.Value, false);
             Assert.AreEqual(contrato.TrigoEspecial.Value, false);
@@ -218,7 +217,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BorrarFijacionTest()
         {
-            var fijacion = new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, ContratoId = 1, ComercialId = 1, MaterialId = 1, ProveedorId = 1 };
+            var fijacion = new FijacionDePrecioContrato { Id = 1, ContratoId = 1, ComercialId = 1, MaterialId = 1, ProveedorId = 1 };
             fijacionManagerMock.Setup(x => x.BorrarFijacion(fijacion)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.BorrarFijacion(fijacion);
             Assert.NotNull(result);
@@ -297,7 +296,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarAmpliacionContratoTest()
         {
-            var contrato = new Contrato {ContratoId=1, ComercialId = 1, MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1 };
+            var contrato = new Contrato { Id = 1, ComercialId = 1, MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1 };
             contratoManagerMock.Setup(x => x.GrabarAmpliacionContrato(contrato)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarAmpliacionContrato(contrato);
             Assert.NotNull(result);
@@ -311,7 +310,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarFijacionTest()
         {
-            var fijacion = new FijacionDePrecioContrato { FijacionDePrecioContratoId = 1, ContratoId = 1, ComercialId = 1, MaterialId = 1, ProveedorId = 1 };
+            var fijacion = new FijacionDePrecioContrato { Id = 1, ContratoId = 1, ComercialId = 1, MaterialId = 1, ProveedorId = 1 };
             fijacionManagerMock.Setup(x => x.GrabarFijacionDePrecio(fijacion)).Returns(new GrabarFijacionResult { FijacionDePrecioContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarFijacion(fijacion);
             Assert.NotNull(result);
@@ -981,7 +980,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerTotalesPesosDolares(It.IsAny<KendoGridMvcRequest>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1,\"Id\":0},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

@@ -26,5 +26,5 @@
     CONSTRAINT [FK_Fason_Fasonero] FOREIGN KEY (FasoneroId) REFERENCES [Proveedor]([ProveedorId]),
     CONSTRAINT [FK_Fason_EstadoContrato] FOREIGN KEY (EstadoId) REFERENCES [EstadoContrato]([EstadoContratoId]),
 	CONSTRAINT [FK_Fason_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
-	CONSTRAINT [FK_Fason_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId])
+	CONSTRAINT [FK_Fason_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]),
 )

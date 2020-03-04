@@ -472,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DateTime hoy = DateTime.Now.Date;
 
                 Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
-                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula: " );
+                logger.Debug("CrearSugerenciaCupo - se obtuvo la formula: ");
                 var formulaSave = repositorio.Obtener<Formula>(formula.Id);
                 formulaSave.Inicio = formula.Inicio;
                 formulaSave.CantDias = formula.CantDias;
@@ -501,19 +501,20 @@ namespace Molinos.DataAgro.Business.Managers
 
                 logger.Debug("CrearSugerenciaCupo - inicio de PriorizarSegunDisponibilidad.");
                 PriorizarSegunDisponibilidad(disponibilidadEnPlantas, negocios);
-                logger.Debug("CrearSugerenciaCupo - negocios priorizados: "+ negocios.Where(a => a.Priorizado).Count());
+                logger.Debug("CrearSugerenciaCupo - negocios priorizados: " + negocios.Where(a => a.Priorizado).Count());
                 logger.Debug("CrearSugerenciaCupo - fin de PriorizarSegunDisponibilidad.");
 
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
-                    AgenteCompraId = a.AgenteCompraId,
+                    //AgenteCompraId = a.AgenteCompraId,
                     ZonaCupoId = a.ZonaCupoId ?? 0,
                     CantidadDeCupos = a.CantidadDeCupos,
                     CentroId = a.DestinoId,
-                    ContratoId = a.ContratoId,
-                    FasonId = a.FasonId,
+                    NegocioId = a.NegocioId,
+                    //ContratoId = a.ContratoId,
+                    //FasonId = a.FasonId,
                     FechaSugerida = a.FechaSugerida,
-                    FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
+                    //FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
                     ConfiguracionEspacioDinamicoId = a.ConfiguracionEspacioDinamicoId,
                     MaterialId = a.MaterialId,
                     MonedaId = a.MonedaId,
@@ -563,7 +564,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in disponibilidadEnPlantas)
             {
-                logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta:" + item.Fecha.ToString("dd/MM/yyyy") + ",cantidad:"+item.LimiteCupo+"materialid:"+item.MaterialId);
+                logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta:" + item.Fecha.ToString("dd/MM/yyyy") + ",cantidad:" + item.LimiteCupo + "materialid:" + item.MaterialId);
             }
             return disponibilidadEnPlantas;
         }
@@ -574,7 +575,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 formula.Criterio.Dto = item;
                 formula.Criterio.Dto.formula = formula;
-                item.PuntuacionTotal = servicioCriterios.Calcular(formula.Criterio);
+                item.PuntuacionTotal = Math.Round(servicioCriterios.Calcular(formula.Criterio), 2);
 
                 ArmarPuntuaciones(formula.Criterio, item.Puntuaciones, 0);
 
@@ -732,7 +733,7 @@ namespace Molinos.DataAgro.Business.Managers
             //}
             //logger.Debug("CrearSugerenciaCupo - pongo precio pizarra a FijacionDePrecioContrato que no tienen precio");
 
-            Dictionary<int, int> contratoUsados = cupos.Where(x => x.ContratoId != null && x.ComercialId != null).GroupBy(x => x.ContratoId.Value).ToDictionary(a => a.Key, a => a.Count());
+            Dictionary<int, int> negociosUsados = cupos.Where(x => x.NegocioId != null && x.ComercialId != null).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
                 new SugerenciaCupoDto
                 {
@@ -743,7 +744,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ZonaDescrip = x.GrupoDeCompras.Descripcion,
                     CantidadDeCupos = (int)Math.Ceiling(x.Cantidad / 30000),
                     DestinoId = x.DestinoId.Value,
-                    ContratoId = x.ContratoId,
+                    NegocioId = x.Id,
                     MaterialId = x.MaterialId,
                     MonedaId = x.MonedaId,
                     Precio = x.Precio,
@@ -752,13 +753,13 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocioId = x.TipoNegocioId,
                     ContratoSAP = x.ContratoSAP
                 },
-                    x => ((x.FechaDesde >= formula.FechaDesde && x.FechaDesde <= formula.FechaHasta) || (x.FechaHasta >= formula.FechaDesde && x.FechaHasta <= formula.FechaHasta)) && x.EstadoId == 5 && x.DestinoId == formula.CentroId);
+                    x => ((formula.FechaDesde >= x.FechaDesde && formula.FechaHasta < x.FechaHasta) || (formula.FechaHasta <= x.FechaHasta && formula.FechaHasta > x.FechaDesde) || (formula.FechaDesde <= x.FechaDesde && formula.FechaHasta >= x.FechaHasta)) && x.EstadoId == 5 && x.DestinoId == formula.CentroId);
             var zonas = repositorio.Listar<ZonaCupo>();
             foreach (var item in contratos)
             {
-                if (contratoUsados.Any(a => a.Key == item.ContratoId))
+                if (negociosUsados.Any(a => a.Key == item.NegocioId))
                 {
-                    item.CantidadDeCupos -= contratoUsados.Where(a => a.Key == item.ContratoId).Single().Value;
+                    item.CantidadDeCupos -= negociosUsados.Where(a => a.Key == item.NegocioId).Single().Value;
                 }
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
             }
@@ -817,7 +818,7 @@ namespace Molinos.DataAgro.Business.Managers
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
         {
             string guion = new String('-', guiones);
-            puntuaciones.Add(guion + criterio.DisplayName, criterio.Puntuacion);
+            puntuaciones.Add(guion + criterio.DisplayName, Math.Round(criterio.Puntuacion, 2));
             if (criterio.Hijos != null && criterio.Hijos.Count > 0)
             {
                 foreach (var hijo in criterio.Hijos)
@@ -836,17 +837,18 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = a.TipoNegocioId,
                 TipoNegocioDesc = a.TipoNegocio.Descripcion,
                 CentroId = a.CentroId,
-                AgenteCompraId = a.AgenteCompraId,
+                //AgenteCompraId = a.AgenteCompraId,
+                NegocioId = a.NegocioId,
                 CantidadDeCupos = a.CantidadDeCupos,
-                ContratoId = a.ContratoId,
+                //ContratoId = a.ContratoId,
                 DestinoId = 1,
-                FasonId = a.FasonId,
+                //FasonId = a.FasonId,
                 FechaSugerida = a.FechaSugerida,
-                FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
+                //FijacionDePrecioContratoId = a.FijacionDePrecioContratoId,
                 MaterialId = a.MaterialId,
                 MaterialDesc = a.Material.Descripcion,
-                MonedaId = a.MonedaId == null ? "": a.MonedaId,
-                MonedaDesc = a.MonedaId == null?"": a.Moneda.Descripcion,
+                MonedaId = a.MonedaId == null ? "" : a.MonedaId,
+                MonedaDesc = a.MonedaId == null ? "" : a.Moneda.Descripcion,
                 PuntuacionTotal = a.Puntuacion,
                 ProveedorId = a.ProveedorId,
                 ProveedorDesc = a.ProveedorId.HasValue ? a.Proveedor.RazonSocial : "",
@@ -885,7 +887,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ZonaCupoId = sugerencia.ZonaCupoId.Value,
                         ComercialId = sugerencia.ComercialId,
                         Calidad = sugerencia.StandardDeCalidad,
-                        Fason = sugerencia.FasonId.HasValue,
+                        Fason = sugerencia.TipoNegocioId == 4,
                         Destinatario = sugerencia.Destinatario,
                         FechaGeneracion = DateTime.Now,
                         Observaciones = null,//---
@@ -895,10 +897,11 @@ namespace Molinos.DataAgro.Business.Managers
                         CupoStop = null,//---
                         CreacionStop = "",//---
                         ErrorStop = "",//---
-                        FasonId = sugerencia.FasonId,
-                        ContratoId = sugerencia.ContratoId,
-                        AgenteCompraId = sugerencia.AgenteCompraId,
-                        FijacionDePrecioContratoId = sugerencia.FijacionDePrecioContratoId,
+                        //FasonId = sugerencia.FasonId,
+                        //ContratoId = sugerencia.ContratoId,
+                        //AgenteCompraId = sugerencia.AgenteCompraId,
+                        //FijacionDePrecioContratoId = sugerencia.FijacionDePrecioContratoId,
+                        NegocioId = sugerencia.NegocioId,
                         ConfiguracionEspacioDinamicoId = sugerencia.ConfiguracionEspacioDinamicoId,
                         TipoNegocioId = sugerencia.TipoNegocioId,
                     };

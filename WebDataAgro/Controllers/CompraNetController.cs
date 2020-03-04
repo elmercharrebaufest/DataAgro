@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -339,8 +340,8 @@ namespace WebDataAgro.Controllers
         {
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
-                oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId);
-                oParam.UsuarioCreador = PermisosHelper.ObtenerUsuario();
+                oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId ?? 0);
+                oParam.UsuarioId = PermisosHelper.ObtenerUsuario();
             }
             return new JsonResult()
             {
@@ -350,21 +351,22 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
+        public ActionResult BuscaDatosTabla(DataSourceRequest request)
         {
-            if (request.SortObjects != null)
+            if (request.Sort != null)
             {
-                request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Estado_Order", "asc") });
+                request.Sort = request.Sort.Concat(new[] { new Sort {Field= "Estado_Order", Dir= "asc" } });
             }
             else
             {
-                request.SortObjects = new List<SortObject> { new SortObject("Estado_Order", "asc") };
+                request.Sort = new List<Sort> { new Sort { Field = "Estado_Order", Dir = "asc" } };
             }
-            request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha_Order", "desc") });
+            request.Sort = request.Sort.Concat(new[] { new Sort { Field = "Fecha_Order", Dir = "desc" } });
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
+
         }
 
         public ActionResult TraerCampanaPorMaterial(int? materialId)
@@ -703,14 +705,14 @@ namespace WebDataAgro.Controllers
         {
             return Json(mobjComercialManager.ListarGrupoDeCompras(filtro).OrderBy(x => x.Descripcion), JsonRequestBehavior.AllowGet);
         }
-        public ActionResult BuscarTotales(FilterObject[] filtros)
+        public ActionResult BuscarTotales(Kendo.DynamicLinq.Filter filtros)
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var request = new KendoGridMvcRequest();
+            var request = new DataSourceRequest();
             request.Take = 0;
-            request.PageSize = 0;
-            request.SortObjects = null;
-            request.FilterObjectWrapper = filtros != null ? new FilterObjectWrapper { Logic = "and", FilterObjects = filtros.AsEnumerable() } : null;
+            request.Skip = 0;
+            request.Sort = null;
+            request.Filter = filtros;
             var model = mobjContratoManager.TraerTotalesPesosDolares(request, equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);

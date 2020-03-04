@@ -455,7 +455,7 @@
                             <th rowspan="2" class="@(totalDolares != 0 ? "" : "hide")">Ton. USD</th>
                             <th rowspan="2" class="@(pondDolares > 0 ? "" : "hide")">Precio USD</th>
                             <th rowspan="2"></th>
-                            <th rowspan="2"></th>
+                            <th rowspan="2">Total</th>
                         </tr>
                         <tr class="titulosPosicion">
                             <th class="@(dispFijacion ? "" : "hide") borde-izq-der">Disponible</th>
@@ -523,23 +523,23 @@
                                     </a>
                                 </td>
                                 @{
-                                    var totalMesNeogcioIds = mes.ListDispAFijar.Select(a => a.Value).ToList();
+                                    var totalMesNeogcioIds = new List<int>(); //mes.ListDispAFijar.Select(a => a.Value).ToList();
                                     totalMesNeogcioIds.AddRange(mes.ListDispAPrecio.Select(a => a.Value).ToList());
                                     totalMesNeogcioIds.AddRange(mes.ListDispFijac.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Value).ToList());
+                                    //totalMesNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Value).ToList());
                                     totalMesNeogcioIds.AddRange(mes.ListFrwAPrecio.Select(a => a.Value).ToList());
                                     totalMesNeogcioIds.AddRange(mes.ListFrwFijac.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Value).ToList());
+                                    //totalMesNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Value).ToList());
                                     totalMesNeogcioIds.AddRange(mes.ListNewAPrecio.Select(a => a.Value).ToList());
                                     totalMesNeogcioIds.AddRange(mes.ListNewFijac.Select(a => a.Value).ToList());
                                     totalMaterialNeogcioIds.AddRange(totalMesNeogcioIds);
-                                    var totalMesTipoNeogcioIds = mes.ListDispAFijar.Select(a => a.Key).ToList();
+                                    var totalMesTipoNeogcioIds = new List<int>(); //mes.ListDispAFijar.Select(a => a.Key).ToList();
                                     totalMesTipoNeogcioIds.AddRange(mes.ListDispAPrecio.Select(a => a.Key).ToList());
                                     totalMesTipoNeogcioIds.AddRange(mes.ListDispFijac.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Key).ToList());
+                                    //totalMesTipoNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Key).ToList());
                                     totalMesTipoNeogcioIds.AddRange(mes.ListFrwAPrecio.Select(a => a.Key).ToList());
                                     totalMesTipoNeogcioIds.AddRange(mes.ListFrwFijac.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Key).ToList());
+                                    //totalMesTipoNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Key).ToList());
                                     totalMesTipoNeogcioIds.AddRange(mes.ListNewAPrecio.Select(a => a.Key).ToList());
                                     totalMesTipoNeogcioIds.AddRange(mes.ListNewFijac.Select(a => a.Key).ToList());
                                     totalMaterialTipoNeogcioIds.AddRange(totalMesTipoNeogcioIds);
@@ -565,7 +565,7 @@
                                     @*@Html.ActionLink("Descarga", "DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD") }, new { @class = "Descarga" })*@
                                 </td>
                                 <td>
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="abrirModalDetallePosicion" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','','')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','','')">
                                         @((mes.KilosDolares + mes.KilosPesos).ToString("N0"))
                                     </a>
                                 </td>

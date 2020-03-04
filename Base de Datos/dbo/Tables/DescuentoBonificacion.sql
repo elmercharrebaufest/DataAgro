@@ -10,7 +10,7 @@
 	[TipoPeriodoDBId]	INT				NOT NULL,
 	[ContratoId]		INT             NOT NULL,    
     CONSTRAINT [PK_dbo.DescuentoBonificacion] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [FK_dbo.DescuentoBonificacion_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [dbo].[Contrato] ([ContratoId]) ON DELETE CASCADE,
+	CONSTRAINT [FK_dbo.DescuentoBonificacion_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [dbo].[Negocio] ([Id]) ON DELETE CASCADE,
 	CONSTRAINT [FK_dbo.DescuentoBonificacion_TipoDB] FOREIGN KEY ([TipoDBId]) REFERENCES [dbo].[TipoDB] ([Id]),
 	CONSTRAINT [FK_dbo.DescuentoBonificacion_TipoPeriodoDB] FOREIGN KEY ([TipoPeriodoDBId]) REFERENCES [dbo].[TipoPeriodoDB] ([Id])
 );

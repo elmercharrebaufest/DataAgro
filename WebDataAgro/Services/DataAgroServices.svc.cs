@@ -159,7 +159,7 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
-                var Id = repositorio.Obtener<Contrato,int>(x=> x.ContratoSAP== contratoSAP .ContratoSAP, x=>x.ContratoId);
+                var Id = repositorio.Obtener<Contrato,int>(x=> x.ContratoSAP== contratoSAP .ContratoSAP, x=>x.Id);
 
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
@@ -169,7 +169,7 @@ namespace WebDataAgro.Services
                 {
                     var calidad = new Calidad
                     {
-                        ContratoId = Id,
+                        NegocioId = Id,
                         CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
                         StandardDeCalidadId = standardCalidadList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
                         Valor = cal.Valor,
@@ -207,7 +207,7 @@ namespace WebDataAgro.Services
                 {
                     var apertura = new AperturaPrecio
                     {
-                        ContratoId = Id,
+                        NegocioId = Id,
                         ConceptoAperturaPrecioId= conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id,
                         Importe =aper.Importe,
                         MonedaId = aper.Moneda,

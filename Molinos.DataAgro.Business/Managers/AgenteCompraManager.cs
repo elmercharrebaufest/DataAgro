@@ -216,7 +216,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Operador = x.Operador.Descripcion,
                 OperadorId = x.OperadorId,
                 AgenteId = x.Id,
-                CampanaId = x.CampanaId
+                CampanaId = x.CampanaId ?? 0
             });
             return contrato;
         }

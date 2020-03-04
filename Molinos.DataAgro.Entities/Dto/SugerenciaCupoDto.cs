@@ -21,10 +21,11 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string MonedaId { get; set; }
 
-        public int? AgenteCompraId { get; set; }
-        public int? FijacionDePrecioContratoId { get; set; }
-        public int? FasonId { get; set; }
-        public int? ContratoId { get; set; }
+        //public int? AgenteCompraId { get; set; }
+        //public int? FijacionDePrecioContratoId { get; set; }
+        //public int? FasonId { get; set; }
+        //public int? ContratoId { get; set; }
+
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         
         public DateTime FechaDesde { get; set; }
@@ -55,6 +56,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TipoNegocioId { get; set; }
 
         public string ContratoSAP { get; set; }
+        public int? NegocioId { get; set; }
 
         public object Clone()
         {

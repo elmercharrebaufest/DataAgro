@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Fijar = x.Where(y => y.TipoNegocioId == 1).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     Precio = x.Where(y => y.TipoNegocioId == 2).Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
                     Total = x.Select(y => Math.Round(y.Cantidad / 1000)).DefaultIfEmpty(0).Sum(),
-                    Ids = x.Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.ContratoId))
+                    Ids = x.Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id))
                 }).First();
             }
             

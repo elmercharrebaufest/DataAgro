@@ -347,7 +347,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var oContrato = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 ClasificacionId = 1,
                 CorredorId = null,
@@ -396,7 +396,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             var oContratoBase = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 ClasificacionId = 1,
                 CorredorId = null,
@@ -461,7 +461,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var oContrato = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 ClasificacionId = 1,
                 CorredorId = null,
@@ -506,7 +506,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             var oContratoBase = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 ProveedorId = 1,
                 ClasificacionId = 1,
                 CorredorId = null,
@@ -819,7 +819,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var oContrato = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 Ampliaciones = 5
             };
             var oContratoSave = new Contrato()
@@ -844,7 +844,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var oContrato = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 Ampliaciones = 5
             };
             var oContratoSave = new Contrato()
@@ -870,7 +870,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var oContrato = new Contrato()
             {
-                ContratoId = 1,
+                Id = 1,
                 Ampliaciones = 5
             };
             var oContratoSave = new Contrato()
@@ -1073,7 +1073,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Pendiente, Comercial = new Comercial() { ComercialId = 1 } });
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
-            var resultado = target.BorrarContrato(new Contrato() { ContratoId = 1, EstadoId = (int)EnumEstadoContrato.Pendiente });
+            var resultado = target.BorrarContrato(new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
@@ -1082,7 +1082,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void BorrarContratoError()
         {
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Finalizado });
-            var resultado = target.BorrarContrato(new Contrato() { ContratoId = 1 });
+            var resultado = target.BorrarContrato(new Contrato() { Id = 1 });
 
             Assert.That(resultado.HayErrores);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -1403,7 +1403,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Pendiente, Comercial = new Comercial() { ComercialId = 1 } });
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
-            var oContrato = new Contrato() { ContratoId = 1, EstadoId = (int)EnumEstadoContrato.Pendiente };
+            var oContrato = new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<Contrato>() {
                     oContrato
@@ -1420,7 +1420,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void BorradoAutomaticoError()
         {
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Throws(new Exception("Error obtener contrato"));
-            var oContrato = new Contrato() { ContratoId = 1, EstadoId = (int)EnumEstadoContrato.Pendiente };
+            var oContrato = new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<Contrato>() {
                     oContrato
@@ -1589,7 +1589,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                ContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Finalizado
             };
 
@@ -1612,7 +1612,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                ContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Finalizado
             };
 
@@ -1631,7 +1631,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                ContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Finalizado
             };
 
@@ -1652,7 +1652,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                ContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Pendiente
             };
 
@@ -1671,7 +1671,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                ContratoId = 1,
+                Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Finalizado
             };
 

@@ -12,10 +12,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int MaterialId { get; set; }
         public DateTime FechaSugerida { get; set; }
         public int CantidadDeCupos { get; set; }
-        public int? FasonId { get; set; }
-        public int? ContratoId { get; set; }
-        public int? AgenteCompraId { get; set; }
-        public int? FijacionDePrecioContratoId { get; set; }
+        //public int? FasonId { get; set; }
+        //public int? ContratoId { get; set; }
+        //public int? AgenteCompraId { get; set; }
+        //public int? FijacionDePrecioContratoId { get; set; }
+        public int? NegocioId { get; set; }
         public int TipoNegocioId { get; set; }
         public decimal? Precio { get; set; }
         public string MonedaId { get; set; }
@@ -36,14 +37,16 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Centro Centro { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
-        [ForeignKey("FasonId")]
-        public virtual Fason Fason { get; set; }
-        [ForeignKey("ContratoId")]
-        public virtual Contrato Contrato { get; set; }
-        [ForeignKey("AgenteCompraId")]
-        public virtual AgenteCompra AgenteCompra { get; set; }
-        [ForeignKey("FijacionDePrecioContratoId")]
-        public virtual FijacionDePrecioContrato FijacionDePrecioContrato { get; set; }
+        [ForeignKey("NegocioId")]
+        public virtual Negocio Negocio { get; set; }
+        //[ForeignKey("FasonId")]
+        //public virtual Fason Fason { get; set; }
+        //[ForeignKey("ContratoId")]
+        //public virtual Contrato Contrato { get; set; }
+        //[ForeignKey("AgenteCompraId")]
+        //public virtual AgenteCompra AgenteCompra { get; set; }
+        //[ForeignKey("FijacionDePrecioContratoId")]
+        //public virtual FijacionDePrecioContrato FijacionDePrecioContrato { get; set; }
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
         [ForeignKey("MonedaId")]

@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                        .OrderBy(x => SqlFunctions.DatePart("month", x.Fecha)).Select(x => new ExcelPosicionMaterialDto
                        {
                            Mes = SqlFunctions.DateName("month", x.FechaHasta),
-                           Contrato = x.ContratoId.ToString() ?? "",
+                           Contrato = x.Id.ToString() ?? "",
                            RazonSocial = x.Proveedor.RazonSocial ?? "",
                            Cuit = x.Proveedor.CUIT ?? "",
                            Material = x.MaterialId == 1 ? "Maiz" : x.MaterialId == 2 ? "Trigo" : x.MaterialId == 3 ? "Soja" : x.MaterialId == 4? "Girasol" : x.MaterialId == 5 ? "Girasol Alto Oleico": "",

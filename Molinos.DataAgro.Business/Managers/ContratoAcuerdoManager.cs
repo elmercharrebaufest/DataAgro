@@ -253,7 +253,7 @@ namespace Molinos.DataAgro.Business
                 })
             };
 
-            contratos.ContratoAcuerdo.ForEach(x => x.PorcentajeCargado = Math.Round(((decimal)repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == x.Id).Sum(d => d.Cantidad) / x.Cantidad), 2) * 100);
+            contratos.ContratoAcuerdo.ForEach(x => x.PorcentajeCargado = (decimal)Math.Round((repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == x.Id).Sum(d => d.Cantidad) / x.Cantidad), 2) * 100);
             return contratos;
         }
 

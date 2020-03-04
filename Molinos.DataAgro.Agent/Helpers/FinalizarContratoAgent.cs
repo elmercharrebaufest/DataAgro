@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                logger.Debug("Finalizando Contrato Nro: " + contrato.ContratoId);
+                logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
                 var listaDescuentos = new List<ZMPES5290>();
 
                 foreach (var descBon in descuentoBonificacion)
@@ -155,7 +155,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_CONTRATO = new ZMPES5270
                     {
                         CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
-                        CONTR_DATAAGRO = contrato.ContratoId.ToString(),
+                        CONTR_DATAAGRO = contrato.Id.ToString(),
                         COSECHA = contrato.Campana.Descripcion,
                         DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
                         FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),

@@ -156,7 +156,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocioId = 5,
                     Cantidad = x.Cantidad,
                     PosicionString = x.Posicion,
-                    CampanaId = x.CampanaId,
+                    CampanaId = x.CampanaId??0,
                     MaterialCampanaId = x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0
                 }).ToList();
             foreach(var age in agente)

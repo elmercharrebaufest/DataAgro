@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -318,7 +319,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
-                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oParam.ContratoId && (x.EstadoId <= 5 || x.EstadoId == 7)).Select(x => x.Cantidad).Sum();
+                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.Id != oParam.Id && (x.EstadoId <= 5 || x.EstadoId == 7)).Select(x => x.Cantidad).Sum();
                 if (cantidadMadre - sumaContratosHijos < oParam.Cantidad)
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
@@ -513,12 +514,12 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
             if (oContratoSave.ContratoMadre != null)
             {
                 var sap = oContratoSave.ContratoMadre.PadLeft(10, '0');
                 var cantidadMadre = repositorio.Obtener<Contrato, double>(x => x.ContratoSAP == sap, x => x.Cantidad);
-                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.ContratoId != oContrato.ContratoId).Select(x => x.Cantidad).Sum();
+                var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.Id != oContrato.Id).Select(x => x.Cantidad).Sum();
                 if (cantidadMadre - sumaContratosHijos < oContratoSave.Cantidad + oContrato.Ampliaciones)
                 {
                     oEntityErrors.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
@@ -565,12 +566,12 @@ namespace Molinos.DataAgro.Business.Managers
             List<AperturaPrecio> aperturasExistentes = null;
             var hoy = DateTime.Now;
 
-            if (oContrato.ContratoId != 0)
+            if (oContrato.Id != 0)
             {
-                oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
-                descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.ContratoId);
-                calidadesExistentes = repositorio.Listar<Calidad>(x => x.ContratoId == oContrato.ContratoId);
-                aperturasExistentes = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == oContrato.ContratoId);
+                oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+                descuentosExistentes = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContrato.Id);
+                calidadesExistentes = repositorio.Listar<Calidad>(x => x.NegocioId == oContrato.Id);
+                aperturasExistentes = repositorio.Listar<AperturaPrecio>(x => x.NegocioId == oContrato.Id);
                 if (oContratoSave.EstadoId == 5 || oContratoSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "El contrato no se puede modificar");
@@ -662,7 +663,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == descExistente.Id))
                     {
                         repositorio.Remover(descExistente);
-                        if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                         {
                             oContratoSave.EstadoId = 7;
                         }
@@ -675,7 +676,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     descuento.Contrato = oContratoSave;
                     repositorio.Agregar(descuento);
-                    if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                     {
                         oContratoSave.EstadoId = 7;
                     }
@@ -688,7 +689,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calExistente.Id))
                     {
                         repositorio.Remover(calExistente);
-                        if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                         {
                             oContratoSave.EstadoId = 7;
                         }
@@ -701,7 +702,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     calidad.Contrato = oContratoSave;
                     repositorio.Agregar(calidad);
-                    if (oContratoSave.ContratoId != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                     {
                         oContratoSave.EstadoId = 7;
                     }
@@ -713,7 +714,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.ContratoSAP = oContrato.ContratoSAP;
             }
 
-            if (oContratoSave.ContratoId == 0)
+            if (oContratoSave.Id == 0)
             {
                 oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
                 repositorio.Agregar(oContratoSave);
@@ -739,7 +740,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (ConfirmacionAutomatica(oContrato))
             {
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                logger.Debug("El contrato " + oContrato.ContratoId + " se finalizo automaticamente por estar dentro de los rangos configurados");
+                logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
 
             }
             repositorio.GuardarCambios();
@@ -785,7 +786,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
                 var cantidad =
                     repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
-                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.ContratoId != contrato.ContratoId && x.TipoNegocioId == 2
+                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id && x.TipoNegocioId == 2
                  && x.MaterialId == rango.MaterialId);
                 cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == rango.MaterialId));
@@ -802,7 +803,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public KendoGrid<BasicoContrato> TraerTodosContratos(KendoGridMvcRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
+        public DataSourceResult TraerTodosContratos(DataSourceRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial));
         }
@@ -875,9 +876,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 try
                 {
-                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
-                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
-                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == oContratoSave.ContratoId);
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.Id);
+                    var objCalidad = repositorio.Listar<Calidad>(x => x.NegocioId == oContratoSave.Id);
+                    var objApertura = repositorio.Listar<AperturaPrecio>(x => x.NegocioId == oContratoSave.Id);
 
                     if (objApertura == null)
                     {
@@ -959,7 +960,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
 
             if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado))
             {
@@ -994,7 +995,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (contrato.EstadoId == 2)
             {
                 title = "Contrato Confirmado";
-                message = "El contrato " + contrato.ContratoId + " ha sido confirmado a las " + hora;
+                message = "El contrato " + contrato.Id + " ha sido confirmado a las " + hora;
             }
             else if (contrato.EstadoId == 5)
             {
@@ -1004,7 +1005,7 @@ namespace Molinos.DataAgro.Business.Managers
             else if (contrato.EstadoId == 6)
             {
                 title = "Contrato Rechazado";
-                message = "El contrato " + contrato.ContratoId + " ha sido rechazado a las " + hora;
+                message = "El contrato " + contrato.Id + " ha sido rechazado a las " + hora;
             }
             var url = "/CompraNet";
             foreach (var to in tokens)
@@ -1048,7 +1049,7 @@ namespace Molinos.DataAgro.Business.Managers
             var a = acuerdoId == 0 ? (int?)null : acuerdoId;
             return repositorio.Listar<Calidad, CalidadDto>(cal => new CalidadDto()
             {
-                ContratoId = cal.ContratoId.Value,
+                ContratoId = cal.NegocioId,
                 Id = cal.Id,
                 CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
                 CalidadEspecialId = cal.CalidadEspecialId,
@@ -1056,14 +1057,14 @@ namespace Molinos.DataAgro.Business.Managers
                 PorcentajeDesde = cal.PorcentajeDesde,
                 PorcentajeHasta = cal.PorcentajeHasta,                
             },
-            x => x.ContratoId == c && x.AcuerdoId == a);
+            x => x.NegocioId == c || x.NegocioId == a);
         }
         public BasicoContrato TraerContrato(int contratoId)
         {
-            var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoId == contratoId, x => new BasicoContrato
+            var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
-                ContratoId = x.ContratoId,
-                ProveedorId = x.ProveedorId,
+                ContratoId = x.Id,
+                ProveedorId = x.ProveedorId ?? 0,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
                 Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
                 ComercialId = x.ComercialId,
@@ -1082,7 +1083,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Ampliaciones = x.Ampliaciones,
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
-                CampanaId = x.CampanaId,
+                CampanaId = x.CampanaId??0,
                 ProvinciaId = x.ProvinciaId,
                 Provincia = x.Provincia.Nombre,
                 LocalidadId = x.LocalidadId,
@@ -1163,7 +1164,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }).ToList(),
                 AperturaPrecios = x.AperturaPrecio.Select(y=> new AperturaPrecioDto 
                 {
-                    contratoId = y.ContratoId,
+                    contratoId = y.NegocioId,
                     Id = y.Id,
                     ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
                     ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
@@ -1180,7 +1181,7 @@ namespace Molinos.DataAgro.Business.Managers
             var hoy = DateTime.Now.Date;
             var contratosPendientes = repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
             {
-                ContratoId = x.ContratoId,
+                ContratoId = x.Id,
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
@@ -1321,7 +1322,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
-                    var error = FinalizarContrato(contrato.ContratoId, idActiveDirectory);
+                    var error = FinalizarContrato(contrato.Id, idActiveDirectory);
                 }
                 catch (Exception ex)
                 {
@@ -1372,7 +1373,7 @@ namespace Molinos.DataAgro.Business.Managers
             var fechaAteAyer = DateTime.Now.Date.AddDays(-2);
             return repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
             {
-                ContratoId = x.ContratoId,
+                ContratoId = x.Id,
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
@@ -1405,7 +1406,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             sap = sap.PadLeft(10, '0');
             var result = new ContratoResult();
-            var idContrato = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == sap && x.Madre == true, x => x.ContratoId);
+            var idContrato = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == sap && x.Madre == true, x => x.Id);
             if (idContrato != 0)
             {
                 result.Contrato = TraerContrato(idContrato);
@@ -1420,7 +1421,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.ContratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
@@ -1446,8 +1447,8 @@ namespace Molinos.DataAgro.Business.Managers
                         oEntityErrors.Error("", e.Message);
 
                     }
-                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.ContratoId);
-                    var objCalidad = repositorio.Listar<Calidad>(x => x.ContratoId == oContratoSave.ContratoId);
+                    var objDescuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == oContratoSave.Id);
+                    var objCalidad = repositorio.Listar<Calidad>(x => x.NegocioId == oContratoSave.Id);
                     mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
                 }
             }
@@ -1644,7 +1645,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = repositorio.Listar<AperturaPrecio, AperturaPrecioDto>(x => new AperturaPrecioDto
             {
-                contratoId = x.ContratoId,
+                contratoId = x.NegocioId,
                 Id = x.Id,
                 ConceptoAperturaPrecio = x.ConceptoAperturaPrecio.Descripcion,
                 ConceptoAperturaPrecioId = x.ConceptoAperturaPrecioId,
@@ -1652,23 +1653,25 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 Porcentaje = x.Porcentaje
             },
-            x => x.ContratoId == contratoId);
+            x => x.NegocioId == contratoId);
             return lista;
         }
-        public TotalPesosDolares TraerTotalesPesosDolares(KendoGridMvcRequest request, List<int> listComercialesId, List<int> corredoresComercial)
+        public TotalPesosDolares TraerTotalesPesosDolares(DataSourceRequest request, List<int> listComercialesId, List<int> corredoresComercial)
         {
             var resultados = repositorio.ObtenerConsultaEscalar(new TraerTotalesPesosDolares(request, listComercialesId, corredoresComercial));
-            var materialesId = resultados.Data.Select(x => x.MaterialId).Distinct();
-           
-            return new TotalPesosDolares {
-                TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*((decimal)x.Cantidad),0)),
-                TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * ((decimal)x.Cantidad),0)),
-                TotalSoja = resultados.Data.Sum(x => Math.Round( x.TotalSoja / 1000)),
-                TotalMaiz = resultados.Data.Sum(x => Math.Round(x.TotalMaiz / 1000)),
-                TotalTrigo = resultados.Data.Sum(x => Math.Round(x.TotalTrigo / 1000)),
-                TotalGirasol = resultados.Data.Sum(x => Math.Round(x.TotalGirasol / 1000)),
-                TotalGirasolAlto = resultados.Data.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
-            };
+            //var materialesId = resultados.Data.Select(x => x.MaterialId).Distinct();
+
+            //return new TotalPesosDolares {
+            //    TotalDolares = resultados.Data.Sum(x =>Math.Round(x.TotalDolares*(x.Cantidad),0)),
+            //    TotalPesos = resultados.Data.Sum(x => Math.Round(x.TotalPesos * (x.Cantidad),0)),
+            //    TotalSoja = resultados.Data.Sum(x => Math.Round( x.TotalSoja / 1000)),
+            //    TotalMaiz = resultados.Data.Sum(x => Math.Round(x.TotalMaiz / 1000)),
+            //    TotalTrigo = resultados.Data.Sum(x => Math.Round(x.TotalTrigo / 1000)),
+            //    TotalGirasol = resultados.Data.Sum(x => Math.Round(x.TotalGirasol / 1000)),
+            //    TotalGirasolAlto = resultados.Data.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
+            //};
+
+            return resultados;
         }
 
         public List<EstadoContratoDto> TraerTodoLosEstados()
@@ -1706,9 +1709,9 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ActualizarContratoSAP(Contrato contrato)
         {
             var error = new Resultado();
-            logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.ContratoId);
+            logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.Id);
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP);
-            if(contratoSave==null || contratoSave.ContratoId == 0) 
+            if(contratoSave==null || contratoSave.Id == 0) 
             {
                 error.Error("Contrato", "No existe contrato en DataAgro");
             }
@@ -1773,11 +1776,11 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.TarifaFlete = contrato.TarifaFlete;
             contratoSave.NivelTarifaId = contrato.NivelTarifaId == 0 ? null : contrato.NivelTarifaId;
 
-            var calidades = repositorio.Listar<Calidad>(x => x.ContratoId == contratoSave.ContratoId);
+            var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
-            var descuentos = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoSave.ContratoId);
+            var descuentos = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoSave.Id);
             repositorio.RemoverTodos(descuentos);
-            var aperturas = repositorio.Listar<AperturaPrecio>(x => x.ContratoId == contratoSave.ContratoId);
+            var aperturas = repositorio.Listar<AperturaPrecio>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(aperturas);
 
             contratoSave.Calidad = contrato.Calidad;
@@ -1798,7 +1801,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     return error;
                 }
-                contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.ContratoId == contrato.ContratoId, x => x.ContratoSAP);
+                contrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.Id == contrato.Id, x => x.ContratoSAP);
                 var res = modificarContratoAgent.Modificar(contrato);
                 if (res.Contains("Error"))
                 {
@@ -1819,11 +1822,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ContratoIdDto> TraerContratosSAP(string desde, string hasta)
         {
-            var desdeId = !string.IsNullOrEmpty(desde)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(desde), x => x.ContratoId):0;
-            var hastaId = !string.IsNullOrEmpty(hasta)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(hasta), x => x.ContratoId):
-                repositorio.ObtenerMayor<Contrato,int,int>(x=>true, x=>x.ContratoId, x=>x.ContratoId);
-            return repositorio.Listar<Contrato, ContratoIdDto >(x =>new ContratoIdDto {ContratoId=x.ContratoId, ContratoSAP = x.ContratoSAP }
-            , x => x.ContratoId >= desdeId && x.ContratoId <= hastaId && !string.IsNullOrEmpty(x.ContratoSAP));
+            var desdeId = !string.IsNullOrEmpty(desde)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(desde), x => x.Id) :0;
+            var hastaId = !string.IsNullOrEmpty(hasta)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(hasta), x => x.Id) :
+                repositorio.ObtenerMayor<Contrato,int,int>(x=>true, x=>x.Id, x=>x.Id);
+            return repositorio.Listar<Contrato, ContratoIdDto >(x =>new ContratoIdDto {ContratoId=x.Id, ContratoSAP = x.ContratoSAP }
+            , x => x.Id >= desdeId && x.Id <= hastaId && !string.IsNullOrEmpty(x.ContratoSAP));
         }
     }
 }

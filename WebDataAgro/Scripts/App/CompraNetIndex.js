@@ -412,9 +412,13 @@ function CreateGridInformeCompraNet() {
             read: {
                 type: 'post',
                 dataType: 'json',
+                contentType: "application/json",
                 url: '/CompraNet/BuscaDatosTabla'
             },
             parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
@@ -959,7 +963,7 @@ function BuscarTotales() {
         }
     }
 
-    var totales = MSExecuteOnServer('/CompraNet/BuscarTotales', filtros);
+    var totales = MSExecuteOnServer('/CompraNet/BuscarTotales', filter);
 
     if (totales != null) {
         $("#totalPesos").text(kendo.toString(totales.TotalPesos, "n0"));
