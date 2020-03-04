@@ -166,7 +166,7 @@ namespace WebDataAgro.Services
                 var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
                 logger.Debug("ActualizandoContrato1");
 
-                foreach (var cal in contratoSAP.Calidad)
+                foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
                 {
                     var calidad = new Calidad
                     {
@@ -184,7 +184,8 @@ namespace WebDataAgro.Services
                 var descuentos = new List<DescuentoBonificacion>();
                 var tipoDescuentoList = repositorio.Listar<TipoDB>();
                 var tipoPeriodoList = repositorio.Listar<TipoPeriodoDB>();
-                foreach (var desc in contratoSAP.DescuentoBonificaciones)
+
+                foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
                 {
                     if (desc.TipoPeriodo != "I"&& desc.TipoDescBon != "B")
                     {
@@ -206,7 +207,7 @@ namespace WebDataAgro.Services
 
                 var aperturas = new List<AperturaPrecio>();
                 var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
-                foreach (var aper in contratoSAP.Apertura)
+                foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
                 {
                     var apertura = new AperturaPrecio
                     {
