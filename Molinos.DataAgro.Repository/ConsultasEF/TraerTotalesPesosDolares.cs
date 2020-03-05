@@ -80,7 +80,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 };
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);
-                     
+            
             var result2 = from a in queryContratos
                           group a by 0 into g
                           select new

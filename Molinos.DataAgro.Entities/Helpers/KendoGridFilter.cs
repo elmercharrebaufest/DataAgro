@@ -196,6 +196,15 @@ namespace Molinos.DataAgro.Entities.Helpers
 
             var parameterIndex = parameters.Count;
 
+
+            var properties = property.PropertyType.GetProperties();
+            var dataType = property.PropertyType.Name.ToLower();
+            foreach (var prop in properties)
+            {
+                var propType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                dataType = propType.Name.ToLower();
+            }
+
             switch (filter.Operator.ToLower())
             {
                 case "eq":
@@ -204,10 +213,13 @@ namespace Molinos.DataAgro.Entities.Helpers
                 case "gt":
                 case "lte":
                 case "lt":
-                    if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
+                    //if (typeof(DateTime).IsAssignableFrom(property.PropertyType))
+                    if (dataType == "datetime")
                     {
-                        parameters.Add(DateTime.Parse(filter.Value.ToString()).Date);
-                        return string.Format(" EntityFunctions.TruncateTime(" + filter.Field + ")" + ToLinqOperator(filter.Operator) + "@" + parameterIndex);
+                        //parameters.Add(DateTime.Parse(filter.Value.ToString()).Date);
+                        parameters.Add(((DateTime)filter.Value).Date);
+                        //return string.Format(" EntityFunctions.TruncateTime(" + filter.Field + ")" + ToLinqOperator(filter.Operator) + "@" + parameterIndex);
+                        return string.Format(filter.Field + ToLinqOperator(filter.Operator) + "@" + parameterIndex);
                     }
                     if (typeof(int).IsAssignableFrom(property.PropertyType))
                     {
@@ -265,6 +277,45 @@ namespace Molinos.DataAgro.Entities.Helpers
                 type = info.PropertyType;
             }
             return info;
+        }
+
+        public static void TruncateTime<T>(Filter filter, ref IQueryable<T> queryable)
+        {
+            if (filter != null)
+            {
+                var filters = filter.Filters;
+                for (int i = 0; i < filters.Count(); i++)
+                {
+                    var f = filters.ToList()[i];
+
+                    if (f.Filters == null)
+                    {
+                        var entityType = (typeof(T));
+                        PropertyInfo property;
+
+                        if (f.Field.Contains("."))
+                            property = GetNestedProp<T>(f.Field);
+                        else
+                            property = entityType.GetProperty(f.Field);
+                        var properties = property.PropertyType.GetProperties();
+                        var dataType = property.PropertyType.Name.ToLower();
+                        foreach (var prop in properties)
+                        {
+                            var propType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                            dataType = propType.Name.ToLower();
+                        }
+                        if (dataType == "datetime")
+                        {
+                            f.Value = new DateTime(((DateTime)f.Value).Year, ((DateTime)f.Value).Month, ((DateTime)f.Value).Day);
+                        }
+                    }
+                    else
+                    {
+                        TruncateTime(f, ref queryable);
+                    }
+                }
+            }
+
         }
     }
 }

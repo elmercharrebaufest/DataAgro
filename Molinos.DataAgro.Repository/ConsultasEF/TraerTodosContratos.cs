@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Dto;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Transactions;
+using Molinos.DataAgro.Entities.Helpers;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -28,6 +29,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto,  equipo);
+            GridHelper.TruncateTime(request.Filter,ref queryContratos);
             return queryContratos.ToDataSourceResult(request);
         }
         

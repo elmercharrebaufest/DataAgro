@@ -709,9 +709,9 @@ namespace WebDataAgro.Controllers
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var request = new DataSourceRequest();
-            request.Take = 0;
-            request.Skip = 0;
-            request.Sort = null;
+            //request.Take = 0;
+            //request.Skip = 0;
+            //request.Sort = null;
             request.Filter = filtros;
             var model = mobjContratoManager.TraerTotalesPesosDolares(request, equipo, GlobalVariables.CorredoresComercial);
 
