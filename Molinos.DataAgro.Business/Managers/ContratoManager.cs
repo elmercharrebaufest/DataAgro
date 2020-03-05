@@ -1741,7 +1741,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.DiasPesificado = contrato.DiasPesificado;
             contratoSave.NoInformaSio = contrato.NoInformaSio;
             contratoSave.TrigoEspecial = contrato.TrigoEspecial;
-            contratoSave.EstadoId = contrato.EstadoId;
             contratoSave.Ampliaciones = contrato.Ampliaciones;
             contratoSave.Observacion = contrato.Observacion;
             contratoSave.DestinoId = contrato.DestinoId;

@@ -339,7 +339,7 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     if (!$("#negociosPropiosDiv").hasClass("selected")) {
-        addOrRemoveFilter(grilla, "ComercialId", "eq", comercialId);
+        addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
         $("#negociosPropiosDiv").addClass("selected");
         $("#negociosPropios").addClass("selected").removeClass("varios");
     } else {
