@@ -84,19 +84,19 @@ function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre,
     else calidad = null;
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
-    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad ;
-    
+    href = href + "/DetalleExcelModal?mes=" + mes + "&anio=" + anio + "&materialId=" + material + "&fechaString=" + fechaDesde + "&fechaHastaString=" + fechaHasta + "&centroId=" + ObtenerValorCentroId() + "&clasificacion=" + calidad;
+
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }
-function AbrirModalIds(anio,materialNombre,mesNombre,negocioids,tiponegocioids,moneda) {
+function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda) {
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
     if (moneda == null) {
         moneda = "";
     }
     href = href + "/DetalleIdsModal?" + "&tiponegocioids=" + tiponegocioids + "&negocioids=" + negocioids + "&moneda=" + moneda;
-   
+
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }
@@ -221,8 +221,8 @@ function crearGrilladetallePosicion(href) {
         columns: [
             {
                 field: "Contrato",
-                title: "Nro Contrato",
-                width: 150
+                title: "Nro",
+                width: 50
             }, {
                 field: "RazonSocial",
                 title: "Razon Social",
@@ -231,22 +231,22 @@ function crearGrilladetallePosicion(href) {
                 field: "Cuit",
                 title: "CUIT",
                 width: 120
-            },{
+            }, {
                 field: "RazonCorredor",
                 title: "Corredor",
                 width: 150
             }, {
                 field: "CuitCorredor",
-                title: "CUIT Corredor",
+                title: "CUIT",
                 width: 120
             }, {
                 field: "Material",
                 title: "Material",
-                width: 150
+                width: 100
             }, {
                 field: "TipoNegocio",
-                title: "Tipo Negocio",
-                width: 150
+                title: "Negocio",
+                width: 100
             }, {
                 field: "Comercial",
                 title: "Comercial",
@@ -254,39 +254,39 @@ function crearGrilladetallePosicion(href) {
             }, {
                 field: "Cantidad",
                 title: "Cantidad",
-                width: 150
+                width: 100
             }, {
                 field: "CantidadCamiones",
-                title: "Cantidad Camiones",
-                width: 150
+                title: "Camiones",
+                width: 100
             }, {
                 field: "Campana",
                 title: "Campaña",
-                width: 150
+                width: 100
             }, {
                 field: "FechaDesde",
-                title: "Fecha Desde",
-                width: 150
+                title: "Fecha<br> Desde",
+                width: 100
             }, {
                 field: "FechaHasta",
-                title: "Fecha Hasta",
-                width: 150
+                title: "Fecha <br>Hasta",
+                width: 100
             }, {
                 field: "Precio",
                 title: "Precio",
-                width: 150
+                width: 100
             }, {
                 field: "PrecioNeto",
-                title: "Precio Neto",
-                width: 150
+                title: "Precio <br>Neto",
+                width: 100
             }, {
                 field: "Moneda",
                 title: "Moneda",
-                width: 150
+                width: 80
             }, {
                 field: "Fecha",
-                title: "Fecha Operación",
-                width: 150
+                title: "Fecha <br> Operación",
+                width: 110
             }, {
                 field: "Provincia",
                 title: "Provincia",
@@ -309,31 +309,31 @@ function crearGrilladetallePosicion(href) {
                 width: 150
             }, {
                 field: "CondicionFijacion",
-                title: "Condición Fijacion",
+                title: "Condición<br> Fijacion",
                 width: 150
             }, {
                 field: "DesdeFijacion",
-                title: "Desde Fijacion",
-                width: 150
+                title: "Desde<br> Fijacion",
+                width: 100
             }, {
                 field: "HastaFijacion",
-                title: "Hasta Fijacion",
-                width: 150
+                title: "Hasta<br>Fijacion",
+                width: 100
             }, {
                 field: "Base",
                 title: "Base",
                 width: 150
             }, {
                 field: "ImporteSustentable",
-                title: "Importe Sustentable",
+                title: "Importe<br> Sustentable",
                 width: 150
             }, {
                 field: "FechaDolarizado",
-                title: "Fecha Dolarizado",
+                title: "Fecha<br> Dolarizado",
                 width: 150
             }, {
                 field: "DiasPesificado",
-                title: "Días Pesificado",
+                title: "Días<br> Pesificado",
                 width: 150
             }, {
                 field: "NoInformaSio",
@@ -363,7 +363,7 @@ function crearGrilladetallePosicion(href) {
             }
             , {
                 field: "CalidadEspecial",
-                title: "Calidad Especial",
+                title: "Calidad <br>Especial",
                 width: 150
             }
             , {
@@ -378,6 +378,32 @@ function crearGrilladetallePosicion(href) {
             }]
 
     });
+
+    OcultarColumnasVacias($("#grilla").data("kendoGrid"));
+}
+
+function OcultarColumnasVacias(grid) {
+    //var grid = $("#grid").data("kendoGrid");
+    var data = grid.dataSource.data();
+    for (var j = 0; j < grid.columns.length; j++) {
+
+        var field = grid.columns[j].field;
+        var title = grid.columns[j].title;
+
+        var hideColumn = true;
+
+        for (var i = 0; i < data.length; i++) {
+            if (data[i][field] != 0 && data[i][field] != "" && data[i][field] != null) {
+                hideColumn = false;
+                break;
+            }
+        }
+
+        if (hideColumn) {
+            console.log("hide column: " + title + " column nro:" + j)
+            grid.hideColumn(j);
+        }
+    }
 
 }
 
@@ -414,36 +440,36 @@ function crearGrillaAgente(href) {
         columns: [
             {
                 field: "Agente",
-                title: "Nro Agente",
-                width: 150
+                title: "Nro",
+                width: 50
             }, {
                 field: "Operador",
                 title: "Operador",
-                width: 150
+                width: 100
             }, {
                 field: "Material",
                 title: "Material",
-                width: 120
+                width: 100
             }, {
                 field: "Posicion",
                 title: "Posicion",
-                width: 150
+                width: 100
             }, {
                 field: "Cantidad",
                 title: "Cantidad",
-                width: 150
+                width: 100
             }, {
                 field: "Precio",
                 title: "Precio",
-                width: 150
+                width: 100
             }, {
                 field: "Fecha",
                 title: "Fecha",
-                width: 150
+                width: 100
             }, {
                 field: "Comercial",
                 title: "Comercial",
-                width: 150
+                width: 100
             }]
     });
 

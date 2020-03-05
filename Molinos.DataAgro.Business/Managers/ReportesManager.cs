@@ -812,9 +812,9 @@ namespace Molinos.DataAgro.Business.Managers
                 //{
                 //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 //}
-                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
-                EnumClasificacionNegocio.NewCropFijacion;
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                EnumClasificacionNegocio.NewCropAPrecio;
             }
             contratos.AddRange(acuerdos);
 

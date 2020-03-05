@@ -2057,9 +2057,7 @@ function ObtenerDatos() {
     var minuto = hoy.getMinutes();
 
     obj.TipoNegocioId = $("#tipoId").val();
-    obj.ContratoId = (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) ? Id : 0;
-    obj.FijacionDePrecioContratoId = obj.TipoNegocioId == 3 ? Id : 0;
-    obj.Id = (obj.TipoNegocioId == 4 || obj.TipoNegocioId == 5 || obj.TipoNegocioId == 6) ? Id : 0;
+    obj.Id = Id;
     obj.MaterialId = $("#material").val();
     obj.Cantidad = $("#cantidadId").val();
     obj.Precio = $("#precioId").val();
@@ -2102,7 +2100,6 @@ function ObtenerDatos() {
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
     obj.MercsDeposito = $("#mercsDepositoId").is(":checked") ? true : false;
-    obj.Especial = $("#trigoEspecialFasonId").is(":checked") ? true : false;
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
 
@@ -2172,7 +2169,7 @@ function ObtenerDatos() {
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
 
-
+    obj.Especial = $("#trigoEspecialFasonId").is(":checked") ? true : false;
     obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;
 
     obj.ZonaId = obj.MaterialId == 5 ?
@@ -2210,7 +2207,7 @@ function ObtenerDatos() {
         obj.StandardDeCalidadId = viewModel.Calidades[0].StandardDeCalidadId;
     }
 
-    if (obj.TipoNegocioId == 3) obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
+    if (obj.TipoNegocioId == 3 || obj.TipoNegocioId == 4) obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
     obj.Compensacion = $("#compensacionId").is(":checked") ? true : false;
     obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;

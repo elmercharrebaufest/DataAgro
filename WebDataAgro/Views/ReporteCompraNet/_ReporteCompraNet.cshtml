@@ -22,7 +22,23 @@
     var hedgeObj = Model.HedgeObjetivo.RemitirObjetivo != 0 && Model.HedgeObjetivo.PricingObjetivo != 0 ? 1 : 0;
     var pricing = Model.PricingCampania.Count != 0 ? 1 : 0;
 }
+<style>
+    .k-grid-header, #grilla .k-grid-header .k-header {
+        font-weight: bold;
+        padding: 0;
+    }
+    .k-grid-header th.k-with-icon .k-link {
+        margin-right: 2px;
+    }
+    .k-grid tbody tr {
+        line-height: 14px;
+        font-size: 11px;
+    }
 
+    .k-grid tbody td {
+        padding: 0;
+    }
+</style>
 <div id="ReportesCompraNet">
     <div class="row">
         <div class="table-responsive col-md-4 @(hedgeMat == 1 ? "" : "hide")">
