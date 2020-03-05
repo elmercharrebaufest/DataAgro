@@ -155,6 +155,9 @@ namespace WebDataAgro.Services
         }
         public ResultadoSap ActualizarContratoSAP(ContratoSAPDto contratoSAP)
         {
+            contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
+            contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
+            contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
             var oEntityErrors = new ResultadoSap();
             try
             {
@@ -290,7 +293,7 @@ namespace WebDataAgro.Services
             }
             catch (Exception ex)
             {
-                logger.Debug(oEntityErrors.ListaErrores.ToXml());
+                logger.Error(ex);
 
                 oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {

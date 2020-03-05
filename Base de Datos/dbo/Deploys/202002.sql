@@ -432,4 +432,9 @@ go
 alter table Negocio drop column idanterior
 go
 
+update negocio set fechadesde = '1753-01-01' where fechadesde is null
+update negocio set FechaHasta = '1753-01-01' where FechaHasta is null
+
+
+  go
 commit transaction

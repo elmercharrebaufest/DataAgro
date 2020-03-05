@@ -1114,9 +1114,10 @@ function ModalConfirmadoVarios() {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
-                } ConfirmarVariosContratos()
+                } 
             }
         }
+        ConfirmarVariosContratos();
     } else {
         $("#negocioConfirmado-modal").append('<div style="text-align:center"> Se debe seleccionar negocios</div>');
         $("#confirmarVarios").hide();
