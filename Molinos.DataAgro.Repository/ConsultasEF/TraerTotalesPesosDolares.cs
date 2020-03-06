@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Corredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
                     ProveedorId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).OperadorId : contrato.ProveedorId,
                     CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
+                    ComercialCreadorId = contrato.ComercialCreadorId,
                     Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,

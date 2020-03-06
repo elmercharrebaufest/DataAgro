@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using System.Collections.Generic;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Interfaces
@@ -11,5 +12,6 @@ namespace Molinos.DataAgro.Interfaces
         OperadorDto TraerOperador(int id);
         Resultado GrabarOperador(Operador oCentro);
         Resultado EliminarOperador(int id);
+        List<OperadorIni> ListarOperador(string text);
     }
 }

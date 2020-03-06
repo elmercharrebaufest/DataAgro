@@ -34,5 +34,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double TotalGirasol { get; set; }
         public double TotalGirasolAlto { get; set; }
         public int Id { get; set; }
+        public int? ComercialCreadorId { get; set; }
     }
 }

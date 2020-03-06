@@ -104,5 +104,19 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.IsFalse(resultado.HayErrores);
         }
+
+
+        [Test]
+        public void ListarOperadorOkTest()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Operador, OperadorIni>>>(), It.IsAny<Expression<Func<Operador, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<OperadorIni>());
+
+            var result = target.ListarOperador("aa");
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Operador, OperadorIni>>>(), It.IsAny<Expression<Func<Operador, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc), Times.Once);
+            Assert.NotNull(result);
+            Assert.AreEqual(0, result.Count);
+        }
     }
 }

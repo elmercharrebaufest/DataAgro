@@ -160,8 +160,8 @@ function botonModificarFinalizados(dataItem, icono) {
     }
 }
 function botonConfirmadoTilde(dataItem, icono) {
-    if (confirmaNegocios && !externo && puedeConfirmarNegocio(dataItem) ) {
-        
+    if (confirmaNegocios && !externo && puedeConfirmarNegocio(dataItem)) {
+
         return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTilde(' +
             "'" + dataItem.Estado + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
@@ -322,7 +322,7 @@ function recargarGrilla() {
     if (viewModel.ContratosPendientes.length > 0) {
         AvisoContratosPendientes();
     }
-    
+
 }
 
 function filtrarZona() {
@@ -503,12 +503,8 @@ function CreateGridInformeCompraNet() {
         columns: [
             { selectable: true, width: "50px" },
             {
-                field: "Proveedor", type: "string", width: 150, headerAttributes: {
-                    "class": classExterno
-                },attributes: {
-                    "id": "line",
-                    "class": classExterno
-                },
+                field: "Proveedor", type: "string", width: 150,
+                headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
@@ -566,7 +562,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "FASON"
                     }, {
-                        TipoNegocio: "AGENTE COMPRAS"
+                        TipoNegocio: "AGENTE DE COMPRAS"
                     }, {
                         TipoNegocio: "CONTRATO ACUERDO"
                     }]
@@ -637,7 +633,7 @@ function CreateGridInformeCompraNet() {
                 headerAttributes: {
                     "class": classExterno
                 },
-                attributes: { "class": "mobile-xs mobile-md " + classExterno}
+                attributes: { "class": "mobile-xs mobile-md " + classExterno }
             },
             {
                 field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
@@ -646,7 +642,7 @@ function CreateGridInformeCompraNet() {
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "ComercialCreador", type: "string", title: "Creador", width: 70, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "ComercialCreador", type: "string", title: "Creador", width: 70, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
@@ -741,7 +737,7 @@ function CreateGridInformeCompraNet() {
                     if (dataItem.Estado == 6) { //Rechazado
                         descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n rechazada por MOA" ' : '';
 
-                        return '<div ' + descripcion+' class="status borrado">Rechazado</div>' +
+                        return '<div ' + descripcion + ' class="status borrado">Rechazado</div>' +
                             botonVisualizar(dataItem, 'fa-eye bor');
                     }
                     if (dataItem.Estado == 7) { //reconfirmar
@@ -842,9 +838,10 @@ function CreateGridInformeCompraNet() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url) {
+    function createMultiSelect(element, textField, valueField, url,columna) {
         element.removeAttr("data-bind");
-
+        columna = columna == null ? valueField : columna;
+        console.log(columna);
         element.kendoMultiSelect({
             itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
             dataBound: function () {
@@ -881,12 +878,12 @@ function CreateGridInformeCompraNet() {
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v !== '') {
-                        addOrRemoveFilter(grilla, valueField, "eq", v);
+                        addOrRemoveFilter(grilla, columna, "eq", v);
                     }
                 });
 
                 if (values.length === 0) {
-                    addOrRemoveFilter(grilla, valueField, "eq", "");
+                    addOrRemoveFilter(grilla, columna, "eq", "");
                 }
             }
         });
@@ -897,20 +894,24 @@ function CreateGridInformeCompraNet() {
     }
 
     function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "ProveedorId", "/CompraNet/ListarProveedor");
+        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
     }
     function createMultiSelectCorredor(element) {
-        return createMultiSelect(element, "Corredor", "CorredorId", "/CompraNet/ListarCorredor");
+        return createMultiSelect(element, "Proveedor", "ProveedorId", "/CompraNet/ListarCorredor","CorredorId");
     }
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
     }
+    function createMultiSelectComercialCreador(element) {
+        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial","ComercialCreadorId");
+    }
+    
     AvisoContratosPendientes();
 }
 function BuscarTotales() {
     var grid = $("#gridInformeCompraNet").data("kendoGrid");
     var filter = grid.dataSource.filter();
-   
+
     var totales = MSExecuteOnServer('/CompraNet/BuscarTotales', filter);
 
     if (totales != null) {
@@ -1114,7 +1115,7 @@ function ModalConfirmadoVarios() {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
                 } else {
                     $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
-                } 
+                }
             }
         }
         ConfirmarVariosContratos();
@@ -1455,12 +1456,12 @@ function ObtenerDatosModalAmpliaciones() {
 
     objAmpliaciones.ContratoId = $("#contratoIdAmpliaciones").val();
     objAmpliaciones.Ampliaciones = $("#inputAmpliaciones").val();
-    if ($("#tipoNegocioIdAmpliaciones").val() == 3) {
-        objAmpliaciones.FijacionDePrecioContratoId = $("#contratoIdAmpliaciones").val();
-    } else if ($("#tipoNegocioIdAmpliaciones").val() == 4 || $("#tipoNegocioIdAmpliaciones").val() == 5) {
-        objAmpliaciones.Id = $("#contratoIdAmpliaciones").val();
-    }
-
+    //if ($("#tipoNegocioIdAmpliaciones").val() == 3) {
+    //    objAmpliaciones.FijacionDePrecioContratoId = $("#contratoIdAmpliaciones").val();
+    //} else if ($("#tipoNegocioIdAmpliaciones").val() == 4 || $("#tipoNegocioIdAmpliaciones").val() == 5) {
+    //    objAmpliaciones.Id = $("#contratoIdAmpliaciones").val();
+    //}
+    objAmpliaciones.Id = $("#contratoIdAmpliaciones").val();
     GuardarAmpliacion(objAmpliaciones);
 }
 
@@ -1968,9 +1969,9 @@ function ArmarPrecio(dataItem) {
         if (!externo && dataItem.TipoNegocioId === 3 && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && ( e.Pizarra==true || e.MonedaId === dataItem.Moneda); })[0];
+                var p = precioMoa[i].filter(function (e) { return e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); })[0];
                 if (p)
-                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo || (p.Pizarra == true && dataItem.Precio==0);
+                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo || (p.Pizarra == true && dataItem.Precio == 0);
             }
             if (esPrecioMoa === true) {
                 return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);

@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ProveedorId { get; set; }
         public string Nombre { get; set; }
         public bool AceptaTyC { get; set; }
-        
+        public DateTime FechaHora { get; set; }        
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
     }

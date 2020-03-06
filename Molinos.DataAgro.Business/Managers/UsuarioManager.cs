@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
+using System;
 
 namespace Molinos.DataAgro.Business
 {
@@ -25,7 +26,8 @@ namespace Molinos.DataAgro.Business
         public void Aceptar(string nombre, string Cuit)
         {
             var proveedorId = repositorio.Obtener<Proveedor,int>(x=>x.CUIT == Cuit, x=>x.ProveedorId);
-            repositorio.Agregar(new UsuarioExterno { Nombre = nombre, ProveedorId= proveedorId,AceptaTyC = true });
+            var hoy = DateTime.Now;
+            repositorio.Agregar(new UsuarioExterno { Nombre = nombre, ProveedorId= proveedorId,AceptaTyC = true, FechaHora = hoy });
             repositorio.GuardarCambios();
         }
     }

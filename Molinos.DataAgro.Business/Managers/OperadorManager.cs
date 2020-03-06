@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Business
 {
 
     public class OperadorManager : IOperadorManager
-    { 
+    {
         private ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Business
 
         public OperadorDto TraerOperador(int id)
         {
-            return repositorio.Obtener<Operador, OperadorDto>(x => x.Id == id, x => new OperadorDto { Id = x.Id, Descripcion = x.Descripcion}) ?? new OperadorDto();
+            return repositorio.Obtener<Operador, OperadorDto>(x => x.Id == id, x => new OperadorDto { Id = x.Id, Descripcion = x.Descripcion }) ?? new OperadorDto();
         }
 
         public Resultado GrabarOperador(Operador oOperador)
@@ -53,15 +53,15 @@ namespace Molinos.DataAgro.Business
             var oEntityErrors = new Resultado();
 
             EntityValid.ValidateAll(oOperador, oEntityErrors);
-            if(oOperador.Descripcion == "" || oOperador.Descripcion == null)
+            if (oOperador.Descripcion == "" || oOperador.Descripcion == null)
             {
-                oEntityErrors.Error("","El nombre del operador no debe estar vacío");
+                oEntityErrors.Error("", "El nombre del operador no debe estar vacío");
             }
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
-            
+
             if (oOperador.Id != 0)
             {
                 var oOperadorSave = repositorio.Obtener<Operador>(oOperador.Id);
@@ -104,6 +104,11 @@ namespace Molinos.DataAgro.Business
                 throw;
             }
             return oEntityErrors;
+        }
+
+        public List<OperadorIni> ListarOperador(string text)
+        {
+            return repositorio.Listar<Operador, OperadorIni>(x => new OperadorIni { Id = x.Id, Descripcion = x.Descripcion }, x => text == "" || x.Descripcion.Contains(text), 15);
         }
     }
 }

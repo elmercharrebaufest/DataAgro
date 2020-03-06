@@ -28,11 +28,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     from contrato in contexto.Set<Negocio>()
                     where ((contrato.ComercialId != null && equipo.Contains(contrato.ComercialId.Value)) || (
                     contrato.ComercialCreadorId != null && equipo.Contains(contrato.ComercialCreadorId.Value))) &&
-                    ((crearFason && contrato is Fason) || (crearAgente && contrato is AgenteCompra) ||( crearAcuerdos && contrato is ContratoAcuerdo) || (!(contrato is Fason) && !(contrato is AgenteCompra) && !(contrato is ContratoAcuerdo)))
+                    ((crearFason && contrato is Fason) || (crearAgente && contrato is AgenteCompra) || (crearAcuerdos && contrato is ContratoAcuerdo) || (!(contrato is Fason) && !(contrato is AgenteCompra) && !(contrato is ContratoAcuerdo)))
                     select new BasicoContrato()
                     {
                         Id = contrato.Id,
-                        ContratoId = contrato.Id,
+                        ContratoId = contrato is Contrato ? contrato.Id : contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).ContratoId.HasValue ? (contrato as FijacionDePrecioContrato).ContratoId.Value : 0 : 0,
                         ProveedorId = contrato.ProveedorId ?? 0,
                         CorredorId = contrato.CorredorId != null ? contrato.CorredorId.Value : 0,
                         ComercialId = contrato.ComercialId,
@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Precio = contrato.Precio,
                         PrecioPlazo = contrato.TipoNegocioId == 1 ? SqlFunctions.DateName("day", (contrato as Contrato).HastaFijacion) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).HastaFijacion) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).HastaFijacion) : contrato.Precio.ToString(),
                         FechaEntrega = contrato is Contrato ? (contrato as Contrato).FechaEntrega : (DateTime?)null,
-                        CampanaId = contrato.CampanaId??0,
+                        CampanaId = contrato.CampanaId ?? 0,
                         FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                         FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
                         MonedaId = contrato.MonedaId,
@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ContratoSAP = contrato.ContratoSAP,
                         Ampliaciones = contrato.Ampliaciones,
                         Cuit = contrato.Proveedor == null ? "" : contrato.Proveedor.CUIT,
-                        Proveedor = (contrato is AgenteCompra)?(contrato as AgenteCompra).Operador.Descripcion: contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
+                        Proveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
                         Corredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
                         Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                         Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         DestinoId = contrato.DestinoId,
                         DestinoDescripcion = contrato.Destino.Descripcion,
                         CantidadCamiones = (contrato is Contrato) ? (contrato as Contrato).CantidadCamiones : (int?)null,
-                        Consignatario = (contrato is Contrato)? (contrato as Contrato).Consignatario : false,
+                        Consignatario = (contrato is Contrato) ? (contrato as Contrato).Consignatario : false,
                         PlanCanje = (contrato is Contrato) ? (contrato as Contrato).PlanCanje : false,
                         CD = (contrato is Contrato) ? (contrato as Contrato).CD : null,
                         Warrant = (contrato is Contrato) ? (contrato as Contrato).Warrant : null,
@@ -106,7 +106,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial" : "Cámara",
                         MercsDeposito = (contrato is Contrato) ? ((contrato as Contrato).MercsDeposito == true ? (contrato as Contrato).MercsDeposito : false) : null,
                         ComercialCreadorId = contrato.ComercialCreadorId,
-                        ComercialCreador = (contrato as FijacionDePrecioContrato).ProveedorCreadorId != null ?contrato.UsuarioId: contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
+                        ComercialCreador = (contrato as FijacionDePrecioContrato).ProveedorCreadorId != null ? contrato.UsuarioId : contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                         ContratoCorredor = (contrato is Contrato) ? (contrato as Contrato).ContratoCorredor : "",
                         ContratoVendedor = (contrato is Contrato) ? (contrato as Contrato).ContratoVendedor : "",
                         SelCargoMOA = (contrato is Contrato) ? (contrato as Contrato).SelCargoMOA : null,
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Acuerdo = (contrato is Contrato) ? (contrato as Contrato).ContratoAcuerdoId : null,
                         Rechazo = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).MotivoRechazo : null
                     };
-                
+
                 return queryNegocios;
             }
             else
@@ -153,15 +153,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ProveedorId = fijac.ProveedorId ?? 0,
                         CorredorId = fijac.CorredorId != null ? fijac.CorredorId.Value : 0,
                         ComercialId = fijac.ComercialId,
-                        ComercialZonaId = fijac.ContratoId.HasValue ? fijac.Contrato.Comercial.GrupoDeComprasId:null,
-                        ComercialZonaDescripcion = fijac.ContratoId.HasValue ? fijac.Contrato.Comercial.GrupoDeCompras.Descripcion:"",
+                        ComercialZonaId = fijac.ContratoId.HasValue ? fijac.Contrato.Comercial.GrupoDeComprasId : null,
+                        ComercialZonaDescripcion = fijac.ContratoId.HasValue ? fijac.Contrato.Comercial.GrupoDeCompras.Descripcion : "",
                         MaterialId = fijac.MaterialId,
                         TipoNegocioId = 3,
                         Cantidad = fijac.Cantidad,
                         Precio = fijac.Precio,
                         PrecioPlazo = fijac.Precio.ToString(),
                         FechaEntrega = null,
-                        CampanaId = fijac.CampanaId??0,
+                        CampanaId = fijac.CampanaId ?? 0,
                         FechaDesde = DbFunctions.TruncateTime(fijac.FechaDesde),
                         FechaHasta = DbFunctions.TruncateTime(fijac.FechaHasta),
                         MonedaId = fijac.MonedaId,
@@ -223,7 +223,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CalidadDescripcion = "",
                         MercsDeposito = null,
                         ComercialCreadorId = fijac.ProveedorCreadorId,
-                        ComercialCreador = fijac.UsuarioId != null ? fijac.UsuarioId: fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial :  " " ,
+                        ComercialCreador = fijac.UsuarioId != null ? fijac.UsuarioId : fijac.ProveedorCreadorId != null ? fijac.ProveedorCreador.RazonSocial : " ",
                         ContratoCorredor = "",
                         ContratoVendedor = "",
                         SelCargoMOA = null,

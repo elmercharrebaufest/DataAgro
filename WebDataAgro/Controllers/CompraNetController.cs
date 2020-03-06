@@ -41,6 +41,8 @@ namespace WebDataAgro.Controllers
 
         private IProveedorManager mobjProveedorManager;
 
+        private IOperadorManager mobjOperadorManager;
+
         private ILogger mobjLogger;
 
         private readonly IFasonManager mobjFasonManager;
@@ -59,7 +61,7 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager)
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -69,6 +71,7 @@ namespace WebDataAgro.Controllers
             mobjCampañaManager = oCampañaManager;
             mobjMaterialManager = oMaterialManager;
             mobjProveedorManager = oProveedorManager;
+            mobjOperadorManager = oOperadorManager;
             mobjLocalidadManager = ojLocalidadManager;
             mobjLogger = oLogger;
             mobjFasonManager = oFasonManager;
@@ -355,7 +358,7 @@ namespace WebDataAgro.Controllers
         {
             if (request.Sort != null)
             {
-                request.Sort = request.Sort.Concat(new[] { new Sort {Field= "Estado_Order", Dir= "asc" } });
+                request.Sort = request.Sort.Concat(new[] { new Sort { Field = "Estado_Order", Dir = "asc" } });
             }
             else
             {
@@ -460,6 +463,10 @@ namespace WebDataAgro.Controllers
         public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = mobjProveedorManager.ListarProveedor(text);
+            var operadores = mobjOperadorManager.ListarOperador(text).Select(a => new ProveedorDto { ProveedorId = a.Id, RazonSocial = a.Descripcion });
+            if (operadores.Count() > 0)
+                proveedores.AddRange(operadores);
+
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListarCorredor(string text = "")
