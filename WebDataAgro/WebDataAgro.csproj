@@ -948,6 +948,9 @@
     <Content Include="PROD.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="PreProd.DeployParameters.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="QA.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>

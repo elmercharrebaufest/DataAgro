@@ -56,6 +56,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.Agregar(log);
                 repositorio.GuardarCambios();
                 var valor1 = agent.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALES(rq);
+                logger.Debug(valor1.ToXml());
 
                 return new DatosComercialAgentDto {EX_GRUPO_COMPRAS=valor1.EX_GRUPO_COMPRAS,EX_ZONA=valor1.EX_ZONA };
             }
