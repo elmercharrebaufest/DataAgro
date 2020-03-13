@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
             public int OperadorId { get; set; }
             public string OperadorDesc { get; set; }
             public double Cantidad { get; set; }
-            public List<KeyValuePair<int, int>> Ids { get; set; } = new List<KeyValuePair<int, int>>();
+            public List<int> Ids { get; set; } = new List<int>();
         }
         public int? ComercialCreadorId { get; set; }
     }

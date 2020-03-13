@@ -38,7 +38,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? PagoDiferido { get; set; }
         public int? StandardDeCalidadId { get; set; }
         public string Posicion { get; set; }
-
+        public bool? CD { get; set; }
+        public bool? Warrant { get; set; }
+        public DateTime? FechaDolarizado { get; set; } // Fecha_Dolarizado
+        public bool? Dolarizado { get; set; }
 
 
         [ForeignKey("EstadoId")]

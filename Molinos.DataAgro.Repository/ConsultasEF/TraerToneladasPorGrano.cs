@@ -33,9 +33,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaManana = fechaHasta.Date;
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(+1).Month, 1);
             var toneladasPorGrano = new ToneladasGranoTipoDto();
-            toneladasPorGrano.ListNewAgente = new List<KeyValuePair<int, int>>();
-            toneladasPorGrano.ListDispAgente = new List<KeyValuePair<int, int>>();
-            toneladasPorGrano.ListFrwAgente = new List<KeyValuePair<int, int>>();
+            toneladasPorGrano.ListNewAgente = new List<int>();
+            toneladasPorGrano.ListDispAgente = new List<int>();
+            toneladasPorGrano.ListFrwAgente = new List<int>();
             //var posicion = contexto.Set<Contrato>()
             //    .Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
             //    && DbFunctions.TruncateTime(x.Fecha) <= fechaManana 
@@ -169,16 +169,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 if (age.CampanaId > age.MaterialCampanaId)
                 {
                     toneladasPorGrano.NewAgente += Math.Round(age.Cantidad / 1000);
-                    toneladasPorGrano.ListNewAgente.Add(new KeyValuePair<int, int>(age.TipoNegocioId, age.Id));
+                    toneladasPorGrano.ListNewAgente.Add(age.Id);
                 }
                 else if (age.CampanaId <= age.MaterialCampanaId && (fechaMesSiguiente >= fecha))                    
                 {
                     toneladasPorGrano.DispAgente += Math.Round(age.Cantidad / 1000);
-                    toneladasPorGrano.ListDispAgente.Add(new KeyValuePair<int, int>(age.TipoNegocioId, age.Id));
+                    toneladasPorGrano.ListDispAgente.Add(age.Id);
                 }
                 else {
                     toneladasPorGrano.FrwAgente += Math.Round(age.Cantidad / 1000);
-                    toneladasPorGrano.ListFrwAgente.Add(new KeyValuePair<int, int>(age.TipoNegocioId, age.Id));
+                    toneladasPorGrano.ListFrwAgente.Add(age.Id);
                 }
             }
             //toneladasPorGrano.NewAgente = toneladasPorGrano.NewAgente;

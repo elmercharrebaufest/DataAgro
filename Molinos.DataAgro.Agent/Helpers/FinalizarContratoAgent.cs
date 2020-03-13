@@ -34,7 +34,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.Password = PassSap;
                 logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
                 var listaDescuentos = new List<ZMPES5290>();
-
                 foreach (var descBon in descuentoBonificacion)
                 {
                     if (descBon.TipoPeriodoDBId != 1)
@@ -65,9 +64,26 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
+                if(contrato.PrecioPactado.Count > 0)
+                {
+                    foreach(var p in contrato.PrecioPactado)
+                    {
+                        listaDescuentos.Add(new ZMPES5290
+                        {
+                            TIPO_PERIODO = "E",
+                            TIPO_DB = "A",
+                            FEDESDE = p.FechaDesde?.ToString("yyyy-MM-dd"),
+                            FEHASTA = p.FechaHasta?.ToString("yyyy-MM-dd"),
+                            IMPORTE_DB = p.ImportePactado ?? 0,
+                            MONEDA_DB = p.MonedaImportePactado != null ? p.MonedaImportePactadoId : "",
+                            PORC_DB = p.Porcentaje ?? 0,
+                            PRECIO = p.Precio,
+                            MONEDA = p.MonedaPactadoId
+                        });
+                    }
+                }
                 logger.Debug("Descuentos: " + descuentoBonificacion);
                 var listaCalidades = new List<ZMPES5300>();
-
                 foreach (var cal in calidad)
                 {
                     if (cal.StandardDeCalidadId == 2)

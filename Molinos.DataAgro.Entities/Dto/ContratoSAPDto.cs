@@ -84,6 +84,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Importe { get; set; }
         public string MonedaDB { get; set; }
         public decimal PorcentajeDB { get; set; }
+        public decimal Precio { get; set; }
+        public string Moneda { get; set; }
     }
 
     public class AperturaPrecioSap

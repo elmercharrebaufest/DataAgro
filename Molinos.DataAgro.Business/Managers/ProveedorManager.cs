@@ -2754,7 +2754,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var proveedor in proveedores)
             {
-                var listaRoles = roles.Select(y => y.Id).ToList();
+                var listaRoles = roles != null ? roles.Select(y => y.Id).ToList() : new List<int>();
                 if (proveedor.RolesAsociados != null)
                 {
                     proveedor.RolesAsociados.Clear();

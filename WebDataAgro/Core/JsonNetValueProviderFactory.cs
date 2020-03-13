@@ -76,6 +76,11 @@ namespace WebDataAgro.Core
             }
 
             // primitive
+           
+            if (value != null && value.GetType() == typeof(DateTime))
+            {
+                value = ((DateTime)value).ToLocalTime();
+            }
             backingStore[prefix] = value;
         }
 

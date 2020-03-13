@@ -67,6 +67,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta);
         string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0);
         string DetalleAgenteModal(DateTime fecha);
-        string DetallePosicionModalIds(List<KeyValuePair<int, int>> negocios,string moneda);
+        string DetallePosicionModalIds(List<int> negocios,string moneda);
     }
 }

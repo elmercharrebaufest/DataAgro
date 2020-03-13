@@ -157,7 +157,7 @@ function CrearViewModel() {
             var dto = {
                 Id: this.id,
                 Descripcion: this.descripcionRol,
-                PermisosEnum: this.permisos.map(permisos => permisos.Id)
+                PermisosEnum: this.permisos.map(permisos => permisos.Id+"")
             };
             MSExecuteOnServerAsync('/Rol/CrearModificarPost', dto, function (result) {
                 if (result != null) {

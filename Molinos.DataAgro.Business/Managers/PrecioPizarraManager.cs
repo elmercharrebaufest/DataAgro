@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using System;
@@ -16,10 +17,12 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
-        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger)
+        private IPrecioPizarraAgent precioPizarraAgent;
+        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.precioPizarraAgent = crearPrecioPizarraAgent;
         }
         public Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra)
         {
@@ -28,6 +31,27 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
+            if (precioPizarra.Id == 0)
+            {
+                try
+                {
+                    string resultado = precioPizarraAgent.Crear(precioPizarra);
+                    if (resultado != "Ok")
+                    {
+                        oEntityErrors.Error("PrecioPizarraSAP", resultado);
+                    }
+                }
+                catch (Exception e)
+                {
+                    oEntityErrors.Error("PrecioPizarraSAP", e.Message);
+                }
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+            }
+            
+
             try
             {
                 repositorio.Agregar(precioPizarra);
@@ -55,6 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (precioPizarra.FechaHasta.CompareTo(precioPizarra.FechaDesde) == -1) error.Errores.Add(new ErrorMessage(400, "El campo Fecha Hasta no puede ser menor que el campo Fecha Desde"));
             if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "Ya existe un rango de fechas asignado para este cultivo"));
             if (precioPizarra.Precio == 0) error.Errores.Add(new ErrorMessage(400, "El campo Precio no puede estar vacío"));
+            if (precioPizarra.ComercialId == null) error.Errores.Add(new ErrorMessage(400, "El campo Comercial no puede estar vacío"));
             return error;
         }
 
@@ -96,9 +121,10 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion + "",
-                UnidadMedida = x.UnidadMedida + "TON"
+                UnidadMedida = x.UnidadMedida != null? x.UnidadMedida: "TON",
+                Fecha = x.FechaHasta
 
-            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId,0, "FechaHasta",Entities.Helpers.DirOrden.Desc);
+            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId,0, "Fecha",Entities.Helpers.DirOrden.Desc);
         }
 
         public List<MonedaDto> TraerTodoMoneda()
@@ -113,6 +139,24 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado EliminarPizarra(int id)
         {
             var result = new Resultado();
+            var precioPizarra = repositorio.Obtener<PrecioPizarra>(x => x.Id == id);
+            try
+            {
+                string resultado = precioPizarraAgent.Anular(precioPizarra);
+                if (resultado != "Ok")
+                {
+                    result.Error("PrecioPizarraSAP", resultado);
+                }
+            }
+            catch (Exception e)
+            {
+                result.Error("PrecioPizarraSAP", e.Message);
+            }
+            if (result.HayError)
+            {
+                return result;
+            }
+            
             try
             {
                 repositorio.Remover<PrecioPizarra>(id);

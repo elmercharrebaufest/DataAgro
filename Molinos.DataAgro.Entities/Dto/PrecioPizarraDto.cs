@@ -19,5 +19,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UnidadMedida { get; set; }
         public string Material { get; set; }
         public string Pizarra { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }

@@ -107,7 +107,7 @@
                     @foreach (var datos in Model.PricingCampania)
                     {
                         string sumaPricing;
-                        List<KeyValuePair<int, int>> sumaPricingIds = new List<KeyValuePair<int, int>>();
+                        List<int> sumaPricingIds = new List<int>();
                         switch (datos.Id)
                         {
                             case 11:
@@ -222,17 +222,17 @@
                             <td>@datos.Material</td>
                             <td>@datos.Campania</td>
                             <td>
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds.Select(a => a.Value))','@String.Join(",", sumaPricingIds.Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds)')">
                                     @sumaPricing
                                 </a>
                             </td>
                             <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo > 0) ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds.Select(a => a.Value))','@String.Join(",", datos.SanLorenzoIds.Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
                                     @(Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
                                 </a>
                             </td>
                             <td class="@(Model.PricingCampania.Any(x => x.Acopio > 0) ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds.Select(a => a.Value))','@String.Join(",", datos.AcopioIds.Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
                                     @(Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
                                 </a>
                             </td>
@@ -280,63 +280,44 @@
                     {
 
                         var totalMaterialDisNeogcioIds = new List<int>();
-                        var totalMaterialDisTipoNeogcioIds = new List<int>();
                         var totalMaterialNewNeogcioIds = new List<int>();
-                        var totalMaterialNewTipoNeogcioIds = new List<int>();
                         var totalMaterialFrwNeogcioIds = new List<int>();
-                        var totalMaterialFrwTipoNeogcioIds = new List<int>();
 
                         var posicion = Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower());
                         foreach (var mes in posicion)
                         {
-                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
+                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialDisNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
 
-                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
+                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialFrwNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
 
-                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
-                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value).ToList());
+                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                            totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
 
-                            //--
-                            totalMaterialDisTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialDisTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialDisTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-
-                            totalMaterialFrwTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialFrwTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialFrwTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-
-                            totalMaterialNewTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialNewTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-                            totalMaterialNewTipoNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key).ToList());
-
+                           
 
                         }
 
-                        totalMaterialDisNeogcioIds.AddRange(toneladaPrecio.ListDispAgente.Select(a => a.Value));
-                        totalMaterialFrwNeogcioIds.AddRange(toneladaPrecio.ListFrwAgente.Select(a => a.Value));
-                        totalMaterialNewNeogcioIds.AddRange(toneladaPrecio.ListNewAgente.Select(a => a.Value));
+                        totalMaterialDisNeogcioIds.AddRange(toneladaPrecio.ListDispAgente);
+                        totalMaterialFrwNeogcioIds.AddRange(toneladaPrecio.ListFrwAgente);
+                        totalMaterialNewNeogcioIds.AddRange(toneladaPrecio.ListNewAgente);
+                        
 
-                        totalMaterialDisTipoNeogcioIds.AddRange(toneladaPrecio.ListDispAgente.Select(a => a.Key));
-                        totalMaterialFrwTipoNeogcioIds.AddRange(toneladaPrecio.ListFrwAgente.Select(a => a.Key));
-                        totalMaterialNewTipoNeogcioIds.AddRange(toneladaPrecio.ListNewAgente.Select(a => a.Key));
-
-
-                        List<KeyValuePair<int, int>> ListDispAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListDispAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListDispFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-
-                        List<KeyValuePair<int, int>> ListNewAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListNewAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListNewFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-
-                        List<KeyValuePair<int, int>> ListFrwAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListFrwAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                        List<KeyValuePair<int, int>> ListFrwFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListDispAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListDispAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListDispFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                             
+                        List<int> ListNewAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListNewAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListNewFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                             
+                        List<int> ListFrwAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListFrwAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
+                        List<int> ListFrwFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
 
 
                         var totalDisp = posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente;
@@ -349,81 +330,81 @@
                             <tr>
                                 <th class="borde-izquierdo">@toneladaPrecio.Material</th>
                                 <td class="@(dispAFijar ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispAFijar.Select(a => a.Value))','@String.Join(",", ListDispAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispAFijar)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(dispAPrecio ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispAPrecio.Select(a => a.Value))','@String.Join(",", ListDispAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispAPrecio)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(dispFijacion ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispFijac.Select(a => a.Value))','@String.Join(",", ListDispFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListDispFijac)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(dispAgente ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListDispAgente.Select(a => a.Value))','@String.Join(",", toneladaPrecio.ListDispAgente.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListDispAgente)')">
                                         @toneladaPrecio.DispAgente.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(disp == 0 ? "hide" : "") borde-derecho-oscuro">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialDisNeogcioIds)','@String.Join(",", totalMaterialDisTipoNeogcioIds)')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialDisNeogcioIds)')">
                                         @totalDisp.ToString("N0")
                                     </a>
                                 </td>
 
                                 <td class="espacio @(disp == 0 ? "hide" : "")"></td>
                                 <td class="@(forwAFijar ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwAFijar.Select(a => a.Value))','@String.Join(",", ListFrwAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwAFijar)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(forwAPrecio ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwAPrecio.Select(a => a.Value))','@String.Join(",", ListFrwAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwAPrecio)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(forwFijacion ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwFijac.Select(a => a.Value))','@String.Join(",", ListFrwFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListFrwFijac)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(forwAgente ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListFrwAgente.Select(a => a.Value))','@String.Join(",", toneladaPrecio.ListFrwAgente.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListFrwAgente)')">
                                         @toneladaPrecio.FrwAgente.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(forw == 0 ? "hide" : "") borde-derecho-oscuro">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialFrwNeogcioIds)','@String.Join(",", totalMaterialFrwTipoNeogcioIds)')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialFrwNeogcioIds)')">
                                         @totalForw.ToString("N0")
                                     </a>
                                 </td>
 
                                 <td class="espacio @(forw == 0 ? "hide" : "")"> </td>
                                 <td class="@(newcAFijar ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewAFijar.Select(a => a.Value))','@String.Join(",", ListNewAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewAFijar)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(newcAPrecio ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewAPrecio.Select(a => a.Value))','@String.Join(",", ListNewAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewAPrecio)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(newcFijacion ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewFijac.Select(a => a.Value))','@String.Join(",", ListNewFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", ListNewFijac)')">
                                         @(posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(newcAgente ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListNewAgente.Select(a => a.Value))','@String.Join(",", toneladaPrecio.ListNewAgente.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", toneladaPrecio.ListNewAgente)')">
                                         @toneladaPrecio.NewAgente.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(newc == 0 ? "hide" : "") borde-derecho-oscuro">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialNewNeogcioIds)','@String.Join(",", totalMaterialNewTipoNeogcioIds)')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@toneladaPrecio.Material.ToUpper()', '','@String.Join(",", totalMaterialNewNeogcioIds)')">
                                         @totalNewC.ToString("N0")
                                     </a>
                                 </td>
@@ -486,7 +467,6 @@
                         </tr>
                         @{
                             var totalMaterialNeogcioIds = new List<int>();
-                            var totalMaterialTipoNeogcioIds = new List<int>();
                         }
                         @foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                         {
@@ -494,80 +474,71 @@
                             <tr>
                                 <td> @mes.Mes - @mes.Anio</td>
                                 <td class="@(dispFijacion ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','@String.Join(",", mes.ListDispFijac.Select(a => a.Value))','@String.Join(",", mes.ListDispFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','@String.Join(",", mes.ListDispFijac)')">
                                         @mes.DispFijac.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(forwFijacion ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwFijac.Select(a => a.Value))','@String.Join(",", mes.ListFrwFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwFijac)')">
                                         @mes.FrwFijac.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(newcFijacion ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewFijac.Select(a => a.Value))','@String.Join(",", mes.ListNewFijac.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewFijac)')">
                                         @mes.NewFijac.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(dispAFijar ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListDispAFijar.Select(a => a.Value))','@String.Join(",", mes.ListDispAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListDispAFijar)')">
                                         @mes.DispAFijar.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(forwAFijar ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwAFijar.Select(a => a.Value))','@String.Join(",", mes.ListFrwAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwAFijar)')">
                                         @mes.FrwAFijar.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(newcAFijar ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewAFijar.Select(a => a.Value))','@String.Join(",", mes.ListNewAFijar.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewAFijar)')">
                                         @mes.NewAFijar.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(dispAPrecio ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListDispAPrecio.Select(a => a.Value))','@String.Join(",", mes.ListDispAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListDispAPrecio)')">
                                         @mes.DispAPrecio.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(forwAPrecio ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwAPrecio.Select(a => a.Value))','@String.Join(",", mes.ListFrwAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListFrwAPrecio)')">
                                         @mes.FrwAPrecio.ToString("N0")
                                     </a>
                                 </td>
                                 <td class="@(newcAPrecio ? "" : "hide") borde-izq-der">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewAPrecio.Select(a => a.Value))','@String.Join(",", mes.ListNewAPrecio.Select(a => a.Key))')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", mes.ListNewAPrecio)')">
                                         @mes.NewAPrecio.ToString("N0")
                                     </a>
                                 </td>
                                 @{
-                                    var totalMesNeogcioIds = new List<int>(); //mes.ListDispAFijar.Select(a => a.Value).ToList();
-                                    totalMesNeogcioIds.AddRange(mes.ListDispAPrecio.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListDispFijac.Select(a => a.Value).ToList());
-                                    //totalMesNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListFrwAPrecio.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListFrwFijac.Select(a => a.Value).ToList());
-                                    //totalMesNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListNewAPrecio.Select(a => a.Value).ToList());
-                                    totalMesNeogcioIds.AddRange(mes.ListNewFijac.Select(a => a.Value).ToList());
+                                    var totalMesNeogcioIds = new List<int>(); //mes.ListDispAFijar;
+                                    totalMesNeogcioIds.AddRange(mes.ListDispAPrecio);
+                                    totalMesNeogcioIds.AddRange(mes.ListDispFijac);
+                                    //totalMesNeogcioIds.AddRange(mes.ListFrwAFijar);
+                                    totalMesNeogcioIds.AddRange(mes.ListFrwAPrecio);
+                                    totalMesNeogcioIds.AddRange(mes.ListFrwFijac);
+                                    //totalMesNeogcioIds.AddRange(mes.ListNewAFijar);
+                                    totalMesNeogcioIds.AddRange(mes.ListNewAPrecio);
+                                    totalMesNeogcioIds.AddRange(mes.ListNewFijac);
                                     totalMaterialNeogcioIds.AddRange(totalMesNeogcioIds);
-                                    var totalMesTipoNeogcioIds = new List<int>(); //mes.ListDispAFijar.Select(a => a.Key).ToList();
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListDispAPrecio.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListDispFijac.Select(a => a.Key).ToList());
-                                    //totalMesTipoNeogcioIds.AddRange(mes.ListFrwAFijar.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListFrwAPrecio.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListFrwFijac.Select(a => a.Key).ToList());
-                                    //totalMesTipoNeogcioIds.AddRange(mes.ListNewAFijar.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListNewAPrecio.Select(a => a.Key).ToList());
-                                    totalMesTipoNeogcioIds.AddRange(mes.ListNewFijac.Select(a => a.Key).ToList());
-                                    totalMaterialTipoNeogcioIds.AddRange(totalMesTipoNeogcioIds);
+                                   
                                 }
                                 <td class="@(totalPesos != 0 ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','@String.Join(",", totalMesTipoNeogcioIds)', 'ARP  ')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', 'ARP  ')">
                                         @(mes.KilosPesos.ToString("N0"))
                                     </a>
                                 </td>
                                 <td class="@(pondPesos > 0 ? "" : "hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
                                 <td class="@(totalDolares != 0 ? "" : "hide")">
-                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','@String.Join(",", totalMesTipoNeogcioIds)', 'USDM ')">
+                                    <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', 'USDM ')">
                                         @(mes.KilosDolares.ToString("N0"))
                                     </a>
                                 </td>
@@ -582,7 +553,7 @@
                                 </td>
                                 <td>
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','','')">
-                                        @((mes.KilosDolares + mes.KilosPesos).ToString("N0"))
+                                      @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
                                     </a>
                                 </td>
                             </tr>
@@ -591,58 +562,58 @@
                         <tr class="titulosPosicion total">
                             <th>Total</th>
                             <td class="@(dispFijacion ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.DispFijac).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(forwFijacion ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.FrwFijac).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(newcFijacion ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.NewFijac).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(dispAFijar ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.DispAFijar).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(forwAFijar ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.FrwAFijar).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(newcAFijar ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.NewAFijar).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(dispAPrecio ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.DispAPrecio).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(forwAPrecio ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.FrwAPrecio).ToString("N0")
                                 </a>
                             </td>
                             <td class="@(newcAPrecio ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                     @material.PosicionKilos.Sum(y => y.NewAPrecio).ToString("N0")
                                 </a>
                             </td>
                             <th class="@(totalPesos != 0 ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','@String.Join(",", totalMaterialTipoNeogcioIds)', 'ARP  ')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'ARP  ')">
                                     @totalPesos.ToString("N0")
                                 </a>
                             </th>
                             <td class="@(pondPesos > 0 ? "" : "hide")"></td>
                             <th class="@(totalDolares != 0 ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','@String.Join(",", totalMaterialTipoNeogcioIds)', 'USDM ')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'USDM ')">
                                     @totalDolares.ToString("N0")
                                 </a>
                             </th>
@@ -681,7 +652,7 @@
 
                         <td>@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])</td>
                         <td>
-                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])', '@agente.MaterialDesc', '','@String.Join(",", agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value))','@String.Join(",", agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key))')">
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])', '@agente.MaterialDesc', '','@String.Join(",", agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList())')">
                                 @agente.Operador.Sum(x => x.Cantidad).ToString("N0")
                             </a>
                         </td>
@@ -697,7 +668,7 @@
                             }
                             <td>
 
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])', '@agente.MaterialDesc', '','@String.Join(",", operador.Ids.Select(a => a.Value))','@String.Join(",", operador.Ids.Select(a => a.Key))')">
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('@((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1])', '@agente.MaterialDesc', '','@String.Join(",", operador.Ids)')">
                                     @(cantidad != null ? cantidad : "0")
                                 </a>
                             </td>
@@ -709,13 +680,11 @@
                     <th></th>
                     <th>Total</th>
                     <th>
-                        @{List<int> keys = new List<int>();
-                            Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => keys.AddRange(agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key)));
-                        }
+                        
                         @{List<int> values = new List<int>();
-                            Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values.AddRange(agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value)));
+                            Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values.AddRange(agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList()));
                         }
-                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '', '','@string.Join(",",values)','@string.Join(",",keys)')">
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '', '','@string.Join(",",values)')">
                             @Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Sum(y => y.Cantidad)).ToString("N0")
                         </a>
                     </th>
@@ -723,13 +692,11 @@
                     @foreach (var op in Model.AgenteCompras.ListaOperadores)
                     {
                         var cantidad = Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Where(y => y.OperadorId == op.OperadorId).Sum(y => y.Cantidad));
-                        keys = new List<int>();
-                        Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => keys.AddRange(agente.Operador.Where(y => y.OperadorId == op.OperadorId).Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Key)));
                         values = new List<int>();
-                        Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values.AddRange(agente.Operador.Where(y => y.OperadorId == op.OperadorId).Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.Value)));
+                        Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values.AddRange(agente.Operador.Where(y => y.OperadorId == op.OperadorId).Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList()));
 
                         <th>
-                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '', '','@string.Join(",",values)','@string.Join(",",keys)')">
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '', '','@string.Join(",",values)','')">
                                 @cantidad
                             </a>
                         </th>

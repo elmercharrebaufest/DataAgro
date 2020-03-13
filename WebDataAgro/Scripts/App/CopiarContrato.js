@@ -108,6 +108,7 @@ function CargarCopiaContrato(contratoId, tipo) {
     if (contratoCopia.HayError) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {
+        contratoCopia.Estado = 1;
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
     }

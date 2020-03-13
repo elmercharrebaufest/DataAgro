@@ -48,6 +48,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 if ((descuentos == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
                     descuentos != null && descuentos.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count ||
+                    (contrato.PrecioPactado == null && contratoGuardado.PrecioPactado.ToList().Count > 0) ||
+                    contrato.PrecioPactado != null && contrato.PrecioPactado.Count != contratoGuardado.PrecioPactado.Count ||
                          contrato.ImporteSustentable != contratoGuardado.ImporteSustentable ||
                          contrato.MonedaId != contratoGuardado.MonedaId )
                 {
@@ -61,6 +63,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                          && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
                          && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId)
                          )
+                        {
+                            descModificado = true;
+                            break;
+                        }
+                    }
+                    foreach (var precio in contratoGuardado.PrecioPactado)
+                    {
+                        if (!contrato.PrecioPactado.Any(x => x.FechaDesde == precio.FechaDesde
+                        && x.FechaHasta == precio.FechaHasta
+                        && x.Precio == precio.Precio
+                        && x.MonedaPactadoId == precio.MonedaPactadoId
+                        && x.ImportePactado == precio.ImportePactado
+                        && x.MonedaImportePactadoId == precio.MonedaImportePactadoId
+                        && x.Porcentaje == precio.Porcentaje))
                         {
                             descModificado = true;
                             break;
@@ -99,6 +115,24 @@ namespace Molinos.DataAgro.Agent.Helpers
                         MONEDA_DB = contrato.MonedaSustentableId,
                         PORC_DB = 0
                     });
+                }
+                if (contrato.PrecioPactado!= null)
+                {
+                    foreach (var p in contrato.PrecioPactado)
+                    {
+                        listaDescuentos.Add(new ZMPES5290
+                        {
+                            TIPO_PERIODO = "E",
+                            TIPO_DB = "A",
+                            FEDESDE = p.FechaDesde?.ToString("yyyy-MM-dd"),
+                            FEHASTA = p.FechaHasta?.ToString("yyyy-MM-dd"),
+                            IMPORTE_DB = p.ImportePactado ?? 0,
+                            MONEDA_DB = p.MonedaImportePactadoId ?? "",
+                            PORC_DB = p.Porcentaje ?? 0,
+                            PRECIO = p.Precio,
+                            MONEDA = p.MonedaPactadoId
+                        });
+                    }
                 }
                 logger.Debug("Descuentos modificados");
 

@@ -527,11 +527,11 @@ namespace Molinos.DataAgro.Business.Managers
                     Material = e.Key.Material,
                     MaterialId = e.Select(x => x.MaterialId).FirstOrDefault(),
                     Pricing = e.Sum(x => x.Pricing),
-                    PricingIds = e.Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id)).ToList(),
+                    PricingIds = e.Select(a => a.Id).ToList(),
                     Acopio = e.Sum(x => x.Acopio),
-                    AcopioIds = e.Where(a => a.Acopio > 0).Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id)).ToList(),
+                    AcopioIds = e.Where(a => a.Acopio > 0).Select(a => a.Id).ToList(),
                     SanLorenzo = e.Sum(x => x.SanLorenzo),
-                    SanLorenzoIds = e.Where(a => a.SanLorenzo > 0).Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id)).ToList(),
+                    SanLorenzoIds = e.Where(a => a.SanLorenzo > 0).Select(a => a.Id).ToList(),
                     Id = e.Select(x => x.MaterialId).FirstOrDefault() * 10 + (e.Key.Campania == "New Crop" ? 2 : 1)
 
                 };
@@ -628,7 +628,7 @@ namespace Molinos.DataAgro.Business.Managers
                             agenteTemp.Operador.Add(operador);
                         }
                         operador.Cantidad += Math.Round(agente.Cantidad / 1000);
-                        operador.Ids.Add(new KeyValuePair<int, int>(5, agente.Id));
+                        operador.Ids.Add(agente.Id);
                         agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
                         agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
                         agenteTemp.MaterialDesc = agente.Material.Descripcion;
@@ -902,20 +902,20 @@ namespace Molinos.DataAgro.Business.Managers
                             NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
                             PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
                             PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            ListDispAFijar = x.Where(y => y.DispAFijar > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListDispAPrecio = x.Where(y => y.DispAPrecio > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListDispFijac = x.Where(y => y.DispFijac > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListFrwAFijar = x.Where(y => y.FrwAFijar > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListFrwFijac = x.Where(y => y.FrwFijac > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListNewAFijar = x.Where(y => y.NewAFijar > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListNewAPrecio = x.Where(y => y.NewAPrecio > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId)),
-                            ListNewFijac = x.Where(y => y.NewFijac > 0).Select(y => new KeyValuePair<int, int>(y.TipoNegocioId, y.NegocioId))
+                            ListDispAFijar = x.Where(y => y.DispAFijar > 0).Select(y =>y.NegocioId),
+                            ListDispAPrecio = x.Where(y => y.DispAPrecio > 0).Select(y => y.NegocioId),
+                            ListDispFijac = x.Where(y => y.DispFijac > 0).Select(y =>  y.NegocioId),
+                            ListFrwAFijar = x.Where(y => y.FrwAFijar > 0).Select(y =>  y.NegocioId),
+                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio > 0).Select(y =>  y.NegocioId),
+                            ListFrwFijac = x.Where(y => y.FrwFijac > 0).Select(y =>y.NegocioId),
+                            ListNewAFijar = x.Where(y => y.NewAFijar > 0).Select(y =>  y.NegocioId),
+                            ListNewAPrecio = x.Where(y => y.NewAPrecio > 0).Select(y =>  y.NegocioId),
+                            ListNewFijac = x.Where(y => y.NewFijac > 0).Select(y =>  y.NegocioId)
                         }).ToList();
             return posicionKilos;
         }
 
-        public string DetallePosicionModalIds(List<KeyValuePair<int, int>> negocios, string moneda)
+        public string DetallePosicionModalIds(List<int> negocios, string moneda)
         {
             var detalle = TraerDetallePosicion(negocios, moneda);
             detalle.ForEach(x => x.Cantidad = (int.Parse(x.Cantidad)).ToString("n0"));
@@ -923,13 +923,13 @@ namespace Molinos.DataAgro.Business.Managers
             detalle.ForEach(x => x.PrecioNeto = decimal.Parse(x.PrecioNeto.Replace('.', ',')).ToString("n2"));
             return JsonConvert.SerializeObject(new { items = detalle, total = detalle.Count() }); ;
         }
-        private List<DetalleContratoDto> TraerDetallePosicion(List<KeyValuePair<int, int>> negocios, string moneda)
+        private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda)
         {
-            var contratoIds = negocios.Where(a => a.Key == 1 || a.Key == 2).Select(a => a.Value).ToList();
-            var fijacionDePrecioContratoIds = negocios.Where(a => a.Key == 3).Select(a => a.Value).ToList();
-            var fasonIds = negocios.Where(a => a.Key == 4).Select(a => a.Value).ToList();
-            var contratoAcuerdoIds = negocios.Where(a => a.Key == 6).Select(a => a.Value).ToList();
-            var agentesIds = negocios.Where(a => a.Key == 5).Select(a => a.Value).ToList();
+            //var contratoIds = negocios.Where(a => a.Key == 1 || a.Key == 2).Select(a => a.Value).ToList();
+            //var fijacionDePrecioContratoIds = negocios.Where(a => a.Key == 3).Select(a => a.Value).ToList();
+            //var fasonIds = negocios.Where(a => a.Key == 4).Select(a => a.Value).ToList();
+            //var contratoAcuerdoIds = negocios.Where(a => a.Key == 6).Select(a => a.Value).ToList();
+            //var agentesIds = negocios.Where(a => a.Key == 5).Select(a => a.Value).ToList();
 
             var data = new List<DetalleContratoDto>();
             var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
@@ -977,7 +977,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
             },
-            x => contratoIds.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+            x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
             if (contratos != null)
             {
@@ -1029,7 +1029,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
             },
-             x => fijacionDePrecioContratoIds.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
             if (fijaciones != null)
             {
@@ -1080,7 +1080,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString()
             },
-             x => fasonIds.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
             if (fasones != null)
             {
                 data.AddRange(fasones);
@@ -1134,7 +1134,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString()
             },
-             x => contratoAcuerdoIds.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
 
             if (acuerdos != null)
@@ -1188,7 +1188,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString()
             },
-            x => agentesIds.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+            x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
             if (agente != null)
             {

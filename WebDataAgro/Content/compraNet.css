@@ -1221,3 +1221,8 @@ body {
     margin-bottom:0;
     padding-top:0;
 }
+
+.tabla-pactados{
+    max-height: 150px; 
+    overflow-y: auto;
+}

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -20,7 +21,7 @@ namespace WebDataAgro.Controllers
         private readonly IMaterialManager oMaterialManager;
         private readonly IPizarraManager oPizarraManager;
 
-        public PrecioPizarraController( IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
+        public PrecioPizarraController(IPrecioPizarraManager oPrecioPizarraManager, IMaterialManager oMaterialManager, IPizarraManager oPizarraManager)
         {
             this.oPrecioPizarraManager = oPrecioPizarraManager;
             this.oMaterialManager = oMaterialManager;
@@ -41,8 +42,9 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GrabarPrecioPizarra(PrecioPizarraModel precioPizarraModel)
         {
-           var precioPizarra = TransformarAEntidad(precioPizarraModel);
-           var resultado = oPrecioPizarraManager.GrabarPrecioPizarra((precioPizarra));
+            var precioPizarra = TransformarAEntidad(precioPizarraModel);
+
+            var resultado = oPrecioPizarraManager.GrabarPrecioPizarra(precioPizarra);
 
             return PartialView("_ListaPrecioPizarra", new PrecioPizarraModel
             {
@@ -51,7 +53,7 @@ namespace WebDataAgro.Controllers
                 Resultado = resultado
             });
         }
-       
+
         private PrecioPizarra TransformarAEntidad(PrecioPizarraModel precioPizarraModel)
         {
             var precioPizarra = new PrecioPizarra
@@ -63,7 +65,8 @@ namespace WebDataAgro.Controllers
                 PizarraId = precioPizarraModel.PizarraId,
                 Precio = precioPizarraModel.Precio,
                 MonedaId = precioPizarraModel.MonedaId,
-                UnidadMedida = precioPizarraModel.UnidadMedida
+                UnidadMedida = precioPizarraModel.UnidadMedida,
+                ComercialId = GlobalVariables.ComercialId
 
             };
             return precioPizarra;
@@ -127,7 +130,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = x.Descripcion,
                     Value = x.Id.ToString(),
-                    Selected = x.Codigo !="ROS" ?false :true
+                    Selected = x.Codigo != "ROS" ? false : true
                 }).OrderBy(x => x.Value);
             ViewBag.Pizarra = pizarraListItems;
 
@@ -138,7 +141,7 @@ namespace WebDataAgro.Controllers
                 {
                     Text = x.Descripcion,
                     Value = x.MonedaId.ToString(),
-                    Selected = x.Descripcion== "ARP" ? true:false
+                    Selected = x.Descripcion == "ARP" ? true : false
                 }).OrderBy(x => x.Value);
             ViewBag.Moneda = monedaListItems;
         }

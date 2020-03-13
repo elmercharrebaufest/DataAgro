@@ -179,7 +179,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarAgenteResult();
             var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
 
-            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            if (oContratoSave.EstadoId != (int)EnumEstadoContrato.Rechazado && oContratoSave.EstadoId != (int)EnumEstadoContrato.Eliminado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
 
@@ -194,7 +194,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("", "Agente de Compras no se puede rechazar");
+                oEntityErrors.Error("", "Este Negocio no se puede rechazar por estar Rechazado o Eliminado");
             }
             return oEntityErrors;
         }

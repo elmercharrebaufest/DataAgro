@@ -339,7 +339,7 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     if (!$("#negociosPropiosDiv").hasClass("selected")) {
-        addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
+        addOrRemoveFilter(grilla, "ComercialCreadorId", "eq", parseInt(comercialId));
         $("#negociosPropiosDiv").addClass("selected");
         $("#negociosPropios").addClass("selected").removeClass("varios");
     } else {
@@ -1323,7 +1323,7 @@ function Confirmar(confirmarContratoFijacion) {
     } else if ($("#tipoNegocioModalConTilde").val() === '6') {
         result = MSExecuteOnServer('/CompraNet/ConfirmarAcuerdo', confirmarContratoFijacion);
     } else if ($("#tipoNegocioModalConTilde").val() === '5') {
-        result = MSExecuteOnServer('/CompraNet/ConfirmarAgenteCompra', confirmarContratoFijacion);
+        result = MSExecuteOnServer('/CompraNet/ConfirmarAgente', confirmarContratoFijacion);
     } else if ($("#tipoNegocioModalConTilde").val() === '4') {
         result = MSExecuteOnServer('/CompraNet/ConfirmarFason', confirmarContratoFijacion);
     } else {
@@ -1343,7 +1343,7 @@ function ObtenerDatosModalBorrado() {
     var result;
     if ($("#tipoNegocioModalBorrar").val() === '3') {
         if ($("#estadoModalBorrar").val() != '9') {
-            objConfirmado.FijacionDePrecioContratoId = $("#contratoModalBorrar").val();
+            objConfirmado.Id = $("#contratoModalBorrar").val();
             result = MSExecuteOnServer('/CompraNet/BorrarFijacion', objConfirmado);
         } else {
             id = $("#contratoModalBorrar").val();
@@ -1360,7 +1360,7 @@ function ObtenerDatosModalBorrado() {
         objConfirmado.Id = $("#contratoModalBorrar").val();
         result = MSExecuteOnServer('/CompraNet/BorrarAcuerdo', objConfirmado);
     } else {
-        objConfirmado.contratoId = $("#contratoModalBorrar").val();
+        objConfirmado.Id = $("#contratoModalBorrar").val();
         if ($("#estadoModalBorrar").val() == '5') {
             result = MSExecuteOnServer('/CompraNet/AnularContrato', objConfirmado);
         } else {

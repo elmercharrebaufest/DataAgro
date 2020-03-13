@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Test.Controllers
             materialManagerMock = new Mock<IMaterialManager>();
             pizarraManagerMock = new Mock<IPizarraManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
+            HttpContext.Current.Session["comercialId"] = 1;
             target = new PrecioPizarraController(precioPizarraManagerMock.Object, materialManagerMock.Object, pizarraManagerMock.Object);
         }
 
@@ -80,7 +81,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarPrecioPizarraOk()
         {
             var precioPizarraModel = new PrecioPizarraModel
-            { MaterialId = 1, Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON", Resultado = new Resultado(), HistorialPrecioPizarra = new List<PrecioPizarraDto>(), Precios = new List<PrecioPizarraModel>() };
+            {  MaterialId = 1, Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON", Resultado = new Resultado(), HistorialPrecioPizarra = new List<PrecioPizarraDto>(), Precios = new List<PrecioPizarraModel>() };
 
             precioPizarraManagerMock.Setup(x => x.GrabarPrecioPizarra(It.IsAny<PrecioPizarra>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             precioPizarraManagerMock.Setup(x => x.TraerTodoPrecioPizarra()).Returns(new List<PrecioPizarraDto> {
@@ -104,7 +105,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void BuscarPorPizarraYMaterial()
         {
             precioPizarraManagerMock.Setup(x => x.TraerTodoPrecioPizarraPorMaterialYPizarra(1, 1)).Returns(new List<PrecioPizarraDto> {
-            new PrecioPizarraDto{ Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MaterialId = 1, MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON"} });
+            new PrecioPizarraDto{ Id = 1, FechaDesde = "06-08-2019", FechaHasta = "06-08-2019", MaterialId = 1, MonedaId = "USD", PizarraId = 1, Precio = 100, UnidadMedida = "TON", Fecha = new DateTime(2019,8,6)} });
             
             var result = target.BuscarPorPizarraYMaterial(1, 1);
 
@@ -112,7 +113,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Precio\":100,\"MaterialId\":1,\"PizarraId\":1,\"FechaDesde\":\"06-08-2019\",\"FechaHasta\":\"06-08-2019\",\"MonedaId\":\"USD\",\"Moneda\":null,\"UnidadMedida\":\"TON\",\"Material\":null,\"Pizarra\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}", a);
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Precio\":100,\"MaterialId\":1,\"PizarraId\":1,\"FechaDesde\":\"06-08-2019\",\"FechaHasta\":\"06-08-2019\",\"MonedaId\":\"USD\",\"Moneda\":null,\"UnidadMedida\":\"TON\",\"Material\":null,\"Pizarra\":null,\"Fecha\":\"\\/Date(1565060400000)\\/\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}", a);
         }
 
 

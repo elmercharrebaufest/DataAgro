@@ -14,6 +14,8 @@
 	[MonedaId] CHAR(5) NOT NULL,
 	[CorredorId] INT NULL,
     [StandardDeCalidadId] INT NULL,
+    [CD] BIT NULL,
+    [Warrant] BIT NULL,
     CONSTRAINT [FK_ContratoAcuerdo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
 	CONSTRAINT [FK_ContratoAcuerdo_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
 	CONSTRAINT [FK_ContratoAcuerdo_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro]([Id]),

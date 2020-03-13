@@ -112,19 +112,11 @@ namespace WebDataAgro.Controllers
             return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion,  int.Parse(centroId)), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult DetalleIdsModal(string tiponegocioids,string negocioids,string moneda)
+        public JsonResult DetalleIdsModal(string negocioids,string moneda)
         {
-            tiponegocioids = tiponegocioids == "" ? "0" : tiponegocioids;
-            negocioids = negocioids == "" ? "0" : negocioids;
-            var listtiponegocioids = tiponegocioids.Split(',').Select(a=>int.Parse(a)).ToList();
             var listnegocioids = negocioids.Split(',').Select(a => int.Parse(a)).ToList();
-            var items = new List<KeyValuePair<int, int>>();
-            for (int i = 0; i < listtiponegocioids.Count(); i++)
-            {
-                items.Add(new KeyValuePair<int, int> ( listtiponegocioids[i], listnegocioids[i] ));
-            }
           
-            var result = mobjReportesManager.DetallePosicionModalIds(items,moneda);
+            var result = mobjReportesManager.DetallePosicionModalIds(listnegocioids, moneda);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         public ExcelResult ExcelAgente(string fechaString)

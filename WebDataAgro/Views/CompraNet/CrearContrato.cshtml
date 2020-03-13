@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <div id="plazosYTopesFijacion" class="noFason noAgente noAcuerdo contratoAFijar contratoAPrecio">
+    <div id="plazosYTopesFijacion" class="noFason noAgente acuerdo contratoAFijar contratoAPrecio">
         <div class="row ">
             <div class="contratoAFijar">
                 <div class="col-sm-2 ">
@@ -146,7 +146,7 @@
                 </div>
             </div>
         </div>
-        <div class="row ampliar">
+        <div class="row acuerdo ampliar">
             <div class="contratoAFijar noFason noAgente ampliar">
                 <div class="col-sm-2 ">
                     <label>Condición fijación</label>
@@ -156,7 +156,7 @@
                     <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div id="pagosDiv" class="noFason noAgente ampliar ">
+            <div id="pagosDiv" class="noFason noAgente acuerdo ampliar ">
                 <div class="col-sm-2 ">
                     <label>Pago</label>
                 </div>
@@ -349,7 +349,7 @@
         </div>
     </div>
 
-    <div class="row noAcuerdo" id="aperturaPrecioDiv">
+    <div class="row" id="aperturaPrecioDiv">
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio Neto</label>
         </div>
@@ -460,14 +460,13 @@
             <i class="fa fa-plus"></i> Datos adicionales
         </div>
     </div>
-    <div class="datos-adicionales ampliar-adicionales noFason noAgente noAcuerdo" display="block">
-        <div class="row">
+    <div class="datos-adicionales ampliar-adicionales noFason noAgente acuerdo" display="block">
+        <div class="row noAcuerdo">
             <div class="col-sm-2 ">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
                 <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-
             <div class="col-sm-4 col-md-2">
                 <div class="sustentableDiv" hidden>
                     <input id="sustentablePrecioId" placeholder="Importe" style="width:100%" />
@@ -475,18 +474,19 @@
                 </div>
             </div>
             <div class="col-sm-4 col-md-2">
-
                 <div class="sustentableDiv" hidden>
                     <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="width:100%"></select>
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-sm-2 ">
-                <label>Contrato Vendedor</label>
-            </div>
-            <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
-                <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10" />
-                <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="noAcuerdo">
+                <div class="col-sm-2 ">
+                    <label>Contrato Vendedor</label>
+                </div>
+                <div class="col-md-3 col-sm-9" id="contratoVendedorDiv">
+                    <input id="contVendedorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contVendedorId" maxlength="10" />
+                    <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
         </div>
         <div class="row">
@@ -503,13 +503,15 @@
                     <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div id="contCorredorDiv" hidden>
-                <div class="col-sm-2 ">
-                    <label>Contrato Corredor</label>
-                </div>
-                <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
-                    <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
-                    <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="noAcuerdo">
+                <div id="contCorredorDiv" hidden>
+                    <div class="col-sm-2 ">
+                        <label>Contrato Corredor</label>
+                    </div>
+                    <div class="col-md-3 col-sm-9" id="contratoCorredorDiv">
+                        <input id="contCorredorId" class="k-input contratoinput" type="text" data-bind="value: Parametros.contCorredorId" maxlength="10" />
+                        <img id="errcontCorredorId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -527,13 +529,13 @@
                     <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-sm-6 ">
+            <div class="col-sm-6 noAcuerdo">
                 <label style="width:200px">Sellado 100% a cargo vendedor</label>
                 <input id="selCargoVendedorId" class="campo-input-input" data-bind="checked:Parametros.selCargoVendedorId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errselCargoVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div class="row">
+        <div class="row noAcuerdo">
             <div class="col-sm-2 ">
                 <label style="width:120px">No Informa SIO</label>
                 <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
@@ -555,7 +557,7 @@
                 <img id="errselCargoMOAId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div class="row">
+        <div class="row noAcuerdo">
             <div class="col-sm-2">
                 <label>Comercial</label>
             </div>
@@ -570,7 +572,7 @@
             </div>
         </div>
 
-        <div class="row ocultar">
+        <div class="row ocultar noAcuerdo">
             <div class="col-sm-2 ">
                 <label>Nivel Tarifa</label>
             </div>
@@ -584,8 +586,6 @@
             <div class="col-md-3 col-sm-9">
                 <input id="TarifaFleteId" class="number-input " style="width:100%; margin:0" />
             </div>
-
-
         </div>
     </div>
 
@@ -717,11 +717,10 @@
     </div>
 
     <div class="noFason noAgente noAcuerdo ampliar">
-        <div id="DatosCalidades" class="btnagregar widthButton btnAzul ampliar " type="button">
-            <i class="fa fa-plus"></i> Calidad
-        </div>
+        <div id="DatosCalidades" class="btnagregar widthButton btnAzul " type="button">
+            <i class="fa fa-plus"></i> Calidad </div>
     </div>
-    <div class="noFason noAgente datos-calidades calidades-acuerdo ampliar-adicionales" display="block">
+    <div class="noFason noAgente datos-calidades ampliar-adicionales acuerdo" display="block">
         <div class="row">
             <div id="especialesId">
                 <div>

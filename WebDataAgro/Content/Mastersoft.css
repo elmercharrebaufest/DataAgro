@@ -90,7 +90,7 @@ span.k-widget.k-numerictextbox {
     margin-top:0px;
 }
 
-span.k-widget.k-dropdown.k-header {
+span.k-widget.k-dropdown {
     padding: 0px;
     margin-left: 0px;
     margin-top: 3px;
@@ -204,4 +204,12 @@ span.k-edit {
 
 .sinMargen {
     margin-left: 0 !important;
+}
+
+.k-action-buttons {
+    border-style: none;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 13.2em;
 }

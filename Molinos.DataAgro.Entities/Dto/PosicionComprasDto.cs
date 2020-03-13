@@ -35,14 +35,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? CantidadPonderada { get; set; }
         public int TipoNegocioId { get; set; }
         public int NegocioId { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListDispAFijar { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListDispAPrecio { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListDispFijac { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListFrwAFijar { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListFrwAPrecio { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListFrwFijac { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListNewAFijar { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListNewAPrecio { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> ListNewFijac { get; set; }
+        public IEnumerable<int> ListDispAFijar { get; set; }
+        public IEnumerable<int> ListDispAPrecio { get; set; }
+        public IEnumerable<int> ListDispFijac { get; set; }
+        public IEnumerable<int> ListFrwAFijar { get; set; }
+        public IEnumerable<int> ListFrwAPrecio { get; set; }
+        public IEnumerable<int> ListFrwFijac { get; set; }
+        public IEnumerable<int> ListNewAFijar { get; set; }
+        public IEnumerable<int> ListNewAPrecio { get; set; }
+        public IEnumerable<int> ListNewFijac { get; set; }
     }
 }

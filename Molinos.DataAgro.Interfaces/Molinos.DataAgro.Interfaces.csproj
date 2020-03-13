@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />
+    <Compile Include="Agent\IPrecioPizarraAgent.cs" />
     <Compile Include="Agent\IModificarContratoAgent.cs" />
     <Compile Include="Agent\IModificarCupoAgent.cs" />
     <Compile Include="Agent\IClienteStopAgent.cs" />

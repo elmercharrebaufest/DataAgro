@@ -14,11 +14,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campania { get; set; }
         public int CampaniaId { get; set; }
         public double Pricing { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> PricingIds { get; set; } = new List<KeyValuePair<int, int>>();
+        public IEnumerable<int> PricingIds { get; set; } = new List<int>();
         public double SanLorenzo { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> SanLorenzoIds { get; set; } = new List<KeyValuePair<int, int>>();
+        public IEnumerable<int> SanLorenzoIds { get; set; } = new List<int>();
         public double Acopio { get; set; }
-        public IEnumerable<KeyValuePair<int, int>> AcopioIds { get; set; } = new List<KeyValuePair<int, int>>();
+        public IEnumerable<int> AcopioIds { get; set; } = new List<int>();
         public int TipoNegocioId { get; set; }
     }
 }

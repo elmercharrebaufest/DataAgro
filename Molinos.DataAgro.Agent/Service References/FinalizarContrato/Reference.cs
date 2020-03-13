@@ -271,6 +271,10 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private decimal pORC_DBField;
         
+        private decimal pRECIOField;
+        
+        private string mONEDAField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string FEDESDE {
@@ -352,6 +356,30 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.pORC_DBField = value;
                 this.RaisePropertyChanged("PORC_DB");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public decimal PRECIO {
+            get {
+                return this.pRECIOField;
+            }
+            set {
+                this.pRECIOField = value;
+                this.RaisePropertyChanged("PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string MONEDA {
+            get {
+                return this.mONEDAField;
+            }
+            set {
+                this.mONEDAField = value;
+                this.RaisePropertyChanged("MONEDA");
             }
         }
         
@@ -492,6 +520,10 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         private string zONAField;
         
         private string cREADORField;
+        
+        private string dOL_EXPRESSField;
+        
+        private string fECHA_CIERTAField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1210,6 +1242,30 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.cREADORField = value;
                 this.RaisePropertyChanged("CREADOR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=60)]
+        public string DOL_EXPRESS {
+            get {
+                return this.dOL_EXPRESSField;
+            }
+            set {
+                this.dOL_EXPRESSField = value;
+                this.RaisePropertyChanged("DOL_EXPRESS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=61)]
+        public string FECHA_CIERTA {
+            get {
+                return this.fECHA_CIERTAField;
+            }
+            set {
+                this.fECHA_CIERTAField = value;
+                this.RaisePropertyChanged("FECHA_CIERTA");
             }
         }
         

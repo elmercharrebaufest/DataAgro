@@ -1016,7 +1016,7 @@ namespace Molinos.DataAgro.Test.Managers
             var mat = new Material { MaterialId = 1, CampañaId = 1, Descripcion = "a" };
             var ope = new Operador { Descripcion = "a", Id = 1 };
             var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
-            var ids = new List<KeyValuePair<int, int>> { new KeyValuePair<int, int>(1, 1) };
+            var ids = new List<int>() { 1, 1 };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", Precio = "1", PrecioNeto = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))

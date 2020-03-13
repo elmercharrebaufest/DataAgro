@@ -107,11 +107,7 @@ namespace Molinos.DataAgro.Business
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
-            if(oContratoAcuerdo.MaterialId != 2)
-            {
-                oContratoAcuerdo.Calidad = null;
-                oContratoAcuerdo.StandardDeCalidadId = null;
-            }
+            
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
@@ -134,6 +130,12 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CorredorId = oContratoAcuerdo.CorredorId;
                 objContratoAcuerdo.MonedaId = oContratoAcuerdo.MonedaId;
                 objContratoAcuerdo.StandardDeCalidadId = oContratoAcuerdo.StandardDeCalidadId;
+                objContratoAcuerdo.CD = oContratoAcuerdo.CD;
+                objContratoAcuerdo.Warrant = oContratoAcuerdo.Warrant;
+                objContratoAcuerdo.DiasPesificado = oContratoAcuerdo.DiasPesificado;
+                objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
+                objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
+
                 if (objContratoAcuerdo.Calidad != null)
                 {
                     foreach (var cal in objContratoAcuerdo.Calidad.ToList())
@@ -156,6 +158,32 @@ namespace Molinos.DataAgro.Business
                             PorcentajeHasta = cal.PorcentajeHasta,
                             StandardDeCalidadId = cal.StandardDeCalidadId,
                             Valor = cal.Valor
+                        });
+                    }
+                }
+                if (objContratoAcuerdo.AperturaPrecio != null)
+                {
+                    foreach (var ap in objContratoAcuerdo.AperturaPrecio.ToList())
+                    {
+                        repositorio.Remover(ap);
+                    }
+                }
+                else
+                {
+                    objContratoAcuerdo.AperturaPrecio = new List<AperturaPrecio>();
+                }
+                if (oContratoAcuerdo.AperturaPrecio != null)
+                {
+                    foreach (var y in oContratoAcuerdo.AperturaPrecio)
+                    {
+                        objContratoAcuerdo.AperturaPrecio.Add(new AperturaPrecio
+                        {
+                            NegocioId = y.NegocioId,
+                            Id = y.Id,
+                            ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
+                            Importe = y.Importe,
+                            MonedaId = y.MonedaId,
+                            Porcentaje = y.Porcentaje                            
                         });
                     }
                 }
@@ -184,6 +212,8 @@ namespace Molinos.DataAgro.Business
                 Precio = x.Precio,
                 ComercialId = x.ComercialCreadorId,
                 MaterialId = x.MaterialId,
+                CD = x.CD,
+                Warrant = x.Warrant,
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
@@ -206,7 +236,30 @@ namespace Molinos.DataAgro.Business
                 Moneda = x.Moneda.Descripcion,
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-                Calidades = x.Calidad.Select(y=>new CalidadDto {Valor= y.Valor, CalidadEspecialId = y.CalidadEspecialId, CalidadEspecialDesc=y.CalidadEspecial.Descripcion }).ToList()
+                Dolarizado = x.Dolarizado,
+                Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                Dias_Pesificado = x.DiasPesificado,   
+                PagoDiferido = x.PagoDiferido,
+                Calidades = x.Calidad.Select(y=>new CalidadDto
+                {
+                    Valor = y.Valor,
+                    CalidadEspecialId = y.CalidadEspecialId,
+                    CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
+                    PorcentajeDesde = y.PorcentajeDesde,
+                    PorcentajeHasta =y.PorcentajeHasta
+                }).ToList(),
+                AperturaPrecios = x.AperturaPrecio.Select(y=>new AperturaPrecioDto
+                {
+                    contratoId = y.NegocioId,
+                    Id = y.Id,
+                    ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
+                    ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Porcentaje = y.Porcentaje
+                }).ToList()
             });
             return contrato;            
         }

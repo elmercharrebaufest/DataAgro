@@ -3,6 +3,7 @@ using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
@@ -23,13 +24,15 @@ namespace Molinos.DataAgro.Test.Managers
         private PrecioPizarraManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
+        private Mock<ICrearPrecioPizarraAgent> crearPrecioPizarraAgentMock;
 
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object);
+            crearPrecioPizarraAgentMock = new Mock<ICrearPrecioPizarraAgent>();
+            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, crearPrecioPizarraAgentMock.Object);
         }
 
         [Test]
@@ -76,7 +79,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarPrecioPizarraOk()
         {
-            var precioPizarra = new PrecioPizarra { Id = 1, MaterialId = 1, FechaDesde =new DateTime(2019,8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
+            var precioPizarra = new PrecioPizarra {ComercialId=1, Id = 1, MaterialId = 1, FechaDesde =new DateTime(2019,8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
             repositorioMock.Setup(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()))
                 .Returns(new PrecioPizarra { FechaHasta = new DateTime(2019, 8, 5) });
 

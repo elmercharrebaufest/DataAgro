@@ -116,6 +116,7 @@
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
+    <Compile Include="Dto\PrecioPactadosDto.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
@@ -249,6 +250,7 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\CondicionPago.cs" />
+    <Compile Include="Entities\PrecioPactado.cs" />
     <Compile Include="Entities\Negocio.cs" />
     <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />

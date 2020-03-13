@@ -17,15 +17,19 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime FechaHasta { get; set; }
         public string MonedaId { get; set; }
         public string UnidadMedida { get; set; }
+        public int? ComercialId { get; set; }
 
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
 
-        [ForeignKey ("MaterialId")]
+        [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
 
-        [ForeignKey ("PizarraId")]
+        [ForeignKey("PizarraId")]
         public virtual Pizarra Pizarra { get; set; }
+
+        [ForeignKey("ComercialId")]
+        public virtual Comercial Comercial { get; set; }
 
     }
 }

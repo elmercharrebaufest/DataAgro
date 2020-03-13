@@ -14,15 +14,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Base { get; set; } // Base
         public decimal? ImporteSustentable { get; set; } // Importe_Sustentable
         public string MonedaSustentableId { get; set; } // MonedaId_Sustentable 
-        public DateTime? FechaDolarizado { get; set; } // Fecha_Dolarizado
         public bool? NoInformaSio { get; set; } // NoInformaSIO
         public int ClasificacionId { get; set; }//ClasificacionId
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
         public int? CondicionFijacionId { get; set; }
-        public bool? CD { get; set; }
-        public bool? Warrant { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
@@ -42,7 +39,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Compensacion { get; set; }
         public int? NivelTarifaId { get;  set; }
         public decimal? TarifaFlete { get; set; }
-        public bool? Dolarizado { get; set; }
         public bool? Sustentable { get; set; }
 
        
@@ -67,6 +63,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
         [InverseProperty("Contrato")]
         public virtual ICollection<Calidad> Calidad { get; set; }
+        [InverseProperty("Contrato")]
+        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; }
 
         [ForeignKey("ZonaId")]
         public virtual Zona Zona { get; set; }

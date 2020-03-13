@@ -95,7 +95,7 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
     if (moneda == null) {
         moneda = "";
     }
-    href = href + "/DetalleIdsModal?" + "&tiponegocioids=" + tiponegocioids + "&negocioids=" + negocioids + "&moneda=" + moneda;
+    href = href + "/DetalleIdsModal?" /*+ "&tiponegocioids=" + tiponegocioids*/ + "&negocioids=" + negocioids + "&moneda=" + moneda;
 
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
@@ -379,7 +379,7 @@ function crearGrilladetallePosicion(href) {
 
     });
 
-    OcultarColumnasVacias($("#grilla").data("kendoGrid"));
+  
 }
 
 function OcultarColumnasVacias(grid) {
@@ -398,11 +398,11 @@ function OcultarColumnasVacias(grid) {
                 break;
             }
         }
-
+        
         if (hideColumn) {
-            console.log("hide column: " + title + " column nro:" + j)
             grid.hideColumn(j);
-        }
+           
+        } 
     }
 
 }
@@ -481,9 +481,11 @@ function ShowModal(e) {
         $(document).off('focusin.modal');
     });
     $("#ModalDetallePosicion").on('hidden.bs.modal', function () {
-        $("#grilla").kendoGrid().destroy;
+        //$("#grilla").kendoGrid().destroy;
+        $('#grilla').kendoGrid('destroy').empty();
     });
     $("#ModalDetallePosicion").modal('show');
+    OcultarColumnasVacias($("#grilla").data("kendoGrid"));
 }
 
 function ShowModalAgente() {

@@ -185,6 +185,7 @@ namespace WebDataAgro.Services
                 logger.Debug("ActualizandoContrato2");
 
                 var descuentos = new List<DescuentoBonificacion>();
+                var preciosPactados = new List<PrecioPactado>();
                 var tipoDescuentoList = repositorio.Listar<TipoDB>();
                 var tipoPeriodoList = repositorio.Listar<TipoPeriodoDB>();
 
@@ -204,6 +205,22 @@ namespace WebDataAgro.Services
                             TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id
                         };
                         descuentos.Add(descuento);
+                    }
+                    if (desc.TipoPeriodo != "E" && desc.TipoDescBon != "A")
+                    {
+                        var precio = new PrecioPactado
+                        {
+                            ContratoId = Id,
+                            FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                            FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                            ImportePactado = desc.Importe,
+                            Porcentaje = desc.PorcentajeDB,
+                            MonedaPactadoId = desc.MonedaDB,
+                            Precio = desc.Precio,
+                            MonedaImportePactadoId = desc.Moneda
+                            
+                        };
+                        preciosPactados.Add(precio);
                     }
                 }
                 logger.Debug("ActualizandoContrato3");

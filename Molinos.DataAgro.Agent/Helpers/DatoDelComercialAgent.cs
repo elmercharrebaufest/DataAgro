@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.Password = PassSap;
 
-                var rq = new Z_MPRFC_DATOS_COMERCIAL() { IM_USUARIO = Usuario };
+                var rq = new Z_MPRFC_DATOS_COMERCIAL() { IM_USUARIO = Usuario.ToUpper() };
                 logger.Debug(rq.ToXml());
 
                 var log = new Log

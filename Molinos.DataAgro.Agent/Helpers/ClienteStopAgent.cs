@@ -350,7 +350,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     while (listaCupos.results.Count > 0)
                     {
                         var index = listaCupos.results.Count >= 50 ? 50 : listaCupos.results.Count;
-                        var lista = listaCupos.results.Take(index);
+                        var lista = listaCupos.results.Take(index).ToList();
                         listaCupos.results.RemoveRange(0, index);
                         var cuposActualizados = lista.ToDictionary(x => x.idCupoTerminal);
                         var actualizarCupos = repositorio.Listar<Cupo>(x => cuposActualizados.Keys.Contains(x.CupoSap));
