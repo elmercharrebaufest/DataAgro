@@ -24,15 +24,15 @@ namespace Molinos.DataAgro.Test.Managers
         private PrecioPizarraManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
-        private Mock<ICrearPrecioPizarraAgent> crearPrecioPizarraAgentMock;
+        private Mock<IPrecioPizarraAgent> precioPizarraAgentMock;
 
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
-            crearPrecioPizarraAgentMock = new Mock<ICrearPrecioPizarraAgent>();
-            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, crearPrecioPizarraAgentMock.Object);
+            precioPizarraAgentMock = new Mock<IPrecioPizarraAgent>();
+            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, precioPizarraAgentMock.Object);
         }
 
         [Test]
@@ -79,13 +79,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarPrecioPizarraOk()
         {
-            var precioPizarra = new PrecioPizarra {ComercialId=1, Id = 1, MaterialId = 1, FechaDesde =new DateTime(2019,8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
+            var precioPizarra = new PrecioPizarra {ComercialId=1, Id = 0, MaterialId = 1, FechaDesde =new DateTime(2019,8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
             repositorioMock.Setup(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()))
                 .Returns(new PrecioPizarra { FechaHasta = new DateTime(2019, 8, 5) });
 
             repositorioMock.Setup(x => x.Agregar<PrecioPizarra>(precioPizarra)).Returns(precioPizarra);
             repositorioMock.Setup(x => x.GuardarCambios());
-
+            precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("Ok");
             var resultado = target.GrabarPrecioPizarra(precioPizarra);
 
             repositorioMock.Verify(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()));
@@ -113,6 +113,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarPizarraOk()
         {
+            repositorioMock.Setup(y => y.Obtener<PrecioPizarra>(It.IsAny<int>())).Returns( new PrecioPizarra { Id = 1 });
+            precioPizarraAgentMock.Setup(y => y.Anular(It.IsAny<PrecioPizarra>())).Returns("Ok");
             var resultado = target.EliminarPizarra(1);
 
             repositorioMock.Verify(x => x.Remover<PrecioPizarra>(It.IsAny<int>()));

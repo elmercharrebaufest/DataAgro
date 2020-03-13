@@ -201,7 +201,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual("Agente de Compras no se puede rechazar", result.ListaErrores[0].Message);
+            Assert.AreEqual("Este Negocio no se puede rechazar por estar Rechazado o Eliminado", result.ListaErrores[0].Message);
         }
         [Test]
         public void TraerAgenteTestOk()
