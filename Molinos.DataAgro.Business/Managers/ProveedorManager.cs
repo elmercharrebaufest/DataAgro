@@ -742,6 +742,22 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+            if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
+            {
+                htmlBody += "PRECIO PACTADO <br />";
+                foreach (var precio in oContrato.PrecioPactado)
+                {
+                    htmlBody += "Precio " + precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() + "<br />";
+                    if (precio.ImportePactado != null)
+                    {
+                        htmlBody += "Importe Pactado " + precio.ImportePactado.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaImportePactado.Descripcion.ToUpper() + "<br />";
+                    }
+                    if (precio.Porcentaje != null)
+                    {
+                        htmlBody += "Porcentaje Pactado " + precio.Porcentaje.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "%<br />";
+                    }
+                }
+            }
             if (oContrato.PlanCanje == true)
             {
                 htmlBody += "PLAN CANJE" + "<br />";

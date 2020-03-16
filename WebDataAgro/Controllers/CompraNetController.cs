@@ -500,6 +500,16 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult TraerDatosDeContrato(int contratoId)
+        {
+            var model = mobjContratoManager.TraerDatosDeContrato(contratoId);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult TraerAperturaPrecioPorContrato(int contratoId = 0, string tipo = "contrato")
         {
             List<AperturaPrecioDto> model;
@@ -764,6 +774,14 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjFijacionDePrecioContratoManager.AprobarFijacion(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult ObtenerRangoDePrecios(int materialId, string monedaId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ObtenerRangoDePrecios(materialId, monedaId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

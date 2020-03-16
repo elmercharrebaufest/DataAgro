@@ -116,6 +116,7 @@
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
+    <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />

@@ -31,14 +31,14 @@ namespace Molinos.DataAgro.Business
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
         {
             var oEntityErrors = new GrabarAcuerdoResult();
-            if (!repositorio.Existe<Contrato>(x=>x.ContratoAcuerdoId == oAcuerdo.Id))
+            if (!repositorio.Existe<Contrato>(x => x.ContratoAcuerdoId == oAcuerdo.Id))
             {
                 var oContratoSave = repositorio.Obtener<ContratoAcuerdo>(oAcuerdo.Id);
 
                 if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado ||
-                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error || 
-                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || 
-                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || 
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error ||
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
+                    oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar ||
                     oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
                     oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
@@ -69,45 +69,22 @@ namespace Molinos.DataAgro.Business
             var oEntityErrors = new GrabarAcuerdoResult();
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
-
-            if (oContratoAcuerdo.Precio < 0)
-            {
-                oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
-            }
-            if (oContratoAcuerdo.Cantidad <= 0)
-            {
-                oEntityErrors.Error("", "La Cantidad debe ser mayor o igual a 0");
-            }
-            if (oContratoAcuerdo.ComercialCreadorId == 0 )
-            {
-                oEntityErrors.Error("", "El campo Comercial es obligatorio");
-            }
-            if ( oContratoAcuerdo.DestinoId == 0 )
-            {
-                oEntityErrors.Error("", "El campo Destino es obligatorio");
-            }
-            if (oContratoAcuerdo.MaterialId == 0)
-            {
-                oEntityErrors.Error("", "El campo Material es obligatorio");
-            }
-            if (oContratoAcuerdo.MonedaId == null)
-            {
-                oEntityErrors.Error("", "El campo Moneda es obligatorio");
-            }
-            if (oContratoAcuerdo.FechaHasta == new DateTime())
-            {
-                oEntityErrors.Error("", "La fecha es obligatoria");
-            }
+            
             if (oEntityErrors.HayErrores)
             {
-
                 return oEntityErrors;
             }
 
+            Validar(oContratoAcuerdo, oEntityErrors);
+
+            if (oEntityErrors.Errores.Count > 0)
+            {
+                return oEntityErrors;
+            }
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
-            
+
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
@@ -122,7 +99,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.DestinoId = oContratoAcuerdo.DestinoId;
                 objContratoAcuerdo.FechaDesde = oContratoAcuerdo.FechaDesde;
                 objContratoAcuerdo.FechaHasta = oContratoAcuerdo.FechaHasta;
-                objContratoAcuerdo.EstadoId = estado == 1? 7:2;
+                objContratoAcuerdo.EstadoId = estado == 1 ? 7 : 2;
                 objContratoAcuerdo.ComercialCreadorId = oContratoAcuerdo.ComercialCreadorId;
                 objContratoAcuerdo.Precio = oContratoAcuerdo.Precio;
                 objContratoAcuerdo.Cantidad = oContratoAcuerdo.Cantidad;
@@ -135,6 +112,23 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.DiasPesificado = oContratoAcuerdo.DiasPesificado;
                 objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
                 objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
+                objContratoAcuerdo.FechaDolarizado = oContratoAcuerdo.FechaDolarizado;
+
+
+                objContratoAcuerdo.TipoNegocioId = oContratoAcuerdo.TipoNegocioId;
+                objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
+                objContratoAcuerdo.GrupoCompra = oContratoAcuerdo.GrupoCompra;
+                objContratoAcuerdo.ComercialId = oContratoAcuerdo.ComercialId;
+                objContratoAcuerdo.UsuarioId = oContratoAcuerdo.UsuarioId;
+                objContratoAcuerdo.TrigoEspecial = oContratoAcuerdo.TrigoEspecial;
+                objContratoAcuerdo.Ampliaciones = oContratoAcuerdo.Ampliaciones;
+                objContratoAcuerdo.Observacion = oContratoAcuerdo.Observacion;    
+                objContratoAcuerdo.PrecioNeto = oContratoAcuerdo.PrecioNeto;
+                objContratoAcuerdo.Pizarra = oContratoAcuerdo.Pizarra;
+            
+
+
+
 
                 if (objContratoAcuerdo.Calidad != null)
                 {
@@ -183,7 +177,7 @@ namespace Molinos.DataAgro.Business
                             ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
                             Importe = y.Importe,
                             MonedaId = y.MonedaId,
-                            Porcentaje = y.Porcentaje                            
+                            Porcentaje = y.Porcentaje
                         });
                     }
                 }
@@ -203,10 +197,88 @@ namespace Molinos.DataAgro.Business
             return oEntityErrors;
         }
 
+        private void Validar(ContratoAcuerdo oContratoAcuerdo, GrabarAcuerdoResult oEntityErrors)
+        {
+            if (oContratoAcuerdo.Precio < 0)
+            {
+                oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
+            }
+            if (oContratoAcuerdo.Cantidad <= 0)
+            {
+                oEntityErrors.Error("", "La Cantidad debe ser mayor o igual a 0");
+            }
+            if (oContratoAcuerdo.ComercialCreadorId == 0)
+            {
+                oEntityErrors.Error("", "El campo Comercial es obligatorio");
+            }
+            if (oContratoAcuerdo.DestinoId == 0)
+            {
+                oEntityErrors.Error("", "El campo Destino es obligatorio");
+            }
+            if (oContratoAcuerdo.MaterialId == 0)
+            {
+                oEntityErrors.Error("", "El campo Material es obligatorio");
+            }
+            if (oContratoAcuerdo.MonedaId == null)
+            {
+                oEntityErrors.Error("", "El campo Moneda es obligatorio");
+            }
+            if (oContratoAcuerdo.FechaHasta == new DateTime())
+            {
+                oEntityErrors.Error("", "La fecha es obligatoria");
+            }
+            if (oContratoAcuerdo.Dolarizado.HasValue && oContratoAcuerdo.Dolarizado.Value && !oContratoAcuerdo.FechaDolarizado.HasValue)
+            {
+                oEntityErrors.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+            }
+
+            if (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value)
+            {
+                if (!oContratoAcuerdo.DiasPesificado.HasValue || oContratoAcuerdo.DiasPesificado == 0)
+                {
+                    oEntityErrors.Error("", "Días de diferimiento es obligatorio con el Pago Diferido");
+                }
+                if (oContratoAcuerdo.AperturaPrecio != null)
+                {
+                    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                    if (concepto == null)
+                    {
+                        oEntityErrors.Error("", "Concepto Financiero es obligatorio con el Pago Diferido");
+                    }
+                }
+                else
+                {
+                    oEntityErrors.Error("", "Concepto Financiero es obligatorio con el Pago Diferido");
+                }
+
+            }
+            if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.MonedaId == "  ARP")
+            {
+                var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                if (concepto != null && oContratoAcuerdo.PagoDiferido != true)
+                {
+                    oEntityErrors.Error("", "Pago Diferido es obligatorio con el concepto Financiero");
+                }
+            }
+            if (oContratoAcuerdo.Calidad != null)
+            {
+                var calidad = oContratoAcuerdo.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
+                if (calidad != null && calidad.PorcentajeHasta < 40)
+                {
+                    oEntityErrors.Error("", "Falta completar el rango de Dañados");
+                }
+                calidad = oContratoAcuerdo.Calidad.LastOrDefault(x => x.CalidadEspecialId == 2);
+                if (calidad != null && calidad.PorcentajeHasta < 100)
+                {
+                    oEntityErrors.Error("", "Falta completar el rango de Granos Verdes");
+                }
+            }
+        }
+
         public BasicoContrato TraerAcuerdo(int id)
         {
             var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == id, x => new BasicoContrato
-            {                
+            {
                 Id = x.Id,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
@@ -240,17 +312,17 @@ namespace Molinos.DataAgro.Business
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
-                Dias_Pesificado = x.DiasPesificado,   
+                Dias_Pesificado = x.DiasPesificado,
                 PagoDiferido = x.PagoDiferido,
-                Calidades = x.Calidad.Select(y=>new CalidadDto
+                Calidades = x.Calidad.Select(y => new CalidadDto
                 {
                     Valor = y.Valor,
                     CalidadEspecialId = y.CalidadEspecialId,
                     CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
                     PorcentajeDesde = y.PorcentajeDesde,
-                    PorcentajeHasta =y.PorcentajeHasta
+                    PorcentajeHasta = y.PorcentajeHasta
                 }).ToList(),
-                AperturaPrecios = x.AperturaPrecio.Select(y=>new AperturaPrecioDto
+                AperturaPrecios = x.AperturaPrecio.Select(y => new AperturaPrecioDto
                 {
                     contratoId = y.NegocioId,
                     Id = y.Id,
@@ -261,7 +333,7 @@ namespace Molinos.DataAgro.Business
                     Porcentaje = y.Porcentaje
                 }).ToList()
             });
-            return contrato;            
+            return contrato;
         }
 
         public DatosIniAbmContratoAcuerdo TraerDatosIniciales()
@@ -398,16 +470,16 @@ namespace Molinos.DataAgro.Business
         public void AnularAcuerdos()
         {
             var dia = diasHabilesAgent.UltimoDiaHabil();
-            var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == 2); 
-            
-            foreach(var acuerdo in listaAcuerdo)
+            var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == 2);
+
+            foreach (var acuerdo in listaAcuerdo)
             {
-                var cantidad = repositorio.Listar<Contrato,double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
+                var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
                 acuerdo.Cantidad = (int)cantidad;
                 acuerdo.EstadoId = 5;
             }
 
-           repositorio.GuardarCambios();
+            repositorio.GuardarCambios();
         }
     }
 }

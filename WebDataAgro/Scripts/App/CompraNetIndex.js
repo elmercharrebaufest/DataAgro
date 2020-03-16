@@ -1640,15 +1640,18 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
     }
 
+    
+    var datos;
+    if (tipo == 6) {
+        datos = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
+    } else {
+        datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContrato', { contratoId: contrato });
+    }
     var iteracionesDescuentos = viewModel.DescuentosVisualizar.length;
     for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
     }
-
-
-
-    var descuentosDto = MSExecuteOnServer('/CompraNet/TraerDescuentosPorContrato', { contratoId: contrato });
-
+    var descuentosDto = datos.DescuentosBonificaciones;
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
             Id: descuento.Id,
@@ -1671,8 +1674,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.CalidadesVisualizar.pop();
     }
 
-    var calidadesDto = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
-
+    var calidadesDto = datos.DescuentosBonificaciones;
     $("#visualizar_calidad").text(standardDeCalidadDescripcion);
 
     $.each(calidadesDto, function (key, calidad) {
@@ -1688,6 +1690,32 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
+    var iteracionesPrecio = viewModel.PreciosVisualizar.length;
+    for (var k = 0; k < iteracionesPrecio; k++) {
+        viewModel.PreciosVisualizar.pop();
+    }
+    var preciosDto = datos.Precios;
+    if (preciosDto != null && preciosDto.length>0)
+        $("#pactadosDivVisualizar").show();
+    else
+        $("#pactadosDivVisualizar").hide();
+
+    $.each(preciosDto, function (key, precio) {
+        var precioKendo = {
+            Id: precio.Id,
+            FechaDesde: precio.FechaDesde,
+            FechaHasta: precio.FechaHasta,
+            Precio: precio.Precio,
+            MonedaPactadoId: precio.MonedaPactadoId,
+            MonedaPactadoDesc: precio.MonedaPactadoDesc,
+            ImportePactado: precio.ImportePactado != null ? precio.ImportePactado:"",
+            MonedaImportePactadoId: precio.MonedaImportePactadoId != null ? precio.MonedaImportePactadoId : "",
+            MonedaImportePactadoDesc: precio.MonedaImportePactadoDesc != null ? precio.MonedaImportePactadoDesc : "",
+            Porcentaje: precio.Porcentaje != null ? precio.Porcentaje : ""
+        };
+        viewModel.PreciosVisualizar.push(precioKendo);
+    });
+
     if (standardDeCalidadDescripcion == "null") $("#tipoCalidadDiv").hide();
     if (standardDeCalidadDescripcion == "Grado 2" || standardDeCalidadDescripcion == "Bonif. SECO de 7% a 10% Por punto") $("#calidadesDivVisualizar").hide();
 
@@ -1859,11 +1887,13 @@ function CrearViewModel() {
         Parametros: param,
         DescuentosVisualizar: [],
         CalidadesVisualizar: [],
-        ContratosPendientes: []
+        ContratosPendientes: [],
+        PreciosVisualizar: []
     });
 
     kendo.bind($("#tabla-descuentos-visualizar"), viewModel);
     kendo.bind($("#tabla-calidades-visualizar"), viewModel);
+    kendo.bind($("#tabla-precios-pactados"), viewModel);
     kendo.bind($("#tabla-pendientes"), viewModel);
 }
 

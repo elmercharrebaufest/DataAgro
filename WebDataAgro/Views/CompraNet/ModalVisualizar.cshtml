@@ -258,6 +258,31 @@
                             </div>
                         </script>
                     </div>
+                    
+                    <div id="pactadosDivVisualizar" class="row campo marginCero clearfix noFason noAgente noPadding noFijacion">
+                        <strong style="float:left">Precios Pactados:</strong>
+                        <table id="tabla-precios-pactados" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Fecha Desde</th>
+                                    <th>Fecha Hasta</th>
+                                    <th>Precio</th>
+                                    <th>Importe</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody data-template="precio-pactado-template" data-bind="source:PreciosVisualizar"></tbody>
+                        </table>
+                        <script id="precio-pactado-template" type="text/x-kendo-template">
+                            <tr>
+                                <td>#: FechaDesde #</td>
+                                <td>#: FechaHasta #</td>
+                                <td>#: Precio # #: MonedaPactadoDesc #</td>
+                                <td>#: ImportePactado # #: MonedaImportePactadoDesc #</td>
+                                <td>#: Porcentaje #</td>
+                            </tr>
+                        </script>
+                    </div>
                     <div class="row marginCero">
                         <div id="contratoCorredorVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Contrato Corredor:</strong>

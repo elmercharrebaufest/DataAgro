@@ -1081,6 +1081,60 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => x.NegocioId == c || x.NegocioId == a);
         }
+        public DatosContratoDto TraerDatosDeContrato(int contratoId)
+        {
+            return repositorio.Obtener<Contrato, DatosContratoDto>(x => x.Id == contratoId, 
+                x => new DatosContratoDto()
+            {
+                Calidades = x.Calidad.Select(cal => new CalidadDto()
+                {
+                    ContratoId = cal.NegocioId,
+                    Id = cal.Id,
+                    CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
+                    CalidadEspecialId = cal.CalidadEspecialId,
+                    Valor = cal.Valor,
+                    PorcentajeDesde = cal.PorcentajeDesde,
+                    PorcentajeHasta = cal.PorcentajeHasta,
+                }).ToList(),
+                DescuentosBonificaciones = x.Descuentos.Select(desc => new DescuentoBonificacionDto()
+                {
+                    ContratoId = desc.ContratoId,
+                    Id = desc.Id,
+                    FechaDesde = desc.FechaDesde != null ? SqlFunctions.DateName("day", desc.FechaDesde).Trim() + "-" +
+                                            SqlFunctions.StringConvert((double)desc.FechaDesde.Value.Month).TrimStart() + "-" +
+                                            SqlFunctions.DateName("year", desc.FechaDesde) : "",
+
+                    FechaHasta = desc.FechaHasta != null ? SqlFunctions.DateName("day", desc.FechaHasta).Trim() + "-" +
+                                            SqlFunctions.StringConvert((double)desc.FechaHasta.Value.Month).TrimStart() + "-" +
+                                            SqlFunctions.DateName("year", desc.FechaHasta) : "",
+                    Importe = desc.Importe,
+                    Porcentaje = desc.Porcentaje,
+                    MonedaId = desc.MonedaId,
+                    TipoDBId = desc.TipoDBId,
+                    TipoDBDesc = desc.TipoDB.Descripcion,
+                    TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId = desc.TipoPeriodoDBId
+                }).ToList(),
+                Precios = x.PrecioPactado.Select(pre => new PrecioPactadosDto
+                {
+                    ContratoId = pre.ContratoId,
+                    FechaDesde = pre.FechaDesde != null ? SqlFunctions.DateName("day", pre.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)pre.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", pre.FechaDesde) : "",
+                    FechaHasta = pre.FechaHasta != null ? SqlFunctions.DateName("day", pre.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)pre.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", pre.FechaHasta) : "",
+                    Id = pre.Id,
+                    ImportePactado = pre.ImportePactado,
+                    MonedaImportePactadoDesc = pre.MonedaImportePactado.Descripcion,
+                    MonedaImportePactadoId = pre.MonedaImportePactadoId,
+                    MonedaPactadoDesc = pre.MonedaPactado.Descripcion,
+                    MonedaPactadoId = pre.MonedaPactadoId,
+                    Porcentaje = pre.Porcentaje,
+                    Precio = pre.Precio
+                }).ToList()
+            });
+        }
         public BasicoContrato TraerContrato(int contratoId)
         {
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
@@ -1879,6 +1933,15 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.ObtenerMayor<Contrato,int,int>(x=>true, x=>x.Id, x=>x.Id);
             return repositorio.Listar<Contrato, ContratoIdDto >(x =>new ContratoIdDto {ContratoId=x.Id, ContratoSAP = x.ContratoSAP }
             , x => x.Id >= desdeId && x.Id <= hastaId && !string.IsNullOrEmpty(x.ContratoSAP));
+        }
+        public RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId)
+        {
+            return repositorio.Obtener<RangoPrecio, RangoPrecioDto>(x => x.MaterialId == materialId && x.MonedaId == monedaId,
+                x => new RangoPrecioDto
+                {
+                    PrecioMaximo= x.PrecioMaximo,
+                    PrecioMinimo = x.PrecioMinimo
+                });
         }
     }
 }
