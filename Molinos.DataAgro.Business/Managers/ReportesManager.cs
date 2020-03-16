@@ -529,9 +529,9 @@ namespace Molinos.DataAgro.Business.Managers
                     Pricing = e.Sum(x => x.Pricing),
                     PricingIds = e.Select(a => a.Id).ToList(),
                     Acopio = e.Sum(x => x.Acopio),
-                    AcopioIds = e.Where(a => a.Acopio > 0).Select(a => a.Id).ToList(),
+                    AcopioIds = e.Where(a => a.Acopio != 0).Select(a => a.Id).ToList(),
                     SanLorenzo = e.Sum(x => x.SanLorenzo),
-                    SanLorenzoIds = e.Where(a => a.SanLorenzo > 0).Select(a => a.Id).ToList(),
+                    SanLorenzoIds = e.Where(a => a.SanLorenzo != 0).Select(a => a.Id).ToList(),
                     Id = e.Select(x => x.MaterialId).FirstOrDefault() * 10 + (e.Key.Campania == "New Crop" ? 2 : 1)
 
                 };
@@ -599,7 +599,7 @@ namespace Molinos.DataAgro.Business.Managers
                         sumProd += hT.TipoCambio * hT.HedgePesos;
                         total += hT.HedgePesos;
                     }
-                    if (total > 0)
+                    if (total != 0)
                     {
                         obj.PromedioTC = sumProd / total;
                     }
@@ -669,7 +669,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var standard = calidad.HasValue ? calidad.Value : 1;
             var precioPizarra = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == materialId && x.FechaHasta <= fechaHasta);
-            var precio = precioPizarra.Count > 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
+            var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
@@ -684,7 +684,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = x.TipoNegocioId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
                 CampanaId = x.CampanaId,
-                CantidadPonderada = x.Pizarra == true && precio.Precio > 0 ? x.Cantidad : x.Precio > 0 ? x.Cantidad : 0,
+                CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
                 x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -726,7 +726,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Pizarra == true ? precio.Precio : x.Precio,
                 CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
-                CantidadPonderada = x.Pizarra == true && precio.Precio > 0 ? x.Cantidad : x.Precio > 0 ? x.Cantidad : 0,
+                CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -753,7 +753,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 TipoNegocioId = 4,
                 Precio = x.Precio,
-                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
+                CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
                 CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
                 Posicion = x.Posicion,
@@ -785,7 +785,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 TipoNegocioId = 6,
                 Precio = x.Precio,
-                CantidadPonderada = x.Precio > 0 ? x.Cantidad : 0,
+                CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.MonedaId,
 
             },
@@ -900,17 +900,17 @@ namespace Molinos.DataAgro.Business.Managers
                             NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
                             NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
                             NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
-                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) > 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            ListDispAFijar = x.Where(y => y.DispAFijar > 0).Select(y =>y.NegocioId),
-                            ListDispAPrecio = x.Where(y => y.DispAPrecio > 0).Select(y => y.NegocioId),
-                            ListDispFijac = x.Where(y => y.DispFijac > 0).Select(y =>  y.NegocioId),
-                            ListFrwAFijar = x.Where(y => y.FrwAFijar > 0).Select(y =>  y.NegocioId),
-                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio > 0).Select(y =>  y.NegocioId),
-                            ListFrwFijac = x.Where(y => y.FrwFijac > 0).Select(y =>y.NegocioId),
-                            ListNewAFijar = x.Where(y => y.NewAFijar > 0).Select(y =>  y.NegocioId),
-                            ListNewAPrecio = x.Where(y => y.NewAPrecio > 0).Select(y =>  y.NegocioId),
-                            ListNewFijac = x.Where(y => y.NewFijac > 0).Select(y =>  y.NegocioId)
+                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y =>y.NegocioId),
+                            ListDispAPrecio = x.Where(y => y.DispAPrecio != 0).Select(y => y.NegocioId),
+                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y =>  y.NegocioId),
+                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y =>  y.NegocioId),
+                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y =>  y.NegocioId),
+                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y =>y.NegocioId),
+                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y =>  y.NegocioId),
+                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y =>  y.NegocioId),
+                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y =>  y.NegocioId)
                         }).ToList();
             return posicionKilos;
         }

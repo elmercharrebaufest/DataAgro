@@ -99,7 +99,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();
                 logger.Debug("Guardado en la base");
 
-                if (devolucion.EX_MENSAJE != "")
+                if (devolucion.EX_MENSAJE != "OK")
                 {
                     throw new Exception(devolucion.EX_MENSAJE);
                 }

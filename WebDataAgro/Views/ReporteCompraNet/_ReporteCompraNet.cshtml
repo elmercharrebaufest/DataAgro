@@ -2,19 +2,19 @@
 @model WebDataAgro.Models.ReporteCompraNetModel
 
 @{
-    var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar > 0));
-    var dispAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAPrecio > 0));
-    var dispFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispFijac > 0));
+    var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar != 0));
+    var dispAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAPrecio != 0));
+    var dispFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispFijac != 0));
     var dispAgente = Model.ToneladasGranoTipo.Any(x => x.DispAgente != 0);
     var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispAgente ? 0 : 1);
-    var forwAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAFijar > 0));
-    var forwAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAPrecio > 0));
-    var forwFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwFijac > 0));
+    var forwAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAFijar != 0));
+    var forwAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwAPrecio != 0));
+    var forwFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.FrwFijac != 0));
     var forwAgente = Model.ToneladasGranoTipo.Any(x => x.FrwAgente != 0);
     var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwAgente ? 0 : 1);
-    var newcAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAFijar > 0));
-    var newcAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAPrecio > 0));
-    var newcFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewFijac > 0));
+    var newcAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAFijar != 0));
+    var newcAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewAPrecio != 0));
+    var newcFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewFijac != 0));
     var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente != 0);
     var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcAgente ? 0 : 1);
 
@@ -101,8 +101,8 @@
                         <th>MATERIAL</th>
                         <th>CAMPAÑA</th>
                         <th>PRICING</th>
-                        <th class="@(Model.PricingCampania.Any(x => x.SanLorenzo > 0) ? "" : "hide")">SL</th>
-                        <th class="@(Model.PricingCampania.Any(x => x.Acopio > 0) ? "" : "hide")">Acopios</th>
+                        <th class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">SL</th>
+                        <th class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">Acopios</th>
                     </tr>
                     @foreach (var datos in Model.PricingCampania)
                     {
@@ -226,14 +226,14 @@
                                     @sumaPricing
                                 </a>
                             </td>
-                            <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo > 0) ? "" : "hide")">
+                            <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">
                                 <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
-                                    @(Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
+                                    @(Model.PricingCampania.Any(x => x.SanLorenzo != 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
                                 </a>
                             </td>
-                            <td class="@(Model.PricingCampania.Any(x => x.Acopio > 0) ? "" : "hide")">
+                            <td class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">
                                 <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
-                                    @(Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
+                                    @(Model.PricingCampania.Any(x => x.Acopio != 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
                                 </a>
                             </td>
                         </tr>
@@ -420,37 +420,37 @@
         @foreach (var material in Model.PosicionCompras)
         {
 
-            dispAFijar = material.PosicionKilos.Any(x => x.DispAFijar > 0);
-            dispAPrecio = material.PosicionKilos.Any(x => x.DispAPrecio > 0);
-            dispFijacion = material.PosicionKilos.Any(x => x.DispFijac > 0);
-            forwAFijar = material.PosicionKilos.Any(x => x.FrwAFijar > 0);
-            forwAPrecio = material.PosicionKilos.Any(x => x.FrwAPrecio > 0);
-            forwFijacion = material.PosicionKilos.Any(x => x.FrwFijac > 0);
-            newcAFijar = material.PosicionKilos.Any(x => x.NewAFijar > 0);
-            newcAPrecio = material.PosicionKilos.Any(x => x.NewAPrecio > 0);
-            newcFijacion = material.PosicionKilos.Any(x => x.NewFijac > 0);
+            dispAFijar = material.PosicionKilos.Any(x => x.DispAFijar != 0);
+            dispAPrecio = material.PosicionKilos.Any(x => x.DispAPrecio != 0);
+            dispFijacion = material.PosicionKilos.Any(x => x.DispFijac != 0);
+            forwAFijar = material.PosicionKilos.Any(x => x.FrwAFijar != 0);
+            forwAPrecio = material.PosicionKilos.Any(x => x.FrwAPrecio != 0);
+            forwFijacion = material.PosicionKilos.Any(x => x.FrwFijac != 0);
+            newcAFijar = material.PosicionKilos.Any(x => x.NewAFijar != 0);
+            newcAPrecio = material.PosicionKilos.Any(x => x.NewAPrecio != 0);
+            newcFijacion = material.PosicionKilos.Any(x => x.NewFijac != 0);
             var totalPesos = material.PosicionKilos.Sum(y => y.KilosPesos);
             var totalDolares = material.PosicionKilos.Sum(y => y.KilosDolares);
             var fix = 3 - (dispFijacion ? 0 : 1) - (forwFijacion ? 0 : 1) - (newcFijacion ? 0 : 1);
             var aFijar = 3 - (dispAFijar ? 0 : 1) - (forwAFijar ? 0 : 1) - (newcAFijar ? 0 : 1);
             var aPrecio = 3 - (dispAPrecio ? 0 : 1) - (forwAPrecio ? 0 : 1) - (newcAPrecio ? 0 : 1);
             var suma = fix + aFijar + aPrecio + (totalPesos != 0 ? 1 : 0) + (totalDolares != 0 ? 1 : 0);
-            var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos > 0) ? 1 : 0;
-            var pondDolares = material.PosicionKilos.Any(x => x.PrecioPonderadoDolares > 0) ? 1 : 0;
+            var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos != 0) ? 1 : 0;
+            var pondDolares = material.PosicionKilos.Any(x => x.PrecioPonderadoDolares != 0) ? 1 : 0;
             var pond = pondPesos + pondDolares;
-            <div id="@material.Material.Replace(" ", "")Table" class="table-responsive col-xs-12 @(suma <= 5 ? "col-md-6" : "col-md-12") @(suma > 0 ? "" : "hide")">
+            <div id="@material.Material.Replace(" ", "")Table" class="table-responsive col-xs-12 @(suma <= 5 ? "col-md-6" : "col-md-12") @(suma != 0 ? "" : "hide")">
                 <table id="@material.Material.Replace(" ", "")" class="table table-condensed">
                     <tbody>
                         <tr class="titulosPosicion"><th colspan="@(suma + pond + 3)">@material.Material.ToUpper()</th></tr>
-                        <tr class="titulosPosicion @(suma > 0 ? "" : "hide")">
+                        <tr class="titulosPosicion @(suma != 0 ? "" : "hide")">
                             <th rowspan="2">Posición</th>
-                            <th colspan="@fix" class="@(fix > 0 ? "" : "hide") borde-izq-der">Fix</th>
-                            <th colspan="@aFijar" class="@(aFijar > 0 ? "" : "hide") borde-izq-der">A Fijar</th>
-                            <th colspan="@aPrecio" class="@(aPrecio > 0 ? "" : "hide") borde-izq-der">A Precio</th>
+                            <th colspan="@fix" class="@(fix != 0 ? "" : "hide") borde-izq-der">Fix</th>
+                            <th colspan="@aFijar" class="@(aFijar != 0 ? "" : "hide") borde-izq-der">A Fijar</th>
+                            <th colspan="@aPrecio" class="@(aPrecio != 0 ? "" : "hide") borde-izq-der">A Precio</th>
                             <th rowspan="2" class="@(totalPesos != 0 ? "" : "hide")">Ton. $</th>
-                            <th rowspan="2" class="@(pondPesos > 0 ? "" : "hide")">Precio $</th>
+                            <th rowspan="2" class="@(pondPesos != 0 ? "" : "hide")">Precio $</th>
                             <th rowspan="2" class="@(totalDolares != 0 ? "" : "hide")">Ton. USD</th>
-                            <th rowspan="2" class="@(pondDolares > 0 ? "" : "hide")">Precio USD</th>
+                            <th rowspan="2" class="@(pondDolares != 0 ? "" : "hide")">Precio USD</th>
                             <th rowspan="2"></th>
                             <th rowspan="2">Total</th>
                         </tr>
@@ -536,13 +536,13 @@
                                         @(mes.KilosPesos.ToString("N0"))
                                     </a>
                                 </td>
-                                <td class="@(pondPesos > 0 ? "" : "hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
+                                <td class="@(pondPesos != 0 ? "" : "hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
                                 <td class="@(totalDolares != 0 ? "" : "hide")">
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', 'USDM ')">
                                         @(mes.KilosDolares.ToString("N0"))
                                     </a>
                                 </td>
-                                <td class="@(pondDolares > 0 ? "" : "hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
+                                <td class="@(pondDolares != 0 ? "" : "hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
                                 <td>
                                     <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD" ? 2 : material.Material.ToUpper() == "TRIGO GRADO 2" ? 7 : 3) })">
                                         <span>
@@ -611,7 +611,7 @@
                                     @totalPesos.ToString("N0")
                                 </a>
                             </th>
-                            <td class="@(pondPesos > 0 ? "" : "hide")"></td>
+                            <td class="@(pondPesos != 0 ? "" : "hide")"></td>
                             <th class="@(totalDolares != 0 ? "" : "hide")">
                                 <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'USDM ')">
                                     @totalDolares.ToString("N0")
@@ -625,7 +625,7 @@
                 </table>
             </div>
         }
-        <div class="table-responsive col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count > 0 ? "" : "hide")">
+        <div class="table-responsive col-xs-12 col-md-6 @(Model.AgenteCompras.ListaAgenteCompras.Count != 0 ? "" : "hide")">
             <table id="agenteCompras" class="table-condensed">
                 <tr class="titulos agente">
                     <th colspan="@(Model.AgenteCompras.ListaOperadores.Count + 3)">AGENTE DE COMPRA MAT</th>
@@ -704,24 +704,24 @@
                 </tr>
             </table>
         </div>
-        <div class="table-responsive col-xs-6 col-md-3 @(Model.SojaSustentable.Total > 0 ?"":"hide")">
+        <div class="table-responsive col-xs-6 col-md-3 @(Model.SojaSustentable.Total != 0 ?"":"hide")">
             <table class="table-condensed " id="SojaSustentable">
                 <tbody>
                     <tr>
                         <th class="titulos" colspan="3">SOJA SUSTENTABLE</th>
                     </tr>
                     <tr>
-                        <th class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">A Precio</th>
-                        <th class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">A Fijar</th>
+                        <th class="@(Model.SojaSustentable.Precio != 0 ? "":"hide")">A Precio</th>
+                        <th class="@(Model.SojaSustentable.Fijar != 0 ? "":"hide")">A Fijar</th>
                         <th>Total</th>
                     </tr>
                     <tr>
-                        <td class="@(Model.SojaSustentable.Precio > 0 ? "":"hide")">
+                        <td class="@(Model.SojaSustentable.Precio != 0 ? "":"hide")">
                             <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Key))')">
                                 @Model.SojaSustentable.Precio.ToString("N0")
                             </a>
                         </td>
-                        <td class="@(Model.SojaSustentable.Fijar > 0 ? "":"hide")">
+                        <td class="@(Model.SojaSustentable.Fijar != 0 ? "":"hide")">
                             <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA SUSTENTABLE A Fijar', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Key))')">
                                 @Model.SojaSustentable.Fijar.ToString("N0")
                             </a>
@@ -740,7 +740,7 @@
                 <tbody>
                     @foreach (var moneda in Model.PrecioCantidad)
                     {
-                        <tr class="total @(moneda.Cantidad>0?"":"hide")">
+                        <tr class="total @(moneda.Cantidad != 0?"":"hide")">
                             <th>@moneda.Moneda</th>
                             <td>@moneda.Cantidad.Value.ToString("N2")</td>
                         </tr>

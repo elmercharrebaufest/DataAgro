@@ -63,7 +63,7 @@ namespace WebDataAgro.Seguridad
                 esExterno = true;
             }
 
-            log.Debug("Agregando claims de permisos del Orquestador para el usuario {0}", nombreUsuario);
+            log.Debug("Agregando claims de permisos DataAgro para el usuario {0}", nombreUsuario);
             if (esExterno)
             {
                 var usuario = repositorio.ObtenerNoTracking<Proveedor>(u => u.CUIT == nombreUsuario);
