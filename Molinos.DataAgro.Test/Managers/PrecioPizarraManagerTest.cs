@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(x => x.Agregar<PrecioPizarra>(precioPizarra)).Returns(precioPizarra);
             repositorioMock.Setup(x => x.GuardarCambios());
-            precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("Ok");
+            precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("OK");
             var resultado = target.GrabarPrecioPizarra(precioPizarra);
 
             repositorioMock.Verify(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()));
@@ -114,7 +114,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void EliminarPizarraOk()
         {
             repositorioMock.Setup(y => y.Obtener<PrecioPizarra>(It.IsAny<int>())).Returns( new PrecioPizarra { Id = 1 });
-            precioPizarraAgentMock.Setup(y => y.Anular(It.IsAny<PrecioPizarra>())).Returns("Ok");
+            precioPizarraAgentMock.Setup(y => y.Anular(It.IsAny<PrecioPizarra>())).Returns("OK");
             var resultado = target.EliminarPizarra(1);
 
             repositorioMock.Verify(x => x.Remover<PrecioPizarra>(It.IsAny<int>()));
