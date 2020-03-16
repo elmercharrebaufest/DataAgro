@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     string resultado = precioPizarraAgent.Crear(precioPizarra);
-                    if (resultado != "Ok")
+                    if (resultado != "OK")
                     {
                         oEntityErrors.Error("PrecioPizarraSAP", resultado);
                     }
@@ -143,7 +143,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 string resultado = precioPizarraAgent.Anular(precioPizarra);
-                if (resultado != "Ok")
+                if (resultado != "OK")
                 {
                     result.Error("PrecioPizarraSAP", resultado);
                 }

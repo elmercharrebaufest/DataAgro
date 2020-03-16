@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return "Ok";
+                return "OK";
             }
             else
             {
@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return "Ok";
+                return "OK";
             }
             else
             {
