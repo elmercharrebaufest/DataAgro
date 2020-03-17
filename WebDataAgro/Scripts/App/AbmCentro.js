@@ -335,7 +335,7 @@ function Grabar() {
         "Id": viewModel.get("Centro.Id"),
         "Descripcion": viewModel.get("Centro.Descripcion"),
         "CodigoSap": viewModel.get("Centro.CodigoSap"),
-        "Acopio": viewModel.get("")
+        "Acopio": viewModel.get("Centro.Acopio")
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);
