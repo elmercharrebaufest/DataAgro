@@ -95,7 +95,7 @@
     CONSTRAINT [FK_Negocio_ComercialCreador] FOREIGN KEY ([ComercialCreadorId]) REFERENCES [Comercial]([ComercialId]), 
     CONSTRAINT [FK_Negocio_Corredor] FOREIGN KEY ([CorredorId]) REFERENCES [Proveedor]([ProveedorId]),
 	CONSTRAINT [FK_Negocio_FinDelDia] FOREIGN KEY (FinDelDiaId) REFERENCES [FinDelDia]([Id]),
-	CONSTRAINT [FK_Negocio_ContratoAcuerdo] FOREIGN KEY (ContratoAcuerdoId) REFERENCES [ContratoAcuerdo]([Id]),
+	CONSTRAINT [FK_Negocio_ContratoAcuerdo] FOREIGN KEY (ContratoAcuerdoId) REFERENCES [Negocio]([Id]),
 	CONSTRAINT [FK_Negocio_StandardDeCalidad] FOREIGN KEY (StandardDeCalidadId) REFERENCES [StandardDeCalidad]([Id]),
 	CONSTRAINT [FK_Negocio_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id]),
 	CONSTRAINT [FK_Negocio_NivelTarifa] FOREIGN KEY (NivelTarifaId) REFERENCES [NivelTarifa]([Id]),

@@ -3215,10 +3215,10 @@ function AgregarPrecioPactado() {
         Id: 0,
         FechaDesde: $("#fechaDesdePactado").val(),
         FechaHasta: $("#fechaHastaPactado").val(),
-        Precio: kendo.toString($("#precioPactado").val().replace(',', '.') ? Number($("#precioPactado").val().replace(',', '.')) : Number(0), "n2"),
+        Precio: kendo.toString($("#precioPactado").val().replace(',', '.') ? Number($("#precioPactado").val().replace(',', '.')) : "", "n2"),
         MonedaPactadoId: $("#monedaPactadoId").data("kendoDropDownList").value(),
         MonedaPactadoDesc: $("#monedaPactadoId").data("kendoDropDownList").text(),
-        ImportePactado: kendo.toString($("#importePactado").val().replace(',', '.') ? Number($("#importePactado").val().replace(',', '.')) : Number(0), "n2"),
+        ImportePactado: kendo.toString($("#importePactado").val().replace(',', '.') ? Number($("#importePactado").val().replace(',', '.')) : "", "n2"),
         MonedaImportePactadoId: $("#monedaImportePactadoId").data("kendoDropDownList").value(),
         MonedaImportePactadoDesc: $("#monedaImportePactadoId").data("kendoDropDownList").value() != "" ? $("#monedaImportePactadoId").data("kendoDropDownList").text() : "",
         Porcentaje: $("#porcentajePactado").val(),
@@ -3274,9 +3274,10 @@ function AgregarPrecioPactado() {
         }
 
         var rangos = MSExecuteOnServer('/CompraNet/ObtenerRangoDePrecios', { materialId: $("#material").val(), monedaId: $("#precioMonedaId").val() });
-        if (precioPactado.Precio < rangos.PrecioMinimo) {
+        if (Number($("#precioPactado").val().replace(',', '.')) < rangos.PrecioMinimo) {
             errores.push("Precio por fuera del rango de Precio Mínimo");
-        } if (precioPactado.Precio > rangos.PrecioMaximo) {
+        }
+        if (Number($("#precioPactado").val().replace(',', '.')) > rangos.PrecioMaximo) {
             errores.push("Precio por fuera del rango de Precio Máximo");
         }
         return errores;

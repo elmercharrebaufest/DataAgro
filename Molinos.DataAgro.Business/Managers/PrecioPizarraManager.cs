@@ -140,23 +140,23 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var result = new Resultado();
             var precioPizarra = repositorio.Obtener<PrecioPizarra>(x => x.Id == id);
-            //try
-            //{
-            //    string resultado = precioPizarraAgent.Anular(precioPizarra);
-            //    if (resultado != "OK")
-            //    {
-            //        result.Error("PrecioPizarraSAP", resultado);
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    result.Error("PrecioPizarraSAP", e.Message);
-            //}
-            //if (result.HayError)
-            //{
-            //    return result;
-            //}
-            
+            try
+            {
+                string resultado = precioPizarraAgent.Anular(precioPizarra);
+                if (resultado != "OK")
+                {
+                    result.Error("PrecioPizarraSAP", resultado);
+                }
+            }
+            catch (Exception e)
+            {
+                result.Error("PrecioPizarraSAP", e.Message);
+            }
+            if (result.HayError)
+            {
+                return result;
+            }
+
             try
             {
                 repositorio.Remover<PrecioPizarra>(id);
