@@ -37,6 +37,7 @@ function InicializarBordesRojos() {
 function InicializarFondosGrises() {
     $(".gris").addClass("no-border").prop('disabled', true);
     $("#precioId").data("kendoNumericTextBox").value("");
+    $("#precioTotalApertura").data("kendoNumericTextBox").value("");
     $("#precioMonedaId").data("kendoDropDownList").enable(false);
     $("#precioMonedaId").data("kendoDropDownList").value("");
     $("div.col-xs-12.col-sm-5.col-md-3.required-box-parent > span.k-widget.k-dropdown.k-header > span").addClass('no-border');
