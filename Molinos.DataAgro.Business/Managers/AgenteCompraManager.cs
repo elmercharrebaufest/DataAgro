@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacío");
             }
-            if (oParam.CampanaId == 0)
+            if (oParam.CampanaId == null || oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("Campaña", "El campo 'Campaña' no debe estar vacío");
             }

@@ -63,7 +63,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     RazonSocial = provs.Key.RazonSocial,
                     Segmentacion = provs.Key.Segmentacion.Descripcion,
                     TipoBoleto = provs.Key.BoletoCompraNet.Descripcion,
-                    Zona = provs.Key.GrupoCompras
+                    Zona = provs.Key.GrupoCompras,
+                    ComisionPorcentaje = provs.Key.ComisionPorcentaje??0
 
                 };
 

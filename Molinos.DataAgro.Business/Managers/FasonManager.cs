@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("TipoFasonId", "El campo 'Tipo Fason' no debe estar vacio");
             }
-            if (oParam.CampanaId == 0)
+            if (oParam.CampanaId == null || oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
             }

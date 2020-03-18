@@ -53,6 +53,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Bolsa { get; set; }
         public string Consignatario { get; set; }
 
+        public decimal? ComisionPorcentaje { get; set; }
+
     }
 
     public class ObjetivoAll

@@ -244,6 +244,9 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 22].Value = "Bolsa";
             workSheet.Column(22).AutoFit();
 
+            workSheet.Cells[1, 23].Value = "Comisión";
+            workSheet.Column(23).AutoFit();
+
             if (oDatos.objetivo.Count > 0)
             {
                 oPropRow = oDatos.objetivo[0].GetType().GetProperties();
