@@ -59,10 +59,10 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager, 
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager) 
+            IMailManager mailManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -107,16 +107,16 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
-                    x=>x.DesdeVigencia <= hoy&& x.HastaVigencia >= hoy);
+                    x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy);
                 listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
                     x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy));
                 datosCombo.material = listaMaterial.GroupBy(y => y.MaterialId).Select(y => y.FirstOrDefault()).ToList();
                 datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido });
             }
-            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });            
+            datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).Where(a=>a.Descripcion != "ESPACIO DINAMICO").ToList();
+            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).Where(a => a.Descripcion != "ESPACIO DINAMICO").ToList();
             if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.TipoFason = repositorio.Listar<TipoFason, TipoFasonQry>(x => new TipoFasonQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.TipoAgenteCompra = repositorio.Listar<TipoAgenteCompra, TipoAgenteCompraQry>(x => new TipoAgenteCompraQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Operador = repositorio.Listar<Operador, OperadorQry>(x => new OperadorQry() { Id = x.Id, Descripcion = x.Descripcion });
-            datosCombo.Zona= repositorio.Listar<Zona, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion });
+            datosCombo.Zona = repositorio.Listar<Zona, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion });
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues)
@@ -253,11 +253,13 @@ namespace Molinos.DataAgro.Business.Managers
             var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
             if (string.IsNullOrEmpty(alta.Mensaje))
             {
-                if (oParam.Consignatario.HasValue&& oParam.Consignatario.Value&& alta.Consignatario == "NO") {
-                    oErrorMessages.Error("Consignatario","El proveedor no está habilitado como Consignatario");                    
+                if (oParam.Consignatario.HasValue && oParam.Consignatario.Value && alta.Consignatario == "NO")
+                {
+                    oErrorMessages.Error("Consignatario", "El proveedor no está habilitado como Consignatario");
                 }
-                if (oParam.PlanCanje.HasValue && oParam.PlanCanje.Value && alta.PlanCanje == "NO") {
-                    oErrorMessages.Error("PlanCanje","El proveedor no está habilitado como Proveedor Plan canje");
+                if (oParam.PlanCanje.HasValue && oParam.PlanCanje.Value && alta.PlanCanje == "NO")
+                {
+                    oErrorMessages.Error("PlanCanje", "El proveedor no está habilitado como Proveedor Plan canje");
                 }
                 if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
                 {
@@ -319,7 +321,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Capacidad Productiva", result);
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(oParam.ContratoMadre))
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
@@ -334,7 +336,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
-            
+
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
@@ -371,7 +373,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacio");
             }
-            
+
             if (oParam.ComercialId == 0 || oParam.ComercialId == null)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
@@ -416,7 +418,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
                 var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
-                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId ==1|| d.EstadoId == 2||d.EstadoId == 3||d.EstadoId == 4|| d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
@@ -511,8 +513,8 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.NivelTarifaId != null && oParam.NivelTarifaId != 0 && oParam.TarifaFlete == null)
             {
                 oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
-            }           
-            
+            }
+
             return oErrorMessages;
         }
 
@@ -549,7 +551,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El contrato no se puede ampliar");
             }
 
-           
+
 
             return oEntityErrors;
         }
@@ -594,7 +596,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                     oContrato.EstadoId = oContratoSave.EstadoId;
                 }
-            } else
+            }
+            else
             {
                 oContratoSave.Fecha = hoy;
             }
@@ -666,7 +669,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Sustentable = oContrato.Sustentable;
             if (oContratoSave.PrecioPactado != null)
             {
-                foreach(var precio in preciosExistentes)
+                foreach (var precio in preciosExistentes)
                 {
                     repositorio.Remover(precio);
                 }
@@ -675,7 +678,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContratoSave.PrecioPactado = new List<PrecioPactado>();
             }
-            if(oContrato.PrecioPactado!= null){
+            if (oContrato.PrecioPactado != null)
+            {
                 foreach (var precio in oContrato.PrecioPactado)
                 {
                     precio.ContratoId = oContrato.Id;
@@ -747,7 +751,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Agregar(oContratoSave);
             }
 
-            
+
 
             if (aperturasExistentes != null)
             {
@@ -889,7 +893,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-            
+
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
                 var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
@@ -1082,63 +1086,63 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecialId = cal.CalidadEspecialId,
                 Valor = cal.Valor,
                 PorcentajeDesde = cal.PorcentajeDesde,
-                PorcentajeHasta = cal.PorcentajeHasta,                
+                PorcentajeHasta = cal.PorcentajeHasta,
             },
             x => x.NegocioId == c || x.NegocioId == a);
         }
         public DatosContratoDto TraerDatosDeContrato(int contratoId)
         {
-            return repositorio.Obtener<Contrato, DatosContratoDto>(x => x.Id == contratoId, 
+            return repositorio.Obtener<Contrato, DatosContratoDto>(x => x.Id == contratoId,
                 x => new DatosContratoDto()
-            {
-                Calidades = x.Calidad.Select(cal => new CalidadDto()
                 {
-                    ContratoId = cal.NegocioId,
-                    Id = cal.Id,
-                    CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
-                    CalidadEspecialId = cal.CalidadEspecialId,
-                    Valor = cal.Valor,
-                    PorcentajeDesde = cal.PorcentajeDesde,
-                    PorcentajeHasta = cal.PorcentajeHasta,
-                }).ToList(),
-                DescuentosBonificaciones = x.Descuentos.Select(desc => new DescuentoBonificacionDto()
-                {
-                    ContratoId = desc.ContratoId,
-                    Id = desc.Id,
-                    FechaDesde = desc.FechaDesde != null ? SqlFunctions.DateName("day", desc.FechaDesde).Trim() + "-" +
-                                            SqlFunctions.StringConvert((double)desc.FechaDesde.Value.Month).TrimStart() + "-" +
-                                            SqlFunctions.DateName("year", desc.FechaDesde) : "",
+                    Calidades = x.Calidad.Select(cal => new CalidadDto()
+                    {
+                        ContratoId = cal.NegocioId,
+                        Id = cal.Id,
+                        CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
+                        CalidadEspecialId = cal.CalidadEspecialId,
+                        Valor = cal.Valor,
+                        PorcentajeDesde = cal.PorcentajeDesde,
+                        PorcentajeHasta = cal.PorcentajeHasta,
+                    }).ToList(),
+                    DescuentosBonificaciones = x.Descuentos.Select(desc => new DescuentoBonificacionDto()
+                    {
+                        ContratoId = desc.ContratoId,
+                        Id = desc.Id,
+                        FechaDesde = desc.FechaDesde != null ? SqlFunctions.DateName("day", desc.FechaDesde).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)desc.FechaDesde.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", desc.FechaDesde) : "",
 
-                    FechaHasta = desc.FechaHasta != null ? SqlFunctions.DateName("day", desc.FechaHasta).Trim() + "-" +
-                                            SqlFunctions.StringConvert((double)desc.FechaHasta.Value.Month).TrimStart() + "-" +
-                                            SqlFunctions.DateName("year", desc.FechaHasta) : "",
-                    Importe = desc.Importe,
-                    Porcentaje = desc.Porcentaje,
-                    MonedaId = desc.MonedaId,
-                    TipoDBId = desc.TipoDBId,
-                    TipoDBDesc = desc.TipoDB.Descripcion,
-                    TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
-                    TipoPeriodoDBId = desc.TipoPeriodoDBId
-                }).ToList(),
-                Precios = x.PrecioPactado.Select(pre => new PrecioPactadosDto
-                {
-                    ContratoId = pre.ContratoId,
-                    FechaDesde = pre.FechaDesde != null ? SqlFunctions.DateName("day", pre.FechaDesde).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)pre.FechaDesde.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", pre.FechaDesde) : "",
-                    FechaHasta = pre.FechaHasta != null ? SqlFunctions.DateName("day", pre.FechaHasta).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)pre.FechaHasta.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", pre.FechaHasta) : "",
-                    Id = pre.Id,
-                    ImportePactado = pre.ImportePactado,
-                    MonedaImportePactadoDesc = pre.MonedaImportePactado.Descripcion,
-                    MonedaImportePactadoId = pre.MonedaImportePactadoId,
-                    MonedaPactadoDesc = pre.MonedaPactado.Descripcion,
-                    MonedaPactadoId = pre.MonedaPactadoId,
-                    Porcentaje = pre.Porcentaje,
-                    Precio = pre.Precio
-                }).ToList()
-            });
+                        FechaHasta = desc.FechaHasta != null ? SqlFunctions.DateName("day", desc.FechaHasta).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)desc.FechaHasta.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", desc.FechaHasta) : "",
+                        Importe = desc.Importe,
+                        Porcentaje = desc.Porcentaje,
+                        MonedaId = desc.MonedaId,
+                        TipoDBId = desc.TipoDBId,
+                        TipoDBDesc = desc.TipoDB.Descripcion,
+                        TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
+                        TipoPeriodoDBId = desc.TipoPeriodoDBId
+                    }).ToList(),
+                    Precios = x.PrecioPactado.Select(pre => new PrecioPactadosDto
+                    {
+                        ContratoId = pre.ContratoId,
+                        FechaDesde = pre.FechaDesde != null ? SqlFunctions.DateName("day", pre.FechaDesde).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)pre.FechaDesde.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", pre.FechaDesde) : "",
+                        FechaHasta = pre.FechaHasta != null ? SqlFunctions.DateName("day", pre.FechaHasta).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)pre.FechaHasta.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", pre.FechaHasta) : "",
+                        Id = pre.Id,
+                        ImportePactado = pre.ImportePactado,
+                        MonedaImportePactadoDesc = pre.MonedaImportePactado.Descripcion,
+                        MonedaImportePactadoId = pre.MonedaImportePactadoId,
+                        MonedaPactadoDesc = pre.MonedaPactado.Descripcion,
+                        MonedaPactadoId = pre.MonedaPactadoId,
+                        Porcentaje = pre.Porcentaje,
+                        Precio = pre.Precio
+                    }).ToList()
+                });
         }
         public BasicoContrato TraerContrato(int contratoId)
         {
@@ -1164,7 +1168,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Ampliaciones = x.Ampliaciones,
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
-                CampanaId = x.CampanaId??0,
+                CampanaId = x.CampanaId ?? 0,
                 ProvinciaId = x.ProvinciaId,
                 Provincia = x.Provincia.Nombre,
                 LocalidadId = x.LocalidadId,
@@ -1228,22 +1232,22 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Id = y.Id,
-                    Porcentaje= y.Porcentaje,
-                    TipoDBDesc=y.TipoDB.Descripcion,
-                    TipoDBId= y.TipoDBId,
-                    TipoPeriodoDBDesc= y.TipoPeriodoDB.Descripcion,
-                    TipoPeriodoDBId= y.TipoPeriodoDBId
+                    Porcentaje = y.Porcentaje,
+                    TipoDBDesc = y.TipoDB.Descripcion,
+                    TipoDBId = y.TipoDBId,
+                    TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId = y.TipoPeriodoDBId
                 }).ToList(),
-                Calidades = x.Calidad.Select(y=> new CalidadDto
+                Calidades = x.Calidad.Select(y => new CalidadDto
                 {
-                    Id=y.Id,
-                    CalidadEspecialDesc= y.CalidadEspecial.Descripcion,
-                    CalidadEspecialId= y.CalidadEspecialId,
-                    PorcentajeDesde=y.PorcentajeDesde,
-                    PorcentajeHasta= y.PorcentajeHasta,
-                    Valor= y.Valor,
+                    Id = y.Id,
+                    CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
+                    CalidadEspecialId = y.CalidadEspecialId,
+                    PorcentajeDesde = y.PorcentajeDesde,
+                    PorcentajeHasta = y.PorcentajeHasta,
+                    Valor = y.Valor,
                 }).ToList(),
-                AperturaPrecios = x.AperturaPrecio.Select(y=> new AperturaPrecioDto 
+                AperturaPrecios = x.AperturaPrecio.Select(y => new AperturaPrecioDto
                 {
                     contratoId = y.NegocioId,
                     Id = y.Id,
@@ -1264,10 +1268,10 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", y.FechaHasta) : "",
                     Id = y.Id,
                     ImportePactado = y.ImportePactado,
-                    MonedaImportePactadoDesc= y.MonedaImportePactado.Descripcion,
-                    MonedaImportePactadoId= y.MonedaImportePactadoId,
-                    MonedaPactadoDesc= y.MonedaPactado.Descripcion,
-                    MonedaPactadoId= y.MonedaPactadoId,
+                    MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                    MonedaImportePactadoId = y.MonedaImportePactadoId,
+                    MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                    MonedaPactadoId = y.MonedaPactadoId,
                     Porcentaje = y.Porcentaje,
                     Precio = y.Precio
                 }).ToList()
@@ -1289,7 +1293,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy);
-            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso== PermisosDataAgro.NotificacionesMailTodos)));
+            var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             var mailComercialesMesa = new List<string>();
             foreach (var mesa in comercialesMesa)
             {
@@ -1528,7 +1532,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (respuesta.Contains("SIO"))
                     {
-                        var administrativo = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.MailSio)));
+                        var administrativo = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailSio)));
                         EnviarMailSio(oContratoSave, administrativo, idActiveDirectory);
                     }
                     oEntityErrors.Error("", respuesta);
@@ -1687,7 +1691,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Ampliaciones = null,
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
-                CampanaId = 0,
+                CampanaId = x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0,
                 ProvinciaId = x.Proveedor.ProveedorId,
                 Provincia = x.Proveedor.Provincia.Nombre,
                 LocalidadId = x.Proveedor.LocalidadId,
@@ -1750,7 +1754,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }).ToList()
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
-            if(contrato.Fecha < dia)
+            if (contrato.Fecha < dia)
             {
                 return new BasicoContrato();
             }
@@ -1811,7 +1815,7 @@ namespace Molinos.DataAgro.Business.Managers
         public AltaTempranaNRCODto ValidarProveedor(int proveedorId)
         {
             var proveedor = repositorio.Obtener<Proveedor>(proveedorId);
-            return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);            
+            return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
         }
 
         public Resultado ActualizarContratoSAP(Contrato contrato)
@@ -1819,11 +1823,11 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new Resultado();
             logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.Id);
             var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.ContratoSAP);
-            if(contratoSave==null || contratoSave.Id == 0) 
+            if (contratoSave == null || contratoSave.Id == 0)
             {
                 error.Error("Contrato", "No existe contrato en DataAgro");
             }
-            
+
             Validar(contrato, error);
 
             if (error.Errores.Count > 0)
@@ -1923,7 +1927,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var listaErrores = ActualizarContratoSAP(contrato);
                 error.Errores.AddRange(listaErrores.Errores);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e.Message);
                 error.Error("", e.Message);
@@ -1933,10 +1937,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<ContratoIdDto> TraerContratosSAP(string desde, string hasta)
         {
-            var desdeId = !string.IsNullOrEmpty(desde)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(desde), x => x.Id) :0;
-            var hastaId = !string.IsNullOrEmpty(hasta)? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(hasta), x => x.Id) :
-                repositorio.ObtenerMayor<Contrato,int,int>(x=>true, x=>x.Id, x=>x.Id);
-            return repositorio.Listar<Contrato, ContratoIdDto >(x =>new ContratoIdDto {ContratoId=x.Id, ContratoSAP = x.ContratoSAP }
+            var desdeId = !string.IsNullOrEmpty(desde) ? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(desde), x => x.Id) : 0;
+            var hastaId = !string.IsNullOrEmpty(hasta) ? repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(hasta), x => x.Id) :
+                repositorio.ObtenerMayor<Contrato, int, int>(x => true, x => x.Id, x => x.Id);
+            return repositorio.Listar<Contrato, ContratoIdDto>(x => new ContratoIdDto { ContratoId = x.Id, ContratoSAP = x.ContratoSAP }
             , x => x.Id >= desdeId && x.Id <= hastaId && !string.IsNullOrEmpty(x.ContratoSAP));
         }
         public RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId)
@@ -1944,7 +1948,7 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<RangoPrecio, RangoPrecioDto>(x => x.MaterialId == materialId && x.MonedaId == monedaId,
                 x => new RangoPrecioDto
                 {
-                    PrecioMaximo= x.PrecioMaximo,
+                    PrecioMaximo = x.PrecioMaximo,
                     PrecioMinimo = x.PrecioMinimo
                 });
         }

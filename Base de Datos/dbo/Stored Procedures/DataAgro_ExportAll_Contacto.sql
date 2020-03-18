@@ -22,7 +22,7 @@ Segmentacion  varchar(255),Domicilio  varchar(255),Localidad varchar(255),Provin
 CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),Intermediario varchar(255),
 AreaDeInfluencia varchar(10),Comentario varchar(MAX),Comercial varchar(255),ClienteMoa varchar(255), 
 Zona varchar(255), FechaAlta DATETIME null, Clasificacion varchar(255), TipoBoleto varchar(255), Bolsa varchar(255),
-Consignatario varchar(255))
+Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255) )
 
 
  insert into @table 
@@ -31,7 +31,7 @@ Consignatario varchar(255))
 
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Estado, Calificacion,
  Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,Comercial
- ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario)
+ ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario,ComisionPorcentaje,LocalidadCompraNet,ProvinciaCompraNet )
 
  select  
 	p.ProveedorId,
@@ -75,8 +75,10 @@ Consignatario varchar(255))
 	claCP.Descripcion,
 	boletocn.Descripcion,
 	bolsacn.Descripcion,
-	case when p.Consignatario = 1 then 'SI' else 'NO' end
-
+	case when p.Consignatario = 1 then 'SI' else 'NO' end,
+	isnull(p.ComisionPorcentaje,0) as ComisionPorcentaje,
+	l1.Nombre ,
+	p1.Nombre
   from Proveedor p
  inner join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
  inner join Comercial c on pc.ComercialId = c.ComercialId
@@ -96,6 +98,9 @@ Consignatario varchar(255))
  left join ClasificacionCompraNet claCP on claCP.Id = P.ClasificacionCompraNetId
  left join BoletoCompraNet boletocn on boletocn.Id = p.BoletoCompraNetId
  left join BolsaCompraNet bolsacn on bolsacn.Id = p.BolsaCompraNetId
+
+  left join Localidad l2 on p.LocalidadCompraNetId = l2.LocalidadId
+ left join Provincia p2 on l2.ProvinciaId = p2.ProvinciaId
 
  where p.ProveedorId in (select * from @table)
  order by p.RazonSocial desc
@@ -147,7 +152,10 @@ select
 	Clasificacion,
 	TipoBoleto,
 	Bolsa,
-	Consignatario
+	Consignatario,
+	ComisionPorcentaje,
+	LocalidadCompraNet,
+	ProvinciaCompraNet
 from #ProveedorAux PA
 
 drop table #ProveedorAux

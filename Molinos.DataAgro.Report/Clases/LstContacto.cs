@@ -247,6 +247,12 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 23].Value = "Comisión";
             workSheet.Column(23).AutoFit();
 
+            workSheet.Cells[1, 24].Value = "LocalidadCompraNet";
+            workSheet.Column(24).AutoFit();
+
+            workSheet.Cells[1, 25].Value = "ProvinciaCompraNet";
+            workSheet.Column(25).AutoFit();
+
             if (oDatos.objetivo.Count > 0)
             {
                 oPropRow = oDatos.objetivo[0].GetType().GetProperties();

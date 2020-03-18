@@ -58,13 +58,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado = provs.Key.Estado.Descripcion,
                     FechaAlta = provs.Key.FechaAlta.HasValue ? provs.Key.FechaAlta.Value : DateTime.Now,
                     Intermediario = provs.Key.Intermediario,
-                    Localidad = provs.Key.LocalidadCompraNet.Nombre,
-                    Provincia = provs.Key.ProvinciaCompraNet.Nombre,
+                    Localidad = provs.Key.Localidad.Nombre,
+                    Provincia = provs.Key.Provincia.Nombre,
                     RazonSocial = provs.Key.RazonSocial,
                     Segmentacion = provs.Key.Segmentacion.Descripcion,
                     TipoBoleto = provs.Key.BoletoCompraNet.Descripcion,
                     Zona = provs.Key.GrupoCompras,
-                    ComisionPorcentaje = provs.Key.ComisionPorcentaje??0
+                    ComisionPorcentaje = provs.Key.ComisionPorcentaje??0,
+                    LocalidadCompraNet = provs.Key.LocalidadCompraNet.Nombre,
+                    ProvinciaCompraNet = provs.Key.ProvinciaCompraNet.Nombre,
 
                 };
 
