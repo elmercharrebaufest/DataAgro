@@ -212,7 +212,11 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 6].Value = "Domicilio de Actividad";
             workSheet.Column(6).AutoFit();
 
+            workSheet.Cells[1, 7].Value = "Localidad";
+            workSheet.Column(7).AutoFit();
 
+            workSheet.Cells[1, 8].Value = "Provincia";
+            workSheet.Column(8).AutoFit();
 
             workSheet.Cells[1, 9].Value = "Código Postal";
             workSheet.Column(9).AutoFit();
@@ -244,14 +248,14 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 22].Value = "Bolsa";
             workSheet.Column(22).AutoFit();
 
-            workSheet.Cells[1, 23].Value = "Comisión";
-            workSheet.Column(23).AutoFit();
-
-            workSheet.Cells[1, 24].Value = "LocalidadCompraNet";
+            workSheet.Cells[1, 24].Value = "Comisión";
             workSheet.Column(24).AutoFit();
 
-            workSheet.Cells[1, 25].Value = "ProvinciaCompraNet";
+            workSheet.Cells[1, 25].Value = "LocalidadCompraNet";
             workSheet.Column(25).AutoFit();
+
+            workSheet.Cells[1, 26].Value = "ProvinciaCompraNet";
+            workSheet.Column(26).AutoFit();
 
             if (oDatos.objetivo.Count > 0)
             {
