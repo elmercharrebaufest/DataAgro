@@ -1850,6 +1850,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.DiasPesificado = contrato.DiasPesificado;
+            contratoSave.PagoDiferido = contrato.PagoDiferido;
             contratoSave.NoInformaSio = contrato.NoInformaSio;
             contratoSave.TrigoEspecial = contrato.TrigoEspecial;
             contratoSave.Ampliaciones = contrato.Ampliaciones;
