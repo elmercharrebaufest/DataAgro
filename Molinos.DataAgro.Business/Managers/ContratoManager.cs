@@ -176,7 +176,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.CampanaId == null || oParam.CampanaId == 0)
             {
                 oErrorMessages.Error("campanaId", "El campo 'Campaña' no debe estar vacio");
-                return oErrorMessages;
             }
             if (oParam.ProveedorId == -1)
             {

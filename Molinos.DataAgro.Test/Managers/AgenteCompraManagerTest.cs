@@ -103,7 +103,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(7,result.ListaErrores.Count);
+            Assert.AreEqual(8,result.ListaErrores.Count);
         }
         [Test]
         public void FinalizarAgenteTestOk()
