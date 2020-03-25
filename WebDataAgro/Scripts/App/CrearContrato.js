@@ -2671,8 +2671,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
     }
 
-    if (contrato.PagoDiferido) {
-        if (contrato.TipoNegocioId != 3) {
+    if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3)  {
             $("#pesificadoId").prop("checked", true);
             $("#pesificadoDiv").show();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
@@ -2683,7 +2682,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
         }
-    }
+    
 
     if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {
         $("#porcentajeComision").data("kendoNumericTextBox").value(contrato.PorcentajeComision);
