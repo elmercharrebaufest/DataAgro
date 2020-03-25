@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Cantidad { get; set; }
         public string Cosecha { get; set; }
         public int DiasDiferimiento { get; set; }
+        public string DiasDiferim { get; set; }
         public string FechaDesde { get; set; }
         public string FechaEntrega { get; set; }
         public string FechaHasta { get; set; }
