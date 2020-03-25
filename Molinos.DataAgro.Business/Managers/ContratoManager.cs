@@ -1181,6 +1181,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                Dolarizado = x.Dolarizado,
+                
                 Dias_Pesificado = x.DiasPesificado,
                 NoInformaSIO = x.NoInformaSio,
                 TrigoEspecial = x.TrigoEspecial,
@@ -1849,6 +1851,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ImporteSustentable = contrato.ImporteSustentable;
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
+            contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DiasPesificado = contrato.DiasPesificado;
             contratoSave.PagoDiferido = contrato.PagoDiferido;
             contratoSave.NoInformaSio = contrato.NoInformaSio;
