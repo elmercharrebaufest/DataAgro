@@ -2682,7 +2682,15 @@ function CargarDatosEditar(contrato, hijo) {
             $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
         }
-    
+    if (contrato.PagoDiferido === true) {
+        $("#pesificadoId").prop("checked", true);
+        $("#pesificadoDiv").show();
+        $("#pesificadoDiasId").data("kendoNumericTextBox").value(contrato.Dias_Pesificado);
+    } else {
+        $("#pesificadoId").prop("checked", false);
+        $("#diasDiferidoId").prop("checked", false);
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+    }
 
     if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {
         $("#porcentajeComision").data("kendoNumericTextBox").value(contrato.PorcentajeComision);
