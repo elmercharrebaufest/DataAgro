@@ -202,6 +202,12 @@
                            /endpoint[@name='HTTP_Port15']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port16 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port16']
+                           /@address" />
+  </parameter>
   <parameter name="ServiceUser Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='ServiceUser']
