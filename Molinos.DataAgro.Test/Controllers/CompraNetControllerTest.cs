@@ -904,28 +904,28 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ObtenerContratosParaCopiarTest()
         {
             contratoManagerMock.Setup(x => x.TraerContratosPorSap(It.IsAny<string>()))
-                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { Cantidad="a",Comercial="",ContratoSap="a",Fecha="a",Filtro="a",Id=1,Material="a",RazonSocial="a",tipoNegocio="a"} });
+                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { CantidadD=1,Comercial="",ContratoSap="a",Fecha="a",Filtro="a",Id=1,Material="a",RazonSocial="a",tipoNegocio="a"} });
             var result = target.ObtenerContratosParaCopiar("a");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             contratoManagerMock.Verify(x => x.TraerContratosPorSap(It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Cantidad\":\"a\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
         public void ObtenerContratosAcuerdoTest()
         {
             contratoManagerMock.Setup(x => x.TraerContratosAcuerdo(It.IsAny<string>()))
-                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { Cantidad = "a", Comercial = "", ContratoSap = "a", Fecha = "a", Filtro = "a", Id = 1, Material = "a", RazonSocial = "a", tipoNegocio = "a" } });
+                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { CantidadD = 1, Comercial = "", ContratoSap = "a", Fecha = "a", Filtro = "a", Id = 1, Material = "a", RazonSocial = "a", tipoNegocio = "a" } });
             var result = target.ObtenerContratosAcuerdo("a");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             contratoManagerMock.Verify(x => x.TraerContratosAcuerdo(It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Cantidad\":\"a\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
