@@ -277,6 +277,16 @@ namespace Molinos.DataAgro.Business
                     oEntityErrors.Error("", "Falta completar el rango de Granos Verdes");
                 }
             }
+            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oContratoAcuerdo.MaterialId && x.MonedaId == oContratoAcuerdo.MonedaId);
+
+            if (rangosPrecio != null && (oContratoAcuerdo.Precio < rangosPrecio.PrecioMinimo || oContratoAcuerdo.Precio > rangosPrecio.PrecioMaximo))
+            {
+                oEntityErrors.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+            }
+            if (oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+            {
+                oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
+            }
         }
 
         public BasicoContrato TraerAcuerdo(int id)
