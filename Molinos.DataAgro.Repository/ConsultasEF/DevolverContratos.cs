@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                  RazonSocial = c.Proveedor.RazonSocial,
                                  Filtro = c.ContratoSAP,
                                  ContratoSap = c.ContratoSAP,
-                                 Cantidad = c.Cantidad.ToString(),
+                                 CantidadD = c.Cantidad,
                                  Fecha = SqlFunctions.DateName("day", c.Fecha) != null ? SqlFunctions.DateName("day", c.Fecha) + "/" + SqlFunctions.DatePart("month", c.Fecha) + "/" + SqlFunctions.DateName("year", c.Fecha) : "",
                                  Material = c.Material.Descripcion,
                                  tipoNegocio = c.TipoNegocioId.ToString()
