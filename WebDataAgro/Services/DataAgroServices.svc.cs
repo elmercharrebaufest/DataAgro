@@ -263,8 +263,8 @@ namespace WebDataAgro.Services
                 contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
                 contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
                 contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
-                contrato.PagoDiferido = contratoSAP.DiasDiferim == "X";
-                contrato.Dolarizado = contratoSAP.PagoDiferido == "X";
+                contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
+                contrato.Dolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite);
                 contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
                 contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
                 contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -282,7 +282,6 @@ namespace WebDataAgro.Services
                 contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
                 contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
                 contrato.Observacion = contratoSAP.ObservacionCal1;
-                contrato.PagoDiferido = contratoSAP.PagoDiferido == "X";
                 contrato.PagoDirectoVendedor = contratoSAP.PagoDirVend == "X";
                 contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
                 contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
