@@ -87,10 +87,12 @@
     <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)Prod%(Extension)')" />
     <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)Qa%(Extension)')" />
     <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)PreProd%(Extension)')" />
+    <Copy SourceFiles="@(BatDir)" DestinationFiles="@(BatDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)Qa2%(Extension)')" />
 
     <ItemGroup>
       <BatProdPackDir Include="$(OutputPackDir)\*Prod.bat"/>
       <BatQaPackDir Include="$(OutputPackDir)\*Qa.bat"/>
+      <BatQa2PackDir Include="$(OutputPackDir)\*Qa2.bat"/>
       <BatPreProdPackDir Include="$(OutputPackDir)\*PreProd.bat"/>
       <OutputPackDir Include="$(OutputPackDir)\**\*.*"/>
     </ItemGroup>

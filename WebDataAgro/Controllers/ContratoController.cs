@@ -1,7 +1,9 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -27,7 +29,7 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
 
         public ContratoController(IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager,
-            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager,  ICampañaManager oCampaniaManager,  ICentroManager oCentroManager)
+            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager, ICampañaManager oCampaniaManager, ICentroManager oCentroManager)
         {
             mobjProveedorManager = oProveedorManager;
             mobjComercialManager = oComercialManager;
@@ -37,10 +39,10 @@ namespace WebDataAgro.Controllers
             mobjMaterialManager = oMaterialManager;
             mobjTipoNegocioManager = oTipoNegocioManager;
             mobjCampaniaManager = oCampaniaManager;
-            mobjCentroManager = oCentroManager;            
+            mobjCentroManager = oCentroManager;
         }
 
-        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet,PermisosDataAgro.VisualizarReporteCompraNetExterno)]
+        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet, PermisosDataAgro.VisualizarReporteCompraNetExterno)]
         public ActionResult Index()
         {
             FillViewBag();
@@ -48,20 +50,21 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuscaDatosTabla(FiltroReporteNegocioDto filtro)
+        public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
         {
-            var filtrarReporte = new FiltroReporteNegocioDto();
-            if (!filtrarReporte.Equals(filtro))
+            if (filtro.Sort == null)
             {
-                filtro.FechaCarga = DateTime.Now.Date.ToString("dd-MM-yyyy");
+                filtro.Sort = new List<Sort> {
+                    new Sort {Field= "Material",Dir="desc" }
+                };
             }
-            var equipo = GlobalVariables.EquipoReal;
 
-            var model = mobjContratoManager.TraerContratosFiltrados(filtro, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
+            var equipo = GlobalVariables.EquipoReal;
+            var model = mobjContratoManager.TraerContratosFiltrados(filtro, equipo);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-        
+
         public ActionResult ListarComercial(string text = "")
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
@@ -169,12 +172,12 @@ namespace WebDataAgro.Controllers
             var comercialListItems = comercial.Comercial.Select(
                x => new SelectListItem
                {
-                   Text = x.Nombres+" "+ x.Apellido,
+                   Text = x.Nombres + " " + x.Apellido,
                    Value = x.ComercialId.ToString(),
                    Selected = false
                }).OrderBy(x => x.Value);
             ViewBag.Comercial = comercialListItems;
         }
-    
+
     }
 }

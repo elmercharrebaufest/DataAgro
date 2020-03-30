@@ -19,6 +19,7 @@
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
+   
 }
 
 <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
@@ -30,6 +31,13 @@
                 <i class="fa fa-file-o"></i>
                 Crear Nuevo Cupo
             </span>
+
+        </div>
+        <div class="float-left" id="cupoPropiosDiv" style="width:100px; margin-left:12px" data-toggle="tooltip" onclick="filtrarMesa()">
+            <span class="botonVarios">
+                <i id="cupoPropio" class="fa fa-user varios" aria-hidden="true"></i>
+            </span>
+            <span>Propios</span>
         </div>
         <div class="float-right margen-15">
             @if (anularCupo)
@@ -41,13 +49,13 @@
             }
         </div>
         <div class="float-right margen-15">
-        @if (modificarCupo)
-        {
-            <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
-                <i class="fa fa-pencil"></i>
-                Modificar
-            </span>
-        }
+            @if (modificarCupo)
+            {
+                <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
+                    <i class="fa fa-pencil"></i>
+                    Modificar
+                </span>
+            }
         </div>
         <div class="float-right margen-15">
             <span id="copiar" class="btnVarios" onclick="CopiarSeleccionados()">
@@ -63,6 +71,21 @@
         </div>
     </div>
 </div>
+
+@*<div class="row no-margin">
+    <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
+        <div class="col-xs-6 col-sm-4">
+            <div id="cupoPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
+                <span class="botonVarios">
+                    <i id="cupoPropio" class="fa fa-user varios" aria-hidden="true"></i>
+                </span>
+                <span>Propios</span>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
 <br />
 <div id="cupos">
     <div class="row" id="nuevotab">

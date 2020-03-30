@@ -147,6 +147,7 @@ namespace WebDataAgro
             {
                 get
                 {
+                    
                     return Equipo.Count > 0;
                 }
             }

@@ -1,24 +1,50 @@
 ﻿$(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
+
+    inicializarTodosKendoDate($(".filtroFecha"));
+    inicializarElementos();
     InicializarCuposIndex();
-        
+
 });
 
+
 function InicializarCuposIndex() {
-    var defaultFilter = { field: "FechaIngreso", operator: "gte", value: new Date };
+
     var ds = {
         transport: {
-            read: {
-                type: 'post',
-                dataType: 'json',
-                url: '/ReporteCupo/BuscaDatosTabla'
-            },
             parameterMap: function (options, operation) {
+
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
                 return options;
+            },
+            read: {
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json",
+                url: '/ReporteCupo/BuscaDatosTabla',
+                data: function () {
+                    let defaultFiltros = [
+                        { field: "FechaRegistro", operator: "eq", value: new Date() }
+                    ];
+
+                    let filtroCompleto = TraerFiltrosConValores();
+
+                    if (filtroCompleto.filter == null) {
+                        filtroCompleto.filter = new FiltroPadre("and", defaultFiltros);
+                        $("#fechaGeneracionDesdeId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+                        $("#fechaGeneracionHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+                    }
+
+                    ConvertirFechaRegistroAString(filtroCompleto.filter.filters);
+
+                    return filtroCompleto;
+                }
             }
         },
         schema: {
@@ -35,10 +61,10 @@ function InicializarCuposIndex() {
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "FechaIngreso", dir: "asc" }],
-        serverFiltering: true,
+        sort: [
+        ],
         pageSize: 20,
-        filter: defaultFilter
+        serverFiltering: true
     };
 
     $("#grid").kendoGrid({
@@ -59,44 +85,19 @@ function InicializarCuposIndex() {
                 $('[data-toggle="tooltip"]').tooltip();
             }
         },
-        columns: [            
-            { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
-            { field: "Hora", title: "Hora", type: "date", width: 150 },
+        columns: [
+            { field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
-            { field: "Proveedor", type: "string", width: 150, filterable: { ui: createMultiSelectProveedor } },
+            { field: "Proveedor", type: "string", width: 150 },
             { field: "Destinatario", type: "string", width: 150 },
-            { field: "Centro", title:"Planta", type: "string", width: 150 },
+            { field: "Centro", title: "Planta", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
             { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
-            {
-                field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
-            },
+            { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
-                field: "EstadoCupo", title: "Estado", filterable: {
-                    multi: true,
-                    dataSource: [{
-                        EstadoCupo: "Sin CTG"
-                    }, {
-                        EstadoCupo: "Activado"
-                    }, {
-                        EstadoCupo: "Arribado"
-                    }, {
-                        EstadoCupo: "Descargado"
-                    }, {
-                        EstadoCupo: "Anulado"
-                    }, {
-                        EstadoCupo: "Disponible"
-                    }, {
-                        EstadoCupo: "Sin STOP"
-                    }, {
-                        EstadoCupo: "Error STOP"
-                    }]
-                }, sortable: false, width: 200,
-                itemTemplate: function (e) {
-                    return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
-                },
+                field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
                 template: function (dataItem) {
                     if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -117,8 +118,10 @@ function InicializarCuposIndex() {
                     }
                 }
             },
-            { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
-            { field: "Observaciones", type: "string", width: 150 }
+            { field: "Comercial", type: "string", width: 150 },
+            { field: "Observaciones", type: "string", width: 150 },
+            { field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 150, format: _DefaultDateTemplate },
+            { field: "Hora", title: "Hora", type: "date", width: 150 },
         ],
         pageable: {
             messages: {
@@ -145,179 +148,93 @@ function InicializarCuposIndex() {
         },
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var templateFlete = kendo.template(this.columns[9].template);
+            var templateFlete = kendo.template(this.columns[8].template);
+
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                var dataItem = { FleteProcedencia: row.cells[9].value };
+                var dataItem = { FleteProcedencia: row.cells[8].value };
+                row.cells[8].value = templateFlete(dataItem);
 
+
+                //la Fecha en Chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
 
                 if (fecha != null) {
+                    fecha = fecha.setHours(fecha.getHours() + 1);
+                    row.cells[0].value = new Date(fecha);
+                }
+            }
+        },
+    });
+}
 
-                    fecha.setHours(fecha.getHours() + 1);
-                    fecha.setHours(0,0,0,0); 
-                    row.cells[0].value = fecha;
-                }
-                row.cells[9].value = templateFlete(dataItem); 
-            }
-        },
-        filterable: {
-            checkAll: false,
-            height: 350,
-            extra: false,
-            messages: {
-                info: "Filtros:",
-                filter: "Filtrar",
-                clear: "Limpiar",
-                isTrue: "SI",
-                isFalse: "NO",
-                and: "Y",
-                or: "O"
-            },
-            operators: {
-                string: {
-                    eq: "Igual",
-                    neq: "Distinto",
-                    startswith: "Comienza con",
-                    contains: "Contiene",
-                    endswith: "Finaliza con"
-                },
-                date: {
-                    eq: "Igual",
-                    gte: "Despu&eacute;s o igual a",
-                    lte: "Antes o igual a"
-                },
-                number: {
-                    eq: "Igual a",
-                    gte: "Mayor que o igual a",
-                    lte: "Menor que o igual a"
-                }
-            }
-        },
-        filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial") {
-                $(e.container).css("width", "300px");
-            }
+
+function Filtrar() {
+    $('#grid').data('kendoGrid').dataSource.read();
+}
+
+
+function inicializarElementos() {
+
+    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
+
+    $("#CupoSap").bind("paste", function (e) {
+        e.preventDefault();
+        if (e.originalEvent.clipboardData !== undefined) {
+            clipText = e.originalEvent.clipboardData.getData('text/plain');
+        } else {
+            clipText = window.clipboardData.getData('text');
         }
+        $("#CupoSap").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+        CambioVariosContratos();
     });
 
-    var checkInputs = function (elements) {
-        elements.each(function () {
-            var element = $(this);
-            var input = element.children("input");
-
-            input.prop("checked", element.hasClass("k-state-selected"));
-        });
-    };
-
-    function createMultiSelect(element, textField, valueField, url) {
-        element.removeAttr("data-bind");
-
-        element.kendoMultiSelect({
-            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
-            dataBound: function () {
-                var items = this.ul.find("li");
-                setTimeout(function () {
-                    checkInputs(items);
-                });
-            },
-
-            dataTextField: textField,
-            dataValueField: valueField,
-            autoClose: false,
-            autoBind: false,
-            delay: 300,
-            dataSource: {
-                serverFiltering: true,
-                filter: [],
-                transport: {
-                    read: {
-                        url: url,
-                        data: function () {
-                            return {
-                                text: element.data("kendoMultiSelect").input.val()
-                            };
-                        },
-                        prefix: ""
-                    }
-                }
-            },
-            change: function (e) {
-                var items = this.ul.find("li");
-                checkInputs(items);
-                var grilla = $('#grid').data("kendoGrid");
-                var values = this.value();
-                $.each(values, function (i, v) {
-                    if (v !== '') {
-                        addOrRemoveFilter(grilla, valueField, "eq", v);
-                    }
-                });
-
-                if (values.length === 0) {
-                    addOrRemoveFilter(grilla, valueField, "eq", "");
-                }
-            }
-        });
-        setTimeout(function () {
-            $(".k-multiselect").parent().children(".k-dropdown").remove();
-            $(".k-multiselect").parent().children("div").find('button').remove();
-        }, 200);
-    }
-    function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "Proveedor", "/Cupo/ListarProveedor");
-    }
-    function createMultiSelectComercial(element) {
-        return createMultiSelect(element, "Comercial", "Comercial", "/Cupo/ListarComercial");
-    }
-
-    function addOrRemoveFilter(grid, field, operator, value) {
-
-        var newFilter = { field: field, operator: operator, value: value };
-        var dataSource = grid.dataSource;
-        var filters = null;
-        if (dataSource.filter() != null) {
-            filters = dataSource.filter().filters;
+    $("#Destinatario").bind("paste", function (e) {
+        e.preventDefault();
+        if (e.originalEvent.clipboardData !== undefined) {
+            clipText = e.originalEvent.clipboardData.getData('text/plain');
+        } else {
+            clipText = window.clipboardData.getData('text');
         }
+        $("#Destinatario").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+        CambioVariosContratos();
+    });
 
-        if (value && value.length > 0) {
-            //Add filter
-            if (filters == null) {
-                filters = [newFilter];
-            }
-            else {
-                var isNew = true;
-                var index = 0;
-                for (index = 0; index < filters.length; index++) {
-                    if (filters[index].field == field) {
-                        isNew = false;
-                        break;
-                    }
-                }
-                if (isNew) {
-                    filters.push(newFilter);
-                }
-                else {
-                    filters[index] = newFilter;
-                }
-            }
-        }
-        else {
-            //Remove filter 
-            var removeIndex = -1;
-            if (filters != null) {
-                for (var x = 0; x < filters.length; x++) {
-                    var temp = filters[x];
-                    if (temp.field == field) {
-                        removeIndex = x;
-                        break;
-                    }
-                }
-                if (removeIndex != -1)
-                    filters.splice(removeIndex, 1);
-            }
-        }
-        dataSource.filter(filters);
+    inicializarPopUpSap();
+
+}
+
+
+
+function mostrarocultar(element) {
+    if ($(element).text() == "Mostrar") {
+        $(element).text("Ocultar");
+    } else {
+        $(element).text("Mostrar");
     }
 }
+function deseleccionarRadioButton() {
+    $('[name=FleteProcedencia]:checked').prop('checked', false);
+}
+
+function ConvertirFechaRegistroAString(filtros) {
+    arr = [];
+
+    filtros.forEach(function (x) {
+        (x.field == "FechaRegistro") ? arr.push(x) : null;
+    });
+
+    if (arr != null) {
+        //se usa asi porque usando toLocaleDateString no trae valores igual al dia de hoy
+        arr.forEach(function (x) { x.value = deFechaAString(x.value) });
+    }
+}
+
+
+
+
+
+
+
 

@@ -7,6 +7,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ContratoId { get; set; } // ContratoId (Primary key)
         public int NivelTarifaId { get; set; }
         public int MaterialId { get; set; } // MaterialId
+        public string Material { get; set; }
         public int TipoNegocioId { get; set; } // TipoNegocioId
         public double Cantidad { get; set; } // Cantidad
         public decimal Precio { get; set; } // Precio

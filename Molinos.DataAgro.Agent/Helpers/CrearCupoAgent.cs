@@ -25,9 +25,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         public List<string> Crear(Cupo cupo,int cantidadCupos)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {
-                var numeroSAP = repositorio.ObtenerMayor<Cupo,int>(x => x.CupoSap != null,x=>x.Id);
-                
+            {                
                 var listaCupos = new List<string>();
                 var random = new Random();
 

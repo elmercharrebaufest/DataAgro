@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
@@ -186,10 +187,13 @@ namespace Molinos.DataAgro.Business.Managers
 
             return error;
         }
-        public KendoGrid<CupoDto> TraerCuposTabla(KendoGridMvcRequest request, List<int> equipo)
+        public DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosCupos(request, equipo));
         }
+
+
+
         public Resultado EliminarCupo(int id, string comercial)
         {
             try
@@ -1001,6 +1005,63 @@ namespace Molinos.DataAgro.Business.Managers
                 return nuevoResultado;
             }
 
+        }
+
+        private void darFormatoAlFiltro(IEnumerable<Filter> filtros)
+        {
+            filtros.ToList().ForEach(p =>
+            {
+                if (p.Value == null)
+                {
+                    darFormatoAlFiltro(p.Filters);
+                }
+                else
+                {
+                    if (p.Value.GetType().IsArray)
+                    {
+                        var unicoValueDelArray = p.Value as object[];
+                        p.Value = unicoValueDelArray.First();
+                    }
+                }
+            });
+            convertirFechaDe<CupoDto>(filtros);
+            convertirBool<CupoDto>(filtros);
+        }
+
+        private void convertirFechaDe<TAlgunDto>(IEnumerable<Filter> filtros)
+        {
+            var propiedadesConFechas = typeof(TAlgunDto).GetProperties().Where(x => x.PropertyType == typeof(DateTime)).ToList();
+
+            var filtrosConFechas = filtros.Where(y => propiedadesConFechas.Any(x => x.Name == y.Field));
+            filtrosConFechas.ToList().ForEach(x =>
+            {
+                x.Value = DateTime.Parse(x.Value.ToString());
+            });
+        }
+
+        private void convertirBool<TAlgunDto>(IEnumerable<Filter> filtros)
+        {
+
+            var propiedadesConBool = typeof(TAlgunDto).GetProperties().Where(x => x.PropertyType == typeof(bool)).ToList();
+
+            var filtrosConFechas = filtros.Where(y => propiedadesConBool.Any(x => x.Name == y.Field));
+            filtrosConFechas.ToList().ForEach(x =>
+            {
+
+                x.Value = bool.Parse(x.Value.ToString());
+            });
+        }
+
+        //==============view
+
+        public List<EstadoCupoDto> TraerTodoLosEstados()
+        {
+            return repositorio.Listar<EstadoCupo, EstadoCupoDto>(x => new EstadoCupoDto
+            {
+                Id = x.Id,
+                Descripcion = x.Descripcion,
+                Orden = x.Orden,
+            });
         }
 
 

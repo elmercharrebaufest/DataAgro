@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface IContratoManager
     {
         DataSourceResult TraerTodosContratos(DataSourceRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
-        KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
+        DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo);
 
         DatosIniContrato TraerDatosCombo();
 

@@ -58,7 +58,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             client.BaseAddress = new Uri(urlStop);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            logger.Debug("urlStop : " + client.BaseAddress.ToString());
             try
             {
                 HttpResponseMessage response = client.PostAsJsonAsync(
@@ -100,7 +99,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var token = ObtenerToken(datosConfiguracion.ClaveStop);
                 foreach (var cupo in listaCupos)
                 {
-                    if (cupo.CupoStop != null) {
+                    if (cupo.CupoStop != null)
+                    {
                         cupo.EstadoCupoId = 1;
                     }
                     else
@@ -257,7 +257,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
                 var estado = ConsultarCupo(codigoCupo, datosConfiguracion.TerminalStopId, token.Data);
                 if (estado == 1)
-                {                    
+                {
                     HttpRequestMessage request = new HttpRequestMessage
                     {
                         Method = HttpMethod.Delete,
@@ -321,7 +321,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
                     var token = ObtenerToken(datosConfiguracion.ClaveStop);
                     var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
-                    logger.Debug("Token obtenido. Consultando para fechas "+string.Join(", ", fechas) );
+                    logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
 
                     foreach (var fecha in fechas)
                     {
@@ -337,6 +337,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());
                             listaCupos.results.AddRange(model.results);
                             logger.Debug(model.results.Count);
+                            if (model.results.Count > 0)
+                                logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
                         }
                         else
                         {

@@ -118,6 +118,11 @@
     <Compile Include="Dto\AbmFormula.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
+    <Compile Include="Dto\EstadoCupoDto.cs" />
+    <Compile Include="Dto\FilterObjectModif.cs" />
+    <Compile Include="Dto\FilterObjectWrapperModif.cs" />
+    <Compile Include="Dto\FiltroReporteCupoDto.cs" />
+    <Compile Include="Dto\KendoGridMvcRequestModif.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />

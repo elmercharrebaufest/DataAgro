@@ -1,5 +1,4 @@
-﻿
-using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
@@ -13,6 +12,11 @@ using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
+using Kendo.DynamicLinq;
+using Filter = Kendo.DynamicLinq.Filter;
+using KendoGridBinder.Containers;
+using System.Collections;
+
 
 namespace WebDataAgro.Controllers
 {
@@ -45,14 +49,14 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         [Autorizacion(PermisosDataAgro.VisualizarCupos)]
         public ActionResult Index()
-        {          
+        {
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
             return View();
         }
 
         [Autorizacion(PermisosDataAgro.AltaCupos)]
-        public ActionResult CrearCupo(int? id,string siguientes)
+        public ActionResult CrearCupo(int? id, string siguientes)
         {
             CargarViewBag();
             if (id == null)
@@ -68,12 +72,12 @@ namespace WebDataAgro.Controllers
                 var cupoModel = new CupoModel
                 {
                     Id = cupo.Id,
-                    CalidadId= cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
+                    CalidadId = cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
                     CantidadCupos = null,
                     FasonId = cupo.Fason ?? false,
                     FechaEntrega = cupo.FechaIngreso,
                     FechaHastaEntrega = cupo.FechaIngreso,
-                    FleteAcarreo = cupo.FleteProcedencia?? false,
+                    FleteAcarreo = cupo.FleteProcedencia ?? false,
                     MaterialId = cupo.MaterialId,
                     ProveedorDescripcion = cupo.Proveedor,
                     Proveedor = cupo.ProveedorId,
@@ -87,7 +91,7 @@ namespace WebDataAgro.Controllers
                 return View(cupoModel);
             }
         }
-        
+
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
@@ -121,12 +125,12 @@ namespace WebDataAgro.Controllers
                 }
                 cupo.Resultado = cupoGrabado;
             }
-            var siguientes = JsonConvert.DeserializeObject<List<int>>(cupo.Siguientes ?? ""); 
+            var siguientes = JsonConvert.DeserializeObject<List<int>>(cupo.Siguientes ?? "");
             if (!ViewData.ModelState.IsValid || !modificado)
-            {   
-                if(!modificado)
+            {
+                if (!modificado)
                 {
-                    ViewBag.Titulo="Nuevo Cupo";
+                    ViewBag.Titulo = "Nuevo Cupo";
                 }
                 else
                 {
@@ -136,7 +140,7 @@ namespace WebDataAgro.Controllers
                 CargarViewBag();
                 return View(cupo);
             }
-            if (siguientes != null && siguientes.Count != 0 )
+            if (siguientes != null && siguientes.Count != 0)
             {
                 var id = siguientes[0];
                 siguientes.RemoveAt(0);
@@ -149,7 +153,8 @@ namespace WebDataAgro.Controllers
         {
             return Json(proveedorManager.DevolverProveedoresCorredores(filtroProveedor), JsonRequestBehavior.AllowGet);
         }
-        private void CargarViewBag() {
+        private void CargarViewBag()
+        {
             var centros = centroManager.TraerTodoCentro();
             var listaCentro = new List<SelectListItem>();
             foreach (var i in centros.Centro)
@@ -175,7 +180,7 @@ namespace WebDataAgro.Controllers
             }
             ViewBag.Material = listaMaterial.OrderBy(x => x.Value);
             var zona = zonaCupoManager.TraerTodoZonaCupo();
-            var listaZona = new List<SelectListItem>() { new SelectListItem { Value= "0", Text= "Seleccione Zona",Selected= false} };
+            var listaZona = new List<SelectListItem>() { new SelectListItem { Value = "0", Text = "Seleccione Zona", Selected = false } };
             var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
             foreach (var i in zona.ZonaCupo)
             {
@@ -183,12 +188,12 @@ namespace WebDataAgro.Controllers
                 {
                     Text = i.Descripcion,
                     Value = i.Id.ToString(),
-                    Selected = comercial.GrupoDeComprasId!= null && comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
+                    Selected = comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == i.Descripcion.ToLower() ? true : false
                 });
             }
             ViewBag.Zona = listaZona;
             ViewBag.ZonaSeleccionada = listaZona.FirstOrDefault(x => comercial.GrupoDeComprasId != null && comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()) != null ? listaZona.FirstOrDefault(x => comercial.GrupoDeCompras.ToLower() == x.Text.ToLower()).Value : "0";
-            
+
             ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
                 new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
         }
@@ -212,12 +217,22 @@ namespace WebDataAgro.Controllers
             };
             return entidad;
         }
-        public ActionResult BuscaDatosTabla(KendoGridMvcRequest request)
+
+        [HttpPost]
+        public ActionResult BuscaDatosTabla(DataSourceRequest request)
         {
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos)? GlobalVariables.EquipoReal: GlobalVariables.Equipo;
+            if (request.Sort == null)
+            {
+                request.Sort = new List<Sort> {
+                    new Sort {Field= "FechaIngreso",Dir="desc" },
+                    new Sort { Field="Material",Dir="desc" } };
+            }
+
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);
         }
+
         [Autorizacion(PermisosDataAgro.AnularCupos)]
         public ActionResult EliminarCupo(int id)
         {
@@ -233,8 +248,8 @@ namespace WebDataAgro.Controllers
         {
             var comerciales = comercialManager.ListarComercial(text, GlobalVariables.Equipo);
             return Json(comerciales.Select(x => new { x.ComercialId, Comercial = x.Nombres + " " + x.Apellido }), JsonRequestBehavior.AllowGet);
-        }      
-        
+        }
+
         [HttpPost]
         public ActionResult TransmitirCupos(List<string> cupos)
         {

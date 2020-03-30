@@ -26,20 +26,20 @@ namespace WebDataAgro
 
             bundles.Add(new StyleBundle("~/Content/plugins/css").Include(
                         "~/Content/assets/global/css/components.min.css",
-                        "~/Content/assets/global/css/plugins.min.css")); 
+                        "~/Content/assets/global/css/plugins.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/layouts/css").Include(
                        "~/Content/assets/layouts/layout4/css/layout.min.css",
                        "~/Content/assets/layouts/layout4/css/themes/default.min.css",
                        "~/Content/assets/layouts/layout4/css/custom.min.css"));
-            
+
             bundles.Add(new StyleBundle("~/Content/kendo/css").Include(
                         "~/Content/kendo/kendo.common-bootstrap.min.css",
                         "~/Content/kendo/kendo.metro.min.css"));
-            
+
             bundles.Add(new StyleBundle("~/Content/mastersoft/css").Include(
                         "~/Content/Mastersoft.css"));
-            
+
             // -------------------------------------------------
             //   Scripts generales
             // -------------------------------------------------
@@ -143,7 +143,7 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/AbmFijacionDePrecio").Include(
                                          "~/Scripts/App/AbmFijacionDePrecio.js"));
-            
+
             bundles.Add(new ScriptBundle("~/bundles/CompraNetContrato").Include(
                                          "~/Scripts/App/CrearContrato.js",
                                          "~/Scripts/App/CopiarContrato.js",
@@ -156,12 +156,14 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/CompraNetIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/firebase-suscribir.js",
-                                         "~/Scripts/App/CompraNetIndex.js")); 
+                                         "~/Scripts/App/CompraNetIndex.js"));
             bundles.Add(new ScriptBundle("~/bundles/ContratoIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
+                                         "~/Scripts/App/Filtros.js",
                                          "~/Scripts/App/ReporteContrato.js"));
             bundles.Add(new ScriptBundle("~/bundles/Cupos").Include(
                              "~/Scripts/KendoExtensions.js",
+                             "~/Scripts/App/Filtros.js",
                              "~/Scripts/App/Cupo.js",
                              "~/Scripts/jquery.mask.js",
                              "~/Scripts/jquery.unobtrusive-ajax.js"));
@@ -187,6 +189,7 @@ namespace WebDataAgro
                                      "~/Scripts/App/AbmRol.js"));
             bundles.Add(new ScriptBundle("~/bundles/ReporteCupo").Include(
                              "~/Scripts/KendoExtensions.js",
+                             "~/Scripts/App/Filtros.js",
                              "~/Scripts/App/ReporteCupo.js"));
             bundles.Add(new ScriptBundle("~/bundles/AbmFormula").Include(
                                        "~/Scripts/App/AbmFormula.js"));

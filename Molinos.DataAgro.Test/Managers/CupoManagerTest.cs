@@ -181,19 +181,19 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(6, result.Errores.Count);
         }
-        [Test]
-        public void TraerCuposTablaTestOk()
-        {
-            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosCupos>())).Returns(
-                new KendoGrid<CupoDto>(new List<CupoDto>() { new CupoDto { Acopio= false,Calidad="a",Centro="a",CentroId=1,Comercial="a",ComercialId=1,CupoSap="a",CupoStop="a",Destinatario="a",EstadoCupo="a", EstadoCupoId=1,Fason=false,
-                FechaGeneracion = new DateTime(2019,1,1),FechaIngreso=new DateTime(2019,1,1),FleteProcedencia=false,HoraIngreso=new DateTime(2019,1,1),Id=1,
-                Material="a",MaterialId=1,MensajeError="",Observaciones="a",Proveedor="a",ProveedorId=1,ZonaCupo="a",ZonaCupoId=1} }, 1));
+        //[Test]
+        //public void TraerCuposTablaTestOk()
+        //{
+        //    repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosCupos>())).Returns(
+        //        new KendoGrid<CupoDto>(new List<CupoDto>() { new CupoDto { Acopio= false,Calidad="a",Centro="a",CentroId=1,Comercial="a",ComercialId=1,CupoSap="a",CupoStop="a",Destinatario="a",EstadoCupo="a", EstadoCupoId=1,Fason=false,
+        //        FechaGeneracion = new DateTime(2019,1,1),FechaIngreso=new DateTime(2019,1,1),FleteProcedencia=false,HoraIngreso=new DateTime(2019,1,1),Id=1,
+        //        Material="a",MaterialId=1,MensajeError="",Observaciones="a",Proveedor="a",ProveedorId=1,ZonaCupo="a",ZonaCupoId=1} }, 1));
 
-            var result = target.TraerCuposTabla(new KendoGridMvcRequest(), new List<int>() { 1, 2 });
+        //    var result = target.TraerCuposTabla(new KendoGridMvcRequest(), new List<int>() { 1, 2 });
 
-            Assert.NotNull(result);
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosCupos>()), Times.Once);
-        }
+        //    Assert.NotNull(result);
+        //    repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosCupos>()), Times.Once);
+        //}
         [Test]
         public void EliminarCupoTestOk()
         {

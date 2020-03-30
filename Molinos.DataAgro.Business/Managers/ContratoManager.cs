@@ -837,9 +837,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosContratos(request, corredor, listComercialesId, corredoresComercial));
         }
-        public KendoGridContratoDto TraerContratosFiltrados(FiltroReporteNegocioDto filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
+        //public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, bool corredor, List<int> listComercialesId, List<int> corredoresComercial)
+        public DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, listComercialesId));
+            return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, equipo));
         }
         public GrabarContratoResult ConfirmarContrato(int contratoId)
         {

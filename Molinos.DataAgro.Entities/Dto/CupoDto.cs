@@ -26,12 +26,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Observaciones { get; set; }
         public bool? Fason { get; set; }
         public string Destinatario { get; set; }
-        public DateTime FechaGeneracion { get; set; }    
+        public DateTime FechaGeneracion { get; set; }
+        public string FechaRegistro { get; set; }
         public int EstadoCupoId { get; set; }
         public string EstadoCupo { get; set; }
         public string MensajeError { get; set; }
         public bool Acopio { get; set; }
         public string Fecha { get; set; }
         public string Hora { get; set; }
+        public int EstadoOrden { get; set; }
     }
 }

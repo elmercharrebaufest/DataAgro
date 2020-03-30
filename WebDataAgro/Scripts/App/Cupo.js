@@ -2,8 +2,10 @@
 var fecha;
 var zonaSeleccionada;
 var anularCupo;
-var modificarCupo; 
+var modificarCupo;
 var filasSeleccionadas = {};
+
+
 
 $(document).ready(function () {
     anularCupo = ConvertirStringABool(anularCupo);
@@ -19,22 +21,53 @@ $(document).ready(function () {
 
     InicializarCuposIndex();
     AutoRecargar();
+
+
+    reordenarPorEstadoCupo();
+
+
 });
 
-function InicializarCuposIndex() {    
-    var defaultFilter = { field: "FechaIngreso", operator: "gte", value: new Date };
+
+
+
+function InicializarCuposIndex() {
+    var defaultFilter = [
+        { field: "FechaIngreso", operator: "gte", value: new Date()},
+    ];
     var ds = {
+
+
         transport: {
-            read: {
-                type: 'post',
-                dataType: 'json',
-                url: '/Cupo/BuscaDatosTabla'
-            },
+
             parameterMap: function (options, operation) {
+
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
                 return options;
+            },
+            read: {
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json",
+                url: '/Cupo/BuscaDatosTabla',
+                data: function (filtrosEnviados) {
+
+                    if (filtrosEnviados.filter == null) {
+                        filtrosEnviados.filter = new FiltroPadre("and", defaultFilter);
+                    }
+
+                    let fechaRegistroFiltro = filtrosEnviados.filter.filters.find(function (f) { return f.field == "FechaRegistro" });
+
+                    if (fechaRegistroFiltro != null) {
+
+                        fechaRegistroFiltro.value = deFechaAString(fechaRegistroFiltro.value);
+                    }
+                }
             }
         },
         schema: {
@@ -44,16 +77,23 @@ function InicializarCuposIndex() {
                 id: 'Id',
                 fields: {
                     FechaIngreso: { type: "date" },
+                    //FechaGeneracion: { type: "date" },
+                    FechaRegistro: { type: "date" },
                     FleteProcedencia: { type: "boolean" }
                 }
             }
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "FechaIngreso", dir: "asc" }],
+        sort: [
+            { field: "FechaIngreso", dir: "asc" },
+            { field: "EstadoOrden", dir: "asc" }
+
+        ],
         serverFiltering: true,
-        pageSize: 20,
-        filter: defaultFilter
+        pageSize: 20
+        //,
+        //filter: defaultFilter
     };
 
     $("#gridCupo").kendoGrid({
@@ -74,54 +114,105 @@ function InicializarCuposIndex() {
                             .prop('checked', true);
                     }
                 }
-                $('[data-toggle="tooltip"]').tooltip();                
-            }        
+                $('[data-toggle="tooltip"]').tooltip();
+            }
         },
+        sortable: true,
         columns: [
-            {selectable:true},
-            { field: "FechaIngreso", title: "Ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
+            { selectable: true },
+            { field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
-            { field: "Material", type: "string", width: 150 },
+            {
+                field: "Material", type: "string", width: 150,
+
+                filterable: {
+                    multi: true,
+                    dataSource: [
+                        { MaterialNombre: "Maiz" },
+                        { MaterialNombre: "Trigo" },
+                        { MaterialNombre: "Soja" },
+                        { MaterialNombre: "Girasol" },
+                        { MaterialNombre: "Girsol AO" }],
+                    itemTemplate: function (e) {
+                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.MaterialNombre#'/><span>#= data.MaterialNombre|| data.all #</span></label></span><br>";
+                    }
+                },
+            },
             { field: "Proveedor", type: "string", width: 150, filterable: { ui: createMultiSelectProveedor } },
             { field: "Destinatario", type: "string", width: 150 },
             { field: "Centro", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
-            { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
+            //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
+            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
+            { field: "Hora", title: "Hora", type: "date", width: 150 },
+            {
+                field: "ZonaCupo", title: "Zona", type: "string", width: 150,
+                filterable: {
+                    multi: true,
+
+                    dataSource: [
+                        { ZonaCupo: "CORREDOR BS AS" },
+                        { ZonaCupo: "CORREDOR ROSARIO" },
+                        { ZonaCupo: "Fasones CAGSA/MOLCA, YPF y AMAGGI" },
+                        { ZonaCupo: "MAT-ROFEX" },
+                        { ZonaCupo: "ORIG INTERIOR CENTRO" },
+                        { ZonaCupo: "ORIG INTERIOR NORTE" },
+                        { ZonaCupo: "ORIG INTERIOR SUR" },
+                        { ZonaCupo: "PRODUCCION PROPIA" },
+                        { ZonaCupo: "REDESPACHOS" },
+                        { ZonaCupo: "SOLIDARIDAD" }],
+                    itemTemplate: function (e) {
+
+                        return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.ZonaCupo#'/><span>#= data.ZonaCupo|| data.all #</span></label></span><br>";
+                        //return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.codigoSap == 0 ? null : data.codigoSap #'/><span class='multiFilter'>#= data.ZonaCupo || data.all #</span></label></span><br>";
+                    }
+                },
+            },
             {
                 field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
             },
             { field: "Observaciones", type: "string", width: 150 },
             { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
+            { field: "EstadoOrden", type: "number", hidden: true },
+
             {
-                field: "EstadoCupo", title: "Estado", filterable: {
+                field: "EstadoCupo", title: "Estado",
+                filterable: {
                     multi: true,
-                    dataSource: [{
-                        EstadoCupo: "Sin CTG"
-                    }, {
-                        EstadoCupo: "Activado"
-                    }, {
-                        EstadoCupo: "Arribado"
-                    }, {
-                        EstadoCupo: "Descargado"
-                    }, {
-                        EstadoCupo: "Anulado"
-                    }, {
-                        EstadoCupo: "Disponible"
-                    }, {
-                        EstadoCupo: "Sin STOP"
-                    }, {
-                        EstadoCupo: "Error STOP"
-                    }]
-                }, sortable: false, width: 200,
+
+                    dataSource: [
+                        { EstadoCupo: "Sin CTG" },
+                        { EstadoCupo: "Activado" },
+                        { EstadoCupo: "Arribado" },
+                        { EstadoCupo: "Descargado" },
+                        { EstadoCupo: "Anulado" },
+                        { EstadoCupo: "Disponible" },
+                        { EstadoCupo: "Sin STOP" },
+                        { EstadoCupo: "Error STOP" }]
+                },
+
+                width: 200,
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
                 },
                 template: function (dataItem) {
+
+
                     if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonModificar(dataItem, 'fa-pencil ctg') +
                             botonBorrar(dataItem, 'fa-trash ctg');
-                    } else if (dataItem.EstadoCupoId == 2) {
+                    }
+                    else if (dataItem.EstadoCupoId == 8) {
+                        return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
+                            botonModificar(dataItem, 'fa-pencil sto') +
+                            botonBorrar(dataItem, 'fa-trash sto');
+                    }
+
+
+
+
+                    else if (dataItem.EstadoCupoId == 2) {
                         return '<div class="status activado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 3) {
                         return '<div class="status arribado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -129,7 +220,11 @@ function InicializarCuposIndex() {
                         return '<div class="status descargado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 4) {
                         return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
-                    } else if (dataItem.EstadoCupoId == 6) {
+                    }
+
+
+
+                    else if (dataItem.EstadoCupoId == 6) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonModificar(dataItem, 'fa-pencil sto') +
                             botonBorrar(dataItem, 'fa-trash sto') +
@@ -138,13 +233,12 @@ function InicializarCuposIndex() {
                         return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError + '"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
                             botonBorrar(dataItem, 'fa-trash err') +
                             botonRetransmitir(dataItem, 'fa-mail-forward err');
-                    } else if (dataItem.EstadoCupoId == 8) {
-                        return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>' +
-                            botonModificar(dataItem, 'fa-pencil sto') +
-                            botonBorrar(dataItem, 'fa-trash sto');
                     }
+
                 }
-            }
+            },
+
+
         ],
         pageable: {
             messages: {
@@ -170,7 +264,7 @@ function InicializarCuposIndex() {
             showIndexes: false
         },
         filterable: {
-            checkAll: false,
+            checkAll: true,
             height: 350,
             extra: false,
             messages: {
@@ -208,7 +302,9 @@ function InicializarCuposIndex() {
             }
         }
     });
-    
+
+
+
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -253,14 +349,14 @@ function InicializarCuposIndex() {
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
-                var grilla = $('#gridCupo').data("kendoGrid");                
+                var grilla = $('#gridCupo').data("kendoGrid");
                 var values = this.value();
                 $.each(values, function (i, v) {
                     if (v !== '') {
                         addOrRemoveFilter(grilla, valueField, "eq", v);
                     }
                 });
-                
+
                 if (values.length === 0) {
                     addOrRemoveFilter(grilla, valueField, "eq", "");
                 }
@@ -335,7 +431,7 @@ function botonBorrar(dataItem, icono) {
     if (anularCupo) {
         return '<button data-toggle="tooltip" title="Anular" onclick="ModalBorrar(' +
             "'" + dataItem.Id + "'" + ',' +
-            "'" + dataItem.CupoSap + "'" + ',' +
+            "'" + dataItem.CupoSap + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return "<div></div>";
@@ -353,8 +449,8 @@ function botonRetransmitir(dataItem, icono) {
 }
 function botonModificar(dataItem, icono) {
     if (modificarCupo) {
-    return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
-        "'" + dataItem.Id + "'" +
+        return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
+            "'" + dataItem.Id + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return "<div></div>";
@@ -362,7 +458,7 @@ function botonModificar(dataItem, icono) {
 }
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
-    $("#cupoBorrar").val(id);   
+    $("#cupoBorrar").val(id);
 
     $("#modalBorrar").modal('show');
 }
@@ -373,7 +469,7 @@ function RetransmitirSeleccionados() {
 
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if ((selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7) && selectedItem.CentroId == 1 ) {
+        if ((selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7) && selectedItem.CentroId == 1) {
             obj.push(selectedItem.CupoSap);
         }
     });
@@ -431,13 +527,13 @@ function Retransmitir(listaCupos) {
 
 function ObtenerDatosModalBorrado() {
     var objBorrar = {};
-    var result;    
+    var result;
     objBorrar.id = $("#cupoBorrar").val();
-    result = MSExecuteOnServer('/Cupo/EliminarCupo', objBorrar);    
+    result = MSExecuteOnServer('/Cupo/EliminarCupo', objBorrar);
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
-    else {        
+    else {
         recargarGrilla();
     }
 }
@@ -478,12 +574,12 @@ function AnularSeleccionados() {
     $("#modalBorrarVarios").on("hidden.bs.modal", function () {
         $("#BorrarVarios").unbind('click');
     });
-    $("#modalBorrarVarios").modal('toggle');   
+    $("#modalBorrarVarios").modal('toggle');
 }
 function ErrorAnulacion(resultado) {
     if (resultado != null) {
         if (ExistsErrorMessages(resultado.Errores)) {
-            MensErr(makeUL(resultado.Errores));            
+            MensErr(makeUL(resultado.Errores));
         }
         else {
             MensInfo("Anulación exitosa");
@@ -509,15 +605,26 @@ function ModificarSeleccionados() {
         if (selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 8)
             obj.push(selectedItem.Id);
     });
-    var siguientes = obj.slice(1);
-    window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + obj[0] + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
-}
+    if (obj.length == 0) {
+        $("#texto").text("Error");
+        $("#cupos-seleccionados-a-borrar").text("No hay cupos seleccionados");
+        $("#BorrarVarios").hide();
+        $("#modalBorrarVarios").on("hidden.bs.modal", function () {
+            $("#BorrarVarios").unbind('click');
+        });
+        $("#modalBorrarVarios").modal('toggle');
+    } else {
+        var siguientes = obj.slice(1);
+        window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + obj[0] + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
 
+    }
+
+}
 function AutoRecargar() {
     setInterval(function () {
         filasSeleccionadas = SeleccionarElementos();
         recargarGrilla();
-    }, 5000);
+    }, 30000);
 
 }
 function SeleccionarElementos() {
@@ -530,4 +637,82 @@ function SeleccionarElementos() {
         obj.push(selectedItem);
     });
     return obj;
+}
+
+function reordenarPorEstadoCupo() {
+
+    let grid = $("#gridCupo").data("kendoGrid");
+
+    grid.bind("sort", function (e) {
+
+        $.each($(".k-link"), function (numeroDeColumna) {
+            if ($(".k-link")[numeroDeColumna].innerText == "EstadoOrden") {
+                $(".k-link")[numeroDeColumna].click();
+            }
+        });
+    });
+}
+
+function filtrarMesa() {
+    //FILTRO MANUAL
+    var grilla = $('#gridCupo').data("kendoGrid");
+    if (!$("#cupoPropiosDiv").hasClass("selected")) {
+        addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
+        $("#cupoPropiosDiv").addClass("selected");
+        $("#cupoPropio").addClass("selected").removeClass("varios");
+    } else {
+        addOrRemoveFilter(grilla, "ComercialId", "eq", "");
+        $("#cupoPropiosDiv").removeClass("selected");
+        $("#cupoPropio").addClass("varios").removeClass("selected");
+    }
+    recargarGrilla();
+}
+
+function addOrRemoveFilter(grid, field, operator, value) {
+
+    var newFilter = { field: field, operator: operator, value: value };
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+
+    if (value && (value.length > 0 || value != undefined)) {
+        //Add filter
+        if (filters == null) {
+            filters = [newFilter];
+        }
+        else {
+            var isNew = true;
+            var index = 0;
+            for (index = 0; index < filters.length; index++) {
+                if (filters[index].field == field) {
+                    isNew = false;
+                    break;
+                }
+            }
+            if (isNew) {
+                filters.push(newFilter);
+            }
+            else {
+                filters[index] = newFilter;
+            }
+        }
+    }
+    else {
+        //Remove filter 
+        var removeIndex = -1;
+        if (filters != null) {
+            for (var x = 0; x < filters.length; x++) {
+                var temp = filters[x];
+                if (temp.field == field) {
+                    removeIndex = x;
+                    break;
+                }
+            }
+            if (removeIndex != -1)
+                filters.splice(removeIndex, 1);
+        }
+    }
+    dataSource.filter(filters);
 }

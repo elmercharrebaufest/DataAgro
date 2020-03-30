@@ -1,5 +1,4 @@
-﻿@model Molinos.DataAgro.Entities.Dto.FiltroReporteNegocioDto
-@{
+﻿@{
     //Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Reporte de contratos";
 }
@@ -28,14 +27,14 @@
             <label>Corredor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorCorredor" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+            <input id="buscadorCorredor" name="CorredorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
         </div>
 
         <div class="col-md-2">
             <label>Proveedor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorProveedor" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
         </div>
     </div>
     <br />
@@ -46,13 +45,15 @@
         <div class="col-md-4">
             <div class="row">
                 <div class="col-xs-5 noRightPadding">
-                    @Html.TextBoxFor(x => x.ContratoSAP, new { @class = "form-control", style = "width:100%" })
+                    @Html.TextBox("ContratoSAP", "", new {  @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
                 </div>
                 <div class="col-xs-5">
-                    @Html.TextBoxFor(x => x.ContratoSAPHasta, new { @class = "form-control", style = "width:100%" })
+                    @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
                 </div>
-                <div id="lista-contratos" class="col-xs-2 noLeftPadding">
-                    <button type="button" id="contratos" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                <div class="col-xs-2 noLeftPadding">
+                    <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                </div>
+                <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
                 </div>
             </div>
         </div>
@@ -60,7 +61,7 @@
             <label>Tipo de Negocio</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.TipoNegocioId, new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Seleccione el Negocio", new { @class = "form-control", @id = "tipoNegocioId" })
+            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Seleccione el Negocio", new { @class = "form-control filtroBusquedaPorId", @id = "tipoNegocioId" })
         </div>
     </div>
     <br />
@@ -70,12 +71,12 @@
         </div>
         <div class="col-md-2">
             <span id="fechaDeCarga">
-                <input id="fechaCargaId" name="fechaString" type="date" style="width: 100%" />
+                <input id="fechaCargaId" class="filtroFecha" name="Fecha-desde" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
             <span id="fechaDeCargaHasta">
-                <input id="fechaCargaHastaId" name="fechaString" type="date" style="width: 100%" />
+                <input id="fechaCargaHastaId" class="filtroFecha" name="Fecha-hasta" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
@@ -83,13 +84,13 @@
         </div>
         <div class="col-md-2">
             <span id="fechaDesdeTopeDiv">
-                <input id="fechaDesdeTopeId" name="fechaStringDesde" type="date" style="width: 100%" />
+                <input id="fechaDesdeTopeId" class="filtroFecha" name="FechaDesde-desde" type="date" style="width: 100%" />
                 <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
             </span>
         </div>
         <div class="col-md-2">
             <span id="fechaHastaTopeDiv">
-                <input id="fechaHastaTopeId" type="date" style="width: 100%" />
+                <input id="fechaHastaTopeId" class="filtroFecha" name="FechaHasta-hasta" type="date" style="width: 100%" />
                 <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
             </span>
         </div>
@@ -101,14 +102,14 @@
         </div>
         <div class="col-md-4">
             <span id="fechaHastaFijacionDiv">
-                <input id="fechaHastaFijacionId" type="date" style="width: 50%" />
+                <input id="fechaHastaFijacionId" class="filtroFecha" name="HastaFijacion-hasta" type="date" style="width: 50%" />
             </span>
         </div>
         <div class="col-md-2">
             <label>Campaña</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.CampaniaId, new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione la Campaña", new { @class = "form-control", @id = "campaniaId" })
+            @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione la Campaña", new { @class = "form-control filtroBusquedaPorId", @id = "campaniaId" })
         </div>
     </div>
     <br />
@@ -117,13 +118,13 @@
             <label>Material</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control", @id = "materialId" })
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
         </div>
         <div class="col-md-2">
             <label>Zona</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.GrupoDeCompraId, new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione la Zona", new { @class = "form-control", @id = "grupoDeCompraId" })
+            @Html.DropDownList("GrupoCompra", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione la Zona", new { @class = "form-control filtroBusquedaPorId", @id = "grupoDeCompraId" })
         </div>
 
     </div>
@@ -133,31 +134,31 @@
             <label>Estado</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.EstadoId, new SelectList(ViewBag.Estado, "Value", "Text"), "Seleccione el Estado", new { @class = "form-control", @id = "estadoId" })
+            @Html.DropDownList("Estado", new SelectList(ViewBag.Estado, "Value", "Text"), "Seleccione el Estado", new { @class = "form-control filtroBusquedaPorId", @id = "estadoId" })
         </div>
         <div class="col-md-2">
             <label>Centro</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione el Centro", new { @class = "form-control", @id = "centroId" })
+            @Html.DropDownList("DestinoId", new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione el Centro", new { @class = "form-control filtroBusquedaPorId", @id = "centroId" })
         </div>
 
 
     </div>
     <br />
     <div class="row">
-        
+
         <div class="col-md-2">
             <label>Boleto</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.BoletoCompraNetId, new SelectList(ViewBag.Boleto, "Value", "Text"), "Seleccione el Boleto", new { @class = "form-control", @id = "BoletoId" })
+            @Html.DropDownList("BoletoId", new SelectList(ViewBag.Boleto, "Value", "Text"), "Seleccione el Boleto", new { @class = "form-control filtroBusquedaPorId", @id = "BoletoId" })
         </div>
         <div class="col-md-2">
             <label>Comercial</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownListFor(m => m.ComercialId, new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control", @id = "ComercialId" })
+            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control filtroBusquedaPorId", @id = "ComercialId" })
         </div>
 
     </div>
@@ -168,28 +169,28 @@
         </div>
         <div class="col-md-2">
             <span id="fechalimiteDiv">
-                <input id="fechalimiteId" type="date" style="width: 100%" />
-                <input type="checkbox" id="dolarizadoId" style="position:absolute; right:55px;top:8px">
+                <input id="fechalimiteId" class="filtroFecha" name="Fecha_Dolarizado-igual" type="date" style="width: 100%" />
+                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", style = "position:absolute; right:55px;top:8px", @id = "DolarizadoId" })
             </span>
         </div>
         <div class="col-md-2">
             <label>Importe Sustentable</label>
         </div>
         <div class="col-md-2">
-            @Html.TextBoxFor(x => x.ImporteSustentable, new { @class = "number", style = "width:100%" })
-            <input type="checkbox" id="importeSustentableId" style="position:absolute; right:20px;top:8px">
+            @Html.TextBox("Importe_Sustentable", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Importe_SustentableId" })
+            @Html.CheckBox("Sustentable", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "SustentableId" })
         </div>
         <div class="col-md-2">
             <label>Días de Diferimiento</label>
         </div>
         <div class="col-md-2">
-            @Html.TextBoxFor(x => x.DiasDiferimiento, new { @class = "number", style = "width:100%" })
-            <input type="checkbox" id="diferimientoId" style="position:absolute; right:20px;top:8px">
+            @Html.TextBox("Dias_Pesificado", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Dias_PesificadoId" })
+            @Html.CheckBox("Pesificado", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "PesificadoId" })
         </div>
     </div>
     <br />
     <div class="row">
-       
+
         <div class="col-md-12" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
         </div>
@@ -203,32 +204,32 @@
     </div>
 </div>
 
-<div class="modal fade" id="CargaContratos" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h1 class="modal-title" id="CargaCupos"></h1>
-                <div class="status confirmado-modal">
-                    <div>Seleccione Contratos</div>
+@*<div class="modal fade" id="CargaContratos" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 class="modal-title" id="CargaCupos"></h1>
+                    <div class="status confirmado-modal">
+                        <div>Seleccione Contratos</div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table id="contratos-table" class="table table-striped">                        
-                    </table>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <input type="number" id="nuevoNumContrato" class="nuevoNumContrato">
-                        </div>
-                        <div class="col-xs-2">
-                            <button class="k-button k-button-icontext fa fa-plus agregarContrato" style="height: 34px;" type="button"></button>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="contratos-table" class="table table-striped">
+                        </table>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <input type="number" id="nuevoNumContrato" class="nuevoNumContrato">
+                            </div>
+                            <div class="col-xs-2">
+                                <button class="k-button k-button-icontext fa fa-plus agregarContrato" style="height: 34px;" type="button"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>
         </div>
-    </div>
-</div>
+    </div>*@

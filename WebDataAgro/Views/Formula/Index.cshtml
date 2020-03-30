@@ -3,28 +3,25 @@
     @Scripts.Render("~/bundles/AbmFormula")
 }
 
-
-
-    <h2 style="margin-bottom:2%; color: grey;
-    text-align: left; margin-left:20px">
-        Algoritimo de Cupos
-    </h2>
-
-
-
-<label class="dias"> Inicio </label>
-<input placeholder="Inicio" id="inicio" />
-<label><i> Es la cantidad dias en la que el algorimo va a empezar a buscar negocios</i></label>
+<h3>Algoritmo de Cupos</h3>
 <br />
-<label class="dias"> Cantidad de Días </label>
-<input data-decimals="0" placeholder="Cantidad de Días" id="cantdias" />
-<label><i> Es la cantidad dias desde el "Inicio" a tener en cuenta para buscar los negocios</i></label>
-<br />
+<script src="~/Scripts/umd/popper.js"></script>
+
+<form>
+    <div class="form-group row">
+        <label for="inicio" class="col-sm-1 col-form-label" cursor: pointer" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Cantidad de días que el algoritmo va a empezar a buscar negocios.">Inicio</label>
+        <div class="col-sm-1">
+            <input class="form-control-plaintext" style="width:100%" id="inicio" placeholder="Inicio">
+        </div>
+        <label for="cantidadDias" class="col-sm-2 col-form-label" cursor: pointer" data-html="true" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="<i>Cantidad de días desde el <strong>Inicio</strong> a tener en cuenta para buscar los negocios.<i>">Cantidad de Días</label>
+        <div class="col-sm-1">
+            <input class="form-control-plaintext" style="width:100%" data-decimals="0" placeholder="Cantidad de Días" id="cantdias">
+        </div>
+    </div>
+</form>
 <label><i> Ejemplo: Inicio 1, Cantidad de Días 3, va a buscar los negocios que esten entre las fechas <b>@DateTime.Now.Date.AddDays(1).ToString("dd/MM/yyyy")</b> y <b>@DateTime.Now.Date.AddDays(4).ToString("dd/MM/yyyy")</b> </i></label>
 
 <div id="treelist"></div>
-
-
 
 <div id="popUpAgregarCriterio" style="text-align: center;">
     <input type="hidden" id="padreid" />
@@ -40,71 +37,74 @@
 
 
 <style>
+        .popover-content {
+            color: dimgray;
+            font-size: 9px !important;
+            font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
+        }
 
-    div.k-window-content {
-        overflow: hidden;
-        text-align: center;
-    }
+        div.k-window-content {
+            overflow: hidden;
+            text-align: center;
+        }
 
-    .k-grid tbody .k-button {
-        min-width: 40px;
-        width: auto;
-    }
+        .k-grid tbody .k-button {
+            min-width: 40px;
+            width: auto;
+        }
 
-    .k-button.k-state-hover, .k-button:hover {
-        border-color: white;
-    }
+        .k-button.k-state-hover, .k-button:hover {
+            border-color: white;
+        }
 
-    .k-window-titlebar .k-window-action {
-        width: auto;
-        height: auto;
-        opacity: 1;
-    }
+        .k-window-titlebar .k-window-action {
+            width: auto;
+            height: auto;
+            opacity: 1;
+        }
 
-    .k-window-title {
-        text-align: center;
-        background-color: #017940;
-        font-size: 12px;
-        text-align: left;
-        margin: 10px 0;
-        border: 0;
-        color: #FFF;
-        padding: 3px;
-        font-weight: 700;
-    }
+        .k-window-title {
+            text-align: center;
+            background-color: #017940;
+            font-size: 12px;
+            text-align: left;
+            margin: 10px 0;
+            border: 0;
+            color: #FFF;
+            padding: 3px;
+            font-weight: 700;
+        }
 
-    .k-button, .k-widget {
-        margin-top: 2%;
-    }
+        .k-button, .k-widget {
+            margin-top: 2%;
+        }
 
-    .k-edit-field, .k-edit-form-container .editor-field {
-        margin-top: 3.7%;
-        font-weight: bold;
-        font-size: 15px;
-    }
+        .k-edit-field, .k-edit-form-container .editor-field {
+            margin-top: 3.7%;
+            font-weight: bold;
+            font-size: 15px;
+        }
 
-    .dias {
-        font-weight: bold;
-        color: grey;
-        margin-left: 20px;
-        margin-right: 20px;
-        width:120px;
-    }
+        .dias {
+            font-weight: bold;
+            color: grey;
+            margin-left: 20px;
+            margin-right: 20px;
+            width: 120px;
+        }
 
-    .editor-label, .k-edit-label {
-        text-align: center;
-    }
-    /*.k-textbox {
-    width: 100px;
-    text-align: center;
-}*/
-
-
-    input.k-textbox, textarea.k-textbox {
+        .editor-label, .k-edit-label {
+            text-align: center;
+        }
+        /*.k-textbox {
         width: 100px;
         text-align: center;
+    }*/
 
-}
 
+        input.k-textbox, textarea.k-textbox {
+            width: 100px;
+            text-align: center;
+        }
 </style>
 

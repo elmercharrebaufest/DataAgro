@@ -7,6 +7,7 @@ var data = new Array();
 $(document).ready(function () {
 
 
+    $('[data-toggle="popover"]').popover();
     traerDatosIniciales();
     CrearViewModel();
     crearArbol();
@@ -62,6 +63,7 @@ function crearArbol() {
             transport: {
                 read: {
                     url: MSGetUrl('/Formula/Buscar'),
+                    cache: false
                 },
                 update: {
                     url: MSGetUrl('/Formula/update'),
@@ -98,7 +100,7 @@ function crearArbol() {
             for (var i = 0; i < datos.length; i++) {
 
                 var dataItem = datos[i];
-                var idCriterioRaiz=$("#treelist").data("kendoTreeList").dataSource.data().find(x => x.Descripcion == 'CriterioRaiz').Id;
+                var idCriterioRaiz = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Descripcion == 'CriterioRaiz' })[0].Id;
 
                 if (dataItem.Concreta) {
                     $("#treelist").find("[data-uid='" + dataItem.uid + "']").find(".k-grid-agregarhijo").hide();
@@ -107,7 +109,7 @@ function crearArbol() {
 
                 if (dataItem.PadreId != idCriterioRaiz && dataItem.PadreId !=null ) {
                     
-                    var padreDeEsteItem=$("#treelist").data("kendoTreeList").dataSource.data().find(x => x.Id == dataItem.PadreId);
+                    var padreDeEsteItem = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Id == dataItem.PadreId })[0];
                     $("#treelist").find("[data-uid='" + padreDeEsteItem.uid + "']").find(".k-grid-delete").hide();
                 }
 
@@ -306,10 +308,10 @@ function abrirVentanaAgregarHijo(e) {
 
     var numerictextbox = $("#prioridad").data("kendoNumericTextBox");
 
-    var hijosDeEsteCriterio = $("#treelist").data("kendoTreeList").dataSource.data().filter(criterio => criterio.PadreId == dataItem.Id);
+    var hijosDeEsteCriterio = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (criterio) { return criterio.PadreId == dataItem.Id });
 
     let sumaPrioridadHijos = 0;
-    hijosDeEsteCriterio.forEach(x => sumaPrioridadHijos = sumaPrioridadHijos + x.Prioridad);
+    hijosDeEsteCriterio.forEach(function (x) { return sumaPrioridadHijos = sumaPrioridadHijos + x.Prioridad });
 
     //$("#maximo").val(dataItem.Prioridad - sumaPrioridadHijos);
     $("#maximo").val(100 - sumaPrioridadHijos);
@@ -321,11 +323,11 @@ function validarPrioridadIngresadaEnEditar(e) {
 
 
     let prioridadIngresada = parseInt(e.model.Prioridad);
-    let criteriosHermanos = $("#treelist").data("kendoTreeList").dataSource.data().filter(x => x.PadreId == e.model.PadreId && x.Id != e.model.Id);
-    let criterioPadre = $("#treelist").data("kendoTreeList").dataSource.data().find(x => x.Id == e.model.PadreId);
+    let criteriosHermanos = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.PadreId == e.model.PadreId && x.Id != e.model.Id });
+    let criterioPadre = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Id == e.model.PadreId })[0];
 
     let sumaPrioridadHermanos = 0;
-    criteriosHermanos.forEach(x => sumaPrioridadHermanos = sumaPrioridadHermanos + x.Prioridad);
+    criteriosHermanos.forEach(function (x) { return sumaPrioridadHermanos = sumaPrioridadHermanos + x.Prioridad });
 
     //let PrioridadMaximaDisponible = criterioPadre.Prioridad - sumaPrioridadHermanos;
     let PrioridadMaximaDisponible = 100 - sumaPrioridadHermanos;
@@ -336,8 +338,8 @@ function validarPrioridadIngresadaEnEditar(e) {
         PopUpError("La Prioridad debe ser Menor o Igual a " + PrioridadMaximaDisponible);
 
 
-        var treeList = $("#treelist").data("kendoTreeList");
-        treeList.cancelChanges();
+        //var treeList = $("#treelist").data("kendoTreeList");
+        //treeList.cancelChanges();
     }
 
 }
@@ -348,9 +350,9 @@ function cargarCombo() {
 
     var criteriosAgregados = $("#treelist").data("kendoTreeList").dataSource.data();
 
-    criteriosAgregados.forEach(criAgregado => {
+    criteriosAgregados.forEach(function(criAgregado) {
 
-        criteriosParaAgregar = criteriosParaAgregar.filter(criterio => criterio.Descripcion != criAgregado.Descripcion);
+      return  criteriosParaAgregar = criteriosParaAgregar.filter(function (criterio) { return criterio.Descripcion != criAgregado.Descripcion });
     });
 
 

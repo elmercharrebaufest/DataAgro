@@ -15,6 +15,36 @@
     padding-right: 0;
     text-indent: .8em;
 }
+
+.botonVarios {
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.varios {
+    color: #017940;
+}
+#cupoPropiosDiv {
+    border: 1px solid #848484;
+    border-radius: 5px !important;
+    background: white;
+    text-align: center;
+    margin: 0 0 15px 0;
+    cursor: pointer;
+}
+
+
+#cupoPropiosDiv.selected {
+    color: white;
+    background-color: #017940;
+}
+
+    #cupoPropiosDiv.selected:hover {
+        color: #ccc;
+        border: 1px solid #ccc;
+        background-color: #017940;
+    }
+
 .w100 {
     width:100%
 }

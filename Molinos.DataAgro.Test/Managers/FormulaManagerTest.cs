@@ -15,8 +15,6 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq.Expressions;
@@ -94,7 +92,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
             repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason {Id=2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
+                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
                 .Returns(new Formula { Id = 2 });
@@ -147,7 +145,7 @@ namespace Molinos.DataAgro.Test.Managers
                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4 });
 
 
-            var criterioNuevo = new CriterioIni { Id =2, Prioridad = 20, PadreId = 1 };
+            var criterioNuevo = new CriterioIni { Id = 2, Prioridad = 20, PadreId = 1 };
             var resultado = target.GrabarCriterio(criterioNuevo);
 
 
@@ -206,7 +204,7 @@ namespace Molinos.DataAgro.Test.Managers
                     .Returns(new List<Formula>() { new Formula { Id = 5, CantDias = 3, Inicio = 5 }, new Formula { Id = 1, CantDias = 10, Inicio = 11 } });
 
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
-                  .Returns(new Formula { Id = 5, CantDias = 3, Inicio = 5 } );
+                  .Returns(new Formula { Id = 5, CantDias = 3, Inicio = 5 });
 
             var nuevosDias = new FormulaIni { CantDias = 7, Inicio = 7 };
 
