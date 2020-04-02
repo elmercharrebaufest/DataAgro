@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int DesdeAnio { get; set; }
         public int HastaMes { get; set; }
         public int HastaAnio { get; set; }
+        public int TipoNegocioId { get; set; }
     }
 }
    

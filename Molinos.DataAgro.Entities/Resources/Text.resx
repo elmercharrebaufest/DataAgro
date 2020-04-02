@@ -613,4 +613,7 @@
   <data name="Confirmar_NegocioOrigSur" xml:space="preserve">
     <value>Confirmar negocios Orig Sur</value>
   </data>
+  <data name="Visualizar_OcultarEnTablero" xml:space="preserve">
+    <value>Ver Marca Ocultar en Tablero </value>
+  </data>
 </root>

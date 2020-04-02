@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
                         
             var cont = contexto.Set<Contrato>()
-                .Where(x => x.TipoNegocioId == 2 && 
+                .Where(x => x.OcultarEnTablero == false && x.TipoNegocioId == 2 && 
                 DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && 
                 DbFunctions.TruncateTime(x.Fecha) <= fechaManana && 
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }).ToList();
 
             var fij = contexto.Set<FijacionDePrecioContrato>()
-                .Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
+                .Where(x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && 
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
                 (centroId == 0 || centroId == 1)
@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }).ToList();
 
             var contPizarra = contexto.Set<Contrato>()
-                .Where(x => x.TipoNegocioId == 2 &&
+                .Where(x => x.OcultarEnTablero == false && x.TipoNegocioId == 2 &&
                 DbFunctions.TruncateTime(x.Fecha) >= fechaHoy &&
                 DbFunctions.TruncateTime(x.Fecha) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }).ToList();
 
             var fijPizarra = contexto.Set<FijacionDePrecioContrato>()
-                .Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
+                .Where(x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
                 (centroId == 0 || centroId == 1)
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      x.Sum(y => precioPizarraPorMaterial.FirstOrDefault(z => z.MaterialId == x.Key).Precio * y.Cantidad / 1000) : 0,
                 }).ToList();
 
-            var fas = contexto.Set<Fason>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
+            var fas = contexto.Set<Fason>().Where(x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1))
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {
@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
                 }).ToList();
 
-            var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId))
+            var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId))
                .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                .Select(x => new PrecioCantidadDto()
                {

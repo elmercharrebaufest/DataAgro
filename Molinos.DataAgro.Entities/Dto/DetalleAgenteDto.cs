@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Operador { get; set; } //Operador
         public string Material { get; set; } // MaterialId
         public string Posicion { get; set; } //Posicion(MM.AAAA)
-        public string Cantidad { get; set; } // Cantidad
+        public double Cantidad { get; set; } // Cantidad
         public string Precio { get; set; } // Precio
         public string Moneda { get; set; } // MonedaId (length: 5) 
         public string Fecha { get; set; } //Fecha

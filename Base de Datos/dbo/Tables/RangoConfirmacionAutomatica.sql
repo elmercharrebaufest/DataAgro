@@ -11,11 +11,14 @@
 	[DesdeMes]			INT NULL,
 	[DesdeAnio]			INT NULL,
 	[HastaMes]			INT NULL,
-	[HastaAnio]			INT NULL,
-	
+	[HastaAnio]			INT NULL,	
+    [TipoNegocioId]		INT NOT NULL DEFAULT 2, 
+
     CONSTRAINT [PK_RangoConfirmacionAutomatica] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Confirmacion_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),
 	CONSTRAINT [FK_Confirmacion_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
-	CONSTRAINT [FK_Confirmacion_GrupoCompras] FOREIGN KEY ([ZonaId]) REFERENCES [GrupoDeCompras]([Id])
+	CONSTRAINT [FK_Confirmacion_GrupoCompras] FOREIGN KEY ([ZonaId]) REFERENCES [GrupoDeCompras]([Id]),
+	CONSTRAINT [FK_Confirmacion_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId])
+
 );
 

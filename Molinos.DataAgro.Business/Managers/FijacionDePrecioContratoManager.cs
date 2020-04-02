@@ -303,6 +303,7 @@ namespace Molinos.DataAgro.Business.Managers
             var precioContrato = contrato.Precio;
 
             var rangos = repositorio.Listar<RangoConfirmacionAutomatica>(x =>
+           x.TipoNegocioId == 3 &&
            x.FechaDesde <= hoy &&
            x.FechaHasta >= hoy &&
            x.MaterialId == contrato.MaterialId &&
@@ -310,8 +311,9 @@ namespace Molinos.DataAgro.Business.Managers
            precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo) ?? new List<RangoConfirmacionAutomatica>();
 
             var rango = rangos.FirstOrDefault(
-                x => contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
-                   contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes)));
+                //x => contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
+                //   contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes))
+                   );
 
             if (rango != null)
             {

@@ -45,6 +45,8 @@ namespace WebDataAgro.Controllers
 
         private ILogger mobjLogger;
 
+        private INegocioManager mobjNegocioManager;
+        
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
@@ -61,7 +63,7 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager)
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager, INegocioManager oNegocioManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -78,6 +80,7 @@ namespace WebDataAgro.Controllers
             mobjAgenteManager = oAgenteManager;
             mobjContratoAcuerdoManager = oContratoAcuerdoManager;
             mobjConfiguracionManager = configuracionManager;
+            mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
         }
 
@@ -782,6 +785,15 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjContratoManager.ObtenerRangoDePrecios(materialId, monedaId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public JsonResult NoMostrarEnTablero(Negocio negocioAnular)
+        {
+            return new JsonResult()
+            {
+                Data = mobjNegocioManager.OcultarEnTablero(negocioAnular),
                 MaxJsonLength = Int32.MaxValue
             };
         }

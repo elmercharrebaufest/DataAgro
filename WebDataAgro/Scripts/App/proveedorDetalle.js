@@ -645,7 +645,7 @@ function armarContacto() {
                     '<div class="contenedor-contacto-comercial-mails">' +
                     (emailComerciales.length > 0 ? ' ' + emailComerciales.join(" - ") : "") +
                     (comerciales[i].CompraNet == true ? " &#10004;" : "") +
-                    (comerciales[i].Cupo == true ? "&#x2713;" : "") +
+                    (comerciales[i].Cupo == true ? '<i class="fa fa-truck"></i>' : "") +
                     '</div>' +
                     '<div class="contenedor-contacto-comercial-extras">' +
                     '<div class="row">' +

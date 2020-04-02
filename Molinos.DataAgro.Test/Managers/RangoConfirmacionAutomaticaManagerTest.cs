@@ -86,7 +86,8 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var rango = new RangoConfirmacionAutomatica { Id = 1, MaterialId = 1, MonedaId = "a", PrecioMaximo = 10, PrecioMinimo = 1,
             Cantidad=1,
-            HastaAnio=1,
+            TipoNegocioId=2,
+                HastaAnio =1,
             DesdeAnio=1,
             HastaMes=1,
             DesdeMes=1,
@@ -113,6 +114,7 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Id = 0,
                 MaterialId = 1,
+                TipoNegocioId = 2,
                 MonedaId = "a",
                 PrecioMaximo = 10,
                 PrecioMinimo = 1,
@@ -214,7 +216,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
-            Assert.AreEqual(6, resultado.Errores.Count);
+            Assert.AreEqual(5, resultado.Errores.Count);
         }
         [Test]
         public void GrabarRangoErrorRangoexistente()

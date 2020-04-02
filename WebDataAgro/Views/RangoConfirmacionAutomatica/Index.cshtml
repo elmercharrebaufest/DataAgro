@@ -28,7 +28,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="gridIniRango" class="table-responsive" data-bind="source: Resultados" style="height:227px;"></div>
+                        <div id="gridIniRango" class="table-responsive" data-bind="source: Resultados" ></div>
                     </div>
                 </div>
 
@@ -45,7 +45,16 @@
             </div>
 
             <div class="tab-pane" id="tab2">
+                <div class="row" style="padding-bottom:5px;">
+                    <div class="col-md-2">
+                        <label>Tipo Negocio</label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="tipoNegocio" data-bind="source: TipoNegocioCombo, value: RangoConfirmacionAutomatica.TipoNegocioId, disabled: isControlDisabled"></select>
+                        <img id="errTipoNegocio" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
 
+                </div>
                 <div class="row">
                     <div class="col-md-2">
                         <label> Rango de Confirmacion Automatica </label>
@@ -100,7 +109,7 @@
                         <input id="cantidad" data-bind="value: RangoConfirmacionAutomatica.Cantidad, disabled: isControlDisabled" style="width:100%" />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="divEntrega">
                     <div class="col-md-2">
                         <label> Mes Desde-Hasta </label>
                     </div>
@@ -120,6 +129,7 @@
                         <input id="hastaAnio" data-bind="value: RangoConfirmacionAutomatica.HastaAnio, disabled: isControlDisabled" style="width:100%" />
                     </div>
                 </div>
+
                 <br />
                 <div class="row">
                     <div class="col-md-12">

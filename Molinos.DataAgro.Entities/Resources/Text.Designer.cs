@@ -1458,6 +1458,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ver Marca Ocultar en Tablero .
+        /// </summary>
+        public static string Visualizar_OcultarEnTablero {
+            get {
+                return ResourceManager.GetString("Visualizar_OcultarEnTablero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acceder a Precio Pizarra.
         /// </summary>
         public static string Visualizar_Pizarra {

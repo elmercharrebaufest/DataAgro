@@ -106,9 +106,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfirmarNegocioCorredoresBsAs = 322,
         [Display(ResourceType = typeof(Text), Name = "Confirmar_NegocioCorredoresRosario")]
         ConfirmarNegocioCorredoresRosario = 323,
-        
-        
-        
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_OcultarEnTablero")]
+        OcultarEnTablero = 324,
+
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,

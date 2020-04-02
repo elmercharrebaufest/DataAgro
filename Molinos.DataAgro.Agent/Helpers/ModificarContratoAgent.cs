@@ -51,13 +51,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                     (contrato.PrecioPactado == null && contratoGuardado.PrecioPactado.ToList().Count > 0) ||
                     contrato.PrecioPactado != null && contrato.PrecioPactado.Count != contratoGuardado.PrecioPactado.Count ||
                          contrato.ImporteSustentable != contratoGuardado.ImporteSustentable ||
-                         contrato.MonedaId != contratoGuardado.MonedaId )
+                         contrato.MonedaId != contratoGuardado.MonedaId)
                 {
                     descModificado = true;
                 }
                 else
                 {
-                    foreach (var descBon in contratoGuardado.Descuentos.Where(x=> x.TipoPeriodoDBId != 1))
+                    foreach (var descBon in contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1))
                     {
                         if (!descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
                          && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
@@ -116,7 +116,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
-                if (contrato.PrecioPactado!= null)
+                if (contrato.PrecioPactado != null)
                 {
                     foreach (var p in contrato.PrecioPactado)
                     {
@@ -233,7 +233,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
                 var listaApertura = new List<ZMPES5440>();
-                if (contrato.TipoNegocioId == 2 && contrato.AperturaPrecio!= null)
+                if (contrato.TipoNegocioId == 2 && contrato.AperturaPrecio != null)
                 {
                     var listaAperturaPrecios = repositorio.Listar<ConceptoAperturaPrecio>();
                     foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
@@ -250,15 +250,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
-                
+
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
-                if(contrato.Descuentos == null)
+                if (contrato.Descuentos == null)
                 {
                     contrato.Descuentos = new List<DescuentoBonificacion>();
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd"): "";
+                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";
                 string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
@@ -324,7 +324,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.UsuarioId != contrato.UsuarioId ||
                     contratoGuardado.Warrant != contrato.Warrant ||
                     contratoGuardado.ZonaId != contrato.ZonaId;
-                
+
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
                     descuentosGenerales != null && descuentosGenerales.Count != contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
@@ -344,7 +344,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
-            var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
+                var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560
@@ -361,7 +361,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                             FECHA_LIMITE = fechaDolarizadoString,
                             GRUPO_COMPRAS = "",
-                            MONEDA = contrato.MonedaId,                            
+                            MONEDA = contrato.MonedaId,
                             NO_INFORMAR_SIO = noInformaSioString,
                             PAGO_DIFERIDO = pagoDiferidoString,
                             MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
@@ -380,8 +380,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion),
                             IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
                             CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
-                            COND_FIJACION = contrato.CondicionFijacionId.HasValue?
-                            repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap):"",
+                            COND_FIJACION = contrato.CondicionFijacionId.HasValue ?
+                            repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap) : "",
                             CAMIONES = cantidadCamiones,
                             CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
                             BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ?
@@ -402,22 +402,23 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
                             MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
                             OBSERVACION_CAL1 = contrato.Observacion,
-                            CUIT_CORREDOR = contrato.CorredorId.HasValue? 
-                            repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "",                            
-                            PORC_COMISION = contrato.CorredorId.HasValue? contrato.PorcentajeComision.Value : 0,
+                            CUIT_CORREDOR = contrato.CorredorId.HasValue ?
+                            repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "",
+                            PORC_COMISION = contrato.CorredorId.HasValue ? contrato.PorcentajeComision.Value : 0,
                             CONTRCORR = contrato.ContratoCorredor ?? "",
                             CONTRVEND = contrato.ContratoVendedor ?? "",
                             SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
                             SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
                             CONTRATO_MADRE = contrato.ContratoMadre ?? "",
-                            CREADOR = contrato.ComercialCreadorId.HasValue?
-                            repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory): "",
-                            ZONA = contrato.ZonaId.HasValue ? 
+                            CREADOR = contrato.ComercialCreadorId.HasValue ?
+                            repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory) : "",
+                            ZONA = contrato.ZonaId.HasValue ?
                             repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "",
                             COMPENSACION = contrato.Compensacion == true ? "X" : "",
-                            FLETE_NIVEL = contrato.NivelTarifaId.HasValue?
+                            FLETE_NIVEL = contrato.NivelTarifaId.HasValue ?
                             repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "",
                             FLETE_TARIFA = contrato.TarifaFlete ?? 0,
+                            FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
                         }
                     }
                 };
@@ -440,7 +441,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq.IM_DESC_BONIF = listaDescuentos.ToArray();
                 rq.IM_CALIDAD = listaCalidades.ToArray();
                 rq.IM_APERTURA = listaApertura.ToArray();
-            
+
                 logger.Debug(rq.ToXml());
 
                 var log = new Log
@@ -459,12 +460,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                 log.Xml += devolucion.ToXml();
                 repositorio.GuardarCambios();
 
-                if (devolucion!= null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE)&& devolucion.EX_MENSAJE.Contains("Error"))
+                if (devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) && devolucion.EX_MENSAJE.Contains("Error"))
                 {
                     throw new Exception(devolucion.EX_MENSAJE);
                 }
-                logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ?"Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
-                return devolucion!=null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? devolucion.EX_MENSAJE:"OK";
+                logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? "Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
+                return devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? devolucion.EX_MENSAJE : "OK";
             }
             catch (Exception e)
             {

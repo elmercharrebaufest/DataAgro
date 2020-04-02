@@ -18,6 +18,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int DesdeAnio { get; set; }
         public int HastaMes { get; set; }
         public int HastaAnio { get; set; }
+        public int TipoNegocioId { get; set; }
+
+        [ForeignKey("TipoNegocioId")]
+        public virtual TipoNegocio TipoNegocio { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MonedaId")]

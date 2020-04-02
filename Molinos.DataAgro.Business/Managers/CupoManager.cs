@@ -103,6 +103,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     if (error.ListaCupos.Count > 0)
                     {
+
                         EnviarEmail(cupo, error.ListaCupos);
                     }
                     return error;
@@ -433,8 +434,16 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + Td(ref linea) + "Con destino " + cupo.Centro.Descripcion + "</td></tr>";
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
-                htmlBody += "<tr>" + Td(ref linea) + "Observaciones: " + (cupo.MaterialId == 1 ? "Maíz Especial" : cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable") + "</td></tr>";
+            {
+                htmlBody += "<tr>" + Td(ref linea) + "Material: " + (cupo.MaterialId == 1 ? "Maíz Especial" : cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable") + "</td></tr>";
+            }
+            else
+            {
+                htmlBody += "<tr>" + Td(ref linea) + "Material: " + cupo.Material.Descripcion  + "</td></tr>";
+            }
+            
             htmlBody += "</table>";
+            htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +

@@ -9,6 +9,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<MaterialCombo> Material { get; set; }
         public List<MonedaQry> Moneda { get; set; }
         public List<ZonaQry> Zona { get; set; }
+        public List<TipoNegocioDto> TipoNegocio { get; set; }
     }
 
     public class DataAbmRangoConfirmacionAutomatica : Resultado
@@ -40,7 +41,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Cantidad { get; set; }
         public string EntregaDesde { get; set; }
         public string EntregaHasta { get; set; }
-
+        public string TipoNegocio { get; set; }
+        public int TipoNegocioId { get; set; }
     }
 }
 

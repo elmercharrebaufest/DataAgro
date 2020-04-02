@@ -51,6 +51,7 @@ function CreateGridInformeCompraNet() {
                     Negocio: { type: "number" },
                     Acuerdo: { type: "number" },
                     Fecha: { type: "date" },
+                    FechaCierta: { type: "date" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
                     FechaEntrega: { type: "date" },
@@ -202,7 +203,8 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Estado_Contrato", title: "Estado", width: 90, sortable: false
             },
-            { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } }
+            { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } },
+            { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 }
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];

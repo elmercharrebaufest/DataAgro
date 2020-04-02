@@ -52,8 +52,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha = DbFunctions.TruncateTime(contrato.Fecha),
                         Hora = SqlFunctions.DateName("hh", contrato.Fecha) + ":" + SqlFunctions.DateName("mi", contrato.Fecha),
                         Fecha_Order = contrato.Fecha,
-                        GrupoCompra = contrato.GrupoCompra ?? 0,
-                        GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
+                        GrupoCompra = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeComprasId.Value : 
+                                        contrato.GrupoCompra.HasValue ? contrato.GrupoCompra.Value : 0,
+                        GrupoCompraDescripcion =(contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeCompras.Descripcion :
+                                                    contrato.GrupoDeCompras.Descripcion,
                         ProvinciaId = contrato is Contrato ? (contrato as Contrato).ProvinciaId : null,
                         LocalidadId = contrato is Contrato ? (contrato as Contrato).LocalidadId : null,
                         Base = contrato is Contrato ? (contrato as Contrato).Base : null,
@@ -135,7 +137,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TarifaFlete = (contrato is Contrato) ? (contrato as Contrato).TarifaFlete : null,
                         Compensacion = (contrato is Contrato) ? (contrato as Contrato).Compensacion : null,
                         Acuerdo = (contrato is Contrato) ? (contrato as Contrato).ContratoAcuerdoId : null,
-                        Rechazo = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).MotivoRechazo : null
+                        Rechazo = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).MotivoRechazo : null,
+                        OcultarEnTablero = contrato.OcultarEnTablero,
+                        FechaCierta = DbFunctions.TruncateTime((contrato as Contrato).FechaCierta),
                     };
 
                 return queryNegocios;
@@ -252,7 +256,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TarifaFlete = null,
                         Compensacion = null,
                         Acuerdo = null,
-                        Rechazo = fijac.MotivoRechazo
+                        Rechazo = fijac.MotivoRechazo,
+                        OcultarEnTablero = fijac.OcultarEnTablero
                     };
                 return queryFijacion;
             }

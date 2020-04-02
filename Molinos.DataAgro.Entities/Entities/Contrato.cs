@@ -41,7 +41,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? TarifaFlete { get; set; }
         public bool? Sustentable { get; set; }
 
-       
+        public DateTime? FechaCierta { get; set; }
+
         [ForeignKey("ProvinciaId")]
         public virtual Provincia Provincia { get; set; } // ProvinciaId
         [ForeignKey("LocalidadId")]

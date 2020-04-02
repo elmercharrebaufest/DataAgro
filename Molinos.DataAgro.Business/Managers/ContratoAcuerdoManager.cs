@@ -181,6 +181,36 @@ namespace Molinos.DataAgro.Business
                         });
                     }
                 }
+
+                if (objContratoAcuerdo.PrecioPactado != null)
+                {
+                    foreach (var cal in objContratoAcuerdo.PrecioPactado.ToList())
+                    {
+                        repositorio.Remover(cal);
+                    }
+                }
+                else
+                {
+                    objContratoAcuerdo.PrecioPactado = new List<PrecioPactado>();
+                }
+                if (oContratoAcuerdo.PrecioPactado != null)
+                {
+                    foreach (var cal in oContratoAcuerdo.PrecioPactado)
+                    {
+                        objContratoAcuerdo.PrecioPactado.Add(new PrecioPactado
+                        {
+                            Id = cal.Id,
+                            FechaDesde = cal.FechaDesde,
+                            FechaHasta = cal.FechaHasta,
+                            Precio = cal.Precio,
+                            MonedaPactadoId = cal.MonedaPactadoId,
+                            ImportePactado = cal.ImportePactado,
+                            MonedaImportePactadoId = cal.MonedaImportePactadoId,
+                            Porcentaje = cal.Porcentaje,
+                            ContratoId = cal.ContratoId
+                        });
+                    }
+                }
             }
             try
             {
@@ -345,6 +375,24 @@ namespace Molinos.DataAgro.Business
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Porcentaje = y.Porcentaje
+                }).ToList(),
+                PreciosPactados = x.PrecioPactado.Select(y => new PrecioPactadosDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    Id = y.Id,
+                    ImportePactado = y.ImportePactado,
+                    MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                    MonedaImportePactadoId = y.MonedaImportePactadoId,
+                    MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                    MonedaPactadoId = y.MonedaPactadoId,
+                    Porcentaje = y.Porcentaje,
+                    Precio = y.Precio
                 }).ToList()
             });
             return contrato;

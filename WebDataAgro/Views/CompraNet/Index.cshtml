@@ -22,6 +22,7 @@
     var verMesa = PermisosHelper.Is(PermisosDataAgro.VerMesa);
     var modificaFinalizados = PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados);
     var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
+    var ocultarEnTablero = PermisosHelper.Is(PermisosDataAgro.OcultarEnTablero);
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -40,6 +41,8 @@
     verMesa = '@verMesa';
     modificaFinalizados = '@modificaFinalizados';
     externo = '@externo';
+    ocultarEnTablero = '@ocultarEnTablero';
+
 </script>
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />

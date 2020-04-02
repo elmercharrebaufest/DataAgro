@@ -278,7 +278,8 @@
                                 <td>#: FechaDesde #</td>
                                 <td>#: FechaHasta #</td>
                                 <td>#: Precio # #: MonedaPactadoDesc #</td>
-                                <td>#: ImportePactado # #: MonedaImportePactadoDesc #</td>
+                                @*<td>#: ImportePactado # #: MonedaImportePactadoDesc #</td>*@
+                            <td># if(ImportePactado>0){ # #: ImportePactado # #: MonedaImportePactadoDesc # #}#</td>
                                 <td>#: Porcentaje #</td>
                             </tr>
                         </script>

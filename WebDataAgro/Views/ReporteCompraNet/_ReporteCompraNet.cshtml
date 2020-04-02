@@ -27,9 +27,11 @@
         font-weight: bold;
         padding: 0;
     }
-    .k-grid-header th.k-with-icon .k-link {
-        margin-right: 2px;
-    }
+
+        .k-grid-header th.k-with-icon .k-link {
+            margin-right: 2px;
+        }
+
     .k-grid tbody tr {
         line-height: 14px;
         font-size: 11px;
@@ -298,23 +300,23 @@
                             totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
                             totalMaterialNewNeogcioIds.AddRange(mes.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
 
-                           
+
 
                         }
 
                         totalMaterialDisNeogcioIds.AddRange(toneladaPrecio.ListDispAgente);
                         totalMaterialFrwNeogcioIds.AddRange(toneladaPrecio.ListFrwAgente);
                         totalMaterialNewNeogcioIds.AddRange(toneladaPrecio.ListNewAgente);
-                        
+
 
                         List<int> ListDispAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListDispAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListDispFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                             
+
                         List<int> ListNewAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListNewAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListNewFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
-                             
+
                         List<int> ListFrwAFijar = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListFrwAPrecio = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
                         List<int> ListFrwFijac = posicion.Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList();
@@ -529,7 +531,7 @@
                                     totalMesNeogcioIds.AddRange(mes.ListNewAPrecio);
                                     totalMesNeogcioIds.AddRange(mes.ListNewFijac);
                                     totalMaterialNeogcioIds.AddRange(totalMesNeogcioIds);
-                                   
+
                                 }
                                 <td class="@(totalPesos != 0 ? "" : "hide")">
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', 'ARP  ')">
@@ -553,7 +555,7 @@
                                 </td>
                                 <td>
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModal(@material.MaterialId, @mesActual, @mes.Anio, '@ViewBag.Fecha', '@ViewBag.FechaHasta', '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()','','')">
-                                      @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
+                                        @((mes.NewAPrecio + mes.FrwAPrecio + mes.DispAPrecio + mes.NewAFijar + mes.FrwAFijar + mes.DispAFijar + mes.NewFijac + mes.FrwFijac + mes.DispFijac).ToString("N0"))
                                     </a>
                                 </td>
                             </tr>
@@ -619,7 +621,26 @@
                             </th>
                             <td class="@(totalDolares != 0 ? "" : "hide")"></td>
                             <td></td>
-                            <td></td>
+                            <td>
+                                @{
+                                    var list = material.PosicionKilos.Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList();
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListDispAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewAFijar).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    list.AddRange(material.PosicionKilos.Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList());
+                                    var matToltalIds = String.Join(",", list);
+                                 
+                                    var matTotal = material.PosicionKilos.Sum(y => y.DispFijac) + material.PosicionKilos.Sum(y => y.FrwFijac) + material.PosicionKilos.Sum(y => y.NewFijac)+material.PosicionKilos.Sum(y => y.DispAFijar) + material.PosicionKilos.Sum(y => y.FrwAFijar) + material.PosicionKilos.Sum(y => y.NewAFijar)
+                                        + material.PosicionKilos.Sum(y => y.DispAPrecio) + material.PosicionKilos.Sum(y => y.FrwAPrecio)+material.PosicionKilos.Sum(y => y.NewAPrecio);
+                                }
+                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@matToltalIds')">
+                                    @matTotal.ToString("N0")
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -680,7 +701,7 @@
                     <th></th>
                     <th>Total</th>
                     <th>
-                        
+
                         @{List<int> values = new List<int>();
                             Model.AgenteCompras.ListaAgenteCompras.ForEach(agente => values.AddRange(agente.Operador.Select(a => a.Ids).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList()));
                         }

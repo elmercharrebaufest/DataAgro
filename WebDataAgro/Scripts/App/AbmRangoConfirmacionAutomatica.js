@@ -42,12 +42,33 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "MaterialId"
     });
-
+    
     $("#material").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             $("#material").data("kendoDropDownList").text("");
         }
     });
+    $("#tipoNegocio").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "TipoNegocioId"
+    });
+    $("#tipoNegocio").change( function(){
+        if ($("#tipoNegocio").val() == "3") {
+            $("#divEntrega").hide();
+            $("#desdeMes").data("kendoNumericTextBox").value("");
+            $("#hastaMes").data("kendoNumericTextBox").value("");
+            $("#desdeAnio").data("kendoNumericTextBox").value("");
+            $("#hastaAnio").data("kendoNumericTextBox").value("");
+        } else {
+            $("#divEntrega").show();
+        }
+    });
+    $("#tipoNegocio").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#tipoNegocio").data("kendoDropDownList").text("");
+        }
+    });
+
     $("#zona").kendoDropDownList({
         dataTextField: "Descripcion",
         dataValueField: "Id"
@@ -140,6 +161,7 @@ function CrearResultadosDataSource(datos) {
                     PrecioMinimo: { type: "number", editable: false },
                     PrecioMaximo: { type: "number", editable: false },
                     Material: { type: "string", editable: false },
+                    TipoNegocio: { type: "string", editable: false },
                     Moneda: { type: "string", editable: false },
                     FechaDesde: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
                     FechaHasta: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
@@ -160,6 +182,7 @@ function CreateGridRango() {
     $("#gridIniRango").kendoGrid({
 
         columns: [
+            { field: "TipoNegocio", title: "Negocio", filterable: false },
             { field: "PrecioMinimo", title: "Mínimo", filterable: false },
             { field: "PrecioMaximo", title: "Máximo", filterable: false },
             { field: "Material", title: "Material", filterable: false },
@@ -235,6 +258,8 @@ function AsignarCombos() {
     viewModel.set("MaterialCombo", datosIniAbmRango.Datos.Material);
     viewModel.set("MonedaCombo", datosIniAbmRango.Datos.Moneda);
     viewModel.set("ZonaCombo", datosIniAbmRango.Datos.Zona);
+    viewModel.set("TipoNegocioCombo", datosIniAbmRango.Datos.TipoNegocio);
+    
 }
 
 function InicializarBusquedaInicial() {
@@ -290,6 +315,7 @@ function UpdateViewModel(model) {
         "FechaDesde": model.Rango.FechaDesde,
         "FechaHasta": model.Rango.FechaHasta,
         "ZonaId": model.Rango.ZonaId,
+        "TipoNegocioId": model.Rango.TipoNegocioId,
         "Cantidad": model.Rango.Cantidad,
         "DesdeMes": model.Rango.DesdeMes,
         "DesdeAnio": model.Rango.DesdeAnio,
@@ -345,6 +371,7 @@ function LimpiarAgregarModificar() {
     $("#precioMinimo").data("kendoNumericTextBox").value("");
     $("#precioMaximo").data("kendoNumericTextBox").value("");
     $("#material").data("kendoDropDownList").value("");
+    $("#tipoNegocio").data("kendoDropDownList").value("");
     $("#moneda").data("kendoDropDownList").value("");
     $("#FechaDesde").data("kendoDateTimePicker").value("");
     $("#FechaHasta").data("kendoDateTimePicker").value("");
@@ -389,6 +416,7 @@ function Modificar() {
             }
         }
     }
+    $("#tipoNegocio").change();
 }
 
 function Eliminar() {
@@ -442,6 +470,7 @@ function Grabar() {
         "FechaDesde": $("#FechaDesde").data("kendoDateTimePicker").value(),
         "Fechahasta": $("#FechaHasta").data("kendoDateTimePicker").value(),
         "ZonaId": $("#zona").data("kendoDropDownList").value(),
+        "TipoNegocioId": $("#tipoNegocio").data("kendoDropDownList").value(),
         "Cantidad": $("#cantidad").data("kendoNumericTextBox").value(),
         "DesdeMes": $("#desdeMes").data("kendoNumericTextBox").value(),
         "DesdeAnio": $("#desdeAnio").data("kendoNumericTextBox").value(),

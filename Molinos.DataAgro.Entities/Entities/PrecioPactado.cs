@@ -21,6 +21,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Moneda MonedaImportePactado { get; set; }
         [ForeignKey("ContratoId")]
         public virtual Contrato Contrato { get; set; }
+
+        [ForeignKey("ContratoId")]
+        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
     }
 
 }

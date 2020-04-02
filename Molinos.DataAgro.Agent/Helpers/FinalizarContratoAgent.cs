@@ -231,6 +231,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         COMPENSACION = contrato.Compensacion == true ? "X" : "",
                         FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "",
                         FLETE_TARIFA = contrato.TarifaFlete ?? 0,
+                        FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

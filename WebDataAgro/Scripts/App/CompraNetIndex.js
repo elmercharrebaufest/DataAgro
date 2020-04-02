@@ -17,10 +17,12 @@ var verMesa;
 var modificaFinalizados;
 var externo;
 var precioMoa;
+var ocultarEnTablero;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
     modificaNegocios = ConvertirStringABool(modificaNegocios);
+    ocultarEnTablero = ConvertirStringABool(ocultarEnTablero);
     eliminaNegocios = ConvertirStringABool(eliminaNegocios);
     finalizaNegocios = ConvertirStringABool(finalizaNegocios);
     confirmaNegocios = ConvertirStringABool(confirmaNegocios);
@@ -149,6 +151,27 @@ function botonPendiente(dataItem, icono) {
     } else {
         return "<div</div>";
     }
+}
+function botonNoMostrarEnTablero(dataItem,color) {
+    if (ocultarEnTablero) {//crear permiso nuevo
+    var title = "Oculto en Tablero";
+    var icono = " fa-star-o " + color;
+    if (dataItem.OcultarEnTablero == false) {
+        title = "Visible en Tablero";
+        icono = " fa-star " + color;
+    }
+    return '<button data-toggle="tooltip" title="' + title +'" onclick="cambiarMarca(' +
+        "'" + dataItem.Id + "'" + "," + !dataItem.OcultarEnTablero  + ')"><i class="fa ' + icono + '"></i></button>';
+     "'" + dataItem.Id + "'" +",this" + ')" />';
+    } else {
+        return "<div</div>";
+    }
+}
+function cambiarMarca(id,ocultar) {
+    console.log(id, ocultar);
+    var marcar = { id: id, OcultarEnTablero: ocultar};
+    result = MSExecuteOnServer('/CompraNet/NoMostrarEnTablero', marcar);
+    recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
     if (modificaFinalizados && dataItem.ContratoId) {
@@ -685,12 +708,14 @@ function CreateGridInformeCompraNet() {
                     if (dataItem.Estado == 2) { //confirmado
                         if (dataItem.TipoNegocioId == 6) {
                             return '<div class="status confirmado">Confirmado</div>' +
+                                botonNoMostrarEnTablero(dataItem,'conf') +
                                 botonPendiente(dataItem, 'fa-pencil conf') +
                                 botonVisualizar(dataItem, 'fa-eye conf') +
                                 botonBorrar(dataItem, 'fa-trash conf');
                         } else {
                             var descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n aprobada por MOA" ' : '';
                             return '<div' + descripcion + ' class="status confirmado">Confirmado</div>' +
+                                botonNoMostrarEnTablero(dataItem, 'conf') +
                                 botonPendiente(dataItem, 'fa-pencil conf') +
                                 botonFinalizado(dataItem, 'fa-flag-checkered conf') +
                                 botonVisualizar(dataItem, 'fa-eye conf') +
@@ -699,6 +724,7 @@ function CreateGridInformeCompraNet() {
                     }
                     if (dataItem.Estado == 3) { //Oferta
                         return '<div class="status oferta">Oferta</div>' +
+                            botonNoMostrarEnTablero(dataItem,'ofe') +
                             botonPendiente(dataItem, 'fa-pencil ofe') +
                             botonConfirmadoTilde(dataItem, 'fa-check ofe') +
                             botonVisualizar(dataItem, 'fa-eye ofe') +
@@ -723,6 +749,7 @@ function CreateGridInformeCompraNet() {
                     if (dataItem.Estado == 5) { //Finalizado
                         if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId) && !dataItem.FijacionDePrecioContratoId) {
                             return '<div class="status finalizado">Finalizado</div>' +
+                                botonNoMostrarEnTablero(dataItem,'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 botonBorrar(dataItem, 'fa-trash fin') +
                                 botonModificarFinalizados(dataItem, 'fa-pencil fin');
@@ -730,6 +757,7 @@ function CreateGridInformeCompraNet() {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
 
                             return '<div ' + descripcion + 'class="status finalizado">Finalizado</div>' +
+                                botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         }
@@ -1112,9 +1140,9 @@ function ModalConfirmadoVarios() {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
             if ((negocios[i].Estado === 1 || negocios[i].Estado === 3 || negocios[i].Estado === 7) && puedeConfirmarNegocio(negocios[i])) {
                 if (negocios[i].TipoNegocioId === 3) {
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].FijacionDePrecioContratoId + '</div>' + loader + '</div>');
+                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Fijaci&oacute;n: ' + negocios[i].Id + '</div>' + loader + '</div>');
                 } else {
-                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].ContratoId + '</div>' + loader + '</div>');
+                    $("#negocioConfirmado-modal").append('<div class="row"><div class="col-xs-3">Contrato: ' + negocios[i].Id + '</div>' + loader + '</div>');
                 }
             }
         }
@@ -1146,6 +1174,9 @@ function ConfirmarVariosContratos() {
             } else if (negocios[i].TipoNegocioId === 2 || negocios[i].TipoNegocioId === 1) {
                 objConfirmado.contratoId = negocios[i].ContratoId;
                 result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', objConfirmado);
+            } else if (negocios[i].TipoNegocioId === 6) {
+                objConfirmado.fijacionDePrecioContratoId = negocios[i].Id;
+                result = MSExecuteOnServer('/CompraNet/ConfirmarAcuerdo', objConfirmado);
             }
             finalizacionCallBack(i, result);
         }
@@ -1530,7 +1561,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("fechaDesdeHastaDivVisualizar").show();
         $(".fason").hide();
     }
-
+    if (tipo === "CONTRATO ACUERDO") {
+        $("#pactadosDivVisualizar").hide();
+    } else {
+        $("#pactadosDivVisualizar").show();
+    }
 
     switch (status) {
         case "1": //pendiente

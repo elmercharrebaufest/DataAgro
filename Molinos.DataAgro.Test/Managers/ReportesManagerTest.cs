@@ -906,8 +906,8 @@ namespace Molinos.DataAgro.Test.Managers
             var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, DetalleAgenteDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<DetalleAgenteDto>() {
-                    new DetalleAgenteDto { Agente="1",Cantidad="1",Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"},
-                    new DetalleAgenteDto { Agente="1",Cantidad="1",Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"}});
+                    new DetalleAgenteDto { Agente="1",Cantidad=1,Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"},
+                    new DetalleAgenteDto { Agente="1",Cantidad=1,Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"}});
             
             var result = target.DetalleAgente(fecha);
 
@@ -967,14 +967,14 @@ namespace Molinos.DataAgro.Test.Managers
             var ope = new Operador { Descripcion = "a", Id = 1 };
             var tac = new TipoAgenteCompra { Id = 1, Descripcion = "a" };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, DetalleAgenteDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<DetalleAgenteDto>() { new DetalleAgenteDto { Agente = "a", Operador = "a", Moneda = "A", Comercial = "a", Cantidad = "1", Precio = "1", Material = "A", Posicion = "01.2019", Fecha = fecha.ToShortDateString() } });
+                .Returns(new List<DetalleAgenteDto>() { new DetalleAgenteDto { Agente = "a", Operador = "a", Moneda = "A", Comercial = "a", Cantidad = 1, Precio = "1", Material = "A", Posicion = "01.2019", Fecha = fecha.ToShortDateString() } });
             
             var result = target.DetalleAgenteModal(fecha);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, DetalleAgenteDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(
-                "{\"items\":[{\"Agente\":\"a\",\"Operador\":\"a\",\"Material\":\"A\",\"Posicion\":\"01.2019\",\"Cantidad\":\"1\",\"Precio\":\"1,00\",\"Moneda\":\"A\",\"Fecha\":\"16/10/2018\",\"Comercial\":\"a\"}],\"total\":1}",
+                "{\"items\":[{\"Agente\":\"a\",\"Operador\":\"a\",\"Material\":\"A\",\"Posicion\":\"01.2019\",\"Cantidad\":1.0,\"Precio\":\"1,00\",\"Moneda\":\"A\",\"Fecha\":\"16/10/2018\",\"Comercial\":\"a\"}],\"total\":1}",
                 result);
         }
         [Test]

@@ -5,7 +5,7 @@
 <script>
     Id = '@ViewBag.Id';
     TipoId = '@ViewBag.TipoId';
-    Siguientes = '@ViewBag.Siguientes';    
+    Siguientes = '@ViewBag.Siguientes';
     AperturaPrecioPorcentajeDeComision = '@ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo';
     comercialId = '@ViewBag.ComercialId';
     BlockUi("Cargando...");
@@ -455,6 +455,15 @@
             </div>
         </div>
     </div>
+    <div class="row" id="fechaCiertaDiv">
+        <div class="col-sm-2 ">
+            <label>Fecha Cierta</label>
+        </div>
+        <div class="col-sm-5 col-md-2">
+            <input id="fechaCiertaId" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
+            <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+    </div>
     <div class="ampliar noFason noAgente noAcuerdo">
         <div id="DatosAdicionales" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Datos adicionales
@@ -718,7 +727,8 @@
 
     <div class="noFason noAgente noAcuerdo ampliar">
         <div id="DatosCalidades" class="btnagregar widthButton btnAzul " type="button">
-            <i class="fa fa-plus"></i> Calidad </div>
+            <i class="fa fa-plus"></i> Calidad
+        </div>
     </div>
     <div class="noFason noAgente datos-calidades ampliar-adicionales acuerdo" display="block">
         <div class="row">

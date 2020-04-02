@@ -140,6 +140,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Rechazo { get; set; }
         public int? ComercialZonaId { get; set; }
         public string ComercialZonaDescripcion { get; set; }
+        public bool OcultarEnTablero { get; set; }
+        public string FechaCiertaFormateado { get; set; }
+        public DateTime? FechaCierta { get; set; }
     }
 
     public class StoredPorContratoResult

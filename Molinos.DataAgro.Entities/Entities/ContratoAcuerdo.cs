@@ -8,5 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [InverseProperty("ContratoAcuerdo")]
         public virtual ICollection<Calidad> Calidad { get; set; }
 
+        [InverseProperty("ContratoAcuerdo")]
+        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; }
     }
 }

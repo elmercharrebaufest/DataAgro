@@ -145,6 +145,7 @@
     <Compile Include="Managers\ICampaniaMaterialManager.cs" />
     <Compile Include="Managers\IConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
+    <Compile Include="Managers\INegocioManager.cs" />
     <Compile Include="Managers\IUsuarioManager.cs" />
     <Compile Include="Managers\ITokenManager.cs" />
     <Compile Include="Managers\IFormulaManager.cs" />

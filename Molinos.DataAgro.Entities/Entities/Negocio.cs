@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Warrant { get; set; }
         public DateTime? FechaDolarizado { get; set; } // Fecha_Dolarizado
         public bool? Dolarizado { get; set; }
-
+        public bool OcultarEnTablero { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual EstadoContrato Estado { get; set; }

@@ -148,7 +148,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
             //toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
-            var agente = contexto.Set<AgenteCompra>().Where(x => fechaHoy==fechaManana && DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (centroId == 0 || centroId == 1) && (calidad == null || calidad == 3))
+            var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero==false && fechaHoy==fechaManana && DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (centroId == 0 || centroId == 1) && (calidad == null || calidad == 3))
                 .Select(x => new NegocioToneladasPosicionDto
                 {
                     Id = x.Id,

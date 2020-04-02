@@ -36,18 +36,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var corredor = PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial);
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
-
             var queryContratos =
                 from contrato in contexto.Set<Negocio>()
-                where contrato.TipoNegocioId == 2
-                //&& contrato.Pizarra != true 
+                where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6   )
+                && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5)
-                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))
-                && !corredor ? equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
-                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0) :
+                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))    
+                 && (
+                !corredor ? (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
+                equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) :
                     (corredor &&
                     (corredoresComercial.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                     corredoresComercial.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)))
+                    )
                 select new TotalPesosDolares()
                 {
                     Id = contrato.Id,

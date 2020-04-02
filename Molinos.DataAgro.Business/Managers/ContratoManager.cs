@@ -666,6 +666,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.NivelTarifaId = oContrato.NivelTarifaId == 0 ? null : oContrato.NivelTarifaId;
             oContratoSave.Dolarizado = oContrato.Dolarizado;
             oContratoSave.Sustentable = oContrato.Sustentable;
+            oContratoSave.FechaCierta = oContrato.FechaCierta;
+
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -800,6 +802,7 @@ namespace Molinos.DataAgro.Business.Managers
             var precioContrato = contrato.Precio;
 
             var rangos = repositorio.Listar<RangoConfirmacionAutomatica>(x =>
+            x.TipoNegocioId == 2 &&
             x.FechaDesde <= hoy &&
             x.FechaHasta >= hoy &&
             x.MaterialId == contrato.MaterialId &&
@@ -1276,7 +1279,10 @@ namespace Molinos.DataAgro.Business.Managers
                     MonedaPactadoId = y.MonedaPactadoId,
                     Porcentaje = y.Porcentaje,
                     Precio = y.Precio
-                }).ToList()
+                }).ToList(),
+                FechaCiertaFormateado = x.FechaCierta != null ? SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaCierta) : ""
             });
             return contrato;
         }
@@ -1687,7 +1693,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
-                TipoNegocioId = 2,
+                TipoNegocioId = x.Precio>0?2:1,
                 MaterialId = x.MaterialId,
                 Cantidad = x.Cantidad,
                 Ampliaciones = null,
@@ -1753,6 +1759,24 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Porcentaje = y.Porcentaje
+                }).ToList(),
+                PreciosPactados = x.PrecioPactado.Select(y => new PrecioPactadosDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    Id = y.Id,
+                    ImportePactado = y.ImportePactado,
+                    MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                    MonedaImportePactadoId = y.MonedaImportePactadoId,
+                    MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                    MonedaPactadoId = y.MonedaPactadoId,
+                    Porcentaje = y.Porcentaje,
+                    Precio = y.Precio
                 }).ToList()
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
@@ -1890,7 +1914,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.Compensacion = contrato.Compensacion;
             contratoSave.TarifaFlete = contrato.TarifaFlete;
             contratoSave.NivelTarifaId = contrato.NivelTarifaId == 0 ? null : contrato.NivelTarifaId;
-
+            contratoSave.FechaCierta = contrato.FechaCierta;
+            
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
             var descuentos = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoSave.Id);

@@ -163,7 +163,13 @@ namespace WebDataAgro.Controllers
                     Pricing = hedgeMat.Where(x => x.MaterialId == 2 && x.TipoObjetivoId == 2).Sum(x => x.Cantidad)},
                 new HedgeObjetivoModel {MaterialId = 3, MaterialDescripcion ="Soja",
                     ARemitir = hedgeMat.Where(x => x.MaterialId == 3 && x.TipoObjetivoId == 1).Sum(x => x.Cantidad),
-                    Pricing = hedgeMat.Where(x => x.MaterialId == 3 && x.TipoObjetivoId == 2).Sum(x => x.Cantidad)}
+                    Pricing = hedgeMat.Where(x => x.MaterialId == 3 && x.TipoObjetivoId == 2).Sum(x => x.Cantidad)},
+                new HedgeObjetivoModel {MaterialId = 4, MaterialDescripcion ="Girasol",
+                    ARemitir = hedgeMat.Where(x => x.MaterialId == 4 && x.TipoObjetivoId == 1).Sum(x => x.Cantidad),
+                    Pricing = hedgeMat.Where(x => x.MaterialId == 4 && x.TipoObjetivoId == 2).Sum(x => x.Cantidad)},
+                 new HedgeObjetivoModel {MaterialId = 5, MaterialDescripcion ="Girasol AO",
+                    ARemitir = hedgeMat.Where(x => x.MaterialId == 5 && x.TipoObjetivoId == 1).Sum(x => x.Cantidad),
+                    Pricing = hedgeMat.Where(x => x.MaterialId == 5 && x.TipoObjetivoId == 2).Sum(x => x.Cantidad)}
             };
             return lista;
         }

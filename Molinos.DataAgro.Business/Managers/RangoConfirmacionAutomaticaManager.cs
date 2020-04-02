@@ -28,7 +28,8 @@ namespace Molinos.DataAgro.Business
             {
                 Material = qry.GetMaterialCombo(),
                 Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }),
-                Zona= repositorio.Listar<GrupoDeCompras, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion })
+                Zona = repositorio.Listar<GrupoDeCompras, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion }),
+                TipoNegocio = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }, x => x.TipoNegocioId == 2 || x.TipoNegocioId == 3)
             };
         }
 
@@ -46,9 +47,10 @@ namespace Molinos.DataAgro.Business
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
                     Cantidad = x.Cantidad,
-                    EntregaDesde = x.DesdeMes + "/" + x.DesdeAnio,
-                    EntregaHasta = x.HastaMes + "/" + x.HastaAnio,
-                    Zona = x.Zona != null ? x.Zona.Descripcion : ""
+                    EntregaDesde = (x.DesdeMes + "/" + x.DesdeAnio) == "0/0" ? "" : (x.DesdeMes + "/" + x.DesdeAnio),
+                    EntregaHasta = (x.HastaMes + "/" + x.HastaAnio) == "0/0" ? "" : (x.HastaMes + "/" + x.HastaAnio),
+                    Zona = x.Zona != null ? x.Zona.Descripcion : "",
+                    TipoNegocio = x.TipoNegocio.Descripcion
                 }, null, 0, "Material")
             };
         }
@@ -65,14 +67,15 @@ namespace Molinos.DataAgro.Business
                 Moneda = x.Moneda.Descripcion,
                 MonedaId = x.MonedaId,
                 FechaDesde = x.FechaDesde,
-                HastaAnio=x.HastaAnio,
-                ZonaId=x.ZonaId ?? 0,
-                Zona=x.Zona.Descripcion,
-                Cantidad=x.Cantidad,
-                DesdeAnio=x.DesdeAnio,
-                DesdeMes=x.DesdeMes,
-                HastaMes=x.HastaMes,
-                FechaHasta=x.FechaHasta
+                HastaAnio = x.HastaAnio,
+                ZonaId = x.ZonaId ?? 0,
+                Zona = x.Zona.Descripcion,
+                Cantidad = x.Cantidad,
+                DesdeAnio = x.DesdeAnio,
+                DesdeMes = x.DesdeMes,
+                HastaMes = x.HastaMes,
+                FechaHasta = x.FechaHasta,
+                TipoNegocioId = x.TipoNegocioId
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
@@ -100,8 +103,9 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.Cantidad = oRango.Cantidad;
                 oRangoSave.DesdeMes = oRango.DesdeMes;
                 oRangoSave.HastaMes = oRango.HastaMes;
-                oRangoSave.DesdeAnio = oRango.DesdeAnio;                
-                oRangoSave.HastaAnio = oRango.HastaAnio;                
+                oRangoSave.DesdeAnio = oRango.DesdeAnio;
+                oRangoSave.HastaAnio = oRango.HastaAnio;
+                oRangoSave.TipoNegocioId = oRango.TipoNegocioId;
             }
             else
             {
@@ -156,7 +160,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Moneda", "El campo Moneda no puede estar vacío");
             }
-            if (oRango.FechaDesde == null|| oRango.FechaHasta == null)
+            if (oRango.FechaDesde == null || oRango.FechaHasta == null)
             {
                 oEntityErrors.Error("FechaDesde", "Los campos Fecha Desde-Hasta no pueden estar vacíos");
             }
@@ -167,29 +171,38 @@ namespace Molinos.DataAgro.Business
             if (oRango.Cantidad == 0)
             {
                 oEntityErrors.Error("cantidad", "El campo Cantidad no puede estar vacío");
-            }           
-            if (oRango.DesdeMes == 0 || oRango.HastaMes == 0)
+            }
+
+            if ((oRango.DesdeMes == 0 || oRango.HastaMes == 0) && oRango.TipoNegocioId == 2)
             {
                 oEntityErrors.Error("Mes", "Los campos Mes no pueden estar vacios");
             }
-            if (oRango.DesdeAnio == 0 || oRango.HastaAnio == 0)
+            if ((oRango.DesdeAnio == 0 || oRango.HastaAnio == 0) && oRango.TipoNegocioId == 2)
             {
                 oEntityErrors.Error("Anio", "Los campos Año no pueden estar vacios");
             }
+
+
+
             var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
-            if (rangosExistentes.Exists(x => 
+            if (rangosExistentes.Exists(x =>
             x.Id != oRango.Id &&
             x.MaterialId == oRango.MaterialId &&
-            x.MonedaId == oRango.MonedaId && 
+            x.MonedaId == oRango.MonedaId &&
             x.FechaDesde == oRango.FechaDesde &&
             x.FechaHasta == oRango.FechaHasta &&
             x.ZonaId == oRango.ZonaId &&
             x.DesdeMes == oRango.DesdeMes &&
             x.HastaMes == oRango.HastaMes &&
             x.DesdeAnio == oRango.DesdeAnio &&
-            x.HastaAnio == oRango.HastaAnio))
+            x.HastaAnio == oRango.HastaAnio &&
+            x.TipoNegocioId == oRango.TipoNegocioId))
             {
                 oEntityErrors.Error("Rango", "Ya existe un rango para los valores seleccionados");
+            }
+            if (oRango.TipoNegocioId == 0)
+            {
+                oEntityErrors.Error("TipoNegocio", "El campo Tipo Negocio no puede estar vacío");
             }
             return oEntityErrors;
         }
