@@ -2155,7 +2155,7 @@ function armarFuncionalidades() {
             (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-mails">' +
-            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? " &#x2713;" : "") : "") : "No especifica mails") +
+            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-extras">' +
             '<div class="row">' +

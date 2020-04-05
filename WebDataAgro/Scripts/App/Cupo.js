@@ -61,12 +61,12 @@ function InicializarCuposIndex() {
                         filtrosEnviados.filter = new FiltroPadre("and", defaultFilter);
                     }
 
-                    let fechaRegistroFiltro = filtrosEnviados.filter.filters.find(function (f) { return f.field == "FechaRegistro" });
+                    //let fechaRegistroFiltro = filtrosEnviados.filter.filters.find(function (f) { return f.field == "FechaRegistro" });
 
-                    if (fechaRegistroFiltro != null) {
+                    //if (fechaRegistroFiltro != null) {
 
-                        fechaRegistroFiltro.value = deFechaAString(fechaRegistroFiltro.value);
-                    }
+                    //    fechaRegistroFiltro.value = deFechaAString(fechaRegistroFiltro.value);
+                    //}
                 }
             }
         },

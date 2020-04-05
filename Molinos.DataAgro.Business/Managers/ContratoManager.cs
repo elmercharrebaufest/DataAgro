@@ -513,7 +513,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
             }
-
+            if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Now.Date)
+            {
+                oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al dia de la fecha.");
+            }
             return oErrorMessages;
         }
 

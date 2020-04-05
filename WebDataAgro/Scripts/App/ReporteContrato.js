@@ -1,9 +1,13 @@
 ﻿$(document).ready(function () {
-
+    
     kendo.culture("es-AR");
-    CreateGridInformeCompraNet();
+    
     inicializarTodosKendoDate($(".filtroFecha"));
+    $("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
+    CreateGridInformeCompraNet();
     InicializarElementos();
+
+
 });
 
 

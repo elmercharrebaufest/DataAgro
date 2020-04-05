@@ -209,6 +209,7 @@
     <Compile Include="Managers\SISAManagerTest.cs" />
     <Compile Include="Managers\RiesgoComercialManagerTest.cs" />
     <Compile Include="Managers\TipoNegocioManagerTest.cs" />
+    <Compile Include="Mock\ClaimsPrincipal.cs" />
     <Compile Include="Mock\FakeHttpContext.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAFijarTest.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecioTest.cs" />

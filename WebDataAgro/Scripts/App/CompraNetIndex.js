@@ -308,8 +308,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.NivelTarifa + "'" + ',' +
         "'" + dataItem.TarifaFlete + "'" + ',' +
         "'" + dataItem.Compensacion + "'" + ',' +
-        "'" + dataItem.Rechazo + "'" +
-
+        "'" + dataItem.Rechazo + "'" + ',' +
+        "'" + formatearFecha(dataItem.FechaCierta)  + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -464,7 +464,8 @@ function CreateGridInformeCompraNet() {
                     PrecioPlazo: { type: "string" },
                     Ampliaciones: { type: "number" },
                     DesdeFijacion: { type: "date" },
-                    HastaFijacion: { type: "date" }
+                    HastaFijacion: { type: "date" },
+                    FechaCierta: { type: "date" },
                 }
             }
         },
@@ -1528,7 +1529,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo) {
+    compensacion, rechazo,fechaCierta) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1636,6 +1637,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     selCargoMOA === "true" ? $("#visualizar_selladoACargo").text("MOA") : selCargoVendedor === "true" ? $("#visualizar_selladoACargo").text("Vendedor") : $("#selladoACargoVisualizar").hide();
 
+    if (fechaCierta == "null") {
+        $("#FechaCiertaVisualizar").hide();
+    } else {
+        $("#visualizar_FechaCierta").text(fechaCierta);
+        $("#FechaCiertaVisualizar").show();
+    }
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");
     $("#visualizar_observacion").text(Observacion != "undefined" && Observacion ? Observacion : "");

@@ -1518,7 +1518,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Moneda = x.Moneda.Descripcion,
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
+            }, x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) == fechaHoy
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5), 0, "Agente");
 
             return agente;

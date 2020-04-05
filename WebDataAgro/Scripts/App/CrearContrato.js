@@ -460,6 +460,7 @@ function InicializarElementos() {
             $("#ocultarAperturaMoneda").removeClass("w70");
             $("#ocultarAperturaMoneda").addClass("w100");
             $("#corredorDiv").show();
+            
             if (this.value() == 3) {
 
                 $("#fechasDiv").hide();
@@ -504,8 +505,12 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").addClass("w70");
                 $('#pagoDirectoDiv').hide();
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+                
+                console.log(viewModel.AperturaPrecio.length);
                 if (viewModel.AperturaPrecio.length > 0) {
-                    viewModel.AperturaPrecio[2].Porcentaje=0;
+                    viewModel.AperturaPrecio[2].Porcentaje = 0;
+                    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+                    GuardarAperturaDePrecio();
                 }
             } else if (this.value() == 4) {
 
@@ -631,6 +636,12 @@ function InicializarElementos() {
                 CalcularPrecioTotalApertura();
             }
             ClickEnPizarra();
+            if (this.value() == 6) {
+                var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
+                $("#precioId").data("kendoNumericTextBox").value("");
+                $("#precioId").trigger('change');
+                precioRojo.removeClass("required-border");
+            }
         }
     });
     $("#Id").kendoDropDownList({
@@ -1738,6 +1749,7 @@ function ClickEnPizarra() {
         }
         precioRojo.addClass("required-border");
     }
+    
 }
 
 function LimpiarBoleto() {

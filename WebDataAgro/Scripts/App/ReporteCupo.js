@@ -41,7 +41,7 @@ function InicializarCuposIndex() {
                         $("#fechaGeneracionHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
                     }
 
-                    ConvertirFechaRegistroAString(filtroCompleto.filter.filters);
+                    //ConvertirFechaRegistroAString(filtroCompleto.filter.filters);
 
                     return filtroCompleto;
                 }

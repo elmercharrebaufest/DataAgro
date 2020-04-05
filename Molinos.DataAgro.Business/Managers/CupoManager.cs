@@ -432,7 +432,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + Td(ref linea) + c + "</td></tr>";
             }
-            htmlBody += "<tr>" + Td(ref linea) + "Con destino " + cupo.Centro.Descripcion + "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea) + "Con destino " +(cupo.Centro.CodigoSap == "1600"? "S. Lorenzo" : cupo.Centro.Descripcion )+ "</td></tr>";
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
                 htmlBody += "<tr>" + Td(ref linea) + "Material: " + (cupo.MaterialId == 1 ? "Maíz Especial" : cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable") + "</td></tr>";

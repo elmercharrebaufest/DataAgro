@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Business
             var oEntityErrors = new GrabarAcuerdoResult();
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
-            
+
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -122,10 +122,10 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.UsuarioId = oContratoAcuerdo.UsuarioId;
                 objContratoAcuerdo.TrigoEspecial = oContratoAcuerdo.TrigoEspecial;
                 objContratoAcuerdo.Ampliaciones = oContratoAcuerdo.Ampliaciones;
-                objContratoAcuerdo.Observacion = oContratoAcuerdo.Observacion;    
+                objContratoAcuerdo.Observacion = oContratoAcuerdo.Observacion;
                 objContratoAcuerdo.PrecioNeto = oContratoAcuerdo.PrecioNeto;
                 objContratoAcuerdo.Pizarra = oContratoAcuerdo.Pizarra;
-            
+
 
 
 
@@ -309,10 +309,11 @@ namespace Molinos.DataAgro.Business
             }
             var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oContratoAcuerdo.MaterialId && x.MonedaId == oContratoAcuerdo.MonedaId);
 
-            if (rangosPrecio != null && (oContratoAcuerdo.Precio < rangosPrecio.PrecioMinimo || oContratoAcuerdo.Precio > rangosPrecio.PrecioMaximo))
+            if (oContratoAcuerdo.Precio > 0 && rangosPrecio != null && (oContratoAcuerdo.Precio < rangosPrecio.PrecioMinimo || oContratoAcuerdo.Precio > rangosPrecio.PrecioMaximo))
             {
                 oEntityErrors.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
+
             if (oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
