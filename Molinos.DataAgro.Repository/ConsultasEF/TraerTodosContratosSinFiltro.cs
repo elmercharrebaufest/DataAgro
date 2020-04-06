@@ -185,7 +185,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Dias_Pesificado = fijac.DiasPesificado,
                         NoInformaSIO = null,
                         Estado = fijac.EstadoId == 9 || fijac.EstadoId == 1 || fijac.EstadoId == 7 ? 9 : fijac.EstadoId == 6 || fijac.EstadoId == 8 ? 6 : fijac.EstadoId == 5 ? 5 : 2,
-                        Estado_Contrato = fijac.EstadoId == 9 || fijac.EstadoId == 1 || fijac.EstadoId == 7 ? fijac.EstadoId == 6 || fijac.EstadoId == 8 ? fijac.EstadoId == 5 ? "Finalizado" : "Rechazado" : "Carga" : "Confirmado",
+                        Estado_Contrato = fijac.EstadoId == 9 || fijac.EstadoId == 1 || fijac.EstadoId == 7 ? "Carga" : fijac.EstadoId == 6 || fijac.EstadoId == 8 ? "Rechazado" : fijac.EstadoId == 5 ? "Finalizado" : "Confirmado",
                         Estado_Order = fijac.Estado.Orden,
                         UsuarioId = "",
                         ContratoSAP = fijac.ContratoSAP,

@@ -165,10 +165,10 @@ namespace Molinos.DataAgro.Business
                 oEntityErrors.Error(ex.Source, ex.Message);
                 throw;
             }
-            if (!modificado)
-            {
-                oEntityErrors.Errores.Add(new ErrorMessage(400, "No hay datos para guardar"));
-            }
+            //if (!modificado)
+            //{
+            //    oEntityErrors.Errores.Add(new ErrorMessage(400, "No hay datos para guardar"));
+            //}
             if (!oEntityErrors.HayError)
             {
                 oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
