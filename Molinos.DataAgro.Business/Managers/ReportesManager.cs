@@ -485,7 +485,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = x.Id,
                 TipoNegocioId = 5,
                 Campania = x.Campana.Descripcion,
-                CampaniaId = x.CampanaId??0,
+                CampaniaId = x.CampanaId ?? 0,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
@@ -503,7 +503,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round((double)x.Cantidad / 1000),
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round((double)x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round((double)x.Cantidad / 1000) : 0
-            }, x => x.OcultarEnTablero == false && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
+            }, x => x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0) && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampaniaTableroId = x.CampaniaTableroId, Descripcion = x.Descripcion, Campana = x.CampaniaTablero.Descripcion });
@@ -687,7 +687,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
-                x =>x.OcultarEnTablero == false &&
+                x => x.OcultarEnTablero == false &&
                 DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
@@ -730,7 +730,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             },
-            x => x.OcultarEnTablero == false 
+            x => x.OcultarEnTablero == false
             && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
             && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
@@ -761,7 +761,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Posicion = x.Posicion,
                 MonedaId = x.MonedaId
             },
-                x => x.OcultarEnTablero == false 
+                x => x.OcultarEnTablero == false
                 && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
                 && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
@@ -792,8 +792,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
 
             },
-               x => x.OcultarEnTablero == false 
+               x => x.OcultarEnTablero == false
                && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
+               && (x.PrecioNeto != null && x.PrecioNeto != 0)
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                && (x.EstadoId == 2 || x.EstadoId == 5)
                && x.MaterialId == materialId
@@ -906,15 +907,15 @@ namespace Molinos.DataAgro.Business.Managers
                             NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
                             PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
                             PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y =>y.NegocioId),
+                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y => y.NegocioId),
                             ListDispAPrecio = x.Where(y => y.DispAPrecio != 0).Select(y => y.NegocioId),
-                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y =>  y.NegocioId),
-                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y =>  y.NegocioId),
-                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y =>  y.NegocioId),
-                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y =>y.NegocioId),
-                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y =>  y.NegocioId),
-                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y =>  y.NegocioId),
-                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y =>  y.NegocioId)
+                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y => y.NegocioId),
+                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y => y.NegocioId),
+                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y => y.NegocioId),
+                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y => y.NegocioId),
+                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y => y.NegocioId),
+                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y => y.NegocioId),
+                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y => y.NegocioId)
                         }).ToList();
             return posicionKilos;
         }
@@ -1039,7 +1040,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 data.AddRange(fijaciones);
             }
-            
+
 
             var fasones = repositorio.Listar<Fason, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1262,6 +1263,7 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
+             && x.OcultarEnTablero == false
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
@@ -1321,6 +1323,7 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
+             && x.OcultarEnTablero == false
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == true && calidad == 7) || (calidad != null && x.TrigoEspecial == false && calidad == 3))
@@ -1395,6 +1398,7 @@ namespace Molinos.DataAgro.Business.Managers
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
+             && x.OcultarEnTablero == false
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == true && calidad == 7) || (calidad != null && x.TrigoEspecial == false && calidad == 3))
@@ -1471,6 +1475,8 @@ namespace Molinos.DataAgro.Business.Managers
                 PrecioNeto = x.Precio.ToString()
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
+             && x.OcultarEnTablero == false
+             && (x.PrecioNeto != null && x.PrecioNeto != 0)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId));

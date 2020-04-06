@@ -510,7 +510,10 @@ function InicializarElementos() {
                 if (viewModel.AperturaPrecio.length > 0) {
                     viewModel.AperturaPrecio[2].Porcentaje = 0;
                     $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
-                    GuardarAperturaDePrecio();
+                    if ($("#precioId").val()>0) {
+                        GuardarAperturaDePrecio();
+                    }
+                    
                 }
             } else if (this.value() == 4) {
 
@@ -2644,6 +2647,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
+        $("#precioId").change();
         if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
             $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
         } else {
@@ -2915,8 +2919,10 @@ function CargarDatosEditar(contrato, hijo) {
 
         }
         InicializarEditarContratoApertura();
+        if ($("#precioId").val() > 0) {
+            GuardarAperturaDePrecio();
+        }
 
-        GuardarAperturaDePrecio();
         contrato.Compensacion === true ? $("#compensacionId").prop("checked", true) : $("#compensacionId").prop("checked", false);
     }
     if (contrato.Estado == 5) {
@@ -3089,6 +3095,9 @@ function InicializarAperturaDePrecios() {
                 $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
                 $("#CDId").prop("checked", false);
                 $("#WarrantId").prop("checked", false);
+
+                $(".contratoAFijar").show();
+                $(".madreDiv").hide();
 
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();

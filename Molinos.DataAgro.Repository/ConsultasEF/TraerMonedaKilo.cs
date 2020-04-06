@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cantidad = x.Sum(y => (double)y.Precio * y.Cantidad / 1000)
                 }).ToList();
 
-            var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId))
+            var contAcuerdo = contexto.Set<ContratoAcuerdo>().Where(x => x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (0 == centroId || x.DestinoId == centroId))
                .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                .Select(x => new PrecioCantidadDto()
                {

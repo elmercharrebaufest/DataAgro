@@ -18,4 +18,4 @@ left join
 	where i.ProveedorId = @ProveedorId
 ) a on cm.MaterialId = a.MaterialId and c.proveedorId = a.proveedorId
 
-where c.ProveedorId = @ProveedorId --and a.proveedorId is null and a.MaterialId is null and a.CampañaId is null
+where c.ProveedorId = @ProveedorId and (a.CampañaId <> camp.CampañaId or a.CampañaId is null)
