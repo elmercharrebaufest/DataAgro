@@ -503,7 +503,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round((double)x.Cantidad / 1000),
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round((double)x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round((double)x.Cantidad / 1000) : 0
-            }, x => x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0) && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
+            }, x => x.OcultarEnTablero == false 
+            //&& (x.PrecioNeto != null && x.PrecioNeto != 0) 
+            && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampaniaTableroId = x.CampaniaTableroId, Descripcion = x.Descripcion, Campana = x.CampaniaTablero.Descripcion });
@@ -794,7 +796,7 @@ namespace Molinos.DataAgro.Business.Managers
             },
                x => x.OcultarEnTablero == false
                && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
-               && (x.PrecioNeto != null && x.PrecioNeto != 0)
+               //&& (x.PrecioNeto != null && x.PrecioNeto != 0)
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                && (x.EstadoId == 2 || x.EstadoId == 5)
                && x.MaterialId == materialId
@@ -817,9 +819,10 @@ namespace Molinos.DataAgro.Business.Managers
                 //{
                 //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
                 //}
-                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleAPrecio :
-                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
-                EnumClasificacionNegocio.NewCropAPrecio;
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? (cont.Precio>0? EnumClasificacionNegocio.DisponibleAPrecio:EnumClasificacionNegocio.DisponibleAFijar) :
+                /*cont.TipoNegocioId == 1 &&*/ 
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
+                (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
             }
             contratos.AddRange(acuerdos);
 
@@ -1476,7 +1479,7 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && x.OcultarEnTablero == false
-             && (x.PrecioNeto != null && x.PrecioNeto != 0)
+             //&& (x.PrecioNeto != null && x.PrecioNeto != 0)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId));
