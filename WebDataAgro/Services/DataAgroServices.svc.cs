@@ -28,10 +28,10 @@ namespace WebDataAgro.Services
         private readonly IContratoManager contratoManager;
         private readonly IRepositorio repositorio;
 
-        public DataAgroServices(ILogger logger, 
+        public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
-            ICampaniaActualManager campanaActual, 
-            ICampaniaMaterialManager campaniaMaterial, 
+            ICampaniaActualManager campanaActual,
+            ICampaniaMaterialManager campaniaMaterial,
             IInformeComercialManager informeComercial,
             IContratoManager contratoManager,
             IRepositorio repositorio)
@@ -162,7 +162,7 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
-                var Id = repositorio.Obtener<Contrato,int>(x=> x.ContratoSAP== contratoSAP .ContratoSAP, x=>x.Id);
+                var Id = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contratoSAP.ContratoSAP, x => x.Id);
 
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
@@ -182,6 +182,7 @@ namespace WebDataAgro.Services
                     };
                     calidades.Add(calidad);
                 }
+
                 logger.Debug("ActualizandoContrato2");
 
                 var descuentos = new List<DescuentoBonificacion>();
@@ -191,7 +192,7 @@ namespace WebDataAgro.Services
 
                 foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
                 {
-                    if (desc.TipoPeriodo != "I"&& desc.TipoDescBon != "B")
+                    if (desc.TipoPeriodo != "I" && desc.TipoDescBon != "B")
                     {
                         var descuento = new DescuentoBonificacion
                         {
@@ -218,7 +219,7 @@ namespace WebDataAgro.Services
                             MonedaPactadoId = desc.MonedaDB,
                             Precio = desc.Precio,
                             MonedaImportePactadoId = desc.Moneda
-                            
+
                         };
                         preciosPactados.Add(precio);
                     }
@@ -232,8 +233,8 @@ namespace WebDataAgro.Services
                     var apertura = new AperturaPrecio
                     {
                         NegocioId = Id,
-                        ConceptoAperturaPrecioId= conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id,
-                        Importe =aper.Importe,
+                        ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id,
+                        Importe = aper.Importe,
                         MonedaId = aper.Moneda,
                         Porcentaje = aper.Porcentaje
                     };
@@ -241,8 +242,24 @@ namespace WebDataAgro.Services
                 }
                 logger.Debug("ActualizandoContrato4");
 
-                var porcentaje = contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).ToList().Count >0?
-                    contratoSAP.Apertura.Where(x => x.Concepto == "CO" || x.Concepto == "BO" && x.Porcentaje > 0).Sum(x => x.Porcentaje * contratoSAP.Precio):0;
+                var precioOriginal = contratoSAP.Precio;
+                var porcentajeComision = contratoSAP.Apertura.Where(x => (x.Concepto == "CO") && x.Porcentaje > 0).Sum(x => x.Porcentaje);
+                var precioTarifaFlete = contratoSAP.FleteTarifa;
+                precioOriginal += contratoSAP.Apertura.Where(x => x.Concepto == "FI").Sum(x => x.Importe);
+                precioOriginal += contratoSAP.Apertura.Where(x => x.Concepto == "RE").Sum(x => x.Importe);
+                var maximoBonificacion = (contratoSAP.Precio + contratoSAP.Apertura.Where(x => x.Concepto == "FI").Sum(x => x.Importe)+ contratoSAP.Apertura.Where(x => x.Concepto == "RE").Sum(x => x.Importe) )* (decimal)0.01;
+                var aperturaPrecioImporteComisiones = contratoSAP.Apertura.Where(x => x.Concepto == "CO").Sum(x => x.Importe);
+                if (aperturaPrecioImporteComisiones > maximoBonificacion)
+                {
+                    aperturaPrecioImporteComisiones = maximoBonificacion;
+                }
+                precioOriginal += contratoSAP.Apertura.Where(x => x.Concepto == "BO").Sum(x => x.Importe);
+
+                precioOriginal += contratoSAP.Apertura.Where(x => x.Concepto == "BO").Sum(x => x.Importe)* contratoSAP.Precio/100;
+                porcentajeComision = porcentajeComision / 100;
+                precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
+                precioOriginal += aperturaPrecioImporteComisiones;
+
                 var contrato = new Contrato();
 
                 contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
@@ -286,12 +303,12 @@ namespace WebDataAgro.Services
                 contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
                 contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
                 contrato.Precio = contratoSAP.Precio;
-                contrato.PrecioNeto = contratoSAP.Precio + contratoSAP.Apertura.Where(x => x.Concepto == "RE" || x.Concepto == "FI" || x.Concepto == "CO" || x.Concepto == "BO").Sum(x => x.Importe)
-                 + porcentaje + contratoSAP.FleteTarifa;
+                contrato.PrecioNeto = precioOriginal;
                 contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor, x => x.ProveedorId);
                 contrato.ProvinciaId = contratoSAP.Provincia;
                 contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
                 contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
+                //contratoSAP.Especial = contratoSAP.Especial.Replace("0", "");
                 contrato.StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
                 contrato.Sustentable = contratoSAP.Sustentable == "X";
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;

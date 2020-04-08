@@ -2649,12 +2649,12 @@ function CargarDatosEditar(contrato, hijo) {
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
         if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-            $("#fechaDesdeTopeId").val(contrato.DesdeFijacionFormateado);
+            $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
         } else {
             $("#fechaDesdeTopeId").val("");
         }
         if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-            $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
+            $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
         } else {
             $("#fechaDesdeTopeId").val("");
         }
@@ -3099,6 +3099,9 @@ function InicializarAperturaDePrecios() {
                 $("#pagosDiv").hide();
                 $("#pesificadoDiv").hide();
                 $(".madreDiv").hide();
+                $("#FijacionDesdeHastaDiv").show();
+                $("#condicionFijacionDiv").show();
+                $(".acuerdoSinPrecio").show();
 
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
@@ -3106,6 +3109,7 @@ function InicializarAperturaDePrecios() {
                 $("#dolarizadoFechaId").data("kendoDatePicker").value("");
             } else {
                 $("#pagosDiv").show();
+                $(".acuerdoSinPrecio").hide();
                 $("#precioMonedaId").data("kendoDropDownList").trigger("change");
             }
         }
@@ -3348,8 +3352,11 @@ function AgregarPrecioPactado() {
         if (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined) {
             errores.push("La Fecha Hasta no debe ser vacia");
         }
-        if (precioPactado.ImportePactado !== "" && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)) {
+        if (precioPactado.ImportePactado > 0 && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)) {
             errores.push("La Moneda no debe ser vacia cuando hay Importe");
+        }
+        if ((precioPactado.ImportePactado == 0 || precioPactado.ImportePactado == "" || precioPactado.ImportePactado === undefined) && (precioPactado.MonedaImportePactadoId != "")) {
+            errores.push("El Importe no debe ser vacia cuando seleciono Moneda");
         }
         if (kendo.parseDate(precioPactado.FechaDesde, "dd-MM-yyyy") > kendo.parseDate(precioPactado.FechaHasta, "dd-MM-yyyy")) {
             errores.push("La Fecha Desde no debe ser mayor a Fecha Hasta");
