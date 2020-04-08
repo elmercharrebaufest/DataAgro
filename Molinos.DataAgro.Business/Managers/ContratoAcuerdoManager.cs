@@ -125,6 +125,9 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.Observacion = oContratoAcuerdo.Observacion;
                 objContratoAcuerdo.PrecioNeto = oContratoAcuerdo.PrecioNeto;
                 objContratoAcuerdo.Pizarra = oContratoAcuerdo.Pizarra;
+                objContratoAcuerdo.DesdeFijacion = oContratoAcuerdo.DesdeFijacion;
+                objContratoAcuerdo.HastaFijacion = oContratoAcuerdo.HastaFijacion;
+                objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
 
 
 

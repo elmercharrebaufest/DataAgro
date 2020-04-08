@@ -1696,7 +1696,16 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
-                TipoNegocioId = x.Precio>0?2:1,
+                TipoNegocioId = x.Precio > 0 ? 2 : 1,
+                HastaFijacion = x.HastaFijacion,
+                DesdeFijacion = x.DesdeFijacion,
+                DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                CondicionFijacionDescripcion = x.CondicionFijacion.Descripcion,
                 MaterialId = x.MaterialId,
                 Cantidad = x.Cantidad,
                 Ampliaciones = null,
@@ -1721,10 +1730,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = x.Proveedor.Consignatario,
                 CantidadCamiones = 0,
                 BoletoId = x.Proveedor.BoletoCompraNetId,
-                BolsaId = x.Proveedor.BolsaCompraNetId,
-                DesdeFijacionFormateado = "",
-                HastaFijacionFormateado = "",
-                CondicionFijacion = null,
+                BolsaId = x.Proveedor.BolsaCompraNetId,                
+                CondicionFijacion = x.CondicionFijacionId,
                 PagoDirectoVendedor = null,
                 EstablecimientoPropio = null,
                 MercsDeposito = null,

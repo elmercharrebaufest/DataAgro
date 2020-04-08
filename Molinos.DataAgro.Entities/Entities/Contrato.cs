@@ -19,13 +19,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CantidadCamiones { get; set; }
         public bool? Consignatario { get; set; }
         public bool? PlanCanje { get; set; }
-        public int? CondicionFijacionId { get; set; }
         public bool? PagoDirectoVendedor { get; set; }
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
-        public DateTime? DesdeFijacion { get; set; }
-        public DateTime? HastaFijacion { get; set; }
+
         public bool? MercsDeposito { get; set; }
         public decimal? PorcentajeComision { get; set; }
         public string ContratoVendedor { get; set; }
@@ -52,8 +50,6 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("ClasificacionId")]
         public virtual ClasificacionCompraNet Clasificacion { get; set; }//ClasificacionId
 
-        [ForeignKey("CondicionFijacionId")]
-        public virtual CondicionFijacion CondicionFijacion { get; set; }
         [ForeignKey("BoletoId")]
         public virtual BoletoCompraNet Boleto { get; set; }
         [ForeignKey("BolsaId")]
