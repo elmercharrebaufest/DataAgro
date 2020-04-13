@@ -2638,6 +2638,9 @@ function CargarDatosEditar(contrato, hijo) {
     InicializarBordesRojos();
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
+    if (contrato.Corredor != null && contrato.Corredor != "") {
+        $('#contCorredorDiv').show();
+    }
     $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
@@ -3107,8 +3110,14 @@ function InicializarAperturaDePrecios() {
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoId").prop("checked", false);
                 $("#dolarizadoFechaId").data("kendoDatePicker").value("");
+                $("#ocultarAperturaBtn").hide();
+                $("#ocultarAperturaMoneda").removeClass("w70");
+                $("#ocultarAperturaMoneda").addClass("w100");
             } else {
-                $("#pagosDiv").show();
+                $("#ocultarAperturaBtn").show();
+                $("#ocultarAperturaMoneda").removeClass("w100");
+                $("#ocultarAperturaMoneda").addClass("w70");
+                $("#pagosDiv").show();                
                 $(".acuerdoSinPrecio").hide();
                 $("#precioMonedaId").data("kendoDropDownList").trigger("change");
             }

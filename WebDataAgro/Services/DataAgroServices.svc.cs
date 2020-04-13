@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -228,17 +229,20 @@ namespace WebDataAgro.Services
 
                 var aperturas = new List<AperturaPrecio>();
                 var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+                if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
+                {
+                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                }
                 foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
                 {
-                    var apertura = new AperturaPrecio
-                    {
-                        NegocioId = Id,
-                        ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id,
-                        Importe = aper.Importe,
-                        MonedaId = aper.Moneda,
-                        Porcentaje = aper.Porcentaje
-                    };
-                    aperturas.Add(apertura);
+                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
                 }
                 logger.Debug("ActualizandoContrato4");
 
@@ -338,7 +342,8 @@ namespace WebDataAgro.Services
                     Message = ex.Message
                 });
             }
-            logger.Debug("ActualizandoContrato7");
+            logger.Debug("ActualizandoContrato7 CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
+            logger.Debug("ActualizandoContrato7 RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
