@@ -616,6 +616,11 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult GrabarFason(Fason oParam)
         {
+            if (oParam.ComercialCreadorId.HasValue && oParam.GrupoCompra == null)
+            {
+                var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
+                oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
+            }
             return new JsonResult()
             {
                 Data = mobjFasonManager.GrabarFason(oParam),
@@ -624,6 +629,11 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult GrabarAgente(AgenteCompra oParam)
         {
+            if (oParam.ComercialCreadorId.HasValue && oParam.GrupoCompra == null)
+            {
+                var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
+                oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
+            }
             return new JsonResult()
             {
                 Data = mobjAgenteManager.GrabarAgente(oParam),
@@ -633,6 +643,11 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarAcuerdo(ContratoAcuerdo oParam)
         {
+            if (oParam.ComercialCreadorId.HasValue && oParam.GrupoCompra == null)
+            {
+                var comercial = mobjComercialManager.TraerComercial(oParam.ComercialCreadorId.Value);
+                oParam.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
+            }
             return new JsonResult()
             {
                 Data = mobjContratoAcuerdoManager.GrabarAcuerdo(oParam),
