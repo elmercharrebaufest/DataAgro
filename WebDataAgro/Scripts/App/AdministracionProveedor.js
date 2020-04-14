@@ -78,11 +78,11 @@ function InicializarElementos() {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: "/Proveedor/BuscarProveedoresConCorredor"
+                    url: "/Proveedor/BuscarProveedores"
                 },
                 parameterMap: function (data, type) {
                    
-                    return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+                    return { filtroProveedor: $('#buscadorProveedor').val() };
                 }
             }
 

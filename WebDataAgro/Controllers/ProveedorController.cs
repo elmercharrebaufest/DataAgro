@@ -334,7 +334,12 @@ namespace WebDataAgro.Controllers
         {
             return Json(mobjProveedorManager.TraerProveedorParaCorredor(cuit), JsonRequestBehavior.AllowGet);
         }
+        public JsonResult BuscarProveedores(string filtroProveedor)
+        {
 
+            return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+
+        }
         public ActionResult GrabarCorredor(NuevoCorredor oParam)
         {
 
