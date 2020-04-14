@@ -159,6 +159,7 @@ namespace WebDataAgro.Services
             contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
             contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
             contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
+            contratoSAP.Procedencia = contratoSAP.Procedencia != null ? contratoSAP.Procedencia.Trim() : contratoSAP.Procedencia;
             var oEntityErrors = new ResultadoSap();
             try
             {
@@ -246,24 +247,6 @@ namespace WebDataAgro.Services
                 }
                 logger.Debug("ActualizandoContrato4");
 
-                //var precioNeto = contratoSAP.Precio;
-                //var porcentajeComision = contratoSAP.Apertura.Where(x => (x.Concepto == "CO") && x.Porcentaje > 0).Sum(x => x.Porcentaje);
-                //var precioTarifaFlete = contratoSAP.FleteTarifa;
-                //precioNeto += contratoSAP.Apertura.Where(x => x.Concepto == "FI").Sum(x => x.Importe);
-                //precioNeto += contratoSAP.Apertura.Where(x => x.Concepto == "RE").Sum(x => x.Importe);
-                //var maximoBonificacion = (contratoSAP.Precio + contratoSAP.Apertura.Where(x => x.Concepto == "FI").Sum(x => x.Importe)+ contratoSAP.Apertura.Where(x => x.Concepto == "RE").Sum(x => x.Importe) )* (decimal)0.01;
-                //var aperturaPrecioImporteComisiones = contratoSAP.Apertura.Where(x => x.Concepto == "CO").Sum(x => x.Importe);
-                //if (aperturaPrecioImporteComisiones > maximoBonificacion)
-                //{
-                //    aperturaPrecioImporteComisiones = maximoBonificacion;
-                //}
-                //precioNeto += contratoSAP.Apertura.Where(x => x.Concepto == "BO").Sum(x => x.Importe);
-
-                //precioNeto += contratoSAP.Apertura.Where(x => x.Concepto == "BO").Sum(x => x.Importe)* contratoSAP.Precio/100;
-                //porcentajeComision = porcentajeComision / 100;
-                //precioNeto += (precioNeto * porcentajeComision) - precioTarifaFlete;
-                //precioNeto += aperturaPrecioImporteComisiones;
-
                 var contrato = new Contrato();
 
                 contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
@@ -292,14 +275,13 @@ namespace WebDataAgro.Services
                 contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
-                contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
+                contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
                 contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
+
                 contrato.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId);
                 contrato.MercsDeposito = contratoSAP.MercDescargada == "X";
                 contrato.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId);
-                contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ?
-                contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
+                contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
                 contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
                 contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
                 contrato.Observacion = contratoSAP.ObservacionCal1;
@@ -307,7 +289,6 @@ namespace WebDataAgro.Services
                 contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
                 contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
                 contrato.Precio = contratoSAP.Precio;
-                //contrato.PrecioNeto = precioNeto;
                 contrato.PrecioNeto = contratoSAP.PrecioNeto;
                 contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
                 contrato.ProvinciaId = contratoSAP.Provincia;
@@ -329,7 +310,11 @@ namespace WebDataAgro.Services
                 contrato.ComercialId = 1;
                 contrato.Fecha = DateTime.Now;
                 logger.Debug("ActualizandoContrato5");
-
+                Validar(contrato, oEntityErrors);
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
                 var resultado = contratoManager.ActualizarContratoSAP(contrato);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
@@ -339,14 +324,25 @@ namespace WebDataAgro.Services
 
                 oEntityErrors.ListaErrores.Add(new ErrorMessage()
                 {
-                    Message = ex.Message
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
                 });
+                oEntityErrors.HayError = true;
             }
             logger.Debug("ActualizandoContrato7 CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
             logger.Debug("ActualizandoContrato7 RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
+        }
+
+        private void Validar(Contrato oParam, ResultadoSap oErrorMessages)
+        {
+            if (oParam.LocalidadId == 0)
+            {
+                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Procedencia' es invalido" });
+            }
+            oErrorMessages.HayError = oErrorMessages.ListaErrores.Any();
+
         }
         #endregion
     }
