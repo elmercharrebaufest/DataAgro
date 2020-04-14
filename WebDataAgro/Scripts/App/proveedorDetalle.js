@@ -687,6 +687,9 @@ function armarContacto() {
     $("#16-17").html("");
     $("#15-16").html("");
     $("#14-15").html("");
+    $("#19-20").html("");
+    $("#20-21").html("");
+
 
     if (campoacopio.length > 0) {
         //var grupocampoacopio = {};
@@ -741,6 +744,14 @@ function armarContacto() {
                         armarCampañaProduccion($("#14-15"), i, grupocampoacopio, $("#campana14-15"));
                         $("#datos-produccion .col-lg-12:first-of-type").show();
                         break;
+                    case 3:
+                        armarCampañaProduccion($("#19-20"), i, grupocampoacopio, $("#campana19-20"));
+                        $("#datos-produccion .col-lg-12:first-of-type").show();
+                        break;
+                    case 4:
+                        armarCampañaProduccion($("#20-21"), i, grupocampoacopio, $("#campana20-21"));
+                        $("#datos-produccion .col-lg-12:first-of-type").show();
+                        break;
                 }
                 cont++;
             })(ii);
@@ -754,14 +765,34 @@ function armarContacto() {
             $("#campana15-16").remove();
             $("#14-15").remove();
             $("#campana14-15").remove();
+            $("#19-20").remove();
+            $("#campana19-20").remove();
+            $("#20-21").remove();
+            $("#campana20-21").remove();
         } else if (campañaLength == 1) {
             $("#15-16").remove();
             $("#campana15-16").remove();
             $("#14-15").remove();
             $("#campana14-15").remove();
+            $("#19-20").remove();
+            $("#campana19-20").remove();
+            $("#20-21").remove();
+            $("#campana20-21").remove();
         } else if (campañaLength == 2) {
             $("#14-15").remove();
             $("#campana14-15").remove();
+            $("#19-20").remove();
+            $("#campana19-20").remove();
+            $("#20-21").remove();
+            $("#campana20-21").remove();
+        } else if (campañaLength == 3) {
+            $("#19-20").remove();
+            $("#campana19-20").remove();
+            $("#20-21").remove();
+            $("#campana20-21").remove();
+        } else if (campañaLength == 4) {
+            $("#20-21").remove();
+            $("#campana20-21").remove();
         }
     } else {
         var html = "";
@@ -775,6 +806,8 @@ function armarContacto() {
     $("#a16-17").html("");
     $("#a15-16").html("");
     $("#a14-15").html("");
+    $("#a19-20").html("");
+    $("#a20-21").html("");
 
     if (acopio.length > 0) {
         //var grupoacopio = {};
@@ -851,6 +884,14 @@ function armarContacto() {
                             armarCampañaAlmacenamiento($("#a14-15"), i, grupoacopio, $("#acampana14-15"));
                             $("#datos-almacenamiento .col-lg-12:first-of-type").show();
                             break;
+                        case 3:
+                            armarCampañaAlmacenamiento($("#a19-20"), i, grupoacopio, $("#acampana19-20"));
+                            $("#datos-almacenamiento .col-lg-12:first-of-type").show();
+                            break;
+                        case 4:
+                            armarCampañaAlmacenamiento($("#a20-21"), i, grupoacopio, $("#acampana20-21"));
+                            $("#datos-almacenamiento .col-lg-12:first-of-type").show();
+                            break;
                     }
                     acont++;
                 }
@@ -865,14 +906,34 @@ function armarContacto() {
             $("#acampana15-16").remove();
             $("#a14-15").remove();
             $("#acampana14-15").remove();
+            $("#a19-20").remove();
+            $("#acampana19-20").remove();
+            $("#a20-21").remove();
+            $("#acampana20-21").remove();
         } else if (acampañaLength == 1) {
             $("#a15-16").remove();
             $("#acampana15-16").remove();
             $("#a14-15").remove();
             $("#acampana14-15").remove();
+            $("#a19-20").remove();
+            $("#acampana19-20").remove();
+            $("#a20-21").remove();
+            $("#acampana20-21").remove();
         } else if (acampañaLength == 2) {
             $("#a14-15").remove();
             $("#acampana14-15").remove();
+            $("#a19-20").remove();
+            $("#acampana19-20").remove();
+            $("#a20-21").remove();
+            $("#acampana20-21").remove();
+        } else if (acampañaLength == 3) {
+            $("#a19-20").remove();
+            $("#acampana19-20").remove();
+            $("#a20-21").remove();
+            $("#acampana20-21").remove();
+        } else if (acampañaLength == 4) {
+            $("#a20-21").remove();
+            $("#acampana20-21").remove();
         }
     } else {
         var html = "";
@@ -1401,6 +1462,8 @@ function armarEstilosyFuncionesDetalle() {
         $("#16-17").removeClass("whc-selected");
         $("#15-16").removeClass("whc-selected");
         $("#14-15").removeClass("whc-selected");
+        $("#19-20").removeClass("whc-selected");
+        $("#20-21").removeClass("whc-selected");
         $("#16-17").addClass("whc-selected");
         if ($("#campana15-16").is(":visible")) {
             $("#campana15-16").fadeOut("slow", function () {
@@ -1410,12 +1473,22 @@ function armarEstilosyFuncionesDetalle() {
             $("#campana14-15").fadeOut("slow", function () {
                 $("#campana16-17").fadeIn("slow", function () { });
             });
+        } else if ($("#campana19-20").is(":visible")) {
+            $("#campana19-20").fadeOut("slow", function () {
+                $("#campana16-17").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana20-21").is(":visible")) {
+            $("#campana20-21").fadeOut("slow", function () {
+                $("#campana16-17").fadeIn("slow", function () { });
+            });
         }
     });
     $("#15-16").click(function () {
         $("#16-17").removeClass("whc-selected");
         $("#15-16").removeClass("whc-selected");
         $("#14-15").removeClass("whc-selected");
+        $("#19-20").removeClass("whc-selected");
+        $("#20-21").removeClass("whc-selected");
         $("#15-16").addClass("whc-selected");
         if ($("#campana16-17").is(":visible")) {
             $("#campana16-17").fadeOut("slow", function () {
@@ -1425,12 +1498,22 @@ function armarEstilosyFuncionesDetalle() {
             $("#campana14-15").fadeOut("slow", function () {
                 $("#campana15-16").fadeIn("slow", function () { });
             });
+        } else if ($("#campana19-20").is(":visible")) {
+            $("#campana19-20").fadeOut("slow", function () {
+                $("#campana15-16").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana20-21").is(":visible")) {
+            $("#campana20-21").fadeOut("slow", function () {
+                $("#campana15-16").fadeIn("slow", function () { });
+            });
         }
     });
     $("#14-15").click(function () {
         $("#16-17").removeClass("whc-selected");
         $("#15-16").removeClass("whc-selected");
         $("#14-15").removeClass("whc-selected");
+        $("#19-20").removeClass("whc-selected");
+        $("#20-21").removeClass("whc-selected");
         $("#14-15").addClass("whc-selected");
         if ($("#campana16-17").is(":visible")) {
             $("#campana16-17").fadeOut("slow", function () {
@@ -1440,12 +1523,73 @@ function armarEstilosyFuncionesDetalle() {
             $("#campana15-16").fadeOut("slow", function () {
                 $("#campana14-15").fadeIn("slow", function () { });
             });
+        } else if ($("#campana20-21").is(":visible")) {
+            $("#campana20-21").fadeOut("slow", function () {
+                $("#campana14-15").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana20-21").is(":visible")) {
+            $("#campana20-21").fadeOut("slow", function () {
+                $("#campana14-15").fadeIn("slow", function () { });
+            });
         }
     });
+    $("#19-20").click(function () {
+        $("#16-17").removeClass("whc-selected");
+        $("#15-16").removeClass("whc-selected");
+        $("#14-15").removeClass("whc-selected");
+        $("#20-21").removeClass("whc-selected");
+        $("#19-20").addClass("whc-selected");
+        if ($("#campana16-17").is(":visible")) {
+            $("#campana16-17").fadeOut("slow", function () {
+                $("#campana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana15-16").is(":visible")) {
+            $("#campana15-16").fadeOut("slow", function () {
+                $("#campana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana14-15").is(":visible")) {
+            $("#campana14-15").fadeOut("slow", function () {
+                $("#campana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana20-21").is(":visible")) {
+            $("#campana20-21").fadeOut("slow", function () {
+                $("#campana19-20").fadeIn("slow", function () { });
+            });
+        }
+    });
+
+    $("#20-21").click(function () {
+        $("#16-17").removeClass("whc-selected");
+        $("#15-16").removeClass("whc-selected");
+        $("#14-15").removeClass("whc-selected");
+        $("#19-20").removeClass("whc-selected");
+        $("#20-21").addClass("whc-selected");
+        if ($("#campana16-17").is(":visible")) {
+            $("#campana16-17").fadeOut("slow", function () {
+                $("#campana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana15-16").is(":visible")) {
+            $("#campana15-16").fadeOut("slow", function () {
+                $("#campana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana14-15").is(":visible")) {
+            $("#campana14-15").fadeOut("slow", function () {
+                $("#campana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#campana19-20").is(":visible")) {
+            $("#campana19-20").fadeOut("slow", function () {
+                $("#campana20-21").fadeIn("slow", function () { });
+            });
+        }
+    });
+
+
     $("#a16-17").click(function () {
         $("#a16-17").removeClass("whc-selected");
         $("#a15-16").removeClass("whc-selected");
         $("#a14-15").removeClass("whc-selected");
+        $("#a19-20").removeClass("whc-selected");
+        $("#a20-21").removeClass("whc-selected");
         $("#a16-17").addClass("whc-selected");
         if ($("#acampana15-16").is(":visible")) {
             $("#acampana15-16").fadeOut("slow", function () {
@@ -1455,12 +1599,23 @@ function armarEstilosyFuncionesDetalle() {
             $("#acampana14-15").fadeOut("slow", function () {
                 $("#acampana16-17").fadeIn("slow", function () { });
             });
+        } else if ($("#acampana19-20").is(":visible")) {
+            $("#acampana19-20").fadeOut("slow", function () {
+                $("#acampana16-17").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana20-21").is(":visible")) {
+            $("#acampana20-21").fadeOut("slow", function () {
+                $("#acampana16-17").fadeIn("slow", function () { });
+            });
         }
+
     });
     $("#a15-16").click(function () {
         $("#a16-17").removeClass("whc-selected");
         $("#a15-16").removeClass("whc-selected");
         $("#a14-15").removeClass("whc-selected");
+        $("#a19-20").removeClass("whc-selected");
+        $("#a20-21").removeClass("whc-selected");
         $("#a15-16").addClass("whc-selected");
         if ($("#acampana16-17").is(":visible")) {
             $("#acampana16-17").fadeOut("slow", function () {
@@ -1470,12 +1625,22 @@ function armarEstilosyFuncionesDetalle() {
             $("#acampana14-15").fadeOut("slow", function () {
                 $("#acampana15-16").fadeIn("slow", function () { });
             });
+        } else if ($("#acampana19-20").is(":visible")) {
+            $("#acampana19-20").fadeOut("slow", function () {
+                $("#acampana15-16").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana20-21").is(":visible")) {
+            $("#acampana20-21").fadeOut("slow", function () {
+                $("#acampana15-16").fadeIn("slow", function () { });
+            });
         }
     });
     $("#a14-15").click(function () {
         $("#a16-17").removeClass("whc-selected");
         $("#a15-16").removeClass("whc-selected");
         $("#a14-15").removeClass("whc-selected");
+        $("#a19-20").removeClass("whc-selected");
+        $("#a20-21").removeClass("whc-selected");
         $("#a14-15").addClass("whc-selected");
         if ($("#acampana16-17").is(":visible")) {
             $("#acampana16-17").fadeOut("slow", function () {
@@ -1484,6 +1649,66 @@ function armarEstilosyFuncionesDetalle() {
         } else if ($("#acampana15-16").is(":visible")) {
             $("#acampana15-16").fadeOut("slow", function () {
                 $("#acampana14-15").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana19-20").is(":visible")) {
+            $("#acampana19-20").fadeOut("slow", function () {
+                $("#acampana14-15").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana20-21").is(":visible")) {
+            $("#acampana20-21").fadeOut("slow", function () {
+                $("#acampana14-15").fadeIn("slow", function () { });
+            });
+        }
+    });
+
+    $("#a19-20").click(function () {
+        $("#a16-17").removeClass("whc-selected");
+        $("#a15-16").removeClass("whc-selected");
+        $("#a14-15").removeClass("whc-selected");
+        $("#a19-20").removeClass("whc-selected");
+        $("#a20-21").removeClass("whc-selected");
+        $("#a19-20").addClass("whc-selected");
+        if ($("#acampana16-17").is(":visible")) {
+            $("#acampana16-17").fadeOut("slow", function () {
+                $("#acampana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana15-16").is(":visible")) {
+            $("#acampana15-16").fadeOut("slow", function () {
+                $("#acampana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana14-15").is(":visible")) {
+            $("#acampana14-15").fadeOut("slow", function () {
+                $("#acampana19-20").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana20-21").is(":visible")) {
+            $("#acampana20-21").fadeOut("slow", function () {
+                $("#acampana19-20").fadeIn("slow", function () { });
+            });
+        }
+    });
+
+    $("#a20-21").click(function () {
+        $("#a16-17").removeClass("whc-selected");
+        $("#a15-16").removeClass("whc-selected");
+        $("#a14-15").removeClass("whc-selected");
+        $("#a19-20").removeClass("whc-selected");
+        $("#a20-21").removeClass("whc-selected");
+        $("#a20-21").addClass("whc-selected");
+        if ($("#acampana16-17").is(":visible")) {
+            $("#acampana16-17").fadeOut("slow", function () {
+                $("#acampana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana15-16").is(":visible")) {
+            $("#acampana15-16").fadeOut("slow", function () {
+                $("#acampana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana14-15").is(":visible")) {
+            $("#acampana14-15").fadeOut("slow", function () {
+                $("#acampana20-21").fadeIn("slow", function () { });
+            });
+        } else if ($("#acampana19-20").is(":visible")) {
+            $("#acampana19-20").fadeOut("slow", function () {
+                $("#acampana20-21").fadeIn("slow", function () { });
             });
         }
     });
