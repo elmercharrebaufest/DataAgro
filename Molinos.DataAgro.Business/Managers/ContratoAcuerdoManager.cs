@@ -90,6 +90,12 @@ namespace Molinos.DataAgro.Business
                 oContratoAcuerdo.Fecha = DateTime.Now;
                 oContratoAcuerdo.EstadoId = estado;
                 repositorio.Agregar(oContratoAcuerdo);
+                if (ConfirmacionAutomatica(oContratoAcuerdo))
+                {
+                    oContratoAcuerdo.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    logger.Debug("El contrato " + oContratoAcuerdo.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
+
+                }
             }
             else
             {
@@ -214,6 +220,13 @@ namespace Molinos.DataAgro.Business
                         });
                     }
                 }
+
+                if (ConfirmacionAutomatica(oContratoAcuerdo))
+                {
+                    oContratoAcuerdo.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    logger.Debug("El contrato " + oContratoAcuerdo.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
+
+                }
             }
             try
             {
@@ -228,6 +241,47 @@ namespace Molinos.DataAgro.Business
             logger.Debug("Guardando el Contrato Acuerdo");
 
             return oEntityErrors;
+        }
+
+        private bool ConfirmacionAutomatica(ContratoAcuerdo contrato)
+        {
+            var hoy = DateTime.Now;
+            var precioContrato = contrato.Precio;
+
+            var rangos = repositorio.Listar<RangoConfirmacionAutomatica>(x =>
+            x.TipoNegocioId == 2 &&
+            x.FechaDesde <= hoy &&
+            x.FechaHasta >= hoy &&
+            x.MaterialId == contrato.MaterialId &&
+            x.MonedaId == contrato.MonedaId &&
+            precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo) ?? new List<RangoConfirmacionAutomatica>();
+
+            var rango = rangos.FirstOrDefault(
+                x => contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
+                   contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes)));
+
+
+            if (rango != null && contrato.Precio > 0)
+            {
+                var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
+                var cantidad =
+                    repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
+                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id && x.TipoNegocioId == 2
+                 && x.MaterialId == rango.MaterialId);
+                cantidad.AddRange(repositorio.Listar<ContratoAcuerdo, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
+                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id && x.TipoNegocioId == 6
+                 && x.MaterialId == rango.MaterialId));
+                var total = cantidad.Sum();
+
+                var valor =
+                    (total + contrato.Cantidad) <= rango.Cantidad &&
+                    (rango.ZonaId == 47 || rango.ZonaId == null || grupo == rango.ZonaId);
+                return valor;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void Validar(ContratoAcuerdo oContratoAcuerdo, GrabarAcuerdoResult oEntityErrors)

@@ -319,12 +319,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var grupo = repositorio.Obtener<Comercial, int>(x => x.ComercialId == contrato.ComercialId, x => x.GrupoDeComprasId.Value);
                 var cantidad =
-                    repositorio.Listar<Contrato, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
-                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 2
-                 && x.MaterialId == rango.MaterialId);
-                cantidad.AddRange(repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
+                    repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id
-                && x.MaterialId == rango.MaterialId));
+                && x.MaterialId == rango.MaterialId);
 
                 var total = cantidad.Sum();
                 var valor =
