@@ -16,56 +16,111 @@
             <input type="hidden" id="buscadorResult" />
         </div>
     </div>
-    <div id="datos-proveedor" hidden>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="datos-proveedor" hidden>
 
-        <div class="row">
-            <div class="col-md-2">
-                <label>Rol</label>
-            </div>
-            <div class="col-md-4">
-                <script id="template" type="text/x-kendo-template">
-                    #if(Disabled){#
-                    <span class="k-state-disabled"> #: Descripcion #</span>
-                    #}else {#
-                    <span>#: Descripcion #  </span>#}#
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Rol</label>
+                    </div>
+                    <div class="col-md-4">
+                        <script id="template" type="text/x-kendo-template">
+                            #if(Disabled){#
+                            <span class="k-state-disabled"> #: Descripcion #</span>
+                            #}else {#
+                            <span>#: Descripcion #  </span>#}#
+                        </script>
+                        <select id="RolId" data-bind="source: RolCombo" style="max-width:300px"></select>
+                    </div>
+                    <div class="col-md-2 ">
+                        <button class="k-button k-button-icontext" style="" type="button" data-bind="click: addRol">Agregar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 table-responsive">
+                        <table id="lista-permisos" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="sinBorde" style="width:50%">Descripción</th>
+                                    <th class="sinBorde"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-permisos" data-template="div-template" data-bind="source:RolesSeleccionados">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script id="div-template" type="text/x-kendo-template">
+                    <tr>
+                        <td data-bind="text: Descripcion"></td>
+                        <td class="alinearCentro"><a data-bind="click: removeRol" class="ancho fuente"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                    </tr>
                 </script>
-                <select id="RolId" data-bind="source: RolCombo" style="max-width:300px"></select>
-            </div>
-            <div class="col-md-2 form-group">
-                <button class="k-button k-button-icontext" style="margin-top: 1.4%;margin-left: -59%" type="button" data-bind="click: addRol">Agregar</button>
+                <br />
+
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6 table-responsive">
-                <table id="lista-permisos" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th class="sinBorde" style="width:50%">Descripción</th>
-                            <th class="sinBorde"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-permisos" data-template="div-template" data-bind="source:RolesSeleccionados">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <script id="div-template" type="text/x-kendo-template">
-            <tr>
-                <td data-bind="text: Descripcion"></td>
-                <td class="alinearCentro"><a data-bind="click: removeRol" class="ancho fuente"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-            </tr>
-        </script>
-        <br />
-        <div class="row">
-            <div class="col-md-12">
-                <button id="butAceptar" class="k-button" type="button" data-role="button">Guardar</button>
-                <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+        <div class="col-md-6">
+            <div id="comercial-proveedor" hidden>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Comercial</label>
+                    </div>
+                    <div class="col-md-4">
+                        <script id="templateComerciales" type="text/x-kendo-template">
+                            #if(Disabled){#
+                            <span class="k-state-disabled"> #: NombreCompleto #</span>
+                            #}else {#
+                            <span>#: NombreCompleto #  </span>#}#
+                        </script>
+                        <select id="ComercialId" data-bind="source: ComercialCombo" style="max-width:300px"></select>
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <button class="k-button k-button-icontext" style="margin-top: 1.4%;" type="button" data-bind="click: addComercial">Agregar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 table-responsive">
+                        <table id="lista-comerciales" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th class="sinBorde" style="width:90%">Descripción</th>
+                                    <th class="sinBorde"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-comerciales" data-template="div-templateComerciales" data-bind="source:ComercialesSeleccionados">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script id="div-templateComerciales" type="text/x-kendo-template">
+                    <tr>
+                        <td data-bind="text: NompreCompleto"></td>
+                        <td class="alinearCentro"><a data-bind="click: removeComercial" class="ancho fuente"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                    </tr>
+                </script>
+                <br />
+                @*<div class="row">
+                        <div class="col-md-12">
+                            <button id="butAceptarComercial" class="k-button" type="button" data-role="button">Guardar</button>
+                            <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+                        </div>
+                    </div>*@
             </div>
         </div>
     </div>
+    <div class="row" hidden id="divBotones">
+        <div class="col-md-offset-5 col-md-12">
+            <button id="butAceptar" class="k-button" type="button" data-role="button">Guardar</button>
+            <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
+        </div>
+    </div>
+
 </div>
 <style>
     .k-icon.k-i-close {
-    display: none !important;
-}
+        display: none !important;
+    }
 </style>

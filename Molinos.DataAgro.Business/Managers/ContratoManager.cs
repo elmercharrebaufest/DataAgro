@@ -1000,11 +1000,30 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
+            if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+            oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
 
             if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado))
             {
+
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                if (oContratoSave.Ampliaciones > 0)
+                {
+                    oContratoSave.Ampliaciones = 0;
+                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                    }
+                }
                 repositorio.GuardarCambios();
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                 try
@@ -1018,6 +1037,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     logger.Error(e);
                 }
+
+
             }
             else
             {
@@ -1192,7 +1213,7 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
                 Dolarizado = x.Dolarizado,
-                
+
                 Dias_Pesificado = x.DiasPesificado,
                 NoInformaSIO = x.NoInformaSio,
                 TrigoEspecial = x.TrigoEspecial,
@@ -1538,7 +1559,13 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
+            if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
+            oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
@@ -1733,7 +1760,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Consignatario = x.Proveedor.Consignatario,
                 CantidadCamiones = 0,
                 BoletoId = x.Proveedor.BoletoCompraNetId,
-                BolsaId = x.Proveedor.BolsaCompraNetId,                
+                BolsaId = x.Proveedor.BolsaCompraNetId,
                 CondicionFijacion = x.CondicionFijacionId,
                 PagoDirectoVendedor = null,
                 EstablecimientoPropio = null,
@@ -1928,7 +1955,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.TarifaFlete = contrato.TarifaFlete;
             contratoSave.NivelTarifaId = contrato.NivelTarifaId == 0 ? null : contrato.NivelTarifaId;
             contratoSave.FechaCierta = contrato.FechaCierta;
-            
+
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
             var descuentos = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoSave.Id);

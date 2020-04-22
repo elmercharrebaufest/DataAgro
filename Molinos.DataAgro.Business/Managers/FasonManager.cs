@@ -173,8 +173,14 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFasonResult BorrarFason(Fason oFason)
         {
             var oEntityErrors = new GrabarFasonResult();
+            
+            if (string.IsNullOrEmpty(oFason.MotivoRechazo) || string.IsNullOrWhiteSpace(oFason.MotivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
             var oContratoSave = repositorio.Obtener<Fason>(oFason.Id);
-
+            oContratoSave.MotivoRechazo = oFason.MotivoRechazo;
             if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar 
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado 
@@ -182,7 +188,18 @@ namespace Molinos.DataAgro.Business.Managers
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
-
+                if (oContratoSave.Ampliaciones > 0)
+                {
+                    oContratoSave.Ampliaciones = 0;
+                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                    }
+                }
                 try
                 {
                     repositorio.GuardarCambios();                    

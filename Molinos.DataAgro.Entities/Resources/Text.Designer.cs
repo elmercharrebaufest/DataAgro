@@ -1530,6 +1530,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte De Proveedores.
+        /// </summary>
+        public static string Visualizar_Reporte_De_Proveedores {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_De_Proveedores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visualizar Reporte Dinamico.
         /// </summary>
         public static string Visualizar_Reporte_Dinamico {

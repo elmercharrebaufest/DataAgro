@@ -241,7 +241,7 @@ namespace Molinos.DataAgro.Business
         {
             return new ReporteCompraNetDto
             {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(DateTime.Now, DateTime.Now)
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(DateTime.Now, DateTime.Now,null)
             };
         }
 

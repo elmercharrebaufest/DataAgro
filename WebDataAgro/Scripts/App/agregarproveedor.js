@@ -838,7 +838,7 @@ function armarSelects(result) {
         obj.item = capProdCant;
         obj.CampoId = $("#campoid").val();
 
-        if (!$("#kmz").val()) {
+        //if (!$("#kmz").val()) {
             if ($("#provincia-produccion").val() == "null") {
                 MensErr("Debe ingresar una provincia");
                 return false;
@@ -846,9 +846,9 @@ function armarSelects(result) {
                 obj.provincia = $("#provincia-produccion").val();
                 obj.provinciaNom = $("#provincia-produccion option:selected").text();
             }
-        }
+        //}
 
-        if (!$("#kmz").val()) {
+        //if (!$("#kmz").val()) {
             if ($("#localidad-produccion").val() == "null") {
                 MensErr("Debe ingresar una localidad");
                 return false;
@@ -856,7 +856,7 @@ function armarSelects(result) {
                 obj.localidad = $("#localidad-produccion").val();
                 obj.localidadNom = $("#localidad-produccion option:selected").text();
             }
-        }
+        //}
 
         obj.coordenadas = $("#coordenadas").val();
 
@@ -979,7 +979,7 @@ function armarSelects(result) {
         obj.item = capProdCantAlmacenamiento;
         obj.CampoId = $("#campo-almacenamientoid").val();
 
-        if (!$("#kmz-almacenamiento").val()) {
+        //if (!$("#kmz-almacenamiento").val()) {
             if ($("#provincia-almacenamiento").val() == "null") {
                 MensErr("Debe ingresar una provincia");
                 return false;
@@ -987,9 +987,9 @@ function armarSelects(result) {
                 obj.provincia = $("#provincia-almacenamiento").val();
                 obj.provinciaNom = $("#provincia-almacenamiento option:selected").text();
             }
-        }
+        //}
 
-        if (!$("#kmz-almacenamiento").val()) {
+        //if (!$("#kmz-almacenamiento").val()) {
             if ($("#localidad-almacenamiento").val() == "null") {
                 MensErr("Debe ingresar una localidad");
                 return false;
@@ -997,7 +997,7 @@ function armarSelects(result) {
                 obj.localidad = $("#localidad-almacenamiento").val();
                 obj.localidadNom = $("#localidad-almacenamiento option:selected").text();
             }
-        }
+        //}
 
         if ($("#coordenadas-almacenamiento").val())
             obj.coordenadasAlmacenamiento = $("#coordenadas-almacenamiento").val();

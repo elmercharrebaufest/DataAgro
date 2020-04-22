@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business
         private readonly IRepositorio repositorio;
         private readonly IDatoDelComercialAgent oDatoDelComercialAgent;
 
-        public ComercialManager(ILogger logger, IRepositorio repositorio,IDatoDelComercialAgent oDatoDelComercialAgent)
+        public ComercialManager(ILogger logger, IRepositorio repositorio, IDatoDelComercialAgent oDatoDelComercialAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Business
             var empleadorId = repositorio.Obtener<Comercial, int?>(x => x.ComercialId == comercialId, x => x.EmpleadorACargoId) ?? 0;
             var list = qry.GetAbmComercialCombo();
             var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
-            var subordinados = ListarEquipo(comercialId,lista);
+            var subordinados = ListarEquipo(comercialId, lista);
             list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
             return list;
         }
@@ -69,26 +69,26 @@ namespace Molinos.DataAgro.Business
 
         public ComercialDto TraerComercial(int intComercialId)
         {
-            var comercial= repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
-                new ComercialDto
-                {
-                    IdActiveDirectory = x.IdActiveDirectory,
-                    GrupoDeComprasId = x.GrupoDeComprasId,
-                    GrupoDeCompras= x.GrupoDeCompras.Descripcion,
-                    Administrador = x.Administrador,
-                    Apellido = x.Apellido,
-                    ComercialId = x.ComercialId,
-                    EmpleadorACargoId = x.EmpleadorACargoId,
-                    Nombres = x.Nombres,
-                    PerfilId = x.PerfilId ?? 0,
-                    Cupera=x.Cupera,
-                    RolesAsociados =   x.RolesAsociados.Select(y=> new RolBasicoDto { Descripcion = y.Descripcion, Id= y.Id}).ToList()                
-                }) ?? new ComercialDto();
+            var comercial = repositorio.Obtener<Comercial, ComercialDto>(x => x.ComercialId == intComercialId, x =>
+                 new ComercialDto
+                 {
+                     IdActiveDirectory = x.IdActiveDirectory,
+                     GrupoDeComprasId = x.GrupoDeComprasId,
+                     GrupoDeCompras = x.GrupoDeCompras.Descripcion,
+                     Administrador = x.Administrador,
+                     Apellido = x.Apellido,
+                     ComercialId = x.ComercialId,
+                     EmpleadorACargoId = x.EmpleadorACargoId,
+                     Nombres = x.Nombres,
+                     PerfilId = x.PerfilId ?? 0,
+                     Cupera = x.Cupera,
+                     RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList()
+                 }) ?? new ComercialDto();
             return comercial;
         }
 
 
-        public Resultado GrabarComercial(Comercial oComercial, List<Rol>roles)
+        public Resultado GrabarComercial(Comercial oComercial, List<Rol> roles)
         {
             var oEntityErrors = new Resultado();
 
@@ -125,10 +125,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Roles", "Debe asignar algún rol");
                 return oEntityErrors;
-            }            
+            }
 
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "0")
-            {                
+            {
                 var comercial = oDatoDelComercialAgent.ObtenerDatosDeComercial(oComercial.IdActiveDirectory);
 
                 if (comercial != null)
@@ -255,12 +255,12 @@ namespace Molinos.DataAgro.Business
         public EquipoDto ListarEquipo(string idActiveDirectory)
         {
             var comerciales = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
-            var comercialId = repositorio.Obtener<Comercial,int>(x => x.IdActiveDirectory == idActiveDirectory,x=>x.ComercialId);
+            var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
             var resultado = new EquipoDto
             {
-                Equipo = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ? 
-                
-                ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)))
+                Equipo = !PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial) ?
+
+                ListarEquipo(comercialId, comerciales) : repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)))
             };
             resultado.EquipoReal = comerciales.Select(x => x.ComercialId).ToList();
 
@@ -283,7 +283,7 @@ namespace Molinos.DataAgro.Business
         public List<int> CadenaComerciales(int comercialId)
         {
             var listaSuperiores = new List<int>();
-            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
+            var permiso = repositorio.Obtener<Comercial, bool>(x => x.ComercialId == comercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             if (permiso)
             {
                 listaSuperiores.Add(comercialId);
@@ -295,7 +295,7 @@ namespace Molinos.DataAgro.Business
         private List<int> ObtenerCadenaUsuarios(int comercialId, List<int> listaSuperiores)
         {
             var comercial = repositorio.Obtener<Comercial>(comercialId);
-            if (!listaSuperiores.Contains(comercial.ComercialId) && 
+            if (!listaSuperiores.Contains(comercial.ComercialId) &&
                 comercial.RolesAsociados.Any(x => x.PermisosAsociados
                 .Any(y => y.Permiso == PermisosDataAgro.NotificacionesMailTodos || y.Permiso == PermisosDataAgro.NotificacionesMailJerarquia)))
             {
@@ -315,13 +315,13 @@ namespace Molinos.DataAgro.Business
 
         public List<int> ListarCorredoresComercial()
         {
-            var resultado = (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
+            var resultado = (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)) ? repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))) : new List<int>();
             return resultado;
         }
 
         public List<Comercial> ListarComercialesCorredor()
         {
-            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.VerCorredorComercial)));
+            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
         }
 
         public List<GrupoDeCompras> ListarGrupoDeCompras(string filtro)
@@ -338,6 +338,14 @@ namespace Molinos.DataAgro.Business
         public int ComercialAsociado(int proveedorId)
         {
             var comercial = repositorio.Obtener<ProveedorComercial, int>(x => x.ProveedorId == proveedorId, x => x.ComercialId);
+            return comercial;
+        }
+
+        public List<ComercialDto> TraerComercialesProveedor(int proveedorId)
+        {
+            var comercial = repositorio.Listar<ProveedorComercial, ComercialDto>(
+                x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Comercial.Nombres, Apellido = x.Comercial.Apellido }, 
+                x => x.ProveedorId == proveedorId);
             return comercial;
         }
     }

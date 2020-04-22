@@ -616,4 +616,7 @@
   <data name="Visualizar_OcultarEnTablero" xml:space="preserve">
     <value>Ver Marca Ocultar en Tablero </value>
   </data>
+  <data name="Visualizar_Reporte_De_Proveedores" xml:space="preserve">
+    <value>Visualizar Reporte De Proveedores</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
@@ -52,9 +53,12 @@ namespace Molinos.DataAgro.Interfaces
         GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId);
         bool ValidarProveedorEsCorredor(int idproveedor);
         string TraerCuit(int id);
-        GrabarProveedorResult GrabarRol(int id, List<Rol> roles);
+        GrabarProveedorResult GrabarRol(int id, List<Rol> roles,List<Comercial> comerciales);
         List<RolBasicoDto> TraerRolesProveedor(int id);
         bool ValidarDirecto(string cuit);
-
+        DataSourceResult BuscarDatosProveedor(DataSourceRequest request, List<int> equipo);
+        DataSourceResult BuscarDatosContacto(DataSourceRequest request, List<int> equipo);
+        DataSourceResult BuscarDatosProduccion(DataSourceRequest request, List<int> equipo);
+        DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo);
     }
 }

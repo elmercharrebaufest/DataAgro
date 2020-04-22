@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
         public int? CondicionFijacionId { get; set; }
+        public string MotivoRechazo { get; set; }
 
         [ForeignKey("CondicionFijacionId")]
         public virtual CondicionFijacion CondicionFijacion { get; set; }

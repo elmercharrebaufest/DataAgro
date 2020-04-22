@@ -85,11 +85,12 @@ function CreateGridInformeCompraNet() {
     };
 
     $("#grid").kendoGrid({
-        toolbar: ["excel"],
-        excel: {
-            fileName: "Reporte Contratos.xlsx",
-            allPages: true
-        },
+        toolbar: kendo.template($("#templateToolbar").html()),
+        //toolbar: ["excel"],
+        //excel: {
+        //    fileName: "Reporte Contratos.xlsx",
+        //    allPages: true,
+        //},
         dataSource: ds,
         dataBound: function () {
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
@@ -208,7 +209,8 @@ function CreateGridInformeCompraNet() {
                 field: "Estado_Contrato", title: "Estado", width: 90, sortable: false
             },
             { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } },
-            { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 }
+            { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 },
+            { field: "Rechazo", type: "string", title: "Motivo Rechazo" }
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
@@ -367,9 +369,10 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-
+   
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
     CrearMultiSelectFiltro("#buscadorCorredor", "Corredor", "CorredorId", "/Contrato/ListarCorredor");
+    CrearMultiSelectFiltro("#ClasificacionId", "Clasificacion", "ClasificacionId", "/Contrato/ListarClasificacion");
 
 
     $("#SustentableId").click(function () {
@@ -510,3 +513,18 @@ $("#DolarizadoId").click(function () {
 //    });
 //    return (filtrosContratosSap.length > 0) ? new FiltroPadre("or", filtrosContratosSap) : null;
 //}
+
+
+function customExport() {
+    //TraerFiltrosConValores();
+    var funcReturn = function (data) {
+        if (data != null) {
+            if (data.DownloadKey.length > 0) {
+                var url = MSGetUrl('/DownLoad/Excel?key=' + data.DownloadKey);
+                window.location = url;
+            }
+        }
+    };
+    MSExecuteOnServerAsync('/Contrato/Export', TraerFiltrosConValores(), funcReturn, true);
+}
+

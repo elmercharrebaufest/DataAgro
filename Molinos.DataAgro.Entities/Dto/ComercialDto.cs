@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Administrador { get; set; }
         public bool? Cupera { get; set; }
         public ICollection<RolBasicoDto> RolesAsociados { get; set; }
+
+        public string NombreCompleto { get { return Apellido.ToUpper() + " " + Nombres.ToUpper(); }  }
     }
 }
 

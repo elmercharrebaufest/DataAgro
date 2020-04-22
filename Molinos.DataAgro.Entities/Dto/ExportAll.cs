@@ -81,6 +81,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Interes { get; set; }
         public string OtrosIntereses { get; set; }
         public string Principal { get; set; }
+        public string PrincipalCupo { get; set; }
     }
 
     public class ProduccionAll

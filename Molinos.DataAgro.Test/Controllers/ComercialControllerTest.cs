@@ -34,14 +34,14 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void InicializarTest()
         {
-            comercialManagerMock.Setup(x => x.TraerDatosIniciales()).Returns( new DatosIniAbmComercial()
+            comercialManagerMock.Setup(x => x.TraerDatosIniciales()).Returns(new DatosIniAbmComercial()
             {
-                Comercial = new List<ComercialCombo>(){ new ComercialCombo { ComercialId = 1, Apellido = "A" }},
-                Perfil = new List<Perfil>() {new Perfil { PerfilId = 1, Descripcion="Mesa"} },
+                Comercial = new List<ComercialCombo>() { new ComercialCombo { ComercialId = 1, Apellido = "A" } },
+                Perfil = new List<Perfil>() { new Perfil { PerfilId = 1, Descripcion = "Mesa" } },
                 GrupoDeCompras = new List<GrupoDeCompras>() { new GrupoDeCompras { Id = 1, Descripcion = "A" } }
             });
             var result = target.Inicializar();
-            
+
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
@@ -72,8 +72,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null,\"NombreCompleto\":\"A A\",\"Disabled\":false}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
         [Test]
@@ -100,7 +99,7 @@ namespace Molinos.DataAgro.Test.Controllers
             comercialManagerMock.Setup(x => x.TraerComercial(1)).Returns(new ComercialDto
             {
                 ComercialId = 1,
-                Nombres= "A",
+                Nombres = "A",
                 Apellido = "B",
                 Administrador = false,
                 EmpleadorACargoId = null,
@@ -115,8 +114,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"B A\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
         [Test]
@@ -134,8 +132,8 @@ namespace Molinos.DataAgro.Test.Controllers
                 PerfilId = 1
             };
             var roles = new List<Rol>() { new Rol { Id = 1, Descripcion = "A" } };
-            comercialManagerMock.Setup(x => x.GrabarComercial(comercial,roles)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Grabar(comercial,roles);
+            comercialManagerMock.Setup(x => x.GrabarComercial(comercial, roles)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            var result = target.Grabar(comercial, roles);
 
             Assert.NotNull(result);
 
@@ -149,7 +147,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarComercialTest()
         {
             comercialManagerMock.Setup(x => x.EliminarComercial(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmComercialParam {ComercialId = 1});
+            var result = target.Eliminar(new AbmComercialParam { ComercialId = 1 });
 
             Assert.NotNull(result);
 

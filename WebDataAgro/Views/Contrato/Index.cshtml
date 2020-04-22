@@ -45,7 +45,7 @@
         <div class="col-md-4">
             <div class="row">
                 <div class="col-xs-5 noRightPadding">
-                    @Html.TextBox("ContratoSAP", "", new {  @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                    @Html.TextBox("ContratoSAP", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
                 </div>
                 <div class="col-xs-5">
                     @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
@@ -188,6 +188,17 @@
             @Html.CheckBox("Pesificado", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "PesificadoId" })
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Clasificacion</label>
+        </div>
+        <div class="col-md-4">
+            @*@Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), new { @class = "multiselect", @id = "ClasificacionId" })*@
+            <input id="ClasificacionId" name="ClasificacionId" class="multiselect" style="width:100%" type="text" placeholder="" required="required" />
+
+        </div>
+    </div>
+    <br />
     <br />
     <div class="row">
 
@@ -199,6 +210,12 @@
 </div>
 
 <br />
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
+        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-excel"></span>Reporte Comercial</a>
+    </div>
+</script>
 <div class="resultado">
     <div id="grid" class="tabla-result">
     </div>

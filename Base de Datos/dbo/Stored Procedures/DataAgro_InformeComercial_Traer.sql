@@ -5,17 +5,25 @@
 AS
 
 
-select distinct @ProveedorId as ProveedorId, m.MaterialId,m.descripcion as Material,camp.CampañaId,camp.descripcion as Campaña
-from campo c
-inner join CampoMaterial cm on c.CampoId = cm.CampoId
-inner join Material m on m.materialId = cm.MaterialId 
-inner join Campaña camp on  cm.CampañaId = camp.CampañaId
-left join 
-(
-	select distinct i.proveedorId,d.MaterialId as MaterialId, i.CampañaId
-	from InformeComercial i
-	inner join InformeComercialProduccion d on d.InformeComercialId = i.InformeComercialId
-	where i.ProveedorId = @ProveedorId
-) a on cm.MaterialId = a.MaterialId and c.proveedorId = a.proveedorId
 
-where c.ProveedorId = @ProveedorId and (a.CampañaId <> camp.CampañaId or a.CampañaId is null)
+select ProveedorId,MaterialId,Material,CampañaId, Campaña   
+from (
+select distinct c.ProveedorId as ProveedorId, m.MaterialId,m.descripcion as Material,camp.CampañaId,camp.descripcion as Campaña
+from campo c  
+inner join CampoMaterial cm on c.CampoId = cm.CampoId  
+inner join Material m on m.materialId = cm.MaterialId   
+inner join Campaña camp on  cm.CampañaId = camp.CampañaId  
+ 
+where c.ProveedorId = @ProveedorId  
+
+union all
+ select i.ProveedorId,d.MaterialId as MaterialId,m.Descripcion as Material,camp.CampañaId, camp.Descripcion as Campaña  
+ from InformeComercial i  
+ inner join InformeComercialProduccion d on d.InformeComercialId = i.InformeComercialId  
+ inner join Material m on m.materialId = d.MaterialId 
+ inner join Campaña camp on  i.CampañaId = camp.CampañaId  
+ where i.ProveedorId = @ProveedorId  
+
+ ) a
+ group by  ProveedorId,MaterialId,Material,CampañaId, Campaña  
+ having count(*)=1

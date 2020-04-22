@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private AdministracionProveedorController target;
         private Mock<IRolManager> rolManagerMock; 
         private Mock<IProveedorManager> proveedorManagerMock; 
+        private Mock<IComercialManager> comercialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -27,7 +28,8 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             rolManagerMock = new Mock<IRolManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
-            target = new AdministracionProveedorController(rolManagerMock.Object, proveedorManagerMock.Object);
+            comercialManagerMock = new Mock<IComercialManager>();
+            target = new AdministracionProveedorController(rolManagerMock.Object, proveedorManagerMock.Object, comercialManagerMock.Object);
         }
 
         [Test]
@@ -45,8 +47,8 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarRolProveedorTest()
         {
-            proveedorManagerMock.Setup(x => x.GrabarRol(It.IsAny<int>(), It.IsAny<List<Rol>>())).Returns(new GrabarProveedorResult { Errores = new List<ErrorMessage>()});
-            var result = target.GrabarRolProveedor(1, new List<Rol>() { new Rol { Id= 1, Descripcion="a"} });
+            proveedorManagerMock.Setup(x => x.GrabarRol(It.IsAny<int>(), It.IsAny<List<Rol>>(), It.IsAny<List<Comercial>>())).Returns(new GrabarProveedorResult { Errores = new List<ErrorMessage>()});
+            var result = target.GrabarProveedor(1, new List<Rol>() { new Rol { Id = 1, Descripcion = "a" } }, new List<Comercial>() { new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a" } });
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -55,15 +57,16 @@ namespace Molinos.DataAgro.Test.Controllers
                 a);
         }
         [Test]
-        public void TraerRolesProveedorTest()
+        public void TraerDatosProveedorTest()
         {
             proveedorManagerMock.Setup(x => x.TraerRolesProveedor(It.IsAny<int>())).Returns(new List<RolBasicoDto> { new RolBasicoDto { Descripcion="a",Id=1} });
-            var result = target.TraerRolesProveedor(1);
+            comercialManagerMock.Setup(x => x.TraerComercialesProveedor(It.IsAny<int>())).Returns(new List<ComercialDto> { new ComercialDto { Apellido = "a", Nombres = "a", ComercialId =1} });
+            var result = target.TraerDatosProveedor(1);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"roles\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"comerciales\":[{\"ComercialId\":1,\"Apellido\":\"a\",\"Nombres\":\"a\",\"PerfilId\":0,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":null,\"GrupoDeComprasId\":null,\"GrupoDeCompras\":null,\"Administrador\":null,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"A A\"}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

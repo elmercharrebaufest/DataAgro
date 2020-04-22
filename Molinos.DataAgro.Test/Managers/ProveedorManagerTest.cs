@@ -1775,11 +1775,12 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Proveedor>() { new Proveedor() });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Rol,bool>>>(),It.IsAny<int>(),It.IsAny<string>(),It.IsAny<DirOrden>()))
                 .Returns(new List<Rol>() { new Rol() });
-
-            var result = target.GrabarRol(1, new List<Rol>());
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<Comercial>() { new Comercial() });
+            var result = target.GrabarRol(1, new List<Rol>(), new List<Comercial>());
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Rol, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
         }

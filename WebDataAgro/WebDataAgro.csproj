@@ -217,6 +217,7 @@
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
+    <Compile Include="Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Controllers\TerminosYCondicionesController.cs" />
     <Compile Include="Controllers\FormulaController.cs" />
     <Compile Include="Controllers\ReporteCupoController.cs" />
@@ -976,6 +977,7 @@
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
     <Content Include="Scripts\App\Filtros.js" />
+    <Content Include="Scripts\App\ReporteProveedores.js" />
     <Content Include="Scripts\App\SugerenciaCupo.js" />
     <Content Include="Scripts\App\AbmRol.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
@@ -2651,6 +2653,7 @@
     <Content Include="Views\CompraNet\_ModalAprobar.cshtml" />
     <Content Include="Views\AdministracionProveedor\Index.cshtml" />
     <Content Include="Views\TerminosYCondiciones\Index.cshtml" />
+    <Content Include="Views\ReporteProveedores\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

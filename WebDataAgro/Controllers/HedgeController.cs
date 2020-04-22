@@ -261,17 +261,17 @@ namespace WebDataAgro.Controllers
         private ReporteCompraNetModel ObtenerDatosReporte()
         {
             var hoy = DateTime.Now.Date;
-            var agentes = mobjReportesManager.TraerAgenteDeCompra(hoy, hoy);
+            var agentes = mobjReportesManager.TraerAgenteDeCompra(hoy, hoy, null);
             var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
             return new ReporteCompraNetModel
             {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(hoy, hoy),
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(hoy, hoy, null),
                 SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(hoy, hoy),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(hoy, hoy),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(hoy, hoy),
-                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(hoy, hoy)),
-                HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(hoy, hoy),
-                TCPromedioDto = mobjReportesManager.TraerTcPromedio(hoy, hoy),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(hoy, hoy, null),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(hoy, hoy, null),
+                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(hoy, hoy,null)),
+                HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(hoy, hoy, null),
+                TCPromedioDto = mobjReportesManager.TraerTcPromedio(hoy, hoy,null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
             };
         }
@@ -969,7 +969,7 @@ table {
                     if (totalDisp != 0 || totalForw != 0 || totalNewC != 0)
                     {
                         htmlBody += @"<tr>";
-                        htmlBody += " <th class='borde-izquierdo'>"+toneladaPrecio.Material+"</th>";
+                        htmlBody += " <th class='borde-izquierdo'>" + toneladaPrecio.Material + "</th>";
                         htmlBody += dispAFijar ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0")) + "</td>" : "";
                         htmlBody += dispAPrecio ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0")) + "</td>" : "";
                         htmlBody += dispFijacion ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0")) + " </td>" : "";
@@ -1026,14 +1026,14 @@ table {
                         <tr class='titulosPosicion'><th colspan = '" + (suma + pond + 3) + "'> " + material.Material.ToUpper() + @" </ th ></ tr >
                         <tr class='titulosPosicion'>
                             <th rowspan = '2'> Posición </th>";
-                    htmlBody += fix > 0 ? "<th colspan='"+fix+"' class='borde-izq-der'>Fix</th>" : "";
+                    htmlBody += fix > 0 ? "<th colspan='" + fix + "' class='borde-izq-der'>Fix</th>" : "";
                     htmlBody += aFijar > 0 ? "<th colspan = '" + aFijar + "' class='borde-izq-der'>A Fijar</th>" : "";
                     htmlBody += aPrecio > 0 ? "<th colspan = '" + aPrecio + "' class='borde-izq-der'>A Precio</th>" : "";
                     htmlBody += totalPesos != 0 ? "<th rowspan = '2' colspan='2' class=''>Ton. $</th>" : "";
                     htmlBody += pondPesos > 0 ? "<th rowspan = '2'  colspan='2' class=''>Precio $</th>" : "";
                     htmlBody += totalDolares != 0 ? "<th rowspan = '2'  colspan='2' class=''>Ton.USD</th>" : "";
                     htmlBody += pondDolares > 0 ? "<th rowspan = '2'   class=''>Precio USD</th>" : "";
-                    
+
                     htmlBody += "</tr>";
                     htmlBody += "<tr class='titulosPosicion'>";
                     htmlBody += dispFijacion ? "<th class='borde-izq-der'>Disponible</th>" : "";
@@ -1142,25 +1142,25 @@ table {
         {
             int idCentro = int.Parse(centroId);
             bool filtrarAcopio = idCentro == 0 || idCentro == 1;
-            var agentes = filtrarAcopio ? mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta) : new List<AgenteCompraDto>();
+            var agentes = filtrarAcopio ? mobjReportesManager.TraerAgenteDeCompra(fechaDesde, fechaHasta, null) : new List<AgenteCompraDto>();
             var op = agentes.SelectMany(x => x.Operador).GroupBy(x => x.OperadorId).Select(x => x.First()).ToList();
             agentes.ForEach(x => x.Operador.ForEach(y => y.Cantidad = y.Cantidad));
 
-            var objetivos = mobjReportesManager.TraerHedgeObjetivo(fechaDesde, fechaHasta);
+            var objetivos = mobjReportesManager.TraerHedgeObjetivo(fechaDesde, fechaHasta, null);
             objetivos.PricingCumplido = objetivos.PricingCumplido;
             objetivos.PricingObjetivo = objetivos.PricingObjetivo;
             objetivos.RemitirCumplido = objetivos.RemitirCumplido;
             objetivos.RemitirObjetivo = objetivos.RemitirObjetivo;
             return new ReporteCompraNetModel
             {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta, idCentro),
+                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(fechaDesde, fechaHasta, null, idCentro),
                 SojaSustentable = mobjReportesManager.TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro),
-                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta, idCentro),
-                PricingCampania = mobjReportesManager.TraerPricingCampania(fechaDesde, fechaHasta, idCentro),
-                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta, idCentro),
-                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta)),
+                PosicionCompras = mobjReportesManager.TraerPosicionCompras(fechaDesde, fechaHasta, null, idCentro),
+                PricingCampania = mobjReportesManager.TraerPricingCampania(fechaDesde, fechaHasta, null, idCentro),
+                PrecioCantidad = mobjReportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta, null, idCentro),
+                HedgeMaterial = TransformarAModel(mobjReportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta,null)),
                 HedgeObjetivo = objetivos,
-                TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta),
+                TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta,null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
             };
         }

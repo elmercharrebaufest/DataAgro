@@ -20,6 +20,29 @@ function Rol(id, descripcion) {
         }
     };
 }
+
+function Comercial(id, descripcion) {
+    if ($.isNumeric(parseInt(id))) {
+        this.ComercialId = id;
+        this.NompreCompleto = descripcion;
+    } else {
+        //id trae el objeto que ya existia
+        this.ComercialId = id.ComercialId;
+        this.NompreCompleto = id.NompreCompleto;
+    }
+    this.removeComercial = function () {
+        console.log(this);
+        viewModel.ComercialesSeleccionados.remove(this);
+
+        var select = $("#ComercialId").data("kendoDropDownList");
+        for (var i = 0; i <= select.dataSource.data().length; i++) {
+            var option = $("#ComercialId").data("kendoDropDownList").dataItem(i);
+            if (option.ComercialId == this.ComercialId) {
+                option.set("Disabled", false);
+            }
+        }
+    };
+}
 //var datosIniAbmCentro;
 
 $(document).ready(function () {
@@ -44,9 +67,28 @@ function InicializarElementos() {
 
     });
 
+
     $("#RolId").closest('.k-dropdown.k-widget').keydown(function (e) {
         if (e.keyCode == 46) {
             $("#RolId").data("kendoDropDownList").text("");
+        }
+    });
+    $("#ComercialId").kendoDropDownList({
+        dataTextField: "NombreCompleto",
+        dataValueField: "ComercialId",
+        optionLabel: "Seleccione el Comercial...",
+        select: function (e) {
+            if (e.dataItem.Disabled) {
+                e.preventDefault();
+            }
+        },
+        template: kendo.template($("#templateComerciales").html())
+
+    });
+
+    $("#ComercialId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#ComercialId").data("kendoDropDownList").text("");
         }
     });
 
@@ -68,6 +110,9 @@ function InicializarElementos() {
             if (e.dataItem.Id != 0) {
                 $("#buscadorResult").val(e.dataItem.Id);
                 $("#datos-proveedor").show();
+                $("#comercial-proveedor").show();
+                $("#divBotones").show();
+                
                 CargarViewModel(e.dataItem.Id);
             } 
         },        
@@ -82,7 +127,7 @@ function InicializarElementos() {
                 },
                 parameterMap: function (data, type) {
                    
-                    return { filtroProveedor: $('#buscadorProveedor').val() };
+                    return {  filtroProveedor: $('#buscadorProveedor').val() };
                 }
             }
 
@@ -108,7 +153,7 @@ function InicializarElementos() {
 
 function CrearViewModel() {
 
-    var roles = MSExecuteURLOnServer('/AdministracionProveedor/Inicializar');
+    var data = MSExecuteURLOnServer('/AdministracionProveedor/Inicializar');
     
     viewModel = kendo.observable({
 
@@ -124,26 +169,50 @@ function CrearViewModel() {
 
                 $("#RolId").data("kendoDropDownList").value("");
             }
+        },
+
+        ComercialCombo: [],
+        ComercialesSeleccionados: [],
+
+        addComercial: function () {
+            if ($('#ComercialId option:selected').text() != "Seleccione el Comercial...") {
+                this.ComercialesSeleccionados.push(new Comercial($('#ComercialId option:selected').val(), $('#ComercialId option:selected').text()));
+
+                var option = $("#ComercialId").data("kendoDropDownList").dataItem();
+                option.set("Disabled", true);
+
+                $("#ComercialId").data("kendoDropDownList").value("");
+            }
         }
     });
     kendo.bind($("#proveedor-abm"), viewModel);
 
-    viewModel.set("RolCombo", roles);
+    viewModel.set("RolCombo", data.roles);
+    viewModel.set("ComercialCombo", data.comerciales);
 }
 function LimpiarViewModel() {
     $("#buscadorProveedor").val("");
     $("#datos-proveedor").hide();
+    $("#comercial-proveedor").hide();
+    $("#divBotones").hide();
     $("#buscadorResult").val("");
-    $("#RolId").data("kendoDropDownList").value("");
+    $("#RolId").data("kendoDropDownList").value("");    
     var select = $("#RolId").data("kendoDropDownList");
     for (var i = 0; i <= select.dataSource.data().length; i++) {
         $("#RolId").data("kendoDropDownList").dataItem(i).set("Disabled", false);
     }
+
+    $("#ComercialId").data("kendoDropDownList").value("");
+    var select = $("#ComercialId").data("kendoDropDownList");
+    for (var i = 0; i <= select.dataSource.data().length; i++) {
+        $("#ComercialId").data("kendoDropDownList").dataItem(i).set("Disabled", false);
+    }
     viewModel.set("RolesSeleccionados", []);
+    viewModel.set("ComercialesSeleccionados", []);
 }
 
 function Grabar() {
-    var result = MSExecuteOnServer('/AdministracionProveedor/GrabarRolProveedor', { id: $("#buscadorResult").val(), roles: viewModel.RolesSeleccionados });
+    var result = MSExecuteOnServer('/AdministracionProveedor/GrabarProveedor', { id: $("#buscadorResult").val(), roles: viewModel.RolesSeleccionados, comerciales: viewModel.ComercialesSeleccionados });
 
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
@@ -156,15 +225,30 @@ function Grabar() {
     }
 }
 function CargarViewModel(id) {
-    var roles = MSExecuteOnServer('/AdministracionProveedor/TraerRolesProveedor', { id });
-    if (roles) {
-        for (var i = 0; i < roles.length; i++) {
-            viewModel.RolesSeleccionados.push(new Rol(roles[i].Id, roles[i].Descripcion));
+    var data = MSExecuteOnServer('/AdministracionProveedor/TraerDatosProveedor', { id });
+    if (data.roles) {
+        for (var i = 0; i < data.roles.length; i++) {
+            viewModel.RolesSeleccionados.push(new Rol(data.roles[i].Id, data.roles[i].Descripcion));
 
             var select = $("#RolId").data("kendoDropDownList");
             for (var j = 1; j <= select.dataSource.data().length; j++) {
                 var option = $("#RolId").data("kendoDropDownList").dataItem(j);
-                if (option.Id == roles[i].Id) {
+                if (option.Id == data.roles[i].Id) {
+                    option.set("Disabled", true);
+                }
+            }
+        }
+    }
+
+
+    if (data.comerciales) {
+        for (var i = 0; i < data.comerciales.length; i++) {
+            viewModel.ComercialesSeleccionados.push(new Comercial(data.comerciales[i].ComercialId, data.comerciales[i].NombreCompleto));
+
+            var select = $("#ComercialId").data("kendoDropDownList");
+            for (var j = 1; j <= select.dataSource.data().length; j++) {
+                var option = $("#ComercialId").data("kendoDropDownList").dataItem(j);
+                if (option.ComercialId == data.comerciales[i].ComercialId) {
                     option.set("Disabled", true);
                 }
             }

@@ -161,6 +161,10 @@ namespace WebDataAgro
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/Filtros.js",
                                          "~/Scripts/App/ReporteContrato.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ReporteProveedores").Include(
+                                         "~/Scripts/KendoExtensions.js",
+                                         "~/Scripts/App/Filtros.js",
+                                         "~/Scripts/App/ReporteProveedores.js"));
             bundles.Add(new ScriptBundle("~/bundles/Cupos").Include(
                              "~/Scripts/KendoExtensions.js",
                              "~/Scripts/App/Filtros.js",

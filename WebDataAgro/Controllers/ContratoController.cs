@@ -2,11 +2,14 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -23,13 +26,15 @@ namespace WebDataAgro.Controllers
         private readonly ITipoNegocioManager mobjTipoNegocioManager;
         private readonly ICampañaManager mobjCampaniaManager;
         private readonly ICentroManager mobjCentroManager;
+        private readonly IReportesManager reportesManager;
+
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
         public ContratoController(IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager,
-            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager, ICampañaManager oCampaniaManager, ICentroManager oCentroManager)
+            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager, ICampañaManager oCampaniaManager, ICentroManager oCentroManager, IReportesManager reportesManager)
         {
             mobjProveedorManager = oProveedorManager;
             mobjComercialManager = oComercialManager;
@@ -40,6 +45,8 @@ namespace WebDataAgro.Controllers
             mobjTipoNegocioManager = oTipoNegocioManager;
             mobjCampaniaManager = oCampaniaManager;
             mobjCentroManager = oCentroManager;
+            this.reportesManager = reportesManager;
+
         }
 
         [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet, PermisosDataAgro.VisualizarReporteCompraNetExterno)]
@@ -177,7 +184,41 @@ namespace WebDataAgro.Controllers
                    Selected = false
                }).OrderBy(x => x.Value);
             ViewBag.Comercial = comercialListItems;
+
+
+        }
+        public ActionResult ListarClasificacion(string text = "")
+        {
+            var clasificaciones = mobjContratoManager.TraerDatosCombo().Clasificacion.Select(x => new { ClasificacionId = x.Id.ToString(), Clasificacion = x.Descripcion }).ToList();
+            return Json(clasificaciones, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Export(DataSourceRequest filtro)
+        {
+            var model = new ReportesModel();
+
+            if (filtro.Sort == null)
+            {
+                filtro.Sort = new List<Sort> {
+                    new Sort {Field= "Material",Dir="desc" }
+                };
+            }
+            filtro.Skip = 0;
+            filtro.Take = 0;
+            var equipo = GlobalVariables.EquipoReal;
+            var datos = (List<BasicoContrato>)mobjContratoManager.TraerContratosFiltrados(filtro, equipo).Data;
+
+
+            var oLstContacto = new LstContrato(reportesManager);
+
+            var identif = oLstContacto.GenerarExcel(datos);
+
+            model.DownloadKey = Util.GetDownloadKey(identif);
+
+            return Json(model);
+        }
+       
     }
+
+
 }

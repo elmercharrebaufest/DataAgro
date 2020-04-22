@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Business
         private readonly IRepositorio repositorio;
 
 
-        public CombosQueries(ILogger logger,IRepositorio repositorio)
+        public CombosQueries(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business
 
         public List<Provincia> GetProvinciaCombo()
         {
-            return repositorio.Listar<Provincia>().OrderBy(x => x.Orden).ToList(); 
+            return repositorio.Listar<Provincia>().OrderBy(x => x.Orden).ToList();
         }
 
         public List<LocalidadCombo> GetLocalidadCombo()
@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Business
                 Nombre = x.Nombre
             }, null, 15, "Nombre");
         }
-        
+
         public List<Estado> GetEstadoCombo()
         {
             return repositorio.Listar<Estado>().OrderBy(x => x.Descripcion).ToList();
@@ -102,7 +102,7 @@ namespace Molinos.DataAgro.Business
                 {
                     ComercialId = x.ComercialId,
                     Apellido = x.Apellido + " " + x.Nombres
-                }, c => c.RolesAsociados.Any(y=>y.PermisosAsociados.Any(z=>z.Permiso==PermisosDataAgro.ListaComercial)), 0, "Apellido");
+                }, c => c.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercial)), 0, "Apellido");
             }
             catch (Exception ex)
             {
@@ -151,6 +151,7 @@ namespace Molinos.DataAgro.Business
             {
                 return repositorio.Listar<Material, MaterialCombo>(x => new MaterialCombo()
                 {
+                    MaterialId = x.MaterialId,
                     Codigo = x.Codigo,
                     Descripcion = x.Descripcion
                 }, null, 0, "Descripcion");
@@ -185,8 +186,8 @@ namespace Molinos.DataAgro.Business
             {
                 return repositorio.Listar<Campaña, CampaniaTableroCombo>(x => new CampaniaTableroCombo()
                 {
-                   CampaniaTableroId = x.CampañaId,
-                   Descripcion = x.Descripcion
+                    CampaniaTableroId = x.CampañaId,
+                    Descripcion = x.Descripcion
                 }, null, 0, "Descripcion");
             }
             catch (Exception ex)
@@ -254,7 +255,7 @@ namespace Molinos.DataAgro.Business
                     PrecioMaximo = x.PrecioMaximo,
                     Material = x.Material.Descripcion,
                     MonedaId = x.MonedaId
-                }, null, 0,"Material");
+                }, null, 0, "Material");
             }
             catch (Exception ex)
             {
@@ -286,7 +287,7 @@ namespace Molinos.DataAgro.Business
 
         public List<RolCombo> GetRolCombo()
         {
-            return repositorio.Listar<Rol,RolCombo>(x => new RolCombo { Id= x.Id,  Descripcion = x.Descripcion}).OrderBy(x => x.Descripcion).ToList();
+            return repositorio.Listar<Rol, RolCombo>(x => new RolCombo { Id = x.Id, Descripcion = x.Descripcion }).OrderBy(x => x.Descripcion).ToList();
         }
 
     }

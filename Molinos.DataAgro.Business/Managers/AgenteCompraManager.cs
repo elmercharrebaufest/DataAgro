@@ -177,12 +177,29 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarAgenteResult BorrarAgente(AgenteCompra oAgente)
         {
             var oEntityErrors = new GrabarAgenteResult();
-            var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
 
+            if (string.IsNullOrEmpty(oAgente.MotivoRechazo) || string.IsNullOrWhiteSpace(oAgente.MotivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+            var oContratoSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
+            oContratoSave.MotivoRechazo = oAgente.MotivoRechazo;
             if (oContratoSave.EstadoId != (int)EnumEstadoContrato.Rechazado && oContratoSave.EstadoId != (int)EnumEstadoContrato.Eliminado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
-
+                if (oContratoSave.Ampliaciones > 0)
+                {
+                    oContratoSave.Ampliaciones = 0;
+                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                    }
+                }
                 try
                 {
                     repositorio.GuardarCambios();
@@ -254,7 +271,8 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new Resultado();
 
             var contrato = repositorio.Obtener<AgenteCompra>(id);
-            if (contrato.EstadoId == (int)EnumEstadoContrato.Pendiente || contrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar) {
+            if (contrato.EstadoId == (int)EnumEstadoContrato.Pendiente || contrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+            {
                 contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
                 logger.Debug("Confirmando el Agente:" + id);
@@ -266,8 +284,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     logger.Error(ex);
                     throw;
-                } 
-            } 
+                }
+            }
             else
             {
                 oEntityErrors.Error("Confirmar", "El Agente no se puede confirmar");

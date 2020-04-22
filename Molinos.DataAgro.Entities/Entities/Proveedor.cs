@@ -77,6 +77,9 @@ namespace Molinos.DataAgro.Entities.Entities
         [InverseProperty("ProveedoresAsociados")]
         public virtual ICollection<Rol> RolesAsociados { get; set; }
 
+        [InverseProperty("Proveedor")]
+        public virtual ICollection<ProveedorComercial> ProveedorComercialAsociados { get; set; }
+
     }
 }
 

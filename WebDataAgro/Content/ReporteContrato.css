@@ -131,3 +131,6 @@ div > label {
     padding: 3px;
     font-weight: 700;
 }
+.toolbar {
+    float: right;
+}

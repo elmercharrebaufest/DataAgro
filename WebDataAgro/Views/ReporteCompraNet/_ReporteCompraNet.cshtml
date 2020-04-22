@@ -654,7 +654,7 @@
                 <tr class="titulos agente">
                     <th colspan="@(Model.AgenteCompras.ListaOperadores.Count + 3)">AGENTE DE COMPRA MAT</th>
                     <th style="display:inline-flex;">
-                        @Html.ActionLink("Descarga", "ExcelAgente", "ReporteCompraNet", new { fechaString = ViewBag.Fecha }, new { @class = "Descarga" })
+                        @Html.ActionLink("Descarga", "ExcelAgente", "ReporteCompraNet", new { fechaString = ViewBag.Fecha,materialId = ViewBag.Materiales }, new { @class = "Descarga" })
                         <a id="AbrirModalAgente" class="abrirModal" onclick="ModalAgenteCompras('@ViewBag.Fecha')">Ver</a>
                     </th>
                 </tr>

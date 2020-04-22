@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -28,7 +29,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
 
-        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial, 
+        public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
             IMailManager mailManager)
         {
@@ -650,6 +651,11 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "ENT. DESDE</th>" + Td(ref linea) + Split(oContrato.FechaDesde.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. HASTA</th>" + Td(ref linea) + Split(oContrato.FechaHasta.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "COSECHA</th>" + Td(ref linea) + oContrato.Campana.Descripcion.ToUpper() + "</td></tr>";
+            if (!String.IsNullOrEmpty(oContrato.ContratoMadre))
+            {
+                htmlBody += "<tr>" + th + "CONTRATO MADRE</th>" + Td(ref linea) + oContrato.ContratoMadre.ToUpper() + "</td></tr>";
+            }
+
             if (oContrato.BoletoId != null && oContrato.BoletoId != 3)
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + " " + oContrato.Bolsa.Descripcion.ToUpper() + "</td></tr>";
@@ -937,7 +943,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return td2;
             }
         }
-        
+
         public Resultado EliminarRecordatorio(int Id)
         {
             var oEntityErrors = new Resultado();
@@ -950,8 +956,12 @@ namespace Molinos.DataAgro.Business.Managers
             var DatosCombo = new DatosIniProveedor
             {
                 segm = repositorio.Listar<Segmentacion, SegmentacionQry>(
-                    x => new SegmentacionQry { SegmentacionId = x.SegmentacionId,
-                        Descripcion = x.Descripcion, Grupo = x.Grupo },
+                    x => new SegmentacionQry
+                    {
+                        SegmentacionId = x.SegmentacionId,
+                        Descripcion = x.Descripcion,
+                        Grupo = x.Grupo
+                    },
                     x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
                     && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores"),
                 tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
@@ -2766,10 +2776,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == id, x => x.CUIT);
         }
-        public GrabarProveedorResult GrabarRol(int id, List<Rol> roles)
+        public GrabarProveedorResult GrabarRol(int id, List<Rol> roles, List<Comercial> comerciales)
         {
             var resultado = new GrabarProveedorResult();
-            var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId ==id, x => x.CUIT);
+            var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == id, x => x.CUIT);
             var proveedores = repositorio.Listar<Proveedor>(x => x.CUIT == cuit);
 
             foreach (var proveedor in proveedores)
@@ -2792,6 +2802,33 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     resultado.Error("Roles", e.Message);
                 }
+
+
+
+                var listaComerciales = comerciales != null ? comerciales.Select(y => y.ComercialId).ToList() : new List<int>();
+                if (proveedor.ProveedorComercialAsociados != null)
+                {
+                    var asociados = proveedor.ProveedorComercialAsociados.ToList();
+                    foreach (var item in asociados)
+                    {
+                        repositorio.Remover(item);
+                    }
+
+                }
+                else
+                {
+                    proveedor.ProveedorComercialAsociados = new List<ProveedorComercial>();
+                }
+                var comercialesAsociados = repositorio.Listar<Comercial>(x => listaComerciales.Any(y => y == x.ComercialId));
+                proveedor.ProveedorComercialAsociados = comercialesAsociados.Select(x => new ProveedorComercial { ProveedorComercialId = 0, NroItem = 1, ProveedorId = proveedor.ProveedorId, ComercialId = x.ComercialId }).ToList();
+                try
+                {
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    resultado.Error("Comerciales", e.Message);
+                }
             }
             return resultado;
         }
@@ -2801,8 +2838,25 @@ namespace Molinos.DataAgro.Business.Managers
             var roles = repositorio.Obtener<Proveedor, ICollection<Rol>>(x => x.ProveedorId == id, x => x.RolesAsociados);
             return roles.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList();
         }
-        public bool ValidarDirecto(string cuit){
+        public bool ValidarDirecto(string cuit)
+        {
             return !repositorio.Existe<CorredorProveedor>(x => x.Corredor.CUIT == cuit);
+        }
+        public DataSourceResult BuscarDatosProveedor(DataSourceRequest request, List<int> equipo)
+        {
+            return repositorio.ObtenerConsultaEscalar(new BusquedaDatosProveedores(request, equipo));
+        }
+        public DataSourceResult BuscarDatosContacto(DataSourceRequest request, List<int> equipo)
+        {
+            return repositorio.ObtenerConsultaEscalar(new BusquedaContactosComercial(request, equipo));
+        }
+        public DataSourceResult BuscarDatosProduccion(DataSourceRequest request, List<int> equipo)
+        {
+            return repositorio.ObtenerConsultaEscalar(new BusquedaDatosProduccion(request, equipo));
+        }
+        public DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo)
+        {
+            return repositorio.ObtenerConsultaEscalar(new BusquedaDatosAlmacenamiento(request, equipo));
         }
     }
 }

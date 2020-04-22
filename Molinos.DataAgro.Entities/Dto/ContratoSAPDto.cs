@@ -63,6 +63,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal FleteTarifa { get; set; }
         public string FeDesdeFij { get; set; }
         public string FeHastaFij { get; set; }
+        public string ContratoCorredor { get; set; }
+
         public List<CalidadSAP> Calidad { get; set; }
         public List<DescuentoBonificacionSap> DescuentoBonificaciones { get; set; }
         public List<AperturaPrecioSap> Apertura { get; set; }

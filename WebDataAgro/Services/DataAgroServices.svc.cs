@@ -169,21 +169,7 @@ namespace WebDataAgro.Services
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
                 var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
-                logger.Debug("ActualizandoContrato1");
-
-                foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
-                {
-                    var calidad = new Calidad
-                    {
-                        NegocioId = Id,
-                        CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
-                        StandardDeCalidadId = standardCalidadList.FirstOrDefault(x => x.CodigoSap == cal.Codigo).Id,
-                        Valor = cal.Valor,
-                        PorcentajeDesde = cal.PorcentajeDesde,
-                        PorcentajeHasta = cal.PorcentajeHasta
-                    };
-                    calidades.Add(calidad);
-                }
+                
 
                 logger.Debug("ActualizandoContrato2");
 
@@ -303,12 +289,37 @@ namespace WebDataAgro.Services
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
                 contrato.Warrant = contratoSAP.AutCg == "X";
                 contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
+                logger.Debug("ActualizandoContrato calidades");
+
+                foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
+                {
+                    var calidad = new Calidad
+                    {
+                        NegocioId = Id,
+                        CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
+                        StandardDeCalidadId = contrato.StandardDeCalidadId??1,
+                        Valor = cal.Valor,
+                        PorcentajeDesde = cal.PorcentajeDesde,
+                        PorcentajeHasta = cal.PorcentajeHasta
+                    };
+                    calidades.Add(calidad);
+                }
                 contrato.Calidad = calidades;
                 contrato.AperturaPrecio = aperturas;
                 contrato.Descuentos = descuentos;
                 contrato.TipoNegocioId = 3;
                 contrato.ComercialId = 1;
                 contrato.Fecha = DateTime.Now;
+                contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
+
+                if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
+                {
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".",",")) });
+                }
+                if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
+                {
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) });
+                }
                 logger.Debug("ActualizandoContrato5");
                 Validar(contrato, oEntityErrors);
                 if (oEntityErrors.HayError)

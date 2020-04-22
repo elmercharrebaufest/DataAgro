@@ -34,6 +34,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Nombres { get; set; }                  
         public string PerDescripcion { get; set; }                    
         public string Rol { get; set; }
+        public string NombreCompleto { get { return Apellido.ToUpper() + " " + Nombres.ToUpper(); } }
+        public bool Disabled { get; set; }
     }
 
 }

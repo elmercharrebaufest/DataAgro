@@ -42,6 +42,16 @@
                         <select id="centroId" name="centroId"></select>
                     </span>
                 </div>
+                <div class="col-sm-1 noRightPadding">
+                    <label>Material</label>
+                </div>
+                <div class="col-sm-4 col-md-2">
+                    <span id="materialReporte">
+                        <select id="materialId" name="materialId"></select>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
                 <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
                 @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new { }, new { @class = "k-button k-button-icontext sideMargin-15", @id = "descargaReporte" })
             </div>

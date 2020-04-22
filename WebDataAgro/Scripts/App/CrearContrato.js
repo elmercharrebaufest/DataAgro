@@ -1093,7 +1093,7 @@ function InicializarElementos() {
 
     $("#cargarCantidadCamiones").change(function () {
         if ($("#cargarCantidadCamiones").is(':checked')) {
-            $("#cantidadId").data("kendoNumericTextBox").trigger("change");
+            //$("#cantidadId").data("kendoNumericTextBox").trigger("change");
         }
         else {
             $("#cantidadCamionesId").data("kendoNumericTextBox").value('');
@@ -1104,7 +1104,21 @@ function InicializarElementos() {
         culture: "es-AR",
         format: "n0",
         spinners: false,
-        min: 0
+        min: 0,
+        change: function () {
+            if ($("#cargarCantidadCamiones").is(':checked')) {
+                $("#cantidadId").data("kendoNumericTextBox").value(Math.ceil(this.value() * 30000));
+            }
+            if ($("#cantidadId").val() <= 30) {
+                $("#cantidadTooltip").tooltip({ title: 'Cantidad inferior a 30kg' });
+                $("#cantidadTooltip").tooltip('show');
+                $("#cantidadTooltip").click(function () {
+                    $("#cantidadTooltip").tooltip('destroy');
+                });
+            } else {
+                $("#cantidadTooltip").tooltip('destroy');
+            }
+        }
     });
     $("#precioId").kendoNumericTextBox({
         culture: "es-AR",
@@ -2334,6 +2348,21 @@ function GrabarContrato(nuevoContrato) {
     var result;
 
     if (nuevoContrato.TipoNegocioId == 1 || nuevoContrato.TipoNegocioId == 2) {
+        var cantidadCamiones = $("#cantidadCamionesId").data("kendoNumericTextBox").value();
+        var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
+        if (cantidadCamiones > 0) {
+            var cantidadCamionesNecesarios = Math.ceil(cantidad / 30000);
+            if (cantidadCamiones > cantidadCamionesNecesarios) {
+                MensErr("La cantidad de camiones ingresados es mayor a la necesaria");
+                $.unblockUI();
+                return;
+            }
+            if (cantidadCamiones < cantidadCamionesNecesarios) {
+                MensErr("La cantidad de camiones ingresados es menor a la necesaria");
+                $.unblockUI();
+                return;
+            }
+        }
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
@@ -2687,7 +2716,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     $("#destinoId").data("kendoDropDownList").value(contrato.DestinoId);
 
-   $("#destinoId").data("kendoDropDownList").trigger("change");
+    $("#destinoId").data("kendoDropDownList").trigger("change");
     if (contrato.CantidadCamiones != "null" && contrato.CantidadCamiones != undefined && contrato.CantidadCamiones != 0) {
         $("#cantidadCamionesId").data("kendoNumericTextBox").value(contrato.CantidadCamiones);
         $("#cargarCantidadCamiones").prop("checked", true);

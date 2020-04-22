@@ -1,0 +1,46 @@
+﻿@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Proveedores";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ReporteProveedores")
+}
+
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
+<style>
+    .tabla-result{
+        overflow-x:auto;
+    }
+</style>
+<div class="Titulo">
+    <h4> Proveedores </h4>
+    <br />
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#datos-proveedor">Datos de Proveedor</a></li>
+    <li><a data-toggle="tab" href="#datos-contacto">Datos de Contacto</a></li>
+    <li><a data-toggle="tab" href="#produccion">Produccion</a></li>
+    <li><a data-toggle="tab" href="#almacenamiento">Almacenamiento</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="datos-proveedor" class="tab-pane fade in active">
+            <div id="grid-datos-proveedor" class="tabla-result"></div>
+    </div>
+    <div id="datos-contacto" class="tab-pane fade">
+        <div class="table-responsive">
+            <div id="grid-datos-contacto" class="tabla-result"></div>
+        </div>
+    </div>
+    <div id="produccion" class="tab-pane fade">
+        <div id="grid-produccion" class="tabla-result"></div>
+    </div>
+    <div id="almacenamiento" class="tab-pane fade">
+        <div id="grid-almacenamiento" class="tabla-result"></div>
+    </div>
+</div>
+

@@ -117,6 +117,7 @@
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
+    <Compile Include="Dto\DatosReporteProveedor.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
     <Compile Include="Dto\EstadoCupoDto.cs" />
     <Compile Include="Dto\FilterObjectModif.cs" />

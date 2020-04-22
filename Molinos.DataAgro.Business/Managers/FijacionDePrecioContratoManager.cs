@@ -463,12 +463,29 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
+            if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
             var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
 
+            oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
             if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado)
             {
                 oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
-
+                if (oContratoSave.Ampliaciones > 0)
+                {
+                    oContratoSave.Ampliaciones = 0;
+                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                    }
+                }
                 try
                 {
                     repositorio.GuardarCambios();

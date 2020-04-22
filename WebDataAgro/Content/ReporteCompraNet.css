@@ -260,3 +260,6 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
 #agenteCompras td{
     font-size:12px;
 }
+.k-i-loading {
+    display: none;
+}
