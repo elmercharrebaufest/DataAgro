@@ -45,10 +45,11 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var acuerdo = new ContratoAcuerdo
             {
-                Id = 10
+                Id = 10,
+                MotivoRechazo = "test" 
             };
             repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
-                .Returns(new ContratoAcuerdo { Id = 1,Estado = new EstadoContrato{ EstadoContratoId=2 } , EstadoId=2});
+                .Returns(new ContratoAcuerdo { Id = 1,Estado = new EstadoContrato{ EstadoContratoId=2 } , EstadoId=2, MotivoRechazo = "test" });
             repositorioMock.Setup(x => x.Obtener<EstadoContrato>(It.IsAny<int>()))
                 .Returns(new EstadoContrato { EstadoContratoId = 6});
             var resultado = target.BorrarAcuerdo(acuerdo);

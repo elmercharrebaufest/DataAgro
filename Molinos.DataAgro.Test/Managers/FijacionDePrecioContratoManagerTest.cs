@@ -625,7 +625,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Id = 1,
                 EstadoId = (int)EnumEstadoContrato.Rechazado,
                 Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente },
-                Comercial = new Comercial { ComercialId = 1 }
+                Comercial = new Comercial { ComercialId = 1 },
+                MotivoRechazo = "test"
             };
 
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);

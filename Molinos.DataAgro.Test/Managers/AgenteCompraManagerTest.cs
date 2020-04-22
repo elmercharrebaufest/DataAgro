@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void BorrarAgenteTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 2, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1 };
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 2, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, MotivoRechazo = "test" };
 
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
                             .Returns(agente);
@@ -187,7 +187,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void BorrarAgenteTestError()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 6, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1 };
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 6, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, MotivoRechazo = "test" };
 
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
                             .Returns(agente);
