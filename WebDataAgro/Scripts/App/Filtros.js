@@ -130,16 +130,20 @@ function filtrosBusqSelectMultiple(listaDeFiltros) {
         }
         ($("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().length == 1) ? null : listaSeleccionados = $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().filter(function (x) { if (x == "") { return; } else { return x } });
 
-        console.log(filtroMultiselect[e].id, $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value(), listaSeleccionados.length);
-
-        if (listaSeleccionados.length > 0) {
+        let numberArray = $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().map(Number)
+        if (numberArray.length > 0) {
 
             let filtrosPorCadaValorSeleccionado = [];
-            listaSeleccionados.forEach(function (x) {
-                filtrosPorCadaValorSeleccionado.push(new FiltroHijo(filtroMultiselect[e].name, JSON.parse(x), "eq"));
+            numberArray.forEach(function (x) {
+                if (x > 0) {
+                    filtrosPorCadaValorSeleccionado.push(new FiltroHijo(filtroMultiselect[e].name, JSON.parse(x), "eq"));
+                }
             });
-            let FiltroDeMultiselect = new FiltroPadre("or", filtrosPorCadaValorSeleccionado);
-            listaDeFiltros.push(FiltroDeMultiselect);
+            if (filtrosPorCadaValorSeleccionado.length>0) {
+                let FiltroDeMultiselect = new FiltroPadre("or", filtrosPorCadaValorSeleccionado);
+                listaDeFiltros.push(FiltroDeMultiselect);
+            }
+            
         }
     });
 }

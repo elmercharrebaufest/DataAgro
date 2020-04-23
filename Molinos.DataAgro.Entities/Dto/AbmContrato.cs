@@ -56,22 +56,22 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Zona { get; set; }
         public string Nombre { get; set; }
         public string CUIT { get; set; }
+        public string Figura { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
-        public string Moneda { get; set; }
+        //public string Moneda { get; set; }
         public int? Camiones { get; set; }
-        public string Procedencia { get; set; }
+        public decimal? Comision { get; set; }
+        public decimal? PorcentajeBonificacion { get; set; }
+        public decimal? ImporteBonificacion { get; set; }
+        public string MonedaBonificacion { get; set; }
+        public string MesPosicion { get; set; }
+        public string Procedencia { get; set; }        
         public DateTime? Desde { get; set; }
         public DateTime? Hasta { get; set; }
         public string Cosecha { get; set; }
-        public string Observaciones { get; set; }
-        public decimal? Comision { get; set; }
-        public string Figura { get; set; }
-        public string MesPosicion { get; set; }
-        public string MonedaBonificacion { get; set; }
-        public decimal? ImporteBonificacion { get; set; }
-        public decimal? PorcentajeBonificacion { get; set; }
         public decimal? FleteProcedencia { get; set; }
+        public string Observaciones { get; set; }
     }
 }
 

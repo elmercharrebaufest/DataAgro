@@ -164,7 +164,7 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
-                var Id = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contratoSAP.ContratoSAP, x => x.Id);
+                var contratoOriginal = repositorio.Obtener<Contrato, Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP, x => x);
 
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
@@ -184,7 +184,7 @@ namespace WebDataAgro.Services
                     {
                         var descuento = new DescuentoBonificacion
                         {
-                            ContratoId = Id,
+                            ContratoId = contratoOriginal.Id,
                             FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             Importe = desc.Importe,
@@ -199,7 +199,7 @@ namespace WebDataAgro.Services
                     {
                         var precio = new PrecioPactado
                         {
-                            ContratoId = Id,
+                            ContratoId = contratoOriginal.Id,
                             FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             ImportePactado = desc.Importe,
@@ -218,10 +218,10 @@ namespace WebDataAgro.Services
                 var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
                 if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
                 {
-                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { NegocioId = Id, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
                 }
                 foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
                 {
@@ -295,7 +295,7 @@ namespace WebDataAgro.Services
                 {
                     var calidad = new Calidad
                     {
-                        NegocioId = Id,
+                        NegocioId = contratoOriginal.Id,
                         CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
                         StandardDeCalidadId = contrato.StandardDeCalidadId??1,
                         Valor = cal.Valor,
@@ -310,6 +310,8 @@ namespace WebDataAgro.Services
                 contrato.TipoNegocioId = 3;
                 contrato.ComercialId = 1;
                 contrato.Fecha = DateTime.Now;
+                contrato.ZonaId = contratoOriginal.ZonaId;
+                contrato.GrupoCompra = contratoOriginal.GrupoCompra;
                 contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
 
                 if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))

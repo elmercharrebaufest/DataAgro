@@ -2004,7 +2004,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Latitud = cam.latitud,
                                 Longitud = cam.longitud,
                                 Nombre = cam.nombre,
-                                ComercialId = cam.comercialId,
+                                ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
@@ -2047,7 +2047,7 @@ namespace Molinos.DataAgro.Business.Managers
                             campo.Latitud = mod.latitud;
                             campo.Longitud = mod.longitud;
                             campo.Nombre = mod.nombre;
-                            campo.ComercialId = mod.comercialId;
+                            campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId; 
                             campo.KMZfile = mod.archivoFileResult;
                             campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
@@ -2159,7 +2159,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Latitud = cam.latitud,
                                 Longitud = cam.longitud,
                                 Nombre = cam.nombre,
-                                ComercialId = cam.comercialId,
+                                ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
@@ -2216,7 +2216,7 @@ namespace Molinos.DataAgro.Business.Managers
                             acopio.Latitud = mod.latitud;
                             acopio.Longitud = mod.longitud;
                             acopio.Nombre = mod.nombre;
-                            acopio.ComercialId = mod.comercialId;
+                            acopio.ComercialId = mod.comercialId == 0 ? null: mod.comercialId;
                             acopio.KMZfile = mod.archivoFileResult;
                             acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;

@@ -115,7 +115,8 @@ function CreateGridDatosProveedor() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    eq: "Igual",
+                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -131,6 +132,26 @@ function CreateGridDatosProveedor() {
         }        
     });
 
+    var grid = $("#grid-datos-proveedor").data("kendoGrid");
+    grid.bind("filter", function (e) {
+        if (e.filter == null) {
+            console.log("filter has been cleared");
+        } else {
+            var newFilters = { ...e.filter };
+            newFilters.filters = new Array();
+            for (var i = 0; i < e.filter.filters.length; i++) {
+                if (e.filter.filters[i].field == "RazonSocial" || e.filter.filters[i].field == "Cuit") {
+                    newFilters.filters.push(e.filter.filters[i]);
+                }
+            }
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.read();
+            $("#grid-produccion").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-produccion").data("kendoGrid").dataSource.read();
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.read();
+        }
+    });
 }
 function CreateGridDatosContacto() {
     //kendo.ui.FilterMultiCheck.prototype.options.messages =
@@ -229,7 +250,8 @@ function CreateGridDatosContacto() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    eq: "Igual",
+                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -242,6 +264,27 @@ function CreateGridDatosContacto() {
                     lte: "Menor que o igual a"
                 }
             }
+        }
+    });
+
+    var grid = $("#grid-datos-contacto").data("kendoGrid");
+    grid.bind("filter", function (e) {
+        if (e.filter == null) {
+            console.log("filter has been cleared");
+        } else {
+            var newFilters = { ...e.filter };
+            newFilters.filters = new Array();
+            for (var i = 0; i < e.filter.filters.length; i++) {
+                if (e.filter.filters[i].field == "RazonSocial" || e.filter.filters[i].field == "Cuit") {
+                    newFilters.filters.push(e.filter.filters[i]);
+                }
+            }
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.read();
+            $("#grid-produccion").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-produccion").data("kendoGrid").dataSource.read();
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.read();
         }
     });
 
@@ -340,7 +383,8 @@ function CreateGridProduccion() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    eq: "Igual",
+                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -356,6 +400,26 @@ function CreateGridProduccion() {
         }
     });
 
+    var grid = $("#grid-produccion").data("kendoGrid");
+    grid.bind("filter", function (e) {
+        if (e.filter == null) {
+            console.log("filter has been cleared");
+        } else {
+            var newFilters = { ...e.filter };
+            newFilters.filters = new Array();
+            for (var i = 0; i < e.filter.filters.length; i++) {
+                if (e.filter.filters[i].field == "RazonSocial" || e.filter.filters[i].field == "Cuit") {
+                    newFilters.filters.push(e.filter.filters[i]);
+                }
+            }
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.read();
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.read();
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-almacenamiento").data("kendoGrid").dataSource.read();
+        }
+    });
 }
 function CreateGridAlmacenamiento() {
     //kendo.ui.FilterMultiCheck.prototype.options.messages =
@@ -454,7 +518,8 @@ function CreateGridAlmacenamiento() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    eq: "Igual",
+                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -470,4 +535,24 @@ function CreateGridAlmacenamiento() {
         }
     });
 
+    var grid = $("#grid-almacenamiento").data("kendoGrid");
+    grid.bind("filter", function (e) {
+        if (e.filter == null) {
+            console.log("filter has been cleared");
+        } else {
+            var newFilters = { ...e.filter };
+            newFilters.filters = new Array();
+            for (var i = 0; i < e.filter.filters.length; i++) {
+                if (e.filter.filters[i].field == "RazonSocial" || e.filter.filters[i].field == "Cuit") {
+                    newFilters.filters.push(e.filter.filters[i]);
+                }
+            }
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-contacto").data("kendoGrid").dataSource.read();
+            $("#grid-produccion").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-produccion").data("kendoGrid").dataSource.read();
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.filter(newFilters);
+            $("#grid-datos-proveedor").data("kendoGrid").dataSource.read();
+        }
+    });
 }

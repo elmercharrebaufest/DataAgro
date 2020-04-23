@@ -47,7 +47,6 @@ namespace Molinos.DataAgro.Report
                     Figura = x.ClasificacionDescripcion,
                     Cantidad = x.Cantidad,
                     Precio = x.PrecioNeto ?? x.Precio,
-                    Moneda = x.Moneda,
                     Camiones = x.CantidadCamiones,
                     Comision = x.PorcentajeComision,
                     PorcentajeBonificacion = x.PorcentajeBonificacion,

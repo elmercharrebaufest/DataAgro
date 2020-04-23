@@ -1009,7 +1009,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContrato.EstadoId = oContratoSave.EstadoId;
             oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
 
-            if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || (oContratoSave.Ampliaciones > 0 && oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)))
+            if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || (oContratoSave.Ampliaciones > 0 && oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)))
             {
 
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
