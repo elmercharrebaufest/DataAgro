@@ -69,6 +69,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialCreadorId = 1,
                 DestinoId = 1,
                 MaterialId = 1,
+                CampanaId = 1,
                 MonedaId = "a",
                 FechaHasta = new DateTime(2019, 08, 08)
             };
@@ -90,6 +91,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = 10,
                 ComercialCreadorId = 1,
                 DestinoId = 1,
+                CampanaId = 1,
                 MaterialId = 1,
                 MonedaId = "a",
                 FechaHasta = new DateTime(2019, 08, 08)
@@ -123,7 +125,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.GrabarAcuerdo(acuerdo);
 
             Assert.That(resultado.HayError);
-            Assert.AreEqual(7, resultado.Errores.Count);
+            Assert.AreEqual(8, resultado.Errores.Count);
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }

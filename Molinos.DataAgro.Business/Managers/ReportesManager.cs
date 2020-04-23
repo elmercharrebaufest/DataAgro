@@ -503,13 +503,14 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.Id,
                 TipoNegocioId = 6,
-                Campania = "17-18",
+                Campania = x.CampanaId != null ? x.Campana.Descripcion : "17-18",
+                CampaniaId = x.CampanaId ?? 0,
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round((double)x.Cantidad / 1000),
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round((double)x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round((double)x.Cantidad / 1000) : 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0) 
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0)
             && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var pricing = new List<PricingCampaniaDto>();
@@ -819,7 +820,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.MonedaId,
-
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
             },
                x => x.OcultarEnTablero == false
                && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
@@ -1733,7 +1735,7 @@ namespace Molinos.DataAgro.Business.Managers
             ReporteCompraNetHedgeTCPromedio TCPromedioDto = new ReporteCompraNetHedgeTCPromedio();
             List<ReporteCompraNetAgenteCompra> agenteCompras = new List<ReporteCompraNetAgenteCompra>();
             List<ReporteCompraNetPricingCampania> pricingCampania = new List<ReporteCompraNetPricingCampania>();
-            
+
             foreach (var posicion in result.PosicionCompras)
             {
                 foreach (var kilos in posicion.PosicionKilos)
@@ -1813,7 +1815,7 @@ namespace Molinos.DataAgro.Business.Managers
                         PrecioPonderado = agente.PrecioPonderado,
                         TipoAgente = agente.TipoAgenteDesc,
                         TipoAgenteId = agente.TipoAgenteId
-                        
+
                     });
                 }
 
