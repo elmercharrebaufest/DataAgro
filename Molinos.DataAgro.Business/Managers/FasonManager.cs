@@ -180,6 +180,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<Fason>(oFason.Id);
+            oFason.EstadoId = oContratoSave.EstadoId;
             oContratoSave.MotivoRechazo = oFason.MotivoRechazo;
             if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar 
@@ -187,11 +188,11 @@ namespace Molinos.DataAgro.Business.Managers
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error 
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
             {
-                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                 if (oContratoSave.Ampliaciones > 0)
                 {
                     oContratoSave.Ampliaciones = 0;
-                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    if (oFason.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                     }
@@ -257,6 +258,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFasonSave.Estado.EstadoContratoId <= (int)EnumEstadoContrato.Con_Error)
             {
                 oFasonSave.Ampliaciones = oFason.Ampliaciones.Value;
+                oFasonSave.EstadoId = (int)EnumEstadoContrato.Reconfirmar;
                 try
                 {
                     repositorio.GuardarCambios();

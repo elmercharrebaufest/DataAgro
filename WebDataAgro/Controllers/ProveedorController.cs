@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -164,9 +165,15 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Iniciliazar(int proveedorId)
         {
+            var datos = mobjProveedorManager.TraerDatosCombo(proveedorId, PermisosHelper.Is(PermisosDataAgro.FiltrarAdministrativo));
+
+            if (!PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+            {
+                datos.comercial = datos.comercial.Where(a => a.ComercialId == GlobalVariables.ComercialId).ToList();
+            }
             return new JsonResult()
             {
-                Data = mobjProveedorManager.TraerDatosCombo(proveedorId,  PermisosHelper.Is(PermisosDataAgro.FiltrarAdministrativo)),
+                Data = datos,
                 MaxJsonLength = Int32.MaxValue
             };
         }

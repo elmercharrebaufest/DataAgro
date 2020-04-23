@@ -15,14 +15,7 @@ namespace WebDataAgro.Models
         public Resultado Resultado { get; set; }
     }
 
-    public class HedgeMaterialModel
-    {
-        public int MaterialId { get; set; }
-        public string MaterialDescripcion { get; set; }
-        public decimal Disponible { get; set; }
-        public decimal Forward { get; set; }
-        public decimal NewCrop { get; set; }
-    }
+   
     public class HedgeObjetivoModel
     {
         public int MaterialId { get; set; }

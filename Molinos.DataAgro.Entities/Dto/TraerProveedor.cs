@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? CampañaId { get; set; }
         public string Campaña { get; set; }
         public Nullable<int> ProveedorId { get; set; }
-        public string Coordenadas { get; set; }
+        //public string Coordenadas { get; set; }
         public string KMZnombre { get; set; }
         public string KMZfile { get; set; }
 
@@ -173,6 +173,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? EsCampoProduccion { get; set; }
         public int Id { get; set; }
         public Nullable<bool> HasArrendadas { get; set; }
+
+        public string Latitud { get; set; }
+        public string Longitud { get; set; }
+        public string Nombre { get; set; }
+        public int? ComercialId { get; set; }
+        public string Comercial { get; set; }
+        public string Partido { get; set; }
     }
 
     public class CampoProduccionAcopioPorProveedor

@@ -116,6 +116,7 @@
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
+    <Compile Include="Dto\AgenteCompraModel.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\DatosReporteProveedor.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Dto\FilterObjectWrapperModif.cs" />
     <Compile Include="Dto\FiltroReporteCupoDto.cs" />
     <Compile Include="Dto\KendoGridMvcRequestModif.cs" />
+    <Compile Include="Dto\ReporteCompraNetModel.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />
@@ -259,6 +261,14 @@
     <Compile Include="Entities\CondicionPago.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />
     <Compile Include="Entities\Negocio.cs" />
+    <Compile Include="Entities\ReporteCompraNetAgenteCompra.cs" />
+    <Compile Include="Entities\ReporteCompraNetHedgeCargaObjetivo.cs" />
+    <Compile Include="Entities\ReporteCompraNetHedgeMaterial.cs" />
+    <Compile Include="Entities\ReporteCompraNetHedgeTCPromedio.cs" />
+    <Compile Include="Entities\ReporteCompraNetPosicionCompras.cs" />
+    <Compile Include="Entities\ReporteCompraNetPrecioCantidad.cs" />
+    <Compile Include="Entities\ReporteCompraNetPricingCampania.cs" />
+    <Compile Include="Entities\ReporteCompraNetSojaSustentable.cs" />
     <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />

@@ -151,6 +151,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.DesdeFijacion = oContratoAcuerdo.DesdeFijacion;
                 objContratoAcuerdo.HastaFijacion = oContratoAcuerdo.HastaFijacion;
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
+                objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
 
 
 
@@ -303,6 +304,10 @@ namespace Molinos.DataAgro.Business
 
         private void Validar(ContratoAcuerdo oContratoAcuerdo, GrabarAcuerdoResult oEntityErrors)
         {
+            if (oContratoAcuerdo.CampanaId == null || oContratoAcuerdo.CampanaId == 0)
+            {
+                oEntityErrors.Error("", "El campo 'Campaña' no debe estar vacio");
+            }
             if (oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
@@ -400,6 +405,8 @@ namespace Molinos.DataAgro.Business
             {
                 Id = x.Id,
                 Cantidad = x.Cantidad,
+                CampanaId = x.CampanaId ?? 0,
+                Campania = x.CampanaId == null ? "" : x.Campana.Descripcion,
                 Precio = x.Precio,
                 ComercialId = x.ComercialCreadorId,
                 MaterialId = x.MaterialId,

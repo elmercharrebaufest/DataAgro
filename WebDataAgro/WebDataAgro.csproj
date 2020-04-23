@@ -278,7 +278,6 @@
     <Compile Include="Models\AgendaModel.cs" />
     <Compile Include="Models\AreaInfluenciaModel.cs" />
     <Compile Include="Models\CanalOperacionModel.cs" />
-    <Compile Include="Models\AgenteCompraModel.cs" />
     <Compile Include="Models\ConfiguracionEspacioDinamicoModel.cs" />
     <Compile Include="Models\ConfiguracionInternaModel.cs" />
     <Compile Include="Models\ContratoAcuerdoModel.cs" />
@@ -306,7 +305,6 @@
     <Compile Include="Models\ProvinciaModel.cs" />
     <Compile Include="Models\HedgeModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
-    <Compile Include="Models\ReporteCompraNetModel.cs" />
     <Compile Include="Models\ConfiguracionCupoModel.cs" />
     <Compile Include="Models\ResearchModel.cs" />
     <Compile Include="Models\RolModel.cs" />

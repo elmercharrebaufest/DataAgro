@@ -1,5 +1,5 @@
 ﻿@using Molinos.DataAgro.Entities.Common.Enums
-@model WebDataAgro.Models.ReporteCompraNetModel
+@model Molinos.DataAgro.Entities.Dto.ReporteCompraNetModel
 
 @{
     var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar != 0));

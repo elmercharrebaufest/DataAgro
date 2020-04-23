@@ -283,6 +283,14 @@
     <Build Include="dbo\Tables\Negocio.sql" />
     <Build Include="dbo\Tables\PrecioPactado.sql" />
     <None Include="dbo\Deploys\202002.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetPosicionCompras.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetPrecioCantidad.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetSojaSustentable.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetHedgeTCPromedio.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetHedgeCargaObjetivo.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetHedgeMaterial.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetAgenteCompra.sql" />
+    <Build Include="dbo\Tables\ReporteCompraNetPricingCampania.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

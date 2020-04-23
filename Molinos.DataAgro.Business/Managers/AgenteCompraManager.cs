@@ -187,7 +187,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MotivoRechazo = oAgente.MotivoRechazo;
             if (oContratoSave.EstadoId != (int)EnumEstadoContrato.Rechazado && oContratoSave.EstadoId != (int)EnumEstadoContrato.Eliminado)
             {
-                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
                 if (oContratoSave.Ampliaciones > 0)
                 {
                     oContratoSave.Ampliaciones = 0;
@@ -199,6 +198,11 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
                     }
+                }
+                else
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+
                 }
                 try
                 {
@@ -242,7 +246,8 @@ namespace Molinos.DataAgro.Business.Managers
             var oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
 
             var oEntityErrors = new GrabarAgenteResult();
-            if (oHedgeManager.Dia().Cerrado ?? false)
+            var heedgeDia = oHedgeManager.Dia();
+            if (heedgeDia != null && (heedgeDia.Cerrado ?? false))
             {
                 oEntityErrors.Error("", "El Día de Operación ya se ha cerrado");
                 return oEntityErrors;
@@ -250,6 +255,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oAgenteSave.EstadoId <= (int)EnumEstadoContrato.Con_Error)
             {
                 oAgenteSave.Ampliaciones = oAgente.Ampliaciones.Value;
+                oAgenteSave.EstadoId = (int)EnumEstadoContrato.Reconfirmar;
                 try
                 {
                     repositorio.GuardarCambios();

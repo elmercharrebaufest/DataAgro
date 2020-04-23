@@ -1,0 +1,23 @@
+﻿CREATE TABLE [dbo].[ReporteCompraNetPosicionCompras] (
+ [Id]    INT           IDENTITY (1, 1) NOT NULL,    
+    [Material]         VARCHAR(50) NOT NULL,
+    [MaterialId]         int NOT NULL,
+    [Mes]         VARCHAR(50) NOT NULL,
+    [KilosPesos]         DECIMAL(11, 2) NOT NULL,
+    [KilosDolares]         DECIMAL(11, 2) NOT NULL,
+    [DispAFijar]         DECIMAL(11, 2) NOT NULL,
+    [DispAPrecio]         DECIMAL(11, 2) NOT NULL,
+    [DispFijac]         DECIMAL(11, 2) NOT NULL,
+    [FrwAFijar]         DECIMAL(11, 2) NOT NULL,
+    [FrwAPrecio]         DECIMAL(11, 2) NOT NULL,
+    [FrwFijac]         DECIMAL(11, 2) NOT NULL,
+    [NewAFijar]         DECIMAL(11, 2) NOT NULL,
+    [NewAPrecio]         DECIMAL(11, 2) NOT NULL,
+    [NewFijac]         DECIMAL(11, 2) NOT NULL,
+    [Anio]         int,
+    [PrecioPonderadoPesos]         DECIMAL(11, 2) ,
+    [PrecioPonderadoDolares]         DECIMAL(11, 2) ,
+    [CantidadPonderada]         DECIMAL(11, 2) ,
+	    CONSTRAINT [PK_ReporteCompraNetPosicionCompras] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+

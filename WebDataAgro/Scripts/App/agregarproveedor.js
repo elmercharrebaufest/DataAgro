@@ -165,18 +165,18 @@ function buscarLocalidadProduccion(val) {
 }
 
 function buscarLocalidadAlmacenamiento(val) {
-    var data = { Id: val };
-    var result = MSExecuteOnServer('/Proveedor/TraerLocalidad', data);
-    $(".campo-localidad-almacenamiento").empty();
-    var htmlLocalidadAlmacenamiento = "";
-    htmlLocalidadAlmacenamiento += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-almacenamiento">';
-    for (var ii in result) {
-        (function (i) {
-            htmlLocalidadAlmacenamiento += '<option value="' + result[i].LocalidadId + '">' + result[i].Nombre + '</option>';
-        })(ii);
-    }
-    htmlLocalidadAlmacenamiento += '</select>';
-    $(".campo-localidad-almacenamiento").append(htmlLocalidadAlmacenamiento);
+    //var data = { Id: val };
+    //var result = MSExecuteOnServer('/Proveedor/TraerLocalidad', data);
+    //$(".campo-localidad-almacenamiento").empty();
+    //var htmlLocalidadAlmacenamiento = "";
+    //htmlLocalidadAlmacenamiento += '<select  class="" id="localidad-almacenamiento">';
+    //for (var ii in result) {
+    //    (function (i) {
+    //        htmlLocalidadAlmacenamiento += '<option value="' + result[i].LocalidadId + '">' + result[i].Nombre + '</option>';
+    //    })(ii);
+    //}
+    //htmlLocalidadAlmacenamiento += '</select>';
+    //$(".campo-localidad-almacenamiento").append(htmlLocalidadAlmacenamiento);
 }
 
 function buscarLocalidadCompraNet(val) {
@@ -383,27 +383,41 @@ function armarSelects(result) {
         armarSelectGrano(obj);
     });
 
-    var htmlProvinciaProduccion = "";
-    htmlProvinciaProduccion += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-produccion">';
-    htmlProvinciaProduccion += '<option value = "null">Seleccione...</option>';
-    for (ii in result.prov) {
+    var htmlComercialProduccion = "";
+    htmlComercialProduccion += '<select class="campo-input-select" id="comercial-produccion">';
+    if (modificarDatosCampos) {
+        htmlComercialProduccion += '<option value = "null">Seleccione...</option>';
+    }
+    for (ii in result.comercial) {
         (function (i) {
-            htmlProvinciaProduccion += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
+            htmlComercialProduccion += '<option value="' + result.comercial[i].ComercialId + '">' + result.comercial[i].NombreCompleto + '</option>';
         })(ii);
     }
-    htmlProvinciaProduccion += '</select>';
-    $(".campo-provincia-produccion").append(htmlProvinciaProduccion);
+    htmlComercialProduccion += '</select>';
+    $("#divComercialProduccion").append(htmlComercialProduccion);
 
-    var htmlLocalidadProduccion = "";
-    htmlLocalidadProduccion += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-produccion">';
-    htmlLocalidadProduccion += '<option value = "null">Seleccione...</option>';
-    for (ii in result.loc) {
+    var htmlComercialAlmacenamiento = "";
+    htmlComercialAlmacenamiento += '<select class="campo-input-select" id="comercial-almacenamiento">';
+    if (modificarDatosCampos) {
+        htmlComercialAlmacenamiento += '<option value = "null">Seleccione...</option>';
+    }
+    for (ii in result.comercial) {
         (function (i) {
-            htmlLocalidadProduccion += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
+            htmlComercialAlmacenamiento += '<option value="' + result.comercial[i].ComercialId + '">' + result.comercial[i].NombreCompleto + '</option>';
         })(ii);
     }
-    htmlLocalidadProduccion += '</select>';
-    $(".campo-localidad-produccion").append(htmlLocalidadProduccion);
+    htmlComercialAlmacenamiento += '</select>';
+    $("#divComercialAlmacenamiento").append(htmlComercialAlmacenamiento);
+    //var htmlLocalidadProduccion = "";
+    //htmlLocalidadProduccion += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-produccion">';
+    //htmlLocalidadProduccion += '<option value = "null">Seleccione...</option>';
+    //for (ii in result.loc) {
+    //    (function (i) {
+    //        htmlLocalidadProduccion += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
+    //    })(ii);
+    //}
+    //htmlLocalidadProduccion += '</select>';
+    //$(".campo-localidad-produccion").append(htmlLocalidadProduccion);
 
     var htmlCampañaGranoAlmacenamiento = "";
     htmlCampañaGranoAlmacenamiento += '<select class="campo-input-select campo-sin-span grano" id="campañaAlmacenamiento0">';
@@ -508,27 +522,27 @@ function armarSelects(result) {
         }
     });
 
-    var htmlProvinciaAlmacenamiento = "";
-    htmlProvinciaAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-almacenamiento">';
-    htmlProvinciaAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    for (ii in result.prov) {
-        (function (i) {
-            htmlProvinciaAlmacenamiento += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
-        })(ii);
-    }
-    htmlProvinciaAlmacenamiento += '</select>';
-    $(".campo-provincia-almacenamiento").append(htmlProvinciaAlmacenamiento);
+    //var htmlProvinciaAlmacenamiento = "";
+    //htmlProvinciaAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="provincia-almacenamiento">';
+    //htmlProvinciaAlmacenamiento += '<option value = "null">Seleccione...</option>';
+    //for (ii in result.prov) {
+    //    (function (i) {
+    //        htmlProvinciaAlmacenamiento += '<option value="' + result.prov[i].Provinciaid + '">' + result.prov[i].Nombre + '</option>';
+    //    })(ii);
+    //}
+    //htmlProvinciaAlmacenamiento += '</select>';
+    //$(".campo-provincia-almacenamiento").append(htmlProvinciaAlmacenamiento);
 
-    var htmlLocalidadAlmacenamiento = "";
-    htmlLocalidadAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="localidad-almacenamiento">';
-    htmlLocalidadAlmacenamiento += '<option value = "null">Seleccione...</option>';
-    for (ii in result.loc) {
-        (function (i) {
-            htmlLocalidadAlmacenamiento += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
-        })(ii);
-    }
-    htmlLocalidadAlmacenamiento += '</select>';
-    $(".campo-localidad-almacenamiento").append(htmlLocalidadAlmacenamiento);
+    //var htmlLocalidadAlmacenamiento = "";
+    //htmlLocalidadAlmacenamiento += '<select class="campo-input-select campo-sin-span-produccion" id="localidad-almacenamiento">';
+    //htmlLocalidadAlmacenamiento += '<option value = "null">Seleccione...</option>';
+    //for (ii in result.loc) {
+    //    (function (i) {
+    //        htmlLocalidadAlmacenamiento += '<option value="' + result.loc[i].LocalidadId + '">' + result.loc[i].Nombre + '</option>';
+    //    })(ii);
+    //}
+    //htmlLocalidadAlmacenamiento += '</select>';
+    //$(".campo-localidad-almacenamiento").append(htmlLocalidadAlmacenamiento);
 
     var htmlProvinciaCompraNet = "";
     htmlProvinciaCompraNet += '<select class="campo-input-select" id="provincia-compranet">';
@@ -839,26 +853,31 @@ function armarSelects(result) {
         obj.CampoId = $("#campoid").val();
 
         //if (!$("#kmz").val()) {
-            if ($("#provincia-produccion").val() == "null") {
-                MensErr("Debe ingresar una provincia");
-                return false;
-            } else {
-                obj.provincia = $("#provincia-produccion").val();
-                obj.provinciaNom = $("#provincia-produccion option:selected").text();
-            }
+        //if ($("#provincia-produccion").val() == "null") {
+        //    MensErr("Debe ingresar una provincia");
+        //    return false;
+        //} else {
+        //    obj.provincia = $("#provincia-produccion").val();
+        //    obj.provinciaNom = $("#provincia-produccion option:selected").text();
+        //}
         //}
 
         //if (!$("#kmz").val()) {
-            if ($("#localidad-produccion").val() == "null") {
-                MensErr("Debe ingresar una localidad");
-                return false;
-            } else {
-                obj.localidad = $("#localidad-produccion").val();
-                obj.localidadNom = $("#localidad-produccion option:selected").text();
-            }
+        if ($("#localidadId-produccion").val() == "") {
+            MensErr("Debe ingresar una localidad");
+            return false;
+        } else {
+            obj.localidad = $("#localidadId-produccion").val();
+            obj.localidadNom = $("#localidad-produccion").val()
+            obj.partido = $("#partido-produccion").val();
+        }
         //}
 
-        obj.coordenadas = $("#coordenadas").val();
+        obj.latitud = $("#coordenadas-latitud-produccion").val();
+        obj.longitud = $("#coordenadas-longitud-produccion").val();
+        obj.nombre = $("#campo-nombre-produccion").val();
+        obj.comercialId = $("#comercial-produccion").val();
+        obj.comercialNom = $("#comercial-produccion option:selected").text();
 
         if ($("#hectareas-arrendadas").is(":checked")) {
             obj.hectareas = $("#hectareas-arrendadas").prop("value");
@@ -910,7 +929,7 @@ function armarSelects(result) {
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor' + capProdCant + '">'
             + '<div>'
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
-            + obj.provinciaNom + ", " + obj.localidadNom
+            + obj.localidadNom + " - " + obj.partido
             + '</div>'
             + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
@@ -921,7 +940,10 @@ function armarSelects(result) {
             + '</div>'
             + '<div>'
             + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-            + '(Has ' + (obj.hectareasNom ? obj.hectareasNom : "no especificadas") + ')'
+            + (obj.nombre!="" ? ('<b>Nombre</b>: ' + obj.nombre) :"")
+            + (obj.latitud != "" && obj.longitud != ""?(' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud):"")
+            + (obj.comercialId >0 ? ' <b>Comercial</b>:' + obj.comercialNom:"")
+            + ' <b>Hectareas: </b>(Has ' + (obj.hectareasNom ? obj.hectareasNom : "no especificadas") + ')'
             + '</div>'
             + '<div class="granos-contenedor">';
 
@@ -941,9 +963,12 @@ function armarSelects(result) {
         html += '</div>'
             + '</div>';
 
-        $("#coordenadas").val("");
-        $("#provincia-produccion").val("null");
-        $("#localidad-produccion").val("null");
+        $("#localidadId-produccion").val("");
+        $("#localidad-produccion").val("");
+        $("#coordenadas-latitud-produccion").val("");
+        $("#coordenadas-longitud-produccion").val("");
+        $("#campo-nombre-produccion").val("");
+        $("#partido-produccion").val("");
         $("#hectareas-arrendadas").prop('checked', false);
         $("#hectareas-propias").prop('checked', false);
         $("#campoid").val(0);
@@ -979,29 +1004,24 @@ function armarSelects(result) {
         obj.item = capProdCantAlmacenamiento;
         obj.CampoId = $("#campo-almacenamientoid").val();
 
-        //if (!$("#kmz-almacenamiento").val()) {
-            if ($("#provincia-almacenamiento").val() == "null") {
-                MensErr("Debe ingresar una provincia");
-                return false;
-            } else {
-                obj.provincia = $("#provincia-almacenamiento").val();
-                obj.provinciaNom = $("#provincia-almacenamiento option:selected").text();
-            }
-        //}
 
         //if (!$("#kmz-almacenamiento").val()) {
-            if ($("#localidad-almacenamiento").val() == "null") {
-                MensErr("Debe ingresar una localidad");
-                return false;
-            } else {
-                obj.localidad = $("#localidad-almacenamiento").val();
-                obj.localidadNom = $("#localidad-almacenamiento option:selected").text();
-            }
+        if ($("#localidadId-almacenamiento").val() == "null") {
+            MensErr("Debe ingresar una localidad");
+            return false;
+        } else {
+            obj.localidad = $("#localidadId-almacenamiento").val();
+            obj.localidadNom = $("#localidad-almacenamiento").val()
+            obj.partido = $("#partido-almacenamiento").val();
+        }
         //}
 
-        if ($("#coordenadas-almacenamiento").val())
-            obj.coordenadasAlmacenamiento = $("#coordenadas-almacenamiento").val();
-
+        obj.latitud = $("#coordenadas-latitud-almacenamiento").val();
+        obj.longitud = $("#coordenadas-longitud-almacenamiento").val();
+        obj.nombre = $("#campo-nombre-almacenamiento").val();
+        obj.comercialId = $("#comercial-almacenamiento").val();
+        obj.comercialNom = $("#comercial-almacenamiento option:selected").text();
+                
         obj.granosAlmacenamiento = [];
 
         for (var i = 0; i < (cantGranoAlmacenamiento + 1); i++) {
@@ -1055,7 +1075,7 @@ function armarSelects(result) {
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedoralmacenamiento' + capProdCantAlmacenamiento + '">'
             + '<div>'
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
-            + obj.provinciaNom + ", " + obj.localidadNom
+            + obj.localidadNom + " - " + obj.partido
             + '</div>'
             + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
@@ -1065,6 +1085,11 @@ function armarSelects(result) {
             + '</div>'
             + '</div>'
             + '<div>'
+            + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+            + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+            + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+            + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+            + '</div>'
             + '<div class="granos-contenedor">';
 
         for (var jj in obj.granosAlmacenamiento) {
@@ -1095,9 +1120,14 @@ function armarSelects(result) {
 
         html += '</div>'
             + '</div>';
-        $("#coordenadas-almacenamiento").val("");
-        $("#provincia-almacenamiento").val("null");
-        $("#localidad-almacenamiento").val("null");
+
+        $("#localidadId-almacenamiento").val("");
+        $("#localidad-almacenamiento").val("");
+        $("#coordenadas-latitud-almacenamiento").val("");
+        $("#coordenadas-longitud-almacenamiento").val("");
+        $("#campo-nombre-almacenamiento").val("");
+        $("#partido-almacenamiento").val("");
+
         for (i = cantGranoAlmacenamiento; i > 0; i--) {
             $(".lineaAlmacenamiento" + i).remove();
         }
@@ -1184,10 +1214,20 @@ function editarCampoProduccion(id) {
     });
     obj = obj[0];
 
-    $("#coordenadas").val(obj.coordenadas ? obj.coordenadas : "");
-    $("#provincia-produccion").val(obj.provincia ? obj.provincia : "null");
-    $("#provincia-produccion").trigger("change");
-    $("#localidad-produccion").val(obj.localidad ? obj.localidad : "null");
+    $("#localidadId-produccion").val(obj.localidad);
+    $("#localidad-produccion").val(obj.localidadNom);
+    $("#coordenadas-latitud-produccion").val(obj.latitud);
+    $("#coordenadas-longitud-produccion").val(obj.longitud);
+    $("#campo-nombre-produccion").val(obj.nombre);
+    $("#partido-produccion").val(obj.partido);
+    $("#comercial-produccion").val(obj.comercialId);
+    //obj.comercialNom = $("#comercial-produccion option:selected").text();
+
+
+    //$("#coordenadas").val(obj.coordenadas ? obj.coordenadas : "");
+    //$("#provincia-produccion").val(obj.provincia ? obj.provincia : "null");
+    //$("#provincia-produccion").trigger("change");
+    //$("#localidad-produccion").val(obj.localidad ? obj.localidad : "null");
     if (obj.hectareas == 1) {
         $("#hectareas-propias").prop('checked', true);
     } else if (obj.hectareas == 0) {
@@ -1268,10 +1308,13 @@ function editarAlmacenamiento(id) {
     });
     obj = obj[0];
 
-    $("#coordenadas-almacenamiento").val(obj.coordenadasAlmacenamiento ? obj.coordenadasAlmacenamiento : "");
-    $("#provincia-almacenamiento").val(obj.provincia ? obj.provincia : "null");
-    $("#provincia-almacenamiento").trigger("change");
-    $("#localidad-almacenamiento").val(obj.localidad ? obj.localidad : "null");
+    $("#localidadId-almacenamiento").val(obj.localidad);
+    $("#localidad-almacenamiento").val(obj.localidadNom);
+    $("#coordenadas-latitud-almacenamiento").val(obj.latitud);
+    $("#coordenadas-longitud-almacenamiento").val(obj.longitud);
+    $("#campo-nombre-almacenamiento").val(obj.nombre);
+    $("#partido-almacenamiento").val(obj.partido);
+    $("#comercial-almacenamiento").val(obj.comercialId);
 
     if (obj.archivo) {
         $(".label-field .almacenamiento").html("Archivo Subido");
@@ -2324,8 +2367,118 @@ function InicializarDatos() {
     if (result != null) {
         resultGranos = result.gran;
         armarSelects(result);
+        AutocompleteProcedenciaProduccion();
+        AutocompleteProcedenciaAlmacenamiento();
     }
 }
+
+function AutocompleteProcedenciaAlmacenamiento() {
+    $("#localidad-almacenamiento").click(function () {
+        $("#localidad-almacenamiento").data("kendoAutoComplete").value("");
+        $("#localidad-almacenamiento").trigger("change");
+        if ($("#localidad-almacenamiento").val() == "") {
+            $("#partido-almacenamiento").val('');
+            $("#localidadId-almacenamiento").val("");
+        }
+    });
+
+    $("#localidad-almacenamiento").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        clearButton: false,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function () {
+            if ($("#localidad-almacenamiento").val().split('|').length > 1) {
+                $("#localidad-almacenamiento").val($("#localidad-almacenamiento").val().split('|')[1]);
+
+            }
+
+        },
+        select: function (e) {
+            $("#partido-almacenamiento").val(e.dataItem.Partido);
+            $("#localidadId-almacenamiento").val(e.dataItem.Id);
+            $("#LocalidadNombre-almacenamiento").val(e.dataItem.Localidad);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#localidad-almacenamiento').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+    $("#localidad-almacenamiento").css("width", "100%");
+}
+
+function AutocompleteProcedenciaProduccion() {
+    $("#localidad-produccion").click(function () {
+        $("#localidad-produccion").data("kendoAutoComplete").value("");
+        $("#localidad-produccion").trigger("change");
+        if ($("#localidad-produccion").val() == "") {
+            $("#partido-produccion").val('');
+            $("#localidadId-produccion").val("");
+        }
+    });
+
+    $("#localidad-produccion").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        clearButton: false,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function () {
+            if ($("#localidad-produccion").val().split('|').length > 1) {
+                $("#localidad-produccion").val($("#localidad-produccion").val().split('|')[1]);
+
+            }
+
+        },
+        select: function (e) {
+            $("#partido-produccion").val(e.dataItem.Partido);
+            $("#localidadId-produccion").val(e.dataItem.Id);
+            $("#LocalidadNombre-produccion").val(e.dataItem.Localidad);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#localidad-produccion').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+    $("#localidad-produccion").css("width", "100%");
+
+}
+
 
 function ObtenerDatos() {
     if ($("#concom-nombre").val() !== ""
@@ -2448,7 +2601,7 @@ function recalcularSegmentacion() {
     var tonsMaxProduccion = 0;
     $("#grano0 option").each(function () {
         if (this.value != null) {
-            maxCampaña.push( { granoId: this.value, campañaId: 0 });
+            maxCampaña.push({ granoId: this.value, campañaId: 0 });
         }
 
     });

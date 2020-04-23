@@ -26,9 +26,14 @@ BEGIN
 		EsCampoProduccion bit,
 		Id int,
 		HasArrendadas bit,
-		Coordenadas varchar(50),
 		KMZnombre varchar(500),
-		KMZfile nvarchar(4000)
+		KMZfile nvarchar(4000),
+		Latitud varchar(500),
+		Longitud varchar(500),
+		Nombre varchar(500),
+		ComercialId int,
+		Comercial varchar(500),
+		Partido varchar(500)
 	)
 	
 	INSERT INTO @CampoAcopio
@@ -51,14 +56,21 @@ BEGIN
 		1,
 		C.CampoId,
 		0,
-		C.Coordenadas,
 		C.KMZnombre,
-		c.KMZfile
+		c.KMZfile,
+		C.Latitud,
+		C.Longitud,
+		C.Nombre,
+		C.ComercialId,
+		COM.Apellido + ' ' +COM.Nombres as Comercial,
+		Pa.Descripcion as Partido
 	FROM Campo C
 	INNER JOIN Proveedor PR ON C.ProveedorId = PR.ProveedorId
 	LEFT JOIN CampoMaterial CM ON CM.CampoId = C.CampoId
+	LEFT JOIN Comercial COM ON COM.ComercialId = C.ComercialId
 	LEFT JOIN Localidad L ON L.LocalidadId = C.LocalidadId
 	LEFT JOIN Provincia P ON P.ProvinciaId = L.ProvinciaId
+	LEFT JOIN Partido PA ON PA.Id = L.PartidoId
 	LEFT JOIN Material M ON M.MaterialId = CM.MaterialId
 	LEFT JOIN Campaña CAM ON CAM.CampañaId = CM.CampañaId
 	WHERE C.ProveedorId = @ProveedorId
@@ -83,14 +95,21 @@ BEGIN
 		0,
 		A.AcopioId,
 		AM.HasArrendadas,
-		A.Coordenadas,
 		A.KMZnombre,
-		A.KMZfile
+		A.KMZfile,
+		A.Latitud,
+		A.Longitud,
+		A.Nombre,
+		A.ComercialId,
+		COM.Apellido + ' ' +COM.Nombres as Comercial,
+		Pa.Descripcion as Partido
 	FROM Acopio A
 	INNER JOIN Proveedor PR ON A.ProveedorId = PR.ProveedorId
 	LEFT JOIN AcopioCampaña AM ON AM.AcopioId = A.AcopioId
+	LEFT JOIN Comercial COM ON COM.ComercialId = A.ComercialId
 	LEFT JOIN Localidad L ON L.LocalidadId = a.LocalidadId
 	LEFT JOIN Provincia P ON P.ProvinciaId = L.ProvinciaId
+	LEFT JOIN Partido PA ON PA.Id = L.PartidoId
 	LEFT JOIN Campaña CAM ON CAM.CampañaId = AM.CampañaId
 	WHERE A.ProveedorId = @ProveedorId
 
@@ -113,9 +132,14 @@ BEGIN
 		EsCampoProduccion,
 		Id,
 		HasArrendadas,
-		Coordenadas,
 		KMZnombre,
-		KMZfile
+		KMZfile,
+		isnull(Latitud,'') Latitud,
+		isnull(Longitud,'') Longitud,
+		isnull(Nombre,'') Nombre,
+		isnull(ComercialId,'') ComercialId,
+		isnull(Comercial,'') Comercial,
+		Partido
 	FROM @CampoAcopio	
     
 END

@@ -26,6 +26,12 @@ function InicializarEdit() {
         armarAlmacenamiento(acopio, acopiomaterial);
         armarObjetivos(objetivo);
     }
+    if (modificarDatosCampos) {
+        $("#contacto").hide();
+        $("#contactocomercial").hide();
+        $("#proveedores-corredor").hide();
+        $("#produccion").click();
+    }
 }
 
 function armarBasico(basico) {
@@ -265,9 +271,6 @@ function armarProduccion(campoacopio) {
 
     for (var ii in campoacopio) {
         (function (i) {
-            var obj = {};
-            obj.provincia = campoacopio[i].Provincia;
-            obj.localidad = campoacopio[i].Localidad;
 
             grupocampoacopio["Campo" + campoacopio[i].Id] = grupocampoacopio["Campo" + campoacopio[i].Id] || {};
 
@@ -277,9 +280,13 @@ function armarProduccion(campoacopio) {
             grupocampoacopio["Campo" + campoacopio[i].Id].CampoId = campoacopio[i].Id;
             grupocampoacopio["Campo" + campoacopio[i].Id].Localidad = campoacopio[i].Localidad;
             grupocampoacopio["Campo" + campoacopio[i].Id].Provincia = campoacopio[i].Provincia;
+            grupocampoacopio["Campo" + campoacopio[i].Id].Partido = campoacopio[i].Partido;
             grupocampoacopio["Campo" + campoacopio[i].Id].LocalidadId = campoacopio[i].LocalidadId;
             grupocampoacopio["Campo" + campoacopio[i].Id].ProvinciaId = campoacopio[i].ProvinciaId;
-            grupocampoacopio["Campo" + campoacopio[i].Id].Coordenadas = campoacopio[i].Coordenadas;
+            grupocampoacopio["Campo" + campoacopio[i].Id].latitud = campoacopio[i].Latitud;
+            grupocampoacopio["Campo" + campoacopio[i].Id].longitud = campoacopio[i].Longitud;
+            grupocampoacopio["Campo" + campoacopio[i].Id].nombre = campoacopio[i].Nombre;
+            grupocampoacopio["Campo" + campoacopio[i].Id].comercialId = campoacopio[i].ComercialId;
             grupocampoacopio["Campo" + campoacopio[i].Id].Granos = grupocampoacopio["Campo" + campoacopio[i].Id].Granos || [];
             grupocampoacopio["Campo" + campoacopio[i].Id].Granos.push({
                 HectareasPorcentaje: campoacopio[i].HectareasPorcentaje,
@@ -297,21 +304,24 @@ function armarProduccion(campoacopio) {
         (function (i) {
             var obj = {};
 
-            console.log("asdasdf", obj);
-
             obj.item = capProdCant;
 
-            obj.provincia = grupocampoacopio[0][i].ProvinciaId;
-            obj.provinciaNom = grupocampoacopio[0][i].Provincia;
+            //obj.provincia = grupocampoacopio[0][i].ProvinciaId;
+            //obj.provinciaNom = grupocampoacopio[0][i].Provincia;
 
             obj.localidad = grupocampoacopio[0][i].LocalidadId;
-            obj.localidadNom = grupocampoacopio[0][i].Localidad;
+            obj.localidadNom = grupocampoacopio[0][i].Localidad + "(" + grupocampoacopio[0][i].Provincia + ")";
+
+            obj.partido = grupocampoacopio[0][i].Partido;
 
             obj.archivo = grupocampoacopio[0][i].KMZnombre;
 
             obj.archivoFileResult = grupocampoacopio[0][i].KMZfile;
 
-            obj.coordenadas = grupocampoacopio[0][i].Coordenadas;
+            obj.latitud = grupocampoacopio[0][i].latitud;
+            obj.longitud = grupocampoacopio[0][i].longitud;
+            obj.nombre = grupocampoacopio[0][i].nombre;
+            obj.comercialId = grupocampoacopio[0][i].comercialId;
 
             obj.CampoId = grupocampoacopio[0][i].CampoId;
 
@@ -323,7 +333,7 @@ function armarProduccion(campoacopio) {
             html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor' + capProdCant + '">'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
-                + grupocampoacopio[0][i].Provincia + ", " + grupocampoacopio[0][i].Localidad
+                + obj.localidadNom + " - " + obj.partido
                 + '</div>'
                 + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
@@ -334,6 +344,9 @@ function armarProduccion(campoacopio) {
                 + '</div>'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
                 + '(Has ' + (grupocampoacopio[0][i].ArrendadoPropio == true ? "Propias" : grupocampoacopio[0][i].ArrendadoPropio === false ? "Arrendadas" : "no especificadas") + ')'
                 + '</div>'
                 + '<div class="granos-contenedor">';
@@ -398,9 +411,13 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             grupoacopio["Acopio" + acopio[i].Id].CampoId = acopio[i].Id;
             grupoacopio["Acopio" + acopio[i].Id].Localidad = acopio[i].Localidad;
             grupoacopio["Acopio" + acopio[i].Id].Provincia = acopio[i].Provincia;
+            grupoacopio["Acopio" + acopio[i].Id].Partido = acopio[i].Partido;
             grupoacopio["Acopio" + acopio[i].Id].LocalidadId = acopio[i].LocalidadId;
             grupoacopio["Acopio" + acopio[i].Id].ProvinciaId = acopio[i].ProvinciaId;
-            grupoacopio["Acopio" + acopio[i].Id].Coordenadas = acopio[i].Coordenadas;
+            grupoacopio["Acopio" + acopio[i].Id].latitud = acopio[i].Latitud;
+            grupoacopio["Acopio" + acopio[i].Id].longitud = acopio[i].Longitud;
+            grupoacopio["Acopio" + acopio[i].Id].nombre = acopio[i].Nombre;
+            grupoacopio["Acopio" + acopio[i].Id].comercialId = acopio[i].ComercialId;
             grupoacopio["Acopio" + acopio[i].Id].Granos = grupoacopio["Acopio" + acopio[i].Id].Granos || [];
             grupoacopio["Acopio" + acopio[i].Id].Granos.push({
                 HectareasPorcentaje: acopio[i].HectareasPorcentaje,
@@ -431,8 +448,6 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
 
     grupoacopio = [grupoacopio];
 
-    console.log("GURpo", grupoacopio);
-
     for (ii in grupoacopio[0]) {
         (function (i) {
             var obj = {};
@@ -441,16 +456,20 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             obj.item = capProdCantAlmacenamiento;
 
             obj.localidad = grupoacopio[0][i].LocalidadId;
-            obj.localidadNom = grupoacopio[0][i].Localidad;
+            obj.localidadNom = grupoacopio[0][i].Localidad + "(" + grupoacopio[0][i].Provincia+")";
+            obj.partido = grupoacopio[0][i].Partido;
 
-            obj.provincia = grupoacopio[0][i].ProvinciaId;
-            obj.provinciaNom = grupoacopio[0][i].Provincia;
+            //obj.provincia = grupoacopio[0][i].ProvinciaId;
+            //obj.provinciaNom = grupoacopio[0][i].Provincia;
 
             obj.archivo = grupoacopio[0][i].KMZnombre;
 
             obj.archivoFileResult = grupoacopio[0][i].KMZfile;
 
-            obj.coordenadasAlmacenamiento = grupoacopio[0][i].Coordenadas;
+            obj.latitud = grupoacopio[0][i].latitud;
+            obj.longitud = grupoacopio[0][i].longitud;
+            obj.nombre = grupoacopio[0][i].nombre;
+            obj.comercialId = grupoacopio[0][i].comercialId;
 
             obj.CampoId = grupoacopio[0][i].CampoId;
 
@@ -461,7 +480,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedoralmacenamiento' + capProdCantAlmacenamiento + '">'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
-                + grupoacopio[0][i].Provincia + ", " + grupoacopio[0][i].Localidad
+                + obj.localidadNom + " - " + obj.partido
                 + '</div>'
                 + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
@@ -471,6 +490,11 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 + '</div>'
                 + '</div>'
                 + '<div>'
+                + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+                + '</div>'
                 + '<div class="granos-contenedor">';
 
             console.log(grupoacopio[0][i].Granos);

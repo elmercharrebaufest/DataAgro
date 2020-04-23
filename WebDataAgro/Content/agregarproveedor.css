@@ -568,8 +568,7 @@ campo-granos-almacenamiento button,
 #latitud,
 #longitud,
 #kmz,
-#coordenadas,
-#coordenadas-almacenamiento{
+.coordenadas{
     background-color: rgb(252, 252, 252);
     border: 1px solid rgb(209, 209, 209);
     border-radius: 3px!important;
@@ -580,20 +579,16 @@ campo-granos-almacenamiento button,
     height: 24px;
 }
 
-#coordenadas-almacenamiento::-webkit-input-placeholder,
-#coordenadas::-webkit-input-placeholder {
+.coordenadas::-webkit-input-placeholder {
     font-size: 11px;
 }
-#coordenadas-almacenamiento:-moz-placeholder,
-#coordenadas:-moz-placeholder {
+.coordenadas:-moz-placeholder {
     font-size: 11px;
 }
-#coordenadas-almacenamiento::-moz-placeholder,
-#coordenadas::-moz-placeholder {
+.coordenadas::-moz-placeholder {
     font-size: 11px;
 }
-#coordenadas-almacenamiento:-ms-input-placeholder,
-#coordenadas:-ms-input-placeholder {
+.coordenadas:-ms-input-placeholder {
     font-size: 11px;
 }
 
@@ -1331,3 +1326,4 @@ ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb {
     margin-top: 0;
     margin-bottom: 0;
 }
+

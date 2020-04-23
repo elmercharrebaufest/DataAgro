@@ -129,6 +129,9 @@ function filtrosBusqSelectMultiple(listaDeFiltros) {
             return;
         }
         ($("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().length == 1) ? null : listaSeleccionados = $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().filter(function (x) { if (x == "") { return; } else { return x } });
+
+        console.log(filtroMultiselect[e].id, $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value(), listaSeleccionados.length);
+
         if (listaSeleccionados.length > 0) {
 
             let filtrosPorCadaValorSeleccionado = [];
@@ -217,7 +220,9 @@ function CrearMultiSelectFiltro(element, text, value, url) {
             setTimeout(function () {
             }, 500);
         },
-
+        open: function (e) {
+            $(element).data("kendoMultiSelect").value('');
+        },
         dataTextField: text,
         dataValueField: value,
         autoClose: false,

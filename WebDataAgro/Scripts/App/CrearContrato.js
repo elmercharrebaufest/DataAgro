@@ -543,7 +543,6 @@ function InicializarElementos() {
                 $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
                 $("#pizarraDiv").prop("checked", false);
             } else if (this.value() == 6) {
-
                 $(".noAcuerdo").hide();
                 $(".acuerdo").show();
                 $("#boton-ampliar").hide();
@@ -1093,7 +1092,11 @@ function InicializarElementos() {
 
     $("#cargarCantidadCamiones").change(function () {
         if ($("#cargarCantidadCamiones").is(':checked')) {
-            //$("#cantidadId").data("kendoNumericTextBox").trigger("change");
+            if ($("#cantidadId").data("kendoNumericTextBox").value() > 0) {
+                $("#cantidadId").data("kendoNumericTextBox").trigger("change");
+            } else {
+                $("#cantidadCamionesId").data("kendoNumericTextBox").trigger("change");
+            }
         }
         else {
             $("#cantidadCamionesId").data("kendoNumericTextBox").value('');
@@ -3146,7 +3149,7 @@ function InicializarAperturaDePrecios() {
                 $("#ocultarAperturaBtn").show();
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
-                $("#pagosDiv").show();                
+                $("#pagosDiv").show();
                 $(".acuerdoSinPrecio").hide();
                 $("#precioMonedaId").data("kendoDropDownList").trigger("change");
             }

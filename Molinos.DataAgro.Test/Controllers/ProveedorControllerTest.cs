@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"segm\":[],\"tiptel\":[],\"prov\":[],\"loc\":[],\"cope\":[],\"gran\":[],\"dest\":[],\"cond\":[],\"inte\":[],\"tipoact\":[],\"concom\":[],\"ClasComNet\":[],\"BoleComNet\":[],\"BolsComNet\":[]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"segm\":[],\"tiptel\":[],\"prov\":[],\"loc\":[],\"cope\":[],\"gran\":[],\"dest\":[],\"cond\":[],\"inte\":[],\"tipoact\":[],\"concom\":[],\"ClasComNet\":[],\"BoleComNet\":[],\"BolsComNet\":[],\"comercial\":[]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

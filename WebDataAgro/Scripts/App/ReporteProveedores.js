@@ -16,9 +16,13 @@ function CreateGridDatosProveedor() {
             read: {
                 type: 'post',
                 dataType: 'json',
+                contentType: "application/json",
                 url: '/ReporteProveedores/BuscarDatosProveedor'
             },
             parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
@@ -138,9 +142,13 @@ function CreateGridDatosContacto() {
             read: {
                 type: 'post',
                 dataType: 'json',
+                contentType: "application/json",
                 url: '/ReporteProveedores/BuscarDatosContacto'
             },
             parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
@@ -248,9 +256,13 @@ function CreateGridProduccion() {
             read: {
                 type: 'post',
                 dataType: 'json',
+                contentType: "application/json",
                 url: '/ReporteProveedores/BuscarDatosProduccion'
             },
             parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
@@ -355,9 +367,13 @@ function CreateGridAlmacenamiento() {
             read: {
                 type: 'post',
                 dataType: 'json',
+                contentType: "application/json",
                 url: '/ReporteProveedores/BuscarDatosAlmacenamiento'
             },
             parameterMap: function (options, operation) {
+                if (operation == "read") {
+                    return JSON.stringify(options)
+                }
                 if (options.filter) {
                     KendoGrid_FixFilter(ds, options.filter);
                 }

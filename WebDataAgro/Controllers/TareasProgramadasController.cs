@@ -7,6 +7,7 @@ using System.Web.Script.Serialization;
 using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System;
+using Molinos.DataAgro.Entities.Dto;
 
 namespace WebDataAgro.Controllers
 {
@@ -17,8 +18,9 @@ namespace WebDataAgro.Controllers
         private readonly IFijacionDePrecioContratoManager fijacionManager;
         private readonly ICupoManager cupoManager;
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
+        private readonly IReportesManager reportesManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, IReportesManager reportesManager)
 
         {
             this.logger = logger;
@@ -26,6 +28,7 @@ namespace WebDataAgro.Controllers
             this.fijacionManager = fijacionManager;
             this.cupoManager = cupoManager;
             this.contratoAcuerdoManager = contratoAcuerdoManager;
+            this.reportesManager = reportesManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -81,6 +84,15 @@ namespace WebDataAgro.Controllers
             logger.Info($"CrearSugerenciaCupo");
             cupoManager.CrearSugerenciaCupo();
             logger.Info($"CrearSugerenciaCupo - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult GrabarDatosReporteCompraNet()
+        {
+            logger.Info($"ReporteCompraNet");
+            reportesManager.GrabarDatosReporteCompraNet(DateTime.Now.Date, DateTime.Now.Date, "0", null);
+
+            logger.Info($"ReporteCompraNet - Finalizado");
             return Content("ok");
         }
 

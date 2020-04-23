@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void BorrarAgenteTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 2, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, MotivoRechazo = "test" };
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, MotivoRechazo = "test" };
 
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
                             .Returns(agente);
@@ -177,7 +177,6 @@ namespace Molinos.DataAgro.Test.Managers
             var result = target.BorrarAgente(agente);
 
             repositorioMock.Verify(x => x.Obtener<AgenteCompra>(It.IsAny<int>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);

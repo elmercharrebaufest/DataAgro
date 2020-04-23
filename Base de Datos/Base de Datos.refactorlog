@@ -280,4 +280,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="NegocioId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="aa2ac157-e1a3-492a-bc53-13f4be3e4422" ChangeDateTime="04/20/2020 17:45:18">
+    <Property Name="ElementName" Value="[dbo].[ReporteCompraNetPrecioCantidad].[Material]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReporteCompraNetPrecioCantidad]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Moneda" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6316b6ad-7389-4492-8b17-02a6a202720b" ChangeDateTime="04/20/2020 17:45:25">
+    <Property Name="ElementName" Value="[dbo].[ReporteCompraNetPrecioCantidad].[MaterialId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReporteCompraNetPrecioCantidad]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Cantidad" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9d5542a1-5a66-4588-a7da-118870705158" ChangeDateTime="04/22/2020 18:40:24">
+    <Property Name="ElementName" Value="[dbo].[Acopio].[Coordenadas]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Acopio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Latitud" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="33a3b2ed-80e3-438b-b423-d938d979abd3" ChangeDateTime="04/22/2020 18:41:46">
+    <Property Name="ElementName" Value="[dbo].[Campo].[Coordenadas]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Campo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Latitud" />
+  </Operation>
 </Operations>

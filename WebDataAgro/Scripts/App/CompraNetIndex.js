@@ -651,7 +651,7 @@ function CreateGridInformeCompraNet() {
                 }, headerAttributes: {
                     "class": classExterno
                 }, template: function (dataItem) {
-                    if (ampliaNegocios && dataItem.Estado == 2 && !externo) {
+                    if (ampliaNegocios && dataItem.Estado == 2 && !externo && dataItem.TipoNegocioId != 6) {
                         return '' + dataItem.Ampliaciones + '<button data-toggle="tooltip" title="Ampliar"onclick="ModalAmpliaciones(' +
                             "'" + dataItem.ContratoId + "'" + ',' + "'" + dataItem.Ampliacion + "'" + ',' + "'" + dataItem.TipoNegocioId + "'" + "," + "'" + dataItem.FijacionDePrecioContratoId + "'" + "," + "'" + dataItem.FasonId + "'" + "," + "'" + dataItem.AgenteId + "'" + ')"><i class="fa fa-plus aria-hidden="true"></i></button>';
                     } else {

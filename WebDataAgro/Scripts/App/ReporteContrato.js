@@ -210,7 +210,9 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } },
             { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 },
-            { field: "Rechazo", type: "string", title: "Motivo Rechazo" }
+            { field: "Rechazo", type: "string", title: "Motivo Rechazo" },
+            { field: "ClasificacionDescripcion", type: "string", title: "Clasificacion" },
+            
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];

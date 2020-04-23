@@ -332,6 +332,14 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult GrabarAmpliacionAcuerdo(Contrato oParam)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.GrabarAmpliacionContrato(oParam),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
 
         public ActionResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oParam)
         {

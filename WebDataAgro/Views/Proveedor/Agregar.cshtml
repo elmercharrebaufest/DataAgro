@@ -3,14 +3,17 @@
     ViewBag.Title = "Nuevo Proveedor";
 }
 
-<script>
-    var ProveedorId = '@ViewBag.ProveedorId';
-</script>
 
 @{
     Random randAgregar = new Random();
     string jsAgregar = randAgregar.Next().ToString();
+    bool modificarDatosCampos = PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos);
+
 }
+<script>
+    var ProveedorId = '@ViewBag.ProveedorId';
+    var modificarDatosCampos = ConvertirStringABool('@modificarDatosCampos');
+</script>
 
 <link rel="stylesheet" href="~/Content/agregarproveedor.css" />
 <link rel="stylesheet" href="~/Content/agregarproveedorResponsive.css" />
@@ -161,7 +164,7 @@
                 <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
                     <span class="campo-span">Consignatario </span>
                 </div>
-                <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor" >
+                <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor">
                     <span class="campo-span">Comisión %</span>
                 </div>
             </div>
@@ -417,22 +420,40 @@
             <input type="hidden" id="campoid" />
             <div class="formulario-campo ubicacionkmz">
                 <span class="campo-span">Ubicación</span>
-                <input type="text" placeholder="Coordenadas..." class="campo-input-text" id="coordenadas" />
+                <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-produccion" />
+                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />
                 <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
                 <input type="file" name="kmz" id="kmz" class="inputfile" />
                 <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
             </div>
             <div class="formulario-campo campo-provincia-produccion">
+                <input id="localidad-produccion" placeholder="Localidad" style="width:59%;float:left;" />
+                @Html.Hidden("localidadId-produccion", "", new { @Id = "localidadId-produccion" })
+                @Html.TextBox("partido-produccion", "", new { disabled = "disabled", @id = "partido-produccion", @class = "form-control limpiar", @style = "width:39%;float:right;" })
 
             </div>
-            <div class="formulario-campo campo-localidad-produccion">
-
-            </div>
-            <div class="formulario-campo">
+            <br />
+            <div class="formulario-campo" style="padding-top: 15px;">
                 <span class="campo-span">Hectareas</span>
-                <div class="formulario-campo-radio">
-                    <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="0"> Alquiladas</label>
-                    <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="1"> Propias</label>
+                <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="0"> Alquiladas</label>
+                <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="1"> Propias</label>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Nombre
+                </div>
+                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Comercial
+                </div>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;">
+                    <input class="campo-input-text" id="campo-nombre-produccion" type="text" value="" style="width:100%;">
+                </div>
+                <div style="width:40%;display: inline-block;">
+                    <div class="formulario-campo" id="divComercialProduccion">
+
+                    </div>
                 </div>
             </div>
             <div class="datos-produccion-cap-prod-editor-granos-contenedor">
@@ -486,21 +507,42 @@
             <input type="hidden" id="campo-almacenamientoid" />
             <div class="formulario-campo ubicacionkmzalmacenamiento">
                 <span class="campo-span">Ubicación</span>
-                <input type="text" placeholder="Coordenadas..." class="campo-input-text" id="coordenadas-almacenamiento" />
+                <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-almacenamiento" />
+                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-almacenamiento" />
                 <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
                 <input type="file" name="kmz-almacenamiento" id="kmz-almacenamiento" class="inputfile" />
                 <label for="kmz-almacenamiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field almacenamiento">Subir un Archivo</span></label>
             </div>
             <div class="formulario-campo campo-provincia-almacenamiento">
+                <div style="width:59%;float:left;"><input id="localidad-almacenamiento" placeholder="Localidad" style="width:100% !important;" /></div>
+                @Html.Hidden("localidadId-almacenamiento", "", new { @Id = "localidadId-almacenamiento" })
+                @Html.TextBox("partido-almacenamiento", "", new { disabled = "disabled", @id = "partido-almacenamiento", @class = "form-control limpiar", @style = "width:39%;float:right;" })
 
             </div>
-            <div class="formulario-campo campo-localidad-almacenamiento">
-
+            <br />
+            <div class="formulario-campo" style="padding-top: 15px; text-align:left;">
+                <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Nombre                
+                </div>
+                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Comercial
+                </div>
             </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;">
+                    <input class="campo-input-text" id="campo-nombre-almacenamiento" type="text" value="" style="width:100%;">
+                </div>
+                <div style="width:40%;display: inline-block;">
+                    <div class="formulario-campo" id="divComercialAlmacenamiento">
+
+                    </div>
+                </div>
+            </div>
+            
             <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor">
                 <div class="datos-almacenamiento-cap-prod-editor-granos-titulos">
-                    <div class="produccion-titulo-grano">Campaña</div>
-                    <div class="produccion-titulo-grano">Capacidad planta TNs</div>
+                    <div class="almacenamiento-titulo-grano">Campaña</div>
+                    <div class="almacenamiento-titulo-grano">Capacidad planta TNs</div>
                 </div>
                 <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-contenedor">
                     <div class="datos-almacenamiento-cap-prod-editor-granos-cantidades-grupo">
@@ -513,7 +555,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor">
                 <div class="datos-almacenamiento-cap-prod-editor-titulo">
                     Agregar Volumen comercial por campaña

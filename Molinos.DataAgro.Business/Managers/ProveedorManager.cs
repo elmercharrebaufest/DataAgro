@@ -665,6 +665,22 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            if (oContrato.TipoNegocioId == 1)
+            {
+                if (oContrato.Cantidad < 30000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR "+ Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }else if(oContrato.Cantidad >= 30000 && oContrato.Cantidad <= 100000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " +  Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }else if(oContrato.Cantidad >= 100000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad + (30 * oContrato.Cantidad) / 100).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }
+            }
             if (oContrato.EstablecimientoPropio == true)
             {
                 htmlBody += "ESTABLECIMIENTO PROPIO<br />";
@@ -988,7 +1004,9 @@ namespace Molinos.DataAgro.Business.Managers
                 BoleComNet = repositorio.Listar<BoletoCompraNet, BoletoCompraNetQry>(
                     x => new BoletoCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
                 BolsComNet = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(
-                    x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion })
+                    x => new BolsaCompraNetQry { Id = x.Id, Descripcion = x.Descripcion }),
+                comercial = repositorio.Listar<Comercial, ComercialDto>(
+                    x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido }),
             };
 
             return DatosCombo;
@@ -1201,7 +1219,10 @@ namespace Molinos.DataAgro.Business.Managers
                     var campo = new Campo
                     {
                         ArrendaPropia = cmp.hectareas,
-                        Coordenadas = cmp.coordenadas,
+                        Latitud = cmp.latitud,
+                        Longitud = cmp.longitud,
+                        Nombre = cmp.nombre,
+                        ComercialId = cmp.comercialId,
                         HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)),
                         KMZfile = cmp.archivoFileResult,
                         KMZnombre = cmp.archivo,
@@ -1235,7 +1256,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var acopio = new Acopio
                     {
-                        Coordenadas = cmp.coordenadasAlmacenamiento,
+                        Latitud = cmp.latitud,
+                        Longitud = cmp.longitud,
+                        Nombre = cmp.nombre,
+                        ComercialId = cmp.comercialId,
                         KMZfile = cmp.archivoFileResult,
                         KMZnombre = cmp.archivo,
                         LocalidadId = cmp.localidad,
@@ -1977,7 +2001,10 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var produccion = repositorio.Agregar(new Campo()
                             {
-                                Coordenadas = cam.coordenadas,
+                                Latitud = cam.latitud,
+                                Longitud = cam.longitud,
+                                Nombre = cam.nombre,
+                                ComercialId = cam.comercialId,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
@@ -2017,12 +2044,14 @@ namespace Molinos.DataAgro.Business.Managers
                             var mod = oParam.produccion.CamposProduccion.Where(x => x.CampoId == campo.CampoId).First();
 
                             #region Set Campos
-                            campo.Coordenadas = mod.coordenadas;
+                            campo.Latitud = mod.latitud;
+                            campo.Longitud = mod.longitud;
+                            campo.Nombre = mod.nombre;
+                            campo.ComercialId = mod.comercialId;
                             campo.KMZfile = mod.archivoFileResult;
                             campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
                             campo.ArrendaPropia = mod.hectareas;
-                            campo.Coordenadas = mod.coordenadas;
                             campo.ProveedorId = (int)oParam.ProveedorId;
                             #endregion
 
@@ -2127,7 +2156,10 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var acopio = repositorio.Agregar(new Acopio()
                             {
-                                Coordenadas = cam.coordenadasAlmacenamiento,
+                                Latitud = cam.latitud,
+                                Longitud = cam.longitud,
+                                Nombre = cam.nombre,
+                                ComercialId = cam.comercialId,
                                 KMZfile = cam.archivoFileResult,
                                 KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
@@ -2181,7 +2213,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                             #region Set Campos
                             acopio.AcopioId = (int)mod.CampoId;
-                            acopio.Coordenadas = mod.coordenadasAlmacenamiento;
+                            acopio.Latitud = mod.latitud;
+                            acopio.Longitud = mod.longitud;
+                            acopio.Nombre = mod.nombre;
+                            acopio.ComercialId = mod.comercialId;
                             acopio.KMZfile = mod.archivoFileResult;
                             acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;

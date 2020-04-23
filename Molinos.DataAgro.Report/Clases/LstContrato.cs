@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Report
         //  Metodos Publicos
         //-----------------------------------------------------------------------------------
 
-       
+
         public string GenerarExcel(List<BasicoContrato> oDatos)
         {
             var excel = new ExcelPackage();
@@ -39,21 +39,21 @@ namespace Molinos.DataAgro.Report
                     Comercial = x.Comercial,
                     Grano = x.Material,
                     Tipo = x.TipoNegocio,
-                    Contrato = x.Negocio,
+                    Contrato = (x.ContratoSAP != "0" && x.ContratoSAP != "" && x.ContratoSAP != null) ? x.ContratoSAP : x.Id.ToString(),
                     Destino = x.DestinoDescripcion,
-                    Zona = x.ZonaDescripcion,
+                    Zona = x.ComercialZonaDescripcion,
                     Nombre = x.Proveedor,
                     CUIT = x.Cuit,
                     Figura = x.ClasificacionDescripcion,
                     Cantidad = x.Cantidad,
-                    Precio = x.PrecioNeto??x.Precio,
+                    Precio = x.PrecioNeto ?? x.Precio,
                     Moneda = x.Moneda,
                     Camiones = x.CantidadCamiones,
                     Comision = x.PorcentajeComision,
                     PorcentajeBonificacion = x.PorcentajeBonificacion,
                     ImporteBonificacion = x.ImporteBonificacion,
                     MonedaBonificacion = x.MonedaBonificacion,
-                    MesPosicion =string.IsNullOrEmpty(x.Posicion)?"": x.Posicion.Substring(0,2),
+                    MesPosicion = string.IsNullOrEmpty(x.Posicion) ? "" : x.Posicion.Substring(0, 2),
                     Procedencia = x.Localidad,
                     Desde = x.FechaDesde,
                     Hasta = x.FechaHasta,
@@ -71,7 +71,17 @@ namespace Molinos.DataAgro.Report
                 var oPropRow = oColumnas[0].GetType().GetProperties();
 
                 var cantColumns = oPropRow.Count();
+                var j = 1;
+                while (workSheet.Cells[1, j].Value != null)
+                {
+                    workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
+                    workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+
+                    workSheet.Cells[1, j].Style.Font.Bold = true;
+
+                    j++;
+                }
                 for (int i = 1; i <= cantColumns; i++)
                 {
                     if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)

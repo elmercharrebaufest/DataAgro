@@ -84,7 +84,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int provincia { get; set; }
         public string provinciaNom { get; set; }
         public int? hectareas { get; set; }
-        public string coordenadas { get; set; }
+        public string latitud { get; set; }
+        public string longitud { get; set; }
+        public string nombre { get; set; }
+        public int? comercialId { get; set; }
         public int? CampoId { get; set; }
     }
 
@@ -118,7 +121,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string localidadNom { get; set; }
         public int provincia { get; set; }
         public string provinciaNom { get; set; }
-        public string coordenadasAlmacenamiento { get; set; }
+        public string latitud { get; set; }
+        public string longitud { get; set; }
+        public string nombre { get; set; }
+        public int? comercialId { get; set; }
         //public int hectareasAlmacenamiento { get; set; }
     }
 
