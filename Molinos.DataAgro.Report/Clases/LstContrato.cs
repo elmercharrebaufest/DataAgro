@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Report
                     ImporteBonificacion = x.ImporteBonificacion,
                     MonedaBonificacion = x.MonedaBonificacion,
                     MesPosicion = string.IsNullOrEmpty(x.Posicion) ? "" : x.Posicion.Substring(0, 2),
-                    Procedencia = x.Localidad,
+                    Procedencia = x.Localidad + " - " + x.Localidad,
                     Desde = x.FechaDesde,
                     Hasta = x.FechaHasta,
                     Cosecha = x.Campania,
