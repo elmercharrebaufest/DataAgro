@@ -144,6 +144,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaCiertaFormateado { get; set; }
         public DateTime? FechaCierta { get; set; }
         public string MonedaBonificacion { get; set; }
+        public string MesPosicion { get; set; }
     }
 
     public class StoredPorContratoResult

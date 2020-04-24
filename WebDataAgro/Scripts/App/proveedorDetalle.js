@@ -706,6 +706,7 @@ function armarContacto() {
                 grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].Provincia = campoacopio[i].Provincia;
                 grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].Partido = campoacopio[i].Partido;
                 grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].Nombre = campoacopio[i].Nombre;
+                grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].Comercial = campoacopio[i].Comercial;
 
                 grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].KMZnombre = campoacopio[i].KMZnombre;
                 grupocampoacopio[campoacopio[i].Campaña]["Campo" + campoacopio[i].Id].KMZfile = campoacopio[i].KMZfile;
@@ -824,6 +825,7 @@ function armarContacto() {
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].Provincia = acopio[i].Provincia;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].Partido = acopio[i].Partido;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].Nombre = acopio[i].Nombre;
+                grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].Comercial = acopio[i].Comercial;
 
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].KMZnombre = acopio[i].KMZnombre;
                 grupoacopio[acopio[i].Campaña]["Acopio" + acopio[i].Id].KMZfile = acopio[i].KMZfile;
@@ -1063,6 +1065,11 @@ function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
                     '<b>Nombre: </b>' + grupocampoacopio[0][i][j].Nombre +
                     '</div>';
             }
+            if (grupocampoacopio[0][i][j].Comercial && grupocampoacopio[0][i][j].Comercial != null && grupocampoacopio[0][i][j].Comercial != "") {
+                htmlCamp += '<br><div class="contenedor-campo-grupo-ubicacion">' +
+                    '<b>Comercial: </b>' + grupocampoacopio[0][i][j].Comercial +
+                    '</div>';
+            }
             if (grupocampoacopio[0][i][j].KMZfile && grupocampoacopio[0][i][j].KMZfile != null) {
                 var aux = grupocampoacopio[0][i][j].KMZnombre.split("\\").length - 1;
                 var nomb = grupocampoacopio[0][i][j].KMZnombre.split("\\")[aux];
@@ -1263,6 +1270,11 @@ function armarCampañaAlmacenamiento(elem, i, grupoacopio, elem2) {
             if (grupoacopio[0][i][j].Nombre && grupoacopio[0][i][j].Nombre != null && grupoacopio[0][i][j].Nombre != "") {
                 htmlCamp += '<div class="contenedor-campo-grupo-ubicacion">' +
                     '<br><b>Nombre: </b>' + grupoacopio[0][i][j].Nombre +
+                    '</div>';
+            }
+            if (grupoacopio[0][i][j].Comercial && grupoacopio[0][i][j].Comercial != null && grupoacopio[0][i][j].Comercial != "") {
+                htmlCamp += '<div class="contenedor-campo-grupo-ubicacion">' +
+                    '<br><b>Comercial: </b>' + grupoacopio[0][i][j].Comercial +
                     '</div>';
             }
             if (grupoacopio[0][i][j].KMZfile && grupoacopio[0][i][j].KMZfile != null) {

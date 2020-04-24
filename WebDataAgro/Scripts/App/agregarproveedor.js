@@ -916,7 +916,7 @@ function armarSelects(result) {
             fr = new FileReader();
             fr.readAsDataURL(file);
             obj.archivoFileReader = fr;
-            obj.archivoFileResult = obj.archivoFileReader.result;
+            obj.archivoFileResult = fr.result;
         } else if (mantenerArchivos.length) {
             obj.archivo = mantenerArchivos[0].archivo;
             obj.archivoFile = mantenerArchivos[0].archivoFile;
@@ -2545,7 +2545,9 @@ function ObtenerDatos() {
     obj.produccion.CamposProduccion = aGuardar != null ? aGuardar.concat() : [];
     for (var ii in obj.produccion.CamposProduccion) {
         (function (i) {
-            obj.produccion.CamposProduccion[i].archivoFileResult = (obj.produccion.CamposProduccion[i].archivoFileReader ? obj.produccion.CamposProduccion[i].archivoFileReader.result : null);
+            if (obj.produccion.CamposProduccion[i].archivoFileResult == null || obj.produccion.CamposProduccion[i].archivoFileResult == "") {
+                obj.produccion.CamposProduccion[i].archivoFileResult = (obj.produccion.CamposProduccion[i].archivoFileReader ? obj.produccion.CamposProduccion[i].archivoFileReader.result : null);
+            }
         })(ii);
     }
 
@@ -2580,7 +2582,10 @@ function ObtenerDatos() {
     obj.almacenamiento.CamposAlmacenamiento = aGuardarAlmacenamiento;
     for (ii in obj.almacenamiento.CamposAlmacenamiento) {
         (function (i) {
-            obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult = (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader ? obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader.result : null);
+            if (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult == "" || obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult == null) {
+                obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult = (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader ? obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader.result : null);
+            }
+            
         })(ii);
     }
     obj.contactocomercial = aGuardarContactoComercial;

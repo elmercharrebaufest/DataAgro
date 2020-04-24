@@ -47,13 +47,14 @@ namespace Molinos.DataAgro.Report
                     Figura = x.ClasificacionDescripcion,
                     Cantidad = x.Cantidad,
                     Precio = x.PrecioNeto ?? x.Precio,
+                    Moneda = x.MonedaId,
                     Camiones = x.CantidadCamiones,
                     Comision = x.PorcentajeComision,
-                    PorcentajeBonificacion = x.PorcentajeBonificacion,
-                    ImporteBonificacion = x.ImporteBonificacion,
-                    MonedaBonificacion = x.MonedaBonificacion,
-                    MesPosicion = string.IsNullOrEmpty(x.Posicion) ? "" : x.Posicion.Substring(0, 2),
-                    Procedencia = x.Localidad + " - " + x.Localidad,
+                    PorcentajeBonificacion = ((x.Descuentos != null && x.Descuentos.Count>0)? string.Join("/", x.Descuentos.Select(a => a.Porcentaje.ToString()).ToList()) : ""),
+                    ImporteBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Importe.ToString()).ToList()) : ""),
+                    MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.MonedaId.ToString()).ToList()) : ""),
+                    MesPosicion = x.MesPosicion,
+                    Procedencia = x.Localidad + " - " + x.Provincia,
                     Desde = x.FechaDesde,
                     Hasta = x.FechaHasta,
                     Cosecha = x.Campania,
@@ -61,42 +62,42 @@ namespace Molinos.DataAgro.Report
                     Observaciones = x.Observacion
                 });
 
-                var oColumnas = query.ToList();
+            var oColumnas = query.ToList();
 
-                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+            var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
-                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
+            workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
-                var oPropRow = oColumnas[0].GetType().GetProperties();
+            var oPropRow = oColumnas[0].GetType().GetProperties();
 
-                var cantColumns = oPropRow.Count();
-                var j = 1;
-                while (workSheet.Cells[1, j].Value != null)
-                {
-                    workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            var cantColumns = oPropRow.Count();
+            var j = 1;
+            while (workSheet.Cells[1, j].Value != null)
+            {
+                workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
-                    workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+                workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
 
-                    workSheet.Cells[1, j].Style.Font.Bold = true;
+                workSheet.Cells[1, j].Style.Font.Bold = true;
 
-                    j++;
-                }
-                for (int i = 1; i <= cantColumns; i++)
-                {
-                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                    {
-                        workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
-
-                    }
-                    workSheet.Column(i).AutoFit();
-                };
-
-                //workSheet.Cells[1, cantColumns].Value = "Comercial a Cargo";
-                //workSheet.Column(cantColumns).AutoFit();
-
+                j++;
             }
+            for (int i = 1; i <= cantColumns; i++)
+            {
+                if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                {
+                    workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-            var identif = Varios.GetIdentif();
+                }
+                workSheet.Column(i).AutoFit();
+            };
+
+            //workSheet.Cells[1, cantColumns].Value = "Comercial a Cargo";
+            //workSheet.Column(cantColumns).AutoFit();
+
+        }
+
+        var identif = Varios.GetIdentif();
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -109,7 +110,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-                reportesManager.GrabarReporte(oReporte);
+    reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;

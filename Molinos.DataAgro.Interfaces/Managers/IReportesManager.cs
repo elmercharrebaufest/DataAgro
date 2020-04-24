@@ -70,5 +70,6 @@ namespace Molinos.DataAgro.Interfaces
         string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0);
         string DetalleAgenteModal(DateTime fecha,List<int> materialId);
         string DetallePosicionModalIds(List<int> negocios,string moneda);
+        void TraerPosicionNegocios(List<BasicoContrato> datos);
     }
 }

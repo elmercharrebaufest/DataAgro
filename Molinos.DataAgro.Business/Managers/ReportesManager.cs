@@ -952,6 +952,212 @@ namespace Molinos.DataAgro.Business.Managers
             return posicionKilos;
         }
 
+        public void TraerPosicionNegocios(List<BasicoContrato> negocios)
+        {
+            List<int> negociosIds = negocios.Select(a => a.Id).ToList();
+            var fechaHoy = DateTime.Now.Date;
+            var fechaManana = DateTime.Now.Date;
+            var precioPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= fechaManana);
+            var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
+
+            var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
+            var posicionKilos = new List<PosicionKilos>();
+            var contratos = repositorio.Listar<Contrato, PosicionPorMaterial>(x => new PosicionPorMaterial
+            {
+                Id = x.Id,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,
+                Cantidad = x.Cantidad,
+                Precio = x.Pizarra == true ? precio.Precio : x.Precio,
+                TipoNegocioId = x.TipoNegocioId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                CampanaId = x.CampanaId,
+                CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
+                MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
+            },
+                x => negociosIds.Contains(x.Id));
+            foreach (var cont in contratos)
+            {
+                var posicion = new DateTime();
+                if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                {
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                {
+                    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
+                }
+                else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                {
+                    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
+                }
+                cont.ClasificacionNegocio = cont.TipoNegocioId == 1 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAFijar :
+                cont.TipoNegocioId == 2 && ((fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId)) ? EnumClasificacionNegocio.DisponibleAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAFijar :
+                cont.TipoNegocioId == 2 && cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardAPrecio :
+                cont.TipoNegocioId == 1 && cont.CampanaMaterialId < cont.CampanaId ? EnumClasificacionNegocio.NewCropAFijar : EnumClasificacionNegocio.NewCropAPrecio;
+            }
+
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PosicionPorMaterial>(x => new PosicionPorMaterial
+            {
+                Id = x.Id,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,
+                TipoNegocioId = 3,
+                Cantidad = x.Cantidad,
+                Precio = x.Pizarra == true ? precio.Precio : x.Precio,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
+                MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
+            },
+             x => negociosIds.Contains(x.Id));
+            foreach (var cont in fijaciones)
+            {
+                var posicion = cont.FechaDesde - DateTime.Now;
+
+                cont.ClasificacionNegocio = (posicion.Days <= 30 && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.CampanaMaterialId == cont.CampanaId && posicion.Days > 30 ? EnumClasificacionNegocio.ForwardFijacion :
+                EnumClasificacionNegocio.NewCropFijacion;
+            }
+            contratos.AddRange(fijaciones);
+
+            var fason = repositorio.Listar<Fason, PosicionPorMaterial>(x => new PosicionPorMaterial
+            {
+                Id = x.Id,
+                FechaDesde = x.Fecha,
+                FechaHasta = x.Fecha,
+                Cantidad = x.Cantidad,
+                TipoNegocioId = 4,
+                Precio = x.Precio,
+                CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                Posicion = x.Posicion,
+                MonedaId = x.MonedaId
+            },
+                x => negociosIds.Contains(x.Id));
+            foreach (var cont in fason)
+            {
+                //var mes = int.Parse(cont.Posicion.Substring(0, 2));
+                //var anio = int.Parse(cont.Posicion.Substring(3, 4));
+                //var posicion = new DateTime(anio, mes, 1);
+                var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                EnumClasificacionNegocio.NewCropFijacion;
+            }
+            contratos.AddRange(fason);
+            var acuerdos = repositorio.Listar<ContratoAcuerdo, PosicionPorMaterial>(x => new PosicionPorMaterial
+            {
+                Id = x.Id,
+                FechaDesde = x.Fecha,
+                FechaHasta = x.Fecha,
+                Cantidad = x.Cantidad,
+                TipoNegocioId = 6,
+                Precio = x.Precio,
+                CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
+                MonedaId = x.MonedaId,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+            },
+               x => negociosIds.Contains(x.Id));
+
+            foreach (var cont in acuerdos)
+            {
+                var posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+
+                //if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                //{
+                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1);
+                //}
+                //else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                //{
+                //    posicion = new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1).AddMonths(+1);
+                //}
+                //else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                //{
+                //    posicion = new DateTime(cont.FechaHasta.Year, cont.FechaHasta.Month, 1);
+                //}
+                cont.ClasificacionNegocio = (fechaPosicion >= posicion && cont.CampanaMaterialId == cont.CampanaId) || (cont.CampanaMaterialId > cont.CampanaId) ? (cont.Precio > 0 ? EnumClasificacionNegocio.DisponibleAPrecio : EnumClasificacionNegocio.DisponibleAFijar) :
+                /*cont.TipoNegocioId == 1 &&*/
+                cont.CampanaMaterialId == cont.CampanaId && fechaPosicion < posicion ? (cont.Precio > 0 ? EnumClasificacionNegocio.ForwardAPrecio : EnumClasificacionNegocio.ForwardAFijar) :
+                (cont.Precio > 0 ? EnumClasificacionNegocio.NewCropAPrecio : EnumClasificacionNegocio.NewCropAFijar);
+            }
+            contratos.AddRange(acuerdos);
+
+            foreach (var cont in contratos)
+            {
+                var posKil = new PosicionKilos();
+                posKil.NegocioId = cont.Id;
+                posKil.TipoNegocioId = cont.TipoNegocioId;
+                if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
+                    cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
+                    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
+                {
+                    if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+                    }
+                    else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+                    {
+                        cont.FechaDesde = cont.FechaDesde.AddMonths(1);
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+
+                    }
+                    else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
+                        posKil.Anio = cont.FechaHasta.Year;
+                    }
+                }
+                else
+                {
+                    if (new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+                    {
+                        posKil.Mes = (EnumMeses)DateTime.Now.Month;
+                        posKil.Anio = DateTime.Now.Year;
+                    }
+                    else
+                    {
+                        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+                        posKil.Anio = cont.FechaDesde.Year;
+                    }
+                }
+                posKil.KilosPesos = cont.MonedaId == "ARP  "
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
+                        && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
+                        ? Math.Round(cont.Cantidad / 1000) : 0;
+                posKil.KilosDolares = cont.MonedaId == "USDM "
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleAFijar
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardAFijar
+                    && cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropAFijar
+                    ? Math.Round(cont.Cantidad / 1000) : 0;
+                posKil.DispAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAFijar ? cont.Cantidad : 0;
+                posKil.DispAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleAPrecio ? cont.Cantidad : 0;
+                posKil.DispFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.DisponibleFijacion ? cont.Cantidad : 0;
+                posKil.FrwAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAFijar ? cont.Cantidad : 0;
+                posKil.FrwAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardAPrecio ? cont.Cantidad : 0;
+                posKil.FrwFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.ForwardFijacion ? cont.Cantidad : 0;
+                posKil.NewAFijar = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAFijar ? cont.Cantidad : 0;
+                posKil.NewAPrecio = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropAPrecio ? cont.Cantidad : 0;
+                posKil.NewFijac = cont.ClasificacionNegocio == EnumClasificacionNegocio.NewCropFijacion ? cont.Cantidad : 0;
+                posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
+                posKil.CantidadPonderada = cont.CantidadPonderada;
+
+                posicionKilos.Add(posKil);
+            }
+            foreach (var negocio in negocios)
+            {
+                var pos = posicionKilos.Where(a => a.NegocioId == negocio.Id).Single();
+                negocio.MesPosicion = pos.Mes.ToString() + " " + pos.Anio;
+            }
+        }
         public string DetallePosicionModalIds(List<int> negocios, string moneda)
         {
             var detalle = TraerDetallePosicion(negocios, moneda);

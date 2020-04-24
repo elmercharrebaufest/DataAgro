@@ -287,6 +287,9 @@ function armarProduccion(campoacopio) {
             grupocampoacopio["Campo" + campoacopio[i].Id].longitud = campoacopio[i].Longitud;
             grupocampoacopio["Campo" + campoacopio[i].Id].nombre = campoacopio[i].Nombre;
             grupocampoacopio["Campo" + campoacopio[i].Id].comercialId = campoacopio[i].ComercialId;
+            grupocampoacopio["Campo" + campoacopio[i].Id].comercial = campoacopio[i].Comercial;
+            grupocampoacopio["Campo" + campoacopio[i].Id].KMZnombre = campoacopio[i].KMZnombre;
+            grupocampoacopio["Campo" + campoacopio[i].Id].KMZfile = campoacopio[i].KMZfile;
             grupocampoacopio["Campo" + campoacopio[i].Id].Granos = grupocampoacopio["Campo" + campoacopio[i].Id].Granos || [];
             grupocampoacopio["Campo" + campoacopio[i].Id].Granos.push({
                 HectareasPorcentaje: campoacopio[i].HectareasPorcentaje,
@@ -322,6 +325,7 @@ function armarProduccion(campoacopio) {
             obj.longitud = grupocampoacopio[0][i].longitud;
             obj.nombre = grupocampoacopio[0][i].nombre;
             obj.comercialId = grupocampoacopio[0][i].comercialId;
+            obj.comercialNom = grupocampoacopio[0][i].comercial;
 
             obj.CampoId = grupocampoacopio[0][i].CampoId;
 
@@ -418,6 +422,10 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             grupoacopio["Acopio" + acopio[i].Id].longitud = acopio[i].Longitud;
             grupoacopio["Acopio" + acopio[i].Id].nombre = acopio[i].Nombre;
             grupoacopio["Acopio" + acopio[i].Id].comercialId = acopio[i].ComercialId;
+            grupoacopio["Acopio" + acopio[i].Id].comercial = acopio[i].Comercial;
+            grupoacopio["Acopio" + acopio[i].Id].KMZnombre = acopio[i].KMZnombre;
+            grupoacopio["Acopio" + acopio[i].Id].KMZfile = acopio[i].KMZfile;
+
             grupoacopio["Acopio" + acopio[i].Id].Granos = grupoacopio["Acopio" + acopio[i].Id].Granos || [];
             grupoacopio["Acopio" + acopio[i].Id].Granos.push({
                 HectareasPorcentaje: acopio[i].HectareasPorcentaje,
@@ -470,6 +478,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             obj.longitud = grupoacopio[0][i].longitud;
             obj.nombre = grupoacopio[0][i].nombre;
             obj.comercialId = grupoacopio[0][i].comercialId;
+            obj.comercialNom = grupoacopio[0][i].comercial;
 
             obj.CampoId = grupoacopio[0][i].CampoId;
 

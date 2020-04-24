@@ -206,18 +206,25 @@ namespace WebDataAgro.Controllers
             filtro.Skip = 0;
             filtro.Take = 0;
             var equipo = GlobalVariables.EquipoReal;
-            var datos = (List<BasicoContrato>)mobjContratoManager.TraerContratosFiltrados(filtro, equipo).Data;
+            List<BasicoContrato> datos = (List<BasicoContrato>)mobjContratoManager.TraerContratosFiltrados(filtro, equipo).Data;
 
 
             var oLstContacto = new LstContrato(reportesManager);
-
+            reportesManager.TraerPosicionNegocios(datos);
+            foreach (var negocio in datos)
+            {
+                if (negocio.TipoNegocioId == 1 || negocio.TipoNegocioId == 2)
+                {
+                    negocio.Descuentos = mobjContratoManager.TraerDescuentosPorContrato(negocio.Id);
+                }
+            }
             var identif = oLstContacto.GenerarExcel(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
 
             return Json(model);
         }
-       
+
     }
 
 
