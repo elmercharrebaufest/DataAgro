@@ -2683,17 +2683,19 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
-        if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-            $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
-        } else {
-            $("#fechaDesdeTopeId").val("");
+        if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
+            if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
+                $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
+            } else {
+                $("#fechaDesdeTopeId").val("");
+            }
+            if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
+                $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
+            } else {
+                $("#fechaDesdeTopeId").val("");
+            }
+            $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
         }
-        if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-            $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
-        } else {
-            $("#fechaDesdeTopeId").val("");
-        }
-        $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
     }
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
