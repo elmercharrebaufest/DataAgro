@@ -429,18 +429,31 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             foreach (var c in listaCupos)
             {
-                htmlBody += "<tr>" + Td(ref linea) + c + "</td></tr>";
+                htmlBody += "<tr>" + Td(ref linea, 2) + c + "</td></tr>";
             }
-            htmlBody += "<tr>" + Td(ref linea) + "Con destino " +(cupo.Centro.CodigoSap == "1600"? "S. Lorenzo" : cupo.Centro.Descripcion )+ "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino SAN LORENZO - SANTA FE - BENIELLI 398" + "</td></tr>";
+            htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + cupo.Destinatario.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";            
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
-                htmlBody += "<tr>" + Td(ref linea) + "Material: " + (cupo.MaterialId == 1 ? "Maíz Especial" : cupo.MaterialId == 2 ? "Trigo Especial " : "Soja Sustentable") + "</td></tr>";
+                htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+                if (cupo.MaterialId == 1)
+                {
+                    htmlBody += "Maíz Especial<br />";
+                }
+                if (cupo.MaterialId == 2)
+                {
+                    htmlBody += "Trigo Especial<br />";
+                }
+                else
+                {
+                    htmlBody += "Soja Sustentable<br />";
+
+                }
             }
-            else
-            {
-                htmlBody += "<tr>" + Td(ref linea) + "Material: " + cupo.Material.Descripcion  + "</td></tr>";
-            }
-            
+            htmlBody += "</td></tr>";
             htmlBody += "</table>";
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
@@ -452,19 +465,35 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
-        private string Td(ref int linea)
+        private string Split(string str)
+        {
+            var enumNumero = Enumerable.Range(0, str.Length / 2)
+                .Select(i => str.Substring(i * 2, 2)).ToList();
+            if (str.Length % 2 == 1)
+            {
+                enumNumero.Add(str[str.Length - 1].ToString());
+            }
+            var nuevoString = "";
+
+            for (int i = 0; i < enumNumero.Count(); i++)
+            {
+                nuevoString += "<span>" + enumNumero[i] + "</span>";
+            }
+            return nuevoString;
+        }
+        private string Td(ref int linea, int largo = 1)
         {
             string td1 = "";
             string td2 = "";
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
-                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
-                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                td1 = "<td colspan=\""+ largo+"\" style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                td2 = "<td colspan=\"" + largo + "\" style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
             }
             else
             {
-                td1 = "<td style=\"border: 2px solid white; color:#017940; background-color: #bba7da; padding: 5px 0; width: 250px;\">";
-                td2 = "<td style=\"border: 2px solid white; color:#017940; background-color: #dccdea; padding: 5px 0; width: 250px;\">";
+                td1 = "<td colspan=\"" + largo + "\" style=\"border: 2px solid white; color:#017940; background-color: #bba7da; padding: 5px 0; width: 250px;\">";
+                td2 = "<td colspan=\"" + largo + "\" style=\"border: 2px solid white; color:#017940; background-color: #dccdea; padding: 5px 0; width: 250px;\">";
             }
             linea += 1;
             if (linea % 2 == 0)
