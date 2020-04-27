@@ -96,5 +96,13 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
+        public ActionResult EnvioMailSinCTG()
+        {
+            logger.Info($"EnvioMailSinCtg - Iniciando");
+            cupoManager.EnviarMailSinCtg();
+            logger.Info($"EnvioMailSinCtg - Finalizado");
+            return Content("ok");
+        }
+
     }
 }

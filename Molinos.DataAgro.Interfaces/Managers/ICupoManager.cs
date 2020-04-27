@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias);
         DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo);
+        List<DateTime> FechasComprendidas();
         Resultado EliminarCupo(int id, string comercial);
         //Task ObtenerToken();
         Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta);
@@ -24,8 +25,16 @@ namespace Molinos.DataAgro.Interfaces
         string ObtenerCodigoSap(int id);
         void CrearSugerenciaCupo();
         List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId);
+        IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
+        SugerenciaCupoDto ObtenerSugerencia(int sugerenciaId);
         List<CupoResult> AceptarSugerenciaCupo(List<SugerenciaCupoDto> ids);
+        CupoResult AceptarCupoExcedente(int administracionId);
         CupoResult RechazarSugerenciaCupo(List<int> ids,string motivo);
         List<EstadoCupoDto> TraerTodoLosEstados();
+        CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTabla, int materialId, string centroId);
+        List<DiaCupo> Panel();
+        List<SugerenciaNoAceptada> SugerenciasNoAceptadas();
+        void EnviarMailSinCtg();
     }
+
 }

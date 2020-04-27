@@ -1028,6 +1028,7 @@ function BuscarTotales() {
 function isValidDate(date) {
     return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
 }
+
 function SeleccionarElementos() {
     var grid = $("#gridInformeCompraNet").data("kendoGrid");
     var selectedRows = grid.select();

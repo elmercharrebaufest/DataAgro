@@ -394,104 +394,12 @@ function InicializarElementos() {
         }
     });
 
-    //$("#ContratoSAPId").bind("paste", function (e) {
-    //    e.preventDefault();
-    //    if (e.originalEvent.clipboardData !== undefined) {
-    //        clipText = e.originalEvent.clipboardData.getData('text/plain');
-    //    } else {
-    //        clipText = window.clipboardData.getData('text');
-    //    }
-    //    $("#ContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
-    //    CambioVariosContratos();
-    //});
-    //ModalContrato();
-    //$("#ContratoSAPId").change(CambioVariosContratos);
-    //$("#ContratoSAPHastaId").change(CambioVariosContratos);
-
-    //$(document).on("click", ".agregarContrato", function () {
-    //    var num = $("#nuevoNumContrato").val();
-    //    if ($.isNumeric(num)) {
-    //        $("#contratos-table").append('<tr><td>' + num + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr></td></tr>');
-    //        $(".nuevoNumContrato").val('');
-    //        $(".nuevoNumContrato").focus();
-    //        GenerarContratoSAPDesde();
-    //    }
-    //});
-
-    //$(document).on("click", ".borrarContrato", function () {
-    //    $(this).parent().parent().remove();
-    //    GenerarContratoSAPDesde();
-    //});
-    inicializarPopUpSap();
+    inicializarPopUpSap("Contratos");
 }
 
-//function GenerarContratoSAPDesde() {
-//    var arr = "";
-//    $("#contratos-table tr").each(function () {
-//        if (arr != "") {
-//            arr += ";";
-//        }
-//        arr += $(this).find("td:first").text(); //put elements into array
-//    });
-//    $("#ContratoSAPId").val(arr);
-//    $("#ContratoSAPHastaId").attr('disabled', 'disabled');
-//    $("#ContratoSAPHastaId").val('');
-//}
-
-//function CambioVariosContratos() {
-
-//    if
-//        (parseInt($("#ContratoSAPHastaId").val()) - parseInt($("#ContratoSAPId").val()) > 1000) {
-
-//        PopUpError("Seleccione un rango de valores menor a 1000");
-
-//        return;
-//    }
-
-//    var lista = [];
-//    lista = $("#ContratoSAPId").val().split(';');
-//    if (lista.length > 1) {
-
-//        $("#ContratoSAPHastaId").attr('disabled', 'disabled');
-//        $("#ContratoSAPHastaId").val("")
-//        ArmarTabla(lista);
-//    } else if ($.isNumeric($("#ContratoSAPId").val()) && $.isNumeric($("#ContratoSAPHastaId").val())) {
-
-//        $("#ContratoSAPHastaId").removeAttr('disabled');
-
-//        lista = [];
-//        for (var i = parseInt($("#ContratoSAPId").val()); i <= parseInt($("#ContratoSAPHastaId").val()); i++) {
-//            lista.push(i);
-//        }
-//        ArmarTabla(lista);
-//    }
-//    else {
-//        $("#ContratoSAPHastaId").removeAttr('disabled');
-//        ArmarTabla(lista);
-//    }
-//}
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
 }
-
-//function ModalContrato() {
-//    $("#contratos").click(function () {
-//        $("#CargaContratos").modal('toggle');
-//    });
-//}
-
-
-//function ArmarTabla(contratos) {
-//    $("#contratos-table").empty();
-//    var tabla = '<tr><th>Contratos</th></tr>';
-//    if (contratos) {
-//        for (var i = 0; i < contratos.length; i++) {
-//            tabla += '<tr><td>' + contratos[i] + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr>';
-//        }
-//    }
-//    $("#contratos-table").append(tabla);
-//}
-
 
 $("#DolarizadoId").click(function () {
 

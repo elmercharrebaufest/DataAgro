@@ -44,6 +44,15 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarNuevaConfiguracionEspacioDinamicoTest()
         {
+            var listaCupos = new List <DiaCupo> ();
+
+            var diaCupo = new DiaCupo()
+            {
+                Cantidad = 5,
+                Fecha = DateTime.Now
+
+            };
+            listaCupos.Add(diaCupo);
             var espacioDinamico = new ConfiguracionEspacioDinamico
             {
                 Id = 0,
@@ -57,11 +66,11 @@ namespace Molinos.DataAgro.Test.Managers
             };
             repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<ConfiguracionEspacioDinamico, bool>>>())).Returns(false);
             repositorioMock.Setup(x => x.Agregar(It.IsAny<ConfiguracionEspacioDinamico>()));
-            var resultado = target.GrabarConfiguracionEspacioDinamico(espacioDinamico);
+            var resultado = target.GrabarConfiguracionEspacioDinamico(espacioDinamico, listaCupos);
 
             Assert.That(!resultado.HayError);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<ConfiguracionEspacioDinamico>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
 
         [Test]

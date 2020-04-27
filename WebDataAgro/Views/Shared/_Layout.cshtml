@@ -365,6 +365,14 @@
                                             <i class="icon-bar-chart"></i> Administración de Cupos
                                         </a>
                                     </li>
+                                } 
+                                @if (PermisosHelper.Is(PermisosDataAgro.SolicitudCupo))
+                                {
+                                    <li>
+                                        <a href="~/AdministracionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Solicitud de Cupos
+                                        </a>
+                                    </li>
                                 }
 
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))

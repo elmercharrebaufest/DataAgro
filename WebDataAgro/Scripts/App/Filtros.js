@@ -282,9 +282,11 @@ function filtroPopUpAddValor(nombreDelFiltro) {
 
 
 //Agregarlo en document.ready de kendo si se usa
-function inicializarPopUpSap() {
+function inicializarPopUpSap(nombrePopUp) {
 
-    crearPopUp();
+    crearPopUp(nombrePopUp);
+
+    ModalContrato();
 
 
     $("#ContratoSAPId").bind("paste", function (e) {
@@ -295,9 +297,12 @@ function inicializarPopUpSap() {
             clipText = window.clipboardData.getData('text');
         }
         $("#ContratoSAPId").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
+
         CambioVariosContratos();
     });
-    ModalContrato();
+
+
+
     $("#ContratoSAPId").change(CambioVariosContratos);
     $("#ContratoSAPHastaId").change(CambioVariosContratos);
 
@@ -320,7 +325,7 @@ function inicializarPopUpSap() {
     });
 }
 
-function crearPopUp() {
+function crearPopUp(nombrePopUp) {
 
     if ($("#popUpCargarValores").children().length == 0) {
 
@@ -345,7 +350,7 @@ function crearPopUp() {
         //header
         $("#5").prepend('<span aria-hidden="true">&times;</span>');
         $("#3").prepend('<div id="6" class="status confirmado-modal"></div>');
-        $("#6").prepend('<div>Seleccione Contratos</div>');
+        $("#6").prepend('<div>Seleccione ' + nombrePopUp + '</div>');
         $("#3").prepend('<button id="5" type="button" class="cerrar close" data-dismiss="modal" aria-label="Close"></button>');
     }
 }
@@ -404,7 +409,7 @@ function ModalContrato() {
 
 function ArmarTabla(contratos) {
     $("#contratos-table").empty();
-    var tabla = '<tr><th>Contratos</th></tr>';
+    var tabla = '<tr><th>Seleccionados:</th></tr>';
     if (contratos) {
         for (var i = 0; i < contratos.length; i++) {
             tabla += '<tr><td>' + contratos[i] + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr>';

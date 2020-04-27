@@ -201,6 +201,44 @@ namespace Molinos.DataAgro.Entities.Seguridad
         SugerenciaDeCupos =708,
         [Display(ResourceType = typeof(Text), Name = "Administracion_AlgoritimoDeCupos")]
         AlgoritimoDeCupos = 709,
+        [Display(ResourceType = typeof(Text), Name = "Alta_OtrasZonas")]
+        AltaOtrasZonas = 710,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_OtrasZonas")]
+        ModificarOtrasZonas = 711,
+        [Display(ResourceType = typeof(Text), Name = "Anular_OtrasZonas")]
+        AnularOtrasZonas = 712,
+        [Display(ResourceType = typeof(Text), Name = "Alta_OrigenSur")]
+        AltaOrigenSur = 713,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_OrigenSur")]
+        ModificarOrigenSur = 714,
+        [Display(ResourceType = typeof(Text), Name = "Anular_OrigenSur")]
+        AnularOrigenSur = 715,
+        [Display(ResourceType = typeof(Text), Name = "Alta_OrigenCentro")]
+        AltaOrigenCentro = 716,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_OrigenCentro")]
+        ModificarOrigenCentro = 717,
+        [Display(ResourceType = typeof(Text), Name = "Anular_OrigenCentro")]
+        AnularOrigenCentro = 718,
+        [Display(ResourceType = typeof(Text), Name = "Alta_CorredoresBsAs")]
+        AltaCorredoresBsAs = 719,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_CorredoresBsAs")]
+        ModificarCorredoresBsAs = 720,
+        [Display(ResourceType = typeof(Text), Name = "Anular_CorredoresBsAs")]
+        AnularCorredoresBsAs = 721,
+        [Display(ResourceType = typeof(Text), Name = "Alta_CorredoresRosario")]
+        AltaCorredoresRosario = 722,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_CorredoresRosario")]
+        ModificarCorredoresRosario = 723,
+        [Display(ResourceType = typeof(Text), Name = "Anular_CorredoresRosario")]
+        AnularCorredoresRosario = 724,
+        [Display(ResourceType = typeof(Text), Name = "Alta_OrigenNorte")]
+        AltaOrigenNorte = 725,
+        [Display(ResourceType = typeof(Text), Name = "Modificar_OrigenNorte")]
+        ModificarOrigenNorte = 726,
+        [Display(ResourceType = typeof(Text), Name = "Anular_OrigenNorte")]
+        AnularOrigenNorte = 727,
+        [Display(ResourceType = typeof(Text), Name = "SolicitudCupo")]
+        SolicitudCupo = 728,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

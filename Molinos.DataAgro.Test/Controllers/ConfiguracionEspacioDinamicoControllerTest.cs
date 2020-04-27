@@ -76,9 +76,9 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarCuposTest()
         {
-            configuracionEspacioDinamicoManagerMock.Setup(x => x.GrabarConfiguracionEspacioDinamico(It.IsAny<ConfiguracionEspacioDinamico>()))
+            configuracionEspacioDinamicoManagerMock.Setup(x => x.GrabarConfiguracionEspacioDinamico(It.IsAny<ConfiguracionEspacioDinamico>(), It.IsAny<List<DiaCupo>>()))
                 .Returns(new Resultado());
-            var result = target.Grabar(new ConfiguracionEspacioDinamicoModel { Id = 1, CantidadCupo = 1, CentroId = 1, MaterialId = 1, CalidadId = null, ComercialId = 1, ProveedorId = 1, Fecha = DateTime.Now.Date }) as RedirectToRouteResult;
+            var result = target.Grabar(new ConfiguracionEspacioDinamicoModel { Id = 1, CantidadCupo = 1, CentroId = 1, MaterialId = 1, CalidadId = null, ComercialId = 1, ProveedorId = 1, FechaDesde = new DateTime(2019, 8, 1), FechaHasta = new DateTime(2019, 8, 1)}) as RedirectToRouteResult;
 
             Assert.NotNull(result);
             materialManagerMock.Verify(x => x.TraerTodoMaterial(), Times.Once);

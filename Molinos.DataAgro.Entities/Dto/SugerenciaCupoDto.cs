@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int DestinoId { get; set; }
         public int CantidadDeCupos { get; set; }
         public decimal CantidadDeCuposMaximo { get { return this.CantidadDeCupos; } }
+        public int? CantidadFleteProcedencia { get; set; }
         public string ZonaDescrip { get; set; }
         public bool Priorizado { get; set; } 
         public DateTime FechaSugerida { get; set; }

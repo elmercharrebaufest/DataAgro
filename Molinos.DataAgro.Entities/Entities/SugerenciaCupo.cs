@@ -24,7 +24,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProveedorId { get; set; }
         public bool? Aceptado { get; set; }
         public string StandardDeCalidad { get; set; }
-
         public int? ZonaCupoId { get; set; }
         public string Destinatario { get; set; }
         public int ComercialId { get; set; }

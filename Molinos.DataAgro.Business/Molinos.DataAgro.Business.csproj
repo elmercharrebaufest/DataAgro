@@ -150,6 +150,7 @@
     <Compile Include="Managers\AreaInfluenciaManager.cs" />
     <Compile Include="Managers\CampaniaActualManager.cs" />
     <Compile Include="Managers\CampaniaMaterialManager.cs" />
+    <Compile Include="Managers\AdministracionCupoManager.cs" />
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />

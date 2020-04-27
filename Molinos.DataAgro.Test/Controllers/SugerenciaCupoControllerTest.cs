@@ -28,6 +28,9 @@ namespace Molinos.DataAgro.Test.Controllers
         private SugerenciaCupoController target;
         private Mock<ILogger> loggerMock;
         private Mock<ICupoManager> cupoManagerMock;
+        private Mock<IMaterialManager> materialManagerMock;
+        private Mock<ICentroManager> centroManagerMock;
+
 
         private JavaScriptSerializer serializer;
 
@@ -37,9 +40,10 @@ namespace Molinos.DataAgro.Test.Controllers
             this.serializer = new JavaScriptSerializer();
             loggerMock = new Mock<ILogger>();
             cupoManagerMock = new Mock<ICupoManager>();
+            materialManagerMock = new Mock<IMaterialManager>();
+            centroManagerMock = new Mock<ICentroManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new SugerenciaCupoController(loggerMock.Object, cupoManagerMock.Object);
-
+            target = new SugerenciaCupoController(loggerMock.Object, centroManagerMock.Object, cupoManagerMock.Object, materialManagerMock.Object);
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
 
@@ -48,8 +52,19 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void IndexOk()
         {
-            var result = target.Index() as ViewResult;
+            cupoManagerMock.Setup(x => x.ObtenerSugerenciaCupoAgrupadasPorProveedor(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new List<SugerenciaCupoDto> { new SugerenciaCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } });
 
+            cupoManagerMock.Setup(x => x.FechasComprendidas())
+                .Returns(new List<DateTime> { new DateTime(2018, 10, 26), new DateTime(2018, 10, 27) , new DateTime(2018, 10, 28) });
+
+            materialManagerMock.Setup(x => x.TraerTodoMaterial())
+               .Returns(new ResultIniMaterial {Material= new List<MaterialIni> ()});
+            centroManagerMock.Setup(x => x.TraerTodoCentro())
+              .Returns(new ResultIniCentro {Centro = new List<CentroIni>() });
+
+
+            var result = target.Index() as ViewResult;
             Assert.NotNull(result);
             Assert.IsEmpty(result.ViewName);
         }
@@ -65,25 +80,9 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             cupoManagerMock.Verify(x => x.ObtenerSugerenciaCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadDeCuposMaximo\":0,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadDeCuposMaximo\":0,\"CantidadFleteProcedencia\":null,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
-
-        //[Test]
-        //public void EliminarTest()
-        //{
-        //    int id = 1;
-        //    cupoManagerMock.Setup(x => x.EliminarSugerenciaCupo(id)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-        //    var result = target.Eliminar(id);
-        //    Assert.NotNull(result);
-        //    var a = serializer.Serialize(result);
-
-        //    cupoManagerMock.Verify(x => x.EliminarSugerenciaCupo(It.IsAny<int>()), Times.Once);
-        //    Assert.AreEqual(
-        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-        //        a);
-        //}
-
         [Test]
         public void AceptarTest()
         {
@@ -101,8 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
         [Test]
         public void RechazarTest()
-        {
-            //cupoManagerMock.Setup(x => x.RechazarSugerenciaCupo(It.IsAny<List<int>>(),It.IsAny<String>()));
+        {            
             List<int> ids = new List<int>();
             ids.Add(1);
             var result = target.Rechazar(ids,"");
@@ -111,6 +109,20 @@ namespace Molinos.DataAgro.Test.Controllers
             cupoManagerMock.Verify(x => x.RechazarSugerenciaCupo(It.IsAny<List<int>>(), It.IsAny<String>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void DatosConfirmarTest()
+        {
+            cupoManagerMock.Setup(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            List<ConfirmacionSugerenciaCupoDto> lista = new List<ConfirmacionSugerenciaCupoDto>();            
+            var result = target.DatosConfirmar(lista, 1, "");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            cupoManagerMock.Verify(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
     }

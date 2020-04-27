@@ -10,12 +10,37 @@
 @{
     var anularCupo = PermisosHelper.Is(PermisosDataAgro.AnularCupos);
     var modificarCupo = PermisosHelper.Is(PermisosDataAgro.ModificarCupos);
+    var modificarCentro = PermisosHelper.Is(PermisosDataAgro.ModificarOrigenCentro);
+    var modificarOtrasZonas = PermisosHelper.Is(PermisosDataAgro.ModificarOtrasZonas);
+    var modificarSur = PermisosHelper.Is(PermisosDataAgro.ModificarOrigenSur);
+    var modificarNorte = PermisosHelper.Is(PermisosDataAgro.ModificarOrigenNorte);
+    var modificarRosario = PermisosHelper.Is(PermisosDataAgro.ModificarCorredoresRosario);
+    var modificarBsAs = PermisosHelper.Is(PermisosDataAgro.ModificarCorredoresBsAs);
+    var anularCentro = PermisosHelper.Is(PermisosDataAgro.AnularOrigenCentro);
+    var anularOtrasZonas = PermisosHelper.Is(PermisosDataAgro.AnularOtrasZonas);
+    var anularSur = PermisosHelper.Is(PermisosDataAgro.AnularOrigenSur);
+    var anularNorte = PermisosHelper.Is(PermisosDataAgro.AnularOrigenNorte);
+    var anularRosario = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresRosario);
+    var anularBsAs = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresBsAs);
+
 }
 
 <script>
     comercialId = '@ViewBag.comercialId';
     anularCupo = '@anularCupo';
     modificarCupo = '@modificarCupo';
+    modificarCentro = '@modificarCentro';
+    modificarOtrasZonas = '@modificarOtrasZonas';
+    modificarSur = '@modificarSur';
+    modificarNorte = '@modificarNorte';
+    modificarRosario = '@modificarRosario';
+    modificarBsAs = '@modificarBsAs';
+    anularCentro = '@anularCentro';
+    anularOtrasZonas = '@anularOtrasZonas';
+    anularSur = '@anularSur';
+    anularNorte = '@anularNorte';
+    anularRosario = '@anularRosario';
+    anularBsAs = '@anularBsAs';
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
@@ -40,7 +65,8 @@
             <span>Propios</span>
         </div>
         <div class="float-right margen-15">
-            @if (anularCupo)
+            @if (anularCupo || anularCentro || anularOtrasZonas || anularRosario ||
+                anularSur || anularNorte || anularSur)
             {
                 <span id="anularVarios" class="btnVarios" onclick="AnularSeleccionados()">
                     <i class="fa fa-trash"></i>
@@ -49,7 +75,8 @@
             }
         </div>
         <div class="float-right margen-15">
-            @if (modificarCupo)
+            @if (modificarCupo || modificarCentro || modificarOtrasZonas || modificarRosario ||
+                modificarSur || modificarNorte || modificarSur)
             {
                 <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
                     <i class="fa fa-pencil"></i>

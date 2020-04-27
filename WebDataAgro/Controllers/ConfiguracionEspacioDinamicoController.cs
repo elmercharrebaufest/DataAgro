@@ -44,7 +44,7 @@ namespace WebDataAgro.Controllers
 
             ViewBag.comercialId = GlobalVariables.ComercialId;
             CargarViewBag();
-            return View();
+            return View(new ConfiguracionEspacioDinamicoModel() { FechaDesde = DateTime.Now.Date, FechaHasta = DateTime.Now.Date });
         }
         public ActionResult TablaConfiguracionEspacioDinamico()
         {
@@ -65,12 +65,11 @@ namespace WebDataAgro.Controllers
                 Id = espacioDinamico.Id,
                 CentroId = espacioDinamico.CentroId,
                 MaterialId = espacioDinamico.MaterialId,
-                Fecha = espacioDinamico.Fecha,
                 ProveedorId = espacioDinamico.ProveedorId,
                 ComercialId = espacioDinamico.ComercialId,
                 CantidadDeCupo = espacioDinamico.CantidadCupo,
                 Calidad = espacioDinamico.CalidadId == 1 ? "Camara" : espacioDinamico.CalidadId == 2 ? "Fabrica" : "",
-            });
+            }, espacioDinamico.Dias);
             if (resultado.HayError)
             {
                 foreach (var e in resultado.Errores)

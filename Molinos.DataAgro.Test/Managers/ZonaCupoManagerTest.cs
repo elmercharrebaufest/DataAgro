@@ -5,9 +5,11 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using Molinos.DataAgro.Test.Mock;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -15,6 +17,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -53,8 +57,15 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerTodoZonaCupoTestOk()
         {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaCorredoresBsAs.ToString()) ,
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaCorredoresRosario.ToString()),
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaOrigenCentro.ToString()),
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaOrigenNorte.ToString()),
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaOtrasZonas.ToString()),
+            new Claim(ClaimTypes.Role, PermisosDataAgro.AltaOrigenSur.ToString()) });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, ZonaCupoIni>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<ZonaCupoIni>() { new ZonaCupoIni { Id = 1, Descripcion = "1" } });
+                            .Returns(new List<ZonaCupoIni>() { new ZonaCupoIni { Id = 1, Descripcion = "1",CodigoSap ="OIC" } });
             var result = target.TraerTodoZonaCupo();
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ZonaCupo, ZonaCupoIni>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.NotNull(result);

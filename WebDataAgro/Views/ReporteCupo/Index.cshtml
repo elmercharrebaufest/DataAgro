@@ -1,6 +1,6 @@
 ﻿@{
     //Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Reporte de contratos";
+    ViewBag.Title = "Reporte de cupos";
 }
 
 @section Scripts {
@@ -28,12 +28,6 @@
         <div class="col-md-2">
             <label>Fecha de Ingreso</label>
         </div>
-        @*<div class="col-md-4">
-                <span id="fechaIngreso">
-                    <input id="fechaIngresoId" class="filtroFecha" name="FechaIngreso" type="date" style="width: 100%" />
-                </span>
-            </div>*@
-
         <div class="col-md-2">
             <span id="fechaIngresoDesde">
                 <input id="fechaIngresoDesdeId" class="filtroFecha" name="FechaIngreso-desde" type="date" style="width: 100%" />
@@ -48,12 +42,6 @@
         <div class="col-md-2">
             <label>Fecha de Registro</label>
         </div>
-        @*<div class="col-md-4">
-                <span id="fechaGeneracion">
-                    <input id="fechaGeneracionId" class="filtroFecha" name="FechaGeneracion" type="date" style="width: 100%" />
-                </span>
-            </div>*@
-
         <div class="col-md-2">
             <span id="fechaGeneracionDesde">
                 <input id="fechaGeneracionDesdeId" class="filtroFecha" name="FechaRegistro-desde" type="date" style="width: 100%" />
@@ -102,18 +90,12 @@
     </div>
     <br />
     <div class="row">
-        @*<div class="col-md-2">
-                <label>Cupo SAP</label>
-            </div>
-            <div class="col-md-4">
-                @Html.TextBox("CupoSap", "", new { @class = "form-control filtroBusquedaTextBox", style = "width:100%", @id = "CupoSap" })
-            </div>*@
         <div class="col-md-2">
             <label>Cupo SAP</label>
         </div>
         <div class="col-md-4">
             <div class="row">
-                <div class="col-xs-5 noRightPadding">
+                <div class="col-xs-9 noRightPadding">
                     @Html.TextBox("CupoSap", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
                 </div>
                 <div class="col-xs-2 noLeftPadding">
@@ -163,23 +145,6 @@
         </div>
     </div>
     <br />
-    @*<div class="row">
-        <div class="col-md-2">
-            <label>Cupo SAP</label>
-        </div>
-        <div class="col-md-4">
-            <div class="row">
-                <div class="col-xs-5 noRightPadding">
-                    @Html.TextBox("CupoSap", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
-                </div>
-                <div class="col-xs-2 noLeftPadding">
-                    <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
-                </div>
-                <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
-                </div>
-            </div>
-        </div>
-    </div>*@
     <div class="row">
         <div class="col-md-12" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
@@ -188,10 +153,6 @@
 
     <br />
 </div>
-
-
-
-
 
 <br />
 <div>

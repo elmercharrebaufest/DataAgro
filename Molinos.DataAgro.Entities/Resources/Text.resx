@@ -148,7 +148,7 @@
     <value>Ampliar Negocio Corredor</value>
   </data>
   <data name="Anular_Cupos" xml:space="preserve">
-    <value>Anular Cupos</value>
+    <value>Anular Cupos de todas las Zonas</value>
   </data>
   <data name="April" xml:space="preserve">
     <value>Abril</value>
@@ -409,7 +409,7 @@
     <value>Mes</value>
   </data>
   <data name="Modificar_Cupos" xml:space="preserve">
-    <value>Modificar Cupos</value>
+    <value>Modificar Cupos de todas las Zonas</value>
   </data>
   <data name="Modificar_Datos_Proveedor" xml:space="preserve">
     <value>Modificar Proveedores</value>
@@ -612,6 +612,72 @@
   </data>
   <data name="Confirmar_NegocioOrigSur" xml:space="preserve">
     <value>Confirmar negocios Orig Sur</value>
+  </data>
+  <data name="Alta_CorredoresBsAs" xml:space="preserve">
+    <value>Alta Corredores Bs As</value>
+  </data>
+  <data name="Alta_CorredoresRosario" xml:space="preserve">
+    <value>Alta Corredores Rosario</value>
+  </data>
+  <data name="Alta_OrigenCentro" xml:space="preserve">
+    <value>Alta Origen Centro</value>
+  </data>
+  <data name="Alta_OrigenNorte" xml:space="preserve">
+    <value>Alta Origen Norte</value>
+  </data>
+  <data name="Alta_OrigenSur" xml:space="preserve">
+    <value>Alta Origen Sur</value>
+  </data>
+  <data name="Alta_OtrasZonas" xml:space="preserve">
+    <value>Alta Otras Zonas</value>
+  </data>
+  <data name="Anular_CorredoresBsAs" xml:space="preserve">
+    <value>Anular Corredores Bs As</value>
+  </data>
+  <data name="Anular_CorredoresRosario" xml:space="preserve">
+    <value>Anular Corredores Rosario</value>
+  </data>
+  <data name="Anular_OrigenCentro" xml:space="preserve">
+    <value>Anular Origen Centro</value>
+  </data>
+  <data name="Anular_OrigenNorte" xml:space="preserve">
+    <value>Anular Origen Norte</value>
+  </data>
+  <data name="Anular_OrigenSur" xml:space="preserve">
+    <value>Anular Origen Sur</value>
+  </data>
+  <data name="Anular_OtrasZonas" xml:space="preserve">
+    <value>Anular Otras Zonas</value>
+  </data>
+  <data name="Modificar_CorredoresBsAs" xml:space="preserve">
+    <value>Modificar Corredores Bs As</value>
+  </data>
+  <data name="Modificar_CorredoresRosario" xml:space="preserve">
+    <value>Modificar Corredores Rosario</value>
+  </data>
+  <data name="Modificar_OrigenCentro" xml:space="preserve">
+    <value>Modificar Origen Centro</value>
+  </data>
+  <data name="Modificar_OrigenNorte" xml:space="preserve">
+    <value>Modificar Origen Norte</value>
+  </data>
+  <data name="Modificar_OrigenSur" xml:space="preserve">
+    <value>Modificar Origen Sur</value>
+  </data>
+  <data name="Modificar_OtrasZonas" xml:space="preserve">
+    <value>Modificar Otras Zonas</value>
+  </data>
+  <data name="EstadoAceptadoAdministracionCupo" xml:space="preserve">
+    <value>Aceptado</value>
+  </data>
+  <data name="EstadoPendienteAdministracionCupo" xml:space="preserve">
+    <value>Pendiente</value>
+  </data>
+  <data name="EstadoRechazadoAdministracionCupo" xml:space="preserve">
+    <value>Rechazado</value>
+  </data>
+  <data name="SolicitudCupo" xml:space="preserve">
+    <value>Solicitud de Cupos</value>
   </data>
   <data name="Visualizar_OcultarEnTablero" xml:space="preserve">
     <value>Ver Marca Ocultar en Tablero </value>

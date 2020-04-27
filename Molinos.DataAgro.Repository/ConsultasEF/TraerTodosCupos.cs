@@ -53,6 +53,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CentroId = cupo.CentroId,
                     Calidad = cupo.Calidad,
                     ZonaCupo = cupo.ZonaCupo.Descripcion,
+                    ZonaCupoSap = cupo.ZonaCupo.CodigoSap,
                     ZonaCupoId = cupo.ZonaCupoId,
                     FleteProcedencia = cupo.FleteProcedencia,
                     Observaciones = cupo.Observaciones,

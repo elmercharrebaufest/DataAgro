@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IConfiguracionEspacioDinamicoManager
     {
-        Resultado GrabarConfiguracionEspacioDinamico(ConfiguracionEspacioDinamico cupo);
+        Resultado GrabarConfiguracionEspacioDinamico(ConfiguracionEspacioDinamico cupo, List<DiaCupo> dias);
         KendoGrid<ConfiguracionEspacioDinamicoDto> TraerTodaConfiguracionEspacioDinamico(KendoGridMvcRequest request);
         ConfiguracionEspacioDinamicoDto TraerConfiguracionEspacioDinamico(int id);
         Resultado EliminarConfiguracionEspacioDinamico(int id);

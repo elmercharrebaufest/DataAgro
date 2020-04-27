@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
+    <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
     <Compile Include="Common\Enums\EnumMeses.cs" />
@@ -120,11 +121,14 @@
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\DatosReporteProveedor.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
+    <Compile Include="Dto\AdministracionCupoDto.cs" />
+    <Compile Include="Dto\ConfirmacionSugerenciaCupoDto.cs" />
     <Compile Include="Dto\EstadoCupoDto.cs" />
     <Compile Include="Dto\FilterObjectModif.cs" />
     <Compile Include="Dto\FilterObjectWrapperModif.cs" />
     <Compile Include="Dto\FiltroReporteCupoDto.cs" />
     <Compile Include="Dto\KendoGridMvcRequestModif.cs" />
+    <Compile Include="Dto\SugerenciaNoAceptada.cs" />
     <Compile Include="Dto\ReporteCompraNetModel.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
@@ -258,6 +262,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\AdministracionCupo.cs" />
     <Compile Include="Entities\CondicionPago.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />

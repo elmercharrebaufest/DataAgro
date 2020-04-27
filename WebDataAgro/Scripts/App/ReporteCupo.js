@@ -179,17 +179,6 @@ function inicializarElementos() {
 
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
 
-    $("#CupoSap").bind("paste", function (e) {
-        e.preventDefault();
-        if (e.originalEvent.clipboardData !== undefined) {
-            clipText = e.originalEvent.clipboardData.getData('text/plain');
-        } else {
-            clipText = window.clipboardData.getData('text');
-        }
-        $("#CupoSap").val(clipText.replace(/(\r\n|\n|\r)/gm, ";"));
-        CambioVariosContratos();
-    });
-
     $("#Destinatario").bind("paste", function (e) {
         e.preventDefault();
         if (e.originalEvent.clipboardData !== undefined) {
@@ -201,7 +190,7 @@ function inicializarElementos() {
         CambioVariosContratos();
     });
 
-    inicializarPopUpSap();
+    inicializarPopUpSap("Cupos");
 
 }
 

@@ -1,0 +1,166 @@
+﻿@model WebDataAgro.Models.ConfiguracionCupoModel
+@using Molinos.DataAgro.Entities.Dto
+@{
+    ViewBag.Title = "Administracion Cupos";
+    var panel = (List<DiaCupo>)ViewBag.Panel;
+    var noAceptadas = (List<SugerenciaNoAceptada>)ViewBag.SugerenciasNoAceptadas;
+    var fechas = (List<DateTime>)ViewBag.Fechas;
+
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-toggle.min.css" rel="stylesheet" />
+}
+
+<script src="~/Scripts/KendoExtensions.js"></script>
+<script src="~/Scripts/App/AdministracionCupoGrilla.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/bootstrap-toggle.min.js"></script>
+
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a data-target="#method" data-toggle="tab">Solicitud de Cupos</a></li>
+    <li><a data-target="#payment" data-toggle="tab">Panel Cupos</a></li>
+
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="method">
+        <div class="row-fluid" id="Tabla">
+            <div class="col-xs-12">
+                <div id="gridInformeCompraNet" class="table-responsive"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="payment">
+        <div id="panel" class="table-editable table-responsive">
+
+            <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tabla">
+                <thead>
+                    <tr>
+                        <th></th>
+                        @foreach (var r in fechas)
+                        {
+                            var fecha = r.ToString("dd/MM/yyyy");
+                            <th class="text-center">
+                                <span>@fecha</span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span  style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Configuración de cupos">Disponibilidad en planta </span></td>
+                        @foreach (var d in fechas)
+                        {
+                            <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td ><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad de planta vs la totalidad en cupos de cada sugerencia aceptada y de cada sugerencia pendiente mas los cupos devueltos.">Cupos libres</span></td>
+                        @foreach (var d in fechas)
+                        {
+                            <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos confirmados por los comerciales.">Cupos aceptados</span></td>
+                        @foreach (var d in fechas)
+                        {
+                            <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadSugerenciaAceptadaDia = 0 }).Sum(x => x.CantidadSugerenciaAceptadaDia)</td>
+                        }
+
+
+                    </tr>
+                    <tr>
+                        <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos que no fueron confirmados en su totalidad.">Cupos devueltos</span></td>
+                        @foreach (var d in fechas)
+                        {
+                            <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadCuposDevueltos = 0 }).Sum(x => x.CantidadCuposDevueltos)</td>
+                        }
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br />
+
+        <div id="panel" class="table-editable table-responsive">
+
+            <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tabla">
+                <caption>Sugerencias Pendientes</caption>
+                <thead>
+                    @{
+                        var dias = noAceptadas.SelectMany(x => x.Diacupo.Select(y => y.Fecha)).Distinct().OrderBy(x => x).ToList();
+                    }
+                    <tr>
+                        <th></th>
+                        @foreach (var r in dias)
+                        {
+                            var fecha = r.ToString("dd/MM/yyyy");
+                            <th class="text-center">
+                                <span>@fecha</span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var c in noAceptadas)
+                    {
+                        <tr>
+                            <td>@c.NombreComercial</td>
+                            @foreach (var d in dias)
+                            {
+                                <td>@c.Diacupo.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:65%">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="resultadoCupo"></h1>
+                <div class="status confirmado-modal">
+                    <div>Cupos Creados</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="error-modal" hidden></div>
+                <div id="cupos-generados-modal" style="text-align:center"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn k-button" data-dismiss="modal" onclick="recargarAceptar()">Aceptar</button>
+                <button type="button" class="btn k-button" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #gridInformeCompraNet td {
+        text-align: center !important;
+    }
+     .popover-content {
+            color: dimgray;
+            font-size: 9px !important;
+            font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
+        }
+</style>
+
+
+
+

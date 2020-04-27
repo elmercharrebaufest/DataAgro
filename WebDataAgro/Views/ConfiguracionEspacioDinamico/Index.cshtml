@@ -26,10 +26,16 @@
                 @Html.ValidationSummary()
             </div>
         </div>
+        <script>
+           var cantidadDias = '@Html.Raw(Json.Encode(Model.Dias))';
+           ActualizarCantidad(JSON.parse(cantidadDias));
+        </script>
     }
     else
     {
-        <script>$(document).ready(LimpiarConfiguracion)</script>
+<script>
+    $(document).ready(LimpiarConfiguracion);
+</script>
     }
     <div class="alert alert-success alert-dismissible" role="alert" hidden>
         <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
@@ -40,7 +46,12 @@
             <div class="desplegable">
                 <span class="historial">Alta</span>
             </div>
-
+            <div id="boton-carga-masiva" class="margen-15" hidden>
+                <span class="btnVarios" onclick="MostrarCarga()">
+                    Carga Masiva
+                </span>
+            </div>
+            <br />
 
             @using (Html.BeginForm("Grabar", null, FormMethod.Post))
             {
@@ -62,16 +73,16 @@
                 </div>
                 <div class="row" style="padding-top:8px;">
                     <div class="col-xs-2">
-                        <span>Fecha</span>
+                        <span>Desde</span>
                     </div>
                     <div class="col-sm-4">
-                        @Html.TextBoxFor(x => x.Fecha, new { @class = "w100" })
+                        @Html.TextBoxFor(x => x.FechaDesde, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaDesde" })
                     </div>
                     <div class="col-xs-2">
-                        <span>Cantidad de Cupos</span>
+                        <span>Hasta</span>
                     </div>
                     <div class="col-sm-4">
-                        @Html.TextBoxFor(x => x.CantidadCupo, new { @class = "w100" })
+                        @Html.TextBoxFor(x => x.FechaHasta, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
                     </div>
                 </div>
                 <div class="row">
@@ -92,17 +103,55 @@
                     <div id="buscadorResult"></div>
                 </div>
                 <div class="row">
+                    <div class="col-md-2 col-xs-12">
+                        <span>Cantidad de Cupos</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.CantidadCupo, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
+                    </div>
                     <div id="calidadDiv">
-                        <div class="col-sm-2">
+                        <div class="col-xs-2" style="margin-left:-8px">
                             <label>Calidad</label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4"  style="margin-left:8px">
                             @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control" })
                         </div>
                     </div>
+
                 </div>
                 <div class="row">
                     <button class="btn btnSubmit" type="submit">Grabar</button>
+                </div>
+
+
+                <div class="modal fade" id="CargaCupos" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h1 class="modal-title" id="CargaCupos"></h1>
+                                <div class="status confirmado-modal">
+                                    <div>Carga de Cupos</div>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table id="carga-cupos-table" class="table table-striped">
+                                        <tr>
+                                            <th>Día</th>
+                                            <th>Cantidad</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+                                <button type="button" class="myBtn btn" id="cancelar-carga" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
@@ -111,3 +160,8 @@
         @Html.Action("TablaConfiguracionEspacioDinamico", "ConfiguracionEspacioDinamico")
     </div>
 </div>
+<style>
+    .btn{
+        margin-left: 5px !important;
+    }
+</style>

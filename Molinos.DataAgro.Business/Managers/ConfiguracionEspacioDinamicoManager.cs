@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.repositorio = repositorio;
         }
 
-        public Resultado GrabarConfiguracionEspacioDinamico(ConfiguracionEspacioDinamico espacioDinamico)
+        public Resultado GrabarConfiguracionEspacioDinamico(ConfiguracionEspacioDinamico espacioDinamico, List<DiaCupo> dias)
         {
             var oEntityErrors = Validar(espacioDinamico);
             if (oEntityErrors.HayError)
@@ -33,7 +33,21 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (espacioDinamico.Id == 0)
                 {
-                    repositorio.Agregar(espacioDinamico);
+                    foreach (var d in dias)
+                    {
+                        if (d.Cantidad > 0)
+                        {
+                            if (d.Fecha < DateTime.Today)
+                            {
+                                oEntityErrors.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
+                                continue;
+                            }
+                            espacioDinamico.CantidadDeCupo = d.Cantidad.Value;
+                            espacioDinamico.Fecha = d.Fecha;
+                            repositorio.Agregar(espacioDinamico);
+                            repositorio.GuardarCambios();
+                        }
+                    }
                 }
                 else
                 {
@@ -85,15 +99,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 errores.Error("espaciodinamico", "seleccione un centro");
             }
-            if (espacioDinamico.Fecha == new DateTime())
-            {
-                errores.Error("espacioDinamico", "La fecha no puede estar vacia");
-            }
             if (espacioDinamico.Id == 0)
             {
                 if (repositorio.Existe<ConfiguracionEspacioDinamico>(x => x.ComercialId == espacioDinamico.ComercialId && x.ProveedorId == espacioDinamico.ProveedorId && x.CentroId == espacioDinamico.CentroId && x.MaterialId == espacioDinamico.MaterialId && x.Fecha == espacioDinamico.Fecha))
                 {
-                    errores.Error("espacioDinamico", "Ya existe configuración para ese Comercial,Proveedor, Material, Centro y Fecha");
+                    errores.Error("espacioDinamico", "Ya existe configuración para ese Comercial, Proveedor, Material, Centro y Fecha");
                 }
             }
             return errores;

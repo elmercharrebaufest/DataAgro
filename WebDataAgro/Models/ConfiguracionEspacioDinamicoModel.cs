@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Molinos.DataAgro.Entities.Resources;
+using System.Collections.Generic;
 
 namespace WebDataAgro.Models
 {
@@ -13,7 +14,9 @@ namespace WebDataAgro.Models
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_MaterialRequerido")]
         public int MaterialId { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
-        public DateTime Fecha { get; set; }
+        public DateTime FechaDesde { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
+        public DateTime FechaHasta { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
         public int CantidadCupo { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
@@ -22,5 +25,6 @@ namespace WebDataAgro.Models
         public int ComercialId { get; set; }
         public Resultado Resultado { get; set; }
         public int? CalidadId { get; set; }
+        public List<DiaCupo> Dias { get; set; }
     }
 }

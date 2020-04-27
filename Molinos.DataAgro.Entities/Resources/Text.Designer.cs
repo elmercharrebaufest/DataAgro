@@ -115,6 +115,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alta Corredores Bs As.
+        /// </summary>
+        public static string Alta_CorredoresBsAs {
+            get {
+                return ResourceManager.GetString("Alta_CorredoresBsAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Corredores Rosario.
+        /// </summary>
+        public static string Alta_CorredoresRosario {
+            get {
+                return ResourceManager.GetString("Alta_CorredoresRosario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alta Cupos.
         /// </summary>
         public static string Alta_Cupos {
@@ -129,6 +147,42 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Alta_Datos_Proveedor {
             get {
                 return ResourceManager.GetString("Alta_Datos_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Origen Centro.
+        /// </summary>
+        public static string Alta_OrigenCentro {
+            get {
+                return ResourceManager.GetString("Alta_OrigenCentro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Origen Norte.
+        /// </summary>
+        public static string Alta_OrigenNorte {
+            get {
+                return ResourceManager.GetString("Alta_OrigenNorte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Origen Sur.
+        /// </summary>
+        public static string Alta_OrigenSur {
+            get {
+                return ResourceManager.GetString("Alta_OrigenSur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Otras Zonas.
+        /// </summary>
+        public static string Alta_OtrasZonas {
+            get {
+                return ResourceManager.GetString("Alta_OtrasZonas", resourceCulture);
             }
         }
         
@@ -160,11 +214,65 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anular Cupos.
+        ///   Looks up a localized string similar to Anular Corredores Bs As.
+        /// </summary>
+        public static string Anular_CorredoresBsAs {
+            get {
+                return ResourceManager.GetString("Anular_CorredoresBsAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Corredores Rosario.
+        /// </summary>
+        public static string Anular_CorredoresRosario {
+            get {
+                return ResourceManager.GetString("Anular_CorredoresRosario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Cupos de todas las Zonas.
         /// </summary>
         public static string Anular_Cupos {
             get {
                 return ResourceManager.GetString("Anular_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Origen Centro.
+        /// </summary>
+        public static string Anular_OrigenCentro {
+            get {
+                return ResourceManager.GetString("Anular_OrigenCentro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Origen Norte.
+        /// </summary>
+        public static string Anular_OrigenNorte {
+            get {
+                return ResourceManager.GetString("Anular_OrigenNorte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Origen Sur.
+        /// </summary>
+        public static string Anular_OrigenSur {
+            get {
+                return ResourceManager.GetString("Anular_OrigenSur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anular Otras Zonas.
+        /// </summary>
+        public static string Anular_OtrasZonas {
+            get {
+                return ResourceManager.GetString("Anular_OtrasZonas", resourceCulture);
             }
         }
         
@@ -790,6 +898,33 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aceptado.
+        /// </summary>
+        public static string EstadoAceptadoAdministracionCupo {
+            get {
+                return ResourceManager.GetString("EstadoAceptadoAdministracionCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pendiente.
+        /// </summary>
+        public static string EstadoPendienteAdministracionCupo {
+            get {
+                return ResourceManager.GetString("EstadoPendienteAdministracionCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rechazado.
+        /// </summary>
+        public static string EstadoRechazadoAdministracionCupo {
+            get {
+                return ResourceManager.GetString("EstadoRechazadoAdministracionCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Febrero.
         /// </summary>
         public static string February {
@@ -1006,7 +1141,25 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Cupos.
+        ///   Looks up a localized string similar to Modificar Corredores Bs As.
+        /// </summary>
+        public static string Modificar_CorredoresBsAs {
+            get {
+                return ResourceManager.GetString("Modificar_CorredoresBsAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Corredores Rosario.
+        /// </summary>
+        public static string Modificar_CorredoresRosario {
+            get {
+                return ResourceManager.GetString("Modificar_CorredoresRosario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Cupos de todas las Zonas.
         /// </summary>
         public static string Modificar_Cupos {
             get {
@@ -1065,6 +1218,42 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Modificar_Negocios {
             get {
                 return ResourceManager.GetString("Modificar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Origen Centro.
+        /// </summary>
+        public static string Modificar_OrigenCentro {
+            get {
+                return ResourceManager.GetString("Modificar_OrigenCentro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Origen Norte.
+        /// </summary>
+        public static string Modificar_OrigenNorte {
+            get {
+                return ResourceManager.GetString("Modificar_OrigenNorte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Origen Sur.
+        /// </summary>
+        public static string Modificar_OrigenSur {
+            get {
+                return ResourceManager.GetString("Modificar_OrigenSur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Otras Zonas.
+        /// </summary>
+        public static string Modificar_OtrasZonas {
+            get {
+                return ResourceManager.GetString("Modificar_OtrasZonas", resourceCulture);
             }
         }
         
@@ -1299,6 +1488,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Servicio_Auth {
             get {
                 return ResourceManager.GetString("Servicio_Auth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solicitud de Cupos.
+        /// </summary>
+        public static string SolicitudCupo {
+            get {
+                return ResourceManager.GetString("SolicitudCupo", resourceCulture);
             }
         }
         

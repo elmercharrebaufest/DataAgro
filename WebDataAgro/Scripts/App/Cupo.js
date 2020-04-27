@@ -4,13 +4,36 @@ var zonaSeleccionada;
 var anularCupo;
 var modificarCupo;
 var filasSeleccionadas = {};
-
+var modificarCentro;
+var modificarOtrasZonas;
+var modificarSur;
+var modificarNorte;
+var modificarRosario;
+var modificarBsAs;
+var anularCentro;
+var anularOtrasZonas;
+var anularSur;
+var anularNorte;
+var anularRosario;
+var anularBsAs;
 
 
 $(document).ready(function () {
     anularCupo = ConvertirStringABool(anularCupo);
     modificarCupo = ConvertirStringABool(modificarCupo);
-
+    modificarCentro = ConvertirStringABool(modificarCentro);
+    modificarOtrasZonas = ConvertirStringABool(modificarOtrasZonas);;
+    modificarSur = ConvertirStringABool(modificarSur);;
+    modificarNorte = ConvertirStringABool(modificarNorte);;
+    modificarRosario = ConvertirStringABool(modificarRosario);
+    modificarBsAs = ConvertirStringABool(modificarBsAs);
+    anularCupo = ConvertirStringABool(anularCupo);
+    anularCentro = ConvertirStringABool(anularCentro);
+    anularOtrasZonas = ConvertirStringABool(anularOtrasZonas);;
+    anularSur = ConvertirStringABool(anularSur);;
+    anularNorte = ConvertirStringABool(anularNorte);;
+    anularRosario = ConvertirStringABool(anularRosario);
+    anularBsAs = ConvertirStringABool(anularBsAs);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     $("#crearCupo").click(function () {
@@ -442,7 +465,21 @@ function botonRetransmitir(dataItem, icono) {
         return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
             "'" + dataItem.CupoSap + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
-    } else {
+    } else if (anularCentro == true && dataItem.ZonaCupoSap == "OIC" ||
+        anularNorte == true && dataItem.ZonaCupoSap == "OIN" ||
+        anularRosario == true && dataItem.ZonaCupoSap == "CRO" ||
+        anularBsAs == true && dataItem.ZonaCupoSap == "CBA" ||
+        anularSur == true && dataItem.ZonaCupoSap == "OIS" ||
+        anularOtrasZonas == true && dataItem.ZonaCupoSap == "FAS" ||
+        anularOtrasZonas == true && dataItem.ZonaCupoSap == "MAT" ||
+        anularOtrasZonas == true && dataItem.ZonaCupoSap == "PPR" ||
+        anularOtrasZonas == true && dataItem.ZonaCupoSap == "RED" ||
+        anularOtrasZonas == true && dataItem.ZonaCupoSap == "SOL") {
+        return '<button data-toggle="tooltip" title="Transmitir a STOP" onclick="Retransmitir(' +
+            "'" + dataItem.CupoSap + "'" +
+            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    }
+    else {
         return '<div></div>';
     }
 
@@ -452,9 +489,20 @@ function botonModificar(dataItem, icono) {
         return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
             "'" + dataItem.Id + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
-    } else {
-        return "<div></div>";
-    }
+    } else if (modificarCentro == true && dataItem.ZonaCupoSap == "OIC" ||
+        modificarNorte == true && dataItem.ZonaCupoSap == "OIN" ||       
+        modificarRosario == true && dataItem.ZonaCupoSap == "CRO" ||
+        modificarBsAs == true && dataItem.ZonaCupoSap == "CBA" ||
+        modificarSur == true && dataItem.ZonaCupoSap == "OIS" ||
+        modificarOtrasZonas == true && dataItem.ZonaCupoSap == "FAS" ||
+        modificarOtrasZonas == true && dataItem.ZonaCupoSap == "MAT" ||
+        modificarOtrasZonas == true && dataItem.ZonaCupoSap == "PPR" ||
+        modificarOtrasZonas == true && dataItem.ZonaCupoSap == "RED" ||
+        modificarOtrasZonas == true && dataItem.ZonaCupoSap == "SOL") {
+        return '<button data-toggle="tooltip" title="Modificar Cupo" onclick="ModificarCupo(' +
+            "'" + dataItem.Id + "'" +
+            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    } else { return "<div></div>"; }
 }
 function ModalBorrar(id, cupo) {
     $("#cupo_a_borrar").text(cupo);
@@ -552,9 +600,20 @@ function AnularSeleccionados() {
     var borrar = [];
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if (selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7 || selectedItem.EstadoCupoId == 8)
+        if ((selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 7 ||
+            selectedItem.EstadoCupoId == 8) && (anularCentro && selectedItem.ZonaCupoSap == "OIC" ||
+            anularNorte && selectedItem.ZonaCupoSap == "OIN" ||
+            anularRosario && selectedItem.ZonaCupoSap == "CRO" ||
+            anularBsAs && selectedItem.ZonaCupoSap == "CBA" ||
+            anularSur && selectedItem.ZonaCupoSap == "OIS" ||
+            anularOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
+            anularOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
+            anularOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
+            anularOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
+            anularOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || anularCupo)) {
             obj.push(selectedItem.CupoSap);
-        borrar.push(selectedItem.Id);
+            borrar.push(selectedItem.Id);
+        }
     });
     var result;
     if (obj.length == 0) {
@@ -602,7 +661,17 @@ function ModificarSeleccionados() {
     var obj = [];
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if (selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 8)
+        if ((selectedItem.EstadoCupoId == 1 || selectedItem.EstadoCupoId == 6 || selectedItem.EstadoCupoId == 8) &&
+            (modificarCentro && selectedItem.ZonaCupoSap == "OIC" ||
+            modificarNorte  && selectedItem.ZonaCupoSap == "OIN" ||
+            modificarRosario  && selectedItem.ZonaCupoSap == "CRO" ||
+            modificarBsAs && selectedItem.ZonaCupoSap == "CBA" ||
+            modificarSur && selectedItem.ZonaCupoSap == "OIS" ||
+            modificarOtrasZonas && selectedItem.ZonaCupoSap == "FAS" ||
+            modificarOtrasZonas && selectedItem.ZonaCupoSap == "MAT" ||
+            modificarOtrasZonas && selectedItem.ZonaCupoSap == "PPR" ||
+            modificarOtrasZonas && selectedItem.ZonaCupoSap == "RED" ||
+            modificarOtrasZonas && selectedItem.ZonaCupoSap == "SOL" || modificarCupo))
             obj.push(selectedItem.Id);
     });
     if (obj.length == 0) {
@@ -627,6 +696,7 @@ function AutoRecargar() {
     }, 30000);
 
 }
+
 function SeleccionarElementos() {
     var grid = $("#gridCupo").data("kendoGrid");
     var selectedRows = grid.select();

@@ -3,6 +3,8 @@
     kendo.culture("es-AR");
     CargarGrillaConfig();
     CargarEventos();
+   
+
 });
 $(document).on('click', '.list > li ', function () {
     $(this).next('ul').toggle(200);
@@ -12,29 +14,34 @@ $(document).on('click', '.list > li ', function () {
 })
 function CargarEventos() {
     $("#btnCancelar").click(function () {
-        $("#movitoRechazo").val("");
+        $("#motivoRechazo").val("");
         $("#ModalRolPermiso").modal('hide');
         recargarGrilla();
     });
 
+    $("#btnRechazar").click(function () {
+        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
+        if (grid.selectedKeyNames().length == 0) {
+            MensErr("Debe seleccionar al menos una sugerencia.");
+
+        } else {
+            $("#ModalRechazo").modal('show');          
+            
+        }
+
+    });
     $("#btnAceptarRechazar").click(function () {
-        var motivo = $.trim($("#movitoRechazo").val());
+        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
+        var motivo = $.trim($("#motivoRechazo").val());
         if (motivo == "") {
             MensErr("Ingrese un motivo de Rechazo");
             return false;
         }
         if (motivo.length > 500) {
-            MensErr("El texto ingresado es demaciado largo");
-            return false;
-        }
-        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
-        if (grid.selectedKeyNames().length == 0) {
-            MensErr("Debe seleccionar al menos una sugerencia.");
+            MensErr("El texto ingresado es demasiado largo");
             return false;
         }
         BlockUi("Grabando...");
-
-
         result = MSExecuteOnServer('/SugerenciaCupo/Rechazar', { ids: grid.selectedKeyNames(), motivo: motivo });
         grid._selectedIds = {};
         grid.clearSelection();
@@ -56,8 +63,8 @@ function CargarEventos() {
         }
     });
 
-    $("#btnAceptar").click(function () {
-        BlockUi("Grabando...");
+
+    function ListarSugerencias() {
         var grid = $('#gridSugerenciaCupo').data('kendoGrid');
 
         var list = new Array();
@@ -65,14 +72,60 @@ function CargarEventos() {
             var item = grid.dataSource.data()[i];
             for (var j = 0; j < grid.selectedKeyNames().length; j++) {
                 if (grid.selectedKeyNames()[j] == item.Id) {
-                    console.log(item);
                     list.push(item);
                     break;
                 }
             }
         }
-        console.log(list);
-        result = MSExecuteOnServer('/SugerenciaCupo/Aceptar', list);// grid.selectedKeyNames());
+        return list;
+    }
+
+    $("#btnAceptar").click(function () {
+        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
+        if (grid.selectedKeyNames().length == 0) {
+            MensErr("Debe seleccionar al menos una sugerencia.");
+
+        }else {
+            $("#fleteProcedenciaModal").modal("show");
+        }
+
+    });
+    $('#CargaCupos').on('hidden.bs.modal', function () {
+        $("#cuerpo-carga-cupos").empty();
+    });
+
+    $("#boton-si").click(function () {
+        var sugerencias = ListarSugerencias();
+        var fila = '';
+        for (var i = 0; i < sugerencias.length; i++) {
+            fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
+                + kendo.toString(sugerencias[i].FechaSugerida, "dd/MM/yyyy")
+                + '</td> <td><input id="fleteProcedencia'+i+'" name="' + sugerencias[i].CantidadFleteProcedencia + '" min="1" max="' + sugerencias[i].CantidadDeCuposMaximo
+                + '" class="cantidad" value="' + sugerencias[i].CantidadFleteProcedencia + '"/> </td> <td>'
+                + 'Max. de cupos: ' + sugerencias[i].CantidadDeCuposMaximo + '</td></tr>'
+            $("#cuerpo-carga-cupos").append(fila);
+        }
+        $(".cantidad").kendoNumericTextBox({
+            culture: "es-AR",
+            format: "n0",
+            spinners: false,
+            min: 0
+        });
+        $("#fleteProcedenciaModal").modal("hide");
+        $("#CargaCupos").modal("show");       
+    });
+
+    $("#aceptar").click(function () {
+        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
+        var sugerencias = ListarSugerencias();
+        for (var j = 0; j < sugerencias.length; j++) {
+            sugerencias[j].CantidadFleteProcedencia = $("#fleteProcedencia" + j).val();
+            sugerencias[j].CantidadDeCupos = sugerencias[j].CantidadDeCupos - sugerencias[j].CantidadFleteProcedencia;
+
+        }
+        BlockUi("Grabando...");
+        result = MSExecuteOnServer('/SugerenciaCupo/Aceptar', sugerencias);// grid.selectedKeyNames());
+        $("#CargaCupos").modal("hide");
 
         $.unblockUI();
         var errores = new Array();
@@ -86,7 +139,6 @@ function CargarEventos() {
             }
         }
         if (cuposGenerados.length > 0) {
-            //MensInfo("Cupos generados: " + cuposGenerados.join());
             cuposCreados(cuposGenerados);
             grid._selectedIds = {};
             grid.clearSelection();
@@ -97,6 +149,34 @@ function CargarEventos() {
         }
     });
 
+    $("#boton-no").click(function () {
+        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
+        $("#fleteProcedenciaModal").modal("hide");
+        BlockUi("Grabando...");
+        var lista = ListarSugerencias();
+        result = MSExecuteOnServer('/SugerenciaCupo/Aceptar', lista);
+        $.unblockUI();
+        var error = new Array();
+        var cupos = new Array();
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].HayError) {
+                error = error.concat(result[i].ListaErrores);
+            }
+            if (result[i].ListaCupos != null && result[i].ListaCupos.length > 0) {
+                cupos = cupos.concat(result[i].ListaCupos);
+            }
+        }
+        if (cupos.length > 0) {
+            //MensInfo("Cupos generados: " + cuposGenerados.join());
+            cuposCreados(cupos);
+            grid._selectedIds = {};
+            grid.clearSelection();
+            grid.dataSource.read();
+        }
+        if (error.length > 0) {
+            ShowErrorMessages(error);
+        }
+    });
 }
 
 function cuposCreados(lista) {

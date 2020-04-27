@@ -53,37 +53,103 @@
 <script src="~/Scripts/KendoExtensions.js"></script>
 <script src="~/Scripts/kendo/messages/kendo.messages.es-AR.min.js"></script>
 <script src="~/Scripts/App/SugerenciaCupo.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 
 @*<link href="~/Content/compraNet.css" rel="stylesheet" />*@
 <link href="~/Content/cupo.css" rel="stylesheet" />
 
-<div class="container-fluid" >
-
-    <div class="panelflotante">
-        <div class="row">
-            <div class="float-right margen-15">
-                <span data-toggle="modal" data-target="#ModalRechazo" class="btnVarios">
-                    <i class="fa fa-mail-forward"></i>
-                    Rechazar
-                </span>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active"><a data-target="#payment" data-toggle="tab">Sugerencia de cupos pendientes</a></li>
+            <li><a data-target="#method" data-toggle="tab">Sugerencia de cupos pendientes detalles</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="payment">
+                <div class="row">
+                    <div class="col-xs-12" style="padding:0;">
+                        @Html.Partial("TablaSugerenciaCupo")
+                    </div>
+                </div>
             </div>
-            <div class="float-right margen-15">
-                <span id="btnAceptar" class="btnVarios">
-                    <i class="fa fa-copy"></i>
-                    Aceptar
-                </span>
+            <div class="tab-pane" id="method">
+                <div class="panelflotante">
+                    <div class="row">
+                        <div class="float-right margen-15">
+                            <span id="btnRechazar" class="btnVarios">
+                                <i class="fa fa-mail-forward"></i>
+                                Rechazar
+                            </span>
+                        </div>
+                        <div class="float-right margen-15">
+                            <span id="btnAceptar" class="btnVarios">
+                                <i class="fa fa-copy"></i>
+                                Aceptar
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12" style="padding:0;">
+                        <div id="gridSugerenciaCupo" class="table-responsive">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <br />
-    @*<div class="row">
-            <button class="btn k-button" type="button" id="btnAceptar">Aceptar</button>
-            <button class="btn k-button" type="button" data-toggle="modal" data-target="#ModalRechazo">Rechazar</button>
-        </div>*@
-    <div class="row">
-        <div class="col-xs-12" style="padding:0;">
-            <div id="gridSugerenciaCupo" class="table-responsive">
+<div class="modal fade" id="fleteProcedenciaModal" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="status confirmado-modal">
+                    <div>¿Desea reasignar un cupo con flete procedencia?</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" id="boton-si">Si</button>
+                <button type="button" class="myBtn btn" id="boton-no">No</button>
+                <button type="button" class="myBtn btn" data-dismiss="modal" id="boton-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<div class="modal fade" id="CargaCupos" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="sugerencia"></h1>
+                <div class="status confirmado-modal">
+                    <div>Flete Procedencia</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="carga-cupos-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Proveedor</th>
+                                <th>Fecha</th>
+                                <th>Cantidad de Cupos</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-carga-cupos">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" data-dismiss="modal" id="aceptar">Aceptar</button>
+                <button type="button" class="myBtn btn" id="cancelar-carga" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
@@ -97,41 +163,41 @@
                 <span id="error-alert"></span>
             </div>
 
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-            <div class="modal-header" style="margin-left: -1%;padding-right: 2px;">
-                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
-                <div class="status confirmado-modal">
-                    <div id="tituloAgente" class="tituloPosicion">Motivo de Rechazo</div>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="modal-header" style="margin-left: -1%;padding-right: 2px;">
+                    <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                    <div class="status confirmado-modal">
+                        <div id="tituloAgente" class="tituloPosicion">Motivo de Rechazo</div>
+                    </div>
                 </div>
-            </div>
 
-            <textarea id="movitoRechazo" rows="5" cols="30" class="k-textbox" style="height:120px;"></textarea>
+            <textarea id="motivoRechazo" rows="5" cols="30" class="k-textbox" style="height:120px;"></textarea>
             <button class="btn k-button" type="button" id="btnAceptarRechazar">Rechazar</button>
             <button type="button" id="cancelar" class="btn k-button" data-dismiss="modal">Cancelar</button>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h1 class="modal-title" id="resultadoCupo"></h1>
-                <div class="status confirmado-modal">
-                    <div>Cupos Creados</div>
+    <div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 class="modal-title" id="resultadoCupo"></h1>
+                    <div class="status confirmado-modal">
+                        <div>Cupos Creados</div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <div id="error-modal" hidden></div>
-                <div id="cupos-generados-modal"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn k-button" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="btn k-button" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+                <div class="modal-body">
+                    <div id="error-modal" hidden></div>
+                    <div id="cupos-generados-modal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn k-button" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn k-button" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>

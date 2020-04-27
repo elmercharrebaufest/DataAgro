@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CupoStop { get; set; }
         public int ZonaCupoId { get; set; }
         public string ZonaCupo { get; set; }
+        public string ZonaCupoSap { get; set; }
         public int? ComercialId { get; set; }
         public string Comercial { get; set; }
         public bool? FleteProcedencia { get; set; }
