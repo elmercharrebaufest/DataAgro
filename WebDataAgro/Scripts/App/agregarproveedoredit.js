@@ -339,6 +339,7 @@ function armarProduccion(campoacopio) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
+                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>' : '')
                 + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'
@@ -491,6 +492,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
+                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
                 + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'

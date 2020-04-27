@@ -5,6 +5,8 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -27,7 +29,8 @@ namespace Molinos.DataAgro.Business.Managers
             mobjProveedorManager = oMSProveedorManager;
         }
 
-        private Resultado Validar(Fason oParam, Resultado oErrorMessages) {
+        private Resultado Validar(Fason oParam, Resultado oErrorMessages)
+        {
 
             if (!oParam.ProveedorId.HasValue || oParam.ProveedorId == 0)
             {
@@ -58,7 +61,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
             }
-            if (oParam.Posicion == ""|| oParam.Posicion == null)
+            if (oParam.Posicion == "" || oParam.Posicion == null)
             {
                 oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
             }
@@ -98,6 +101,20 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
                 var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
+                if (estado == 7)
+                {
+                    if (oFasonSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
+                    {
+                        string jsonContrato = JsonConvert.SerializeObject(oFasonSave, new JsonSerializerSettings()
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                        });
+                        oFasonSave.NegocioHistorico.Add(new NegocioHistorico { Datos = jsonContrato, Fecha = DateTime.Now, NegocioId = oFasonSave.Id, TipoNegocioId = oFasonSave.TipoNegocioId, ComercialId = oFasonSave.ComercialId });
+                    }
+
+                }
                 oFasonSave.Precio = oFason.Precio;
                 oFasonSave.Cantidad = oFason.Cantidad;
                 oFasonSave.EstadoId = estado;
@@ -112,6 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.FechaHasta = oFason.FechaHasta;
                 oFasonSave.TrigoEspecial = oFason.TrigoEspecial;
                 oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
+
             }
             else
             {
@@ -131,17 +149,17 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
             return oEntityErrors;
-        }     
+        }
         public GrabarFasonResult FinalizarFason(int fijacionDePrecioContratoId)
         {
             var oEntityErrors = new GrabarFasonResult();
             var oFasonSave = repositorio.Obtener<Fason>(fijacionDePrecioContratoId);
 
-            if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error )
-            {                
+            if (oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFasonSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
+            {
                 try
                 {
-                    if(oFasonSave.Ampliaciones != null && oFasonSave.Ampliaciones != 0)
+                    if (oFasonSave.Ampliaciones != null && oFasonSave.Ampliaciones != 0)
                     {
                         oFasonSave.Cantidad += oFasonSave.Ampliaciones.Value;
                         oFasonSave.Ampliaciones = null;
@@ -173,7 +191,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFasonResult BorrarFason(Fason oFason)
         {
             var oEntityErrors = new GrabarFasonResult();
-            
+
             if (string.IsNullOrEmpty(oFason.MotivoRechazo) || string.IsNullOrWhiteSpace(oFason.MotivoRechazo))
             {
                 oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
@@ -183,27 +201,105 @@ namespace Molinos.DataAgro.Business.Managers
             oFason.EstadoId = oContratoSave.EstadoId;
             oContratoSave.MotivoRechazo = oFason.MotivoRechazo;
             if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente
-                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar 
-                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado 
-                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error 
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado
+                || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error
                 || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Finalizado)
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
-                if (oContratoSave.Ampliaciones > 0)
+
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                 {
-                    oContratoSave.Ampliaciones = 0;
-                    if (oFason.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    if (oContratoSave.Ampliaciones > 0)
                     {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        oContratoSave.Ampliaciones = 0;
+                        if (oFason.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                        }
                     }
                     else
                     {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                        var historico = oContratoSave.NegocioHistorico.LastOrDefault();
+                        if (historico != null)
+                        {
+                            Fason contratoOriginal = JsonConvert.DeserializeObject<Fason>(historico.Datos);
+                            oContratoSave.MaterialId = contratoOriginal.MaterialId;
+                            oContratoSave.TipoNegocioId = contratoOriginal.TipoNegocioId;
+                            oContratoSave.Cantidad = contratoOriginal.Cantidad;
+                            oContratoSave.Precio = contratoOriginal.Precio;
+                            oContratoSave.CampanaId = contratoOriginal.CampanaId;
+                            oContratoSave.FechaDesde = contratoOriginal.FechaDesde;
+                            oContratoSave.FechaHasta = contratoOriginal.FechaHasta;
+                            oContratoSave.ProveedorId = contratoOriginal.ProveedorId;
+                            oContratoSave.MonedaId = contratoOriginal.MonedaId;
+                            oContratoSave.GrupoCompra = contratoOriginal.GrupoCompra;
+                            oContratoSave.ComercialId = contratoOriginal.ComercialId;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.FechaDolarizado = contratoOriginal.FechaDolarizado;
+                            oContratoSave.DiasPesificado = contratoOriginal.DiasPesificado;
+                            oContratoSave.TrigoEspecial = contratoOriginal.TrigoEspecial;
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.Ampliaciones = contratoOriginal.Ampliaciones;
+                            oContratoSave.Observacion = contratoOriginal.Observacion;
+                            oContratoSave.DestinoId = contratoOriginal.DestinoId;
+                            oContratoSave.CondicionFijacionId = contratoOriginal.CondicionFijacionId;
+                            oContratoSave.CD = contratoOriginal.CD;
+                            oContratoSave.Warrant = contratoOriginal.Warrant;
+                            oContratoSave.DesdeFijacion = contratoOriginal.DesdeFijacion;
+                            oContratoSave.HastaFijacion = contratoOriginal.HastaFijacion;
+                            oContratoSave.ComercialCreadorId = contratoOriginal.ComercialCreadorId;
+                            oContratoSave.CorredorId = contratoOriginal.CorredorId;
+                            oContratoSave.PrecioNeto = contratoOriginal.PrecioNeto;
+                            oContratoSave.StandardDeCalidadId = contratoOriginal.StandardDeCalidadId;
+                            oContratoSave.Pizarra = contratoOriginal.Pizarra;
+                            oContratoSave.PagoDiferido = contratoOriginal.PagoDiferido;
+                            oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
+                            oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
+                            oContratoSave.CampanaId = contratoOriginal.CampanaId;
+                            oContratoSave.Posicion = contratoOriginal.Posicion;
+                            oContratoSave.TipoFasonId = contratoOriginal.TipoFasonId;
+
+
+                            if (oContratoSave.AperturaPrecio != null)
+                            {
+                                for (int i = oContratoSave.AperturaPrecio.Count - 1; i > -1; i--)
+                                {
+                                    repositorio.Remover(oContratoSave.AperturaPrecio.First());
+                                }
+                            }
+                            else
+                            {
+                                oContratoSave.AperturaPrecio = new List<AperturaPrecio>();
+                            }
+
+                            if (contratoOriginal.AperturaPrecio != null)
+                            {
+                                foreach (var apertura in contratoOriginal.AperturaPrecio)
+                                {
+                                    repositorio.Agregar(new AperturaPrecio { ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId, Importe = apertura.Importe, MonedaId = apertura.MonedaId, NegocioId = apertura.NegocioId, Porcentaje = apertura.Porcentaje });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                        }
                     }
+
+
+                }
+                else
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                 }
                 try
                 {
-                    repositorio.GuardarCambios();                    
+                    repositorio.GuardarCambios();
                 }
                 catch (Exception ex)
                 {
@@ -221,7 +317,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var contrato = repositorio.Obtener<Fason, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
-                
+
                 ProveedorId = x.ProveedorId ?? 0,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
                 ComercialId = x.ComercialId,

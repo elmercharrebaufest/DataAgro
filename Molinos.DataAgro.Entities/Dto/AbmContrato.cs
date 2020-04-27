@@ -56,6 +56,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Zona { get; set; }
         public string Nombre { get; set; }
         public string CUIT { get; set; }
+        public string NombreCorredor { get; set; }
+        public string CUITCorredor { get; set; }
         public string Figura { get; set; }
         public double Cantidad { get; set; }
         public decimal Precio { get; set; }
@@ -72,6 +74,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Cosecha { get; set; }
         public decimal? FleteProcedencia { get; set; }
         public string Observaciones { get; set; }
+        
     }
 }
 

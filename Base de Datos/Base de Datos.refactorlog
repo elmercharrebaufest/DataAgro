@@ -308,4 +308,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Latitud" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e854388a-7949-4987-bc08-f063d2a5f9ba" ChangeDateTime="04/24/2020 17:31:51">
+    <Property Name="ElementName" Value="[dbo].[NegocioHistorico].[Fehca]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[NegocioHistorico]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Fecha" />
+  </Operation>
 </Operations>

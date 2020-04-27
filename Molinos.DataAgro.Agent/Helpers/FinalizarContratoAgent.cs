@@ -240,7 +240,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
-                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.TipoNegocio.Descripcion,
+                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.EsFason == true ? "FASON" : contrato.TipoNegocio.Descripcion,
                     IM_APERTURA = listaApertura.ToArray()
                 };
                 logger.Debug(rq.ToXml());

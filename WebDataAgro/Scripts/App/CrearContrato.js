@@ -649,6 +649,8 @@ function InicializarElementos() {
         dataValueField: "TipoNegocioId",
     });
     $("#madreId").click(function () {
+        $("#fasonIdCheck").prop("checked", false);
+        $("#fasonIdCheck").attr("disabled", true);
         if ($(this).is(':checked')) {
             $("#pagosDiv").show();
         }
@@ -656,7 +658,7 @@ function InicializarElementos() {
             $("#pagosDiv").hide();
             $("#CDId").prop("checked", false);
             $("#WarrantId").prop("checked", false);
-
+            $("#fasonIdCheck").attr("disabled", false);
         }
     });
     $("#hijoId").click(function () {
@@ -671,7 +673,14 @@ function InicializarElementos() {
             $("#fechaCiertaDiv").show();
         }
     });
-
+    $("#fasonIdCheck").click(function () {
+        if ($(this).is(':checked')) {
+            $("#madreId").prop("checked", false);
+            $("#madreId").attr("disabled", true);
+        } else {
+            $("#madreId").attr("disabled", false);
+        }
+    });
 
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
@@ -2194,7 +2203,7 @@ function ObtenerDatos() {
         obj.ComercialId = $("#comercialFijacionId").val();
         obj.ContratoSAP = $("#contratoId").val();
     }
-
+    
     obj.ComercialId = $("#comercialId").val();
     obj.ComercialCreadorId = $("#comercialCreador").val();
     obj.Base = $("#baseId").is(":checked") ? true : false;
@@ -2292,6 +2301,8 @@ function ObtenerDatos() {
         if (obj.TipoNegocioId == 2) {
             obj.FechaCierta = $("#fechaCiertaId").val();
         }
+    } if ($("#fasonIdCheck").is(":checked")) {
+        obj.EsFason = true;
     }
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
@@ -2692,7 +2703,7 @@ function CargarDatosEditar(contrato, hijo) {
             if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
                 $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
             } else {
-                $("#fechaDesdeTopeId").val("");
+                $("#fechaHastaTopeId").val("");
             }
             $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
         }
@@ -2843,15 +2854,24 @@ function CargarDatosEditar(contrato, hijo) {
     $("#contVendedorId").val(contrato.ContratoVendedor);
     if (hijo != true) {
         if (contrato.Madre === true) {
+            $("#fasonIdCheck").attr("disabled", true);
             $("#madreId").prop("checked", true);
             $("#pagosDiv").show();
         }
         if (contrato.Madre === false) {
+            $("#fasonIdCheck").attr("disabled", false);
             $("#hijoId").prop("checked", true);
             $(".contratoMadreDiv").show();
             $("#contMadreId").val(contrato.ContratoMadre);
         }
     }
+    if (contrato.esFason === true) {
+        $("#madreId").attr("disabled", true);
+        $("#pagosDiv").hide();
+    } else {
+        $("#madreId").attr("disabled", false);
+    }
+
     contrato.SelCargoMOA === true ? $("#selCargoMOAId").prop("checked", true) : $("#selCargoMOAId").prop("checked", false);
     contrato.SelCargoVendedor === true ? $("#selCargoVendedorId").prop("checked", true) : $("#selCargoVendedorId").prop("checked", false);
 

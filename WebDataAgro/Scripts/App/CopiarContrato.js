@@ -159,7 +159,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
             $("#fechaHastaTopeId").val(contrato.HastaFijacionFormateado);
         } else {
-            $("#fechaDesdeTopeId").val("");
+            $("#fechaHastaTopeId").val("");
         }
         $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
     }

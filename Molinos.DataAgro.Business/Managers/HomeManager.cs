@@ -359,6 +359,11 @@ namespace Molinos.DataAgro.Business.Managers
                 return new ExportAll();
             }
         }
+        public List<int> ListarTodosLosComercialesConMismaZona(int comercialId)
+        {
+            var grupoId = repositorio.Obtener<Comercial,int>(x => x.ComercialId == comercialId, x => x.GrupoDeComprasId.Value);
+            return repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.GrupoDeComprasId == grupoId);
+        }
 
         public PostItDto TraerTexto(int idComercial)
         {
@@ -391,11 +396,11 @@ namespace Molinos.DataAgro.Business.Managers
         }
         
     }
-
-
     public class FakeHome
     {
         public int Id { set; get; }
         public string Nombre { set; get; }
     }
+
+
 }

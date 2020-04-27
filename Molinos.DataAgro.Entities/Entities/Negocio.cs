@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? HastaFijacion { get; set; }
         public int? CondicionFijacionId { get; set; }
         public string MotivoRechazo { get; set; }
-
+        
         [ForeignKey("CondicionFijacionId")]
         public virtual CondicionFijacion CondicionFijacion { get; set; }
         [ForeignKey("EstadoId")]
@@ -79,6 +79,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [InverseProperty("Negocio")]
         public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
+
+        [InverseProperty("Negocio")]
+        public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();
 
         public Negocio()
         {

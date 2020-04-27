@@ -622,4 +622,7 @@
   <data name="Modificar_Datos_Campos" xml:space="preserve">
     <value>Modificar Datos de Campos</value>
   </data>
+  <data name="ProveedorZonaPropia" xml:space="preserve">
+    <value>Proveedor de ZonaPropia</value>
+  </data>
 </root>

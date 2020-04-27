@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         FiltrarAdministrativo = 111,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Datos_Campos")]
         ModificarDatosCampos = 112,
+        [Display(ResourceType = typeof(Text), Name = "ProveedorZonaPropia")]
+        ProveedorZonaPropia = 113,
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,

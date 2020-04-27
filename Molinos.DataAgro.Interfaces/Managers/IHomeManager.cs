@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Interfaces
         ExportAll ExportarAll(oParamBusqueda oParam, string idActiveDirectory, List<int> equipo);
 
         PostItDto TraerTexto(int idComercial);
-
+        List<int> ListarTodosLosComercialesConMismaZona(int comercialId);
         GrabarPostItResult GuardarPostIt(PostIt post);
 
     }

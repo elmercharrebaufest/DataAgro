@@ -5,6 +5,8 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -95,23 +97,37 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oAgente.Id != 0)
             {
-                var oFasonSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
-                if (oFasonSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
+                var oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
+                if (oAgenteSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
                     return oEntityErrors;
                 }
                 var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 7;
-                oFasonSave.Precio = oAgente.Precio;
-                oFasonSave.Cantidad = oAgente.Cantidad;
-                oFasonSave.EstadoId = estado;
-                oFasonSave.OperadorId = oAgente.OperadorId;
-                oFasonSave.ComercialId = oAgente.ComercialId;
-                oFasonSave.MonedaId = oAgente.MonedaId;
-                oFasonSave.MaterialId = oAgente.MaterialId;
-                oFasonSave.Posicion = oAgente.Posicion;
-                oFasonSave.ComercialCreadorId = oAgente.ComercialCreadorId;
-                oFasonSave.CampanaId = oAgente.CampanaId;
+                if (estado == 7 && oAgenteSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
+                {
+                    string jsonContrato = JsonConvert.SerializeObject(oAgenteSave, new JsonSerializerSettings()
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                        ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                    });
+                    oAgenteSave.NegocioHistorico.Add(new NegocioHistorico { Datos = jsonContrato, Fecha = DateTime.Now, NegocioId = oAgenteSave.Id, TipoNegocioId = oAgenteSave.TipoNegocioId, ComercialId = oAgenteSave.ComercialId });
+                }
+                
+                oAgenteSave.Precio = oAgente.Precio;
+                oAgenteSave.Cantidad = oAgente.Cantidad;
+                oAgenteSave.EstadoId = estado;
+                oAgenteSave.OperadorId = oAgente.OperadorId;
+                oAgenteSave.ComercialId = oAgente.ComercialId;
+                oAgenteSave.MonedaId = oAgente.MonedaId;
+                oAgenteSave.MaterialId = oAgente.MaterialId;
+                oAgenteSave.Posicion = oAgente.Posicion;
+                oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
+                oAgenteSave.CampanaId = oAgente.CampanaId;
+               
+
+
             }
             else
             {
@@ -187,16 +203,85 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MotivoRechazo = oAgente.MotivoRechazo;
             if (oContratoSave.EstadoId != (int)EnumEstadoContrato.Rechazado && oContratoSave.EstadoId != (int)EnumEstadoContrato.Eliminado)
             {
-                if (oContratoSave.Ampliaciones > 0)
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                 {
-                    oContratoSave.Ampliaciones = 0;
-                    if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                    if (oContratoSave.Ampliaciones > 0)
                     {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        oContratoSave.Ampliaciones = 0;
+                        if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                        }
                     }
                     else
                     {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                        var historico = oContratoSave.NegocioHistorico.LastOrDefault();
+                        if (historico != null)
+                        {
+                            AgenteCompra contratoOriginal = JsonConvert.DeserializeObject<AgenteCompra>(historico.Datos);
+                            oContratoSave.MaterialId = contratoOriginal.MaterialId;
+                            oContratoSave.TipoNegocioId = contratoOriginal.TipoNegocioId;
+                            oContratoSave.Cantidad = contratoOriginal.Cantidad;
+                            oContratoSave.Precio = contratoOriginal.Precio;
+                            oContratoSave.CampanaId = contratoOriginal.CampanaId;
+                            oContratoSave.FechaDesde = contratoOriginal.FechaDesde;
+                            oContratoSave.FechaHasta = contratoOriginal.FechaHasta;
+                            oContratoSave.ProveedorId = contratoOriginal.ProveedorId;
+                            oContratoSave.MonedaId = contratoOriginal.MonedaId;
+                            oContratoSave.GrupoCompra = contratoOriginal.GrupoCompra;
+                            oContratoSave.ComercialId = contratoOriginal.ComercialId;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.FechaDolarizado = contratoOriginal.FechaDolarizado;
+                            oContratoSave.DiasPesificado = contratoOriginal.DiasPesificado;
+                            oContratoSave.TrigoEspecial = contratoOriginal.TrigoEspecial;
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.Ampliaciones = contratoOriginal.Ampliaciones;
+                            oContratoSave.Observacion = contratoOriginal.Observacion;
+                            oContratoSave.DestinoId = contratoOriginal.DestinoId;
+                            oContratoSave.CondicionFijacionId = contratoOriginal.CondicionFijacionId;
+                            oContratoSave.CD = contratoOriginal.CD;
+                            oContratoSave.Warrant = contratoOriginal.Warrant;
+                            oContratoSave.DesdeFijacion = contratoOriginal.DesdeFijacion;
+                            oContratoSave.HastaFijacion = contratoOriginal.HastaFijacion;
+                            oContratoSave.ComercialCreadorId = contratoOriginal.ComercialCreadorId;
+                            oContratoSave.CorredorId = contratoOriginal.CorredorId;
+                            oContratoSave.PrecioNeto = contratoOriginal.PrecioNeto;
+                            oContratoSave.StandardDeCalidadId = contratoOriginal.StandardDeCalidadId;
+                            oContratoSave.Pizarra = contratoOriginal.Pizarra;
+                            oContratoSave.PagoDiferido = contratoOriginal.PagoDiferido;
+                            oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
+                            oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
+
+
+                            if (oContratoSave.AperturaPrecio != null)
+                            {
+                                for (int i = oContratoSave.AperturaPrecio.Count - 1; i > -1; i--)
+                                {
+                                    repositorio.Remover(oContratoSave.AperturaPrecio.First());
+                                }
+                            }
+                            else
+                            {
+                                oContratoSave.AperturaPrecio = new List<AperturaPrecio>();
+                            }
+
+                            if (contratoOriginal.AperturaPrecio != null)
+                            {
+                                foreach (var apertura in contratoOriginal.AperturaPrecio)
+                                {
+                                    repositorio.Agregar(new AperturaPrecio { ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId, Importe = apertura.Importe, MonedaId = apertura.MonedaId, NegocioId = apertura.NegocioId, Porcentaje = apertura.Porcentaje });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                        }
                     }
                 }
                 else

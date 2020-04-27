@@ -1222,6 +1222,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proveedor de ZonaPropia.
+        /// </summary>
+        public static string ProveedorZonaPropia {
+            get {
+                return ResourceManager.GetString("ProveedorZonaPropia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provincia.
         /// </summary>
         public static string Provincia {

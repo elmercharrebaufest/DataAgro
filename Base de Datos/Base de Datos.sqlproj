@@ -291,6 +291,7 @@
     <Build Include="dbo\Tables\ReporteCompraNetHedgeMaterial.sql" />
     <Build Include="dbo\Tables\ReporteCompraNetAgenteCompra.sql" />
     <Build Include="dbo\Tables\ReporteCompraNetPricingCampania.sql" />
+    <Build Include="dbo\Tables\NegocioHistorico.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

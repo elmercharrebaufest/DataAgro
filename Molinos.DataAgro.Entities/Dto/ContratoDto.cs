@@ -57,6 +57,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Pizarra { get; set; }
         public decimal? PrecioNeto { get; set; }
         public int TarifaFlete { get; set; }
+        public bool? EsFason { get; set; }
+
     }
 }
 

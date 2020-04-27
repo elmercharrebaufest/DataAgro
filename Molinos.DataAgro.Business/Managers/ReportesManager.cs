@@ -1087,6 +1087,32 @@ namespace Molinos.DataAgro.Business.Managers
             }
             contratos.AddRange(acuerdos);
 
+            var agente = repositorio.Listar<AgenteCompra, PosicionPorMaterial>(x => new PosicionPorMaterial
+            {
+                Id = x.Id,
+                FechaDesde = x.Fecha,
+                FechaHasta = x.Fecha,
+                Cantidad = x.Cantidad,
+                TipoNegocioId = 4,
+                Precio = x.Precio,
+                CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
+                CampanaId = x.CampanaId,
+                CampanaMaterialId = x.Material.CampaniaTableroId,
+                Posicion = x.Posicion,
+                MonedaId = x.MonedaId
+            },
+                x => negociosIds.Contains(x.Id));
+            foreach (var age in agente)
+            {
+                var posicion = new DateTime(age.FechaDesde.Year, age.FechaDesde.Month, 1);
+
+                age.ClasificacionNegocio = (fechaPosicion >= posicion && age.CampanaMaterialId == age.CampanaId) || (age.CampanaMaterialId > age.CampanaId) ? EnumClasificacionNegocio.DisponibleFijacion :
+                age.CampanaMaterialId == age.CampanaId && fechaPosicion < posicion ? EnumClasificacionNegocio.ForwardFijacion :
+                EnumClasificacionNegocio.NewCropFijacion;
+            }
+            contratos.AddRange(agente);
+            
+
             foreach (var cont in contratos)
             {
                 var posKil = new PosicionKilos();

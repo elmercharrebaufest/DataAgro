@@ -931,6 +931,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
+            + (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>':'')
             + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1077,6 +1078,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
+            + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
             + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1197,6 +1199,20 @@ function eliminarCampoProduccion(val) {
     });
     recalcularSegmentacion();
 }
+function eliminarKMZCampoProduccion(val) {
+    var item = $(val).attr("id").split("eliminarKMZProd")[1];
+    $("#eliminarKMZProd" + item).remove();
+    for (var i = 0; i < aGuardar.length; i++) {
+        if (aGuardar[i].item == item) {
+            aGuardar[i].archivo = null;
+            aGuardar[i].archivoFile = null;
+            aGuardar[i].archivoFileReader = null;
+            aGuardar[i].archivoFileResult = null;
+            break;
+        }
+    }
+    recalcularSegmentacion();
+}
 
 function eliminarAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarAlm")[1];
@@ -1207,7 +1223,20 @@ function eliminarAlmacenamiento(val) {
 
     recalcularSegmentacion();
 }
-
+function eliminarKMZAlmacenamiento(val) {
+    var item = $(val).attr("id").split("eliminarKMZAlm")[1];
+    $("#eliminarKMZAlm" + item).remove();
+    for (var i = 0; i < aGuardarAlmacenamiento.length; i++) {
+        if (aGuardarAlmacenamiento[i].item == item) {
+            aGuardarAlmacenamiento[i].archivo = null;
+            aGuardarAlmacenamiento[i].archivoFile = null;
+            aGuardarAlmacenamiento[i].archivoFileReader = null;
+            aGuardarAlmacenamiento[i].archivoFileResult = null;
+            break;
+        }
+    }
+    recalcularSegmentacion();
+}
 function editarCampoProduccion(id) {
     var obj = aGuardar.filter(function (el) {
         return el.item === parseInt(id);

@@ -44,6 +44,8 @@ namespace Molinos.DataAgro.Report
                     Zona = x.ComercialZonaDescripcion,
                     Nombre = x.Proveedor,
                     CUIT = x.Cuit,
+                    NombreCorredor = x.Corredor,
+                    CUITCorredor = x.CUITCorredor,
                     Figura = x.ClasificacionDescripcion,
                     Cantidad = x.Cantidad,
                     Precio = x.PrecioNeto ?? x.Precio,
@@ -92,10 +94,15 @@ namespace Molinos.DataAgro.Report
                 workSheet.Column(i).AutoFit();
             };
 
-            //workSheet.Cells[1, cantColumns].Value = "Comercial a Cargo";
-            //workSheet.Column(cantColumns).AutoFit();
+                workSheet.Cells[1, 10].Value = "Nombre Corredor";
+                workSheet.Cells[1, 11].Value = "CUIT Corredor";
+                workSheet.Cells[1, 18].Value = "% Bonif por fuera";
+                workSheet.Cells[1, 19].Value = "Imp. Bonif por fuera";
+                workSheet.Cells[1, 20].Value = "Mon Bonif. por fuera";
+                workSheet.Cells[1, 26].Value = "Flete Procedencia";
+                workSheet.Column(1).AutoFit();
 
-        }
+            }
 
         var identif = Varios.GetIdentif();
 

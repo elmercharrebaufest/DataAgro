@@ -52,6 +52,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoNegocio { get; set; }
         public string Proveedor { get; set; }
         public string Corredor { get; set; }
+        public string CUITCorredor { get; set; }
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
         public string Material { get; set; }
@@ -112,6 +113,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? SelCargoMOA { get; set; }
         public bool? SelCargoVendedor { get; set; }
         public bool? Madre { get; set; }
+        public bool? EsFason { get; set; }
         public string ContratoMadre { get; set; }
         public string Posicion { get; set; }
         public string TipoFason { get; set; }

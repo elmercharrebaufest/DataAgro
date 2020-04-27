@@ -173,6 +173,8 @@ namespace WebDataAgro.Controllers
             if (oParam.Base == null) oParam.Base = false;
             if (oParam.NoInformaSio == null) oParam.NoInformaSio = false;
             if (oParam.TrigoEspecial == null) oParam.TrigoEspecial = false;
+            if (oParam.EsFason == null) oParam.EsFason = false;
+
 
             if (oParam.ComercialId.HasValue)
             {

@@ -6,6 +6,8 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -236,7 +238,20 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if ((oFijacionDePrecioSave.Precio != oFijacionDePrecio.Precio || oFijacionDePrecioSave.Cantidad != oFijacionDePrecio.Cantidad) && (oFijacionDePrecioSave.EstadoId != 1 && oFijacionDePrecioSave.EstadoId != 3))
                 {
+                    if (oFijacionDePrecioSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
+                    {
+                        string jsonContrato = JsonConvert.SerializeObject(oFijacionDePrecioSave, new JsonSerializerSettings()
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                        });
+                        oFijacionDePrecioSave.NegocioHistorico.Add(new NegocioHistorico { Datos = jsonContrato, Fecha = DateTime.Now, NegocioId = oFijacionDePrecioSave.Id, TipoNegocioId = oFijacionDePrecioSave.TipoNegocioId, ComercialId = oFijacionDePrecioSave.ComercialId });
+
+                    }
+
                     oFijacionDePrecioSave.EstadoId = 7;
+
                 }
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
@@ -471,15 +486,97 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
 
             oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
-            if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado)
+            if (oContratoSave.Estado.EstadoContratoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Reconfirmar)
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
-                if (oContratoSave.Ampliaciones > 0)
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                 {
-                    oContratoSave.Ampliaciones = 0;
+                    if (oContratoSave.Ampliaciones > 0)
+                    {
+                        oContratoSave.Ampliaciones = 0;
+                        if (oContrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                        }
+                    }
+                    else
+                    {
+                        var historico = oContratoSave.NegocioHistorico.LastOrDefault();
+                        if (historico != null)
+                        {
+                            FijacionDePrecioContrato contratoOriginal = JsonConvert.DeserializeObject<FijacionDePrecioContrato>(historico.Datos);
+                            oContratoSave.MaterialId = contratoOriginal.MaterialId;
+                            oContratoSave.TipoNegocioId = contratoOriginal.TipoNegocioId;
+                            oContratoSave.Cantidad = contratoOriginal.Cantidad;
+                            oContratoSave.Precio = contratoOriginal.Precio;
+                            oContratoSave.CampanaId = contratoOriginal.CampanaId;
+                            oContratoSave.FechaDesde = contratoOriginal.FechaDesde;
+                            oContratoSave.FechaHasta = contratoOriginal.FechaHasta;
+                            oContratoSave.ProveedorId = contratoOriginal.ProveedorId;
+                            oContratoSave.MonedaId = contratoOriginal.MonedaId;
+                            oContratoSave.GrupoCompra = contratoOriginal.GrupoCompra;
+                            oContratoSave.ComercialId = contratoOriginal.ComercialId;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.FechaDolarizado = contratoOriginal.FechaDolarizado;
+                            oContratoSave.DiasPesificado = contratoOriginal.DiasPesificado;
+                            oContratoSave.TrigoEspecial = contratoOriginal.TrigoEspecial;
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                            oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
+                            oContratoSave.Ampliaciones = contratoOriginal.Ampliaciones;
+                            oContratoSave.Observacion = contratoOriginal.Observacion;
+                            oContratoSave.DestinoId = contratoOriginal.DestinoId;
+                            oContratoSave.CondicionFijacionId = contratoOriginal.CondicionFijacionId;
+                            oContratoSave.CD = contratoOriginal.CD;
+                            oContratoSave.Warrant = contratoOriginal.Warrant;
+                            oContratoSave.DesdeFijacion = contratoOriginal.DesdeFijacion;
+                            oContratoSave.HastaFijacion = contratoOriginal.HastaFijacion;
+                            oContratoSave.ComercialCreadorId = contratoOriginal.ComercialCreadorId;
+                            oContratoSave.CorredorId = contratoOriginal.CorredorId;
+                            oContratoSave.PrecioNeto = contratoOriginal.PrecioNeto;
+                            oContratoSave.StandardDeCalidadId = contratoOriginal.StandardDeCalidadId;
+                            oContratoSave.Pizarra = contratoOriginal.Pizarra;
+                            oContratoSave.PagoDiferido = contratoOriginal.PagoDiferido;
+                            oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
+                            oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
+                            oContratoSave.ContratoId = contratoOriginal.ContratoId;
+                            oContratoSave.Posicion = contratoOriginal.Posicion;
+                            oContratoSave.PagoDiferidoContrato = contratoOriginal.PagoDiferidoContrato;
 
-                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
+                            if (oContratoSave.AperturaPrecio != null)
+                            {
+                                for (int i = oContratoSave.AperturaPrecio.Count - 1; i > -1; i--)
+                                {
+                                    repositorio.Remover(oContratoSave.AperturaPrecio.First());
+                                }
+                            }
+                            else
+                            {
+                                oContratoSave.AperturaPrecio = new List<AperturaPrecio>();
+                            }
+
+                            if (contratoOriginal.AperturaPrecio != null)
+                            {
+                                foreach (var apertura in contratoOriginal.AperturaPrecio)
+                                {
+                                    repositorio.Agregar(new AperturaPrecio { ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId, Importe = apertura.Importe, MonedaId = apertura.MonedaId, NegocioId = apertura.NegocioId, Porcentaje = apertura.Porcentaje });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                        }
+                    }
+
+
+                }
+                else
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                 }
                 try
                 {
