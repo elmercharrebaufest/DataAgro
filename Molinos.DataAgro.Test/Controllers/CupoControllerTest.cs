@@ -295,5 +295,28 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void DisponibilidadTest()
+        {
+            var result = target.Disponibilidad() as ViewResult;
+
+            Assert.NotNull(result);
+
+            Assert.NotNull(result);
+            Assert.That(result.ViewName, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void BuscaDatosTablaDisponibilidadTest() {
+            cupoManagerMock.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>() { new DisponibilidadCuposDto { Consumidos = "1", Fecha = new DateTime(2020,4,28).Date, Disponibles = "9", Limite = "10", MaterialCodigo = "000000000019908017", MaterialId = 3, MaterialNombre = "Soja", ZonaId = "CBA" } } );
+            var result = target.BuscaDatosTablaDisponibilidad("","","","");
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Fecha\":\"\\/Date(1588042800000)\\/\",\"MaterialNombre\":\"Soja\",\"ZonaId\":\"CBA\",\"Disponibles\":\"9\",\"Consumidos\":\"1\",\"Limite\":\"10\",\"MaterialCodigo\":\"000000000019908017\",\"MaterialId\":3}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

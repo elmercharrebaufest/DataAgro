@@ -44,7 +44,6 @@ namespace Molinos.DataAgro.Business
                         oMensaje.CC.Add(mail);
                     }
                 }
-                oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 if (vistaAlternativa != null)
                 {
                     oMensaje.AlternateViews.Add(vistaAlternativa);
@@ -111,7 +110,10 @@ namespace Molinos.DataAgro.Business
                     oMensaje.To.Add(mail);
                 }
             }
-            oMensaje.To.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+            if(enviarA == null || enviarA.Count() > 0)
+            {
+                oMensaje.To.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
+            }
             return oMensaje;
         }
 

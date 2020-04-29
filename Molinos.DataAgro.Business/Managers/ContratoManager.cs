@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Business.Managers
             return datosCombo;
         }
 
-        private Resultado Validar(Contrato oParam, Resultado oErrorMessages)
+        private Resultado Validar(Contrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
         {
             if (oParam.ProveedorId == 0)
             {
@@ -202,38 +202,43 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Importe", "Se excede Tarifa Sustentable");
             }
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
-            var sisa = new SISA();
-            if (oParam.ClasificacionId == 1)
+
+            if (!validacionesMinimas)
             {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
-            }
-            else if (oParam.ClasificacionId == 2)
-            {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
-            }
-            else if (oParam.ClasificacionId == 3)
-            {
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
-            }
-            if (sisa != null)
-            {
-                if (sisa.EstadoCuit == 3)
+                var sisa = new SISA();
+                if (oParam.ClasificacionId == 1)
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
                 }
-                else if (sisa.EstadoCuit == 0)
+                else if (oParam.ClasificacionId == 2)
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
                 }
-                if (sisa.SituacionCategoria != "AL")
+                else if (oParam.ClasificacionId == 3)
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
+                }
+                if (sisa != null)
+                {
+                    if (sisa.EstadoCuit == 3)
+                    {
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
+                    }
+                    if (sisa.SituacionCategoria != "AL")
+                    {
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+                    }
+                }
+                else
+                {
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoria Inactivo");
                 }
             }
-            else
-            {
-                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoria Inactivo");
-            }
+
             if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == oParam.ProveedorId && x.EstadoId == 4))
             {
                 oErrorMessages.Error("Estado", "Proveedor no Operable por Estado BAJA");
@@ -564,7 +569,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            Validar(oContrato, oEntityErrors);
+            Validar(oContrato, oEntityErrors, false);
 
             if (oEntityErrors.Errores.Count > 0)
             {
@@ -1029,7 +1034,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContratoSave.Ampliaciones > 0)
                     {
                         oContratoSave.Ampliaciones = 0;
-                        if (oContrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                        if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                         }
@@ -2067,7 +2072,7 @@ namespace Molinos.DataAgro.Business.Managers
             return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
         }
 
-        public Resultado ActualizarContratoSAP(Contrato contrato)
+        public Resultado ActualizarContratoSAP(Contrato contrato, bool validacionesMinimas)
         {
             var error = new Resultado();
             logger.Debug("Actualizando contrato en BD DataAgro: " + contrato.Id);
@@ -2077,7 +2082,7 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Contrato", "No existe contrato en DataAgro");
             }
 
-            Validar(contrato, error);
+            Validar(contrato, error, validacionesMinimas);
 
             if (error.Errores.Count > 0)
             {
@@ -2162,7 +2167,7 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new GrabarContratoResult();
             try
             {
-                Validar(contrato, error);
+                Validar(contrato, error, false);
 
                 if (error.Errores.Count > 0)
                 {
@@ -2176,7 +2181,7 @@ namespace Molinos.DataAgro.Business.Managers
                     return error;
                 }
                 logger.Debug("Actualizacion SAP ok");
-                var listaErrores = ActualizarContratoSAP(contrato);
+                var listaErrores = ActualizarContratoSAP(contrato, false);
                 error.Errores.AddRange(listaErrores.Errores);
             }
             catch (Exception e)
@@ -2203,6 +2208,25 @@ namespace Molinos.DataAgro.Business.Managers
                     PrecioMaximo = x.PrecioMaximo,
                     PrecioMinimo = x.PrecioMinimo
                 });
+        }
+
+        public string ValidarStatus(int contratoId)
+        {
+            var resultado = "";
+            var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato()
+            {
+                ContratoSAP = x.ContratoSAP,
+                Estado = x.EstadoId
+            });
+            if (contrato.Estado == 5)
+            {
+                resultado = status.ValidarEstado(contrato.ContratoSAP);
+                if (!String.IsNullOrEmpty(resultado))
+                {
+                    return resultado;
+                }
+            }
+            return resultado;
         }
     }
 }

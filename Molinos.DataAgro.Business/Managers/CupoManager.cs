@@ -450,8 +450,12 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     htmlBody += "Soja Sustentable<br />";
-
                 }
+            }
+            else
+            {
+                htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+                htmlBody += cupo.Material.Descripcion.ToUpper();
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1502,13 +1506,16 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailSinCtg()
         {
             var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1).GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
-           
-            foreach(var p in cupos)
+            
+            foreach (var p in cupos)
             {
-
-                mailManager.EnviarMail(repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == p.Key.ProveedorId),
-                   "Estado de cupos", "", null, CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
-                    p.ToList(), repositorio.Obtener<Comercial>(p.Key.ComercialId)));
+                var lista = new List<string>();
+                var comercial = repositorio.Obtener<Comercial>(p.Key.ComercialId);
+                var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
+                lista.Add(email);
+                mailManager.EnviarMail(repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == p.Key.ProveedorId && x.Cupo == true),
+                   "Estado de cupos", "", lista, CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
+                    p.ToList(), comercial));
                     
             }
         }

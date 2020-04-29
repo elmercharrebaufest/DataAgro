@@ -169,7 +169,7 @@ namespace WebDataAgro.Services
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
                 var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
-                
+
 
                 logger.Debug("ActualizandoContrato2");
 
@@ -297,7 +297,7 @@ namespace WebDataAgro.Services
                     {
                         NegocioId = contratoOriginal.Id,
                         CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
-                        StandardDeCalidadId = contrato.StandardDeCalidadId??1,
+                        StandardDeCalidadId = contrato.StandardDeCalidadId ?? 1,
                         Valor = cal.Valor,
                         PorcentajeDesde = cal.PorcentajeDesde,
                         PorcentajeHasta = cal.PorcentajeHasta
@@ -310,13 +310,13 @@ namespace WebDataAgro.Services
                 contrato.TipoNegocioId = 3;
                 contrato.ComercialId = 1;
                 contrato.Fecha = DateTime.Now;
-                contrato.ZonaId = contratoOriginal.ZonaId;
+                contrato.ZonaId = contrato.ZonaId ?? contratoOriginal.ZonaId;
                 contrato.GrupoCompra = contratoOriginal.GrupoCompra;
                 contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
 
                 if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
                 {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".",",")) });
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) });
                 }
                 if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
                 {
@@ -328,7 +328,7 @@ namespace WebDataAgro.Services
                 {
                     return oEntityErrors;
                 }
-                var resultado = contratoManager.ActualizarContratoSAP(contrato);
+                var resultado = contratoManager.ActualizarContratoSAP(contrato, true);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)
@@ -355,6 +355,14 @@ namespace WebDataAgro.Services
                 oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Procedencia' es invalido" });
             }
             oErrorMessages.HayError = oErrorMessages.ListaErrores.Any();
+            if (oParam.CorredorId != null && oParam.ProveedorId != null && oParam.CorredorId != 0 && oParam.ProveedorId != 0)
+            {
+                if (!repositorio.Existe<CorredorProveedor>(x => x.CorredorId == oParam.CorredorId && x.ProveedorId == oParam.ProveedorId))
+                {
+                    repositorio.Agregar(new CorredorProveedor { CorredorId = oParam.CorredorId.Value, ProveedorId = oParam.ProveedorId.Value });
+
+                }
+            }
 
         }
         #endregion

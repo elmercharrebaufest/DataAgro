@@ -493,7 +493,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContratoSave.Ampliaciones > 0)
                     {
                         oContratoSave.Ampliaciones = 0;
-                        if (oContrato.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                        if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                         }

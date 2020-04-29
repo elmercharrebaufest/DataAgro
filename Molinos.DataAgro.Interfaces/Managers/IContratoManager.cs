@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Interfaces
         List<BoletoCompraNetDto> TraerTodosLosBoletos();
         List<GrupoDeComprasDto> TraerTodoGrupoDeCompras();
         AltaTempranaNRCODto ValidarProveedor(int proveedorId);
-        Resultado ActualizarContratoSAP(Contrato contratoSAP);
+        Resultado ActualizarContratoSAP(Contrato contratoSAP, bool validacionesMinimas);
         GrabarContratoResult ActualizarContratoFinalizado(Contrato contrato);
         List<ContratoIdDto> TraerContratosSAP(string desde, string hasta);
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
