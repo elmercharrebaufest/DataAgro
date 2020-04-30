@@ -40,10 +40,10 @@ namespace Molinos.DataAgro.Agent
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
+                    fecha = fecha == null ? DateTime.Now.Date : fecha.Value.Date;
 
-                    var rq = new Z_MPRFC_DISPONIBILIDAD_CUPOS() { IM_FECHA = DateTime.Now.Date.ToString("yyyy-MM-dd"), IM_CENTRO = centroId, IM_MATERIAL = materialId, IM_ZONA = zonaId };
+                    var rq = new Z_MPRFC_DISPONIBILIDAD_CUPOS() { IM_FECHA = fecha.Value.ToString("yyyy-MM-dd"), IM_CENTRO = centroId, IM_MATERIAL = materialId, IM_ZONA = zonaId };
                     logger.Debug(rq.ToXml());
-
                     Z_MPRFC_DISPONIBILIDAD_CUPOSResponse devolucion = agent.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS(rq);
                     var result = new List<DisponibilidadCuposDto>();
                     List<Material> materiales = repositorio.Listar<Material>();
