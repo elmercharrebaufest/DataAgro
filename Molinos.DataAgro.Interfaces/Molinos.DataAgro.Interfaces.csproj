@@ -119,6 +119,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IStatusContratoAgent.cs" />
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />
     <Compile Include="Agent\IPrecioPizarraAgent.cs" />
     <Compile Include="Agent\IModificarContratoAgent.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Agent\IEliminarCupoAgent.cs" />
     <Compile Include="Agent\ICrearCupoAgent.cs" />
     <Compile Include="Agent\IAltaTempranaAgent.cs" />
+    <Compile Include="Agent\IDisponibilidadCuposAgent.cs" />
     <Compile Include="Agent\ITipoDeCambioAgent.cs" />
     <Compile Include="Agent\IComprasAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionAgent.cs" />

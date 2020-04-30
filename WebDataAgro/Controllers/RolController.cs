@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -30,6 +31,14 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.Permisos = Enum.GetValues(typeof(PermisosDataAgro)).Cast<PermisosDataAgro>()
                 .Select(d => new SelectListItem { Text = d.DisplayEnum(), Value = ((int)d).ToString(CultureInfo.InvariantCulture) }).OrderBy(x=>x.Value).ToList();
+            foreach (var item in Enum.GetValues(typeof(PermisosDataAgro)).Cast<PermisosDataAgro>()
+                .Select(d => new SelectListItem { Text = d.DisplayEnum(), Value = ((int)d).ToString(CultureInfo.InvariantCulture) }).OrderBy(x => x.Value).ToList())
+            {
+                Debug.WriteLine(
+                    "insert into permisosTemp values ("+item.Value+",'"+item.Text+"')"
+                    ) ;
+
+            }
         }
         public ActionResult Crear()
         {

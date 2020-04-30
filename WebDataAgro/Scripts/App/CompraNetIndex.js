@@ -46,7 +46,6 @@ $(document).ready(function () {
     SetearPrecioMoa();
     CreateGridInformeCompraNet();
     AutoRecargar();
-
     //+ datos modal//
     $("#reenviarMails").click(function () {
         $("#reenviarMails").hide();
@@ -447,7 +446,9 @@ function CreateGridInformeCompraNet() {
 
     var GrupoCompraDescripcionDatos = new Array();
     for (var i = 0; i < grupoDeComprasDatos.length; i++) {
-        GrupoCompraDescripcionDatos.push({ GrupoCompraDescripcion: grupoDeComprasDatos[i].Descripcion });
+        if (grupoDeComprasDatos[i].Id != 47) {
+            GrupoCompraDescripcionDatos.push({ GrupoCompraDescripcion: grupoDeComprasDatos[i].Descripcion });
+        }
     }
     var defaultFilter = { field: "Fecha", operator: "eq", value: new Date };
 
@@ -616,6 +617,8 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "AGENTE DE COMPRAS"
                     }, {
                         TipoNegocio: "CONTRATO ACUERDO"
+                    }, {
+                            TipoNegocio: "FASON MP"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -1042,7 +1045,12 @@ function SeleccionarElementos() {
 }
 
 function editarContrato(id, tipoId, siguientes) {
-    window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
+    var result = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', { id: id });
+    if (ExistsErrorMessages(result)) {
+        MensErr(result);
+    } else {
+        window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");  
+    }
 }
 
 function ModalFinalizado(contratoId, tipoId, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId) {
@@ -1299,6 +1307,7 @@ function ModalModificarVarios() {
     $("#spanModificar").html('<span>Se modificaran los siguientes negocios:</span>');
 
     var negocios = SeleccionarElementos();
+    var hayNegociosParaModificar = false;
     if (negocios.length > 0) {
         for (var i in negocios) {
             if (negocios[i].Estado !== 5 && negocios[i].Estado !== 6 && negocios[i].Estado !== 8) {
@@ -1313,9 +1322,11 @@ function ModalModificarVarios() {
                 } else {
                     $("#negocioModificar-modal").append('<div class="row"><div class="col-xs-4">Contrato: ' + negocios[i].ContratoId + '</div>');
                 }
+                hayNegociosParaModificar = true;
             }
         }
-    } else {
+    }
+    if (hayNegociosParaModificar == false) {
         $("#spanModificar").html('<div style="text-align:center"> Se debe seleccionar negocios</div>');
         $("#modificarVarios").hide();
         $("#cancelarVariosModificar").hide();
@@ -2010,27 +2021,30 @@ function AvisoContratosPendientes() {
 
 
 function InicializarBuscador() {
+    var grupoDeComprasDatos = MSExecuteOnServer('/CompraNet/BuscarGrupoDeCompras');
+
+    var GrupoCompraDescripcionDatos = new Array();
+    for (var i = 0; i < grupoDeComprasDatos.length; i++) {
+        if (grupoDeComprasDatos[i].Id != 47) {
+            GrupoCompraDescripcionDatos.push({ Descripcion: grupoDeComprasDatos[i].Descripcion });
+        }
+    }
     $("#buscadorFiltroZona").kendoMultiSelect({
         autoClose: false,
-        //tagMode: "single",
+        tagMode: "single",
         autoWidth: true,
-        optionLabel: "SELECCIONE UNA ZONA...",
+        placeholder:"Buscar por Zona",
         dataTextField: "Descripcion",
         dataValueField: "Descripcion",
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/CompraNet/BuscarGrupoDeCompras"
-                }
-            }
-
+        dataSource: GrupoCompraDescripcionDatos,
+        dataBound: function (e) {
+            // handle the event
         },
         change: function () {
             filtrarZona();
+        },
+        messages: {
+            singleTag: "item(s)",
         }
     });
 

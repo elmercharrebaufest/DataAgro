@@ -979,6 +979,7 @@
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
     <Content Include="Scripts\App\Filtros.js" />
+    <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
     <Content Include="Scripts\App\SugerenciaCupo.js" />
     <Content Include="Scripts\App\AbmRol.js" />
@@ -2661,6 +2662,7 @@
     <Content Include="Views\SugerenciaCupo\TablaSugerenciaCupo.cshtml" />
     <Content Include="Views\SugerenciaCupo\PartialTabla.cshtml" />
     <Content Include="Views\AdministracionCupo\Index.cshtml" />
+    <Content Include="Views\Cupo\Disponibilidad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

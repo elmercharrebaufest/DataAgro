@@ -117,6 +117,7 @@
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
+    <Compile Include="Dto\DisponibilidadCuposDto.cs" />
     <Compile Include="Dto\AgenteCompraModel.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\DatosReporteProveedor.cs" />

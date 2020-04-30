@@ -16,7 +16,7 @@ using Kendo.DynamicLinq;
 using Filter = Kendo.DynamicLinq.Filter;
 using KendoGridBinder.Containers;
 using System.Collections;
-
+using System.Globalization;
 
 namespace WebDataAgro.Controllers
 {
@@ -262,5 +262,60 @@ namespace WebDataAgro.Controllers
             var resultado = cupoManager.EliminarVarios(listaCupos, GlobalVariables.IdActiveDirectory);
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
+
+
+        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet, PermisosDataAgro.VisualizarReporteCompraNetExterno)]
+        public ActionResult Disponibilidad()
+        {
+            FillViewBag();
+            return View();
+        }
+
+        private void FillViewBag()
+        {
+            var material = materialManager.TraerTodoMaterial();
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.Codigo.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+            var centro = centroManager.TraerTodoCentro();
+            var centroListItems = centro.Centro.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Descripcion,
+                   Value = x.CodigoSap.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Centro = centroListItems;
+
+            var zona = zonaCupoManager.TraerTodoZonaCupo();
+            var zonaListItems = zona.ZonaCupo.Select(
+                x => new SelectListItem
+                {
+                    Text = x.Descripcion,
+                    Value = x.CodigoSap.ToString(),
+                    Selected = false
+                }).OrderBy(x => x.Value);
+            ViewBag.Zona = zonaListItems;
+        }
+
+        [HttpPost]
+        public ActionResult BuscaDatosTablaDisponibilidad(string FechaId, string ZonaId, string CentroId, string MaterialId)
+        {
+            DateTime fecha = DateTime.Now.Date;
+            if (FechaId != null)
+            {
+            DateTime.TryParseExact(FechaId,"dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fecha);
+
+            }
+            List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fecha,  ZonaId,  CentroId,  MaterialId);
+            
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
     }
 }

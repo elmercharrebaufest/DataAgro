@@ -59,8 +59,9 @@ function InicializarCargaCupos() {
             }
         }
     });
-
     $("#fechaEntrega").kendoDatePicker({
+
+        min: kendo.parseDate(new Date()),
         change: function () {
             $("#fechaHasta").data("kendoDatePicker").value("");
             var datepicker = $("#fechaHasta").data("kendoDatePicker");

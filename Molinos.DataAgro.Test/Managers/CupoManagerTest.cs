@@ -39,6 +39,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IServicioCriterios> servicioCriterioMock;
+        private Mock<IDisponibilidadCuposAgent> disponibilidadCuposAgentMock;
         [SetUp]
         public void SetUp()
         {
@@ -51,9 +52,10 @@ namespace Molinos.DataAgro.Test.Managers
             proveedorManagerMock = new Mock<IProveedorManager>();
             mailManagerMock = new Mock<IMailManager>();
             servicioCriterioMock = new Mock<IServicioCriterios>();
+            disponibilidadCuposAgentMock = new Mock<IDisponibilidadCuposAgent>();
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object);
+                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -562,5 +564,20 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SugerenciaCupo>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);
 
         }
+
+        [Test]
+        public void TraerCupoDisponibilidadTest()
+        {
+            disponibilidadCuposAgentMock.Setup(y => y.TraerDisponibilidadCupos(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new List<DisponibilidadCuposDto>() {new DisponibilidadCuposDto
+                {
+                    MaterialNombre  ="Soja"
+                }});
+            var result = target.TraerCupoDisponibilidad(DateTime.Now.Date, "", "", "");
+
+            Assert.AreEqual(1,result.Count());
+
+        }
+
     }
 }

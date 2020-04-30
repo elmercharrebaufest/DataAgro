@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly IModificarContratoAgent modificarContratoAgent;
         private readonly IMailManager mailManager;
+        private readonly IStatusContratoAgent status;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Business.Managers
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager)
+            IMailManager mailManager, IStatusContratoAgent status)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -88,6 +89,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.modificarContratoAgent = modificarContratoAgent;
             this.mailManager = mailManager;
             this.capacidadProductiva = capacidadProductiva;
+            this.status = status;
         }
 
         public DatosIniContrato TraerDatosCombo()
@@ -976,11 +978,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                     try
                     {
-                        mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
-                        var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
-                        foreach (var comercialId in comerciales)
+                        if (oContratoSave.EsFason != true)
                         {
-                            EnviarNotificacion(comercialId, oContratoSave);
+                            mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
+                            var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
+                            foreach (var comercialId in comerciales)
+                            {
+                                EnviarNotificacion(comercialId, oContratoSave);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -2213,8 +2218,7 @@ namespace Molinos.DataAgro.Business.Managers
         public string ValidarStatus(int contratoId)
         {
             var resultado = "";
-            var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato()
-            {
+           var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato(){
                 ContratoSAP = x.ContratoSAP,
                 Estado = x.EstadoId
             });

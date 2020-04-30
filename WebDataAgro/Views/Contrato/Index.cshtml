@@ -60,8 +60,13 @@
         <div class="col-md-2">
             <label>Tipo de Negocio</label>
         </div>
-        <div class="col-md-4">
-            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Seleccione el Negocio", new { @class = "form-control filtroBusquedaPorId", @id = "tipoNegocioId" })
+        <div class="col-md-2">
+            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaPorId", @id = "tipoNegocioId" })
+        </div>
+        <div class="col-md-2">
+            <label>Fasón MP</label>
+            @Html.CheckBox("EsFason", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "FasonMpId" })
+
         </div>
     </div>
     <br />

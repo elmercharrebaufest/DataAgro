@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
     <Compile Include="Helpers\PrecioPizarraAgent.cs" />
     <Compile Include="Helpers\ModificarContratoAgent.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Helpers\CrearCupoAgent.cs" />
     <Compile Include="Helpers\AltaTempranaAgent.cs" />
     <Compile Include="Helpers\CapacidadProductivaAgent.cs" />
+    <Compile Include="Helpers\DisponibilidadCuposAgent.cs" />
     <Compile Include="Helpers\TipoDeCambioAgent.cs" />
     <Compile Include="Helpers\ComprasAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionAgent.cs" />
@@ -101,6 +103,11 @@
     <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\DisponibilidadCupos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\PrecioPizarra\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -181,6 +188,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\StatusContrato\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\TipoDeCambio\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -195,6 +207,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\DisponibilidadCupos\Molinos.DataAgro.Agent.DisponibilidadCupos.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DisponibilidadCupos\Molinos.DataAgro.Agent.DisponibilidadCupos.Z_MPRFC_DISPONIBILIDAD_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DisponibilidadCupos\SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS.wsdl" />
     <None Include="Service References\PrecioPizarra\Molinos.DataAgro.Agent.PrecioPizarra.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -309,6 +328,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" />
+    <None Include="Service References\StatusContrato\Molinos.DataAgro.Agent.StatusContrato.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StatusContrato\Molinos.DataAgro.Agent.StatusContrato.Z_MPRFC_STATUS_DE_CONTRATOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StatusContrato\SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO.wsdl" />
     <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -318,6 +344,7 @@
     <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
     <WCFMetadataStorage Include="Service References\PrecioPizarra\" />
     <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
@@ -334,6 +361,7 @@
     <WCFMetadataStorage Include="Service References\ModificarCupos\" />
     <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
+    <WCFMetadataStorage Include="Service References\StatusContrato\" />
     <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
   </ItemGroup>
   <ItemGroup>
@@ -550,6 +578,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\PrecioPizarra\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatusContrato\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatusContrato\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatusContrato\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DisponibilidadCupos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DisponibilidadCupos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DisponibilidadCupos\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

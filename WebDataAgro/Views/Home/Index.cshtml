@@ -132,7 +132,9 @@
             <div id="Objetivos" class="tab-pane fade in">
                 <div class="contenedor-principal-campanas-subtitulo">
                     Objetivo granos (TNs)
-                    <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-modal"></button>
+                    
+                    <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid @(PermisosHelper.Is(PermisosDataAgro.VisualizarHedge) ? "" : "hide")" data-toggle="modal" data-target="#objetivo-modal"></button>
+
                     <button class="ajax-editar-link fa fa-eye btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-detalle-modal"></button>
                     <div class="contenedor-principal-objetivo-detalle">
 

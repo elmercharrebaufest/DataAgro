@@ -93,7 +93,7 @@ function ObtenerFechaHasta(fechaBase) {
 
 function InicializarElementos() {
     kendo.culture("es-AR");
-    
+
     if (rol == "Corredor") {
         $(".proveedores").show();
         $("#buscadorProveedor").click(function () {
@@ -223,7 +223,7 @@ function InicializarElementos() {
                 $("#fechaHastaId").val(e.dataItem.HastaEntrega);
                 $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
                 $("#destinoId").data("kendoDropDownList").value(e.dataItem.Centro);
-                if (e.dataItem.ImporteAPrecio== 0) {
+                if (e.dataItem.ImporteAPrecio == 0) {
                     $("#impo-a-precio").hide();
                 } else {
                     $("#impo-a-precio").show();
@@ -249,6 +249,10 @@ function InicializarElementos() {
                 $("#porc-sobre-precio").text(e.dataItem.PorcentajeSobrePrecio);
                 $("#cond-fijacion").text(e.dataItem.CondicionFijacionDescripcion);
                 $("#cond-pago").text(e.dataItem.CondicionPagoDescripcion);
+                $("#ImporteSobrePrecio").val(e.dataItem.ImporteSobrePrecio);
+                $("#MonedaSobrePrecio").val(e.dataItem.MonedaSobrePrecio);
+                $("#PorcentajeSobrePrecio").val(e.dataItem.PorcentajeSobrePrecio);
+
                 e.dataItem.Calidad === true ? $("#trigoEspecialFijacion").prop("checked", true) : $("#trigoEspecialFijacion").prop("checked", false);
             }
         },
@@ -301,14 +305,14 @@ function InicializarElementos() {
     $("#tipoId").kendoDropDownList({
         optionLabel: "SELECCIONE UN TIPO DE NEGOCIO...",
         dataTextField: "Descripcion",
-        dataValueField: "TipoNegocioId"       
+        dataValueField: "TipoNegocioId"
     });
 
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
         dataTextField: "Descripcion",
         dataValueField: "MaterialId",
-        change: function () {           
+        change: function () {
             $("#contratoId").val("");
             $("#datosContrato").hide();
         },
@@ -335,7 +339,7 @@ function InicializarElementos() {
                 var p = precioMoa.filter(function (f) { return f.MaterialId === Number($("#material").val()) && f.MonedaId === e.dataItem.MonedaId; })[0];
                 $("#precioId").data("kendoNumericTextBox").value(p.Precio);
                 $("#precioMonedaId").data("kendoDropDownList").value(p.MonedaId);
-            }   
+            }
         }
     });
 
@@ -843,7 +847,7 @@ function InicializarElementos() {
         window.location.href = window.location.origin + "/CompraNet";
     });
 
- 
+
     $("#pizarraId").click(ClickEnPizarra);
 }
 
@@ -1161,12 +1165,12 @@ function AsignarDatos() {
     if ($("#precioMonedaId").data("kendoDropDownList")) {
         $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         //$("#pagoDolarizadoDiv").hide();
-    }    
-   
+    }
+
     $("#proveedorLabelId").removeClass("col-sm-1");
     $("#proveedorLabelId").addClass("col-sm-2");
     if (rol == "Proveedor") {
-        $("#corredorDiv").hide();       
+        $("#corredorDiv").hide();
         $("#buscadorProveedor").data("kendoAutoComplete").readonly();
         $(".proveedores").hide();
     }
@@ -1256,6 +1260,25 @@ function ObtenerDatos() {
     obj.Cantidad = $("#cantidadId").val();
     obj.Precio = $("#precioId").val();
     obj.PrecioNeto = $("#precioId").val();
+    //calcular el neto
+    var ImporteSobrePrecio = parseFloat($("#ImporteSobrePrecio").val());
+    var MonedaSobrePrecio = $("#MonedaSobrePrecio").val();
+    var PorcentajeSobrePrecio = parseFloat($("#PorcentajeSobrePrecio").val());
+    if (ImporteSobrePrecio > 0 && PorcentajeSobrePrecio > 0) {
+        if (MonedaSobrePrecio != $("#precioMonedaId").val()) {
+            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { });
+            if ($.trim(MonedaSobrePrecio) == "ARP") {
+                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) / valorDolar;
+            } else {
+                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) * valorDolar;
+            }
+        }
+        var precioN = $("#precioId").data("kendoNumericTextBox").value();
+        var desc = ((precioN + ImporteSobrePrecio) * PorcentajeSobrePrecio / 100);
+        obj.PrecioNeto = precioN + ImporteSobrePrecio + desc;
+        alert(obj.PrecioNeto);
+    } 
+   
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
     obj.FechaDesde = $("#fechaDesdeId").val();
@@ -1410,9 +1433,9 @@ function ObtenerDatos() {
     //obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     //obj.AperturaPrecio = viewModel.AperturaPrecio;
-    
+
     GrabarContrato(obj);
-   
+
 }
 
 function GrabarContrato(nuevoContrato) {
@@ -2078,7 +2101,7 @@ function CargarPrecioMoa(material) {
             $("#precioId").data("kendoNumericTextBox").value(lista[0].Precio);
             $("#precioMonedaId").data("kendoDropDownList").value(lista[0].MonedaId);
         } else if (lista.length > 1) {
-            var p = precioMoa.filter(function (e) { return e.MaterialId === Number(material)  && e.MonedaId === moneda; })[0];
+            var p = precioMoa.filter(function (e) { return e.MaterialId === Number(material) && e.MonedaId === moneda; })[0];
             $("#precioId").data("kendoNumericTextBox").value(p.Precio);
             $("#precioMonedaId").data("kendoDropDownList").value(p.MonedaId);
         }
@@ -2092,11 +2115,11 @@ function CargarPrecioMoa(material) {
 }
 
 function HabilitarPizarra(material) {
-    var pizarra = MSExecuteOnServer('/CompraNet/HabilitarPizarra', {material: material});
+    var pizarra = MSExecuteOnServer('/CompraNet/HabilitarPizarra', { material: material });
     if (pizarra != true) {
         $("#pizarraId").prop("checked", false);
         $("#pizarraId").attr('disabled', 'disabled');
-    } else {        
+    } else {
         if (!precioMoa) {
             $("#pizarraId").prop("checked", true);
             $("#pizarraId").attr('disabled', 'disabled');
@@ -2104,5 +2127,5 @@ function HabilitarPizarra(material) {
             $("#pizarraId").prop("checked", false);
             $("#pizarraId").removeAttr('disabled');
         }
-    }        
+    }
 }

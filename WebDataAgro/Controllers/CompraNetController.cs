@@ -52,7 +52,7 @@ namespace WebDataAgro.Controllers
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private IConfiguracionManager mobjConfiguracionManager;
-
+        private ITipoDeCambioAgent tipoDeCambioAgent;
 
         //-----------------------------------------------------
         //  Constructor
@@ -63,7 +63,7 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager, INegocioManager oNegocioManager)
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager, INegocioManager oNegocioManager, ITipoDeCambioAgent tipoDeCambioAgent)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -82,6 +82,7 @@ namespace WebDataAgro.Controllers
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
         }
 
         //-----------------------------------------------------
@@ -108,7 +109,13 @@ namespace WebDataAgro.Controllers
             ViewBag.TipoId = tipoId;
             ViewBag.Siguientes = siguientes;
             ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
+           
             return View();
+        }
+        public ActionResult ValidarModificarFinalizado(int? id)
+        {
+            var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : "";           
+            return Json(resultado);
         }
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
         public ActionResult CrearContratoExterno(int? id, int? tipoId)
@@ -821,6 +828,11 @@ namespace WebDataAgro.Controllers
                 Data = mobjNegocioManager.OcultarEnTablero(negocioAnular),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public JsonResult TraerTipoDeCambio() {
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio();
+            return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
     }
 }

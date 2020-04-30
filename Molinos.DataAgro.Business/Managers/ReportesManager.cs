@@ -724,7 +724,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.StandardDeCalidadId == standard))
                 && (centroId == 0 || x.DestinoId == centroId)
-                && x.ContratoAcuerdoId == null);
+                && x.ContratoAcuerdoId == null && x.EsFason != true);
             foreach (var cont in contratos)
             {
                 var posicion = new DateTime();

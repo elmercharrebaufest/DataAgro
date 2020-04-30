@@ -51,5 +51,6 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult ActualizarContratoFinalizado(Contrato contrato);
         List<ContratoIdDto> TraerContratosSAP(string desde, string hasta);
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
+        string ValidarStatus(int contratoId);
     }
 }

@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IContratoAcuerdoManager> acuerdoManagerMock;
         private Mock<IConfiguracionInternaManager> configuracionInternaMock;
         private Mock<IConfiguracionManager> configuracionMock;
+        private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -64,12 +65,13 @@ namespace Molinos.DataAgro.Test.Controllers
             acuerdoManagerMock = new Mock<IContratoAcuerdoManager>();
             configuracionInternaMock = new Mock<IConfiguracionInternaManager>();
             configuracionMock = new Mock<IConfiguracionManager>();
+            tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
-                acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object, negocioManagerMock.Object);
+                acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object, negocioManagerMock.Object, tipoDeCambioAgentMock.Object );
         }
 
         [Test]
@@ -1033,6 +1035,19 @@ namespace Molinos.DataAgro.Test.Controllers
             negocioManagerMock.Verify(x => x.OcultarEnTablero(It.IsAny<Negocio>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ValidarModificarFinalizadoTest()
+        {
+            contratoManagerMock.Setup(x => x.ValidarStatus(It.IsAny<int>()))
+                .Returns("");
+            var result = target.ValidarModificarFinalizado(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            contratoManagerMock.Verify(x => x.ValidarStatus(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
     }
