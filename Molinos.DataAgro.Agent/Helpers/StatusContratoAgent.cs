@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent
 
                     var rq = new Z_MPRFC_STATUS_DE_CONTRATO()
                     {
-                        IM_CONTRATO=""
+                        IM_CONTRATO = contratoSap
                     };
                     var log = new Log
                     {

@@ -438,27 +438,24 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + cupo.Destinatario.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";            
+            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>"; 
+
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
                 if (cupo.MaterialId == 1)
                 {
-                    htmlBody += "Maíz Especial<br />";
+                    htmlBody += "ESPECIAL<br />";
                 }
                 if (cupo.MaterialId == 2)
                 {
-                    htmlBody += "Trigo Especial<br />";
+                    htmlBody += "ESPECIAL<br />";
                 }
                 else
                 {
-                    htmlBody += "Soja Sustentable<br />";
+                    htmlBody += "SUSTENTABLE<br />";
                 }
-            }
-            else
-            {
-                htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
-                htmlBody += cupo.Material.Descripcion.ToUpper();
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
