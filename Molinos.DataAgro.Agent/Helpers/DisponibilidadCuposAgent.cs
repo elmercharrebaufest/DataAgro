@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Agent
                         });
                     }
                     logger.Debug(devolucion.ToXml());
-                    return null;
+                    return result;
                 }
                 catch (Exception ex)
                 {
