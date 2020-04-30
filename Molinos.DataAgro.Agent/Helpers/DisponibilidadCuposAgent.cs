@@ -1,8 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.DisponibilidadCupos;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,9 +15,12 @@ namespace Molinos.DataAgro.Agent
     public class DisponibilidadCuposAgent : IDisponibilidadCuposAgent
     {
         private readonly ILogger logger;
-        public DisponibilidadCuposAgent(ILogger logger)
+        private readonly IRepositorio repositorio;
+
+        public DisponibilidadCuposAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
 
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
@@ -41,16 +46,18 @@ namespace Molinos.DataAgro.Agent
 
                     Z_MPRFC_DISPONIBILIDAD_CUPOSResponse devolucion = agent.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS(rq);
                     var result = new List<DisponibilidadCuposDto>();
+                    List<Material> materiales = repositorio.Listar<Material>();
                     foreach (var item in devolucion.EX_SALIDA)
                     {
                         result.Add(new DisponibilidadCuposDto
                         {
                             Fecha = DateTime.Parse(item.FECHA),
                             MaterialCodigo = item.MATERIAL,
+                            MaterialNombre = materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL) == null ? item.MATERIAL : materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL).Descripcion,
                             ZonaId = item.ZONA,
-                            Disponibles = item.DISPONIBLES,
-                            Consumidos = item.CONSUMIDOS,
-                            Limite = item.LIMITE_CUPOS
+                            Disponibles = item.DISPONIBLES.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.DISPONIBLES.TrimStart(new Char[] { '0' }),
+                            Consumidos = item.CONSUMIDOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.CONSUMIDOS.TrimStart(new Char[] { '0' }),
+                            Limite = item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.LIMITE_CUPOS.TrimStart(new Char[] { '0' })
                         });
                     }
                     logger.Debug(devolucion.ToXml());
