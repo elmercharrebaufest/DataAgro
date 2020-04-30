@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Precio { get; set; }
         public string PrecioPlazo { get; set; }
         public DateTime? FechaEntrega { get; set; }
-        public int CampanaId { get; set; }
+        public int? CampanaId { get; set; }
         public DateTime? FechaDesde { get; set; }
         public string FechaDesdeFormateado { get; set; }
         public DateTime? FechaHasta { get; set; }
@@ -147,6 +147,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaCierta { get; set; }
         public string MonedaBonificacion { get; set; }
         public string MesPosicion { get; set; }
+        public int? CampanaMaterialId { get; set; }
+        public int? ContratoAcuerdoId { get; set; }
     }
 
     public class StoredPorContratoResult

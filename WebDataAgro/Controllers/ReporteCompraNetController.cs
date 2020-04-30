@@ -42,6 +42,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Materiales = materialId == null ? "" : string.Join(",", materialId);
             DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            if (materialId == null || materialId.Count() == 0) materialId = materialManager.TraerDatosIniciales().Material.Select(x => x.MaterialId).ToList();
             ReporteCompraNetModel model = mobjReportesManager.ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId ?? "0", materialId);
             return PartialView("_ReporteCompraNet", model);
 
