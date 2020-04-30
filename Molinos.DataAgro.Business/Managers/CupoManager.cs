@@ -428,11 +428,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A.: <br /><br />  ";
 
-            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             foreach (var c in listaCupos)
             {
-                htmlBody += "<tr>" + Td(ref linea, 2) + c + "</td></tr>";
+                htmlBody +=  c +"<br />";
             }
+            htmlBody += "<br />";
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino SAN LORENZO - SANTA FE - BENIELLI 398" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
@@ -1508,7 +1509,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1).GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso >= DateTime.Today).GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
             
             foreach (var p in cupos)
             {
