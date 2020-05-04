@@ -781,6 +781,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disponibilidad de Cupos.
+        /// </summary>
+        public static string Disponibilidad_De_Cupos {
+            get {
+                return ResourceManager.GetString("Disponibilidad_De_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debe agregar cantidad de Cupos.
         /// </summary>
         public static string Error_CantidadCupoRequerido {

@@ -691,4 +691,7 @@
   <data name="ProveedorZonaPropia" xml:space="preserve">
     <value>Proveedor de ZonaPropia</value>
   </data>
+  <data name="Disponibilidad_De_Cupos" xml:space="preserve">
+    <value>Disponibilidad de Cupos</value>
+  </data>
 </root>

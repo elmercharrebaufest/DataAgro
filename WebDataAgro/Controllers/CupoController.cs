@@ -273,6 +273,8 @@ namespace WebDataAgro.Controllers
 
         private void FillViewBag()
         {
+            var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
+
             var material = materialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
@@ -292,15 +294,20 @@ namespace WebDataAgro.Controllers
                }).OrderBy(x => x.Value);
             ViewBag.Centro = centroListItems;
 
-            var zona = zonaCupoManager.TraerTodoZonaCupo();
-            var zonaListItems = zona.ZonaCupo.Select(
+            var zonas = zonaCupoManager.TraerTodoZonaCupo();
+            var zonaListItems = zonas.ZonaCupo.Select(
                 x => new SelectListItem
                 {
                     Text = x.Descripcion,
                     Value = x.CodigoSap.ToString(),
-                    Selected = false
+                    Selected = comercial.GrupoDeCompras == x.Descripcion
                 }).OrderBy(x => x.Value);
             ViewBag.Zona = zonaListItems;
+            var zona = zonas.ZonaCupo.Where(a=>a.Descripcion == comercial.GrupoDeCompras).SingleOrDefault();
+            if (zona!= null)
+            {
+                ViewBag.GrupoDeCompras = zona.CodigoSap;
+            }
         }
 
         [HttpPost]

@@ -53,7 +53,7 @@
             <label>Zona</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ZonaId", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione la Zona", new { @class = "form-control filtroBusquedaPorId", @id = "ZonaId" })
+            @Html.DropDownList("ZonaId", new SelectList(ViewBag.Zona, "Value", "Text",ViewBag.GrupoDeCompras), "Seleccione la Zona", new { @class = "form-control filtroBusquedaPorId", @id = "ZonaId" })
         </div>
 
     </div>

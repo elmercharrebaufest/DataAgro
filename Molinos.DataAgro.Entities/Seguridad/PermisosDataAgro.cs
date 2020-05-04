@@ -239,6 +239,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AnularOrigenNorte = 727,
         [Display(ResourceType = typeof(Text), Name = "SolicitudCupo")]
         SolicitudCupo = 728,
+        [Display(ResourceType = typeof(Text), Name = "Disponibilidad_De_Cupos")]
+        DisponibilidadDeCupos = 729,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

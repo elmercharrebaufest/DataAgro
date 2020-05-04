@@ -482,11 +482,14 @@
                                         </a>
                                     </li>
                                 }
-                                <li>
-                                    <a href="~/Cupo/Disponibilidad" class="nav-link misreporteslink">
-                                        <i class="icon-bar-chart"></i> Disponibilidad de Cupos
-                                    </a>
-                                </li>
+                                @if (PermisosHelper.Is(PermisosDataAgro.DisponibilidadDeCupos))
+                                {
+                                    <li>
+                                        <a href="~/Cupo/Disponibilidad" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Disponibilidad de Cupos
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }
