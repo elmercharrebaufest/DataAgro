@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Agent
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
 
-                    if (!string.IsNullOrEmpty(valor.EX_STATUS) && !string.IsNullOrEmpty(valor.EX_NUM_SIO))
+                    if (!string.IsNullOrEmpty(valor.EX_STATUS) || !string.IsNullOrEmpty(valor.EX_NUM_SIO))
                     {
                     return "No se puede modificar contrato ya que no se encuentra en slip.";
                     }

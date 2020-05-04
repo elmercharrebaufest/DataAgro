@@ -437,7 +437,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino SAN LORENZO - SANTA FE - BENIELLI 398" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + cupo.Destinatario.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>"; 
 
@@ -452,7 +452,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "ESPECIAL<br />";
                 }
-                else
+                if(cupo.MaterialId == 3)
                 {
                     htmlBody += "SUSTENTABLE<br />";
                 }
