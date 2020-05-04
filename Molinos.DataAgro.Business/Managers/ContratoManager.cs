@@ -2222,14 +2222,18 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoSAP = x.ContratoSAP,
                 Estado = x.EstadoId
             });
-            if (contrato.Estado == 5)
+            if (contrato != null)
             {
-                resultado = status.ValidarEstado(contrato.ContratoSAP);
-                if (!String.IsNullOrEmpty(resultado))
+                if (contrato.Estado == 5)
                 {
-                    return resultado;
+                    resultado = status.ValidarEstado(contrato.ContratoSAP);
+                    if (!String.IsNullOrEmpty(resultado))
+                    {
+                        return resultado;
+                    }
                 }
             }
+            
             return resultado;
         }
     }

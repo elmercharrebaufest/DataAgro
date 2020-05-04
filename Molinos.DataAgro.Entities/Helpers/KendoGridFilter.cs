@@ -165,7 +165,10 @@ namespace Molinos.DataAgro.Entities.Helpers
                     else
                     {
                         ProcessFilters(f, ref queryable);
+                        if (whereClause !="")
+                        {
                         queryable = queryable.Where(whereClause, parameters.ToArray());
+                        }
                     }
                 }
             }

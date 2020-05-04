@@ -979,7 +979,8 @@ namespace Molinos.DataAgro.Test.Controllers
                     TotalMaiz = 1,
                     TotalPesos = 1,
                     TotalSoja = 1,
-                    TotalTrigo = 1
+                    TotalTrigo = 1,
+                    ContratoSAP = "a"
                 });
 
 
@@ -989,7 +990,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerTotalesPesosDolares(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1,\"Id\":0,\"ComercialCreadorId\":1},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":\"a\",\"ProveedorId\":1,\"Corredor\":\"a\",\"CorredorId\":1,\"FechaDesde\":\"\\/Date(1569898800000)\\/\",\"FechaHasta\":\"\\/Date(1569898800000)\\/\",\"TipoNegocio\":\"a\",\"Material\":\"a\",\"MaterialId\":1,\"Cantidad\":1,\"Ampliaciones\":1,\"Campania\":\"a\",\"Negocio\":\"a\",\"Fecha\":\"\\/Date(1569898800000)\\/\",\"GrupoCompraDescripcion\":\"a\",\"Comercial\":\"a\",\"ComercialCreador\":\"a\",\"DestinoDescripcion\":\"a\",\"ComercialId\":1,\"Estado_Contrato\":\"a\",\"TotalPesos\":1,\"TotalDolares\":1,\"TotalTrigo\":1,\"TotalMaiz\":1,\"TotalSoja\":1,\"TotalGirasol\":2,\"TotalGirasolAlto\":1,\"Id\":0,\"ComercialCreadorId\":1,\"ContratoSAP\":\"a\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1010,6 +1011,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     {
                         Acopiador = new ValoresRuca { PlanCanje = "SI", Consignatario = "SI", Directo = "SI" },
                         Corredor = "SI",
+                        Fason = "SI",
                         Otros = new ValoresRuca { Directo = "SI", Consignatario = "SI", PlanCanje = "SI" }
                     }
                 });
@@ -1019,7 +1021,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.ValidarProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\",\"Fason\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

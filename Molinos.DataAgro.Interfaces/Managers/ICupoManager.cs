@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Interfaces
         List<DiaCupo> Panel();
         List<SugerenciaNoAceptada> SugerenciasNoAceptadas();
         void EnviarMailSinCtg();
-        List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fecha, string zonaId, string centroId, string materialId);
+        List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
     }
 
 }

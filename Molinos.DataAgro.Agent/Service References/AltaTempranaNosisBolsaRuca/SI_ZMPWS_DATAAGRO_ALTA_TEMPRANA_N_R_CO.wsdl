@@ -47,6 +47,7 @@
           <xsd:element name="ACOPIADOR" type="rfc:ZMPES540" />
           <xsd:element name="OTROS" type="rfc:ZMPES540" />
           <xsd:element name="CORREDOR" type="rfc:char2" />
+          <xsd:element name="FASON" type="rfc:char2" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES540">

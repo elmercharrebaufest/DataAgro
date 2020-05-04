@@ -128,6 +128,7 @@ function InicializarElementos() {
         },
         select: function (e) {
             ObtenerAlta(e.dataItem.Id);
+            ValidarFason();
             if ($("#estado").val() !== "5") {
                 if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                     $("#clasificacion").data("kendoDropDownList").value("");
@@ -3364,6 +3365,15 @@ function ValidarAlta() {
         }
         if (altaTemprana.FechaActualizacion == "NO") {
             MensInfo("Falta fecha de actualización de legajo");
+            return;
+        }
+    }
+}
+
+function ValidarFason() {
+    if (altaTemprana) {
+        if ($("#fasonIdCheck").is(':checked') && altaTemprana.Ruca.Fason == "NO") {
+            MensInfo("No está habilitado en Ruca");
             return;
         }
     }

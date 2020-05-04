@@ -47,7 +47,8 @@ namespace Molinos.DataAgro.Agent
                             Directo = "SI",
                             PlanCanje = "SI"
                         },
-                        Corredor = "NO"
+                        Corredor = "NO",
+                        Fason = "NO"
                     },
                     Consignatario = "SI",
                     PlanCanje = "SI",
@@ -97,7 +98,8 @@ namespace Molinos.DataAgro.Agent
                                 Directo = valor.EX_RUCA.OTROS.DIRECTO,
                                 PlanCanje = valor.EX_RUCA.OTROS.PROV_PLAN_CANJE
                             },
-                            Corredor = valor.EX_RUCA.CORREDOR
+                            Corredor = valor.EX_RUCA.CORREDOR, 
+                            Fason = valor.EX_RUCA.FASON
                         },
                         PlanCanje = valor.EX_PLAN_CANJE,
                         Consignatario = valor.EX_CONSIGNATARIO,
@@ -107,6 +109,7 @@ namespace Molinos.DataAgro.Agent
                         Carta = valor.EX_CARTA,
                         FechaActualizacion = valor.EX_FECHA_ACTUALIZACION,
                         Mensaje = valor.EX_MENSAJE
+                          
                     };
                     return retorno;
                 }catch (Exception e)

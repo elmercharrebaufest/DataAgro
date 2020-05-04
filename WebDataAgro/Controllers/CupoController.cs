@@ -264,7 +264,7 @@ namespace WebDataAgro.Controllers
         }
 
 
-        [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet, PermisosDataAgro.VisualizarReporteCompraNetExterno)]
+        [Autorizacion(PermisosDataAgro.DisponibilidadDeCupos)]
         public ActionResult Disponibilidad()
         {
             FillViewBag();
@@ -303,24 +303,30 @@ namespace WebDataAgro.Controllers
                     Selected = comercial.GrupoDeCompras == x.Descripcion
                 }).OrderBy(x => x.Value);
             ViewBag.Zona = zonaListItems;
-            var zona = zonas.ZonaCupo.Where(a=>a.Descripcion == comercial.GrupoDeCompras).SingleOrDefault();
-            if (zona!= null)
+            var zona = zonas.ZonaCupo.Where(a => a.Descripcion == comercial.GrupoDeCompras).SingleOrDefault();
+            if (zona != null)
             {
                 ViewBag.GrupoDeCompras = zona.CodigoSap;
             }
         }
 
         [HttpPost]
-        public ActionResult BuscaDatosTablaDisponibilidad(string FechaId, string ZonaId, string CentroId, string MaterialId)
+        public ActionResult BuscaDatosTablaDisponibilidad(string FechaDesde, string FechaHasta, string ZonaId, List<string> CentroId, string MaterialId)
         {
-            DateTime fecha = DateTime.Now.Date;
-            if (FechaId != null)
+            DateTime fechaDesde = DateTime.Now.Date;
+            if (FechaDesde != null)
             {
-            DateTime.TryParseExact(FechaId,"dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fecha);
+                DateTime.TryParseExact(FechaDesde, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaDesde);
 
             }
-            List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fecha,  ZonaId,  CentroId,  MaterialId);
-            
+            DateTime fechaHasta = DateTime.Now.Date;
+            if (FechaHasta != null)
+            {
+                DateTime.TryParseExact(FechaHasta, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaHasta);
+
+            }
+            List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fechaDesde, fechaHasta, ZonaId, CentroId, MaterialId);
+
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 

@@ -653,7 +653,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "COSECHA</th>" + Td(ref linea) + oContrato.Campana.Descripcion.ToUpper() + "</td></tr>";
             if (!String.IsNullOrEmpty(oContrato.ContratoMadre))
             {
-                htmlBody += "<tr>" + th + "CONTRATO MADRE</th>" + Td(ref linea) + oContrato.ContratoMadre.ToUpper() + "</td></tr>";
+                htmlBody += "<tr>" + th + "CONTRATO MADRE</th>" + Td(ref linea) + oContrato.ContratoMadre.TrimStart('0').ToUpper() + "</td></tr>";
             }
 
             if (oContrato.BoletoId != null && oContrato.BoletoId != 3)

@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public ValoresRuca Otros { get; set; }
         public ValoresRuca Acopiador { get; set; }
         public string Corredor { get; set; }
+        public string Fason { get; set; }
     }
     public partial class ValoresRuca
     {

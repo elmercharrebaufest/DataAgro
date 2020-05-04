@@ -156,6 +156,7 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/CompraNetIndex").Include(
                                          "~/Scripts/KendoExtensions.js",
                                          "~/Scripts/App/firebase-suscribir.js",
+                                          "~/Scripts/App/Filtros.js",
                                          "~/Scripts/App/CompraNetIndex.js"));
             bundles.Add(new ScriptBundle("~/bundles/ContratoIndex").Include(
                                          "~/Scripts/KendoExtensions.js",

@@ -2,7 +2,7 @@
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
 
-    inicializarTodosKendoDate($(".filtroFecha"));
+    //inicializarTodosKendoDate($(".filtroFecha"));
     inicializarElementos();
     InicializarGrid();
 
@@ -10,10 +10,11 @@
 
 function additionalData() {
     return {
-        FechaId: $("#FechaId").val(),
+        FechaDesde: $("#FechaDesde").val(),
+        FechaHasta: $("#FechaHasta").val(),
         MaterialId: $("#MaterialId").val(),
         ZonaId: $("#ZonaId").val(),
-        CentroId: $("#CentroId").val(),
+        CentroId: $("#CentroId").data("kendoMultiSelect").value(),
     };
 }
 
@@ -101,15 +102,27 @@ function Filtrar() {
 
 
 function inicializarElementos() {
-    $("#Fecha").kendoDatePicker({
+    $("#FechaDesde").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
     });
 
-    $("#Fecha").click(function () {
+    $("#FechaDesde").click(function () {
         $("#Fecha").val("");
     });
-    
+
+    $("#FechaHasta").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
+    });
+
+    $("#FechaHasta").click(function () {
+        $("#Fecha").val("");
+    });
+
+    $("#CentroId").kendoMultiSelect({
+        autoClose: false
+    });
 
 }
 

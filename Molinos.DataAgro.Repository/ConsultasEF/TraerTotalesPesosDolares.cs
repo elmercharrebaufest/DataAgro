@@ -79,7 +79,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
                     TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
                     TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
-                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0
+                    TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0,
+                    ContratoSAP = contrato.ContratoSAP 
                 };
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);

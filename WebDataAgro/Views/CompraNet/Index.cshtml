@@ -176,17 +176,15 @@
                     <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
                         @if (verMesa)
                         {
-                            <div id="inputZona" class="col-xs-6 col-md-4">
-                                <input id="buscadorFiltroZona" style=" padding:0px" type="text" placeholder="Buscar por Zona" />
-                            </div>
+
                             @*<div class="col-xs-6 col-md-4">
-                                <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
-                                    <span class="botonVarios">
-                                        <i class="fa fa-search varios" aria-hidden="true"></i>
-                                    </span>
-                                    <span>Buscar</span>
-                                </div>
-                            </div>*@
+                            <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-search varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Buscar</span>
+                            </div>
+                        </div>*@
                             <div class="col-xs-6 col-sm-4">
                                 <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
                                     <span class="botonVarios">
@@ -231,9 +229,38 @@
                                 <span>Finalizar </span>
                             </div>
                         </div>
-
                     </div>
-                </div>}
+                </div>
+
+                <div class="linea" data-toggle="collapse" data-target="#demo">
+                </div>
+                    <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#demo">
+                        <span class="icono"> <i class="fa fa-plus-square-o" aria-hidden="true"></i></span>
+                    </button>
+                <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
+                    <div id="inputZona" class="col-xs-12 col-md-2 col-md-offset-5 noPadding">
+                        <input id="buscadorFiltroZona" type="text" placeholder="Buscar por Zona" />
+                    </div>
+                    <div id="variosDiv" class="col-xs-12 col-md-5 alinear-derecha">
+                        <div class="col-xs-12 col-md-4">
+                            @Html.TextBox("ContratoSAP", "", new { placeholder = "Contrato SAP", @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                        </div>
+                        <div class="col-xs-12 col-md-4">
+                            @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+                        </div>
+                        <div class="col-xs-12 col-md-4">
+                            <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                            <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+                            </div>
+                            <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
+                            </button>
+                            <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
             <div class="row" id="nuevotab">
                 <div class="col-xs-12">
                     <div id="gridInformeCompraNet"></div>
@@ -277,3 +304,29 @@
 @Html.Partial("_ModalModificarVarios")
 <!-- Modal Aprobar-->
 @Html.Partial("_ModalAprobar")
+<style>
+    .k-multiselect-wrap .k-input{
+        color: #999999;
+    }
+    .linea {
+        border-top: 1px solid #387941;
+        margin-left: 20px;
+        height: 9px;
+        padding: 0;
+        max-width:1300px;
+       
+    }
+    
+
+  .botonFiltrar{
+     padding: 0;
+    position: relative;
+    top: -24px;
+    left: 13px;
+              }
+  .icono {
+   font-size:22px;
+   color:#387941;
+  }
+
+</style>

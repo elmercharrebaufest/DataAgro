@@ -1568,9 +1568,9 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fecha, string zonaId, string centroId, string materialId)
+        public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId , string materialId)
         {
-            return disponibilidadCuposAgent.TraerDisponibilidadCupos(fecha, zonaId, centroId, materialId);
+            return disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde,fechaHasta, zonaId, centroId, materialId);
         }
     }
 }

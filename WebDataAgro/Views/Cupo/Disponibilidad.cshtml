@@ -26,19 +26,22 @@
 <div id="filtrar" class="container collapse">
     <div class="row">
         <div class="col-md-2">
-            <label>Fecha</label>
+            <label>Fecha Desde</label>
         </div>
         <div class="col-md-4">
             <span id="fechaDeCarga">
-                <input id="FechaId" class="filtroFecha" name="FechaId" type="date" style="width: 100%" />
+                <input id="FechaDesde" class="filtroFecha" name="FechaDesde" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
-            <label>Centro</label>
+            <label>Fecha Hasta</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"),  new { @class = "form-control filtroBusquedaPorId", @id = "CentroId" })
+            <span id="fechaDeCarga">
+                <input id="FechaHasta" class="filtroFecha" name="FechaHasta" type="date" style="width: 100%" />
+            </span>
         </div>
+        
     </div>
     <br />
     
@@ -61,8 +64,13 @@
     <br />
     <br />
     <div class="row">
-
-        <div class="col-md-12" style="text-align:right">
+        <div class="col-md-2">
+            <label>Centro</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control filtroBusquedaPorId", @id = "CentroId" })
+        </div>
+        <div class="col-md-6" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Buscar</button>
         </div>
     </div>

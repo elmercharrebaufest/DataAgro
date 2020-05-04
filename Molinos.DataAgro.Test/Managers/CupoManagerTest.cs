@@ -568,12 +568,12 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerCupoDisponibilidadTest()
         {
-            disponibilidadCuposAgentMock.Setup(y => y.TraerDisponibilidadCupos(It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            disponibilidadCuposAgentMock.Setup(y => y.TraerDisponibilidadCupos(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>()))
                 .Returns(new List<DisponibilidadCuposDto>() {new DisponibilidadCuposDto
                 {
                     MaterialNombre  ="Soja"
                 }});
-            var result = target.TraerCupoDisponibilidad(DateTime.Now.Date, "", "", "");
+            var result = target.TraerCupoDisponibilidad(DateTime.Now.Date, DateTime.Now.Date, "", new List<string>(), "");
 
             Assert.AreEqual(1,result.Count());
 

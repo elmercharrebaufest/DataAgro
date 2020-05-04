@@ -6,6 +6,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IDisponibilidadCuposAgent
     {
-        List<DisponibilidadCuposDto> TraerDisponibilidadCupos(DateTime? fecha, string zonaId, string centroId, string materialId);
+        List<DisponibilidadCuposDto> TraerDisponibilidadCupos(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
     }
 }

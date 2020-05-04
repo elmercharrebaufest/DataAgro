@@ -37,6 +37,12 @@ $(document).ready(function () {
     modificaFinalizados = ConvertirStringABool(modificaFinalizados);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
+        $("#demo").on("hide.bs.collapse", function () {
+            $(".btn").html('<span class="icono"><i class="fa fa-plus-square-o" aria-hidden="true"></i></span>');
+        });
+        $("#demo").on("show.bs.collapse", function () {
+            $(".btn").html('<span class="icono"><i class="fa fa-minus-square-o" aria-hidden="true"></i></span>');
+        });
     CrearViewModel();
     if (!externo) {
         InicializarBuscador();
@@ -57,6 +63,7 @@ $(document).ready(function () {
             $("#reenviarMails").show();
         }, 0);
     });
+    inicializarPopUpSap("Contratos");
 
     $(".btnSubmit").click(function () {
         var self = this;
@@ -130,7 +137,6 @@ $(document).ready(function () {
     });
     
 });
-
 function htmlEncode(value) {
     return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, "")).html();
 }
@@ -346,6 +352,69 @@ function recargarGrilla() {
 
 }
 
+function Filtrar() {
+    var grid = $('#gridInformeCompraNet').data('kendoGrid');
+    var currentFilters = grid.dataSource.filter();
+    let filtroSap = TraerFiltrosConValores();
+    if (!currentFilters) {
+        currentFilters = { filters: [], logic: 'and' }
+    }
+    if (filtroSap.filter != null) {
+        //-----------------------------------------
+        currentFilters.filters = currentFilters.filters.filter(function (x) {
+            return x.field != 'ContratoSAP' && x.field != undefined
+        })
+
+        //if (filtroSap.filter == null) {
+        //    grid.dataSource.filter(currentFilters);
+        //    return;
+        //}
+
+        var contratoSapFilters = { logic: 'or', filters: [] }
+
+
+        for (var i = 0; i < filtroSap.filter.filters[0].filters.length; i++) {
+            contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
+        }
+
+        currentFilters.filters.push(contratoSapFilters)
+        //-----------------------------------------
+
+    } 
+    grid.dataSource.filter(currentFilters);
+    recargarGrilla();
+}
+function BorrarFiltro() {
+        $("#ContratoSAPId").val("");
+        $("#ContratoSAPHastaId").val("");
+        var grid = $('#gridInformeCompraNet').data('kendoGrid');
+        var dataSource = grid.dataSource;
+        var filters = null;
+        if (dataSource.filter() != null) {
+            filters = dataSource.filter().filters;
+        }
+        //Remove filter 
+        var removeIndex = -1;
+        if (filters != null) {
+            for (var x = 0; x < filters.length; x++) {
+                var temp = filters[x];
+                if (temp.filters != undefined) {
+
+                    for (var i = 0; i < temp.filters.length; i++) {
+                        if (temp.filters[i].field == 'ContratoSAP') {
+                            removeIndex = x;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (removeIndex != -1)
+                filters.splice(removeIndex, 1);
+
+        }
+        dataSource.filter(filters);    
+}
 function filtrarZona() {
     ////FILTRO MANUAL
     var grid = $('#gridInformeCompraNet').data('kendoGrid');
@@ -374,7 +443,6 @@ function filtrarZona() {
     currentFilters.filters.push(zonaFilters)
 
     grid.dataSource.filter(currentFilters)
-
     recargarGrilla();
 }
 function filtrarMesa() {
@@ -450,6 +518,7 @@ function CreateGridInformeCompraNet() {
             GrupoCompraDescripcionDatos.push({ GrupoCompraDescripcion: grupoDeComprasDatos[i].Descripcion });
         }
     }
+   
     var defaultFilter = { field: "Fecha", operator: "eq", value: new Date };
 
     kendo.ui.FilterMultiCheck.prototype.options.messages =
@@ -464,7 +533,7 @@ function CreateGridInformeCompraNet() {
                 dataType: 'json',
                 contentType: "application/json",
                 url: '/CompraNet/BuscaDatosTabla'
-            },
+           },
             parameterMap: function (options, operation) {
                 if (operation == "read") {
                     return JSON.stringify(options)
@@ -821,7 +890,12 @@ function CreateGridInformeCompraNet() {
                             botonBorrar(dataItem, 'fa-trash pre');
                     }
                 }
-            }
+            },
+            {
+                field: "ContratoSAP", type: "string", title: "Contrato Sap", filterable: {
+                    multi: true, dataSource: new Array()
+                }
+            },
         ],
         pageable: {
             messages: {
@@ -890,7 +964,7 @@ function CreateGridInformeCompraNet() {
 
 
     });
-
+    $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoSAP");
 
     var checkInputs = function (elements) {
         elements.each(function () {
