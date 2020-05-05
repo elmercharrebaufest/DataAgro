@@ -314,13 +314,13 @@ namespace WebDataAgro.Controllers
         public ActionResult BuscaDatosTablaDisponibilidad(string FechaDesde, string FechaHasta, string ZonaId, List<string> CentroId, string MaterialId)
         {
             DateTime fechaDesde = DateTime.Now.Date;
-            if (FechaDesde != null)
+            if (!String.IsNullOrEmpty(FechaDesde))
             {
                 DateTime.TryParseExact(FechaDesde, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaDesde);
 
             }
             DateTime fechaHasta = DateTime.Now.Date;
-            if (FechaHasta != null)
+            if (!String.IsNullOrEmpty(FechaHasta))
             {
                 DateTime.TryParseExact(FechaHasta, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaHasta);
 

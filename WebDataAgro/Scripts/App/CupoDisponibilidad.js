@@ -63,7 +63,7 @@ function InicializarGrid() {
         columns: [
             { field: "Fecha", title: "Fecha", type: "date", format: "{0:dd/MM/yyyy}"},
             { field: "MaterialNombre", title: "Material", type: "string" },
-            { field: "ZonaId", title: "Zona", type: "string" },
+            { field: "ZonaNombre", title: "Zona", type: "string" },
             { field: "Limite", title: "Limite", type: "string" },
             { field: "Consumidos", title: "Consumidos", type: "string" },
             { field: "Disponibles", title: "Disponibles", type: "string" },
