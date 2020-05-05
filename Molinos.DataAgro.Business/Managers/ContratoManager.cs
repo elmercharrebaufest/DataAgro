@@ -485,6 +485,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("", "Falta completar el rango de Granos Verdes");
                 }
+                if (calidad != null && calidad.Valor > 10)
+                {
+                    oErrorMessages.Error("", "El Valor no puede ser mayor a 10 en rango de Granos Verdes");
+                }
             }
             if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
             {

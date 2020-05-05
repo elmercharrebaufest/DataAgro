@@ -2151,7 +2151,7 @@ function InicializarPrecioMOA() {
             matRetirado = false;
         }
         if (matRetirado == true) {
-            table += '<span class="retirado">Retirado</span>';
+            table += '<span class="retirado">Sin precio</span>';
         } else {
             table += precio[i][0].Precio > 0 ? '<span class="precio">' + kendo.toString(precio[i][0].Precio, "n") + ' ' + precio[i][0].MonedaId + '</span><br/>' : '';
             table += precio[i][1].Precio > 0 ? '<span class="precio">' + kendo.toString(precio[i][1].Precio, "n") + ' ' + precio[i][1].MonedaId + '</span><br/>' : '';
