@@ -11,9 +11,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime Fecha { get; set; }
         public string MaterialNombre { get; set; }
         public string ZonaId { get; set; }
-        public string Disponibles { get; set; }
-        public string Consumidos { get; set; }
-        public string Limite { get; set; }
+        public int Disponibles { get; set; }
+        public int Consumidos { get; set; }
+        public int Limite { get; set; }
         public string MaterialCodigo { get; set; }
         public int MaterialId { get; set; }
         public string ZonaNombre { get; set; }
