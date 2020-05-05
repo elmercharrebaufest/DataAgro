@@ -1844,7 +1844,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         viewModel.CalidadesVisualizar.pop();
     }
 
-    var calidadesDto = datos.DescuentosBonificaciones;
+    var calidadesDto = datos.Calidades;
     $("#visualizar_calidad").text(standardDeCalidadDescripcion);
 
     $.each(calidadesDto, function (key, calidad) {
