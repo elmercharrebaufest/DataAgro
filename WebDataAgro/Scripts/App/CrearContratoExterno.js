@@ -249,9 +249,9 @@ function InicializarElementos() {
                 $("#porc-sobre-precio").text(e.dataItem.PorcentajeSobrePrecio);
                 $("#cond-fijacion").text(e.dataItem.CondicionFijacionDescripcion);
                 $("#cond-pago").text(e.dataItem.CondicionPagoDescripcion);
-                $("#ImporteSobrePrecio").val(e.dataItem.ImporteSobrePrecio);
-                $("#MonedaSobrePrecio").val(e.dataItem.MonedaSobrePrecio);
-                $("#PorcentajeSobrePrecio").val(e.dataItem.PorcentajeSobrePrecio);
+                //$("#ImporteSobrePrecio").val(e.dataItem.ImporteSobrePrecio);
+                //$("#MonedaSobrePrecio").val(e.dataItem.MonedaSobrePrecio);
+                //$("#PorcentajeSobrePrecio").val(e.dataItem.PorcentajeSobrePrecio);
 
                 e.dataItem.Calidad === true ? $("#trigoEspecialFijacion").prop("checked", true) : $("#trigoEspecialFijacion").prop("checked", false);
             }
@@ -1261,23 +1261,23 @@ function ObtenerDatos() {
     obj.Precio = $("#precioId").val();
     obj.PrecioNeto = $("#precioId").val();
     //calcular el neto
-    var ImporteSobrePrecio = parseFloat($("#ImporteSobrePrecio").val());
-    var MonedaSobrePrecio = $("#MonedaSobrePrecio").val();
-    var PorcentajeSobrePrecio = parseFloat($("#PorcentajeSobrePrecio").val());
-    if (ImporteSobrePrecio > 0 && PorcentajeSobrePrecio > 0) {
-        if (MonedaSobrePrecio != $("#precioMonedaId").val()) {
-            var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { });
-            if ($.trim(MonedaSobrePrecio) == "ARP") {
-                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) / valorDolar;
-            } else {
-                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) * valorDolar;
-            }
-        }
-        var precioN = $("#precioId").data("kendoNumericTextBox").value();
-        var desc = ((precioN + ImporteSobrePrecio) * PorcentajeSobrePrecio / 100);
-        obj.PrecioNeto = precioN + ImporteSobrePrecio + desc;
-        alert(obj.PrecioNeto);
-    } 
+    //var ImporteSobrePrecio = parseFloat($("#ImporteSobrePrecio").val());
+    //var MonedaSobrePrecio = $("#MonedaSobrePrecio").val();
+    //var PorcentajeSobrePrecio = parseFloat($("#PorcentajeSobrePrecio").val());
+    //if (ImporteSobrePrecio > 0 && PorcentajeSobrePrecio > 0) {
+    //    if (MonedaSobrePrecio != $("#precioMonedaId").val()) {
+    //        var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { });
+    //        if ($.trim(MonedaSobrePrecio) == "ARP") {
+    //            ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) / valorDolar;
+    //        } else {
+    //            ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) * valorDolar;
+    //        }
+    //    }
+    //    var precioN = $("#precioId").data("kendoNumericTextBox").value();
+    //    var desc = ((precioN + ImporteSobrePrecio) * PorcentajeSobrePrecio / 100);
+    //    obj.PrecioNeto = precioN + ImporteSobrePrecio + desc;
+    //    alert(obj.PrecioNeto);
+    //} 
    
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
