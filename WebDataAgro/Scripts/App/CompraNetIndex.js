@@ -351,7 +351,6 @@ function recargarGrilla() {
     }
 
 }
-
 function Filtrar() {
     var grid = $('#gridInformeCompraNet').data('kendoGrid');
     var currentFilters = grid.dataSource.filter();
@@ -363,13 +362,7 @@ function Filtrar() {
         //-----------------------------------------
         currentFilters.filters = currentFilters.filters.filter(function (x) {
             return x.field != 'ContratoSAP' && x.field != undefined
-        })
-
-        //if (filtroSap.filter == null) {
-        //    grid.dataSource.filter(currentFilters);
-        //    return;
-        //}
-
+        });
         var contratoSapFilters = { logic: 'or', filters: [] }
 
 
@@ -379,8 +372,11 @@ function Filtrar() {
 
         currentFilters.filters.push(contratoSapFilters)
         //-----------------------------------------
+        for (var i = 0; i < currentFilters.filters.length; i++) {
+            addOrRemoveFilter(grid, currentFilters.filters[i].field, "eq", "");
+        }
+    }
 
-    } 
     grid.dataSource.filter(currentFilters);
     recargarGrilla();
 }
