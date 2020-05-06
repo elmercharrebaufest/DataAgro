@@ -17,6 +17,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MaterialCodigo { get; set; }
         public int MaterialId { get; set; }
         public string ZonaNombre { get; set; }
+        public string CentroNombre { get; set; }
+        public string CentroCodigo { get; set; }
     }
 }
 

@@ -30,10 +30,10 @@ function InicializarGrid() {
                 dataType: 'json',
                 contentType: "application/json",
                 url: '/Cupo/BuscaDatosTablaDisponibilidad'
-               
+
             }
         },
-        
+
         serverPaging: false,
         serverSorting: false,
         sort: [
@@ -61,7 +61,8 @@ function InicializarGrid() {
             //}
         },
         columns: [
-            { field: "Fecha", title: "Fecha", type: "date", format: "{0:dd/MM/yyyy}"},
+            { field: "CentroNombre", title: "Centro", type: "string" },
+            { field: "Fecha", title: "Fecha", type: "date", format: "{0:dd/MM/yyyy}" },
             { field: "MaterialNombre", title: "Material", type: "string" },
             { field: "ZonaNombre", title: "Zona", type: "string" },
             { field: "Limite", title: "Limite", type: "string" },
@@ -91,7 +92,7 @@ function InicializarGrid() {
             allowUnsort: true,
             showIndexes: false
         },
-        
+
     });
 }
 

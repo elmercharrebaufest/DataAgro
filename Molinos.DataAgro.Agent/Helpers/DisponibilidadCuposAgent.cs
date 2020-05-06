@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return new List<DisponibilidadCuposDto>() { new DisponibilidadCuposDto { Consumidos = 1, Fecha = DateTime.Now.Date, Disponibles = 9, Limite = 10, MaterialCodigo = "000000000019908017", MaterialId = 3, MaterialNombre = "Soja", ZonaId = "CBA" } };
+                return new List<DisponibilidadCuposDto>() { new DisponibilidadCuposDto { Consumidos = 1, Fecha = DateTime.Now.Date, Disponibles = 9, Limite = 10, MaterialCodigo = "000000000019908017", MaterialId = 3, MaterialNombre = "Soja", ZonaId = "CBA", CentroCodigo = "1029", CentroNombre = "S. Lorenzo" } };
             }
             else
             {
@@ -44,42 +44,22 @@ namespace Molinos.DataAgro.Agent
                     fechaHasta = fechaHasta == null ? DateTime.Now.Date : fechaHasta.Value.Date;
                     DateTime fecha = fechaDesde.Value;
                     var result = new List<DisponibilidadCuposDto>();
-
+                    List<Material> materiales = repositorio.Listar<Material>();
+                    List<ZonaCupo> zonas = repositorio.Listar<ZonaCupo>();
+                    List<Centro> centros = repositorio.Listar<Centro>();
+                    if (centroId == null && centroId.Count == 0)
+                    {
+                        centroId.AddRange(centros.Select(x => x.CodigoSap).ToList());
+                    }
                     while (fecha <= fechaHasta.Value)
                     {
-                        if (centroId != null && centroId.Count > 0)
+
+                        foreach (var centro in centroId)
                         {
-                            foreach (var centro in centroId)
-                            {
-                                var rq = new Z_MPRFC_DISPONIBILIDAD_CUPOS() { IM_FECHA = fecha.ToString("yyyy-MM-dd"), IM_CENTRO = centro, IM_MATERIAL = materialId, IM_ZONA = zonaId };
-                                logger.Debug(rq.ToXml());
-                                Z_MPRFC_DISPONIBILIDAD_CUPOSResponse devolucion = agent.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS(rq);
-                                List<Material> materiales = repositorio.Listar<Material>();
-                                List<ZonaCupo> zonas = repositorio.Listar<ZonaCupo>();
-                                foreach (var item in devolucion.EX_SALIDA)
-                                {
-                                    result.Add(new DisponibilidadCuposDto
-                                    {
-                                        Fecha = DateTime.Parse(item.FECHA),
-                                        MaterialCodigo = item.MATERIAL,
-                                        MaterialNombre = materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL) == null ? item.MATERIAL : materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL).Descripcion,
-                                        ZonaId = item.ZONA,
-                                        ZonaNombre = zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA) == null ? item.ZONA : zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA).Descripcion,
-                                        Disponibles =int.Parse( item.DISPONIBLES.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.DISPONIBLES.TrimStart(new Char[] { '0' })),
-                                        Consumidos = int.Parse(item.CONSUMIDOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.CONSUMIDOS.TrimStart(new Char[] { '0' })),
-                                        Limite = int.Parse(item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }))
-                                    });
-                                }
-                                logger.Debug(devolucion.ToXml());
-                            }
-                        }
-                        else
-                        {
-                            var rq = new Z_MPRFC_DISPONIBILIDAD_CUPOS() { IM_FECHA = fecha.ToString("yyyy-MM-dd"), IM_CENTRO = "", IM_MATERIAL = materialId, IM_ZONA = zonaId };
+                            var rq = new Z_MPRFC_DISPONIBILIDAD_CUPOS() { IM_FECHA = fecha.ToString("yyyy-MM-dd"), IM_CENTRO = centro, IM_MATERIAL = materialId, IM_ZONA = zonaId };
                             logger.Debug(rq.ToXml());
                             Z_MPRFC_DISPONIBILIDAD_CUPOSResponse devolucion = agent.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS(rq);
-                            List<Material> materiales = repositorio.Listar<Material>();
-                            List<ZonaCupo> zonas = repositorio.Listar<ZonaCupo>();
+
                             foreach (var item in devolucion.EX_SALIDA)
                             {
                                 result.Add(new DisponibilidadCuposDto
@@ -88,29 +68,19 @@ namespace Molinos.DataAgro.Agent
                                     MaterialCodigo = item.MATERIAL,
                                     MaterialNombre = materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL) == null ? item.MATERIAL : materiales.FirstOrDefault(a => a.Codigo == item.MATERIAL).Descripcion,
                                     ZonaId = item.ZONA,
-                                    ZonaNombre =  zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA) == null ? item.ZONA : zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA).Descripcion,
+                                    ZonaNombre = zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA) == null ? item.ZONA : zonas.FirstOrDefault(a => a.CodigoSap == item.ZONA).Descripcion,
                                     Disponibles = int.Parse(item.DISPONIBLES.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.DISPONIBLES.TrimStart(new Char[] { '0' })),
                                     Consumidos = int.Parse(item.CONSUMIDOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.CONSUMIDOS.TrimStart(new Char[] { '0' })),
-                                    Limite = int.Parse(item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }))
+                                    Limite = int.Parse(item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.LIMITE_CUPOS.TrimStart(new Char[] { '0' })),
+                                    CentroCodigo = centro,
+                                    CentroNombre = centros.FirstOrDefault(a => a.CodigoSap == centro) == null ? centro : centros.FirstOrDefault(a => a.CodigoSap == centro).Descripcion
                                 });
                             }
                             logger.Debug(devolucion.ToXml());
                         }
+
                         fecha = fecha.AddDays(1);
                     }
-
-                    result = result.GroupBy(x => new { x.MaterialCodigo, x.Fecha, x.ZonaId,x.MaterialId,x.MaterialNombre,x.ZonaNombre }).Select(g => 
-                        new DisponibilidadCuposDto {
-                            Consumidos = g.Sum(x=>x.Consumidos),
-                            Disponibles = g.Sum(x => x.Disponibles),
-                            Limite = g.Sum(x => x.Limite),
-                            Fecha = g.Key.Fecha,
-                            MaterialCodigo = g.Key.MaterialCodigo,
-                            ZonaId = g.Key.ZonaId,
-                            MaterialId = g.Key.MaterialId,
-                            MaterialNombre = g.Key.MaterialNombre,
-                            ZonaNombre = g.Key.ZonaNombre
-                        }).ToList();
 
                     return result;
                 }
