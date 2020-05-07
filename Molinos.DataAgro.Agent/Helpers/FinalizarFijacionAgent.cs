@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
                         IM_MATERIAL = fijacion.Material.Codigo,
                         IM_KILOS = (decimal)fijacion.Cantidad,
-                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.PrecioNeto ?? fijacion.Precio : 0 : 0,
+                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.Precio : 0 : 0,
                         IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",

@@ -359,7 +359,7 @@ function InicializarElementos() {
             $("#cond-pago").text(e.dataItem.CondicionPagoDescripcion);
 
             //
-            if (e.dataItem.ImporteSobrePrecio > 0 && e.dataItem.PorcentajeSobrePrecio > 0) {
+            if (e.dataItem.ImporteSobrePrecio != 0 && e.dataItem.PorcentajeSobrePrecio != 0) {
                 ImporteSobrePrecio = e.dataItem.ImporteSobrePrecio;
                 MonedaSobrePrecio = e.dataItem.MonedaSobrePrecio;
                 PorcentajeSobrePrecio = e.dataItem.PorcentajeSobrePrecio;
@@ -3313,7 +3313,7 @@ function CalcularPrecioTotalApertura() {
     var bonificacion = Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
     var precioOriginal = Number($("#precioId").val().replace(',', '.'));
 
-    if (ImporteSobrePrecio > 0 && PorcentajeSobrePrecio > 0 && $("#precioId").val() > 0) {
+    if (ImporteSobrePrecio != 0 && PorcentajeSobrePrecio > 0 && $("#precioId").val() > 0) {
         precioOriginal = CalcularNetoFijacionConDescuentos();
     } else {
         var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
@@ -3542,7 +3542,7 @@ function FormatearFecha(fecha) {
 }
 
 function CalcularNetoFijacionConDescuentos() {
-    if (ImporteSobrePrecio > 0 && PorcentajeSobrePrecio > 0) {
+    if (ImporteSobrePrecio != 0 && PorcentajeSobrePrecio != 0) {
         if (MonedaSobrePrecio != $("#precioMonedaId").val()) {
             var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
             if ($.trim(MonedaSobrePrecio) == "ARP") {

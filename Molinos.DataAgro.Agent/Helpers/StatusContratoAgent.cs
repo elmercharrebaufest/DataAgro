@@ -54,10 +54,10 @@ namespace Molinos.DataAgro.Agent
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
-
-                    if (!string.IsNullOrEmpty(valor.EX_STATUS) || !string.IsNullOrEmpty(valor.EX_NUM_SIO))
+                    int numsio;
+                    if (!string.IsNullOrEmpty(valor.EX_STATUS) ||(!string.IsNullOrEmpty(valor.EX_NUM_SIO) && (int.TryParse(valor.EX_NUM_SIO, out numsio) && numsio != 0)))
                     {
-                    return "No se puede modificar contrato ya que no se encuentra en slip o fue informado a SIO granos";
+                    return "No se puede modificar el contrato ya que no se encuentra en slip o fue informado a SIO granos";
                     }
                     return "";
                 }catch (Exception e)
