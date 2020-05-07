@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Business.Criterios
 
         private void RegistrarProcesadores()
         {
-            log.Info("Registrando procesadores de comandos...");
+            //log.Info("Registrando procesadores de comandos...");
             procesadores = new Dictionary<Type, Type>();
 
             var criterios = Criterio.TiposDeComandos().Where(t => !t.IsAbstract);
@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Business.Criterios
             {
                 var procesador = ObtenerProcesador(criterio);
                 procesadores.Add(criterio, procesador);
-                log.Debug("Criterio: {0} Procesador: {1}", criterio.Name, procesador.Name);
+                //log.Debug("Criterio: {0} Procesador: {1}", criterio.Name, procesador.Name);
             }
         }
 

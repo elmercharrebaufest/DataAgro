@@ -87,10 +87,15 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-        public ActionResult GrabarDatosReporteCompraNet()
+        public ActionResult GrabarDatosReporteCompraNet(string fecha)
         {
+            DateTime fechaD = DateTime.Now.Date;
+            if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
+            {
+                fechaD = DateTime.ParseExact(fecha, "yyyyMMdd", null);
+            }
             logger.Info($"ReporteCompraNet");
-            reportesManager.GrabarDatosReporteCompraNet(DateTime.Now.Date, DateTime.Now.Date, "0", null);
+            reportesManager.GrabarDatosReporteCompraNet(fechaD, fechaD, "0", null);
 
             logger.Info($"ReporteCompraNet - Finalizado");
             return Content("ok");

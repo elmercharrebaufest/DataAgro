@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
@@ -81,6 +82,17 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             cupoManagerMock.Setup(x => x.CrearSugerenciaCupo());
             var result = target.CrearSugerenciaCupo() as ContentResult;
+
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void GrabarDatosReporteCompraNetTest()
+        {
+            reportesManagerMock.Setup(x => x.GrabarDatosReporteCompraNet(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<int>>()));
+            var result = target.GrabarDatosReporteCompraNet("") as ContentResult;
 
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };

@@ -669,13 +669,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oContrato.Cantidad < 30000)
                 {
-                    htmlBody += "CANTIDAD MÍNIMA A FIJAR "+ Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                     htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-                }else if(oContrato.Cantidad >= 30000 && oContrato.Cantidad <= 100000)
+                }
+                else if (oContrato.Cantidad >= 30000 && oContrato.Cantidad <= 100000)
                 {
-                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " +  Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                     htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-                }else if(oContrato.Cantidad >= 100000)
+                }
+                else if (oContrato.Cantidad >= 100000)
                 {
                     htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                     htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad + (30 * oContrato.Cantidad) / 100).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
@@ -905,7 +907,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "CALIDAD ESPECIAL<br />";
                 }
+                if (contrato.ImporteSustentable != null)
+                {
+                    htmlBody += "SUSTENTABLE " + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                }
             }
+
+
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
@@ -2047,7 +2055,7 @@ namespace Molinos.DataAgro.Business.Managers
                             campo.Latitud = mod.latitud;
                             campo.Longitud = mod.longitud;
                             campo.Nombre = mod.nombre;
-                            campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId; 
+                            campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
                             campo.KMZfile = mod.archivoFileResult;
                             campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
@@ -2216,7 +2224,7 @@ namespace Molinos.DataAgro.Business.Managers
                             acopio.Latitud = mod.latitud;
                             acopio.Longitud = mod.longitud;
                             acopio.Nombre = mod.nombre;
-                            acopio.ComercialId = mod.comercialId == 0 ? null: mod.comercialId;
+                            acopio.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
                             acopio.KMZfile = mod.archivoFileResult;
                             acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;
