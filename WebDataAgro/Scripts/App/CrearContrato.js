@@ -798,6 +798,10 @@ function InicializarElementos() {
                 $("#pesificadoId").prop("checked", false);
                 $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
             }
+            if ($("#tipoId").val() === "3") {
+                CalcularPrecioTotalApertura();
+            }
+
         },
         select: function (e) {
             $("#monedaPactadoId").data("kendoDropDownList").value(e.dataItem.MonedaId);
