@@ -3542,20 +3542,29 @@ function FormatearFecha(fecha) {
 }
 
 function CalcularNetoFijacionConDescuentos() {
+    var ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio;
     if (ImporteSobrePrecio != 0 && PorcentajeSobrePrecio != 0) {
-        if (MonedaSobrePrecio != $("#precioMonedaId").val()) {
+        if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
             var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+            console.log("valorDolar", valorDolar);
             if ($.trim(MonedaSobrePrecio) == "ARP") {
-                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) / valorDolar;
+                ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio / valorDolar;
             } else {
-                ImporteSobrePrecio = parseFloat(ImporteSobrePrecio) * valorDolar;
+                ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio * valorDolar;
             }
         }
+
         var precioN = parseFloat($("#precioId").val());
-        var desc = ((precioN + ImporteSobrePrecio) * PorcentajeSobrePrecio / 100);
-        $("#precioTotalApertura").data("kendoNumericTextBox").value(precioN + ImporteSobrePrecio + desc);
-        return precioN + ImporteSobrePrecio + desc;
+        console.log("precio base:", precioN);
+        console.log("ImporteSobrePrecio", ImporteSobrePrecio);
+        console.log("ImporteSobrePrecioMonedaIgual", ImporteSobrePrecioMonedaIgual);
+        console.log("PorcentajeSobrePrecio", PorcentajeSobrePrecio);
+        var desc = ((precioN + ImporteSobrePrecioMonedaIgual) * PorcentajeSobrePrecio / 100);
+        console.log("descuento", desc);
+        var totalNeto = precioN + ImporteSobrePrecioMonedaIgual + desc;
+        console.log("totalNeto", totalNeto);
+        $("#precioTotalApertura").data("kendoNumericTextBox").value(totalNeto);
+        return totalNeto;
     }
 }
-
 

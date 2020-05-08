@@ -11,13 +11,41 @@
     <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
 }
 <style>
-    .tabla-result{
-        overflow-x:auto;
+    .tabla-result {
+        overflow-x: auto;
     }
 </style>
 <div class="Titulo">
-    <h4> Proveedores </h4>
-    <br />
+    <h5>Reporte de Proveedor</h5>
+</div>
+<div style="display:none;">
+    <div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+        <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+    </div>
+
+    <div id="filtrar" class="container collapse">
+        <br />
+        <div class="col-sm-2">
+            <label>CUIT</label>
+        </div>
+        <div class="col-md-4">
+            <input id="cuit" class="k-textbox" type="text" placeholder="Buscar por CUIT..." />
+        </div>
+        <div class="col-sm-2">
+            <label id="proveedorLabel">Razón Social</label>
+        </div>
+        <div class="col-sm-4">
+            <input id="razonSocial" class="k-textbox" type="text" placeholder="Buscar por razón social" />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12" style="text-align:right">
+                <button type="button" id="buscar" class="k-button k-button-icontext limpiar" style="width: 14%; margin-right:15px">Filtrar</button>
+            </div>
+        </div>
+
+        <br />
+    </div>
 </div>
 
 <ul class="nav nav-tabs">
@@ -29,7 +57,7 @@
 
 <div class="tab-content">
     <div id="datos-proveedor" class="tab-pane fade in active">
-            <div id="grid-datos-proveedor" class="tabla-result"></div>
+        <div id="grid-datos-proveedor" class="tabla-result"></div>
     </div>
     <div id="datos-contacto" class="tab-pane fade">
         <div class="table-responsive">

@@ -1,5 +1,20 @@
 ﻿$(document).ready(function () {
     kendo.culture("es-AR");
+    $("#buscar").click(function () {
+        buscar();
+    });
+    $("#cuit").keyup(function (x) {
+        var code = x.which;
+        if (code === 13) {
+            buscar();
+        }
+    });
+    $("#razonSocial").keyup(function (x) {
+        var code = x.which;
+        if (code === 13) {
+            buscar();
+        }
+    });
     CreateGridDatosProveedor();
     CreateGridDatosContacto();
     CreateGridProduccion();
@@ -51,7 +66,9 @@ function CreateGridDatosProveedor() {
         dataSource: ds,
         columns: [
             { field: "Cuit", type: "string" },            
-            { field: "RazonSocial", title: "Razon Social",type: "string" },            
+            { field: "RazonSocial", title: "Razon Social", type: "string", width: 150,
+                attributes: { "id": "line" },                
+                filterable: { ui: createMultiSelectProveedor } },            
             { field: "Estado", type: "string" },            
             { field: "Calificacion", type: "number" },            
             { field: "Segmentacion", type: "string" },            
@@ -555,4 +572,176 @@ function CreateGridAlmacenamiento() {
             $("#grid-datos-proveedor").data("kendoGrid").dataSource.read();
         }
     });
+}
+
+function createMultiSelectProveedor(element) {
+    return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor","RazonSocial");
+}
+
+var checkInputs = function (elements) {
+    elements.each(function () {
+        var element = $(this);
+        var input = element.children("input");
+
+        input.prop("checked", element.hasClass("k-state-selected"));
+    });
+};
+
+function createMultiSelect(element, textField, valueField, url, columna) {
+    element.removeAttr("data-bind");
+    columna = columna == null ? valueField : columna;
+    element.kendoMultiSelect({
+        itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
+        dataBound: function () {
+            var items = this.ul.find("li");
+            setTimeout(function () {
+                checkInputs(items);
+            });
+        },
+
+        dataTextField: textField,
+        dataValueField: valueField,
+        autoClose: false,
+        autoBind: false,
+        delay: 300,
+        dataSource: {
+            serverFiltering: true,
+            filter: [],
+            transport: {
+                read: {
+                    url: url,
+                    data: function () {
+                        return {
+                            text: element.data("kendoMultiSelect").input.val()
+                        };
+                    },
+                    prefix: ""
+                }
+            },
+        },
+        change: function (e) {
+            var items = this.ul.find("li");
+            checkInputs(items);
+            var gridproveedor = $("#grid-datos-proveedor").data("kendoGrid");
+            var gridcontacto = $("#grid-datos-contacto").data("kendoGrid");
+            var gridproduccion = $("#grid-produccion").data("kendoGrid");
+            var gridalmacenamiento = $("#grid-almacenamiento").data("kendoGrid");
+            var values = this.value();
+            $.each(values, function (i, v) {
+                if (v !== '') {
+                    addOrRemoveFilter(gridproveedor, columna, "eq", v);
+                    addOrRemoveFilter(gridcontacto, columna, "eq", v);
+                    addOrRemoveFilter(gridproduccion, columna, "eq", v);
+                    addOrRemoveFilter(gridalmacenamiento, columna, "eq", v);
+                }
+            });
+
+            if (values.length === 0) {
+                addOrRemoveFilter(gridproveedor, columna, "eq", "");
+                addOrRemoveFilter(gridcontacto, columna, "eq", "");
+                addOrRemoveFilter(gridproduccion, columna, "eq", "");
+                addOrRemoveFilter(gridalmacenamiento, columna, "eq", "");
+            }
+        }
+    });
+    setTimeout(function () {
+        $(".k-multiselect").parent().children(".k-dropdown").remove();
+        $(".k-multiselect").parent().children("div").find('button').remove();
+    }, 200);
+}
+
+function buscar() {
+    var cuit = $("#cuit").val();
+    var razonSocial = $("#razonSocial").val();
+    var gridproveedor = $("#grid-datos-proveedor").data("kendoGrid");
+    var gridcontacto = $("#grid-datos-contacto").data("kendoGrid");
+    var gridproduccion = $("#grid-produccion").data("kendoGrid");
+    var gridalmacenamiento = $("#grid-almacenamiento").data("kendoGrid");
+
+    if (cuit != null) {
+        addOrRemoveFilter(gridproveedor, "Cuit", "contains", cuit);
+        addOrRemoveFilter(gridcontacto, "Cuit", "contains", cuit);
+        addOrRemoveFilter(gridproduccion, "Cuit", "contains", cuit);
+        addOrRemoveFilter(gridalmacenamiento, "Cuit", "contains", cuit);
+    } else {
+        addOrRemoveFilter(gridproveedor, "Cuit", "contains", "");
+        addOrRemoveFilter(gridcontacto, "Cuit", "contains", "");
+        addOrRemoveFilter(gridproduccion, "Cuit", "contains", "");
+        addOrRemoveFilter(gridalmacenamiento, "Cuit", "contains", "");
+    }
+
+    if (razonSocial != null) {
+        addOrRemoveFilter(gridproveedor, "RazonSocial", "contains", razonSocial);
+        addOrRemoveFilter(gridcontacto, "RazonSocial", "contains", razonSocial);
+        addOrRemoveFilter(gridproduccion, "RazonSocial", "contains", razonSocial);
+        addOrRemoveFilter(gridalmacenamiento, "RazonSocial", "contains", razonSocial);
+    } else {
+        addOrRemoveFilter(gridproveedor, "RazonSocial", "contains", "");
+        addOrRemoveFilter(gridcontacto, "RazonSocial", "contains", "");
+        addOrRemoveFilter(gridproduccion, "RazonSocial", "contains", "");
+        addOrRemoveFilter(gridalmacenamiento, "RazonSocial", "contains", "");
+    }
+
+    gridproveedor.dataSource.read();
+    gridcontacto.dataSource.read();
+    gridproduccion.dataSource.read();
+    gridalmacenamiento.dataSource.read();
+    
+}
+
+function mostrarocultar(element) {
+    if ($(element).text() == "Mostrar") {
+        $(element).text("Ocultar");
+    } else {
+        $(element).text("Mostrar");
+    }
+}
+
+function addOrRemoveFilter(grid, field, operator, value) {
+
+    var newFilter = { field: field, operator: operator, value: value };
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+
+    if (value && (value.length > 0 || value != undefined)) {
+        //Add filter
+        if (filters == null) {
+            filters = [newFilter];
+        }
+        else {
+            var isNew = true;
+            var index = 0;
+            for (index = 0; index < filters.length; index++) {
+                if (filters[index].field == field) {
+                    isNew = false;
+                    break;
+                }
+            }
+            if (isNew) {
+                filters.push(newFilter);
+            }
+            else {
+                filters[index] = newFilter;
+            }
+        }
+    }
+    else {
+        //Remove filter 
+        var removeIndex = -1;
+        if (filters != null) {
+            for (var x = 0; x < filters.length; x++) {
+                var temp = filters[x];
+                if (temp.field == field) {
+                    removeIndex = x;
+                    break;
+                }
+            }
+            if (removeIndex != -1)
+                filters.splice(removeIndex, 1);
+        }
+    }
+    dataSource.filter(filters);
 }
