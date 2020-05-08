@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -130,7 +130,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -204,7 +204,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -394,7 +394,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -524,6 +524,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         private string dOL_EXPRESSField;
         
         private string fECHA_CIERTAField;
+        
+        private string aGENTE_COMPRAField;
+        
+        private string cARATULAField;
+        
+        private string cARATULA_EXTField;
+        
+        private string mONEDA_COM_MATField;
+        
+        private decimal pRECIO_COM_MATField;
+        
+        private decimal pORCPARCIALField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1269,6 +1281,78 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=62)]
+        public string AGENTE_COMPRA {
+            get {
+                return this.aGENTE_COMPRAField;
+            }
+            set {
+                this.aGENTE_COMPRAField = value;
+                this.RaisePropertyChanged("AGENTE_COMPRA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=63)]
+        public string CARATULA {
+            get {
+                return this.cARATULAField;
+            }
+            set {
+                this.cARATULAField = value;
+                this.RaisePropertyChanged("CARATULA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=64)]
+        public string CARATULA_EXT {
+            get {
+                return this.cARATULA_EXTField;
+            }
+            set {
+                this.cARATULA_EXTField = value;
+                this.RaisePropertyChanged("CARATULA_EXT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=65)]
+        public string MONEDA_COM_MAT {
+            get {
+                return this.mONEDA_COM_MATField;
+            }
+            set {
+                this.mONEDA_COM_MATField = value;
+                this.RaisePropertyChanged("MONEDA_COM_MAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=66)]
+        public decimal PRECIO_COM_MAT {
+            get {
+                return this.pRECIO_COM_MATField;
+            }
+            set {
+                this.pRECIO_COM_MATField = value;
+                this.RaisePropertyChanged("PRECIO_COM_MAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=67)]
+        public decimal PORCPARCIAL {
+            get {
+                return this.pORCPARCIALField;
+            }
+            set {
+                this.pORCPARCIALField = value;
+                this.RaisePropertyChanged("PORCPARCIAL");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -1280,7 +1364,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1354,7 +1438,7 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

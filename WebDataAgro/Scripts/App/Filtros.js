@@ -11,8 +11,8 @@ function TraerFiltrosConValores() {
     filtrosBusqIdUnico(listaFiltros);
     filtrosBusqBooleano(listaFiltros);
     filtroTextToArrayCsv(listaFiltros);
+    filtroAgregarValorContratoCorredorSap(listaFiltros);
     filtroAgregarValorPopUp(listaFiltros);
-
 
     let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
     let filtroCompleto = new FiltroCompleto(20, 0, filtroPrincipal);
@@ -21,12 +21,30 @@ function TraerFiltrosConValores() {
 }
 
 function filtroAgregarValorPopUp(listaFiltros) {
-
+    let filtrosParaContratoSAP;
     //solo se esta pudiendo agregar 1 filtro de estos por pantalla
-    let filtrosParaContratoSAP = filtroPopUpAddValor($(".filtroAgregarValorPopUp")[0].name);
+    if ($(".filtroAgregarValorPopUp")[0] != undefined) {
+        filtrosParaContratoSAP = filtroPopUpAddValor($(".filtroAgregarValorPopUp")[0].name);
+    }
 
     if (filtrosParaContratoSAP != null) {
-        filtrosParaContratoSAP.filters[0].value = filtrosParaContratoSAP.filters[0].value.padStart(10, '0');  
+        for (var i = 0; i < filtrosParaContratoSAP.filters.length; i++) {
+            filtrosParaContratoSAP.filters[i].value = filtrosParaContratoSAP.filters[i].valuepadStart(10, '0');  
+        }
+        listaFiltros.push(filtrosParaContratoSAP);
+    }
+}
+
+function filtroAgregarValorContratoCorredorSap(listaFiltros) {
+    let filtrosParaContratoSAP;
+    //solo se esta pudiendo agregar 1 filtro de estos por pantalla
+    if ($(".filtroAgregarContrato")[0] != undefined) {
+        filtrosParaContratoSAP = filtroPopUpAddValor($(".filtroAgregarContrato")[0].name);
+
+    }
+
+    if (filtrosParaContratoSAP != null) {
+        filtrosParaContratoSAP.filters[0].value = filtrosParaContratoSAP.filters[0].value;
         listaFiltros.push(filtrosParaContratoSAP);
     }
 }

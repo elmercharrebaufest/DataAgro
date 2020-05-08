@@ -149,6 +149,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MesPosicion { get; set; }
         public int? CampanaMaterialId { get; set; }
         public int? ContratoAcuerdoId { get; set; }
+        public decimal? PorcentajeDePago { get; set; }
     }
 
     public class StoredPorContratoResult

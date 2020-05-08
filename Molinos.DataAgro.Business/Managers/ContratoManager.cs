@@ -530,6 +530,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al dia de la fecha.");
             }
+            if (oParam.PorcentajeDePago == null || oParam.PorcentajeDePago.Value > 100 || oParam.PorcentajeDePago.Value < 0)
+            {
+                oErrorMessages.Error("PorcentajeDePago", "El Porcentaje de Pago debe ser entre 0 y 100.");
+            }
             return oErrorMessages;
         }
 
@@ -695,6 +699,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Dolarizado = oContrato.Dolarizado;
             oContratoSave.Sustentable = oContrato.Sustentable;
             oContratoSave.FechaCierta = oContrato.FechaCierta;
+            oContratoSave.PorcentajeDePago = oContrato.PorcentajeDePago;
 
             if (oContratoSave.PrecioPactado != null)
             {
@@ -1506,7 +1511,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }).ToList(),
                 FechaCiertaFormateado = x.FechaCierta != null ? SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.FechaCierta) : ""
+                                           SqlFunctions.DateName("year", x.FechaCierta) : "",
+                PorcentajeDePago = x.PorcentajeDePago
             });
             return contrato;
         }
@@ -2237,7 +2243,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            
+
             return resultado;
         }
     }

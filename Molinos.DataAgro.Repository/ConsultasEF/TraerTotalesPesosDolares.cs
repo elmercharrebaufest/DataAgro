@@ -80,7 +80,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
                     TotalSoja = contrato.MaterialId == 3 ? contrato.Cantidad : 0,
                     TotalTrigo = contrato.MaterialId == 2 ? contrato.Cantidad : 0,
-                    ContratoSAP = contrato.ContratoSAP 
+                    ContratoSAP = contrato.ContratoSAP,
+                    ContratoCorredor = (contrato is Contrato) ? (contrato as Contrato).ContratoCorredor : "",
                 };
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);

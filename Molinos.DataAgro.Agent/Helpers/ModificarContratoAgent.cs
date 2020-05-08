@@ -323,7 +323,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.TrigoEspecial != contrato.TrigoEspecial ||
                     contratoGuardado.UsuarioId != contrato.UsuarioId ||
                     contratoGuardado.Warrant != contrato.Warrant ||
-                    contratoGuardado.ZonaId != contrato.ZonaId;
+                    contratoGuardado.ZonaId != contrato.ZonaId ||
+                    contratoGuardado.FechaCierta != contrato.FechaCierta ||
+                    contratoGuardado.PorcentajeDePago != contrato.PorcentajeDePago;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
@@ -419,6 +421,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "",
                             FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                             FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
+                            PORCPARCIAL = contrato.PorcentajeDePago?? (decimal)97.5,
                         }
                     }
                 };

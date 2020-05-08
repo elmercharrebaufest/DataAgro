@@ -80,6 +80,7 @@
 	[OcultarEnTablero] BIT NOT NULL DEFAULT 0, 
     [FechaCierta] DATETIME NULL, 
     [EsFason] BIT NULL, 
+    [PorcentajeDePago] DECIMAL(11, 2) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

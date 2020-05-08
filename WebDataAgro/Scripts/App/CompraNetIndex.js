@@ -1,3 +1,4 @@
+
 var viewModel;
 var datosIniCrearContrato;
 var filasSeleccionadas = {};
@@ -354,35 +355,39 @@ function recargarGrilla() {
 function Filtrar() {
     var grid = $('#gridInformeCompraNet').data('kendoGrid');
     var currentFilters = grid.dataSource.filter();
-    let filtroSap = TraerFiltrosConValores();
-    if (!currentFilters) {
-        currentFilters = { filters: [], logic: 'and' }
-    }
+    let filtroSap = TraerFiltrosConValores();    
+    currentFilters = { filters: [], logic: 'and' };
+    grid.dataSource.filter(currentFilters);
     if (filtroSap.filter != null) {
         //-----------------------------------------
         currentFilters.filters = currentFilters.filters.filter(function (x) {
             return x.field != 'ContratoSAP' && x.field != undefined
         });
-        var contratoSapFilters = { logic: 'or', filters: [] }
+        //currentFilters.filters = currentFilters.filters.filter(function (x) {
+        //    return x.field != 'ContratoCorredor' && x.field != undefined
+        //});
 
+        var contratoSapFilters = { logic: 'or', filters: [] };
+        //var contratoCorredorFilters = { logic: 'or', filters: [] };
 
         for (var i = 0; i < filtroSap.filter.filters[0].filters.length; i++) {
             contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
-        }
 
-        currentFilters.filters.push(contratoSapFilters)
-        //-----------------------------------------
-        for (var i = 0; i < currentFilters.filters.length; i++) {
-            addOrRemoveFilter(grid, currentFilters.filters[i].field, "eq", "");
+            contratoSapFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
+            //contratoCorredorFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
         }
-    }
-
-    grid.dataSource.filter(currentFilters);
+        currentFilters.filters.push(contratoSapFilters);
+        //currentFilters.filters.push(contratoCorredorFilters);    
+        grid.dataSource.filter(currentFilters);
+    }   
+    filtrarZona();
     recargarGrilla();
+
 }
 function BorrarFiltro() {
         $("#ContratoSAPId").val("");
-        $("#ContratoSAPHastaId").val("");
+    $("#ContratoSAPHastaId").val("");
+    $("#buscadorFiltroZona").data("kendoMultiSelect").value("");
         var grid = $('#gridInformeCompraNet').data('kendoGrid');
         var dataSource = grid.dataSource;
         var filters = null;
@@ -397,7 +402,7 @@ function BorrarFiltro() {
                 if (temp.filters != undefined) {
 
                     for (var i = 0; i < temp.filters.length; i++) {
-                        if (temp.filters[i].field == 'ContratoSAP') {
+                        if (temp.filters[i].field == 'ContratoSAP' || temp.filters[i].field == 'ContratoCorredor' || temp.filters[i].field == 'GrupoCompraDescripcion') {
                             removeIndex = x;
                             break;
                         }
@@ -411,6 +416,7 @@ function BorrarFiltro() {
         }
         dataSource.filter(filters);    
 }
+
 function filtrarZona() {
     ////FILTRO MANUAL
     var grid = $('#gridInformeCompraNet').data('kendoGrid');
@@ -422,8 +428,8 @@ function filtrarZona() {
     }
 
     currentFilters.filters = currentFilters.filters.filter(function (x) {
-        return x.field != 'GrupoCompraDescripcion' && x.field != undefined
-    })
+        return x.field != 'GrupoCompraDescripcion' /*&& x.field != undefined*/
+    });
 
     if (!value || value.length < 1) {
         grid.dataSource.filter(currentFilters);
@@ -438,9 +444,9 @@ function filtrarZona() {
 
     currentFilters.filters.push(zonaFilters)
 
-    grid.dataSource.filter(currentFilters)
-    recargarGrilla();
+    grid.dataSource.filter(currentFilters);
 }
+
 function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
@@ -892,6 +898,11 @@ function CreateGridInformeCompraNet() {
                     multi: true, dataSource: new Array()
                 }
             },
+            {
+                field: "ContratoCorredor", type: "string", title: "Contrato Corredor", filterable: {
+                    multi: true, dataSource: new Array()
+                }
+            }
         ],
         pageable: {
             messages: {
@@ -961,6 +972,7 @@ function CreateGridInformeCompraNet() {
 
     });
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoSAP");
+    $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoCorredor");
 
     var checkInputs = function (elements) {
         elements.each(function () {

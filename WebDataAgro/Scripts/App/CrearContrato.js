@@ -1277,6 +1277,14 @@ function InicializarElementos() {
         min: 0
     });
 
+    $("#porcentajeDePagoId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: 0,
+        value: 97.5
+    });
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
 
@@ -2004,7 +2012,8 @@ function CrearViewModel() {
         "ContratosPendientes": null,
         "pizarraId": null,
         "precioNetoId": null,
-        "fechaCiertaId": null
+        "fechaCiertaId": null,
+        "porcentajeDePagoId": null
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -2259,6 +2268,9 @@ function ObtenerDatos() {
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
         obj.ComercialId = $("#comercialFijacionId").val();
         obj.ContratoSAP = $("#contratoId").val();
+    }
+    if (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2") {
+        obj.PorcentajeDePago = $("#porcentajeDePagoId").val();
     }
 
     obj.ComercialId = $("#comercialId").val();
@@ -2747,6 +2759,8 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago);
+
     if (!hijo) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
@@ -3567,4 +3581,5 @@ function CalcularNetoFijacionConDescuentos() {
         return totalNeto;
     }
 }
+
 

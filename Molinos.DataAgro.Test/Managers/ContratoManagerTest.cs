@@ -198,6 +198,7 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
                 Sustentable = false,
+                PorcentajeDePago = 95,
                 Calidad = new List<Calidad>()
 
             };
@@ -253,6 +254,7 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
                 Sustentable = false,
+                PorcentajeDePago = 95,
                 Calidad = new List<Calidad>()
 
             };
@@ -312,7 +314,8 @@ namespace Molinos.DataAgro.Test.Managers
                 StandardDeCalidadId = 1,
                 Sustentable = false,
                 Calidad = new List<Calidad>(),
-                Comercial = new Comercial { GrupoDeComprasId = 1 }
+                Comercial = new Comercial { GrupoDeComprasId = 1 },
+                PorcentajeDePago = 95
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
@@ -387,6 +390,7 @@ namespace Molinos.DataAgro.Test.Managers
                 PagoDiferido = true,
                 DiasPesificado = 10,
                 Sustentable = false,
+                PorcentajeDePago = 95,
                 Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -633,6 +637,7 @@ namespace Molinos.DataAgro.Test.Managers
                 BoletoId = null,
                 StandardDeCalidadId = null,
                 Sustentable = true,
+                PorcentajeDePago = 95,
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>()
                 {

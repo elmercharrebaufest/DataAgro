@@ -36,5 +36,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id { get; set; }
         public int? ComercialCreadorId { get; set; }
         public string ContratoSAP { get; set; }
+        public string ContratoCorredor { get; set; }
     }
 }
