@@ -2171,7 +2171,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.Calidad = contrato.Calidad;
             contratoSave.Descuentos = contrato.Descuentos;
             contratoSave.AperturaPrecio = contrato.AperturaPrecio;
-            contratoSave.PrecioPactado = contrato.PrecioPactado;
+            contratoSave.PrecioPactado = contrato.PrecioPactado; 
+            contratoSave.PorcentajeDePago = contrato.PorcentajeDePago;
 
             repositorio.GuardarCambios();
             return error;

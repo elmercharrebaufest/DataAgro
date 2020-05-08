@@ -1780,7 +1780,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (porcentajeDePago == "null") {
         $("#porcentajeDePagoDivVisualizar").hide();
     } else {
-        $("#visualizar_porcentajeDePago").text("% "+porcentajeDePago);
+        $("#visualizar_porcentajeDePago").text(porcentajeDePago + " %");
         $("#porcentajeDePagoDivVisualizar").show();
     }
     $("#visualizar_procedencia").text(procedencia);
