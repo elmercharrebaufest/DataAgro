@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Test.Procesamiento
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
            .Returns(new List<PrecioPizarra>() { new PrecioPizarra { Id = 1, FechaDesde = DateTime.Now.Date, FechaHasta = DateTime.Now.Date.AddDays(1), MaterialId = 1, MonedaId = "ARP  ", PizarraId = 1, Precio = 600, UnidadMedida = "Tons" } });
-            tipoDeCambioMock.Setup(y => y.TraerTipoDeCambio()).Returns(1);
+            tipoDeCambioMock.Setup(y => y.TraerTipoDeCambio(null)).Returns(1);
             var criterio = new CriterioDeltaDePrecio { Dto = new SugerenciaCupoDto { Precio = 600, FechaHasta = DateTime.Now.Date, MaterialId = 1, MonedaId = "ARP  " } };
             var resultado = target.Calcular(criterio);
 

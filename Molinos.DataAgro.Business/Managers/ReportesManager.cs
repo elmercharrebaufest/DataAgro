@@ -674,7 +674,7 @@ namespace Molinos.DataAgro.Business.Managers
             var listaAgentes = new List<AgenteCompraDto>();
             if (fechaDesde == fechaHasta)
             {
-                var precioDolar = tipoDeCambio.TraerTipoDeCambio();
+                var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
                 fechaDesde = fechaDesde.Date;
                 var agentes = repositorio.Listar<AgenteCompra>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) == fechaDesde && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, x.TipoAgenteCompraId });
                 foreach (var agentesPorPosicionYMaterial in agentes)

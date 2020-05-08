@@ -289,6 +289,7 @@ namespace WebDataAgro.Services
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
                 contrato.Warrant = contratoSAP.AutCg == "X";
                 contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
+                contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (decimal)97.5;
                 logger.Debug("ActualizandoContrato calidades");
 
                 foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())

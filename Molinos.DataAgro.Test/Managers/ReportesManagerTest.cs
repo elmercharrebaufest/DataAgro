@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock = new Mock<IComercialManager>();
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
             target = new ReportesManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object, tipoDeCambioMock.Object);
-            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio()).Returns(45);
+            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
         }
 
         [Test]

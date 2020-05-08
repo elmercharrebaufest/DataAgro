@@ -2759,7 +2759,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
-    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago);
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
     if (!hijo) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));

@@ -831,7 +831,7 @@ namespace WebDataAgro.Controllers
         }
 
         public JsonResult TraerTipoDeCambio() {
-            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio();
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
     }

@@ -1,7 +1,9 @@
-﻿namespace Molinos.DataAgro.Interfaces
+﻿using System;
+
+namespace Molinos.DataAgro.Interfaces
 {
     public interface ITipoDeCambioAgent
     {
-        decimal TraerTipoDeCambio();
+        decimal TraerTipoDeCambio(DateTime? fecha);
     }
 }

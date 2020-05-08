@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Business
             DateTime hoy = DateTime.Now.Date;
             var pizarraLista = Repositorio.Listar<PrecioPizarra>(x => x.FechaDesde <= hoy && x.FechaHasta >= hoy);
 
-            decimal dolarCotizacion = tipoDeCambio.TraerTipoDeCambio();
+            decimal dolarCotizacion = tipoDeCambio.TraerTipoDeCambio(null);
             var pizarra = pizarraLista.Where(a => a.MaterialId == criterio.Dto.MaterialId).SingleOrDefault();
             decimal precioPizarra = 1;
             if (pizarra == null)

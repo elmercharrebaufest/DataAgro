@@ -69,6 +69,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DescuentoBonificacionSap> DescuentoBonificaciones { get; set; }
         public List<AperturaPrecioSap> Apertura { get; set; }
         public decimal? PrecioNeto { get; set; }
+        public decimal? PorcentajeDePago { get; set; }
     }
 
     public class CalidadSAP

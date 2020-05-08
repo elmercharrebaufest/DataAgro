@@ -314,7 +314,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.TarifaFlete + "'" + ',' +
         "'" + dataItem.Compensacion + "'" + ',' +
         "'" + dataItem.Rechazo + "'" + ',' +
-        "'" + formatearFecha(dataItem.FechaCierta) + "'" +
+        "'" + formatearFecha(dataItem.FechaCierta) + "'" + ',' +
+        "'" + dataItem.PorcentajeDePago + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1662,7 +1663,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo, fechaCierta) {
+    compensacion, rechazo, fechaCierta, porcentajeDePago) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1775,6 +1776,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else {
         $("#visualizar_FechaCierta").text(fechaCierta);
         $("#FechaCiertaVisualizar").show();
+    }
+    if (porcentajeDePago == "null") {
+        $("#porcentajeDePagoDivVisualizar").hide();
+    } else {
+        $("#visualizar_porcentajeDePago").text("% "+porcentajeDePago);
+        $("#porcentajeDePagoDivVisualizar").show();
     }
     $("#visualizar_procedencia").text(procedencia);
     $("#visualizar_nro_SAP").text(nro_SAP != "undefined" && nro_SAP != "null" ? nro_SAP : "");

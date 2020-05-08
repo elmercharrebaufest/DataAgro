@@ -142,7 +142,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Rechazo = contrato.MotivoRechazo,
                         OcultarEnTablero = contrato.OcultarEnTablero,
                         FechaCierta = DbFunctions.TruncateTime((contrato as Contrato).FechaCierta),
-                        EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false
+                        EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false,
+                        PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                     };
 
                 return queryNegocios;
