@@ -131,9 +131,9 @@ function CreateGridDatosProveedor() {
                 or: "O"
             },
             operators: {
-                string: {
+                string: {                    
+                    contains: "Contine",
                     eq: "Igual",
-                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -267,8 +267,8 @@ function CreateGridDatosContacto() {
             },
             operators: {
                 string: {
+                    contains: "Contine",
                     eq: "Igual",
-                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -400,8 +400,8 @@ function CreateGridProduccion() {
             },
             operators: {
                 string: {
+                    contains: "Contine",
                     eq: "Igual",
-                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",
@@ -535,8 +535,8 @@ function CreateGridAlmacenamiento() {
             },
             operators: {
                 string: {
+                    contains: "Contine",
                     eq: "Igual",
-                    contains: "Contine"
                 },
                 date: {
                     eq: "Igual",

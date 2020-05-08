@@ -64,9 +64,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
-                if(contrato.PrecioPactado.Count > 0)
+                if (contrato.PrecioPactado.Count > 0)
                 {
-                    foreach(var p in contrato.PrecioPactado)
+                    foreach (var p in contrato.PrecioPactado)
                     {
                         listaDescuentos.Add(new ZMPES5290
                         {
@@ -232,6 +232,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "",
                         FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                         FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
+                        PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
