@@ -429,7 +429,8 @@ function filtrarZona() {
     }
 
     currentFilters.filters = currentFilters.filters.filter(function (x) {
-        return x.field != 'GrupoCompraDescripcion' /*&& x.field != undefined*/
+        return x.field != 'GrupoCompraDescripcion' && (x.filters == undefined || x.filters[0].field != 'GrupoCompraDescripcion')
+        /*&& x.field != undefined*/
     });
 
     if (!value || value.length < 1) {
