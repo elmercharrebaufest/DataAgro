@@ -303,6 +303,36 @@ namespace WebDataAgro.Services
                         PorcentajeDesde = cal.PorcentajeDesde,
                         PorcentajeHasta = cal.PorcentajeHasta
                     };
+                    if (calidad.StandardDeCalidadId == 2)
+                    {
+                        if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 && (calidad.CalidadEspecialId == 4 || calidad.CalidadEspecialId == 5)) || calidad.CalidadEspecialId == 10)
+                        {
+                            if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                            {
+                                calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeDesde;
+                                calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeHasta;
+                                calidad.Valor = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().Valor;
+                            }
+
+                        }
+                        else
+                        {
+                            if (calidad.CalidadEspecialId == 1 && calidad.PorcentajeHasta == 51)
+                            {
+                                calidad.PorcentajeHasta = 40;
+                            }
+                        }
+                    }
+                    else if (calidad.StandardDeCalidadId == 7)
+                    {
+                        if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                        {
+                            calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeDesde;
+                            calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeHasta;
+                            calidad.Valor = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().Valor;
+                        }
+
+                    }
                     calidades.Add(calidad);
                 }
                 contrato.Calidad = calidades;

@@ -77,6 +77,16 @@
             </div>
         </div>
     </div>
+
+    <div class="row noAgente noFason noAcuerdo ampliar">
+        <div class="col-sm-2">
+            <label>Agente de Compra</label>
+        </div>
+        <div class="col-md-4 col-sm-5">
+            <select id="AgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra"></select>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-2">
             <label>Tipo</label>
@@ -264,7 +274,7 @@
             <div class="col-sm-6">
                 <div id="impo-a-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
-                        Bonif a Precio:
+                        Bonif Fuera  de Precio:
                     </label>
                     <span id="importe-a-precio"></span>
                 </div>
@@ -276,7 +286,7 @@
                 </div>
                 <div id="porcenteaje-a-precio" class="importe-porcentaje" style="display:inline-block">
                     <label>
-                        Porc. a Precio:
+                        Porc. Fuera de Precio:
                     </label>
                     <span id="porc-a-precio"></span>
                 </div>
@@ -651,8 +661,47 @@
                 <label>Porcentaje de Pago</label>
             </div>
             <div class="col-md-3 ">
-                <input id="porcentajeDePagoId" type="date" data-bind="value: Parametros.porcentajeDePagoId"  />
+                <input id="porcentajeDePagoId" type="date" data-bind="value: Parametros.porcentajeDePagoId" />
             </div>
+        </div>
+        <div class="row noAcuerdo">
+            <div class="col-sm-2 ">
+                <label>Caratula extensión</label>
+            </div>
+            <div class="col-md-4 col-sm-9">
+                <input id="caratulaExtensionId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaExtensionId" maxlength="10" />
+            </div>
+            <div class="col-sm-2 ">
+                <label>Caratula MAT</label>
+            </div>
+            <div class="col-md-3 col-sm-9">
+                <input id="caratulaMATId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaMATId" maxlength="10" />
+            </div>
+        </div>
+        <div class="row noAcuerdo">
+            <div id="LabelPrecio" class="col-sm-2 ">
+                <label>Precio Ajuste Comisión</label>
+            </div>
+            <div class="col-xs-7 col-md-6">
+                <input id="precioAjusteComisionId" class="k-input" data-bind="value: Parametros.precioAjusteComisionId" />
+                <div class="w30" style="display:inline-grid">
+                    <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
+                </div>
+            </div>
+            
+
+            @*<div class="col-sm-2 ">
+                    <label>Precio Ajuste Comisión</label>
+                </div>
+                <div class="col-md-3 col-sm-9">
+                    <input id="precioAjusteComisionId" class="k-input contratoinput" type="text" data-bind="value: Parametros.precioAjusteComisionId" maxlength="10" />
+                </div>
+                <div class="col-sm-2 ">
+                    <label>Moneda Ajuste Comisión</label>
+                </div>
+                <div class="col-md-3 col-sm-9">
+                    <input id="monedaAjusteComisionId" class="k-input contratoinput" type="text" data-bind="value: Parametros.monedaAjusteComisionId" maxlength="10" />
+                </div>*@
         </div>
     </div>
 
