@@ -594,10 +594,6 @@
   <data name="RazonCorredor" xml:space="preserve">
     <value>Corredor</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="Confirmar_NegocioCorredoresBsAs" xml:space="preserve">
     <value>Confirmar negocios Corredores Bs As</value>
   </data>
@@ -693,5 +689,9 @@
   </data>
   <data name="Disponibilidad_De_Cupos" xml:space="preserve">
     <value>Disponibilidad de Cupos</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>
