@@ -363,17 +363,27 @@ function InicializarElementos() {
                 ImporteSobrePrecio = e.dataItem.ImporteSobrePrecio;
                 MonedaSobrePrecio = e.dataItem.MonedaSobrePrecio;
                 PorcentajeSobrePrecio = e.dataItem.PorcentajeSobrePrecio;
-                $("#ocultarAperturaBtn").hide();
-                $("#ocultarAperturaMoneda").removeClass("w70");
-                $("#ocultarAperturaMoneda").addClass("w100");
+                //$("#ocultarAperturaBtn").hide();
+                //$("#ocultarAperturaMoneda").removeClass("w70");
+                //$("#ocultarAperturaMoneda").addClass("w100");
+                $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly();
                 CalcularPrecioTotalApertura();
             } else {
                 ImporteSobrePrecio = 0;
                 MonedaSobrePrecio = "";
                 PorcentajeSobrePrecio = 0;
-                $("#ocultarAperturaBtn").show();
-                $("#ocultarAperturaMoneda").removeClass("w100");
-                $("#ocultarAperturaMoneda").addClass("w70");
+                //$("#ocultarAperturaBtn").show();
+                //$("#ocultarAperturaMoneda").removeClass("w100");
+                //$("#ocultarAperturaMoneda").addClass("w70");
+                $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").readonly(false);
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+                $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
+                $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
             }
 
 
@@ -3576,15 +3586,16 @@ function CalcularNetoFijacionConDescuentos() {
                 ImporteSobrePrecioMonedaIgual = ImporteSobrePrecio * valorDolar;
             }
         }
-
+        var costoFinanciero = Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
         var precioN = parseFloat($("#precioId").val());
         console.log("precio base:", precioN);
+        console.log("costoFinanciero", costoFinanciero);
         console.log("ImporteSobrePrecio", ImporteSobrePrecio);
         console.log("ImporteSobrePrecioMonedaIgual", ImporteSobrePrecioMonedaIgual);
         console.log("PorcentajeSobrePrecio", PorcentajeSobrePrecio);
-        var desc = ((precioN + ImporteSobrePrecioMonedaIgual) * PorcentajeSobrePrecio / 100);
+        var desc = ((precioN + ImporteSobrePrecioMonedaIgual + costoFinanciero) * PorcentajeSobrePrecio / 100);
         console.log("descuento", desc);
-        var totalNeto = precioN + ImporteSobrePrecioMonedaIgual + desc;
+        var totalNeto = precioN + ImporteSobrePrecioMonedaIgual + costoFinanciero + desc;
         console.log("totalNeto", totalNeto);
         $("#precioTotalApertura").data("kendoNumericTextBox").value(totalNeto);
         return totalNeto;

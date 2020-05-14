@@ -1506,7 +1506,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso >= DateTime.Today).GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
             
             foreach (var p in cupos)
             {
@@ -1545,7 +1545,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "En el presente mail, se detalla los cupos sin activar con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "Material" + "</td>" +
-                    th + "Fecha Ingreso" + "</td>" +
+                    th + "Fecha de Cupo" + "</td>" +
                     th + "Productor/Corredor" + "</td>" +
                     th + "Cupos Generados" + "</td>" +
                     th + "Estado de cupo:" + "</td>" +

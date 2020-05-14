@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var numeroSAP = repositorio.Listar<FijacionDePrecioContrato,string>(x => x.FijacionSAP, x => x.FijacionSAP != null ).Last();
+                var numeroSAP = repositorio.Listar<FijacionDePrecioContrato, string>(x => x.FijacionSAP, x => x.FijacionSAP != null).Last();
                 return (int.Parse(numeroSAP) + 1).ToString();
             }
             else
@@ -47,24 +47,29 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
-                                MONEDA = fijacion.Moneda != null  && apertura.Porcentaje == 0? fijacion.Moneda.MonedaId : null,
+                                MONEDA = fijacion.Moneda != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null,
                                 PORC = apertura.Porcentaje
                             });
                         }
                     }
-
+                    decimal precioImportFinanciero = 0;
+                    var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 1).SingleOrDefault();
+                    if (ImportFinanciero != null)
+                    {
+                        precioImportFinanciero = ImportFinanciero.Importe;
+                    }
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
                         IM_MATERIAL = fijacion.Material.Codigo,
                         IM_KILOS = (decimal)fijacion.Cantidad,
-                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.Precio : 0 : 0,
+                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? (fijacion.Precio + precioImportFinanciero) : 0 : 0,
                         IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
                         IM_APERTURA = listaApertura.ToArray(),
                         IM_PAGO_DIF_ARP = fijacion.PagoDiferido.HasValue && fijacion.PagoDiferido.Value ? "X" : "",
-                        IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue? fijacion.DiasPesificado.Value.ToString():"",
+                        IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue ? fijacion.DiasPesificado.Value.ToString() : "",
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd")
                     };
                     logger.Debug(rq.ToXml());
