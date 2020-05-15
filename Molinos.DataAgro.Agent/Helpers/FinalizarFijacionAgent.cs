@@ -58,12 +58,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         precioImportFinanciero = ImportFinanciero.Importe;
                     }
+                    decimal im_precio = (fijacion.Precio + precioImportFinanciero);
+                    var oContrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacion.ContratoSAP);
+
+                    if (listaApertura.Count > 0 && oContrato.Descuentos.Count == 0)
+                        im_precio = fijacion.PrecioNeto.Value;
+
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
                         IM_MATERIAL = fijacion.Material.Codigo,
                         IM_KILOS = (decimal)fijacion.Cantidad,
-                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? (fijacion.Precio + precioImportFinanciero) : 0 : 0,
+                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? im_precio : 0 : 0,
                         IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
                         IM_CONTRATO = fijacion.ContratoSAP.ToString(),
                         IM_CORREDOR = fijacion.Corredor != null ? fijacion.Corredor.CUIT : "",
