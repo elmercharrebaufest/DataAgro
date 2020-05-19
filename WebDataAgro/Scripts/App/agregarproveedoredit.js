@@ -16,6 +16,7 @@ function InicializarEdit() {
     var acopio = resultEdit.Acopio;
     var objetivo = resultEdit.ObjetivosTraerPorProveedorId;
     var acopiomaterial = resultEdit.AcopioMaterialPorProveedores;
+    var establecimiento = resultEdit.ProveedorCampoDetalle;
     armarBasico(basico[0]);
     armarComercial(comerciales);
     if (basico[0].GrupoSegmentacion === "Corredores") {
@@ -25,12 +26,15 @@ function InicializarEdit() {
         armarProduccion(campoacopio);
         armarAlmacenamiento(acopio, acopiomaterial);
         armarObjetivos(objetivo);
+        armarEstablecimiento(establecimiento);
     }
     if (modificarDatosCampos) {
         $("#contacto").hide();
         $("#contactocomercial").hide();
         $("#proveedores-corredor").hide();
-        $("#produccion").click();
+        $("#produccion").hide();
+        $("#almacenamiento").hide();
+        $("#establecimiento").click();
     }
 }
 
@@ -226,7 +230,7 @@ function armarComercial(comerciales) {
                 (comerciales[i].Telefono1 ? comerciales[i].Telefono1 + (comerciales[i].Telefono2 ? " - " + comerciales[i].Telefono2 : "") + (comerciales[i].Telefono3 ? " - " + comerciales[i].Telefono3 : "") : "No especifica teléfono") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-mails">' +
-                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "")  : "") : "No especifica mails") +
+                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-extras">' +
                 '<div class="row">' +
@@ -309,23 +313,20 @@ function armarProduccion(campoacopio) {
 
             obj.item = capProdCant;
 
-            //obj.provincia = grupocampoacopio[0][i].ProvinciaId;
-            //obj.provinciaNom = grupocampoacopio[0][i].Provincia;
-
             obj.localidad = grupocampoacopio[0][i].LocalidadId;
             obj.localidadNom = grupocampoacopio[0][i].Localidad + "(" + grupocampoacopio[0][i].Provincia + ")";
 
             obj.partido = grupocampoacopio[0][i].Partido;
 
-            obj.archivo = grupocampoacopio[0][i].KMZnombre;
+            //obj.archivo = grupocampoacopio[0][i].KMZnombre;
 
-            obj.archivoFileResult = grupocampoacopio[0][i].KMZfile;
+            //obj.archivoFileResult = grupocampoacopio[0][i].KMZfile;
 
-            obj.latitud = grupocampoacopio[0][i].latitud;
-            obj.longitud = grupocampoacopio[0][i].longitud;
-            obj.nombre = grupocampoacopio[0][i].nombre;
-            obj.comercialId = grupocampoacopio[0][i].comercialId;
-            obj.comercialNom = grupocampoacopio[0][i].comercial;
+            //obj.latitud = grupocampoacopio[0][i].latitud;
+            //obj.longitud = grupocampoacopio[0][i].longitud;
+            //obj.nombre = grupocampoacopio[0][i].nombre;
+            //obj.comercialId = grupocampoacopio[0][i].comercialId;
+            //obj.comercialNom = grupocampoacopio[0][i].comercial;
 
             obj.CampoId = grupocampoacopio[0][i].CampoId;
 
@@ -339,7 +340,7 @@ function armarProduccion(campoacopio) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
-                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>' : '')
+                //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>' : '')
                 + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'
@@ -348,12 +349,12 @@ function armarProduccion(campoacopio) {
                 + '</div>'
                 + '</div>'
                 + '<div>'
-                + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
-                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
-                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
-                + '(Has ' + (grupocampoacopio[0][i].ArrendadoPropio == true ? "Propias" : grupocampoacopio[0][i].ArrendadoPropio === false ? "Arrendadas" : "no especificadas") + ')'
-                + '</div>'
+                //+ '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+                //+ (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+                //+ (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                //+ (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+                //+ '(Has ' + (grupocampoacopio[0][i].ArrendadoPropio == true ? "Propias" : grupocampoacopio[0][i].ArrendadoPropio === false ? "Arrendadas" : "no especificadas") + ')'
+                //+ '</div>'
                 + '<div class="granos-contenedor">';
 
             for (var jj in grupocampoacopio[0][i].Granos) {
@@ -465,21 +466,19 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             obj.item = capProdCantAlmacenamiento;
 
             obj.localidad = grupoacopio[0][i].LocalidadId;
-            obj.localidadNom = grupoacopio[0][i].Localidad + "(" + grupoacopio[0][i].Provincia+")";
+            obj.localidadNom = grupoacopio[0][i].Localidad + "(" + grupoacopio[0][i].Provincia + ")";
             obj.partido = grupoacopio[0][i].Partido;
 
-            //obj.provincia = grupoacopio[0][i].ProvinciaId;
-            //obj.provinciaNom = grupoacopio[0][i].Provincia;
 
-            obj.archivo = grupoacopio[0][i].KMZnombre;
+            //obj.archivo = grupoacopio[0][i].KMZnombre;
 
-            obj.archivoFileResult = grupoacopio[0][i].KMZfile;
+            //obj.archivoFileResult = grupoacopio[0][i].KMZfile;
 
-            obj.latitud = grupoacopio[0][i].latitud;
-            obj.longitud = grupoacopio[0][i].longitud;
-            obj.nombre = grupoacopio[0][i].nombre;
-            obj.comercialId = grupoacopio[0][i].comercialId;
-            obj.comercialNom = grupoacopio[0][i].comercial;
+            //obj.latitud = grupoacopio[0][i].latitud;
+            //obj.longitud = grupoacopio[0][i].longitud;
+            //obj.nombre = grupoacopio[0][i].nombre;
+            //obj.comercialId = grupoacopio[0][i].comercialId;
+            //obj.comercialNom = grupoacopio[0][i].comercial;
 
             obj.CampoId = grupoacopio[0][i].CampoId;
 
@@ -492,7 +491,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
-                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
+                //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
                 + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'
@@ -501,11 +500,11 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 + '</div>'
                 + '</div>'
                 + '<div>'
-                + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
-                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
-                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
-                + '</div>'
+                //+ '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+                //+ (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+                //+ (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                //+ (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+                //+ '</div>'
                 + '<div class="granos-contenedor">';
 
             console.log(grupoacopio[0][i].Granos);
@@ -565,6 +564,110 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
     }
 }
 
+function armarEstablecimiento(establecimiento) {
+    var grupoestablecimiento = {};
+
+    for (var ii in establecimiento) {
+        (function (i) {
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] = grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] || {};
+
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].CampoId = establecimiento[i].CampoId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Localidad = establecimiento[i].localidadNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Provincia = establecimiento[i].provinciaNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Partido = establecimiento[i].Partido;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].LocalidadId = establecimiento[i].localidad;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ProvinciaId = establecimiento[i].provincia;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].latitud = establecimiento[i].latitud;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].longitud = establecimiento[i].longitud;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].nombre = establecimiento[i].nombre;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialId = establecimiento[i].comercialId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialNom = establecimiento[i].comercialNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZnombre = establecimiento[i].archivo;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZfile = establecimiento[i].archivoFileResult;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].rinde = establecimiento[i].rinde;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].htotales = establecimiento[i].htotales;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].hcultivables = establecimiento[i].hcultivables;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialId = establecimiento[i].materialId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].materialNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partidoNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ImportId = establecimiento[i].ImportId;
+            
+
+
+        })(ii);
+    }
+
+
+    grupoestablecimiento = [grupoestablecimiento];
+
+    for (ii in grupoestablecimiento[0]) {
+        (function (i) {
+            var obj = {};
+
+            obj.item = capProdCantEstablecimiento;
+
+            obj.localidad = grupoestablecimiento[0][i].LocalidadId;
+            obj.localidadNom = grupoestablecimiento[0][i].Localidad + "(" + grupoestablecimiento[0][i].Provincia + ")";
+            obj.partido = grupoestablecimiento[0][i].Partido;
+
+
+            obj.archivo = grupoestablecimiento[0][i].KMZnombre;
+
+            obj.archivoFileResult = grupoestablecimiento[0][i].KMZfile;
+
+            obj.latitud = grupoestablecimiento[0][i].latitud;
+            obj.longitud = grupoestablecimiento[0][i].longitud;
+            obj.nombre = grupoestablecimiento[0][i].nombre;
+            obj.comercialId = grupoestablecimiento[0][i].comercialId;
+            obj.comercialNom = grupoestablecimiento[0][i].comercialNom;
+            obj.partido = grupoestablecimiento[0][i].partidoNom;
+            
+            obj.CampoId = grupoestablecimiento[0][i].CampoId;
+            obj.ImportId = grupoestablecimiento[0][i].ImportId;
+
+            obj.materialNom = grupoestablecimiento[0][i].materialNom;
+            obj.materialId = grupoestablecimiento[0][i].materialId;
+            obj.rinde = grupoestablecimiento[0][i].rinde;
+            obj.htotales = grupoestablecimiento[0][i].htotales;
+            obj.hcultivables = grupoestablecimiento[0][i].hcultivables;
+
+            var html = "";
+            html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="establecimientocontenedor' + capProdCantEstablecimiento + '">'
+                + '<div>'
+                + '<div class="datos-produccion-cap-prod-guardados-zona">'
+                + obj.localidadNom + " - " + obj.partido
+                + '</div>'
+                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZEstablecimiento(this)" id="eliminarKMZEstablecimiento' + capProdCantEstablecimiento + '">x Eliminar KMZ</div>' : '')
+                + '<div class="editar-produccion" onclick="editarCampoEstablecimiento(' + capProdCantEstablecimiento + ')" id="editarEstablecimiento' + capProdCantEstablecimiento + '">'
+                + '<img src="../Content/Images/contacto-edit.png" /> Editar'
+                + '</div>'
+                + '<div class="eliminar-produccion" onclick="eliminarCampoEstablecimiento(this)" id="eliminarEstablecimiento' + capProdCantEstablecimiento + '">'
+                + 'x Eliminar'
+                + '</div>'
+                + '</div>'
+                + '<div>'
+                + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+                + "<br>"
+                + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.materialNom : "")
+                + ' <b>Rinde</b>:' + obj.rinde
+                + ' <b>Has Totales</b>:' + obj.htotales
+                + ' <b>Has Cultivables</b>:' + obj.hcultivables
+                + '</div>'
+                + '<div class="granos-contenedor">';
+
+            html += '</div>'
+                + '</div>';
+
+            $(".datos-produccion-establecimiento-guardados").append(html);
+            $(".datos-produccion-establecimiento-guardados").show();
+            aGuardarEstablecimiento.push(obj);
+            capProdCantEstablecimiento++;
+        })(ii);
+    }
+}
 function armarObjetivos(objetivo) {
     var htmlCampañaGranoObjetivo = "";
     var cant = objetivo.length ? objetivo.length : 0;

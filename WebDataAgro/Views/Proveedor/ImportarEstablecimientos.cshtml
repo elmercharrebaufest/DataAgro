@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "ImportarEstablecimientos";
+}
+<style>
+
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+        .inputfile + label {
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            border-radius: 50px !important;
+            background-color: #017940;
+        }
+
+    .img-circular {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+    }
+
+
+    .inputfile + label {
+        cursor: pointer;
+    }
+
+    label[for="kmz"] .campo-span, .campo-span {
+        color: #fff;
+        padding-right: 5px;
+    }
+
+    .campo-span-kmz {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .img-circular img {
+        width: 15px;
+        height: 15px;
+        margin-right: 8px;
+        margin-top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+<script src="~/Scripts/umd/popper.js"></script>
+@using (Html.BeginForm("ImportarEstablecimientos", "Proveedor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="row">
+        <h2>Importar Establecimientos</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Seleciconar Archivo</label>
+        </div>
+        <div class="col-md-10">
+            <input class="inputfile" type="file" name="resume" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="kmz">
+            <label for="kmz"><div class="img-circular"><img title="Adjuntar Excel" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
+        </div>
+
+    </div>
+    <div class="row" style="padding-top:15px;">
+        <input type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" name="submitAction" value="Importar" />
+    </div>
+
+}
+@if (ViewBag.resultado != null)
+{
+    var resultado = (Molinos.DataAgro.Entities.Dto.Resultado)ViewBag.resultado;
+    int i = 1;
+    if (resultado.HayError)
+    {
+        <h2>Resultado</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+
+                    <th scope="col">Errores</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in resultado.Errores)
+                {
+                    <tr>
+                        <th scope="row">@(i++)</th>
+
+                        <td>@item.Message</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+
+    }
+}
+<div id="gridContainer"></div>
+<script type="text/javascript">
+    window.addEventListener("submit", function (e) {
+        BlockUi("Procesando...");
+
+    }, true);
+      $("#kmz").change(function (x) {
+        $(".label-field").html("Archivo subido");
+    });
+</script>

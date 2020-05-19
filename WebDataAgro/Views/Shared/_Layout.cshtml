@@ -96,20 +96,20 @@
                         PermisosDataAgro.VisualizarReporteCompraNetExterno,
                         PermisosDataAgro.VisualizarComprasDiarias,
                         PermisosDataAgro.VisualizarIndicadores,
-                        PermisosDataAgro.VisualizarReporteCupo, 
+                        PermisosDataAgro.VisualizarReporteCupo,
                         PermisosDataAgro.VisualizarReporteDeProveedores))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-        {
-            <li>
-                <a href="/Cubproveedores" class="nav-link misreporteslink">
-                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                </a>
-            </li>
-        }*@
+                    {
+                        <li>
+                            <a href="/Cubproveedores" class="nav-link misreporteslink">
+                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                            </a>
+                        </li>
+                    }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -231,7 +231,7 @@
                          PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas) ||
                          PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores) ||
                          PermisosHelper.Is(PermisosDataAgro.AlgoritimoDeCupos) ||
-                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) || 
+                         PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos) ||
                          PermisosHelper.Is(PermisosDataAgro.AdministracionEspacioDinamico))
                     {
                         <li class="dropdown">
@@ -365,7 +365,7 @@
                                             <i class="icon-bar-chart"></i> Administración de Cupos
                                         </a>
                                     </li>
-                                } 
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.SolicitudCupo))
                                 {
                                     <li>
@@ -516,6 +516,24 @@
                                         </a>
                                     </li>
                                 }
+                            </ul>
+                        </li>
+                    }
+
+                    @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+                    {
+                        <li class="dropdown">
+                            <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Otros <span class="caret"></span></a>
+                            <ul class="dropdown-menu opacidad" id="research">
+                                @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+                                {
+                                    <li>
+                                        <a href="~/Proveedor/ImportarEstablecimientos" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Importar Establecimientos
+                                        </a>
+                                    </li>
+                                }
+                                
                             </ul>
                         </li>
                     }

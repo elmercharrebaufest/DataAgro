@@ -1402,6 +1402,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PreAnular Negocio.
+        /// </summary>
+        public static string Pre_Anular {
+            get {
+                return ResourceManager.GetString("Pre_Anular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Precio.
         /// </summary>
         public static string Precio {
@@ -1470,6 +1479,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Rechazar_Negocios {
             get {
                 return ResourceManager.GetString("Rechazar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reconfirmar Finalizado.
+        /// </summary>
+        public static string ReconfirmarFinalizado {
+            get {
+                return ResourceManager.GetString("ReconfirmarFinalizado", resourceCulture);
             }
         }
         

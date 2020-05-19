@@ -191,7 +191,7 @@ namespace WebDataAgro.Controllers
 
             oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
             GrabarContratoResult model;
-            if (oParam.EstadoId == 5)
+            if (oParam.EstadoId == 5 || oParam.EstadoId == 11)
             {
                 model = mobjContratoManager.ActualizarContratoFinalizado(oParam);
             }
@@ -223,6 +223,26 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.ConfirmarContrato(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public ActionResult PreAnularContrato(int contratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.PreAnularContrato(contratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+            
+        }
+
+        public ActionResult RechazarPreAnularContrato(int contratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.RechazarPreAnularContrato(contratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+            
         }
 
         public ActionResult BorrarContrato(Contrato oParam)
@@ -834,5 +854,14 @@ namespace WebDataAgro.Controllers
             var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult ReconfirmarFinalizado(int contratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ReconfirmarFinalizado(contratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
     }
 }

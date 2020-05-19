@@ -281,6 +281,14 @@ namespace WebDataAgro.Services
                 contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
                 contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
                 contrato.StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
+                contrato.EstadoId = 5;
+                contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId;
+                contrato.CaratulaMAT = contratoSAP.CaratulaMAT;
+                contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
+                contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
+                contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
+
+
                 if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
                 {
                     contrato.StandardDeCalidadId = 3;

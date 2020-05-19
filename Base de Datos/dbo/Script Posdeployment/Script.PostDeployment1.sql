@@ -37,13 +37,9 @@ IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Finalizado') BE
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Rechazado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Rechazado', 6); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Reconfirmar') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Reconfirmar', 7); END
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Eliminado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Eliminado', 8); END
-update EstadoContrato set Descripcion = 'Carga' where Descripcion = 'PreAprobacion'
 IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'Carga') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('Carga', 9); END
-															    
-update EstadoContrato set Orden  = 1 where EstadoContratoId = 7 --reconfirmar
-update EstadoContrato set Orden  = 2 where EstadoContratoId = 1 -- pendiente
-update EstadoContrato set Orden  = 3 where EstadoContratoId = 2 --confirmado
-
+IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'PreAnulado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('PreAnulado', 10); END
+IF NOT EXISTS (select 1 from EstadoContrato where Descripcion = 'ReconfirmarFinalizado') BEGIN insert into EstadoContrato (Descripcion, Orden) values ('ReconfirmarFinalizado', 11); END
 
 --StandardDeCalidad
 IF NOT EXISTS (select 1 from StandardDeCalidad where Descripcion = 'Camara' AND CodigoSap = '3') BEGIN insert into StandardDeCalidad (Descripcion,CodigoSap) values ('Camara','3'); END

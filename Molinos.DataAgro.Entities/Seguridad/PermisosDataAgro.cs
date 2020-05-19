@@ -111,6 +111,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfirmarNegocioCorredoresRosario = 323,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_OcultarEnTablero")]
         OcultarEnTablero = 324,
+        [Display(ResourceType = typeof(Text), Name = "Pre_Anular")]
+        PreAnular = 325,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

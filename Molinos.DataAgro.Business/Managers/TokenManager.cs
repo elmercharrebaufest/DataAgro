@@ -5,6 +5,7 @@ using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
+using System.Configuration;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -13,6 +14,8 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        readonly String UrlBaseDataAgro = ConfigurationManager.AppSettings["UrlBaseDataAgro"];
+
         public TokenManager(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
@@ -91,8 +94,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         private string ObtenerUrl(string token)
         {
-            var url = System.Web.HttpContext.Current.Request.Url.AbsoluteUri;
-            return url.Replace("services/AuthService.svc", $"auth?t={token}");
+            var url = UrlBaseDataAgro;
+            //var url = System.Web.HttpContext.Current.Request.Url.AbsoluteUri;
+            //return url.Replace("services/AuthService.svc", $"auth?t={token}");
+            return url + $"auth?t={token}";
         }
     }
 }

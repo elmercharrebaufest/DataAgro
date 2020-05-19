@@ -38,6 +38,9 @@
             <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
                 Almacenamiento
             </div>
+            <div class="wizard-header-contenedor noCorredor" id="establecimiento">
+                Establecimiento
+            </div>
             <div class="wizard-header-contenedor" id="proveedores-corredor" style="display:none;">
                 Proveedores
             </div>
@@ -418,14 +421,14 @@
                 Agregar detalle de capacidad productiva
             </div>
             <input type="hidden" id="campoid" />
-            <div class="formulario-campo ubicacionkmz">
+            @*<div class="formulario-campo ubicacionkmz">
                 <span class="campo-span">Ubicación</span>
                 <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-produccion" />
                 <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />
                 <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
                 <input type="file" name="kmz" id="kmz" class="inputfile" />
                 <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
-            </div>
+            </div>*@
             <div class="formulario-campo campo-provincia-produccion">
                 <input id="localidad-produccion" placeholder="Localidad" style="width:59%;float:left;" />
                 @Html.Hidden("localidadId-produccion", "", new { @Id = "localidadId-produccion" })
@@ -438,7 +441,7 @@
                 <label for="hectareas-arrendadas"><input id="hectareas-arrendadas" type="radio" name="hectareas" value="0"> Alquiladas</label>
                 <label for="hectareas-propias"><input id="hectareas-propias" type="radio" name="hectareas" value="1"> Propias</label>
             </div>
-            <div class="formulario-campo" style="text-align:left;">
+            @*<div class="formulario-campo" style="text-align:left;">
                 <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
                     Nombre
                 </div>
@@ -455,7 +458,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div>*@
             <div class="datos-produccion-cap-prod-editor-granos-contenedor">
                 <div class="datos-produccion-cap-prod-editor-granos-titulos">
                     <div class="produccion-titulo-grano">Grano</div>
@@ -505,14 +508,14 @@
                 Agregar detalle de Almacenamiento Estático
             </div>
             <input type="hidden" id="campo-almacenamientoid" />
-            <div class="formulario-campo ubicacionkmzalmacenamiento">
-                <span class="campo-span">Ubicación</span>
-                <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-almacenamiento" />
-                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-almacenamiento" />
-                <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
-                <input type="file" name="kmz-almacenamiento" id="kmz-almacenamiento" class="inputfile" />
-                <label for="kmz-almacenamiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field almacenamiento">Subir un Archivo</span></label>
-            </div>
+            @*<div class="formulario-campo ubicacionkmzalmacenamiento">
+            <span class="campo-span">Ubicación</span>
+            <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-almacenamiento" />
+            <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-almacenamiento" />
+            <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+            <input type="file" name="kmz-almacenamiento" id="kmz-almacenamiento" class="inputfile" />
+            <label for="kmz-almacenamiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field almacenamiento">Subir un Archivo</span></label>
+        </div>*@
             <div class="formulario-campo campo-provincia-almacenamiento">
                 <div style="width:59%;float:left;"><input id="localidad-almacenamiento" placeholder="Localidad" style="width:100% !important;" /></div>
                 @Html.Hidden("localidadId-almacenamiento", "", new { @Id = "localidadId-almacenamiento" })
@@ -520,26 +523,27 @@
 
             </div>
             <br />
-            <div class="formulario-campo" style="padding-top: 15px; text-align:left;">
-                <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
-                    Nombre                
-                </div>
-                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
-                    Comercial
-                </div>
+            <br />
+            @*<div class="formulario-campo" style="padding-top: 15px; text-align:left;">
+            <div style="width:40%;display: inline-block;" class="almacenamiento-titulo-grano">
+                Nombre
             </div>
-            <div class="formulario-campo" style="text-align:left;">
-                <div style="width:45%;display: inline-block;">
-                    <input class="campo-input-text" id="campo-nombre-almacenamiento" type="text" value="" style="width:100%;">
-                </div>
-                <div style="width:40%;display: inline-block;">
-                    <div class="formulario-campo" id="divComercialAlmacenamiento">
+            <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                Comercial
+            </div>
+        </div>
+        <div class="formulario-campo" style="text-align:left;">
+            <div style="width:45%;display: inline-block;">
+                <input class="campo-input-text" id="campo-nombre-almacenamiento" type="text" value="" style="width:100%;">
+            </div>
+            <div style="width:40%;display: inline-block;">
+                <div class="formulario-campo" id="divComercialAlmacenamiento">
 
-                    </div>
                 </div>
             </div>
-            
-            <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor">
+        </div>*@
+
+            <div class="datos-almacenamiento-cap-prod-editor-granos-contenedor" style="padding-top: 15px;">
                 <div class="datos-almacenamiento-cap-prod-editor-granos-titulos">
                     <div class="almacenamiento-titulo-grano">Campaña</div>
                     <div class="almacenamiento-titulo-grano">Capacidad planta TNs</div>
@@ -593,6 +597,99 @@
                 <label for="sojasust-no"><input id="sojasust-no" type="radio" name="sojasustentable" value="0"> No</label>
             </div>
         </div>
+    </div>
+
+    <div id="formulario-establecimiento">
+        <h2>Establecimiento</h2>
+        <div class="datos-produccion-cap-prod">
+            Establecimiento
+        </div>
+        <div class="datos-produccion-establecimiento-guardados">
+
+        </div>
+        <div class="datos-produccion-cap-prod-editor-contenedor">
+            <div class="datos-produccion-cap-prod-editor-titulo">
+                Agregar establecimiento
+            </div>
+            <input type="hidden" id="campoEstablecimientoid" />
+            <input type="hidden" id="ImportId-establecimiento" />
+            <div class="formulario-campo ubicacionkmz">
+                <span class="campo-span">Ubicación</span>
+                <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-establecimiento" />
+                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-establecimiento" />
+                <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+                <input type="file" name="kmz" id="kmz" class="inputfile" />
+                <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
+            </div>
+            <div class="formulario-campo campo-provincia-produccion">
+                <input id="localidad-establecimiento" placeholder="Localidad" style="width:59%;float:left;" />
+                @Html.Hidden("localidadId-establecimiento", "", new { @Id = "localidadId-establecimiento" })
+                @Html.TextBox("partido-establecimiento", "", new { disabled = "disabled", @id = "partido-establecimiento", @class = "form-control limpiar", @style = "width:39%;float:right;" })
+
+            </div>
+            <br />
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Nombre
+                </div>
+                <div style="width:45%;display: contents;" class="almacenamiento-titulo-grano">
+                    Comercial
+                </div>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;">
+                    <input class="campo-input-text" id="campo-nombre-establecimiento" type="text" value="" style="width:100%;">
+                </div>
+                <div style="width:40%;display: inline-block;">
+                    <div class="formulario-campo" id="divComercialEstablecimiento">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Material
+                </div>
+                <div style="width:45%;display: contents;" class="almacenamiento-titulo-grano">
+                    Rinde
+                </div>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;">
+                    <div class="formulario-campo" id="divMaterialEstablecimiento">
+
+                    </div>
+                </div>
+                <div style="width:52%;display: inline-block;">
+                    <input class="" id="rinde-establecimiento" type="text" value="" style="width:100%;">
+                </div>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
+                    Hectareas Totales
+                </div>
+                <div style="width:45%;display: contents;" class="almacenamiento-titulo-grano">
+                    Hectareas Cultivables
+                </div>
+            </div>
+            <div class="formulario-campo" style="text-align:left;">
+                <div style="width:45%;display: inline-block;">
+                    <input class="" id="htotales-establecimiento" type="text" value="" style="width:100%;">
+
+                </div>
+                <div style="width:52%;display: inline-block;">
+                    <input class="" id="hcultivables-establecimiento" type="text" value="" style="width:100%;">
+                </div>
+            </div>
+
+            <div style="text-align:right;">
+                <div class="datos-produccion-cap-prod-editor-contenedor-guardar" id="guardarCapProd-establecimiento">
+                    Guardar
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div id="formulario-proveedorescorredor">

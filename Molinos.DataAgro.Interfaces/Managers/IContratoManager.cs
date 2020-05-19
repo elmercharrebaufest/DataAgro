@@ -52,5 +52,8 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoIdDto> TraerContratosSAP(string desde, string hasta);
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
         string ValidarStatus(int contratoId);
+        GrabarContratoResult PreAnularContrato(int contratoId);
+        GrabarContratoResult RechazarPreAnularContrato(int contratoId);
+        GrabarContratoResult ReconfirmarFinalizado(int contratoId);
     }
 }

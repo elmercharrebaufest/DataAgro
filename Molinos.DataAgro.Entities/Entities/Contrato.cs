@@ -41,6 +41,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? EsFason { get; set; }
         public DateTime? FechaCierta { get; set; }
         public decimal? PorcentajeDePago { get; set; }
+        public string CaratulaExtension { get; set; }
+        public string CaratulaMAT { get; set; }
+        public decimal? PrecioAjusteComision { get; set; }
+        public string MonedaAjusteComisionId { get; set; }
+
 
         [ForeignKey("ProvinciaId")]
         public virtual Provincia Provincia { get; set; } // ProvinciaId

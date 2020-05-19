@@ -1,12 +1,15 @@
 ﻿var cantGrano = 0;
 var capProdCant = 0;
+var capProdCantEstablecimiento = 0;
 var aGuardar = [];
+var aGuardarEstablecimiento = [];
 var cantGranoAlmacenamiento = 0;
 var cantGranoAlmacenamientoGrano = 0;
 var capProdCantAlmacenamiento = 0;
 var aGuardarAlmacenamiento = [];
 var mantenerArchivos = [];
 var mantenerArchivosAlmacenamiento = [];
+var mantenerArchivosEstablecimiento = [];
 var resultInit = {};
 var cantContactoComercial = 0;
 var aGuardarContactoComercial = [];
@@ -15,6 +18,7 @@ var resultGranos = [];
 var cantGranoObjetivo = 0;
 var aEliminarObjetivos = [];
 var aEliminarGranos = [];
+var aEliminarGranosEstablecimiento = [];
 var aEliminarGranosAlmacenamiento = [];
 var aEliminarGranosAlmacenamientoGrano = [];
 
@@ -408,6 +412,23 @@ function armarSelects(result) {
     }
     htmlComercialAlmacenamiento += '</select>';
     $("#divComercialAlmacenamiento").append(htmlComercialAlmacenamiento);
+
+    var htmlComercialEstablecimiento = "";
+    htmlComercialEstablecimiento += '<select class="campo-input-select" id="comercial-establecimiento">';
+    if (modificarDatosCampos) {
+        htmlComercialEstablecimiento += '<option value = "null">Seleccione...</option>';
+    }
+    for (ii in result.comercial) {
+        (function (i) {
+            htmlComercialEstablecimiento += '<option value="' + result.comercial[i].ComercialId + '">' + result.comercial[i].NombreCompleto + '</option>';
+        })(ii);
+    }
+    htmlComercialEstablecimiento += '</select>';
+    $("#divComercialEstablecimiento").append(htmlComercialEstablecimiento);
+
+
+
+
     //var htmlLocalidadProduccion = "";
     //htmlLocalidadProduccion += '<select  class="campo-input-select campo-sin-span-produccion" id="localidad-produccion">';
     //htmlLocalidadProduccion += '<option value = "null">Seleccione...</option>';
@@ -873,11 +894,11 @@ function armarSelects(result) {
         }
         //}
 
-        obj.latitud = $("#coordenadas-latitud-produccion").val();
-        obj.longitud = $("#coordenadas-longitud-produccion").val();
-        obj.nombre = $("#campo-nombre-produccion").val();
-        obj.comercialId = $("#comercial-produccion").val();
-        obj.comercialNom = $("#comercial-produccion option:selected").text();
+        //obj.latitud = $("#coordenadas-latitud-produccion").val();
+        //obj.longitud = $("#coordenadas-longitud-produccion").val();
+        //obj.nombre = $("#campo-nombre-produccion").val();
+        //obj.comercialId = $("#comercial-produccion").val();
+        //obj.comercialNom = $("#comercial-produccion option:selected").text();
 
         if ($("#hectareas-arrendadas").is(":checked")) {
             obj.hectareas = $("#hectareas-arrendadas").prop("value");
@@ -908,22 +929,22 @@ function armarSelects(result) {
         if (!ValidarGranoProduccion(cantGrano))
             return false;
 
-        obj.archivo = $("#kmz").val();
-        obj.archivoFile = document.getElementById("kmz").files[0];
-        if (obj.archivo) {
-            var input = document.getElementById("kmz");
-            var file = input.files[0];
-            fr = new FileReader();
-            fr.readAsDataURL(file);
-            obj.archivoFileReader = fr;
-            obj.archivoFileResult = fr.result;
-        } else if (mantenerArchivos.length) {
-            obj.archivo = mantenerArchivos[0].archivo;
-            obj.archivoFile = mantenerArchivos[0].archivoFile;
-            obj.archivoFileReader = mantenerArchivos[0].archivoFileReader;
-            obj.archivoFileResult = mantenerArchivos[0].archivoFileResult;
-            mantenerArchivos.pop();
-        }
+        //obj.archivo = $("#kmz").val();
+        //obj.archivoFile = document.getElementById("kmz").files[0];
+        //if (obj.archivo) {
+        //    var input = document.getElementById("kmz");
+        //    var file = input.files[0];
+        //    fr = new FileReader();
+        //    fr.readAsDataURL(file);
+        //    obj.archivoFileReader = fr;
+        //    obj.archivoFileResult = fr.result;
+        //} else if (mantenerArchivos.length) {
+        //    obj.archivo = mantenerArchivos[0].archivo;
+        //    obj.archivoFile = mantenerArchivos[0].archivoFile;
+        //    obj.archivoFileReader = mantenerArchivos[0].archivoFileReader;
+        //    obj.archivoFileResult = mantenerArchivos[0].archivoFileResult;
+        //    mantenerArchivos.pop();
+        //}
 
         var html = "";
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor' + capProdCant + '">'
@@ -931,7 +952,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
-            + (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>':'')
+            //+ (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>':'')
             + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -941,9 +962,9 @@ function armarSelects(result) {
             + '</div>'
             + '<div>'
             + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-            + (obj.nombre!="" ? ('<b>Nombre</b>: ' + obj.nombre) :"")
-            + (obj.latitud != "" && obj.longitud != ""?(' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud):"")
-            + (obj.comercialId >0 ? ' <b>Comercial</b>:' + obj.comercialNom:"")
+            //+ (obj.nombre!="" ? ('<b>Nombre</b>: ' + obj.nombre) :"")
+            //+ (obj.latitud != "" && obj.longitud != ""?(' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud):"")
+            //+ (obj.comercialId >0 ? ' <b>Comercial</b>:' + obj.comercialNom:"")
             + ' <b>Hectareas: </b>(Has ' + (obj.hectareasNom ? obj.hectareasNom : "no especificadas") + ')'
             + '</div>'
             + '<div class="granos-contenedor">';
@@ -1017,12 +1038,12 @@ function armarSelects(result) {
         }
         //}
 
-        obj.latitud = $("#coordenadas-latitud-almacenamiento").val();
-        obj.longitud = $("#coordenadas-longitud-almacenamiento").val();
-        obj.nombre = $("#campo-nombre-almacenamiento").val();
-        obj.comercialId = $("#comercial-almacenamiento").val();
-        obj.comercialNom = $("#comercial-almacenamiento option:selected").text();
-                
+        //obj.latitud = $("#coordenadas-latitud-almacenamiento").val();
+        //obj.longitud = $("#coordenadas-longitud-almacenamiento").val();
+        //obj.nombre = $("#campo-nombre-almacenamiento").val();
+        //obj.comercialId = $("#comercial-almacenamiento").val();
+        //obj.comercialNom = $("#comercial-almacenamiento option:selected").text();
+
         obj.granosAlmacenamiento = [];
 
         for (var i = 0; i < (cantGranoAlmacenamiento + 1); i++) {
@@ -1055,22 +1076,22 @@ function armarSelects(result) {
         if (!ValidarGranoAlmacenamiento(cantGranoAlmacenamiento))
             return false;
 
-        obj.archivo = $("#kmz-almacenamiento").val();
-        obj.archivoFile = document.getElementById("kmz-almacenamiento").files[0];
-        if (obj.archivo) {
-            var input = document.getElementById("kmz-almacenamiento");
-            var file = input.files[0];
-            fr = new FileReader();
-            fr.readAsDataURL(file);
-            obj.archivoFileReader = fr;
-            obj.archivoFileResult = obj.archivoFileReader.result;
-        } else if (mantenerArchivosAlmacenamiento.length) {
-            obj.archivo = mantenerArchivosAlmacenamiento[0].archivo;
-            obj.archivoFile = mantenerArchivosAlmacenamiento[0].archivoFile;
-            obj.archivoFileReader = mantenerArchivosAlmacenamiento[0].archivoFileReader;
-            obj.archivoFileResult = mantenerArchivosAlmacenamiento[0].archivoFileResult;
-            mantenerArchivosAlmacenamiento.pop();
-        }
+        //obj.archivo = $("#kmz-almacenamiento").val();
+        //obj.archivoFile = document.getElementById("kmz-almacenamiento").files[0];
+        //if (obj.archivo) {
+        //    var input = document.getElementById("kmz-almacenamiento");
+        //    var file = input.files[0];
+        //    fr = new FileReader();
+        //    fr.readAsDataURL(file);
+        //    obj.archivoFileReader = fr;
+        //    obj.archivoFileResult = obj.archivoFileReader.result;
+        //} else if (mantenerArchivosAlmacenamiento.length) {
+        //    obj.archivo = mantenerArchivosAlmacenamiento[0].archivo;
+        //    obj.archivoFile = mantenerArchivosAlmacenamiento[0].archivoFile;
+        //    obj.archivoFileReader = mantenerArchivosAlmacenamiento[0].archivoFileReader;
+        //    obj.archivoFileResult = mantenerArchivosAlmacenamiento[0].archivoFileResult;
+        //    mantenerArchivosAlmacenamiento.pop();
+        //}
 
         var html = "";
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedoralmacenamiento' + capProdCantAlmacenamiento + '">'
@@ -1078,7 +1099,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
-            + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
+            //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
             + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1087,11 +1108,11 @@ function armarSelects(result) {
             + '</div>'
             + '</div>'
             + '<div>'
-            + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-            + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
-            + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
-            + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
-            + '</div>'
+            //+ '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+            //+ (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+            //+ (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+            //+ (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+            //+ '</div>'
             + '<div class="granos-contenedor">';
 
         for (var jj in obj.granosAlmacenamiento) {
@@ -1170,6 +1191,127 @@ function armarSelects(result) {
         recalcularSegmentacion();
     });
 
+    $("#guardarCapProd-establecimiento").click(function () {
+        var obj = {};
+
+        obj.item = capProdCantEstablecimiento;
+        obj.CampoId = $("#campoEstablecimientoid").val();
+
+        if ($("#localidadId-establecimiento").val() == "") {
+            MensErr("Debe ingresar una localidad");
+            return false;
+        } else {
+            obj.localidad = $("#localidadId-establecimiento").val();
+            obj.localidadNom = $("#localidad-establecimiento").val()
+            obj.partido = $("#partido-establecimiento").val();
+        }
+
+        obj.latitud = $("#coordenadas-latitud-establecimiento").val();
+        obj.longitud = $("#coordenadas-longitud-establecimiento").val();
+        obj.nombre = $("#campo-nombre-establecimiento").val();
+        obj.comercialId = $("#comercial-establecimiento").val();
+        obj.comercialNom = $("#comercial-establecimiento option:selected").text();
+
+        obj.materialNom = $("#material-establecimiento option:selected").text();
+        obj.materialId = $("#material-establecimiento").val();
+        obj.rinde = $("#rinde-establecimiento").data("kendoNumericTextBox").value() == null ? 0 : $("#rinde-establecimiento").data("kendoNumericTextBox").value();
+        obj.htotales = $("#htotales-establecimiento").data("kendoNumericTextBox").value() == null ? 0 : $("#htotales-establecimiento").data("kendoNumericTextBox").value();
+        obj.hcultivables = $("#hcultivables-establecimiento").data("kendoNumericTextBox").value() == null ? 0 : $("#hcultivables-establecimiento").data("kendoNumericTextBox").value();
+        obj.ImportId = $("#ImportId-establecimiento").val();
+
+
+        obj.granos = [];
+
+
+        obj.archivo = $("#kmz").val();
+        obj.archivoFile = document.getElementById("kmz").files[0];
+        if (obj.archivo) {
+            var input = document.getElementById("kmz");
+            var file = input.files[0];
+            fr = new FileReader();
+            fr.readAsDataURL(file);
+            obj.archivoFileReader = fr;
+            obj.archivoFileResult = fr.result;
+        } else if (mantenerArchivosEstablecimiento.length) {
+            obj.archivo = mantenerArchivosEstablecimiento[0].archivo;
+            obj.archivoFile = mantenerArchivosEstablecimiento[0].archivoFile;
+            obj.archivoFileReader = mantenerArchivosEstablecimiento[0].archivoFileReader;
+            obj.archivoFileResult = mantenerArchivosEstablecimiento[0].archivoFileResult;
+            mantenerArchivosEstablecimiento.pop();
+        }
+
+        if (obj.materialId <= 0) {
+            MensErr("Debe seleccionar un Maerial");
+            return false;
+        }
+        if (obj.nombre== "") {
+            MensErr("Debe ingresar un Nombre");
+            return false;
+        }
+
+        var html = "";
+        html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="establecimientocontenedor' + capProdCantEstablecimiento + '">'
+            + '<div>'
+            + '<div class="datos-produccion-cap-prod-guardados-zona">'
+            + obj.localidadNom + " - " + obj.partido
+            + '</div>'
+            + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZEstablecimiento(this)" id="eliminarKMZEstablecimiento' + capProdCantEstablecimiento + '">x Eliminar KMZ</div>' : '')
+            + '<div class="editar-produccion" onclick="editarCampoEstablecimiento(' + capProdCantEstablecimiento + ')" id="editarEstablecimiento' + capProdCantEstablecimiento + '">'
+            + '<img src="../Content/Images/contacto-edit.png" /> Editar'
+            + '</div>'
+            + '<div class="eliminar-produccion" onclick="eliminarCampoEstablecimiento(this)" id="eliminarEstablecimiento' + capProdCantEstablecimiento + '">'
+            + 'x Eliminar'
+            + '</div>'
+            + '</div>'
+            + '<div>'
+            + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
+            + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
+            + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+            + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+            + "<br>"
+            + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.materialNom : "")
+            + ' <b>Rinde</b>:' + obj.rinde
+            + ' <b>Has Totales</b>:' + obj.htotales
+            + ' <b>Has Cultivables</b>:' + obj.hcultivables
+            + '</div>'
+            + '<div class="granos-contenedor">';
+
+        html += '</div>'
+            + '</div>';
+
+        $("#localidadId-establecimiento").val("");
+        $("#localidad-establecimiento").val("");
+        $("#coordenadas-latitud-establecimiento").val("");
+        $("#coordenadas-longitud-establecimiento").val("");
+        $("#campo-nombre-establecimiento").val("");
+        $("#rinde-establecimiento").data("kendoNumericTextBox").value("");
+        $("#htotales-establecimiento").data("kendoNumericTextBox").value("");
+        $("#material-establecimiento").val("");
+        $("#hcultivables-establecimiento").data("kendoNumericTextBox").value("");
+
+        $("#campoEstablecimientoid").val(0);
+        for (i = cantGrano; i > 0; i--) {
+            $(".linea" + i).remove();
+        }
+
+        $("#grano0").val("null");
+        $("#grano0").trigger("change");
+        $("#campaña0").val("null");
+        $("#hectareas0").val("");
+        $("#toneladas0").val("");
+        $("#eliminarGrano").hide();
+        $("#kmz").val("");
+        $(".label-field .produccion").html("Subir un Archivo");
+        cantGrano = 0;
+
+        $(".datos-produccion-establecimiento-guardados").append(html);
+        $(".datos-produccion-establecimiento-guardados").show();
+
+        aGuardarEstablecimiento.push(obj);
+
+        capProdCantEstablecimiento++;
+    });
+
     $("#provincia").change(function () {
         var valor = $("#provincia").val();
         buscarLocalidad(valor);
@@ -1199,6 +1341,13 @@ function eliminarCampoProduccion(val) {
     });
     recalcularSegmentacion();
 }
+function eliminarCampoEstablecimiento(val) {
+    var item = $(val).attr("id").split("eliminarEstablecimiento")[1];
+    $("#establecimientocontenedor" + item).remove();
+    aGuardarEstablecimiento = aGuardarEstablecimiento.filter(function (el) {
+        return el.item !== parseInt(item);
+    });
+}
 function eliminarKMZCampoProduccion(val) {
     var item = $(val).attr("id").split("eliminarKMZProd")[1];
     $("#eliminarKMZProd" + item).remove();
@@ -1213,7 +1362,19 @@ function eliminarKMZCampoProduccion(val) {
     }
     recalcularSegmentacion();
 }
-
+function eliminarKMZEstablecimiento(val) {
+    var item = $(val).attr("id").split("eliminarKMZEstablecimiento")[1];
+    $("#eliminarKMZEstablecimiento" + item).remove();
+    for (var i = 0; i < aGuardarEstablecimiento.length; i++) {
+        if (aGuardarEstablecimiento[i].item == item) {
+            aGuardarEstablecimiento[i].archivo = null;
+            aGuardarEstablecimiento[i].archivoFile = null;
+            aGuardarEstablecimiento[i].archivoFileReader = null;
+            aGuardarEstablecimiento[i].archivoFileResult = null;
+            break;
+        }
+    }
+}
 function eliminarAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarAlm")[1];
     $("#granocontenedoralmacenamiento" + item).remove();
@@ -1331,6 +1492,41 @@ function editarCampoProduccion(id) {
     });
 }
 
+function editarCampoEstablecimiento(id) {
+    var obj = aGuardarEstablecimiento.filter(function (el) {
+        return el.item === parseInt(id);
+    });
+    obj = obj[0];
+
+    $("#localidadId-establecimiento").val(obj.localidad);
+    $("#localidad-establecimiento").val(obj.localidadNom);
+    $("#coordenadas-latitud-establecimiento").val(obj.latitud);
+    $("#coordenadas-longitud-establecimiento").val(obj.longitud);
+    $("#campo-nombre-establecimiento").val(obj.nombre);
+    $("#partido-establecimiento").val(obj.partido);
+    $("#comercial-establecimiento").val(obj.comercialId);
+    $("#material-establecimiento").val(obj.materialId);
+    $("#ImportId-establecimiento").val(obj.ImportId);
+    $("#rinde-establecimiento").data("kendoNumericTextBox").value(obj.rinde);
+    $("#htotales-establecimiento").data("kendoNumericTextBox").value(obj.htotales);
+    $("#hcultivables-establecimiento").data("kendoNumericTextBox").value(obj.hcultivables);
+
+    if (obj.archivo) {
+        $(".label-field .produccion").html("Archivo Subido");
+        mantenerArchivosEstablecimiento.push({
+            archivo: obj.archivo,
+            archivoFile: obj.archivoFile,
+            archivoFileReader: obj.archivoFileReader,
+            archivoFileResult: obj.archivoFileResult
+        });
+    }
+    $("#campoEstablecimientoid").val(obj.CampoId ? obj.CampoId : 0);
+
+    $("#establecimientocontenedor" + id).remove();
+    aGuardarEstablecimiento = aGuardarEstablecimiento.filter(function (el) {
+        return el.item !== parseInt(id);
+    });
+}
 function editarAlmacenamiento(id) {
     var obj = aGuardarAlmacenamiento.filter(function (el) {
         return el.item === parseInt(id);
@@ -1602,6 +1798,15 @@ function armarFuncionalidades() {
         $("#almacenamiento").addClass("whc-selected");
         esconderForms("formulario-almacenamiento");
 
+        $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
+        $(".formulario-footer-siguiente").hide();
+    });
+
+    $("#establecimiento").click(function () {
+        limpiarSelected();
+        $("#establecimiento").addClass("whc-selected");
+        esconderForms("formulario-establecimiento");
+
         $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
         $(".formulario-footer-siguiente").hide();
     });
@@ -1621,6 +1826,7 @@ function armarFuncionalidades() {
         $("#almacenamiento").removeClass("whc-selected");
         $("#contactocomercial").removeClass("whc-selected");
         $("#proveedores-corredor").removeClass("whc-selected");
+        $("#establecimiento").removeClass("whc-selected");
     }
     function esconderForms(form) {
         if ($("#formulario-contacto").is(":visible") && "formulario-contacto" !== form) {
@@ -1641,6 +1847,10 @@ function armarFuncionalidades() {
             });
         } else if ($("#formulario-proveedorescorredor").is(":visible") && "formulario-proveedorescorredor" !== form) {
             $("#formulario-proveedorescorredor").fadeOut("slow", function () {
+                $("#" + form).fadeIn("slow");
+            });
+        } else if ($("#formulario-establecimiento").is(":visible") && "formulario-establecimiento" !== form) {
+            $("#formulario-establecimiento").fadeOut("slow", function () {
                 $("#" + form).fadeIn("slow");
             });
         }
@@ -1741,6 +1951,16 @@ function armarFuncionalidades() {
 
             $("#produccion").removeClass("whc-selected");
             $("#almacenamiento").addClass("whc-selected");
+
+            $(".formulario-footer-guardar-contacto").html("Guardar").addClass("invertir-boton-Guardar");
+            $(".formulario-footer-siguiente").hide();
+        } else if ($("#formulario-almacenamiento").is(":visible")) {
+            $("#formulario-almacenamiento").fadeOut("slow", function () {
+                $("#formulario-estsablecimiento").fadeIn("slow");
+            });
+
+            $("#almacenamiento").removeClass("whc-selected");
+            $("#estsablecimiento").addClass("whc-selected");
 
             $(".formulario-footer-guardar-contacto").html("Guardar y Finalizar").addClass("invertir-boton-Guardar");
             $(".formulario-footer-siguiente").hide();
@@ -2398,9 +2618,75 @@ function InicializarDatos() {
         armarSelects(result);
         AutocompleteProcedenciaProduccion();
         AutocompleteProcedenciaAlmacenamiento();
+        AutocompleteProcedenciaEstablecimiento();
     }
 }
+function AutocompleteProcedenciaEstablecimiento() {
+    $("#localidad-establecimiento").click(function () {
+        $("#localidad-establecimiento").data("kendoAutoComplete").value("");
+        $("#localidad-establecimiento").trigger("change");
+        if ($("#localidad-establecimiento").val() == "") {
+            $("#partido-establecimiento").val('');
+            $("#localidadId-establecimiento").val("");
+        }
+    });
 
+    $("#localidad-establecimiento").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        clearButton: false,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function () {
+            if ($("#localidad-establecimiento").val().split('|').length > 1) {
+                $("#localidad-establecimiento").val($("#localidad-establecimiento").val().split('|')[1]);
+
+            }
+
+        },
+        select: function (e) {
+            $("#partido-establecimiento").val(e.dataItem.Partido);
+            $("#localidadId-establecimiento").val(e.dataItem.Id);
+            $("#LocalidadNombre-establecimiento").val(e.dataItem.Localidad);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#localidad-establecimiento').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+    $("#localidad-establecimiento").css("width", "100%");
+    $("#rinde-establecimiento").kendoNumericTextBox({ decimals: 2, spinners: false, min: 0 });
+    $("#htotales-establecimiento").kendoNumericTextBox({ decimals: 2, spinners: false, min: 0 });
+    $("#hcultivables-establecimiento").kendoNumericTextBox({ decimals: 2, spinners: false, min: 0 });
+
+    var htmlestablecimientoMaterial = "";
+    htmlestablecimientoMaterial += '<select class="campo-input-select campo-sin-span" id="material-establecimiento" style="width: 100%!important;margin-top: -5px;">';
+    htmlestablecimientoMaterial += '<option value = "null">Seleccione...</option>';
+    for (ii in resultInit.gran) {
+        (function (i) {
+            htmlestablecimientoMaterial += '<option value="' + resultInit.gran[i].MaterialId + '">' + resultInit.gran[i].Descripcion + '</option>';
+        })(ii);
+    }
+    htmlestablecimientoMaterial += '</select>';
+    $("#divMaterialEstablecimiento").append(htmlestablecimientoMaterial);
+}
 function AutocompleteProcedenciaAlmacenamiento() {
     $("#localidad-almacenamiento").click(function () {
         $("#localidad-almacenamiento").data("kendoAutoComplete").value("");
@@ -2614,7 +2900,7 @@ function ObtenerDatos() {
             if (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult == "" || obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult == null) {
                 obj.almacenamiento.CamposAlmacenamiento[i].archivoFileResult = (obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader ? obj.almacenamiento.CamposAlmacenamiento[i].archivoFileReader.result : null);
             }
-            
+
         })(ii);
     }
     obj.contactocomercial = aGuardarContactoComercial;
@@ -2623,6 +2909,16 @@ function ObtenerDatos() {
         recalcularSegmentacion();
         obj.basicos.segmentacion = $("#segmentacion").val();
     }
+
+    obj.establecimiento = aGuardarEstablecimiento != null ? aGuardarEstablecimiento.concat() : [];
+    for (var ii in obj.establecimiento) {
+        (function (i) {
+            if (obj.establecimiento[i].archivoFileResult == null || obj.establecimiento[i].archivoFileResult == "") {
+                obj.establecimiento[i].archivoFileResult = (obj.establecimiento[i].archivoFileReader ? obj.establecimiento[i].archivoFileReader.result : null);
+            }
+        })(ii);
+    }
+
     GrabarProveedor(obj);
 }
 

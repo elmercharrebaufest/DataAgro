@@ -73,7 +73,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":1,\"Provincia_Nombre\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Localidad\":{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":1,\"Provincia_Nombre\":null,\"Partido_Nombre\":null,\"PartidoId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

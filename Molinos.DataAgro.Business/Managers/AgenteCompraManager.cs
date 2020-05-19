@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("OperadorId", "El campo 'Operador' no debe estar vacío");
             }
-            if (oParam.TipoAgenteCompraId == 0)
+            if (oParam.TipoAgenteCompraId == 0 || oParam.TipoAgenteCompraId == null)
             {
                 oErrorMessages.Error("TipoAgenteCompraId", "El campo 'Tipo Agente' no debe estar vacío");
             }

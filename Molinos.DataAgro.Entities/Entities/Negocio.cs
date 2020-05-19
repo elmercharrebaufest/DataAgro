@@ -47,7 +47,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? HastaFijacion { get; set; }
         public int? CondicionFijacionId { get; set; }
         public string MotivoRechazo { get; set; }
-        
+        public int? TipoAgenteCompraId { get; set; }
+
+        [ForeignKey("TipoAgenteCompraId")]
+        public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
         [ForeignKey("CondicionFijacionId")]
         public virtual CondicionFijacion CondicionFijacion { get; set; }
         [ForeignKey("EstadoId")]

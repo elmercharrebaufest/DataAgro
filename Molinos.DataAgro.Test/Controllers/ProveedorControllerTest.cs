@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IHomeManager> homeManagerMock;
         private Mock<ILocalidadManager> localidadManagerMock;
+        private Mock<IProvinciaManager> provinciaManagerMock;
         private Mock<ICampañaManager> campanaManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
@@ -36,12 +37,13 @@ namespace Molinos.DataAgro.Test.Controllers
             proveedorManagerMock = new Mock<IProveedorManager>();
             homeManagerMock = new Mock<IHomeManager>();
             localidadManagerMock = new Mock<ILocalidadManager>();
+            provinciaManagerMock = new Mock<IProvinciaManager>();
             campanaManagerMock = new Mock<ICampañaManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             reportesManagerMock = new Mock<IReportesManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ProveedorController(proveedorManagerMock.Object, homeManagerMock.Object, campanaManagerMock.Object, comercialManagerMock.Object, reportesManagerMock.Object, localidadManagerMock.Object);
+            target = new ProveedorController(proveedorManagerMock.Object, homeManagerMock.Object, campanaManagerMock.Object, comercialManagerMock.Object, reportesManagerMock.Object, localidadManagerMock.Object, provinciaManagerMock.Object);
         }
 
         [Test]
@@ -119,7 +121,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadTraerPorProveedores\":null,\"BasicoProveedorTraerPorProveedores\":null,\"ContactosComercialesTraerPorProveedores\":null,\"CampoProduccionAcopioPorProveedores\":null,\"Acopio\":null,\"AcopioMaterialPorProveedores\":null,\"ActividadHistoriaTraerPorProveedores\":null,\"DatosContacto\":null,\"Historial\":null,\"CanalesDeOperacion\":null,\"ProveedorDestinatario\":null,\"ProveedorCondicion\":null,\"ObjetivosTraerPorProveedorId\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadTraerPorProveedores\":null,\"BasicoProveedorTraerPorProveedores\":null,\"ContactosComercialesTraerPorProveedores\":null,\"CampoProduccionAcopioPorProveedores\":null,\"Acopio\":null,\"AcopioMaterialPorProveedores\":null,\"ActividadHistoriaTraerPorProveedores\":null,\"DatosContacto\":null,\"Historial\":null,\"CanalesDeOperacion\":null,\"ProveedorDestinatario\":null,\"ProveedorCondicion\":null,\"ProveedorCampoDetalle\":null,\"ObjetivosTraerPorProveedorId\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -150,7 +152,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":2,\"Provincia_Nombre\":\"A\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"LocalidadId\":1,\"Nombre\":\"A\",\"CodLocalidad\":\"A\",\"ProvinciaId\":2,\"Provincia_Nombre\":\"A\",\"Partido_Nombre\":null,\"PartidoId\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Interfaces
 
         List<BusquedaHome> DevolverProveedoresConCorredor(string filtroProveedor, string filtro);
 
+        List<ProveedorDto> ListarProveedorTodos();
         List<ProveedorDto> ListarProveedor(string text);
         List<ProveedorDto> ListarCorredor(string text);
         List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId);
@@ -60,5 +61,6 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult BuscarDatosContacto(DataSourceRequest request, List<int> equipo);
         DataSourceResult BuscarDatosProduccion(DataSourceRequest request, List<int> equipo);
         DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo);
+        void ImportarEstablecimientos(List<CampoDetalleDto> campos, Resultado resultado);
     }
 }

@@ -23,5 +23,7 @@ namespace Molinos.DataAgro.Interfaces
         List<BusquedaLocalidad> DevolverLocalidades(string filtro);
 
         LocalidadQry TraerLocalidadProvincia(string localidad, string provincia);
+
+        List<LocalidadDto> ListarLocalidadTodas();
     }
 }

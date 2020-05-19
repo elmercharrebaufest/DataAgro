@@ -70,6 +70,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<AperturaPrecioSap> Apertura { get; set; }
         public decimal? PrecioNeto { get; set; }
         public decimal? PorcentajeDePago { get; set; }
+        public int? TipoAgenteCompraId { get; set; }
+        public string CaratulaMAT { get; set; }
+        public string CaratulaExtension { get; set; }
+        public decimal? PrecioAjusteComision { get; set; }
+        public string MonedaAjusteComisionId { get; set; }
     }
 
     public class CalidadSAP

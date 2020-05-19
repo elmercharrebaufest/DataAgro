@@ -26,7 +26,9 @@
   <setParameter name="ServiceUser Key" value="molinosagro\dataagrot" />
   <setParameter name="ServicePass Key" value="MOA.Test" />
   
-  <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />  
+  <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
+  <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9000/" />
+
 
   <setParameter name="HTTP_Port Service Endpoint Address"  value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="HTTP_Port1 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL&amp;interfaceNamespace=namespace%3Adataagro" />
@@ -45,4 +47,7 @@
   <setParameter name="HTTP_Port14 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CUPO&amp;interfaceNamespace=namespace%3Adataagro"/>
   <setParameter name="HTTP_Port15 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
   <setParameter name="HTTP_Port16 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_PRECIO_PIZARRA&amp;interfaceNamespace=namespace%3Adataagro"/>
+  <setParameter name="HTTP_Port17 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro"/>
+  <setParameter name="HTTP_Port18 Service Endpoint Address" value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS&amp;interfaceNamespace=namespace%3Adataagro"/>
+
 </parameters>

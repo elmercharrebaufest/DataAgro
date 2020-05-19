@@ -78,14 +78,17 @@
         </div>
     </div>
 
-    @*<div class="row noAgente noFason noAcuerdo ampliar">
+    <div class="row noAgente noFason noAcuerdo ampliar">
         <div class="col-sm-2">
             <label>Agente de Compra</label>
         </div>
         <div class="col-md-4 col-sm-5">
-            <select id="AgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra"></select>
+            @*<select id="AgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra"></select>*@
+            <select id="AgenteCompraId" data-bind="value: Parametros.TipoAgenteCompra">
+                <option value="1">MATBA ROFEX SA</option>
+            </select>
         </div>
-    </div>*@
+    </div>
 
     <div class="row">
         <div class="col-sm-2">
@@ -664,7 +667,7 @@
                 <input id="porcentajeDePagoId" type="date" data-bind="value: Parametros.porcentajeDePagoId" />
             </div>
         </div>
-        @*<div class="row noAcuerdo">
+        <div class="row noAcuerdo">
             <div class="col-sm-2 ">
                 <label>Caratula extensión</label>
             </div>
@@ -688,7 +691,7 @@
                     <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
                 </div>
             </div>
-        </div>*@
+        </div>
     </div>
 
     <div class="noFason noAgente noAcuerdo ampliar">

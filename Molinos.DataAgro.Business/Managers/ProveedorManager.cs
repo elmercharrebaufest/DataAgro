@@ -85,6 +85,30 @@ namespace Molinos.DataAgro.Business.Managers
                 res.CanalesDeOperacion = repositorio.Listar<ProveedorCanalOperacion, CanalOperacion>(x => x.CanalOperacion, x => x.ProveedorId == ProveedorId);
                 res.ProveedorCondicion = repositorio.Listar<ProveedorCondicion, Condicion>(x => x.Condicion, x => x.ProveedorId == ProveedorId);
                 res.ProveedorDestinatario = repositorio.Listar<ProveedorDestinatario, Destinatario>(x => x.Destinatario, x => x.ProveedorId == ProveedorId);
+                res.ProveedorCampoDetalle = repositorio.Listar<CampoDetalle, CampoDetalleDto>(x => new CampoDetalleDto
+                {
+                    archivo = x.KMZnombre,
+                    archivoFileResult = x.KMZfile,
+                    CampoId = x.Id,
+                    comercialId = x.ComercialId,
+                    comercialNom = x.Comercial.Apellido + " " + x.Comercial.Nombres,
+                    hcultivables = x.HectareasCultivables,
+                    htotales = x.HectareasTotales,
+                    ImportId = x.ImportId,
+                    archivofile = null,
+                    item = x.NroItem,
+                    latitud = x.Latitud,
+                    localidad = x.LocalidadId,
+                    localidadNom = x.Localidad.Nombre,
+                    longitud = x.Longitud,
+                    materialId = x.MaterialId,
+                    materialNom = x.Material.Descripcion,
+                    nombre = x.Nombre,
+                    provincia = x.Localidad.ProvinciaId,
+                    provinciaNom = x.Localidad.Provincia.Nombre,
+                    partidoNom = x.Localidad.Partido.Descripcion,
+                    rinde = x.Rinde
+                }, x => x.ProveedorId == ProveedorId);
 
             }
             catch (Exception ex)
@@ -1228,13 +1252,13 @@ namespace Molinos.DataAgro.Business.Managers
                     var campo = new Campo
                     {
                         ArrendaPropia = cmp.hectareas,
-                        Latitud = cmp.latitud,
-                        Longitud = cmp.longitud,
-                        Nombre = cmp.nombre,
-                        ComercialId = cmp.comercialId,
+                        //Latitud = cmp.latitud,
+                        //Longitud = cmp.longitud,
+                        //Nombre = cmp.nombre,
+                        //ComercialId = cmp.comercialId,
+                        //KMZfile = cmp.archivoFileResult,
+                        //KMZnombre = cmp.archivo,                        
                         HabilitadoSojaSustentable = Convert.ToBoolean(Convert.ToInt32(oParam.produccion.habilitaoSojaSust)),
-                        KMZfile = cmp.archivoFileResult,
-                        KMZnombre = cmp.archivo,
                         LocalidadId = cmp.localidad,
                         NroItem = item++,
                         Proveedor = proveedor
@@ -1265,12 +1289,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var acopio = new Acopio
                     {
-                        Latitud = cmp.latitud,
-                        Longitud = cmp.longitud,
-                        Nombre = cmp.nombre,
-                        ComercialId = cmp.comercialId,
-                        KMZfile = cmp.archivoFileResult,
-                        KMZnombre = cmp.archivo,
+                        //Latitud = cmp.latitud,
+                        //Longitud = cmp.longitud,
+                        //Nombre = cmp.nombre,
+                        //ComercialId = cmp.comercialId,
+                        //KMZfile = cmp.archivoFileResult,
+                        //KMZnombre = cmp.archivo,
                         LocalidadId = cmp.localidad,
                         NroItem = item++,
                         Proveedor = proveedor
@@ -1304,7 +1328,31 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-
+            if (oParam.establecimiento != null && oParam.establecimiento.Count > 0)
+            {
+                int itemEst = 1;
+                foreach (var param in oParam.establecimiento)
+                {
+                    repositorio.Agregar(new CampoDetalle
+                    {
+                        NroItem = itemEst,
+                        ComercialId = param.comercialId,
+                        HectareasCultivables = param.hcultivables,
+                        HectareasTotales = param.htotales,
+                        ImportId = param.ImportId,
+                        Rinde = param.rinde,
+                        Latitud = param.latitud,
+                        Longitud = param.longitud,
+                        Nombre = param.nombre,
+                        KMZfile = param.archivoFileResult,
+                        KMZnombre = param.archivo,
+                        LocalidadId = param.localidad,
+                        MaterialId = param.materialId,
+                        Proveedor = proveedor
+                    });
+                    itemEst++;
+                }
+            }
             if (oParam.contacto.canalesOperacion != null && oParam.contacto.canalesOperacion.Count > 0)
             {
                 int itemPCO = 1;
@@ -1413,6 +1461,13 @@ namespace Molinos.DataAgro.Business.Managers
                 return resultado;
             }
             resultado = UpdateAlmacenamiento(oParam);
+
+            if (resultado.HayErrores)
+            {
+                return resultado;
+            }
+
+            resultado = UpdateEstablecimiento(oParam);
 
             if (resultado.HayErrores)
             {
@@ -2010,12 +2065,12 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var produccion = repositorio.Agregar(new Campo()
                             {
-                                Latitud = cam.latitud,
-                                Longitud = cam.longitud,
-                                Nombre = cam.nombre,
-                                ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
-                                KMZfile = cam.archivoFileResult,
-                                KMZnombre = cam.archivo,
+                                //Latitud = cam.latitud,
+                                //Longitud = cam.longitud,
+                                //Nombre = cam.nombre,
+                                //ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
+                                //KMZfile = cam.archivoFileResult,
+                                //KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 ArrendaPropia = cam.hectareas,
                                 NroItem = 1,
@@ -2053,12 +2108,12 @@ namespace Molinos.DataAgro.Business.Managers
                             var mod = oParam.produccion.CamposProduccion.Where(x => x.CampoId == campo.CampoId).First();
 
                             #region Set Campos
-                            campo.Latitud = mod.latitud;
-                            campo.Longitud = mod.longitud;
-                            campo.Nombre = mod.nombre;
-                            campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
-                            campo.KMZfile = mod.archivoFileResult;
-                            campo.KMZnombre = mod.archivo;
+                            //campo.Latitud = mod.latitud;
+                            //campo.Longitud = mod.longitud;
+                            //campo.Nombre = mod.nombre;
+                            //campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
+                            //campo.KMZfile = mod.archivoFileResult;
+                            //campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
                             campo.ArrendaPropia = mod.hectareas;
                             campo.ProveedorId = (int)oParam.ProveedorId;
@@ -2165,12 +2220,12 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var acopio = repositorio.Agregar(new Acopio()
                             {
-                                Latitud = cam.latitud,
-                                Longitud = cam.longitud,
-                                Nombre = cam.nombre,
-                                ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
-                                KMZfile = cam.archivoFileResult,
-                                KMZnombre = cam.archivo,
+                                //Latitud = cam.latitud,
+                                //Longitud = cam.longitud,
+                                //Nombre = cam.nombre,
+                                //ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
+                                //KMZfile = cam.archivoFileResult,
+                                //KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 NroItem = 1,
                                 ProveedorId = (int)oParam.ProveedorId
@@ -2222,12 +2277,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                             #region Set Campos
                             acopio.AcopioId = (int)mod.CampoId;
-                            acopio.Latitud = mod.latitud;
-                            acopio.Longitud = mod.longitud;
-                            acopio.Nombre = mod.nombre;
-                            acopio.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
-                            acopio.KMZfile = mod.archivoFileResult;
-                            acopio.KMZnombre = mod.archivo;
+                            //acopio.Latitud = mod.latitud;
+                            //acopio.Longitud = mod.longitud;
+                            //acopio.Nombre = mod.nombre;
+                            //acopio.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
+                            //acopio.KMZfile = mod.archivoFileResult;
+                            //acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;
                             acopio.ProveedorId = (int)oParam.ProveedorId;
                             #endregion
@@ -2352,6 +2407,92 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
+        private GrabarProveedorResult UpdateEstablecimiento(NuevoProveedor oParam)
+        {
+            var resultado = new GrabarProveedorResult();
+            try
+            {
+                var oCampoDetalleSave = repositorio.Listar<CampoDetalle>(x => x.ProveedorId == oParam.ProveedorId);
+
+                #region Eliminar 
+
+                foreach (var cam in oCampoDetalleSave)
+                {
+                    if ((oParam.establecimiento != null && !oParam.establecimiento.Any(x => x.CampoId == cam.Id)) || oParam.establecimiento == null)
+                    {
+                        repositorio.Remover(cam);
+                    }
+                }
+                #endregion
+
+                #region Agregar
+                if (oParam.establecimiento != null)
+                {
+                    foreach (var param in oParam.establecimiento)
+                    {
+                        if (param.CampoId.GetValueOrDefault(0) == 0)
+                        {
+                            var acopio = repositorio.Agregar(new CampoDetalle()
+                            {
+                                ComercialId = param.comercialId,
+                                HectareasCultivables = param.hcultivables,
+                                HectareasTotales = param.htotales,
+                                ImportId = param.ImportId,
+                                Rinde = param.rinde,
+                                Latitud = param.latitud,
+                                Longitud = param.longitud,
+                                Nombre = param.nombre,
+                                KMZfile = param.archivoFileResult,
+                                KMZnombre = param.archivo,
+                                LocalidadId = param.localidad,
+                                MaterialId = param.materialId,
+                                NroItem = 1,
+                                ProveedorId = (int)oParam.ProveedorId
+                            });
+                        }
+                    }
+                }
+                #endregion
+
+                #region Modificar 
+
+                foreach (var campo in oCampoDetalleSave)
+                {
+                    if (oParam.establecimiento != null)
+                    {
+                        if (oParam.establecimiento.Any(x => x.CampoId == campo.Id))
+                        {
+                            var mod = oParam.establecimiento.Where(x => x.CampoId == campo.Id).First();
+
+                            #region Set Campos
+                            campo.Id = (int)mod.CampoId;
+                            campo.Latitud = mod.latitud;
+                            campo.Longitud = mod.longitud;
+                            campo.Nombre = mod.nombre;
+                            campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
+                            campo.KMZfile = mod.archivoFileResult;
+                            campo.KMZnombre = mod.archivo;
+                            campo.LocalidadId = mod.localidad;
+                            campo.MaterialId = mod.materialId;
+                            campo.HectareasCultivables = mod.hcultivables;
+                            campo.HectareasTotales = mod.htotales;
+                            campo.ImportId = mod.ImportId;
+                            campo.Rinde = mod.rinde;
+                            campo.ProveedorId = (int)oParam.ProveedorId;
+                            #endregion
+                        }
+                    }
+                }
+
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                resultado.Error("", ex.Message);
+            }
+            return resultado;
+        }
         private Historial Comprar(int proveedorId, string UsuarioDirectory, List<int> equipo)
         {
             var historial = new Historial();
@@ -2485,6 +2626,10 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
+        }
+        public List<ProveedorDto> ListarProveedorTodos()
+        {
+            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => x.SegmentacionId== 2 || x.SegmentacionId == 3 || x.SegmentacionId == 4);
         }
         public List<ProveedorDto> ListarCorredor(string proveedor)
         {
@@ -2901,6 +3046,46 @@ namespace Molinos.DataAgro.Business.Managers
         public DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo)
         {
             return repositorio.ObtenerConsultaEscalar(new BusquedaDatosAlmacenamiento(request, equipo));
+        }
+
+        public void ImportarEstablecimientos(List<CampoDetalleDto> campos, Resultado resultado)
+        {
+            try
+            {
+                var campoDetalles = repositorio.Listar<CampoDetalle>();
+                foreach (var campo in campos)
+                {
+                    CampoDetalle campoDetalle = campoDetalles.Where(x => x.ImportId == campo.ImportId).FirstOrDefault();
+                    if (campoDetalle == null)
+                    {
+                        campoDetalle = new CampoDetalle();
+                        campoDetalle.ProveedorId = campo.proveedorId;
+                        campoDetalle.Nombre = campo.nombre;
+                        campoDetalle.LocalidadId = campo.localidad;
+                        campoDetalle.Longitud = campo.longitud;
+                        campoDetalle.Latitud = campo.latitud;
+                        campoDetalle.NroItem = 1;
+                        campoDetalle.MaterialId = 3;
+                        campoDetalle.ImportId = campo.ImportId;
+                        repositorio.Agregar(campoDetalle);
+                    }
+                    else
+                    {
+                        campoDetalle.ProveedorId = campo.proveedorId;
+                        campoDetalle.Nombre = campo.nombre;
+                        campoDetalle.LocalidadId = campo.localidad;
+                        campoDetalle.Longitud = campo.longitud;
+                        campoDetalle.Longitud = campo.latitud;
+
+                    }
+                }
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
         }
     }
 }

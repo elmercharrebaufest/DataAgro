@@ -23,6 +23,7 @@
     var modificaFinalizados = PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados);
     var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
     var ocultarEnTablero = PermisosHelper.Is(PermisosDataAgro.OcultarEnTablero);
+    var preaunlar = PermisosHelper.Is(PermisosDataAgro.PreAnular);
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -42,6 +43,7 @@
     modificaFinalizados = '@modificaFinalizados';
     externo = '@externo';
     ocultarEnTablero = '@ocultarEnTablero';
+    preanular = '@preaunlar';
 
 </script>
 @section Styles {
@@ -178,13 +180,13 @@
                         {
 
                             @*<div class="col-xs-6 col-md-4">
-                            <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
-                                <span class="botonVarios">
-                                    <i class="fa fa-search varios" aria-hidden="true"></i>
-                                </span>
-                                <span>Buscar</span>
-                            </div>
-                        </div>*@
+                                    <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                                        <span class="botonVarios">
+                                            <i class="fa fa-search varios" aria-hidden="true"></i>
+                                        </span>
+                                        <span>Buscar</span>
+                                    </div>
+                                </div>*@
                             <div class="col-xs-6 col-sm-4">
                                 <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
                                     <span class="botonVarios">
@@ -234,9 +236,9 @@
 
                 <div class="linea col-12" data-toggle="collapse" data-target="#demo">
                 </div>
-                    <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#demo">
-                        <span class="icono"> <i class="fa fa-plus-square-o" aria-hidden="true"></i></span>
-                    </button>
+                <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#demo">
+                    <span class="icono"> <i class="fa fa-plus-square-o" aria-hidden="true"></i></span>
+                </button>
                 <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
                     <div id="inputZona" class="col-xs-12 col-md-2 col-md-offset-5 noPadding">
                         <input id="buscadorFiltroZona" type="text" placeholder="Buscar por Zona" />
@@ -304,30 +306,39 @@
 @Html.Partial("_ModalModificarVarios")
 <!-- Modal Aprobar-->
 @Html.Partial("_ModalAprobar")
+
+<!-- Modal PreAnularBorrado-->
+@Html.Partial("ModalBorrarPreanulado")
+
+<!-- Modal preAnular-->
+@Html.Partial("ModalPreAnular")
+
+<!-- Modal ReconfirmarFinalizado-->
+@Html.Partial("ModalConfirmadoTildeFinalizado")
 <style>
-    .k-multiselect-wrap .k-input{
+    .k-multiselect-wrap .k-input {
         color: #999999;
     }
+
     .linea {
         border-top: 1px solid #387941;
         margin-left: 33px;
         height: 9px;
         padding: 0;
         width: 96.6%;
-       
     }
-    
 
-  .botonFiltrar{
-     padding: 0;
-    position: relative;
-    top: -24px;
-    left: 13px;
-    background-color: transparent;
-              }
-  .icono {
-   font-size:22px;
-   color:#387941;
-  }
 
+    .botonFiltrar {
+        padding: 0;
+        position: relative;
+        top: -24px;
+        left: 13px;
+        background-color: transparent;
+    }
+
+    .icono {
+        font-size: 22px;
+        color: #387941;
+    }
 </style>

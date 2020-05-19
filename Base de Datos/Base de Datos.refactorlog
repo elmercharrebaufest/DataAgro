@@ -315,4 +315,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Fecha" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="23467ffb-38da-4d07-87a5-4972f44299d0" ChangeDateTime="05/11/2020 18:45:56">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[MonedaAjusteComision]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MonedaAjusteComisionId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8ed0af1-071d-47a6-92a0-d251462bdb07" ChangeDateTime="05/12/2020 17:41:16">
+    <Property Name="ElementName" Value="[dbo].[Campo].[hectareas totales]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Campo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HectareasTotales" />
+  </Operation>
 </Operations>

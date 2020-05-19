@@ -76,7 +76,8 @@ function ValidarGranoProduccion(cantGrano) {
         MensErr("Debe ingresar una cantidad de hectareas");
         return false;
     }
-    else*/ if (isNaN($("#hectareas" + cantGrano).val().trim().split(",").join("."))) {
+    else*/
+    if (isNaN($("#hectareas" + cantGrano).val().trim().split(",").join("."))) {
         MensErr("El formato de las Hectareas es invalido");
         return false;
     }

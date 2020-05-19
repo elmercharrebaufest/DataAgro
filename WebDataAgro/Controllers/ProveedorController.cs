@@ -12,6 +12,12 @@ using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
+using Molinos.DataAgro.Entities.Helpers;
+using System.Data;
+using System.Collections.Generic;
+using WebDataAgro.Helpers;
+using System.Text;
+using System.Globalization;
 
 namespace WebDataAgro.Controllers
 {
@@ -25,11 +31,12 @@ namespace WebDataAgro.Controllers
 
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
+        private IProvinciaManager mobjProvinciaManager;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager oReportesManager, ILocalidadManager oLocalidadManager)
+        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager oReportesManager, ILocalidadManager oLocalidadManager, IProvinciaManager oProvinciaManager)
         {
 
             mobjProveedorManager = oProveedorManager;
@@ -38,6 +45,7 @@ namespace WebDataAgro.Controllers
             mobComercialManager = oComercialManager;
             mobjreportesManager = oReportesManager;
             mobjLocalidadManager = oLocalidadManager;
+            mobjProvinciaManager = oProvinciaManager;
         }
 
 
@@ -55,7 +63,7 @@ namespace WebDataAgro.Controllers
         }
 
 
-        [Autorizacion(PermisosDataAgro.AltaDatosProveedor,PermisosDataAgro.ModificarDatosProveedor)]
+        [Autorizacion(PermisosDataAgro.AltaDatosProveedor, PermisosDataAgro.ModificarDatosProveedor)]
         public ActionResult Agregar(int? ProveedorId)
         {
             ViewBag.ProveedorId = ProveedorId;
@@ -228,7 +236,7 @@ namespace WebDataAgro.Controllers
 
             if (oParam.ProveedorId != null && oParam.ProveedorId != 0)
             {
-                model = mobjProveedorManager.UpdateProveedor(oParam, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo,GlobalVariables.ComercialId);
+                model = mobjProveedorManager.UpdateProveedor(oParam, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId);
             }
             else
             {
@@ -344,8 +352,8 @@ namespace WebDataAgro.Controllers
         public JsonResult BuscarProveedores(string filtroProveedor)
         {
 
-                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
-            
+            return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+
         }
         public ActionResult GrabarCorredor(NuevoCorredor oParam)
         {
@@ -367,5 +375,123 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        [Autorizacion(PermisosDataAgro.ModificarDatosCampos)]
+        public ActionResult ImportarEstablecimientos()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Autorizacion(PermisosDataAgro.ModificarDatosCampos)]
+        public ActionResult ImportarEstablecimientos(string file)
+        {
+            var dsExcel = ExcelHelper.LeerExcelDesdeHttpRequest(Request);
+            if (dsExcel != null && dsExcel.Tables.Count > 0 && dsExcel.Tables[0].Rows.Count > 0)
+            {
+                var dtExcel = dsExcel.Tables[0];
+                var resultado = new Resultado();
+                var campos = ValidarExcel(dtExcel, resultado);
+                if (campos.Count > 0)
+                {
+                    mobjProveedorManager.ImportarEstablecimientos(campos, resultado);
+                }
+
+                ViewBag.resultado = resultado;
+            }
+            return View();
+        }
+
+        private List<CampoDetalleDto> ValidarExcel(DataTable dtExcel, Resultado resultado)
+        {
+            var proveedores = mobjProveedorManager.ListarProveedorTodos();
+            //var provincias = mobjProvinciaManager.ListarProvincia("");
+            var localidades = mobjLocalidadManager.ListarLocalidadTodas();
+            var campos = new List<CampoDetalleDto>();
+            var rows = dtExcel.AsEnumerable().Select(x => x.ItemArray);
+            var i = 1;
+            foreach (var r in rows.AsEnumerable().Skip(1))
+            {
+                bool error = false;
+                i++;
+                CampoDetalleDto campo = new CampoDetalleDto();
+
+                if (r[0] != null && r[0].GetType().Equals(typeof(double)))
+                {
+                    campo.ImportId = int.Parse(r[0].ToString());
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna ID fila: " + i + ". El ID no es numerico. "+ r[0].ToString() });
+                    error = true;
+                }
+
+                if (!String.IsNullOrEmpty(r[2].ToString()) && r[2].ToString().GetType().Equals(typeof(System.String)) && error == false)
+                {
+                    string cuit = r[2].ToString().Replace("-", "");
+                    var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
+                    if (proveedor != null)
+                    {
+                        campo.proveedorId = proveedor.ProveedorId;
+                    }
+                    else
+                    {
+                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. "+ r[2].ToString() });
+                        error = true;
+                    }
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i+ ". " + r[2].ToString() });
+                    error = true;
+                }
+
+                campo.nombre = r[3].ToString();
+
+                string provinciaNom = r[4].ToString().ToUpper().RemoveDiacritics();
+                string departamentoNom = r[5].ToString().ToUpper().RemoveDiacritics();
+                string localidadNom = r[6].ToString().ToUpper().RemoveDiacritics();
+
+                if (error == false)
+                {
+                    var localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper() == provinciaNom && a.Nombre.ToUpper() == localidadNom && a.Partido_Nombre == departamentoNom).FirstOrDefault();
+                    if (localidad != null)
+                    {
+                        campo.localidad = localidad.LocalidadId;
+                    }
+                    else
+                    {
+                        localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper() == provinciaNom && a.Nombre.ToUpper() == localidadNom).FirstOrDefault();
+                        if (localidad != null)
+                        {
+                            campo.localidad = localidad.LocalidadId;
+                        }
+                        else
+                        {
+                            resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: Localidad fila: " + i + ". No se encontro la Localidad. " + provinciaNom + " - " + localidadNom });
+                            error = true;
+                        }
+
+                    }
+                }
+
+                campo.latitud = r[7].ToString();
+                campo.longitud = r[8].ToString();
+
+
+
+                if (error == false)
+                {
+                    campos.Add(campo);
+                }
+
+            }
+            if (campos.Count <= 0)
+            {
+                resultado.Errores.Add(new ErrorMessage { Message = "SinDatos" });
+            }
+            return campos;
+        }
+
     }
 }

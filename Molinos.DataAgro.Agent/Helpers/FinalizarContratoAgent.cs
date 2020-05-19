@@ -178,7 +178,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
                         FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                         FECHA_LIMITE = fechaDolarizadoString,
-                        GRUPO_COMPRAS = "",
+                        GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
                         MONEDA = contrato.Moneda?.MonedaId,
                         NO_INFORMAR_SIO = noInformaSioString,
                         PAGO_DIFERIDO = pagoDiferidoString,
@@ -233,6 +233,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                         FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
                         PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
+                        AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1? "9952569841" :"",
+                        CARATULA = contrato.CaratulaMAT,
+                        CARATULA_EXT = contrato.CaratulaExtension,
+                        PRECIO_COM_MAT = contrato.PrecioAjusteComision??0,
+                        MONEDA_COM_MAT = contrato.MonedaAjusteComisionId
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

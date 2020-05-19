@@ -694,4 +694,10 @@
   <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Pre_Anular" xml:space="preserve">
+    <value>PreAnular Negocio</value>
+  </data>
+  <data name="ReconfirmarFinalizado" xml:space="preserve">
+    <value>Reconfirmar Finalizado</value>
+  </data>
 </root>
