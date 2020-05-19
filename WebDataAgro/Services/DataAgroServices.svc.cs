@@ -321,6 +321,12 @@ namespace WebDataAgro.Services
                                 calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeHasta;
                                 calidad.Valor = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().Valor;
                             }
+                            else
+                            {
+                                calidad.PorcentajeDesde = null;
+                                calidad.PorcentajeHasta = null;
+                                calidad.Valor = 2;
+                            }
 
                         }
                         else
