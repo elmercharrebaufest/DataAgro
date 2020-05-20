@@ -2365,7 +2365,7 @@ function ObtenerDatos() {
         var proveedorId;
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
-            proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+                proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
         } else {
             proveedorId = -1;
         }
@@ -2376,6 +2376,11 @@ function ObtenerDatos() {
             var cuitC = cuitAuxC[1].split(')');
             var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
         }
+    }
+    if (proveedorId == null || proveedorId == 0) {
+        MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
+        $.unblockUI();
+        return;
     }
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;

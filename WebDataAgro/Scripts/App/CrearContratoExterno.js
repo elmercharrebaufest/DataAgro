@@ -1358,6 +1358,11 @@ function ObtenerDatos() {
         }
         obj.ProveedorCreadorId = corredorId;
     }
+    if (proveedorId == null || proveedorId == 0) {
+        MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
+        $.unblockUI();
+        return;
+    }
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 

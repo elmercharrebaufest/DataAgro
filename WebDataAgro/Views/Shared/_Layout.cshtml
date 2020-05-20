@@ -520,12 +520,12 @@
                         </li>
                     }
 
-                    @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+                    @if (PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ))
                     {
                         <li class="dropdown">
-                            <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Otros <span class="caret"></span></a>
+                            <a onclick="return false" id="research-a" class="dropdown-toggle nav-text5 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">KMZ <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="research">
-                                @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+                                @if (PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ))
                                 {
                                     <li>
                                         <a href="~/Proveedor/ImportarEstablecimientos" class="nav-link misreporteslink">

@@ -21,21 +21,22 @@ function InicializarEdit() {
     armarComercial(comerciales);
     if (basico[0].GrupoSegmentacion === "Corredores") {
         CrearCorredor();
-        armarEditCorredor(resultEdit);
+        armarEditCorredor(resultEdit);        
     } else {
         armarProduccion(campoacopio);
         armarAlmacenamiento(acopio, acopiomaterial);
         armarObjetivos(objetivo);
         armarEstablecimiento(establecimiento);
+        if (modificarDatosCampos) {
+            $("#contacto").hide();
+            $("#contactocomercial").hide();
+            $("#proveedores-corredor").hide();
+            $("#produccion").hide();
+            $("#almacenamiento").hide();
+            $("#establecimiento").click();
+        }
     }
-    if (modificarDatosCampos) {
-        $("#contacto").hide();
-        $("#contactocomercial").hide();
-        $("#proveedores-corredor").hide();
-        $("#produccion").hide();
-        $("#almacenamiento").hide();
-        $("#establecimiento").click();
-    }
+
 }
 
 function armarBasico(basico) {
@@ -591,7 +592,7 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].materialNom;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partidoNom;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ImportId = establecimiento[i].ImportId;
-            
+
 
 
         })(ii);
@@ -621,7 +622,7 @@ function armarEstablecimiento(establecimiento) {
             obj.comercialId = grupoestablecimiento[0][i].comercialId;
             obj.comercialNom = grupoestablecimiento[0][i].comercialNom;
             obj.partido = grupoestablecimiento[0][i].partidoNom;
-            
+
             obj.CampoId = grupoestablecimiento[0][i].CampoId;
             obj.ImportId = grupoestablecimiento[0][i].ImportId;
 

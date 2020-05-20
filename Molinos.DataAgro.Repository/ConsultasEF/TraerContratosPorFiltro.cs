@@ -37,23 +37,27 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
             GridHelper.TruncateTime(request.Filter, ref queryContratos);
             var result = queryContratos.ToDataSourceResult<BasicoContrato>(request);
-            var pizarraDesde = DateTime.Now.Date;
-            var pizarraHasta = DateTime.Now.Date;
+            var cargaDesde = DateTime.Now.Date;
+            var cargaHasta = DateTime.Now.Date;
             foreach (var item in request.Filter.Filters)
             {
                 if (item.Field == "Fecha")
                 {
                     if (item.Operator == "gte")
                     {
-                        pizarraDesde = (DateTime)item.Value;
+                        cargaDesde = (DateTime)item.Value;
                     }
                     else
                     {
-                        pizarraHasta = (DateTime)item.Value;
+                        cargaHasta = (DateTime)item.Value;
                     }
                 }
             }
-            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => ((a.FechaDesde <= pizarraDesde && a.FechaHasta >= pizarraDesde) || (a.FechaDesde <= pizarraHasta && a.FechaHasta >= pizarraHasta)) && a.PizarraId == 1).ToList();
+            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => (( a.FechaDesde >=cargaDesde && a.FechaDesde <= cargaHasta) 
+                                                                                      || (a.FechaHasta >= cargaDesde && a.FechaHasta <= cargaHasta)
+                                                                                      || (a.FechaDesde <= cargaDesde && a.FechaHasta >= cargaHasta)
+                                                                                      )
+                                                                                      && a.PizarraId == 1).ToList();
             foreach (var item in result.Data)
             {
                 if (((item as BasicoContrato).TipoNegocioId == 3 || (item as BasicoContrato).TipoNegocioId == 2) && (item as BasicoContrato).Pizarra == true && (item as BasicoContrato).Fecha.HasValue)

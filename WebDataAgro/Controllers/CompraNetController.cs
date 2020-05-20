@@ -46,7 +46,7 @@ namespace WebDataAgro.Controllers
         private ILogger mobjLogger;
 
         private INegocioManager mobjNegocioManager;
-        
+
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
@@ -109,12 +109,12 @@ namespace WebDataAgro.Controllers
             ViewBag.TipoId = tipoId;
             ViewBag.Siguientes = siguientes;
             ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
-           
+
             return View();
         }
         public ActionResult ValidarModificarFinalizado(int? id)
         {
-            var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : "";           
+            var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : "";
             return Json(resultado);
         }
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
@@ -232,7 +232,7 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.PreAnularContrato(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
-            
+
         }
 
         public ActionResult RechazarPreAnularContrato(int contratoId)
@@ -242,7 +242,7 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.RechazarPreAnularContrato(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
-            
+
         }
 
         public ActionResult BorrarContrato(Contrato oParam)
@@ -461,7 +461,15 @@ namespace WebDataAgro.Controllers
 
         public int ObtenerProveedorId(string Cuit, bool corredor)
         {
-            return mobjProveedorManager.TraerProveedorPorCuit(Cuit, corredor).ProveedorId;
+            var proveedor = mobjProveedorManager.TraerProveedorPorCuit(Cuit, corredor);
+            if (proveedor == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return proveedor.ProveedorId;
+            }
         }
 
         public ActionResult ObtenerLocalidadId(string localidad, string provincia)
@@ -850,7 +858,8 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public JsonResult TraerTipoDeCambio() {
+        public JsonResult TraerTipoDeCambio()
+        {
             var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }

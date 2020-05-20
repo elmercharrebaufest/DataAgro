@@ -31,8 +31,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AsignarProveedores = 110,
         [Display(ResourceType = typeof(Text), Name = "Filtrar_Administrativo")]
         FiltrarAdministrativo = 111,
-        [Display(ResourceType = typeof(Text), Name = "Modificar_Datos_Campos")]
-        ModificarDatosCampos = 112,
+        [Display(ResourceType = typeof(Text), Name = "Subida_Archivos_KMZ")]
+        SubidaArchivosKMZ = 112,
         [Display(ResourceType = typeof(Text), Name = "ProveedorZonaPropia")]
         ProveedorZonaPropia = 113,
         //Comercial

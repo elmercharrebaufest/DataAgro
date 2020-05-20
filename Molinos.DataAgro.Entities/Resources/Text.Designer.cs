@@ -1177,15 +1177,6 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Datos de Campos.
-        /// </summary>
-        public static string Modificar_Datos_Campos {
-            get {
-                return ResourceManager.GetString("Modificar_Datos_Campos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Modificar Proveedores.
         /// </summary>
         public static string Modificar_Datos_Proveedor {
@@ -1524,6 +1515,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string SolicitudCupo {
             get {
                 return ResourceManager.GetString("SolicitudCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subida de Archivos KMZ.
+        /// </summary>
+        public static string Subida_Archivos_KMZ {
+            get {
+                return ResourceManager.GetString("Subida_Archivos_KMZ", resourceCulture);
             }
         }
         

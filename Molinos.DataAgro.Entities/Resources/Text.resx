@@ -681,8 +681,8 @@
   <data name="Visualizar_Reporte_De_Proveedores" xml:space="preserve">
     <value>Visualizar Reporte De Proveedores</value>
   </data>
-  <data name="Modificar_Datos_Campos" xml:space="preserve">
-    <value>Modificar Datos de Campos</value>
+  <data name="Subida_Archivos_KMZ" xml:space="preserve">
+    <value>Subida de Archivos KMZ</value>
   </data>
   <data name="ProveedorZonaPropia" xml:space="preserve">
     <value>Proveedor de ZonaPropia</value>

@@ -175,7 +175,7 @@ namespace WebDataAgro.Controllers
         {
             var datos = mobjProveedorManager.TraerDatosCombo(proveedorId, PermisosHelper.Is(PermisosDataAgro.FiltrarAdministrativo));
 
-            if (!PermisosHelper.Is(PermisosDataAgro.ModificarDatosCampos))
+            if (!PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ))
             {
                 datos.comercial = datos.comercial.Where(a => a.ComercialId == GlobalVariables.ComercialId).ToList();
             }
@@ -376,14 +376,14 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        [Autorizacion(PermisosDataAgro.ModificarDatosCampos)]
+        [Autorizacion(PermisosDataAgro.SubidaArchivosKMZ)]
         public ActionResult ImportarEstablecimientos()
         {
             return View();
         }
 
         [HttpPost]
-        [Autorizacion(PermisosDataAgro.ModificarDatosCampos)]
+        [Autorizacion(PermisosDataAgro.SubidaArchivosKMZ)]
         public ActionResult ImportarEstablecimientos(string file)
         {
             var dsExcel = ExcelHelper.LeerExcelDesdeHttpRequest(Request);
@@ -426,9 +426,9 @@ namespace WebDataAgro.Controllers
                     error = true;
                 }
 
-                if (!String.IsNullOrEmpty(r[2].ToString()) && r[2].ToString().GetType().Equals(typeof(System.String)) && error == false)
+                if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)) && error == false)
                 {
-                    string cuit = r[2].ToString().Replace("-", "");
+                    string cuit = r[3].ToString().Replace("-", "");
                     var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
                     if (proveedor != null)
                     {
@@ -436,21 +436,21 @@ namespace WebDataAgro.Controllers
                     }
                     else
                     {
-                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. "+ r[2].ToString() });
+                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. "+ r[3].ToString() });
                         error = true;
                     }
                 }
                 else
                 {
-                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i+ ". " + r[2].ToString() });
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i+ ". " + r[3].ToString() });
                     error = true;
                 }
 
-                campo.nombre = r[3].ToString();
+                campo.nombre = r[4].ToString();
 
-                string provinciaNom = r[4].ToString().ToUpper().RemoveDiacritics();
-                string departamentoNom = r[5].ToString().ToUpper().RemoveDiacritics();
-                string localidadNom = r[6].ToString().ToUpper().RemoveDiacritics();
+                string provinciaNom = r[5].ToString().ToUpper().RemoveDiacritics();
+                string departamentoNom = r[6].ToString().ToUpper().RemoveDiacritics();
+                string localidadNom = r[7].ToString().ToUpper().RemoveDiacritics();
 
                 if (error == false)
                 {
@@ -475,8 +475,8 @@ namespace WebDataAgro.Controllers
                     }
                 }
 
-                campo.latitud = r[7].ToString();
-                campo.longitud = r[8].ToString();
+                campo.latitud = r[8].ToString();
+                campo.longitud = r[9].ToString();
 
 
 
