@@ -53,10 +53,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     }
                 }
             }
-            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => a.FechaDesde >= pizarraDesde && a.FechaHasta <= pizarraHasta && a.PizarraId == 1).ToList();
+            List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => ((a.FechaDesde <= pizarraDesde && a.FechaHasta >= pizarraDesde) || (a.FechaDesde <= pizarraHasta && a.FechaHasta >= pizarraHasta)) && a.PizarraId == 1).ToList();
             foreach (var item in result.Data)
             {
-                if ((item as BasicoContrato).TipoNegocioId == 3 && (item as BasicoContrato).Pizarra == true && (item as BasicoContrato).Fecha.HasValue)
+                if (((item as BasicoContrato).TipoNegocioId == 3 || (item as BasicoContrato).TipoNegocioId == 2) && (item as BasicoContrato).Pizarra == true && (item as BasicoContrato).Fecha.HasValue)
                 {
                     var pizarra = listaPizarra.Where(a => a.FechaDesde <= (item as BasicoContrato).Fecha.Value && a.FechaHasta >= (item as BasicoContrato).Fecha.Value && a.MaterialId == (item as BasicoContrato).MaterialId).SingleOrDefault();
                     if (pizarra != null)

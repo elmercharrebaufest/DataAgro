@@ -2309,8 +2309,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error(e.Message);
-                error.Error("", e.Message);
+                logger.Error(e);
+                error.Error("", e.Message+ ".");
             }
             return error;
         }
