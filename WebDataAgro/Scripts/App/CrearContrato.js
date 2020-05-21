@@ -2403,7 +2403,10 @@ function ObtenerDatos() {
     obj.FasoneroId = proveedorId;
     obj.Posicion = $("#posicionFasonId").val();
     obj.TipoFasonId = $("#tipoFasonId").val();
-    obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
+    if (obj.TipoNegocioId == 5) {
+        obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
+    }
+   
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;

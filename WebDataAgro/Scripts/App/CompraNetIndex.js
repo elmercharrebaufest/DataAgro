@@ -752,7 +752,9 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "CONTRATO ACUERDO"
                     }, {
-                            TipoNegocio: "FASON MP"
+                        TipoNegocio: "FASON MP"
+                    }, {
+                        TipoNegocio: "AGENTE DE COMPRAS MP"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"

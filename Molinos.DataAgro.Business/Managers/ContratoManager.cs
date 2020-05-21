@@ -1041,7 +1041,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     try
                     {
-                        if (oContratoSave.EsFason != true)
+                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null)
                         {
                             mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
                             var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);

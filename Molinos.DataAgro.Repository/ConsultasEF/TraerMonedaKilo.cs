@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
                 (0 == centroId || x.DestinoId == centroId) 
                 && x.ContratoAcuerdo == null
+                && x.TipoAgenteCompraId == null
                 && x.Pizarra != true)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()

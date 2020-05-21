@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
-                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : contrato.TipoNegocio.Descripcion),
+                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : contrato.TipoNegocio.Descripcion),
                     Negocio = (contrato is FijacionDePrecioContrato && contrato.EstadoId == (int)EnumEstadoContrato.Finalizado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialId = contrato.ComercialId,

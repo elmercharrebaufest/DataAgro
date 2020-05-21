@@ -13,10 +13,12 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class FinalizarFijacionAgent : IFinalizarFijacionAgent
     {
-        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio)
+        private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
+        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.contratosParaFijacionAgent = contratosParaFijacionAgent;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -59,9 +61,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         precioImportFinanciero = ImportFinanciero.Importe;
                     }
                     decimal im_precio = (fijacion.Precio + precioImportFinanciero);
-                    var oContrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacion.ContratoSAP);
-
-                    if (listaApertura.Count > 0 && oContrato.Descuentos.Count == 0)
+                    //var oContrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacion.ContratoSAP);
+                    var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
+                    if (listaApertura.Count > 0 && oContrato != null && (oContrato.PorcentajeSobrePrecio > 0 || oContrato.ImporteSobrePrecio > 0))
                         im_precio = fijacion.PrecioNeto.Value;
 
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
