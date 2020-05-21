@@ -44,6 +44,14 @@
     #Pricing tbody tr:nth-child(even) {
         background-color: #ddd;
     }
+    #ComprasToneladasTipo {
+        width:auto;
+    }
+    .valores {
+       width:auto;
+       padding-left: 30px !important;
+       padding-right: 30px !important;
+    }
 </style>
 <div id="ReportesCompraNet">
     <div class="row">
@@ -255,18 +263,18 @@
                 <tbody>
                     <tr class="titulos">
                         <td id="" class="borde-izquierdo"></td>
-                        <th id="disponible" class="borde-derecho @(disp == 0 ? "hide" : "")" colspan="@(disp)">DISPONIBLE</th>
-                        <th id="disponibleTotal" class="@(disp == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL DISPONIBLE</th>
+                        <th id="disponible" class="valores borde-derecho @(disp == 0 ? "hide" : "")" colspan="@(disp)">DISPONIBLE</th>
+                        <th id="disponibleTotal" class="valores @(disp == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL DISPONIBLE</th>
                         <td class="espacio @(disp == 0 ? "hide" : "")"> </td>
-                        <th id="forward" class="borde-derecho @(forw == 0 ? "hide" : "")" colspan="@(forw)">FORWARD</th>
-                        <th id="forwardTotal" class="@(forw == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL FORWARD</th>
+                        <th id="forward" class="valores borde-derecho @(forw == 0 ? "hide" : "")" colspan="@(forw)">FORWARD</th>
+                        <th id="forwardTotal" class="valores @(forw == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL FORWARD</th>
                         <td class="espacio @(forw == 0 ? "hide" : "")"> </td>
-                        <th id="newCrop" class="borde-derecho @(newc == 0 ? "hide" : "")" colspan="@(newc)">NEW CROP</th>
-                        <th id="newCropTotal" class="@(newc == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL NEW CROP</th>
+                        <th id="newCrop" class="valores borde-derecho @(newc == 0 ? "hide" : "")" colspan="@(newc)">NEW CROP</th>
+                        <th id="newCropTotal" class="valores @(newc == 0 ? "hide" : "") borde-derecho-oscuro" rowspan="2">TOTAL NEW CROP</th>
 
                     </tr>
                     <tr class="titulos">
-                        <th class="producto borde-izquierdo">PRODUCTO</th>
+                        <th class="valores producto borde-izquierdo">PRODUCTO</th>
                         <th class="valores @(dispAFijar ? "" : "hide")">A Fijar</th>
                         <th class="valores @(dispAPrecio ? "" : "hide")">A Precio</th>
                         <th class="valores @(dispFijacion ? " " : " hide")">Fijación</th>

@@ -2582,7 +2582,7 @@ function AgregarDescuentos() {
         }
     };
 
-    var err = validarDescuento(descuento, viewModel.Descuentos);
+    var err = validarDescuento(descuento);
     if (ExistsErrorMessages(err)) {
         MensErr(err[0]);
     }
@@ -2594,9 +2594,9 @@ function AgregarDescuentos() {
     }
 }
 
-function validarDescuento(descuento, viewModel) {
+function validarDescuento(descuento) {
     var errores = [];
-    var descuentos = viewModel;
+    var descuentos = viewModel.Descuentos;
     var sonIguales = false;
     
     if (descuento.TipoPeriodoDBId == 0 || descuento.TipoPeriodoDBId == "" || descuento.TipoPeriodoDBId == null) {
@@ -2627,7 +2627,7 @@ function validarDescuento(descuento, viewModel) {
                 descuentos[i].TipoDBId == descuento.TipoDBId &&
                 descuentos[i].Importe == descuento.Importe &&
                 descuentos[i].Porcentaje == descuento.Porcentaje &&
-                descuentos[i].MonedaId == descuento.MonedaId) {
+                descuentos[i].MonedaId == descuento.MonedaId || descuentos[i].TipoDBDesc == descuento.TipoDBDesc) {
 
                 sonIguales = true;
                 break;

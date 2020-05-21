@@ -422,29 +422,32 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
-                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna ID fila: " + i + ". El ID no es numerico. "+ r[0].ToString() });
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna ID fila: " + i + ". El ID no es numerico. " + r[0].ToString() });
                     error = true;
                 }
-
-                if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)) )
+                if (error == false)
                 {
-                    string cuit = r[3].ToString().Replace("-", "");
-                    var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
-                    if (proveedor != null)
+                    if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)))
                     {
-                        campo.proveedorId = proveedor.ProveedorId;
+                        string cuit = r[3].ToString().Replace("-", "");
+                        var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
+                        if (proveedor != null)
+                        {
+                            campo.proveedorId = proveedor.ProveedorId;
+                        }
+                        else
+                        {
+                            resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. " + r[3].ToString() });
+                            error = true;
+                        }
                     }
                     else
                     {
-                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. "+ r[3].ToString() });
+                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i + ". " + r[3].ToString() });
                         error = true;
                     }
                 }
-                else
-                {
-                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: CUIT fila: " + i+ ". " + r[3].ToString() });
-                    error = true;
-                }
+
 
                 campo.nombre = r[4].ToString();
 
@@ -478,7 +481,7 @@ namespace WebDataAgro.Controllers
                 campo.latitud = r[8].ToString();
                 campo.longitud = r[9].ToString();
 
-                
+
                 if (!String.IsNullOrEmpty(r[10].ToString()) && r[10].ToString().GetType().Equals(typeof(System.String)))
                 {
                     var comercial = comerciales.Comercial.Where(a => a.Apellido.ToUpper() == r[10].ToString().ToUpper().RemoveDiacritics()).FirstOrDefault();
@@ -498,19 +501,19 @@ namespace WebDataAgro.Controllers
                     //error = true;
                 }
 
-                if (r[12] != null && r[12].GetType().Equals(typeof(double)))
-                {
-                    campo.rinde = decimal.Parse(r[12].ToString());
-                }
-                else
-                {
-                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[12].ToString() });
-                    //error = true;
-                }
+                //if (r[12] != null && r[12].GetType().Equals(typeof(double)))
+                //{
+                //    campo.rinde = decimal.Parse(r[12].ToString());
+                //}
+                //else
+                //{
+                //    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[12].ToString() });
+                //    //error = true;
+                //}
 
                 if (r[13] != null && r[13].GetType().Equals(typeof(double)))
                 {
-                    campo.rinde += decimal.Parse(r[13].ToString());
+                    campo.rinde = decimal.Parse(r[13].ToString());
                 }
                 else
                 {
