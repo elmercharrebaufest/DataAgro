@@ -405,11 +405,11 @@ namespace WebDataAgro.Controllers
         private List<CampoDetalleDto> ValidarExcel(DataTable dtExcel, Resultado resultado)
         {
             var proveedores = mobjProveedorManager.ListarProveedorTodos();
-            //var provincias = mobjProvinciaManager.ListarProvincia("");
+            var comerciales = mobComercialManager.TraerTodoComercial();
             var localidades = mobjLocalidadManager.ListarLocalidadTodas();
             var campos = new List<CampoDetalleDto>();
             var rows = dtExcel.AsEnumerable().Select(x => x.ItemArray);
-            var i = 1;
+            var i = 0;
             foreach (var r in rows.AsEnumerable().Skip(1))
             {
                 bool error = false;
@@ -426,7 +426,7 @@ namespace WebDataAgro.Controllers
                     error = true;
                 }
 
-                if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)) && error == false)
+                if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)) )
                 {
                     string cuit = r[3].ToString().Replace("-", "");
                     var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
@@ -478,6 +478,65 @@ namespace WebDataAgro.Controllers
                 campo.latitud = r[8].ToString();
                 campo.longitud = r[9].ToString();
 
+                
+                if (!String.IsNullOrEmpty(r[10].ToString()) && r[10].ToString().GetType().Equals(typeof(System.String)))
+                {
+                    var comercial = comerciales.Comercial.Where(a => a.Apellido.ToUpper() == r[10].ToString().ToUpper().RemoveDiacritics()).FirstOrDefault();
+                    if (comercial != null)
+                    {
+                        campo.comercialId = comercial.ComercialId;
+                    }
+                    else
+                    {
+                        resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: Comercial fila: " + i + ". No se encontro el Comercial. " + r[10].ToString() });
+                        //error = true;
+                    }
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna: Comercial fila: " + i + ". " + r[10].ToString() });
+                    //error = true;
+                }
+
+                if (r[12] != null && r[12].GetType().Equals(typeof(double)))
+                {
+                    campo.rinde = decimal.Parse(r[12].ToString());
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[12].ToString() });
+                    //error = true;
+                }
+
+                if (r[13] != null && r[13].GetType().Equals(typeof(double)))
+                {
+                    campo.rinde += decimal.Parse(r[13].ToString());
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[13].ToString() });
+                    //error = true;
+                }
+
+                if (r[14] != null && r[14].GetType().Equals(typeof(double)))
+                {
+                    campo.htotales = decimal.Parse(r[14].ToString());
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Hectáreas Totales fila: " + i + ". No es numerico. " + r[14].ToString() });
+                    //error = true;
+                }
+
+                if (r[15] != null && r[15].GetType().Equals(typeof(double)))
+                {
+                    campo.hcultivables = decimal.Parse(r[15].ToString());
+                }
+                else
+                {
+                    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Hectáreas Cultivables fila: " + i + ". No es numerico. " + r[15].ToString() });
+                    //error = true;
+                }
 
 
                 if (error == false)

@@ -3067,6 +3067,10 @@ namespace Molinos.DataAgro.Business.Managers
                         campoDetalle.NroItem = 1;
                         campoDetalle.MaterialId = 3;
                         campoDetalle.ImportId = campo.ImportId;
+                        campoDetalle.HectareasTotales = campo.htotales;
+                        campoDetalle.HectareasCultivables = campo.hcultivables;
+                        campoDetalle.ComercialId = campo.comercialId;
+                        campoDetalle.Rinde = campo.rinde;
                         repositorio.Agregar(campoDetalle);
                     }
                     else
@@ -3076,7 +3080,10 @@ namespace Molinos.DataAgro.Business.Managers
                         campoDetalle.LocalidadId = campo.localidad;
                         campoDetalle.Longitud = campo.longitud;
                         campoDetalle.Latitud = campo.latitud;
-
+                        campoDetalle.HectareasTotales = campo.htotales;
+                        campoDetalle.HectareasCultivables = campo.hcultivables;
+                        campoDetalle.ComercialId = campo.comercialId;
+                        campoDetalle.Rinde = campo.rinde;
                     }
                 }
                 repositorio.GuardarCambios();

@@ -653,9 +653,9 @@ function armarEstablecimiento(establecimiento) {
                 + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
                 + "<br>"
                 + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.materialNom : "")
-                + ' <b>Rinde</b>:' + obj.rinde
-                + ' <b>Has Totales</b>:' + obj.htotales
-                + ' <b>Has Cultivables</b>:' + obj.hcultivables
+                + (obj.rinde > 0 ? ' <b>Rinde</b>:' + obj.rinde : "")
+                + (obj.htotales > 0 ? ' <b>Has Totales</b>:' + obj.htotales : "")
+                + (obj.hcultivables > 0 ? ' <b>Has Cultivables</b>:' + obj.hcultivables : "")
                 + '</div>'
                 + '<div class="granos-contenedor">';
 
