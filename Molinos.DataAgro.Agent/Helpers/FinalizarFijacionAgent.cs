@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     decimal im_precio = (fijacion.Precio + precioImportFinanciero);
                     //var oContrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacion.ContratoSAP);
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
-                    if (listaApertura.Count > 0 && oContrato != null && (oContrato.PorcentajeSobrePrecio > 0 || oContrato.ImporteSobrePrecio > 0))
+                    if (listaApertura.Count > 0 && oContrato != null && oContrato.PorcentajeSobrePrecio == 0 && oContrato.ImporteSobrePrecio == 0)
                         im_precio = fijacion.PrecioNeto.Value;
 
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
