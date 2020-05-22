@@ -672,6 +672,11 @@ function Grabar() {
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
             proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+            if (proveedorId == null || proveedorId == 0) {
+                MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
+                $.unblockUI();
+                return;
+            }
         } else {
             proveedorId = -1;
         }
@@ -685,11 +690,7 @@ function Grabar() {
             corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitCorredor[0], corredor: true });
         }
     }
-    if (proveedorId == null || proveedorId == 0) {
-        MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
-        $.unblockUI();
-        return;
-    }
+    
     var datos = {
         "ObjectState": objectstate,
         "Id": viewModel.get("ContratoAcuerdo.Id"),

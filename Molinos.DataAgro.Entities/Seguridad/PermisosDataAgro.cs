@@ -113,6 +113,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         OcultarEnTablero = 324,
         [Display(ResourceType = typeof(Text), Name = "Pre_Anular")]
         PreAnular = 325,
+        [Display(ResourceType = typeof(Text), Name = "Anular")]
+        Anular = 326,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

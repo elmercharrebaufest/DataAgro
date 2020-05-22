@@ -982,6 +982,20 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+        public GrabarContratoResult AnularContratoPreAnulado(int contratoId)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+
+            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            {
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                repositorio.GuardarCambios();
+            }
+
+            return oEntityErrors;
+        }
         public GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();

@@ -2365,7 +2365,12 @@ function ObtenerDatos() {
         var proveedorId;
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
-                proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+            proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+            if (proveedorId == null || proveedorId == 0) {
+                MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
+                $.unblockUI();
+                return;
+            }
         } else {
             proveedorId = -1;
         }
@@ -2377,11 +2382,7 @@ function ObtenerDatos() {
             var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
         }
     }
-    if (proveedorId == null || proveedorId == 0) {
-        MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
-        $.unblockUI();
-        return;
-    }
+    
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 
@@ -2636,7 +2637,7 @@ function validarDescuento(descuento) {
         }
     }
     if (sonIguales) {
-        errores.push("El descuento o bonificación que intenta agregar ya existe");
+        errores.push("El descuento o bonificación que intenta agregar ya existe, debe anular el dto/bonif existente");
     }
     return errores;
 }

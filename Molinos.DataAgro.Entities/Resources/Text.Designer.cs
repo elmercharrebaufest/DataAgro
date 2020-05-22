@@ -214,6 +214,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anular.
+        /// </summary>
+        public static string Anular {
+            get {
+                return ResourceManager.GetString("Anular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anular Corredores Bs As.
         /// </summary>
         public static string Anular_CorredoresBsAs {

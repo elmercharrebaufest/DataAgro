@@ -20,6 +20,7 @@ var externo;
 var precioMoa;
 var ocultarEnTablero;
 var preanular;
+var anular;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
@@ -37,6 +38,7 @@ $(document).ready(function () {
     verMesa = ConvertirStringABool(verMesa);
     externo = ConvertirStringABool(externo);
     preanular = ConvertirStringABool(preanular);
+    anular = ConvertirStringABool(anular);
     modificaFinalizados = ConvertirStringABool(modificaFinalizados);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
@@ -364,7 +366,7 @@ function botonBorrar(dataItem, icono) {
 }
 
 function botonBorrarPreanulado(dataItem, icono) {
-    if (preanular) {
+    if (anular) {
         return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrarPreAnulado(' +
             "'" + dataItem.Proveedor + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
@@ -383,7 +385,8 @@ function botonBorrarPreanulado(dataItem, icono) {
 function botonPreAnular(dataItem, icono) {
     if (preanular) {
         return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +          
-            "'" + dataItem.ContratoId + "'" +         
+            "'" + dataItem.ContratoId + "'" + ',' +  
+            "'" + dataItem.Proveedor + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return '<div></div>';
@@ -1610,7 +1613,17 @@ function ObtenerDatosModalBorrarPreAnular() {
         recargarGrilla();
     }
 }
-
+function AnularContratoPreAnulado() {
+    var result;
+    var id = $("#contratoModalBorrar").val();
+    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id });
+    if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
+        MensErr(result.Errores[0].Message);
+    }
+    else {
+        recargarGrilla();
+    }
+}
 function ObtenerDatosModalBorrado() {
     var motivoRechazo = $("#motivo-rechazo").val();
     var objConfirmado = {};
@@ -2246,8 +2259,8 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#modalBorrarPreanulado").modal('show');
 }
 
-function ModalPreAnular(id) {
-    
+function ModalPreAnular(id ,proveedor) {
+    $("#proveedor_a_preanular").text(proveedor);
     $("#contratoModalAnular").val(id);  
 
     $("#modalPreAnular").modal('show');

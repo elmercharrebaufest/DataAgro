@@ -700,4 +700,7 @@
   <data name="ReconfirmarFinalizado" xml:space="preserve">
     <value>Reconfirmar Finalizado</value>
   </data>
+  <data name="Anular" xml:space="preserve">
+    <value>Anular</value>
+  </data>
 </root>

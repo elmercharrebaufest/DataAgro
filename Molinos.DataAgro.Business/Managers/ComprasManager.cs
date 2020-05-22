@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var item in listProve)
                 {
                     var hist = oComprasAgent.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
-                    logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT + ": " + hist.Count);
+                    logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT.Count + ": " + hist.Count);
                     if (hist.Count > 0)
                     {
                         var listHistorial = hist.GroupBy(x => new { x.VENDEDOR, x.MATERIAL, x.COSECHA });
@@ -97,8 +97,9 @@ namespace Molinos.DataAgro.Business.Managers
                             var materialId = materiales[jj.Key.MATERIAL].MaterialId;
                             var campaniaId = campanias[jj.Key.COSECHA].CampañaId;
 
-                            foreach(var proveedorId in proveedoresId.Key)
+                            foreach(var proveedor in proveedoresId)
                             {
+                                int proveedorId = proveedor.ProveedorId;
                                 var campaniaMaterial = campaniaMaterialActual.Where(x => x.CampañaId == campaniaId && x.ProveedorId == proveedorId && x.MaterialId == materialId).FirstOrDefault();
                                 if (campaniaMaterial != null)
                                 {
@@ -145,6 +146,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("ProcessCompras ERROR");
                 logger.Error(ex);
                 throw;
             }
