@@ -18,6 +18,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public ICollection<RolBasicoDto> RolesAsociados { get; set; }
 
         public string NombreCompleto { get { return Apellido.ToUpper() + " " + Nombres.ToUpper(); }  }
+
+        public bool Deshabilitado { get; set; }
     }
 }
 

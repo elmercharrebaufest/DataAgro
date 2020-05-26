@@ -78,7 +78,7 @@ namespace WebDataAgro.Seguridad
             else
             {
                 var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
-                if (usuario != null)
+                if (usuario != null && usuario.Deshabilitado != true)
                 {
                     foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
                     {

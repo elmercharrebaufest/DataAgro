@@ -116,6 +116,7 @@ function CrearResultadosDataSource(datos) {
                     Apellido: { type: "string", editable: false },
                     Nombres: { type: "string", editable: false },
                     Roles: { type: "string", editable: false },
+                    Deshabilitado: { type: "boolean", editable: false },
                 }
             }
         },
@@ -129,7 +130,8 @@ function CreateGridCentro() {
         columns: [
             { field: "Apellido", title: "Apellido" },
             { field: "Nombres", title: "Nombres" },
-            { field: "Rol", title: "Roles" }
+            { field: "Rol", title: "Roles" },
+            { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si#}else{}# " },
         ],
 
         sortable: true,
@@ -302,7 +304,8 @@ function UpdateViewModel(model) {
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         "Administrador": model.Comercial.Administrador,
-        "Cupera": model.Comercial.Cupera        
+        "Cupera": model.Comercial.Cupera,        
+        "Deshabilitado": model.Comercial.Deshabilitado        
     };
     
     viewModel.set("Comercial", comercial);
@@ -334,6 +337,7 @@ function UpdateViewModel(model) {
 function LimpiarValidaciones() {
     $("#errApellido").css("display", "none");
     $("#errNombres").css("display", "none");
+    $("#errDeshabilitado").css("display", "none");
     $("#errPerfilId").css("display", "none");
     $("#errEmpleadorACargo").css("display", "none");
     $("#errIdActiveDirectory").css("display", "none");
@@ -460,6 +464,7 @@ function Grabar() {
         "ComercialId": viewModel.get("Comercial.ComercialId"),
         "Apellido": viewModel.get("Comercial.Apellido"),
         "Nombres": viewModel.get("Comercial.Nombres"),
+        "Deshabilitado": viewModel.get("Comercial.Deshabilitado"),
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),

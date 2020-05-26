@@ -85,10 +85,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarComercialTest()
         {
-            repositorioMock.Setup(x => x.Remover<Comercial>(It.IsAny<int>()));
+            repositorioMock.Setup(x => x.Obtener<Comercial>(It.IsAny<int>()))
+                  .Returns(new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 1 });
             var resultado = target.EliminarComercial(1);
 
-            repositorioMock.Verify(x => x.Remover<Comercial>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(resultado);

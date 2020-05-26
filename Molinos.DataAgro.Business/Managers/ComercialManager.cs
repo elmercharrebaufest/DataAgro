@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Business
             var qry = new CombosQueries(logger, repositorio);
             var empleadorId = repositorio.Obtener<Comercial, int?>(x => x.ComercialId == comercialId, x => x.EmpleadorACargoId) ?? 0;
             var list = qry.GetAbmComercialCombo();
-            var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
+            var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId});
             var subordinados = ListarEquipo(comercialId, lista);
             list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
             return list;
@@ -81,6 +81,7 @@ namespace Molinos.DataAgro.Business
                      EmpleadorACargoId = x.EmpleadorACargoId,
                      Nombres = x.Nombres,
                      PerfilId = x.PerfilId ?? 0,
+                     Deshabilitado = x.Deshabilitado ?? false,
                      Cupera = x.Cupera,
                      RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList()
                  }) ?? new ComercialDto();
@@ -157,6 +158,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;
+                oComercialSave.Deshabilitado = oComercial.Deshabilitado;
                 oComercialSave.PerfilId = oComercial.PerfilId;
                 oComercialSave.Cupera = oComercial.Cupera;
 
@@ -203,8 +205,8 @@ namespace Molinos.DataAgro.Business
         {
             var oEntityErrors = new Resultado();
 
-            repositorio.Remover<Comercial>(intComercialId);
-
+            var comercial = repositorio.Obtener<Comercial>(intComercialId);
+            comercial.Deshabilitado = true;
             try
             {
                 repositorio.GuardarCambios();
@@ -344,7 +346,7 @@ namespace Molinos.DataAgro.Business
         public List<ComercialDto> TraerComercialesProveedor(int proveedorId)
         {
             var comercial = repositorio.Listar<ProveedorComercial, ComercialDto>(
-                x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Comercial.Nombres, Apellido = x.Comercial.Apellido }, 
+                x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Comercial.Nombres, Apellido = x.Comercial.Apellido },
                 x => x.ProveedorId == proveedorId);
             return comercial;
         }

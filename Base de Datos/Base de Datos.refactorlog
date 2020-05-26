@@ -329,4 +329,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="HectareasTotales" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="bb3a7a8b-d446-41a2-bc19-82abe3803b6b" ChangeDateTime="05/26/2020 14:25:59">
+    <Property Name="ElementName" Value="[dbo].[Comercial].[Activo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Comercial]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Deshabilitado" />
+  </Operation>
 </Operations>
