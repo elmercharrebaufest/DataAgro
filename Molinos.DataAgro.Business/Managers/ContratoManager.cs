@@ -2361,6 +2361,7 @@ namespace Molinos.DataAgro.Business.Managers
         private bool ValidarCalidadModificada(Contrato contrato, Contrato contratoGuardado)
         {
             var calModificado = false;
+
             if ((contrato.Calidad == null && contratoGuardado.Calidad.Count > 0) || contrato.Calidad != null && contratoGuardado.Calidad.Count != contrato.Calidad.Count)
             {
                 calModificado = true;
@@ -2378,6 +2379,10 @@ namespace Molinos.DataAgro.Business.Managers
                         break;
                     }
                 }
+            }
+            if (contrato.StandardDeCalidadId != contratoGuardado.StandardDeCalidadId)
+            {
+                calModificado = true;
             }
             return calModificado;
         }
@@ -2664,55 +2669,55 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             var modificado =
-                    contratoSave.CD != oContrato.CD ||
-                    contratoSave.Compensacion != oContrato.Compensacion ||
-                    contratoSave.EstablecimientoPropio != oContrato.EstablecimientoPropio ||
-                    contratoSave.Sustentable != oContrato.Sustentable ||
-                    contratoSave.CorredorId != oContrato.CorredorId ||
-                    contratoSave.ContratoCorredor != oContrato.ContratoCorredor ||
-                    contratoSave.ContratoVendedor != oContrato.ContratoVendedor ||
-                    contratoSave.DestinoId != oContrato.DestinoId ||
-                    contratoSave.DiasPesificado != oContrato.DiasPesificado ||
-                    contratoSave.Dolarizado != oContrato.Dolarizado ||
-                    contratoSave.ImporteSustentable != oContrato.ImporteSustentable ||
-                    contratoSave.FechaDolarizado != oContrato.FechaDolarizado ||
-                    contratoSave.Warrant != oContrato.Warrant ||
-                    contratoSave.MercsDeposito != oContrato.MercsDeposito ||
-                    contratoSave.TrigoEspecial != oContrato.TrigoEspecial ||
-                    contratoSave.PlanCanje != oContrato.PlanCanje ||
-                    contratoSave.SelCargoMOA != oContrato.SelCargoMOA ||
-                    contratoSave.SelCargoVendedor != oContrato.SelCargoVendedor ||
-                    contratoSave.TarifaFlete != oContrato.TarifaFlete ||
-                    contratoSave.NivelTarifaId != oContrato.NivelTarifaId ||
-                    contratoSave.Observacion != oContrato.Observacion ||
-                    contratoSave.FechaCierta != oContrato.FechaCierta ||
+                    //contratoSave.CD != oContrato.CD ||
+                    //contratoSave.Compensacion != oContrato.Compensacion ||
+                    //contratoSave.EstablecimientoPropio != oContrato.EstablecimientoPropio ||
+                    //contratoSave.Sustentable != oContrato.Sustentable ||
+                    //contratoSave.CorredorId != oContrato.CorredorId ||
+                    //contratoSave.ContratoCorredor != oContrato.ContratoCorredor ||
+                    //contratoSave.ContratoVendedor != oContrato.ContratoVendedor ||
+                    //contratoSave.DestinoId != oContrato.DestinoId ||
+                    //contratoSave.DiasPesificado != oContrato.DiasPesificado ||
+                    //contratoSave.Dolarizado != oContrato.Dolarizado ||
+                    //contratoSave.ImporteSustentable != oContrato.ImporteSustentable ||
+                    //contratoSave.FechaDolarizado != oContrato.FechaDolarizado ||
+                    //contratoSave.Warrant != oContrato.Warrant ||
+                    //contratoSave.MercsDeposito != oContrato.MercsDeposito ||
+                    //contratoSave.TrigoEspecial != oContrato.TrigoEspecial ||
+                    //contratoSave.PlanCanje != oContrato.PlanCanje ||
+                    //contratoSave.SelCargoMOA != oContrato.SelCargoMOA ||
+                    //contratoSave.SelCargoVendedor != oContrato.SelCargoVendedor ||
+                    //contratoSave.TarifaFlete != oContrato.TarifaFlete ||
+                    //contratoSave.NivelTarifaId != oContrato.NivelTarifaId ||
+                    //contratoSave.Observacion != oContrato.Observacion ||
+                    //contratoSave.FechaCierta != oContrato.FechaCierta ||
                     ValidarCalidadModificada(oContrato, contratoSave);
 
-            var descuentosGenerales = new List<DescuentoBonificacion>();
-            var descuentos = new List<DescuentoBonificacion>();
-            if (oContrato.Descuentos != null)
-            {
-                descuentosGenerales = oContrato.Descuentos.ToList();
-                descuentos = oContrato.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList();
-            }
-            if ((descuentos == null && contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
-                descuentos != null && descuentos.Count != contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
-            {
-                modificado = true;
-            }
-            else
-            {
-                foreach (var descBon in contratoSave.Descuentos.ToList())
-                {
-                    if (!descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
-                     && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
-                     && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
-                    {
-                        modificado = true;
-                        break;
-                    }
-                }
-            }
+            //var descuentosGenerales = new List<DescuentoBonificacion>();
+            //var descuentos = new List<DescuentoBonificacion>();
+            //if (oContrato.Descuentos != null)
+            //{
+            //    descuentosGenerales = oContrato.Descuentos.ToList();
+            //    descuentos = oContrato.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList();
+            //}
+            //if ((descuentos == null && contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
+            //    descuentos != null && descuentos.Count != contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
+            //{
+            //    modificado = true;
+            //}
+            //else
+            //{
+            //    foreach (var descBon in contratoSave.Descuentos.ToList())
+            //    {
+            //        if (!descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
+            //         && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
+            //         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
+            //        {
+            //            modificado = true;
+            //            break;
+            //        }
+            //    }
+            //}
             if (modificado)
             {
                 htmlBody += "<tr>" + th1 + "OBSERVACIÓN</th>" + TdCambio(ref linea);
@@ -2809,6 +2814,12 @@ namespace Molinos.DataAgro.Business.Managers
             else if (oContrato.TrigoEspecial == true)
             {
                 htmlBody += "CALIDAD ESPECIAL ";
+            }else if(oContrato.StandardDeCalidadId == 1 || oContrato.StandardDeCalidadId == 4 || oContrato.StandardDeCalidadId == 5)
+            {
+                htmlBody += "CALIDAD CÁMARA ";
+            }else if (oContrato.StandardDeCalidadId == 3)
+            {
+                htmlBody += "CALIDAD FÁBRICA ";
             }
             if (oContrato.Calidad != null && oContrato.StandardDeCalidadId != 7)
             {

@@ -51,6 +51,9 @@ namespace Molinos.DataAgro.Business.Managers
         
         public void ActualizarCompras()
         {
+            repositorio.RemoverTodos<CampañaMaterial>(x=>true);
+            repositorio.RemoverTodos<CampañaMaterialPorMes>(x=>true);
+            repositorio.GuardarCambios();
             var a = new List<string>();
 
             var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
