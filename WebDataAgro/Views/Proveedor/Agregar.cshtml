@@ -8,7 +8,10 @@
     Random randAgregar = new Random();
     string jsAgregar = randAgregar.Next().ToString();
     bool modificarDatosCampos = PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ);
-
+    if (global_asax.GlobalVariables.EsAdministrador)
+    {
+        modificarDatosCampos = false;
+    }
 }
 <script>
     var ProveedorId = '@ViewBag.ProveedorId';

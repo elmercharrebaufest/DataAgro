@@ -344,7 +344,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Compensacion + "'" + ',' +
         "'" + dataItem.Rechazo + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaCierta) + "'" + ',' +
-        "'" + dataItem.PorcentajeDePago + "'" +
+        "'" + dataItem.PorcentajeDePago + "'" + ',' +
+        "'" + dataItem.TipoAgenteCompraId + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -866,9 +867,9 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Estado_Contrato: "Reconfirmar"
                     }, {
-                        Estado_Contrato: "Eliminado"
-                    },{
                         Estado_Contrato: "ReconfirmarFinalizado"
+                    },{
+                        Estado_Contrato: "Eliminado"
                     }, {
                         Estado_Contrato: "PreAprobacion"
                     }]
@@ -1818,7 +1819,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo, fechaCierta, porcentajeDePago) {
+    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1921,13 +1922,20 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     else if (provinciaDat != "" && localidadDat != "") {
         procedencia = localidadDat + ", " + provinciaDat;
     }
+
+    if (tipo === "AGENTE DE COMPRAS MP") {
+        $("#agenteDeCompraDivVisualizar").show();
+        $("#visualizar_agenteDeCompra").text("MATBA ROFEX SA");
+    } else {
+        $("#agenteDeCompraDivVisualizar").hide();
+    }
+
     if (corredor !== null && corredor !== "") {
         $("#corredorDivVisualizar").show();
         $("#visualizar_corredor").text(corredor);
     } else {
         $("#corredorDivVisualizar").hide();
     }
-
     contratoCorredor != null && contratoCorredor != "" ? $("#visualizar_contratoCorredor").text(contratoCorredor) : $("#visualizar_contratoCorredor").text("null");
     contratoVendedor != null && contratoVendedor != "" ? $("#visualizar_contratoVendedor").text(contratoVendedor) : $("#visualizar_contratoVendedor").text("null");
     visualizacionRowDoble("contratoCorredorVisualizar", "visualizar_contratoCorredor", "contratoVendedorVisualizar", "visualizar_contratoVendedor");

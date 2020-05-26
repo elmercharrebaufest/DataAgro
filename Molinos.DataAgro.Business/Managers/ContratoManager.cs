@@ -990,7 +990,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                 repositorio.GuardarCambios();
             }
 
@@ -1109,9 +1109,9 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
             oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
 
-            if (oContratoSave != null && (oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || oContrato.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado) || (int)oContratoSave.EstadoId < (int)EnumEstadoContrato.Finalizado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
             {
-                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
+                if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar || oContratoSave.EstadoId == (int)EnumEstadoContrato.ReconfirmarFinalizado)
                 {
                     if (oContratoSave.Ampliaciones > 0)
                     {
@@ -1153,7 +1153,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.DiasPesificado = contratoOriginal.DiasPesificado;
                             oContratoSave.NoInformaSio = contratoOriginal.NoInformaSio;
                             oContratoSave.TrigoEspecial = contratoOriginal.TrigoEspecial;
-                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                            oContratoSave.EstadoId = contratoOriginal.EstadoId;
                             oContratoSave.UsuarioId = contratoOriginal.UsuarioId;
                             oContratoSave.Ampliaciones = contratoOriginal.Ampliaciones;
                             oContratoSave.Observacion = contratoOriginal.Observacion;

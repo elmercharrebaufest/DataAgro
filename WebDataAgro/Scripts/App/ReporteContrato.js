@@ -100,6 +100,8 @@ function CreateGridInformeCompraNet() {
             $("td:has(div.statusfinalizado)").css('border-bottom', '5px solid #000000');
             $("td:has(div.statusborrado)").css('border-bottom', '5px solid #848484');
             $("td:has(div.statuspreaprobacion)").css('border-bottom', '5px solid #15deca');
+            $("td:has(div.statuspreanulado)").css('border-bottom', 'border-grey');
+            $("td:has(div.statusreconfirmarfinalizado)").css('border-bottom', '5px solid #ac67ca');
         },
         columns: [
             {
@@ -116,8 +118,12 @@ function CreateGridInformeCompraNet() {
                         return '<div class="statusfinalizado "></div>' + dataItem.Cuit;
                     } else if (dataItem.Estado === 6) {
                         return '<div class="statusborrado "></div>' + dataItem.Cuit;
-                    } else if (dataItem.Estado === 9) {
-                        return '<div class="statuspreaprobacion "></div>' + dataItem.Cuit;
+                    } else if (dataItem.Estado == 9) {
+                        return '<div class="statuspreaprobacion "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.Estado == 10) {
+                        return '<div class="statuspreanulado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.Estado == 11) {
+                        return '<div class="statusreconfirmarfinalizado "></div>' + dataItem.Proveedor;
                     }
                 }
             },

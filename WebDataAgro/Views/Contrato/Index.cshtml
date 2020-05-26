@@ -60,14 +60,32 @@
         <div class="col-md-2">
             <label>Tipo de Negocio</label>
         </div>
-        <div class="col-md-2">
-            @Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaPorId", @id = "tipoNegocioId" })
+        <div class="col-md-4">
+            @*@Html.DropDownList("TipoNegocioId", new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaPorId", @id = "tipoNegocioId" })*@
+
+            @Html.DropDownList("TipoNegocio", new SelectList(
+                       new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = "A FIJAR", Text = "A FIJAR"},
+                    new SelectListItem{ Value = "A PRECIO", Text = "A PRECIO"},
+                    new SelectListItem{ Value = "FIJACION", Text = "FIJACION"},
+                    new SelectListItem{ Value = "CONVENIO", Text = "CONVENIO"},
+                    new SelectListItem{ Value = "FIJ. CONVENIO", Text = "FIJ. CONVENIO"},
+                    new SelectListItem{ Value = "FASON", Text = "FASON"},
+                    new SelectListItem{ Value = "AGENTE DE COMPRAS", Text = "AGENTE DE COMPRAS"},
+                    new SelectListItem{ Value = "CONTRATO ACUERDO", Text = "CONTRATO ACUERDO"},
+                    new SelectListItem{ Value = "FASON MP", Text = "FASON MP"},
+                    new SelectListItem{ Value = "AGENTE DE COMPRAS MP", Text = "AGENTE DE COMPRAS MP"}
+
+                }
+           , "Value", "Text"), "Negocio", new { @class = "form-control filtroBusquedaTextBox", @id = "TipoNegocio" })
         </div>
-        <div class="col-md-2">
+        @*<div class="col-md-2">
             <label>Fasón MP</label>
             @Html.CheckBox("EsFason", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "FasonMpId" })
-
-        </div>
+            <label>Agente de Compra MP</label>
+            @Html.CheckBox("EsAgenteDeCompra", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "AgenteDeCompraMpId" })
+        </div>*@
     </div>
     <br />
     <div class="row">
