@@ -3076,8 +3076,10 @@ function armarEstablecimiento(establecimiento) {
             var html = "";
             html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="establecimientocontenedor' + capProdCantEstablecimiento + '">'
                 + '<div>'
+                + (obj.nombre != "" ? ('<div class="datos-produccion-cap-prod-guardados-zona"><b>Nombre</b>: ' + obj.nombre.toUpperCase() + '</div><br>') : "")
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
+                + (obj.latitud != "" && obj.longitud != "" ? ('<span class="datos-produccion-cap-prod-guardados-hectareas"> &nbsp;&nbsp;&nbsp;&nbsp; <b>Latitud</b>:' + obj.latitud + " &nbsp;&nbsp;&nbsp;&nbsp;<b>Longitud</b>: " + obj.longitud + '</span>') : "")
                 + '</div>'
                 + file
                 //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZEstablecimiento(this)" id="eliminarKMZEstablecimiento' + capProdCantEstablecimiento + '">x Eliminar KMZ</div>' : '')
@@ -3090,14 +3092,13 @@ function armarEstablecimiento(establecimiento) {
                 + '</div>'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
-                + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
+                
                 + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
-                + "<br>"
-                + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.materialNom : "")
-                +  (obj.rinde > 0 ? ' <b>Rinde</b>:' +obj.rinde : "")
-                + (obj.htotales > 0 ? ' <b>Has Totales</b>:' + obj.htotales : "")
-                +  (obj.hcultivables > 0 ? ' <b>Has Cultivables</b>:' +obj.hcultivables : "")
+                //+ "<br>"
+                + (obj.materialId > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Material</b>:' + obj.materialNom : "")
+                + (obj.rinde > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Rinde</b>:' +obj.rinde : "")
+                + (obj.htotales > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Totales</b>:' + obj.htotales : "")
+                + (obj.hcultivables > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Cultivables</b>:' +obj.hcultivables : "")
                 + '</div>'
                 + '<div class="granos-contenedor">';
 

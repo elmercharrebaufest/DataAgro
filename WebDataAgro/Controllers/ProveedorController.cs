@@ -429,8 +429,8 @@ namespace WebDataAgro.Controllers
                 {
                     if (!String.IsNullOrEmpty(r[3].ToString()) && r[3].ToString().GetType().Equals(typeof(System.String)))
                     {
-                        string cuit = r[3].ToString().Replace("-", "");
-                        var proveedor = proveedores.Where(a => a.CUIT == cuit).FirstOrDefault();
+                        string cuit = r[3].ToString().Replace("-", "").Trim();
+                        var proveedor = proveedores.Where(a => a.CUIT == cuit).OrderByDescending(a=>a.SegmentacionId).FirstOrDefault();
                         if (proveedor != null)
                         {
                             campo.proveedorId = proveedor.ProveedorId;
@@ -451,20 +451,20 @@ namespace WebDataAgro.Controllers
 
                 campo.nombre = r[4].ToString();
 
-                string provinciaNom = r[5].ToString().ToUpper().RemoveDiacritics();
-                string departamentoNom = r[6].ToString().ToUpper().RemoveDiacritics();
-                string localidadNom = r[7].ToString().ToUpper().RemoveDiacritics();
+                string provinciaNom = r[5].ToString().ToUpper().RemoveDiacritics().Trim();
+                string departamentoNom = r[6].ToString().ToUpper().RemoveDiacritics().Trim();
+                string localidadNom = r[7].ToString().ToUpper().RemoveDiacritics().Trim();
 
                 if (error == false)
                 {
-                    var localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper() == provinciaNom && a.Nombre.ToUpper() == localidadNom && a.Partido_Nombre == departamentoNom).FirstOrDefault();
+                    var localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper().Trim() == provinciaNom && a.Nombre.ToUpper().Trim() == localidadNom && a.Partido_Nombre == departamentoNom).FirstOrDefault();
                     if (localidad != null)
                     {
                         campo.localidad = localidad.LocalidadId;
                     }
                     else
                     {
-                        localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper() == provinciaNom && a.Nombre.ToUpper() == localidadNom).FirstOrDefault();
+                        localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper().Trim() == provinciaNom && a.Nombre.ToUpper().Trim() == localidadNom).FirstOrDefault();
                         if (localidad != null)
                         {
                             campo.localidad = localidad.LocalidadId;
@@ -478,13 +478,14 @@ namespace WebDataAgro.Controllers
                     }
                 }
 
-                campo.latitud = r[8].ToString();
-                campo.longitud = r[9].ToString();
+                campo.latitud = r[8].ToString().Trim();
+                campo.longitud = r[9].ToString().Trim();
 
 
                 if (!String.IsNullOrEmpty(r[10].ToString()) && r[10].ToString().GetType().Equals(typeof(System.String)))
                 {
-                    var comercial = comerciales.Comercial.Where(a => a.Apellido.ToUpper() == r[10].ToString().ToUpper().RemoveDiacritics()).FirstOrDefault();
+                    string comercialNom = r[10].ToString().ToUpper().RemoveDiacritics().Trim();
+                    var comercial = comerciales.Comercial.Where(a => a.Apellido.ToUpper().Trim() == comercialNom).FirstOrDefault();
                     if (comercial != null)
                     {
                         campo.comercialId = comercial.ComercialId;

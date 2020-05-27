@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Administrador { get; set; }
         public bool? Cupera { get; set; }
         public bool? Deshabilitado { get; set; }
+        public DateTime? FechaDeshabilitado { get; set; }
+
 
         [ForeignKey("PerfilId")]
         public virtual Perfil Perfil { get; set; }

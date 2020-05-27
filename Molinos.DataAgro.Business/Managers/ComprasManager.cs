@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var a = new List<string>();
             var ayer = DateTime.Now.AddDays(-1);
-            var oProveedor = repositorio.Listar<Proveedor,string>(x => x.CUIT,x=> x.FechaAlta >= ayer).Distinct().ToList();
+            var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT, x => x.FechaAlta >= ayer).Distinct().ToList();
             var oComercial = repositorio.Listar<Comercial>();
 
             var listProve = new List<ComprasIniciales>();
@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     comp = new ComprasIniciales();
                     comp.CUIT.AddRange(oProveedor);
-                    
+
                     comp.UsuarioDirectory = comercial.IdActiveDirectory;
                     listProve.Add(comp);
                 }
@@ -48,11 +48,14 @@ namespace Molinos.DataAgro.Business.Managers
                 ActualizarComprasProveedorIniciales(listProve, oComercial);
             }
         }
-        
+
         public void ActualizarCompras()
         {
-            repositorio.RemoverTodos<CampañaMaterial>(x=>true);
-            repositorio.RemoverTodos<CampañaMaterialPorMes>(x=>true);
+
+
+            repositorio.RemoverTodos<CampañaMaterialPorMes>(x => true);
+            repositorio.GuardarCambios();
+            repositorio.RemoverTodos<CampañaMaterial>(x => true);
             repositorio.GuardarCambios();
             var a = new List<string>();
 
@@ -64,7 +67,7 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var comercial in oComercial)
             {
                 comp = new ComprasIniciales();
-                comp.CUIT.AddRange(oProveedor);                
+                comp.CUIT.AddRange(oProveedor);
 
                 comp.UsuarioDirectory = comercial.IdActiveDirectory;
                 listProve.Add(comp);
@@ -74,15 +77,15 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         private void ActualizarComprasProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
-        {            
+        {
             var histActual = repositorio.Listar<CampañaMaterialPorMes>();
             var campaniaMaterialActual = repositorio.Listar<CampañaMaterial>();
-            var proveedores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto {ProveedorId= x.ProveedorId,CUIT= x.CUIT }).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
-            var campanias = repositorio.Listar<Campaña,CampañaDto>(x => new CampañaDto { CampañaId=x.CampañaId,Descripcion=x.Descripcion }).ToDictionary(x => x.Descripcion.ToUpper().Trim());
-            var materiales = repositorio.Listar<Material,MaterialBasicoDto>(x => new MaterialBasicoDto { MaterialId= x.MaterialId,Codigo= x.Codigo }).ToDictionary(x => x.Codigo.ToUpper().Trim());
+            var proveedores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT }).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
+            var campanias = repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToDictionary(x => x.Descripcion.ToUpper().Trim());
+            var materiales = repositorio.Listar<Material, MaterialBasicoDto>(x => new MaterialBasicoDto { MaterialId = x.MaterialId, Codigo = x.Codigo }).ToDictionary(x => x.Codigo.ToUpper().Trim());
             var campaniasMaterial = new List<CampañaMaterial>();
             var campaniaMaterialPorMes = new List<CampañaMaterialPorMes>();
-            
+
             try
             {
                 var contadorActualizacion = 0;
@@ -100,7 +103,7 @@ namespace Molinos.DataAgro.Business.Managers
                             var materialId = materiales[jj.Key.MATERIAL].MaterialId;
                             var campaniaId = campanias[jj.Key.COSECHA].CampañaId;
 
-                            foreach(var proveedor in proveedoresId)
+                            foreach (var proveedor in proveedoresId)
                             {
                                 int proveedorId = proveedor.ProveedorId;
                                 var campaniaMaterial = campaniaMaterialActual.Where(x => x.CampañaId == campaniaId && x.ProveedorId == proveedorId && x.MaterialId == materialId).FirstOrDefault();
@@ -154,5 +157,5 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
         }
-    }    
+    }
 }

@@ -2629,7 +2629,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<ProveedorDto> ListarProveedorTodos()
         {
-            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial }, x => x.SegmentacionId == 2 || x.SegmentacionId == 3 || x.SegmentacionId == 4);
+            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, SegmentacionId = x.SegmentacionId });
         }
         public List<ProveedorDto> ListarCorredor(string proveedor)
         {

@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     x.Nombres,
                     PerDescripcion = x.Perfil.Descripcion,
                     x.Deshabilitado,
+                    x.FechaDeshabilitado,
                     Roles = x.RolesAsociados.AsEnumerable()
                 }).ToList().OrderBy(x=>x.Apellido);
 
@@ -29,6 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                    Nombres=q.Nombres,
                    PerDescripcion= q.PerDescripcion,
                    Deshabilitado = q.Deshabilitado ?? false,
+                   FechaDeshabilitado = q.FechaDeshabilitado,
                    Rol = string.Join(", ", q.Roles.Select(x => x.Descripcion)) }).ToList();
 
             return list;

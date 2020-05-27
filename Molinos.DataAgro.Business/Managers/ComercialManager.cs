@@ -82,6 +82,7 @@ namespace Molinos.DataAgro.Business
                      Nombres = x.Nombres,
                      PerfilId = x.PerfilId ?? 0,
                      Deshabilitado = x.Deshabilitado ?? false,
+                     FechaDeshabilitado = x.FechaDeshabilitado,
                      Cupera = x.Cupera,
                      RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList()
                  }) ?? new ComercialDto();
@@ -148,9 +149,21 @@ namespace Molinos.DataAgro.Business
             }
             var listaRoles = roles.Select(y => y.Id).ToList();
             oComercial.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
+            
             if (oComercial.ComercialId != 0)
             {
                 var oComercialSave = repositorio.Obtener<Comercial>(oComercial.ComercialId);
+                if (oComercial.Deshabilitado != oComercialSave.Deshabilitado)
+                {
+                    if (oComercial.Deshabilitado == true)
+                    {
+                        oComercialSave.FechaDeshabilitado = DateTime.Now;
+                    }
+                    else
+                    {
+                        oComercialSave.FechaDeshabilitado = null;
+                    }
+                }
                 oComercialSave.Apellido = oComercial.Apellido;
                 oComercialSave.Nombres = oComercial.Nombres;
                 oComercialSave.Perfil = oComercial.Perfil;
@@ -177,6 +190,10 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
+                if (oComercial.Deshabilitado == true)
+                {
+                    oComercial.FechaDeshabilitado = DateTime.Now;
+                }
                 repositorio.Agregar(oComercial);
             }
 
@@ -207,6 +224,7 @@ namespace Molinos.DataAgro.Business
 
             var comercial = repositorio.Obtener<Comercial>(intComercialId);
             comercial.Deshabilitado = true;
+            comercial.FechaDeshabilitado = DateTime.Now;
             try
             {
                 repositorio.GuardarCambios();

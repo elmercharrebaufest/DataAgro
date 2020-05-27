@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Comercial\":[{\"ComercialId\":1,\"Apellido\":\"A\"}],\"Perfil\":[{\"PerfilId\":1,\"Descripcion\":\"Mesa\"}],\"GrupoDeCompras\":[{\"Id\":1,\"Descripcion\":\"A\"}],\"Rol\":null},\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Comercial\":[{\"ComercialId\":1,\"Apellido\":\"A\"}],\"Perfil\":[{\"PerfilId\":1,\"Descripcion\":\"Mesa\"}],\"GrupoDeCompras\":[{\"Id\":1,\"Descripcion\":\"A\"}],\"Rol\":null},\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null,\"NombreCompleto\":\"A A\",\"Disabled\":false,\"Deshabilitado\":false}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
+"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null,\"NombreCompleto\":\"A A\",\"Disabled\":false,\"Deshabilitado\":false,\"FechaDeshabilitado\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"B A\",\"Deshabilitado\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"B A\",\"Deshabilitado\":false,\"FechaDeshabilitado\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
                 , a);
         }
 
@@ -140,7 +140,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

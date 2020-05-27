@@ -109,6 +109,7 @@ namespace WebDataAgro.Controllers
 
 
             var comercial = mobjComercialManager.TraerTodoComercial();
+            comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper() == "Comercial".ToUpper() || a.Rol.ToUpper() == "Comercial corredor".ToUpper() || a.Rol.ToUpper() == "Mesa".ToUpper()) && a.Deshabilitado != true).ToList();
             var comercialListItems = comercial.Comercial.Select(
                x => new SelectListItem
                {

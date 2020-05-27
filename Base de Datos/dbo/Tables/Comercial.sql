@@ -9,6 +9,7 @@
     [Administrador]     BIT           NULL,
 	[Cupera]			BIT			NULL,
     [Deshabilitado] BIT NULL , 
+    [FechaDeshabilitado] DATETIME NULL, 
     CONSTRAINT [PK_Comercial] PRIMARY KEY CLUSTERED ([ComercialId] ASC),
     CONSTRAINT [FK_Comercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
     CONSTRAINT [FK_Comercial_GrupoDeCompras] FOREIGN KEY ([GrupoDeComprasId]) REFERENCES [dbo].[GrupoDeCompras] ([Id]),

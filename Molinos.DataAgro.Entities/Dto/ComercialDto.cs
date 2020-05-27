@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -20,6 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string NombreCompleto { get { return Apellido.ToUpper() + " " + Nombres.ToUpper(); }  }
 
         public bool Deshabilitado { get; set; }
+        public DateTime? FechaDeshabilitado { get; set; }
     }
 }
 

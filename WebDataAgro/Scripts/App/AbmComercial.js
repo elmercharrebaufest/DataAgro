@@ -117,6 +117,7 @@ function CrearResultadosDataSource(datos) {
                     Nombres: { type: "string", editable: false },
                     Roles: { type: "string", editable: false },
                     Deshabilitado: { type: "boolean", editable: false },
+                    FechaDeshabilitado: { type: "date", editable: false },
                 }
             }
         },
@@ -131,7 +132,7 @@ function CreateGridCentro() {
             { field: "Apellido", title: "Apellido" },
             { field: "Nombres", title: "Nombres" },
             { field: "Rol", title: "Roles" },
-            { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si#}else{}# " },
+            { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si (#=kendo.toString(kendo.parseDate(FechaDeshabilitado, 'yyyy-MM-dd hh:mm:sss'), 'MM/dd/yyyy HH:mm:ss')#) #}else{}# " },
         ],
 
         sortable: true,
@@ -305,7 +306,8 @@ function UpdateViewModel(model) {
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
         "Administrador": model.Comercial.Administrador,
         "Cupera": model.Comercial.Cupera,        
-        "Deshabilitado": model.Comercial.Deshabilitado        
+        "Deshabilitado": model.Comercial.Deshabilitado,
+        "FechaDeshabilitado": model.Comercial.FechaDeshabilitado,
     };
     
     viewModel.set("Comercial", comercial);
@@ -465,6 +467,7 @@ function Grabar() {
         "Apellido": viewModel.get("Comercial.Apellido"),
         "Nombres": viewModel.get("Comercial.Nombres"),
         "Deshabilitado": viewModel.get("Comercial.Deshabilitado"),
+        "FechaDeshabilitado": new Date(),
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),

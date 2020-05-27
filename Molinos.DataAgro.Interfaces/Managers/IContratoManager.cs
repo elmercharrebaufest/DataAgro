@@ -55,6 +55,6 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult PreAnularContrato(int contratoId);
         GrabarContratoResult RechazarPreAnularContrato(int contratoId);
         GrabarContratoResult ReconfirmarFinalizado(int contratoId);
-        GrabarContratoResult AnularContratoPreAnulado(int contratoId);
+        GrabarContratoResult AnularContratoPreAnulado(int contratoId, string idActiveDirectory);
     }
 }

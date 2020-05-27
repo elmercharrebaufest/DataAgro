@@ -875,7 +875,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.AnularContratoPreAnulado(contratoId),
+                Data = mobjContratoManager.AnularContratoPreAnulado(contratoId, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }
