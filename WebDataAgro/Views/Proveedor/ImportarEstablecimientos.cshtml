@@ -61,7 +61,7 @@
     </div>
     <div class="row">
         <div class="col-md-2">
-            <label>Selecciconar Archivo</label>
+            <label>Seleccionar Archivo</label>
         </div>
         <div class="col-md-10">
             <input class="inputfile" type="file" name="resume" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="kmz">
@@ -86,17 +86,19 @@
                 <tr>
                     <th scope="col">#</th>
 
+                    <th scope="col">Cuit</th>
                     <th scope="col">Errores</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in resultado.Errores)
                 {
-                    <tr>
-                        <th scope="row">@(i++)</th>
+                <tr>
+                    <th scope="row">@(i++)</th>
 
-                        <td>@item.Message</td>
-                    </tr>
+                    <td>@item.Source</td>
+                    <td>@item.Message</td>
+                </tr>
 
                 }
             </tbody>

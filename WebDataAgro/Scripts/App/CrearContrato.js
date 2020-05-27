@@ -21,7 +21,9 @@ $(document).ready(function () {
     AutocompleteProcedencia();
 
 });
-
+$(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
+    e.preventDefault();
+});
 function InicializarBordesRojos() {
     $("select.required-box, input.required-box").on("change", function (e) {
         var padre = $(this).hasClass("required-box-parent") ? $(this) : $(this).parent().parent();
@@ -1031,7 +1033,23 @@ function InicializarElementos() {
     $("#AgenteCompraId").kendoDropDownList({
         optionLabel: "SELECCIONE AGENTE...",
         dataTextField: "Descripcion",
-        dataValueField: "Id"
+        dataValueField: "Id",
+        change: function () {
+            if (this.value() == 1) {
+                $("#boletoNingunoId").prop("checked", false);
+                $("#boletoNingunoId").click();
+                $("#boletoNingunoId").attr("readonly", "readonly");
+                $("#boletoConfirmaId").attr("disabled", true);
+                $("#boletoFisicoId").attr("disabled", true);
+                $("#boletoCartaId").attr("disabled", true);
+             } else {
+                $("#boletoNingunoId").prop("checked", false);
+                $("#boletoNingunoId").removeAttr("readonly");
+                $("#boletoConfirmaId").removeAttr("disabled");
+                $("#boletoFisicoId").removeAttr("disabled");
+                $("#boletoCartaId").removeAttr("disabled");
+            }
+        }
     });
 
     $("#tipoAgenteCompraId").closest('.k-dropdown.k-widget').keydown(function (e) {

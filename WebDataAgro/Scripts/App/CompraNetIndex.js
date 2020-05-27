@@ -863,7 +863,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Estado_Contrato: "Rechazado"
                     }, {
-                        Estado_Contrato: "PreAnular"
+                        Estado_Contrato: "PreAnulado"
                     }, {
                         Estado_Contrato: "Reconfirmar"
                     }, {
@@ -965,7 +965,7 @@ function CreateGridInformeCompraNet() {
                             botonBorrar(dataItem, 'fa-trash pre');
                     }
                     if (dataItem.Estado == 10) { //PreAnulado                        
-                        return '<div class="status borrado">PreAnular</div>' +                           
+                        return '<div class="status borrado">PreAnulado</div>' +                           
                             botonVisualizar(dataItem, 'fa-eye bor') +
                             botonBorrarPreanulado(dataItem, 'fa-trash bor');
                     }
