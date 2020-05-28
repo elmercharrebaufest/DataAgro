@@ -424,7 +424,7 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
-                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna ID fila: " + i + ". El ID no es numerico. " + r[0].ToString() });
+                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna ID fila: <b>" + i + "</b>. El ID no es numerico. " + r[0].ToString() });
                     error = true;
                 }
                 if (error == false)
@@ -439,13 +439,13 @@ namespace WebDataAgro.Controllers
                         }
                         else
                         {
-                            resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: CUIT fila: " + i + ". No se encontro el cuit. " + r[3].ToString() });
+                            resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: CUIT fila: <b>" + i + "</b>. No se encontro el cuit. " + r[3].ToString() });
                             error = true;
                         }
                     }
                     else
                     {
-                        resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: CUIT fila: " + i + ". " + r[3].ToString() });
+                        resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: CUIT fila: <b>" + i + "</b>. " + r[3].ToString() });
                         error = true;
                     }
                 }
@@ -473,7 +473,7 @@ namespace WebDataAgro.Controllers
                         }
                         else
                         {
-                            resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Localidad fila: " + i + ". No se encontro la Localidad. " + provinciaNom + " - " + localidadNom });
+                            resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Localidad fila: <b>" + i + "</b>. No se encontro la Localidad. " + provinciaNom + " - " + localidadNom });
                             error = true;
                         }
 
@@ -494,13 +494,13 @@ namespace WebDataAgro.Controllers
                     }
                     else
                     {
-                        resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Comercial fila: " + i + ". No se encontro el Comercial. " + r[10].ToString() });
+                        resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Comercial fila: <b>" + i + "</b>. No se encontro el Comercial. " + r[10].ToString() });
                         //error = true;
                     }
                 }
                 else
                 {
-                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Comercial fila: " + i + ". " + r[10].ToString() });
+                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna: Comercial fila: <b>" + i + "</b>. " + r[10].ToString() });
                     //error = true;
                 }
 
@@ -510,7 +510,7 @@ namespace WebDataAgro.Controllers
                 //}
                 //else
                 //{
-                //    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[12].ToString() });
+                //    resultado.Errores.Add(new ErrorMessage { Message = "Error en la Columna Rinde  fila: <b>" + i + "</b>. No es numerico. " + r[12].ToString() });
                 //    //error = true;
                 //}
 
@@ -520,7 +520,7 @@ namespace WebDataAgro.Controllers
                 //}
                 //else
                 //{
-                //    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Rinde  fila: " + i + ". No es numerico. " + r[13].ToString() });
+                //    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Rinde  fila: <b>" + i + "</b>. No es numerico. " + r[13].ToString() });
                 //    //error = true;
                 //}
 
@@ -530,7 +530,7 @@ namespace WebDataAgro.Controllers
                 }
                 else
                 {
-                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Hectáreas Totales fila: " + i + ". No es numerico. " + r[12].ToString() });
+                    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Hectáreas Totales fila: <b>" + i + "</b>. No es numerico. " + r[12].ToString() });
                     //error = true;
                 }
 
@@ -540,7 +540,7 @@ namespace WebDataAgro.Controllers
                 //}
                 //else
                 //{
-                //    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Hectáreas Cultivables fila: " + i + ". No es numerico. " + r[15].ToString() });
+                //    resultado.Errores.Add(new ErrorMessage { Source = cuit2, Message = "Error en la Columna Hectáreas Cultivables fila: <b>" + i + "</b>. No es numerico. " + r[15].ToString() });
                 //    //error = true;
                 //}
 
@@ -553,7 +553,7 @@ namespace WebDataAgro.Controllers
             }
             if (campos.Count <= 0)
             {
-                resultado.Errores.Add(new ErrorMessage { Message = "SinDatos" });
+                resultado.Errores.Add(new ErrorMessage { Message = "No se pudo agregar ningun Establecimiento" });
             }
             return campos;
         }

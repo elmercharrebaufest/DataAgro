@@ -92,12 +92,12 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
-            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterialPorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            comprasAgentMock.Verify(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()), Times.Once);
-            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterialPorMes>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);
-            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterial>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterialPorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(2));
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(2));
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(2));
+            comprasAgentMock.Verify(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()), Times.Exactly(2));
+            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterialPorMes>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(2));
+            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterial>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(2));
         }
     }
 }
