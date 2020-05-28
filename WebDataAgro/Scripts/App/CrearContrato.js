@@ -3163,6 +3163,12 @@ function CargarDatosEditar(contrato, hijo) {
             $("#caratulaMATId").val(contrato.CaratulaMAT);
             $("#precioAjusteComisionId").data("kendoNumericTextBox").value(contrato.PrecioAjusteComision);
             $("#monedaAjusteComisionId").data("kendoDropDownList").value(contrato.MonedaAjusteComisionId);
+            $("#boletoNingunoId").prop("checked", false);
+            $("#boletoNingunoId").click();
+            $("#boletoNingunoId").attr("readonly", "readonly");
+            $("#boletoConfirmaId").attr("disabled", true);
+            $("#boletoFisicoId").attr("disabled", true);
+            $("#boletoCartaId").attr("disabled", true);
         }
 
     }

@@ -74,6 +74,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             ActualizarComprasProveedorIniciales(listProve, oComercial);
+            ActualizarComprasProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes
         }
 
         private void ActualizarComprasProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
