@@ -991,9 +991,9 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-            var res = status.ValidarEstado(oContratoSave.ContratoSAP);
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
-            {                
+
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            {
                 try
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
@@ -1005,10 +1005,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", e.Message);
 
                 }
-               
-            }else
-            {
-                oEntityErrors.Error("", res);
+
             }
 
             return oEntityErrors;

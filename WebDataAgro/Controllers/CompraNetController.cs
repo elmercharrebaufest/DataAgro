@@ -225,16 +225,6 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult PreAnularContrato(int contratoId)
-        {
-            return new JsonResult()
-            {
-                Data = mobjContratoManager.PreAnularContrato(contratoId),
-                MaxJsonLength = Int32.MaxValue
-            };
-
-        }
-
         public ActionResult BorrarContrato(Contrato oParam)
         {
             return new JsonResult()
@@ -860,6 +850,16 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.ReconfirmarFinalizado(contratoId),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        public ActionResult PreAnularContrato(int contratoId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.PreAnularContrato(contratoId),
+                MaxJsonLength = Int32.MaxValue
+            };
+
         }
         public ActionResult AnularContratoPreAnulado(int contratoId)
         {
