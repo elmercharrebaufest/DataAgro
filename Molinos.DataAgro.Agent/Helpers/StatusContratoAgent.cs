@@ -54,8 +54,8 @@ namespace Molinos.DataAgro.Agent
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
-                    int numsio = 0;
-                    int.TryParse(valor.EX_NUM_SIO, out numsio);
+                    long numsio = 0;
+                    long.TryParse(valor.EX_NUM_SIO, out numsio);
                     logger.Debug("valor.EX_STATUS: ." + valor.EX_STATUS + ".");
                     logger.Debug("numsio: ." + numsio + ".");
                     if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
