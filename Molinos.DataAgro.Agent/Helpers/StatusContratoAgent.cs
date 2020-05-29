@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Agent
                     int.TryParse(valor.EX_NUM_SIO, out numsio);
                     logger.Debug("valor.EX_STATUS: ." + valor.EX_STATUS + ".");
                     logger.Debug("numsio: ." + numsio + ".");
-                    if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
+                    if (string.IsNullOrEmpty(valor.EX_STATUS) || numsio == 0)
                     {
                         return "";
                     }
