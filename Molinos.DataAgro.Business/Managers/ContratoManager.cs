@@ -963,11 +963,24 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
+            var res = status.ValidarEstado(oContratoSave.ContratoSAP);
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado) && String.IsNullOrEmpty(res))
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
-                repositorio.GuardarCambios();
+                try
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", res);
             }
 
             return oEntityErrors;
@@ -979,7 +992,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && res == "")
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
             {                
                 try
                 {
@@ -1007,7 +1020,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && res == "")
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
                 if (respuesta.Contains("Error"))
