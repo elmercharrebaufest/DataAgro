@@ -716,7 +716,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 if (disponible.LimiteCupo > 0)
                                 {
                                     var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                                    newNegocio.CantidadDeCupos -= disponible.LimiteCupo;
+                                    newNegocio.CantidadDeCupos = disponible.LimiteCupo;
                                     newNegocio.Priorizado = true;
                                     newNegocio.FechaSugerida = disponible.Fecha.Date;
                                     newNegocios.Add(newNegocio);

@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Agent
                     int numsio;
                     if (!string.IsNullOrEmpty(valor.EX_STATUS) ||(!string.IsNullOrEmpty(valor.EX_NUM_SIO) && (int.TryParse(valor.EX_NUM_SIO, out numsio) && numsio != 0)))
                     {
-                    return "No se puede modificar el contrato ya que no se encuentra en slip o fue informado a SIO granos";
+                    return "El contrato ya no se encuentra en slip o fue informado a SIO granos";
                     }
                     return "";
                 }catch (Exception e)

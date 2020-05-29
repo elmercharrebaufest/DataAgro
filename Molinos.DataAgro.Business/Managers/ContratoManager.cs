@@ -978,11 +978,24 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+            var res = status.ValidarEstado(oContratoSave.ContratoSAP);
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && res == "")
+            {                
+                try
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+                }
+               
+            }else
             {
-                oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
-                repositorio.GuardarCambios();
+                oEntityErrors.Error("", res);
             }
 
             return oEntityErrors;
@@ -992,8 +1005,9 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+            var res = status.ValidarEstado(oContratoSave.ContratoSAP);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && res == "")
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
                 if (respuesta.Contains("Error"))
@@ -1022,6 +1036,9 @@ namespace Molinos.DataAgro.Business.Managers
                     var objCalidad = repositorio.Listar<Calidad>(x => x.NegocioId == oContratoSave.Id);
                     mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, true);
                 }
+            }
+            else {
+                oEntityErrors.Error("", res);
             }
 
             return oEntityErrors;

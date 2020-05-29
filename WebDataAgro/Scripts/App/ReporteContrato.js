@@ -87,10 +87,10 @@ function CreateGridInformeCompraNet() {
     $("#grid").kendoGrid({
         toolbar: kendo.template($("#templateToolbar").html()),
         //toolbar: ["excel"],
-        //excel: {
-        //    fileName: "Reporte Contratos.xlsx",
-        //    allPages: true,
-        //},
+        excel: {
+            fileName: "Reporte Contratos.xlsx",
+            allPages: true,
+        },
         dataSource: ds,
         dataBound: function () {
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');

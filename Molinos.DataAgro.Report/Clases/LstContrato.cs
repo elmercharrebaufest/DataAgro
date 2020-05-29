@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Report
                     Comision = x.PorcentajeComision,
                     PorcentajeBonificacion = ((x.Descuentos != null && x.Descuentos.Count>0)? string.Join("/", x.Descuentos.Select(a => a.Porcentaje.ToString()).ToList()) : ""),
                     ImporteBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Importe.ToString()).ToList()) : ""),
-                    MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.MonedaId.ToString()).ToList()) : ""),
+                    MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => (a.MonedaId??"").ToString()).ToList()) : ""),
                     MesPosicion = x.MesPosicion,
                     Procedencia = x.Localidad + " - " + x.Provincia,
                     Desde = x.FechaDesde,
