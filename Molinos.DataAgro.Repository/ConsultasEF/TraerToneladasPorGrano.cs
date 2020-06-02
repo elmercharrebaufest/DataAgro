@@ -148,7 +148,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.FrwAFijar + toneladasPorGrano.FrwAPrecio + toneladasPorGrano.FrwFijac + toneladasPorGrano.FrwFason +
             //toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
-            var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero==false && fechaHoy==fechaManana && DbFunctions.TruncateTime(x.Fecha) == fechaHoy && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.MaterialId == materialId && (centroId == 0 || centroId == 1) && (calidad == null || calidad == 3))
+            var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero == false 
+                && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
+                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana 
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) 
+                && x.MaterialId == materialId && (centroId == 0 || centroId == 1) 
+                && (calidad == null || calidad == 3))
                 .Select(x => new NegocioToneladasPosicionDto
                 {
                     Id = x.Id,
@@ -156,10 +161,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocioId = 5,
                     Cantidad = x.Cantidad,
                     PosicionString = x.Posicion,
-                    CampanaId = x.CampanaId??0,
+                    CampanaId = x.CampanaId ?? 0,
                     MaterialCampanaId = x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0
                 }).ToList();
-            foreach(var age in agente)
+            foreach (var age in agente)
             {
                 var pos = age.PosicionString.Split('.');
                 var fecha = new DateTime(int.Parse(pos[1]), int.Parse(pos[0]), 1);
@@ -171,12 +176,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     toneladasPorGrano.NewAgente += Math.Round(age.Cantidad / 1000);
                     toneladasPorGrano.ListNewAgente.Add(age.Id);
                 }
-                else if (age.CampanaId <= age.MaterialCampanaId && (fechaMesSiguiente >= fecha))                    
+                else if (age.CampanaId <= age.MaterialCampanaId && (fechaMesSiguiente >= fecha))
                 {
                     toneladasPorGrano.DispAgente += Math.Round(age.Cantidad / 1000);
                     toneladasPorGrano.ListDispAgente.Add(age.Id);
                 }
-                else {
+                else
+                {
                     toneladasPorGrano.FrwAgente += Math.Round(age.Cantidad / 1000);
                     toneladasPorGrano.ListFrwAgente.Add(age.Id);
                 }
@@ -185,7 +191,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.FrwAgente = toneladasPorGrano.FrwAgente;
             //toneladasPorGrano.DispAgente = toneladasPorGrano.DispAgente;
             toneladasPorGrano.Total += toneladasPorGrano.NewAgente + toneladasPorGrano.DispAgente + toneladasPorGrano.FrwAgente;
-            
+
             return toneladasPorGrano;
         }
     }

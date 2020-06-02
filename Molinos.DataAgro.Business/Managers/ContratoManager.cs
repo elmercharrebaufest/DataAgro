@@ -428,7 +428,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
                 var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
-                var cantidadCargada = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var cantidadCargada = repositorio.Listar<Contrato>(d => oParam.Id != d.Id && d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
@@ -731,6 +731,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.CaratulaMAT = oContrato.CaratulaMAT;
             oContratoSave.PrecioAjusteComision = oContrato.PrecioAjusteComision;
             oContratoSave.MonedaAjusteComisionId = oContrato.MonedaAjusteComisionId;
+            oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
 
             if (oContratoSave.PrecioPactado != null)
             {
@@ -1642,7 +1643,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CaratulaExtension = x.CaratulaExtension,
                 CaratulaMAT = x.CaratulaMAT,
                 PrecioAjusteComision = x.PrecioAjusteComision,
-                MonedaAjusteComisionId = x.MonedaAjusteComisionId
+                MonedaAjusteComisionId = x.MonedaAjusteComisionId,
+                ContratoAcuerdoId = x.ContratoAcuerdoId,
             });
             return contrato;
         }

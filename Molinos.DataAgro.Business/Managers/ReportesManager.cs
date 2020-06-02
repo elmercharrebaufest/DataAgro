@@ -405,7 +405,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 StandardCalidadId = x.StandardDeCalidadId,
                 DestinoId = x.DestinoId,
-                EsFason = x is Contrato? (x as Contrato).EsFason : null,
+                EsFason = x is Contrato ? (x as Contrato).EsFason : null,
                 ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null
             },
                x => x.OcultarEnTablero == false &&
@@ -413,7 +413,7 @@ namespace Molinos.DataAgro.Business.Managers
                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                && (centroId == 0 || x.DestinoId == centroId)
-               && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6 )
+               && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
                && (x.TipoAgenteCompraId == null)
                );
 
@@ -529,7 +529,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = Math.Round(x.Cantidad / 1000),
                 Acopio = 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && fechaDesde == fechaHasta && DbFunctions.TruncateTime(x.Fecha) == fechaDesde
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false 
+                && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var acuerdo = repositorio.Listar<ContratoAcuerdo, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
@@ -673,34 +674,39 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var listaAgentes = new List<AgenteCompraDto>();
-            if (fechaDesde == fechaHasta)
+            //if (fechaDesde == fechaHasta)
+            //{
+            var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
+            fechaDesde = fechaDesde.Date;
+            fechaHasta = fechaHasta.Date;
+            var agentes = repositorio.Listar<AgenteCompra>(x => materialId.Contains(x.MaterialId) &&
+                x.OcultarEnTablero == false &&
+                DbFunctions.TruncateTime(x.Fecha) >= fechaDesde &&
+                DbFunctions.TruncateTime(x.Fecha) <= fechaHasta &&
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value });
+            foreach (var agentesPorPosicionYMaterial in agentes)
             {
-                var precioDolar = tipoDeCambio.TraerTipoDeCambio(null);
-                fechaDesde = fechaDesde.Date;
-                var agentes = repositorio.Listar<AgenteCompra>(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) == fechaDesde && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId=x.TipoAgenteCompraId.Value });
-                foreach (var agentesPorPosicionYMaterial in agentes)
+                var agenteTemp = new AgenteCompraDto() { Operador = new List<AgenteCompraDto.OperadorCantidad>() };
+                foreach (var agente in agentesPorPosicionYMaterial)
                 {
-                    var agenteTemp = new AgenteCompraDto() { Operador = new List<AgenteCompraDto.OperadorCantidad>() };
-                    foreach (var agente in agentesPorPosicionYMaterial)
+                    var operador = agenteTemp.Operador.FirstOrDefault(x => x.OperadorId == agente.OperadorId);
+                    if (operador == null)
                     {
-                        var operador = agenteTemp.Operador.FirstOrDefault(x => x.OperadorId == agente.OperadorId);
-                        if (operador == null)
-                        {
-                            operador = new AgenteCompraDto.OperadorCantidad { OperadorDesc = agente.Operador.Descripcion, OperadorId = agente.OperadorId };
-                            agenteTemp.Operador.Add(operador);
-                        }
-                        operador.Cantidad += Math.Round(agente.Cantidad / 1000);
-                        operador.Ids.Add(agente.Id);
-                        agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
-                        agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
-                        agenteTemp.MaterialDesc = agente.Material.Descripcion;
-                        agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
-                        agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
-                        agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
+                        operador = new AgenteCompraDto.OperadorCantidad { OperadorDesc = agente.Operador.Descripcion, OperadorId = agente.OperadorId };
+                        agenteTemp.Operador.Add(operador);
                     }
-                    listaAgentes.Add(agenteTemp);
+                    operador.Cantidad += Math.Round(agente.Cantidad / 1000);
+                    operador.Ids.Add(agente.Id);
+                    agenteTemp.Posicion = agentesPorPosicionYMaterial.Key.Posicion;
+                    agenteTemp.MaterialId = agentesPorPosicionYMaterial.Key.MaterialId;
+                    agenteTemp.MaterialDesc = agente.Material.Descripcion;
+                    agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
+                    agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
+                    agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
                 }
+                listaAgentes.Add(agenteTemp);
             }
+            //}
             return listaAgentes.OrderBy(x => x.MaterialId).ThenBy(x => new DateTime(int.Parse(x.Posicion.Split('.')[1]), int.Parse(x.Posicion.Split('.')[0]), 1)).ToList();
         }
 
@@ -727,7 +733,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ListarConsulta(new TraerPosicionMaterialMes(fechaDesde, fechaHasta));
         }
-        private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra,List<BasicoContrato> negocios, int centroId = 0)
+        private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId = 0)
         {
             var standard = calidad.HasValue ? calidad.Value : 1;
             precioPizarra = precioPizarra.Where(x => x.MaterialId == materialId && x.FechaHasta <= fechaHasta).ToList();
@@ -759,7 +765,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             }).ToList();
-                
+
             foreach (var cont in contratos)
             {
                 var posicion = new DateTime();
@@ -1158,7 +1164,7 @@ namespace Molinos.DataAgro.Business.Managers
                 EnumClasificacionNegocio.NewCropFijacion;
             }
             contratos.AddRange(agente);
-            
+
 
             foreach (var cont in contratos)
             {

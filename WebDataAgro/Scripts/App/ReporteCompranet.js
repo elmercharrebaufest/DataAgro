@@ -35,7 +35,7 @@ function InicializarDate() {
             });
             fechaString = $("#fecha").val();
             fechaHastaString = $("#fechaHasta").val();
-            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString());
+            $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString());
         }
     });
     var fechaMax = new Date($("#fecha").val().toString().split('-')[2], parseInt($("#fecha").val().toString().split('-')[1], 10) - 1, $("#fecha").val().toString().split('-')[0]);
@@ -50,7 +50,7 @@ function InicializarDate() {
     $("#fechaHasta").change(function () {
         fechaString = $("#fecha").val();
         fechaHastaString = $("#fechaHasta").val();
-        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString());
+        $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaHastaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString());
     });
 }
 
@@ -100,7 +100,11 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
     }
     href = href + "/DetalleIdsModal?" /*+ "&tiponegocioids=" + tiponegocioids*/ + "&negocioids=" + negocioids + "&moneda=" + moneda;
 
-    $.get(href, function (data) { crearGrilladetallePosicion(data); });
+    //$.get(href, function (data) { crearGrilladetallePosicion(data); });
+    var list = negocioids.split(',');
+    $.post(window.location.href +"/DetalleIdsModal", { negocioids: list, moneda: moneda }, function (data) {
+        crearGrilladetallePosicion(data);
+    }, "json");
     return false;
 }
 function setearTituloModal(materialNombre, mesNombre, anio) {

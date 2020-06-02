@@ -806,17 +806,17 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Count);
         }
-        [Test]
-        public void TraerAgenteDeCompraTestError()
-        {
-            var fecha = new DateTime(2018, 10, 26);
-            var fecha1 = new DateTime(2018, 10, 28);
+        //[Test]
+        //public void TraerAgenteDeCompraTestError()
+        //{
+        //    var fecha = new DateTime(2018, 10, 26);
+        //    var fecha1 = new DateTime(2018, 10, 28);
 
-            var result = target.TraerAgenteDeCompra(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
+        //    var result = target.TraerAgenteDeCompra(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
-            Assert.NotNull(result);
-        }
+        //    repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
+        //    Assert.NotNull(result);
+        //}
         [Test]
         public void DetallePosicionTestOkMesAnio()
         {

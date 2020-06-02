@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var fecha = new DateTime(2018, 10, 26);
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             reportesManagerMock.Setup(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>())).Returns("");
-            var result = target.DetalleIdsModal("1", "");
+            var result = target.DetalleIdsModal(new List<int> {  1}, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 

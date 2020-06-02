@@ -3053,7 +3053,7 @@ function CargarDatosEditar(contrato, hijo) {
     var descuentosDto = contrato.Descuentos;
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
-            Id: descuento.Id,
+            Id: hijo ? 0 : descuento.Id,
             TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
             TipoPeriodoDBId: descuento.TipoPeriodoDBId,
             TipoDBDesc: descuento.TipoDBDesc,
@@ -3074,7 +3074,7 @@ function CargarDatosEditar(contrato, hijo) {
     calidadesDto = contrato.Calidades;
     $.each(calidadesDto, function (key, calidad) {
         var calidadKendo = {
-            Id: calidad.Id,
+            Id: hijo ? 0 : calidad.Id,
             CalidadEspecialId: calidad.CalidadEspecialId,
             CalidadEspecialDesc: calidad.CalidadEspecialDesc,
             Valor: calidad.Valor,
@@ -3170,7 +3170,9 @@ function CargarDatosEditar(contrato, hijo) {
             $("#boletoFisicoId").attr("disabled", true);
             $("#boletoCartaId").attr("disabled", true);
         }
-
+        if (contrato.ContratoAcuerdoId != null) {
+            $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
+        }
     }
 }
 
