@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -103,8 +103,8 @@
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.5.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
       <HintPath>..\packages\TaskScheduler.2.8.5\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
@@ -218,6 +218,7 @@
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
     <Compile Include="Controllers\ConfiguracionCupoController.cs" />
+    <Compile Include="Controllers\LogDataAgroController.cs" />
     <Compile Include="Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Controllers\TerminosYCondicionesController.cs" />
     <Compile Include="Controllers\FormulaController.cs" />
@@ -981,6 +982,7 @@
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
+    <Content Include="Scripts\App\LogDataAgro.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
     <Content Include="Scripts\App\SugerenciaCupo.js" />
     <Content Include="Scripts\App\AbmRol.js" />
@@ -2668,6 +2670,8 @@
     <Content Include="Views\CompraNet\ModalBorrarPreanulado.cshtml" />
     <Content Include="Views\CompraNet\ModalConfirmadoTildeFinalizado.cshtml" />
     <Content Include="Views\Proveedor\ImportarEstablecimientos.cshtml" />
+    <Content Include="Views\LogDataAgro\Index.cshtml" />
+    <Content Include="Views\LogDataAgro\ModalVisualizar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

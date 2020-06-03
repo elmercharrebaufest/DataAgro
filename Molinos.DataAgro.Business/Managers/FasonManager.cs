@@ -21,12 +21,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IProveedorManager mobjProveedorManager;
         private readonly ILogger logger;
+        private readonly ILogDataAgroManager logDataAgroManager;
 
-        public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager)
+        public FasonManager(ILogger logger, IRepositorio repositorio, IProveedorManager oMSProveedorManager, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             mobjProveedorManager = oMSProveedorManager;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         private Resultado Validar(Fason oParam, Resultado oErrorMessages)
@@ -91,10 +93,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return oEntityErrors;
             }
-
+            Fason oFasonSave = null;
             if (oFason.Id != 0)
             {
-                var oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
+                oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
                 if (oFasonSave.Estado.EstadoContratoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El Negocio Fasón no se puede modificar");
@@ -142,6 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oFasonSave ?? oFason, (oFasonSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
             }
             catch (Exception ex)
             {
@@ -166,11 +169,14 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception ex)
                 {
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
                 }
@@ -300,6 +306,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+
+
                 }
                 catch (Exception ex)
                 {
@@ -358,6 +367,8 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+
                 }
                 catch (Exception ex)
                 {
@@ -386,6 +397,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(contrato, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception ex)
                 {

@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailManager> mailManagerMock;
         private JavaScriptSerializer serializer;
         private Mock<IStatusContratoAgent> status;
-
+        private Mock<ILogDataAgroManager> logDataAgroManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -80,6 +80,8 @@ namespace Molinos.DataAgro.Test.Managers
             modificarContratoAgentMock = new Mock<IModificarContratoAgent>();
             mailManagerMock = new Mock<IMailManager>();
             status = new Mock<IStatusContratoAgent>();
+            logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
+
 
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
@@ -95,7 +97,7 @@ namespace Molinos.DataAgro.Test.Managers
                 capacidadProductivaAgentMock.Object,
                 altaTempranaAgentMock.Object,
                 diasHabilesAgentMock.Object, modificarContratoAgentMock.Object,
-                mailManagerMock.Object, status.Object);
+                mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object);
         }
 
         [Test]
@@ -1097,7 +1099,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Pendiente, Comercial = new Comercial() { ComercialId = 1 }, MotivoRechazo = "test" });
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
-            var resultado = target.BorrarContrato(new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente , MotivoRechazo = "test"});
+            var resultado = target.BorrarContrato(new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente, MotivoRechazo = "test" });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }

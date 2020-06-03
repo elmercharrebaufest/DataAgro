@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ReporteCompraNetPosicionCompras] (
  [Id]    INT           IDENTITY (1, 1) NOT NULL,    
-    [Material]         VARCHAR(50) NOT NULL,
+    [Material]			VARCHAR(50) NOT NULL,
     [MaterialId]         int NOT NULL,
     [Mes]         VARCHAR(50) NOT NULL,
     [KilosPesos]         DECIMAL(11, 2) NOT NULL,
@@ -15,9 +15,21 @@
     [NewAPrecio]         DECIMAL(11, 2) NOT NULL,
     [NewFijac]         DECIMAL(11, 2) NOT NULL,
     [Anio]         int,
-    [PrecioPonderadoPesos]         DECIMAL(11, 2) ,
-    [PrecioPonderadoDolares]         DECIMAL(11, 2) ,
-    [CantidadPonderada]         DECIMAL(11, 2) ,
+    [PrecioPonderadoPesos]			DECIMAL(11, 2) ,
+    [PrecioPonderadoDolares]			DECIMAL(11, 2) ,
+    [CantidadPonderada]			DECIMAL(11, 2) ,
+	[DispAPrecioPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[DispAPrecioDolares]			DECIMAL(11, 2) NOT NULL default 0,
+	[DispFijacPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[DispFijacDolares]			DECIMAL(11, 2) NOT NULL default 0,
+	[FrwAPrecioPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[FrwAPrecioDolares]			DECIMAL(11, 2) NOT NULL default 0,
+	[FrwFijacPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[FrwFijacDolares]			DECIMAL(11, 2) NOT NULL default 0,
+	[NewAPrecioPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[NewAPrecioDolares]			DECIMAL(11, 2) NOT NULL default 0,
+	[NewFijacPesos]			DECIMAL(11, 2) NOT NULL default 0,
+	[NewFijacDolares]			DECIMAL(11, 2) NOT NULL default 0,
 	    CONSTRAINT [PK_ReporteCompraNetPosicionCompras] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

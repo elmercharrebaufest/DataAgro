@@ -529,7 +529,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = Math.Round(x.Cantidad / 1000),
                 Acopio = 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false 
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false
                 && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var acuerdo = repositorio.Listar<ContratoAcuerdo, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -982,14 +982,35 @@ namespace Molinos.DataAgro.Business.Managers
                             KilosPesos = x.Sum(y => y.KilosPesos),
                             KilosDolares = x.Sum(y => y.KilosDolares),
                             DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
+
                             DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispAPrecio / 1000)),
+
                             DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),
+                            DispFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispFijac / 1000)),
+                            DispFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispFijac / 1000)),
+
                             FrwAFijar = Math.Round(x.Sum(y => y.FrwAFijar / 1000)),
+
                             FrwAPrecio = Math.Round(x.Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwAPrecio / 1000)),
+
                             FrwFijac = Math.Round(x.Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwFijac / 1000)),
+
                             NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
+
                             NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewAPrecio / 1000)),
+
                             NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
+                            NewFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewFijac / 1000)),
+                            NewFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewFijac / 1000)),
+
                             PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
                             PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
                             ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y => y.NegocioId),
@@ -2045,6 +2066,18 @@ namespace Molinos.DataAgro.Business.Managers
                         NewFijac = kilos.NewFijac,
                         PrecioPonderadoDolares = kilos.PrecioPonderadoDolares,
                         PrecioPonderadoPesos = kilos.PrecioPonderadoPesos,
+                        DispAPrecioPesos = kilos.DispAPrecioPesos,
+                        DispAPrecioDolares = kilos.DispAPrecioDolares,
+                        DispFijacPesos = kilos.DispFijacPesos,
+                        DispFijacDolares = kilos.DispFijacDolares,
+                        FrwAPrecioPesos = kilos.FrwAPrecioPesos,
+                        FrwAPrecioDolares = kilos.FrwAPrecioDolares,
+                        FrwFijacPesos = kilos.FrwFijacPesos,
+                        FrwFijacDolares = kilos.FrwFijacDolares,
+                        NewAPrecioPesos = kilos.NewAPrecioPesos,
+                        NewAPrecioDolares = kilos.NewAPrecioDolares,
+                        NewFijacPesos = kilos.NewFijacPesos,
+                        NewFijacDolares = kilos.NewFijacDolares,
                     });
                 }
 

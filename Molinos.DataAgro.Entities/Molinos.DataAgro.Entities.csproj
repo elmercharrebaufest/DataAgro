@@ -62,8 +62,8 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -120,6 +120,7 @@
     <Compile Include="Common\Enums\EnumPerfil.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
+    <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Dto\AgenteCompraModel.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\DatosReporteProveedor.cs" />
+    <Compile Include="Dto\LogDataAgroDto.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
     <Compile Include="Dto\AdministracionCupoDto.cs" />
     <Compile Include="Dto\ConfirmacionSugerenciaCupoDto.cs" />
@@ -273,6 +275,8 @@
     <Compile Include="Entities\AdministracionCupo.cs" />
     <Compile Include="Entities\CampoDetalle.cs" />
     <Compile Include="Entities\CondicionPago.cs" />
+    <Compile Include="Entities\CriterioCDWarrant.cs" />
+    <Compile Include="Entities\LogDataAgro.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />
     <Compile Include="Entities\Negocio.cs" />

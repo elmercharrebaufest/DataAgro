@@ -258,5 +258,6 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarNegocioExterno = 804,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_CompraNet_Externo")]
         VisualizarReporteCompraNetExterno = 805,
+        LogDataAgro = 806,
     }
 }

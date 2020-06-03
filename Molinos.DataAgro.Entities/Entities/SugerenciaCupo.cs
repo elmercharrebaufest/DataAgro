@@ -61,5 +61,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial Comercial { get; set; }
         public string Puntuaciones { get; set; }
         public string MotivoRechazo { get; set; }
+        public bool CDWarrant { get; set; }
     }
 }

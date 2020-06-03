@@ -44,5 +44,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public IEnumerable<int> ListNewAFijar { get; set; }
         public IEnumerable<int> ListNewAPrecio { get; set; }
         public IEnumerable<int> ListNewFijac { get; set; }
+        public double DispAPrecioPesos { get; set; }
+        public double DispAPrecioDolares { get; set; }
+        public double DispFijacPesos { get; set; }
+        public double DispFijacDolares { get; set; }
+        public double FrwAPrecioPesos { get; set; }
+        public double FrwAPrecioDolares { get; set; }
+        public double FrwFijacPesos { get; set; }
+        public double FrwFijacDolares { get; set; }
+        public double NewAPrecioPesos { get; set; }
+        public double NewAPrecioDolares { get; set; }
+        public double NewFijacPesos { get; set; }
+        public double NewFijacDolares { get; set; }
     }
 }

@@ -20,8 +20,11 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web;
 using System.Web.Script.Serialization;
+using WebDataAgro.Controllers;
+using static WebDataAgro.MvcApplication;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -40,6 +43,10 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailManager> mailManagerMock;
         private Mock<IServicioCriterios> servicioCriterioMock;
         private Mock<IDisponibilidadCuposAgent> disponibilidadCuposAgentMock;
+        private Mock<ICriterioCDWarrantAgent> criterioCDWarrantAgentMock;
+        private Mock<ILogDataAgroManager> logDataAgroManagerMock;
+
+
         [SetUp]
         public void SetUp()
         {
@@ -53,9 +60,11 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock = new Mock<IMailManager>();
             servicioCriterioMock = new Mock<IServicioCriterios>();
             disponibilidadCuposAgentMock = new Mock<IDisponibilidadCuposAgent>();
+            criterioCDWarrantAgentMock = new Mock<ICriterioCDWarrantAgent>();
+            logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object);
+                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, logDataAgroManagerMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -499,6 +508,7 @@ namespace Molinos.DataAgro.Test.Managers
                            } } }
                }
             };
+            criterioCDWarrantAgentMock.Setup(x => x.ConsultarContratoWarrant(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns( new List<BasicoContrato>());
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
                .Returns(formula);
             repositorioMock.Setup(y => y.Obtener<Formula>(It.IsAny<int>()))
@@ -575,7 +585,7 @@ namespace Molinos.DataAgro.Test.Managers
                 }});
             var result = target.TraerCupoDisponibilidad(DateTime.Now.Date, DateTime.Now.Date, "", new List<string>(), "");
 
-            Assert.AreEqual(1,result.Count());
+            Assert.AreEqual(1, result.Count());
 
         }
 

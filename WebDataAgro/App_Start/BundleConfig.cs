@@ -198,6 +198,8 @@ namespace WebDataAgro
                              "~/Scripts/App/ReporteCupo.js"));
             bundles.Add(new ScriptBundle("~/bundles/AbmFormula").Include(
                                        "~/Scripts/App/AbmFormula.js"));
+            bundles.Add(new ScriptBundle("~/bundles/LogDataAgro").Include(
+                                       "~/Scripts/App/LogDataAgro.js"));
             bundles.IgnoreList.Clear();
         }
     }

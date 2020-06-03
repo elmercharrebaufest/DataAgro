@@ -20,13 +20,16 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly IHedgeManager oHedgeManager;
+        private readonly ILogDataAgroManager logDataAgroManager;
         private ILogger logger;
 
-        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager)
+
+        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oHedgeManager = oHedgeManager;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         //--------------------------------------------------
@@ -87,6 +90,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarAgenteResult GrabarAgente(AgenteCompra oAgente)
         {
             var oEntityErrors = new GrabarAgenteResult();
+            AgenteCompra oAgenteSave = null;
 
             this.Validar(oAgente, oEntityErrors);
 
@@ -97,7 +101,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oAgente.Id != 0)
             {
-                var oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
+                oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
                 if (oAgenteSave.EstadoId > (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El Agente de Compras no se puede modificar");
@@ -114,7 +118,7 @@ namespace Molinos.DataAgro.Business.Managers
                     });
                     oAgenteSave.NegocioHistorico.Add(new NegocioHistorico { Datos = jsonContrato, Fecha = DateTime.Now, NegocioId = oAgenteSave.Id, TipoNegocioId = oAgenteSave.TipoNegocioId, ComercialId = oAgenteSave.ComercialId });
                 }
-                
+
                 oAgenteSave.Precio = oAgente.Precio;
                 oAgenteSave.Cantidad = oAgente.Cantidad;
                 oAgenteSave.EstadoId = estado;
@@ -125,7 +129,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.Posicion = oAgente.Posicion;
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
-               
+
 
 
             }
@@ -140,6 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oAgenteSave ?? oAgente, TipoAccionLogDataAgro.Crear);
             }
             catch (Exception ex)
             {
@@ -168,11 +173,15 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+
                 }
                 catch (Exception ex)
                 {
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
                 }
@@ -292,6 +301,8 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+
                 }
                 catch (Exception ex)
                 {
@@ -344,6 +355,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oAgenteSave, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception ex)
                 {
@@ -370,6 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(contrato, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception ex)
                 {

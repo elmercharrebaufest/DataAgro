@@ -27,14 +27,16 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IProveedorManager> proveedorManagerMock;
+        private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             proveedorManagerMock = new Mock<IProveedorManager>();
+            logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
 
-            target = new FasonManager(logger.Object, repositorioMock.Object, proveedorManagerMock.Object);
+            target = new FasonManager(logger.Object, repositorioMock.Object, proveedorManagerMock.Object, logDataAgroManagerMock.Object);
         }
 
         [Test]
@@ -418,7 +420,7 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
                 Ampliaciones = 2,
-                Estado = new EstadoContrato { EstadoContratoId = 6}
+                Estado = new EstadoContrato { EstadoContratoId = 6 }
             };
 
             repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);

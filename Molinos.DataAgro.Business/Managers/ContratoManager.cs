@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IModificarContratoAgent modificarContratoAgent;
         private readonly IMailManager mailManager;
         private readonly IStatusContratoAgent status;
+        private readonly ILogDataAgroManager logDataAgroManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -66,7 +67,7 @@ namespace Molinos.DataAgro.Business.Managers
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status)
+            IMailManager mailManager, IStatusContratoAgent status, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -91,6 +92,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.capacidadProductiva = capacidadProductiva;
             this.status = status;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         public DatosIniContrato TraerDatosCombo()
@@ -589,6 +591,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oContratoSave.CantidadCamiones = Convert.ToInt32(Math.Ceiling(((decimal)oContratoSave.Cantidad + (decimal)oContrato.Ampliaciones) / 30000));
                 }
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
             }
             else
             {
@@ -840,7 +843,9 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
 
             }
+            var tipoDeLog = (oContratoSave.Id == 0) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
             repositorio.GuardarCambios();
+            logDataAgroManager.LogCambiosDataAgro(oContratoSave, tipoDeLog);
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
                 try
@@ -929,6 +934,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
 
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
+
                 try
                 {
                     diferencialManager.ValidarComprasDiferencial(oContratoSave.ComercialId.Value);
@@ -971,6 +978,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
+
                 }
                 catch (Exception e)
                 {
@@ -999,6 +1008,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
+
                 }
                 catch (Exception e)
                 {
@@ -1068,6 +1079,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "Fecha del contrato debe ser la de hoy o día hábil anterior");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
+
                     return oEntityErrors;
                 }
                 try
@@ -1100,6 +1113,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
 
                     try
                     {
@@ -1133,6 +1147,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
                     logger.Error(e);
                     oEntityErrors.Error("", e.Message);
                 }
@@ -1352,6 +1367,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                 try
                 {
@@ -1919,6 +1936,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Modificar);
                     }
                     catch (Exception e)
                     {
@@ -2313,6 +2331,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.PorcentajeDePago = contrato.PorcentajeDePago;
 
             repositorio.GuardarCambios();
+            logDataAgroManager.LogCambiosDataAgro(contratoSave, TipoAccionLogDataAgro.Modificar);
+
             return error;
         }
 
@@ -2406,6 +2426,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     contrato.EstadoId = 5;
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(contrato, TipoAccionLogDataAgro.Modificar);
+
                     EnviarMail(contrato, contratoSave);
                 }
             }

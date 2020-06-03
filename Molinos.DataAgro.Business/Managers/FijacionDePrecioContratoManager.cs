@@ -30,6 +30,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
+        private readonly ILogDataAgroManager logDataAgroManager;
+
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -40,7 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarFijacionAgent oFinalizarFijacionAgent,
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IMailManager mailManager)
+            IMailManager mailManager, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -51,6 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oContratosParaFijacionAgent = oContratosParaFijacionAgent;
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.mailManager = mailManager;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         //--------------------------------------------------
@@ -103,6 +106,8 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioContratoSave, TipoAccionLogDataAgro.Modificar);
+
                 }
                 catch (Exception ex)
                 {
@@ -303,6 +308,8 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+
             }
             catch (Exception ex)
             {
@@ -367,6 +374,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+
+
                     var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
                     foreach (var comercialId in comerciales)
                     {
@@ -434,6 +444,9 @@ namespace Molinos.DataAgro.Business.Managers
                         mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
 
                         repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+
+
                         var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
                         foreach (var comercialId in comerciales)
                         {
@@ -581,6 +594,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+
+
                     var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                     foreach (var comercialId in comerciales)
                     {
@@ -615,6 +631,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+
+
                     EnviarMailRechazo(oContratoSave);
                 }
                 catch (Exception ex)
@@ -817,6 +836,9 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+
+
                 }
                 catch (Exception ex)
                 {

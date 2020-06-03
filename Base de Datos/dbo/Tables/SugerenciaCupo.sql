@@ -19,6 +19,7 @@
     [MotivoRechazo] VARCHAR(500) NULL, 
     [ConfiguracionEspacioDinamicoId] INT NULL, 
     [NegocioId] INT NULL, 
+    [CDWarrant] BIT NULL, 
     CONSTRAINT [PK_SugerenciaCupo] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

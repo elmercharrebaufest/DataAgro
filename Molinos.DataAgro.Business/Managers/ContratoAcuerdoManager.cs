@@ -22,12 +22,15 @@ namespace Molinos.DataAgro.Business
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly ILogDataAgroManager logDataAgroManager;
 
-        public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent)
+        public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio,
+            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.diasHabilesAgent = diasHabilesAgent;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
@@ -126,7 +129,7 @@ namespace Molinos.DataAgro.Business
                                         oContratoSave.PrecioPactado.Add(precio);
                                     }
                                 }
-                                                                
+
 
                                 if (oContratoSave.Calidad != null)
                                 {
@@ -185,6 +188,7 @@ namespace Molinos.DataAgro.Business
                     try
                     {
                         repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
                     }
                     catch (Exception ex)
                     {
@@ -207,6 +211,7 @@ namespace Molinos.DataAgro.Business
         public GrabarAcuerdoResult GrabarAcuerdo(ContratoAcuerdo oContratoAcuerdo)
         {
             var oEntityErrors = new GrabarAcuerdoResult();
+            ContratoAcuerdo objContratoAcuerdo = null;
 
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
@@ -239,7 +244,7 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
-                var objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
+                objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
                 if (estado == 1 && objContratoAcuerdo.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
                     string jsonContrato = JsonConvert.SerializeObject(objContratoAcuerdo, new JsonSerializerSettings()
@@ -382,6 +387,8 @@ namespace Molinos.DataAgro.Business
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(objContratoAcuerdo ?? oContratoAcuerdo, (objContratoAcuerdo == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
+
             }
             catch (Exception ex)
             {
@@ -726,6 +733,8 @@ namespace Molinos.DataAgro.Business
                 {
                     oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(oAcuerdoSave, TipoAccionLogDataAgro.Modificar);
+
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
                 }
@@ -754,9 +763,11 @@ namespace Molinos.DataAgro.Business
                 var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
                 acuerdo.Cantidad = (int)cantidad;
                 acuerdo.EstadoId = 5;
+                logDataAgroManager.LogCambiosDataAgro(acuerdo, TipoAccionLogDataAgro.Modificar);
             }
 
             repositorio.GuardarCambios();
+            
         }
     }
 }

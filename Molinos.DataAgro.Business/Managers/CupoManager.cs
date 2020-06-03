@@ -2,6 +2,7 @@
 using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -10,13 +11,21 @@ using Molinos.DataAgro.Interfaces.Criterios;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Reflection;
 using System.Text;
+
+
+
+
+
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -32,10 +41,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly IServicioCriterios servicioCriterios;
         private readonly IDisponibilidadCuposAgent disponibilidadCuposAgent;
+        private readonly ICriterioCDWarrantAgent cdWarrant;
+        private readonly ILogDataAgroManager logDataAgroManager;
+
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
-            IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios, IDisponibilidadCuposAgent disponibilidadCuposAgent)
+            IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios, 
+            IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -47,14 +60,17 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.servicioCriterios = servicioCriterios;
             this.disponibilidadCuposAgent = disponibilidadCuposAgent;
+            this.cdWarrant = cdWarrant;
+            this.logDataAgroManager = logDataAgroManager;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
             try
             {
+                var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId); ;
                 cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
-                cupo.Comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
+                cupo.Comercial = comercial;
                 cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
                 cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
                 cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
@@ -96,6 +112,9 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             repositorio.AgregarTodos(cuposConSap);
                             repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(cuposConSap, TipoAccionLogDataAgro.Crear);
+
+
 
                             if (listaCupos.Count < d.Cantidad.Value)
                             {
@@ -142,6 +161,8 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                     }
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(cupoSave, TipoAccionLogDataAgro.Modificar);
+
                     return error;
                 }
             }
@@ -208,7 +229,12 @@ namespace Molinos.DataAgro.Business.Managers
                 if (resultado == "OK")
                 {
                     cupoSap.EstadoCupoId = 4;
+
                     repositorio.GuardarCambios();
+
+                    logDataAgroManager.LogCambiosDataAgro(cupoSap, TipoAccionLogDataAgro.Eliminar);
+
+
                 }
                 else
                 {
@@ -430,7 +456,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var c in listaCupos)
             {
-                htmlBody +=  c +"<br />";
+                htmlBody += c + "<br />";
             }
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
@@ -439,7 +465,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>"; 
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
@@ -452,7 +478,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "ESPECIAL<br />";
                 }
-                if(cupo.MaterialId == 3)
+                if (cupo.MaterialId == 3)
                 {
                     htmlBody += "SUSTENTABLE<br />";
                 }
@@ -491,7 +517,7 @@ namespace Molinos.DataAgro.Business.Managers
             string td2 = "";
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
-                td1 = "<td colspan=\""+ largo+"\" style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                td1 = "<td colspan=\"" + largo + "\" style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
                 td2 = "<td colspan=\"" + largo + "\" style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
             }
             else
@@ -503,7 +529,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (linea % 2 == 0)
             {
                 return td1;
-            }      
+            }
             else
             {
                 return td2;
@@ -524,7 +550,7 @@ namespace Molinos.DataAgro.Business.Managers
                 style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
             }
             logger.Debug($"cupo numero: {c.Id}");
-           linea += 1;
+            linea += 1;
             if (linea % 2 == 0)
             {
                 return "<tr>" +
@@ -543,7 +569,7 @@ namespace Molinos.DataAgro.Business.Managers
                         "<td " + style2 + c.CupoSap + "</td>" +
                         "<td " + style2 + "Sin CTG" + "</td></ tr>";
             }
-           
+
         }
 
         public void CrearSugerenciaCupo()
@@ -608,11 +634,13 @@ namespace Molinos.DataAgro.Business.Managers
                     StandardDeCalidad = a.StandardDeCalidad,
                     Aceptado = null,
                     Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
-                    ContratoSAP = a.ContratoSAP
+                    ContratoSAP = a.ContratoSAP,
+                    CDWarrant = a.CDWarrant
                 }).ToList();
                 repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false);
                 repositorio.AgregarTodos(sugerencias);
                 repositorio.GuardarCambios();
+
                 logger.Debug("CrearSugerenciaCupo - GuardarCambios.");
             }
             catch (Exception e)
@@ -846,7 +874,15 @@ namespace Molinos.DataAgro.Business.Managers
             negocios.AddRange(contratos);
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
 
-
+            var warrant = cdWarrant.ConsultarContratoWarrant(formula.FechaDesde, formula.FechaHasta);
+            foreach (var c in contratos)
+            {
+                var item = warrant.Where(x => x.ContratoSAP == c.ContratoSAP).SingleOrDefault();
+                if (item != null)
+                {
+                    c.CDWarrant = true;
+                }
+            }
             Dictionary<int, int> espacioDinamicoUsados = cupos.Where(x => x.ConfiguracionEspacioDinamicoId != null).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
             var espacioDinamicoLista = repositorio.Listar<ConfiguracionEspacioDinamico, SugerenciaCupoDto>(x =>
@@ -894,6 +930,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("CrearSugerenciaCupo - Espacio Dinamico obtenidos: " + espacioDinamicoLista.Count());
         }
 
+        
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
         {
             string guion = new String('-', guiones);
@@ -1081,19 +1118,24 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Errores.AddRange(result.Errores);
                 resultado.ListaCupos.AddRange(result.ListaCupos);
                 repositorio.GuardarCambios();
+                //if (repositorio.GuardarCambios() > 0)
+                //{
+                //    LogCambiosDataAgro(sugerencia, comercial.IdActiveDirectory,"CambioEstado");
+                //}
                 return resultado;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e.Message);
                 return null;
             }
-        } 
+        }
 
 
         public List<DateTime> FechasComprendidas()
         {
             var fechas = new List<DateTime>();
-            Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());            
+            Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
             var fechaInicio = formula.FechaDesde;
             for (var i = 0; i <= formula.CantDias; i++)
             {
@@ -1268,11 +1310,11 @@ namespace Molinos.DataAgro.Business.Managers
             if (esLaUltimaSugerencia)
             {
                 cuposDevueltos.TryGetValue(sugerencia.FechaSugerida, out cuposDevueltosParaLaFecha);
-            }            
+            }
 
             var cantidadFleteProcedencia = detalle.CantidadFleteProcedencia ?? 0;
             cantidadFleteProcedencia = sugerencia.CantidadDeCupos < cantidadFleteProcedencia ? sugerencia.CantidadDeCupos : cantidadFleteProcedencia;
-            var cantidadSugerencia = sugerencia.CantidadDeCupos + cuposDevueltosParaLaFecha > detalle.CantidadSugerencia 
+            var cantidadSugerencia = sugerencia.CantidadDeCupos + cuposDevueltosParaLaFecha > detalle.CantidadSugerencia
                                         ? detalle.CantidadSugerencia : sugerencia.CantidadDeCupos + cuposDevueltosParaLaFecha;
 
             if (cantidadSugerencia == sugerencia.CantidadDeCupos + cuposDevueltosParaLaFecha && cuposDevueltos.ContainsKey(sugerencia.FechaSugerida.Date))
@@ -1349,10 +1391,11 @@ namespace Molinos.DataAgro.Business.Managers
                     var sugerenciasProveedorFecha = sugerenciaTodosLosProveedores.Where(a => a.FechaSugerida == fechaProveedor.Fecha && a.ProveedorId == detalle.ProveedorId).ToList();
                     var totalDeCuposIngresadosEnPantalla = fechaProveedor.CantidadSugerencia;
                     var totalDeCuposEnSugerenciasExistentes = sugerenciasProveedorFecha.Sum(x => x.CantidadDeCupos);
-                    if(sugerenciasProveedorFecha.Count() <= 0)
+                    if (sugerenciasProveedorFecha.Count() <= 0)
                     {
-                       
-                        var nuevaSugerencia = new SugerenciaCupo {
+
+                        var nuevaSugerencia = new SugerenciaCupo
+                        {
                             FechaSugerida = fechaProveedor.Fecha,
                             CantidadDeCupos = fechaProveedor.CantidadSugerencia,
                             ProveedorId = detalle.ProveedorId,
@@ -1361,8 +1404,8 @@ namespace Molinos.DataAgro.Business.Managers
                             ComercialId = detalle.ComercialId,
                             ZonaCupoId = repositorio.Obtener<ZonaCupo, int>(x => x.Descripcion == comercial.GrupoDeCompras.Descripcion, x => x.Id),
                             Puntuaciones = "",
-                            StandardDeCalidad="",
-                            TipoNegocioId=7
+                            StandardDeCalidad = "",
+                            TipoNegocioId = 7
                         };
                         sugerenciasProveedorFecha.Add(nuevaSugerencia);
                         repositorio.Agregar(nuevaSugerencia);
@@ -1380,7 +1423,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (totalDeCuposIngresadosEnPantalla - totalDeCuposEnSugerenciasExistentes > 0)
                     {
                         logger.Debug($"CrearSugerencia  {detalle.ProveedorId} {fechaProveedor.Fecha} {fechaProveedor.CantidadSugerencia} ");
-                        
+
                         var autorizacion = new AdministracionCupo()
                         {
                             CantidadCupo = totalDeCuposIngresadosEnPantalla - totalDeCuposEnSugerenciasExistentes,
@@ -1482,7 +1525,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = new List<SugerenciaNoAceptada>();
             Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula());
-            var sugerenciaComercialDia = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida >= formula.FechaDesde && x.FechaSugerida <= formula.FechaHasta && x.CentroId == formula.CentroId && x.Aceptado == null).GroupBy(y =>y.Comercial);
+            var sugerenciaComercialDia = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida >= formula.FechaDesde && x.FechaSugerida <= formula.FechaHasta && x.CentroId == formula.CentroId && x.Aceptado == null).GroupBy(y => y.Comercial);
             foreach (var sug in sugerenciaComercialDia)
             {
                 var dia = new SugerenciaNoAceptada()
@@ -1506,8 +1549,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void EnviarMailSinCtg()
         {
-            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x=> new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
-            
+            var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
+
             foreach (var p in cupos)
             {
                 var lista = new List<string>();
@@ -1522,7 +1565,7 @@ namespace Molinos.DataAgro.Business.Managers
                 mailManager.EnviarMail(emailproveedor,
                    "Estado de cupos", "", lista, CuerpoMailSinCtg(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"),
                     p.ToList(), comercial));
-                    
+
             }
         }
 
@@ -1540,8 +1583,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
             }
-            var linea = 0;        
-            string htmlBody = "";         
+            var linea = 0;
+            string htmlBody = "";
             htmlBody += "En el presente mail, se detalla los cupos sin activar con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "Material" + "</td>" +
@@ -1568,9 +1611,9 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId , string materialId)
+        public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
         {
-            return disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde,fechaHasta, zonaId, centroId, materialId);
+            return disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
         }
     }
 }

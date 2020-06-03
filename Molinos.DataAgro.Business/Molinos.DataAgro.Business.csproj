@@ -81,6 +81,9 @@
     <Reference Include="GemBox.Email, Version=13.0.35.1030, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
       <HintPath>..\packages\GemBox.Email.13.0.0.1030\lib\net35\GemBox.Email.dll</HintPath>
     </Reference>
+    <Reference Include="JsonDiffer, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonDiffer.0.2.0\lib\net45\JsonDiffer.dll</HintPath>
+    </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
@@ -90,8 +93,8 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
@@ -153,6 +156,7 @@
     <Compile Include="Managers\AdministracionCupoManager.cs" />
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
+    <Compile Include="Managers\LogDataAgroManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />
     <Compile Include="Managers\UsuarioManager.cs" />
     <Compile Include="Managers\TokenManager.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="Managers\TipoNegocioManager.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecio.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsEspacioDinamico.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioCDWarrant.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioProveedor.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioRaiz.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioContrato.cs" />

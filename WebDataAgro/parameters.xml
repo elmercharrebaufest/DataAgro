@@ -242,5 +242,11 @@
                     match="/configuration/appSettings/add[@key='UrlBaseDataAgro']
                            /@value" />
   </parameter>
+  <parameter name="HTTP_Port19 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port19']
+                           /@address" />
+  </parameter>
   
 </parameters>

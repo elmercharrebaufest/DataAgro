@@ -59,6 +59,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ContratoSAP { get; set; }
         public int? NegocioId { get; set; }
 
+        public bool CDWarrant { get; set; }
+
         public object Clone()
         {
             return this.MemberwiseClone();

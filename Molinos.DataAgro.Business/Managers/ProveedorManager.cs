@@ -28,10 +28,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IDatosProveedorAgent oDatosProveedorAgent;
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
+        private readonly ILogDataAgroManager logDataAgroManager;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
-            IMailManager mailManager)
+            IMailManager mailManager, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -39,6 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oDatosProveedorAgent = oDatosProveedorAgent;
             this.mailManager = mailManager;
             this.repositorio = repositorio;
+            this.logDataAgroManager = logDataAgroManager;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string actividadId)
@@ -251,6 +253,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(proveedor, TipoAccionLogDataAgro.Modificar);
 
                 if (oParam.tipoactividad == Convert.ToInt32(ConfigurationManager.AppSettings["AgendaCita"]))
                 {
@@ -1424,6 +1427,8 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(proveedor, TipoAccionLogDataAgro.Crear);
+
             }
             catch (Exception ex)
             {
@@ -1667,6 +1672,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(oProveedorSave, TipoAccionLogDataAgro.Modificar);
+
             }
             catch (Exception ex)
             {
@@ -2841,7 +2848,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-
+                        Proveedor proveedorUpdate = null;
                         var nuevoProveedorParaCorredor = new Proveedor
                         {
                             CUIT = proveedor.basicos.cuit,
@@ -2873,7 +2880,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
                         {
-                            var proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
+                            proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
                             proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
                             proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
                             proveedorUpdate.LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId;
@@ -2891,6 +2898,8 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var entidad = repositorio.Agregar(nuevoProveedorParaCorredor);
                             repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(proveedorUpdate ?? nuevoProveedorParaCorredor, (proveedorUpdate == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
+
                             proveedor.ProveedorId = entidad.ProveedorId;
                         }
                     }
@@ -2986,6 +2995,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(proveedor, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception e)
                 {
@@ -3013,6 +3023,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(proveedor, TipoAccionLogDataAgro.Modificar);
                 }
                 catch (Exception e)
                 {

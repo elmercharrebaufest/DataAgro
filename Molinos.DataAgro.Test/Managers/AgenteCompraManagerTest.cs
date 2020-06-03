@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IHedgeManager> hedgeManagerMock;
-
+        private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -38,21 +38,22 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             hedgeManagerMock = new Mock<IHedgeManager>();
+            logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new AgenteCompraManager(logger.Object, repositorioMock.Object,hedgeManagerMock.Object);
+            target = new AgenteCompraManager(logger.Object, repositorioMock.Object, hedgeManagerMock.Object, logDataAgroManagerMock.Object);
         }
 
         [Test]
         public void GrabarAgenteTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 1, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, CampanaId=1 };
+            var agente = new AgenteCompra { Id = 1, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<RangoPrecio>());
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
-                            .Returns( new AgenteCompra());
+                            .Returns(new AgenteCompra());
             var result = target.GrabarAgente(agente);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
@@ -68,7 +69,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarAgenteNuevoTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1,CampanaId =1 };
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<RangoPrecio>());
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
@@ -103,18 +104,18 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(8,result.ListaErrores.Count);
+            Assert.AreEqual(8, result.ListaErrores.Count);
         }
         [Test]
         public void FinalizarAgenteTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1,Ampliaciones=1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 2, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1 };
-            
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 2, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1 };
+
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
                             .Returns(agente);
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(It.IsAny<int>()))
-                            .Returns(new EstadoContrato { Descripcion="a",EstadoContratoId=5,Orden=1});
+                            .Returns(new EstadoContrato { Descripcion = "a", EstadoContratoId = 5, Orden = 1 });
             var result = target.FinalizarAgente(1);
 
             repositorioMock.Verify(x => x.Obtener<AgenteCompra>(It.IsAny<int>()), Times.Once);
@@ -208,8 +209,8 @@ namespace Molinos.DataAgro.Test.Managers
             var fecha = new DateTime(2019, 10, 01);
             var agente = new AgenteCompra { Id = 0, Cantidad = 1, Ampliaciones = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 6, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1 };
 
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<AgenteCompra, bool>>>(),It.IsAny<Expression<Func<AgenteCompra, BasicoContrato>>>()))
-                            .Returns(new BasicoContrato { Id=1});
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<Expression<Func<AgenteCompra, BasicoContrato>>>()))
+                            .Returns(new BasicoContrato { Id = 1 });
             var result = target.TraerAgente(1);
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<Expression<Func<AgenteCompra, BasicoContrato>>>()), Times.Once);
@@ -245,7 +246,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
                             .Returns(new AgenteCompra { Id = 1, EstadoId = 3 });
-            hedgeManagerMock.Setup(x => x.Dia()).Returns(new FinDelDiaDto { Cerrado= true});
+            hedgeManagerMock.Setup(x => x.Dia()).Returns(new FinDelDiaDto { Cerrado = true });
             var result = target.GrabarAmpliacionAgente(agente);
 
             repositorioMock.Verify(x => x.Obtener<AgenteCompra>(It.IsAny<int>()), Times.Once);

@@ -55,8 +55,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\CriterioCDWarrantAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
     <Compile Include="Helpers\PrecioPizarraAgent.cs" />
@@ -103,6 +104,11 @@
     <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\CriterioCDWarrant\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\DisponibilidadCupos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -207,6 +213,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\CriterioCDWarrant\Molinos.DataAgro.Agent.CriterioCDWarrant.SI_ZMPWS_DATAAGRO_CD_WARRANTSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CriterioCDWarrant\Molinos.DataAgro.Agent.CriterioCDWarrant.Z_MPRFC_CD_WARRANTSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CriterioCDWarrant\SI_ZMPWS_DATAAGRO_CD_WARRANTS.wsdl" />
     <None Include="Service References\DisponibilidadCupos\Molinos.DataAgro.Agent.DisponibilidadCupos.SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -344,6 +357,7 @@
     <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CriterioCDWarrant\" />
     <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
     <WCFMetadataStorage Include="Service References\PrecioPizarra\" />
     <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
@@ -602,6 +616,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DisponibilidadCupos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CriterioCDWarrant\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CriterioCDWarrant\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CriterioCDWarrant\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
