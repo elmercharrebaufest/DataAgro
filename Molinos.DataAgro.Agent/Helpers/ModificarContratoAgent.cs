@@ -473,10 +473,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 log.Xml += devolucion.ToXml();
                 repositorio.GuardarCambios();
 
-                if (devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) && devolucion.EX_MENSAJE.Contains("Error"))
-                {
-                    throw new Exception(devolucion.EX_MENSAJE);
-                }
+                //if (devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) && devolucion.EX_MENSAJE.Contains("Error"))
+                //{
+                //    throw new Exception(devolucion.EX_MENSAJE);
+                //}
                 logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? "Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
                 return devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? devolucion.EX_MENSAJE : "OK";
             }
