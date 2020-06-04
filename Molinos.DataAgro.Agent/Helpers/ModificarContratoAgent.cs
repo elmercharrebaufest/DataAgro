@@ -384,7 +384,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             HORAACT = fechaContrato.ToString("HH:mm:ss"),
                             PROCEDENCIA = localidadString,
                             CENTRO = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
-                            CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion),
+                            CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion).ToUpper(),
                             IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
                             CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
                             COND_FIJACION = contrato.CondicionFijacionId.HasValue ?
