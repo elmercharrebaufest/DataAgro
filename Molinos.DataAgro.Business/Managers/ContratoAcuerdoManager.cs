@@ -188,7 +188,7 @@ namespace Molinos.DataAgro.Business
                     try
                     {
                         repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+                        logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                     }
                     catch (Exception ex)
                     {
@@ -387,7 +387,8 @@ namespace Molinos.DataAgro.Business
             try
             {
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(objContratoAcuerdo ?? oContratoAcuerdo, (objContratoAcuerdo == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
+                var contratoLog = objContratoAcuerdo ?? oContratoAcuerdo;
+                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contratoLog.Id), (objContratoAcuerdo == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar, contratoLog.GetType());
 
             }
             catch (Exception ex)
@@ -580,6 +581,13 @@ namespace Molinos.DataAgro.Business
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
                 Dias_Pesificado = x.DiasPesificado,
                 PagoDiferido = x.PagoDiferido,
+                Material = x.Material.Descripcion,
+                Fecha = x.Fecha,
+                DestinoDescripcion = x.Destino.Descripcion,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                CondicionFijacionDescripcion = x.CondicionFijacion.Descripcion,
+                Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres,
+
                 Calidades = x.Calidad.Select(y => new CalidadDto
                 {
                     Valor = y.Valor,
@@ -703,6 +711,8 @@ namespace Molinos.DataAgro.Business
                 try
                 {
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
+
                 }
                 catch (Exception ex)
                 {
@@ -728,12 +738,14 @@ namespace Molinos.DataAgro.Business
                 {
                     oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Modificar, oAcuerdoSave.GetType());
+
                 }
                 catch (Exception ex)
                 {
                     oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oAcuerdoSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Modificar, oAcuerdoSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
@@ -763,11 +775,12 @@ namespace Molinos.DataAgro.Business
                 var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
                 acuerdo.Cantidad = (int)cantidad;
                 acuerdo.EstadoId = 5;
-                logDataAgroManager.LogCambiosDataAgro(acuerdo, TipoAccionLogDataAgro.Modificar);
+                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Modificar, acuerdo.GetType());
             }
 
             repositorio.GuardarCambios();
-            
+
+
         }
     }
 }

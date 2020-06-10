@@ -1,0 +1,186 @@
+﻿
+.k-grid-vermas {
+    width: 100px;
+}
+
+.k-grid tbody .k-button {
+    min-width: 40px;
+    width: auto;
+}
+
+.k-link {
+    /*height: 20px;
+        padding: 0;*/
+    text-align: center;
+}
+
+.k-grid tbody tr {
+    text-align: center;
+    line-height: 10px;
+}
+
+#grid {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.k-grid {
+    font-size: 11px;
+}
+
+.k-grid-header th.k-with-icon .k-link {
+    margin-right: 14px;
+}
+
+.k-grid-header th.k-header > .k-link {
+    padding-right: 2px;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
+}
+
+
+.modal .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    background: none !important;
+    text-indent: 0;
+}
+
+div.col-md-6.col-sm-10 .k-icon.k-i-close {
+    display: none !important;
+}
+
+
+.page-container {
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 2000px;
+}
+
+
+.modal .campo {
+    color: #787878;
+    border-color: #dbdbdb;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none !important;
+    text-align: right;
+    padding: 3px 5px;
+    border-bottom: 0;
+    color: #333 !important;
+}
+
+.modal .marginCero {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.modal .campoAdicionales {
+    background: #efefef;
+}
+
+.modal .campo h3 {
+    float: left;
+    margin: 0;
+    font-weight: 700;
+    padding-top: 3px;
+    font-size: 14px;
+    margin: 5px 0 0;
+}
+
+.modal .campo span {
+    margin: 0 10px;
+}
+
+.modal .campo:last-child {
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.modal .fason {
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.modal div.status {
+    display: none;
+}
+
+.modal .campo.campoAdicionales.observacion {
+    text-align: justify;
+}
+
+    .modal .campo.campoAdicionales.observacion p {
+        margin: 0px 0 10px 100px;
+        padding-top: 5px;
+    }
+
+.modal .campo {
+    text-align: left;
+}
+
+
+.modal .dobleColumna {
+    color: #787878;
+    border-color: #dbdbdb;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none !important;
+    text-align: right;
+    padding: 3px 5px;
+    color: #333 !important;
+    border-bottom: 0px;
+    border-right: 0px;
+}
+
+    .modal .dobleColumna span {
+        margin: 0 10px;
+    }
+
+.modal .dobleColumna {
+    text-align: left;
+}
+
+.modal .bordeSeccionVisualizar {
+    border: 1px solid #dbdbdb;
+}
+
+
+.modal .dobleColumna {
+    color: #787878;
+    border-color: #dbdbdb;
+    background-color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: none !important;
+    text-align: right;
+    padding: 3px 5px;
+    color: #333 !important;
+    border-bottom: 0px;
+    border-right: 0px;
+}
+
+    .modal .dobleColumna span {
+        margin: 0 10px;
+    }
+
+.modal .dobleColumna {
+    text-align: left;
+}
+
+.modal .bordeSeccionVisualizar {
+    border: 1px solid #dbdbdb;
+}

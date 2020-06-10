@@ -88,6 +88,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Logs.
+        /// </summary>
+        public static string Administracion_Logs {
+            get {
+                return ResourceManager.GetString("Administracion_Logs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configurar Administración Proveedores.
         /// </summary>
         public static string Administracion_Proveedores {

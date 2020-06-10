@@ -34,6 +34,7 @@ var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (!string.IsNullOrEmpty(CuitCorredor) ? x.Corredor.CUIT == CuitCorredor : x.CorredorId == null) && x.ContratoSAP != null);
+                contratos.Add("0001");
                 if (contratos != null)
                 {
                     var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));

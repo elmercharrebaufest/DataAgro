@@ -537,6 +537,8 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private decimal pORCPARCIALField;
         
+        private string fECHA_CREACIONField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1350,6 +1352,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.pORCPARCIALField = value;
                 this.RaisePropertyChanged("PORCPARCIAL");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=68)]
+        public string FECHA_CREACION {
+            get {
+                return this.fECHA_CREACIONField;
+            }
+            set {
+                this.fECHA_CREACIONField = value;
+                this.RaisePropertyChanged("FECHA_CREACION");
             }
         }
         

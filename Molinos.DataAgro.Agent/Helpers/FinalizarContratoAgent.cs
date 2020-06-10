@@ -237,7 +237,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CARATULA = contrato.CaratulaMAT,
                         CARATULA_EXT = contrato.CaratulaExtension,
                         PRECIO_COM_MAT = contrato.PrecioAjusteComision??0,
-                        MONEDA_COM_MAT = contrato.MonedaAjusteComisionId
+                        MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
+                        FECHA_CREACION = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
+                        repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd")
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

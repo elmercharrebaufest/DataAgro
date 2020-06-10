@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
         [Display(ResourceType = typeof(Text), Name = "Informe_Comercial")]
-        InformeComercial = 202,       
+        InformeComercial = 202,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Interes")]
         ModificarInteres = 203,
         [Display(ResourceType = typeof(Text), Name = "Canal_Notificaciones")]
@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Mail_Todos")]
         NotificacionesMailTodos = 208,
         [Display(ResourceType = typeof(Text), Name = "Notificaciones_Mail_Jerarquia")]
-        NotificacionesMailJerarquia = 209,        
+        NotificacionesMailJerarquia = 209,
         [Display(ResourceType = typeof(Text), Name = "Mail_SIO")]
         MailSio = 210,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Tipos_Negocios")]
@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerMesa = 309,
         [Display(ResourceType = typeof(Text), Name = "Mail_Hedge")]
         MailHedge = 310,
-        
+
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Fason")]
         CrearNegociosFason = 312,
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Agente")]
@@ -152,7 +152,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Centros")]
         ConfiguracionCentros = 505,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Rangos_Precios")]
-        ConfiguracionRangosPrecios = 506,        
+        ConfiguracionRangosPrecios = 506,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Rangos_Confirmacion")]
         ConfiguracionRangosConfirmacion = 507,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Tareas_Programadas")]
@@ -175,6 +175,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionRolesPermisos = 516,
         [Display(ResourceType = typeof(Text), Name = "Administracion_Proveedores")]
         AdministracionProveedores = 517,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_Logs")]
+        LogDataAgro = 518,
+
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
@@ -202,7 +205,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Administracion_EspacioDinamico")]
         AdministracionEspacioDinamico = 707,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_SugerenciaDeCupos")]
-        SugerenciaDeCupos =708,
+        SugerenciaDeCupos = 708,
         [Display(ResourceType = typeof(Text), Name = "Administracion_AlgoritimoDeCupos")]
         AlgoritimoDeCupos = 709,
         [Display(ResourceType = typeof(Text), Name = "Alta_OtrasZonas")]
@@ -258,6 +261,5 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarNegocioExterno = 804,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_CompraNet_Externo")]
         VisualizarReporteCompraNetExterno = 805,
-        LogDataAgro = 806,
     }
 }

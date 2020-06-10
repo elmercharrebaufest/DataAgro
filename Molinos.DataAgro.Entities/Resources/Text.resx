@@ -703,4 +703,10 @@
   <data name="Anular" xml:space="preserve">
     <value>Anular</value>
   </data>
+  <data name="Habilitacion_De_Cupos" xml:space="preserve">
+    <value>Habilitar Cupos</value>
+  </data>
+  <data name="Administracion_Logs" xml:space="preserve">
+    <value>Visualizar Logs</value>
+  </data>
 </root>

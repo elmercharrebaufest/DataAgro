@@ -144,7 +144,8 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(oFasonSave ?? oFason, (oFasonSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
+                logDataAgroManager.LogCambiosDataAgro(TraerFason(oFason.Id), TipoAccionLogDataAgro.Crear, oFason.GetType());
+                //logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave ?? oFason, (oFasonSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
             }
             catch (Exception ex)
             {
@@ -169,13 +170,13 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
                 }
                 catch (Exception ex)
                 {
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
@@ -306,7 +307,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
 
 
                 }
@@ -326,7 +327,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var contrato = repositorio.Obtener<Fason, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
-
+                Id = x.Id,
                 ProveedorId = x.ProveedorId ?? 0,
                 Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
                 ComercialId = x.ComercialId,
@@ -334,7 +335,15 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
                 TipoNegocioId = 4,
+                Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,
                 MaterialId = x.MaterialId,
+                Campania = x.Campana.Descripcion,
+                CondicionFijacionDescripcion = (x.CondicionFijacion != null) ? x.CondicionFijacion.Descripcion : "",
+                StandardDeCalidadDescripcion = (x.StandardDeCalidad != null) ? x.StandardDeCalidad.Descripcion : "",
+                PrecioNeto = x.PrecioNeto,
+                DestinoDescripcion = x.Destino.Descripcion,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
@@ -344,6 +353,10 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoFason = x.TipoFason.Descripcion,
                 TipoFasonId = x.TipoFasonId,
                 FasonId = x.Id,
+                Moneda = (x.Moneda != null) ? x.Moneda.Descripcion : "",
+                Pizarra = x.Pizarra,
+                Material = x.Material.Descripcion,
+                TipoNegocio = x.TipoNegocio.Descripcion,
                 TrigoEspecial = x.TrigoEspecial,
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
@@ -367,7 +380,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFasonSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
 
                 }
                 catch (Exception ex)
@@ -397,7 +410,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(contrato, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
                 }
                 catch (Exception ex)
                 {

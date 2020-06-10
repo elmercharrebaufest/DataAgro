@@ -223,6 +223,7 @@
           <xsd:element name="MONEDA_COM_MAT" type="rfc:cuky5" />
           <xsd:element name="PRECIO_COM_MAT" type="rfc:curr11.2" />
           <xsd:element name="PORCPARCIAL" type="rfc:decimal5.2" />
+          <xsd:element name="FECHA_CREACION" type="rfc:date10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

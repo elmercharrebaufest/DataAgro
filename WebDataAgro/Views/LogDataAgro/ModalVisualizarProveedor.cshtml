@@ -1,0 +1,114 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalVisualizarProveedor" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
+                @*<div class="status pendiente-modal"><div>PENDIENTE</div></div>
+                    <div class="status confirmado-modal"><div>CONFIRMADO</div></div>
+                    <div class="status oferta-modal"><div>OFERTA</div></div>
+                    <div class="status conerror-modal"><div>CON ERROR</div></div>
+                    <div class="status finalizado-modal"><div>FINALIZADO</div></div>
+                    <div class="status borrado-modal"><div>RECHAZADO</div></div>
+                    <div class="status reconfirmar-modal"><div>RECONFIRMAR</div></div>*@
+            </div>
+            <div class="modal-body clearfix ">
+                <div id="DivVisualizar" class="row">
+                    <div id="apellidoDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">Apellido:</strong>
+                        <span id="visualizar_apellido"></span>
+                    </div>
+                    <div id="areainfluenciaDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">area influencia:</strong>
+                        <span id="visualizar_areainfluencia"></span>
+                    </div>
+                    <div id="cuitDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">CUIT:</strong>
+                        <span id="visualizar_cuit"></span>
+                    </div>
+                    <div id="canaloperacionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">canal operacion:</strong>
+                        <span id="visualizar_canaloperacion"></span>
+                    </div>
+                    <div id="clasificacioncompranetDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">clasificacion compranet:</strong>
+                        <span id="visualizar_clasificacioncompranet"></span>
+                    </div>
+                    <div id="codigopostalDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">codigo postal:</strong>
+                        <span id="visualizar_codigopostal"></span>
+                    </div>
+                    <div id="condicionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">condicion:</strong>
+                        <span id="visualizar_condicion"></span>
+                    </div>
+                    <div id="destinatarioDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">destinatario:</strong>
+                        <span id="visualizar_destinatario"></span>
+                    </div>
+                    <div id="direccionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">direccion:</strong>
+                        <span id="visualizar_direccion"></span>
+                    </div>
+                    <div id="emailDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">email:</strong>
+                        <span id="visualizar_email1"></span>
+                    </div>
+
+                    <div id="estadoDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">estado:</strong>
+                        <span id="visualizar_estado"></span>
+                    </div>
+                    <div id="grupodecomprasDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">grupo de compras:</strong>
+                        <span id="visualizar_grupodecompras"></span>
+                    </div>
+                    <div id="gruposegmentacionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">grupo segmentacion:</strong>
+                        <span id="visualizar_gruposegmentacion"></span>
+                    </div>
+                    <div id="localidadDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">localidad:</strong>
+                        <span id="visualizar_localidad"></span>
+                    </div>
+                    <div id="nombrereferenteDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">nombrereferente:</strong>
+                        <span id="visualizar_nombrereferente"></span>
+                    </div>
+                    <div id="nombresDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">nombres:</strong>
+                        <span id="visualizar_nombres"></span>
+                    </div>
+
+                    <div id="observacionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">observacion:</strong>
+                        <span id="visualizar_observacionesproveedor"></span>
+                    </div>
+                    <div id="provinciaDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">provincia:</strong>
+                        <span id="visualizar_provincia"></span>
+                    </div>
+                    <div id="razonsocialDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">razon social:</strong>
+                        <span id="visualizar_razonsocial"></span>
+                    </div>
+                    <div id="segmentacionDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">segmentacion:</strong>
+                        <span id="visualizar_segmentacion"></span>
+                    </div>
+                    <div id="telefono1DivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">telefono 1:</strong>
+                        <span id="visualizar_telefono1"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

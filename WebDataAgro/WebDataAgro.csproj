@@ -379,6 +379,7 @@
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
+    <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
     <Content Include="Content\cupo.css" />
@@ -2672,6 +2673,10 @@
     <Content Include="Views\Proveedor\ImportarEstablecimientos.cshtml" />
     <Content Include="Views\LogDataAgro\Index.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizar.cshtml" />
+    <Content Include="Views\HabilitacionCupo\Index.cshtml" />
+    <Content Include="Views\HabilitacionCupo\_ListaCupo.cshtml" />
+    <Content Include="Views\LogDataAgro\ModalVisualizarProveedor.cshtml" />
+    <Content Include="Views\LogDataAgro\ModalVisualizarCupo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

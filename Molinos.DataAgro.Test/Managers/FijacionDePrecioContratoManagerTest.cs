@@ -111,6 +111,23 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarAmpliacionFijacionOk()
         {
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "1111"
+                    }
+                });
+
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(
                         new FijacionDePrecioContrato
                         {
@@ -152,6 +169,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarFijacionDePrecioOk()
         {
 
+
             var fijacion = new FijacionDePrecioContrato
             {
                 ProveedorId = 1,
@@ -163,6 +181,24 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoSAP = "1234",
                 CampanaId = 1
             };
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "1111"
+                    }
+                });
+
+
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });
@@ -192,6 +228,23 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoSAP = "1234",
                 CampanaId = 1
             };
+
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "1111"
+                    }
+                });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });
@@ -240,6 +293,23 @@ namespace Molinos.DataAgro.Test.Managers
                 CampanaId = 1,
                 EstadoId = (int)EnumEstadoContrato.Confirmado
             };
+
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "1111"
+                    }
+                });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });

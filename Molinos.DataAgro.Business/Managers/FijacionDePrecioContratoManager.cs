@@ -106,7 +106,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioContratoSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioContratoSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioContratoSave.GetType());
 
                 }
                 catch (Exception ex)
@@ -308,7 +308,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
 
             }
             catch (Exception ex)
@@ -374,7 +374,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
 
 
                     var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
@@ -444,7 +444,7 @@ namespace Molinos.DataAgro.Business.Managers
                         mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
 
                         repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+                        logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
 
 
                         var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
@@ -594,7 +594,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
 
 
                     var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
@@ -631,7 +631,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oContratoSave, TipoAccionLogDataAgro.Eliminar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
 
 
                     EnviarMailRechazo(oContratoSave);
@@ -751,6 +751,12 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
                     PagoDiferido = fijac.PagoDiferidoContrato,
                 }
+                ,
+
+                FechaDesde = fijac.FechaDesde,
+                FechaHasta = fijac.FechaHasta,
+                Fecha = fijac.Fecha
+
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -836,7 +842,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(oFijacionDePrecioSave, TipoAccionLogDataAgro.Modificar);
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
 
 
                 }

@@ -431,7 +431,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             CARATULA = contrato.CaratulaMAT,
                             CARATULA_EXT = contrato.CaratulaExtension,
                             PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0,
-                            MONEDA_COM_MAT = contrato.MonedaAjusteComisionId
+                            MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
+                            FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd")
                         }
                     }
                 };

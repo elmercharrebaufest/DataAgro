@@ -130,6 +130,7 @@
     <Compile Include="Dto\DatosContratoDto.cs" />
     <Compile Include="Dto\DatosReporteProveedor.cs" />
     <Compile Include="Dto\LogDataAgroDto.cs" />
+    <Compile Include="Dto\DatosModificadosLogDataAgroDto.cs" />
     <Compile Include="Dto\PrecioPactadosDto.cs" />
     <Compile Include="Dto\AdministracionCupoDto.cs" />
     <Compile Include="Dto\ConfirmacionSugerenciaCupoDto.cs" />

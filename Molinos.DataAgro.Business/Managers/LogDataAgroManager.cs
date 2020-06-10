@@ -1,4 +1,5 @@
-﻿using Kendo.DynamicLinq;
+﻿using JsonDiffer;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -24,44 +25,31 @@ namespace Molinos.DataAgro.Business.Managers
     public class LogDataAgroManager : ILogDataAgroManager
     {
         private readonly IRepositorio repositorio;
+
         public LogDataAgroManager(IRepositorio repositorio)
         {
             this.repositorio = repositorio;
         }
 
-        public int LogCambiosDataAgro(Cupo cambios, TipoAccionLogDataAgro tipoDeAccion)
+        public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, tipoDeContrato);
+        }
+        public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int? idProveedor)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, typeof(Proveedor));
+        }
+        public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
             return (cambios.Id == 0) ? LogGuardarCambios(cambios, tipoDeAccion, null) : LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
         }
-        public int LogCambiosDataAgro(List<Cupo> cambios, TipoAccionLogDataAgro tipoDeAccion)
-        {
-            foreach (var cupo in cambios)
-            {
-                if (cupo.Id == 0)
-                {
-                    LogGuardarCambios(cupo, tipoDeAccion, null);
-                }
-                else
-                {
-                    LogGuardarCambios(cupo, tipoDeAccion, cupo.Id);
-                }
-            }
-            return repositorio.GuardarCambios();
-        }
-        public int LogCambiosDataAgro(Proveedor cambios, TipoAccionLogDataAgro tipoDeAccion)
-        {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.ProveedorId);
-        }
-        public int LogCambiosDataAgro(Negocio cambios, TipoAccionLogDataAgro tipoDeAccion)
-        {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
-        }
 
-        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int? id)
+        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int? id, Type claseDeObjeto = null)
         {
             var usuarioComercial = PermisosHelper.ObtenerUsuario();
-            var tipoDeObjeto = cambios.GetType().Name.Split('_')[0].Trim().TrimEnd();
-
+            Type tipoDelObjeto = (claseDeObjeto != null) ? claseDeObjeto : cambios.GetType();
+            string nombreDelTipodeObjeto = tipoDelObjeto.Name.Split('_')[0];
+            nombreDelTipodeObjeto = nombreDelTipodeObjeto.Replace("Basico", String.Empty).Replace("Dto", String.Empty).Trim();
 
             string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
             {
@@ -72,49 +60,109 @@ namespace Molinos.DataAgro.Business.Managers
 
             try
             {
-                repositorio.Agregar<LogDataAgro>(new LogDataAgro
+                var logAgregado = new LogDataAgro
                 {
                     Usuario = usuarioComercial,
                     Fecha = DateTime.Now,
                     DatoModificado = jsonObjeto,
-                    Clase = (cambios.GetType().IsSubclassOf(typeof(Negocio))) ? $"Negocio - { tipoDeObjeto }" : tipoDeObjeto,
+                    Clase = (tipoDelObjeto.IsSubclassOf(typeof(Negocio))) ? $"Negocio - { nombreDelTipodeObjeto }" : nombreDelTipodeObjeto,
                     AccionRealizada = tipoDeAccion.ToString(),
-                    CupoId = (tipoDeObjeto == "Cupo") ? id : null,
-                    ProveedorId = (tipoDeObjeto == "Proveedor") ? id : null,
-                    NegocioId = (cambios.GetType().IsSubclassOf(typeof(Negocio))) ? id : null,
-                });
+                    CupoId = (nombreDelTipodeObjeto.Contains("Cupo")) ? id : null,
+                    ProveedorId = (nombreDelTipodeObjeto.Contains("Proveedor")) ? id : null,
+                    NegocioId = (tipoDelObjeto.IsSubclassOf(typeof(Negocio))) ? id : null,
+                };
+                repositorio.Agregar<LogDataAgro>(logAgregado);
 
                 return repositorio.GuardarCambios();
             }
             catch (Exception e)
             {
-                throw new Exception($"Cambios Guardados, error en LogDataAgro. {e.Message}", e);
+                throw new Exception($"{nombreDelTipodeObjeto} Guardado, error en LogDataAgro. {e.Message}", e);
 
             }
-
         }
-
-        //public IEnumerable<LogDataAgroDto> ListarDatosLogDataAgro()
-        //{
-
-
-
-        //    return repositorio.Listar<LogDataAgro, LogDataAgroDto>(x => new LogDataAgroDto
-        //    {
-        //        Id = x.Id,
-        //        AccionRealizada = x.AccionRealizada,
-        //        DatoModificado = x.DatoModificado,
-        //        Fecha = x.Fecha,
-        //        Usuario = x.Usuario,
-        //        Clase = x.Clase,
-        //        CupoId = x.CupoId,
-        //        NegocioId = x.NegocioId,
-        //        ProveedorId = x.ProveedorId,
-        //    });
-        //}
         public DataSourceResult ListarDatosLogDataAgro(DataSourceRequest request, List<int> equipo)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosLogsDataAgro(request, equipo));
+        }
+
+        public DatosModificadosLogDataAgroDto TraerDatosModificadosPorId(int idLogDataAgro)
+        {
+            LogDataAgroDto logAnterior = null;
+            var logActual = repositorio.Listar<LogDataAgro>(x => x.Id == idLogDataAgro)
+                .Select(log => new LogDataAgroDto
+                {
+                    Id = log.Id,
+                    Usuario = log.Usuario,
+                    Fecha = log.Fecha,
+                    Clase = log.Clase,
+                    AccionRealizada = log.AccionRealizada,
+                    DatoModificado = log.DatoModificado,
+                    CupoId = log.CupoId,
+                    NegocioId = log.NegocioId,
+                    ProveedorId = log.ProveedorId,
+                }).FirstOrDefault();
+
+            if (logActual.AccionRealizada.Contains("Crear"))
+            {
+                logAnterior = logActual;
+            }
+            else
+            {
+                logAnterior = repositorio.Listar<LogDataAgro>(x =>
+           (x.CupoId != null) ? (x.CupoId == logActual.CupoId && x.Id < logActual.Id) : false ||
+           (x.NegocioId != null) ? (x.NegocioId == logActual.NegocioId && x.Id < logActual.Id) : false ||
+           (x.ProveedorId != null) ? (x.ProveedorId == logActual.ProveedorId && x.Id < logActual.Id) : false)
+               .OrderByDescending(x => x.Id).Take(1)
+               .Select(log => new LogDataAgroDto
+               {
+                   Id = log.Id,
+                   Usuario = log.Usuario,
+                   Fecha = log.Fecha,
+                   Clase = log.Clase,
+                   AccionRealizada = log.AccionRealizada,
+                   DatoModificado = log.DatoModificado,
+                   CupoId = log.CupoId,
+                   NegocioId = log.NegocioId,
+                   ProveedorId = log.ProveedorId,
+               }).FirstOrDefault() ?? logActual;
+            }
+
+
+            if (logAnterior.NegocioId != logActual.NegocioId ||
+                logAnterior.CupoId != logActual.CupoId ||
+                logAnterior.ProveedorId != logActual.ProveedorId)
+            {
+                throw new Exception("No se pueden comparar diferentes Tipos de Registros.");
+            }
+
+            var j1 = JToken.Parse(logActual.DatoModificado);
+            var j2 = JToken.Parse(logAnterior.DatoModificado);
+
+
+
+            JToken diff = JsonDifferentiator.Differentiate(j2, j1);
+            List<string> cambiados = new List<string>();
+
+            if (diff != null)
+            {
+                foreach (var item in diff)
+                {
+                    string campo = item.ToString().TrimStart('"', '*');
+                    int index = campo.IndexOf('"');
+                    if (index > 0)
+                        campo = campo.Substring(0, index);
+                    cambiados.Add(campo);
+                }
+            }
+
+
+            return new DatosModificadosLogDataAgroDto
+            {
+                LogActual = logActual,
+                LogAnterior = logAnterior,
+                CamposCambiados = cambiados
+            };
         }
     }
 }

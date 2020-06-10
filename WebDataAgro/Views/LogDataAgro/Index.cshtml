@@ -1,18 +1,17 @@
 ﻿@{
     //Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Reporte de cupos";
+    ViewBag.Title = "Registro de Logs";
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/LogDataAgro")
 }
+@section Styles {
+    <link href="~/Content/logDataAgro.css" rel="stylesheet" />
+}
 
-@*@section Styles {
-        <link href="~/Content/ReporteCupo.css" rel="stylesheet" />
-    }*@
-
-<div class="Titulo">
-    <h5>Reporte de Cupos</h5>
+<div class="Titulo" style="margin-bottom:10%; margin-top:2%; margin-left:2%;">
+    <h5>Registro de Logs</h5>
 </div>
 
 
@@ -22,16 +21,11 @@
 </div>
 
 
-<div id="popUpAgregarCriterio" style="text-align: center;">
-    <input type="hidden" id="padreid" />
-    <input type="hidden" id="maximo" />
-
-    <input type="text" required id="dropdown" style="margin-bottom: 10%; width: 200px" />
-    <input type="number" id="prioridad" placeholder="Prioridad" /> <b>Puntos</b>
-
-    <br />
-    <input type='button' id="agregarCriterio" class="k-primary" onclick="agregar()" value='Agregar' />
-</div>
-
 
 @Html.Partial("ModalVisualizar")
+
+@Html.Partial("ModalVisualizarCupo")
+
+@Html.Partial("ModalVisualizarProveedor")
+
+

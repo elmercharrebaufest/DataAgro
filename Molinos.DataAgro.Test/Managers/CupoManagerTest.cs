@@ -23,8 +23,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Web;
 using System.Web.Script.Serialization;
-using WebDataAgro.Controllers;
-using static WebDataAgro.MvcApplication;
+
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -80,6 +79,9 @@ namespace Molinos.DataAgro.Test.Managers
                 ZonaCupoId = 1,
                 FechaIngreso = new DateTime(2099, 11, 19)
             };
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, CupoDto>>>()))
+                .Returns(new CupoDto { Id = 1 });
+            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(new Cupo { Id = 1 });
 
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { ProveedorId = 1 });
@@ -439,7 +441,13 @@ namespace Molinos.DataAgro.Test.Managers
             crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>()))
                 .Returns(new List<string>() { "a" });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
+
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, CupoDto>>>()))
+                .Returns(new CupoDto { Id = 1 });
+            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(new Cupo { Id = 1 });
+
             var result = target.AceptarSugerenciaCupo(new List<SugerenciaCupoDto> { new SugerenciaCupoDto { Id = 1, CantidadDeCupos = 1, MaterialId = 1, FechaSugerida = DateTime.Now.Date, CentroId = 1, ZonaCupoId = 1, ZonaDescrip = "" } });
+
 
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())
             //    , Times.Once);
@@ -508,7 +516,7 @@ namespace Molinos.DataAgro.Test.Managers
                            } } }
                }
             };
-            criterioCDWarrantAgentMock.Setup(x => x.ConsultarContratoWarrant(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns( new List<BasicoContrato>());
+            criterioCDWarrantAgentMock.Setup(x => x.ConsultarContratoWarrant(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<BasicoContrato>());
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
                .Returns(formula);
             repositorioMock.Setup(y => y.Obtener<Formula>(It.IsAny<int>()))
@@ -588,6 +596,5 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Count());
 
         }
-
     }
 }

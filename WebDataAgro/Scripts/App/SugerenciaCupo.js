@@ -100,9 +100,9 @@ function CargarEventos() {
         for (var i = 0; i < sugerencias.length; i++) {
             fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
                 + kendo.toString(sugerencias[i].FechaSugerida, "dd/MM/yyyy")
-                + '</td> <td><input id="fleteProcedencia'+i+'" name="' + sugerencias[i].CantidadFleteProcedencia + '" min="1" max="' + sugerencias[i].CantidadDeCuposMaximo
+                + '</td> <td><input id="fleteProcedencia' + i + '" name="' + sugerencias[i].CantidadFleteProcedencia + '" min="1" max="' + sugerencias[i].CantidadDeCupos
                 + '" class="cantidad" value="' + sugerencias[i].CantidadFleteProcedencia + '"/> </td> <td>'
-                + 'Max. de cupos: ' + sugerencias[i].CantidadDeCuposMaximo + '</td></tr>'
+                + 'Max. de cupos: ' + sugerencias[i].CantidadDeCupos + '</td></tr>'
             $("#cuerpo-carga-cupos").append(fila);
         }
         $(".cantidad").kendoNumericTextBox({
@@ -268,7 +268,8 @@ function CargarGrillaConfig() {
                     input.appendTo(container);
                     // initialize a Kendo UI numeric text box and set max value
                     input.kendoNumericTextBox({
-                        max: options.model.CantidadDeCuposMaximo
+                        max: options.model.CantidadDeCuposMaximo,
+                        min: 1
                     });
                 }
             },

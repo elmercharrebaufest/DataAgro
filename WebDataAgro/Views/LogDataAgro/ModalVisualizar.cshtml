@@ -35,13 +35,13 @@
                     </div>
                     <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero noFason noAgente clearfix noFijacion">
                         <strong style="float:left">Fecha Desde - Fecha Hasta (Entrega):</strong>
-                        <span id="visualizar_desdeHasta"></span>
+                        <span id="visualizar_desdehasta"></span>
                     </div>
                     <div class="row campo marginCero clearfix noFason noAgente noFijacion">
-                        <div id="clasificacionDivVisualizar ">
+                        <div class="campo" id="clasificacionDivVisualizar">
                             <strong style="float:left">Clasificación:</strong>
                             <span id="visualizar_clasificacion"></span>
-                            <span id="visualizar_consignatario" style="margin:0"></span>
+                            @*<span id="visualizar_consignatario" style="margin:0"></span>*@
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -50,10 +50,10 @@
                             <span id="visualizar_material"></span>
                         </div>
                         <div id="campanaDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <div>
-                                <strong style="float:left">Campaña:</strong>
-                                <span id="visualizar_campana"></span>
-                            </div>
+
+                            <strong style="float:left">Campaña:</strong>
+                            <span id="visualizar_campanacupo"></span>
+
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -63,7 +63,7 @@
                         </div>
                         <div id="cantidadDeCamionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Cantidad de Camiones:</strong>
-                            <span id="visualizar_cantidadDeCamiones"></span>
+                            <span id="visualizar_cantidaddecamiones"></span>
                         </div>
                     </div>
                     <div class="row marginCero clearfix">
@@ -71,65 +71,63 @@
                             <strong style="float:left">Precio:</strong>
                             <span id="visualizar_precio"></span>
                         </div>
-                        <div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Comercial:</strong>
-                            <span id="visualizar_comercial"></span>
-                        </div>
+
+                    </div>
+                    <div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                        <strong style="float:left">Comercial:</strong>
+                        <span id="visualizar_comercial"></span>
                     </div>
                     <div class="row marginCero clearfix">
                         <div id="porcentajeDePagoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix ">
                             <strong style="float:left">Porcentaje de Pago:</strong>
-                            <span id="visualizar_porcentajeDePago"></span>
+                            <span id="visualizar_porcentajedepago"></span>
                         </div>
-                        @*<div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Comercial:</strong>
-                            <span id="visualizar_comercial"></span>
-                        </div>*@
+
                     </div>
 
                     <div id="aperturaDiv" class="bordeSeccionVisualizar">
 
                         <div id="aperturaDePrecioVisualizarDiv" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFason noAgente aperturaPrecio">
                             <strong style="float:left">Apertura precio: </strong>
-                            <span id="visualizar_aperturaPrecio"></span>
+                            <span id="visualizar_aperturaprecio"></span>
                         </div>
                         <div class="row marginCero clearfix noFason noAgente" id="aperturaDePrecioVisualizarDivPrecioNeto">
-                            <div class="dobleColumna col-sm-12 col-xs-12 noPadding clearfix " id="dobleAperturaPrecioNeto">
+                            <div class="campo dobleColumna col-sm-12 col-xs-12 noPadding clearfix " id="dobleAperturaPrecioNeto">
                                 <strong style="float:left">Precio neto:</strong>
-                                <span id="visualizar_aperturaFinancieroPrecioNeto"></span>
+                                <span id="visualizar_aperturafinancieroprecioneto"></span>
                             </div>
 
                         </div>
                         <div class="row marginCero clearfix noFason noAgente">
                             <div id="aperturaFinancieroDivVisualizar" class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix ">
                                 <strong style="float:left">Financiero:</strong>
-                                <span id="visualizar_aperturaFinanciero"></span>
+                                <span id="visualizar_aperturafinanciero"></span>
                             </div>
                             <div id="aperturaRedespachoDivVisualizar" class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix">
                                 <strong style="float:left">Redespacho:</strong>
-                                <span id="visualizar_aperturaRedespacho"></span>
+                                <span id="visualizar_aperturaredespacho"></span>
                             </div>
                         </div>
                         <div class="row marginCero clearfix noFason noAgente">
                             <div id="aperturaComisionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix ">
                                 <strong style="float:left">Comisiones:</strong>
-                                <span id="visualizar_aperturaComisiones"></span>
+                                <span id="visualizar_aperturacomisiones"></span>
                             </div>
                             <div id="aperturaBonificacionesDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                                 <strong style="float:left">Bonificaciones:</strong>
-                                <span id="visualizar_aperturaBonificaciones"></span>
+                                <span id="visualizar_aperturabonificaciones"></span>
                             </div>
                         </div>
 
                     </div>
                     <div class="row marginCero clearfix" id="fleteDivVisualizar">
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                        <div id="nivelfleteDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Nivel Tarifa:</strong>
-                            <span id="visualizar_nivelFlete"></span>
+                            <span id="visualizar_nivelflete"></span>
                         </div>
-                        <div class="campo col-sm-6 col-xs-12 noPadding clearfix">
+                        <div id="tarifafleteDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Tarifa Flete:</strong>
-                            <span id="visualizar_tarifaFlete"></span>
+                            <span id="visualizar_tarifaflete"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -159,7 +157,7 @@
                     <div class="row marginCero">
                         <div id="planCanjeDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Plan Canje:</strong>
-                            <span id="visualizar_planCanje"></span>
+                            <span id="visualizar_plancanje"></span>
                         </div>
                         <div id="establecimientoDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Establecimiento:</strong>
@@ -173,21 +171,21 @@
                     <div class="row marginCero">
                         <div id="sustentableDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Sustentable (Bonificaci&oacute;n):</strong>
-                            <span id="visualizar_sustentablePrecio"></span>
+                            <span id="visualizar_sustentableprecio"></span>
                         </div>
                         <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding noFason noAgente clearfix">
                             <strong style="float:left">Dolarizado (Fecha l&iacute;mite):</strong>
-                            <span id="visualizar_dolarizadoFecha"></span>
+                            <span id="visualizar_dolarizadofecha"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
                         <div id="pesificadoDiasDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Pesificado (D&iacute;as diferimiento):</strong>
-                            <span id="visualizar_pesificadoDias"></span>
+                            <span id="visualizar_pesificadodias"></span>
                         </div>
                         <div id="informaSIODivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Informa SIO:</strong>
-                            <span id="visualizar_informaSIO"></span>
+                            <span id="visualizar_informasio"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -197,7 +195,7 @@
                         </div>
                         <div id="mercsDepositoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Mercaderías en Depósito:</strong>
-                            <span id="visualizar_mercsDeposito"></span>
+                            <span id="visualizar_mercsdeposito"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -234,11 +232,11 @@
                     </div>
                     <div id="desdeHastaFijacionDivVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFijacion">
                         <strong>Fecha Desde - Fecha Hasta (Fijacion):</strong>
-                        <span id="visualizar_desdeHastaFijacion" class="centrar"></span>
+                        <span id="visualizar_desdehastafijacion" class="centrar"></span>
                     </div>
                     <div id="condicionFijacionDivVisualisar" class="row marginCero clearfix  col-xs-12 noPadding campo campoAdicionales noFijacion">
                         <strong>Condición Fijacion:</strong>
-                        <span id="visualizar_condicionFijacion" class="centrar"></span>
+                        <span id="visualizar_condicionfijacion" class="centrar"></span>
                     </div>
 
                     <div id="tipoCalidadDiv" class="row campo campoAdicionales marginCero clearfix noFason noAgente noPadding noFijacion">
@@ -297,36 +295,36 @@
                     <div class="row marginCero">
                         <div id="contratoCorredorVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Contrato Corredor:</strong>
-                            <span id="visualizar_contratoCorredor"></span>
+                            <span id="visualizar_contratocorredor"></span>
                         </div>
                         <div id="contratoVendedorVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Contrato Vendedor:</strong>
-                            <span id="visualizar_contratoVendedor"></span>
+                            <span id="visualizar_contratovendedor"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
                         <div id="compensacionVisualizar" class="campo campoAdicionales col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Negocio Compensación</strong>
+                            <strong style="float:left">Negocio Compensación:</strong>
                         </div>
                     </div>
 
                     <div class="row marginCero">
                         <div id="selladoACargoVisualizar" class="campo campoAdicionales col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Sellado 100% a Cargo </strong>
-                            <span id="visualizar_selladoACargo"></span>
+                            <strong style="float:left">Sellado 100% a Cargo: </strong>
+                            <span id="visualizar_selladoacargo"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
                         <div id="FechaCiertaVisualizar" class="campo campoAdicionales col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Fecha Cierta </strong>
-                            <span id="visualizar_FechaCierta"></span>
+                            <strong style="float:left">Fecha Cierta: </strong>
+                            <span id="visualizar_fechacierta"></span>
                         </div>
                     </div>
                     <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFason noAgente observacion">
                         <strong style="float:left">Observaci&oacute;n: </strong>
                         <span id="visualizar_observacion"></span>
                     </div>
-                    <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales rechazo">
+                    <div id="MotivoRechazoVisualizar" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales rechazo">
                         <strong style="float:left">Motivo Rechazo: </strong>
                         <span id="visualizar_rechazo"></span>
                     </div>

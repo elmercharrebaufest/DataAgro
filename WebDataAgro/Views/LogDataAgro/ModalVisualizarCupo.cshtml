@@ -1,0 +1,87 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalVisualizarCupo" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
+                @*<div class="status pendiente-modal"><div>PENDIENTE</div></div>
+                    <div class="status confirmado-modal"><div>CONFIRMADO</div></div>
+                    <div class="status oferta-modal"><div>OFERTA</div></div>
+                    <div class="status conerror-modal"><div>CON ERROR</div></div>
+                    <div class="status finalizado-modal"><div>FINALIZADO</div></div>
+                    <div class="status borrado-modal"><div>RECHAZADO</div></div>
+                    <div class="status reconfirmar-modal"><div>RECONFIRMAR</div></div>*@
+            </div>
+            <div class="modal-body clearfix ">
+                <div id="DivVisualizar" class="row">
+                    <div id="fechaIngresoDivVisualizar" class="row campo marginCero noAgente clearfix" hidden>
+                        <strong style="float:left">FechaIngreso:</strong>
+                        <span id="visualizar_fechaingreso"></span>
+                    </div>
+                    <div id="fechaGeneracionDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">FechaGeneracion:</strong>
+                        <span id="visualizar_fechaGeneracion"></span>
+                    </div>
+
+                    <div id="comercialDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Comercial:</strong>
+                        <span id="visualizar_comercial"></span>
+                    </div>
+                    <div id="calidadDivVisualizarCupo" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Calidad:</strong>
+                        <span id="visualizar_calidadcupo"></span>
+                    </div>
+                    <div id="cupoStopDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">CupoStop:</strong>
+                        <span id="visualizar_cupostop"></span>
+                    </div>
+                    <div id="materialDivVisualizarCupo" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Material:</strong>
+                        <span id="visualizar_materialcupo"></span>
+                    </div>
+
+                    <div id="proveedorDivVisualizarCupo" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Proveedor:</strong>
+                        <span id="visualizar_proveedorcupo"></span>
+                    </div>
+                    <div id="centroDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Centro:</strong>
+                        <span id="visualizar_centro"></span>
+                    </div>
+                    <div id="zonaCupoDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">ZonaCupo:</strong>
+                        <span id="visualizar_zonacupo"></span>
+                    </div>
+                    <div id="estadoCupoDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">EstadoCupo:</strong>
+                        <span id="visualizar_estadocupo"></span>
+                    </div>
+                    <div id="acopioDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">Acopio:</strong>
+                        <span id="visualizar_acopio"></span>
+                    </div>
+                    <div id="cupoSapDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">cupoSap:</strong>
+                        <span id="visualizar_cuposap"></span>
+                    </div>
+                    <div id="destinatarioDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">destinatario:</strong>
+                        <span id="visualizar_destinatario"></span>
+                    </div>
+                    <div id="observacionesDivVisualizar" class="row campo marginCero clearfix" hidden>
+                        <strong style="float:left">observaciones:</strong>
+                        <span id="visualizar_observaciones"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

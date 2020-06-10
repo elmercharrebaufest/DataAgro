@@ -35,16 +35,22 @@ namespace WebDataAgro.Controllers
             {
                 request.Sort = new List<Sort> {
                     new Sort {Field= "Fecha",Dir="desc" }
-                    //new Sort { Field="Material",Dir="desc" } };
                     };
             }
 
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = logDataAgroManager.ListarDatosLogDataAgro(request, equipo);
-            //var asd = new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
             return Json(model);
-            ///*return asd*/;
         }
+
+        [HttpPost]
+        public ActionResult TraerDatosModificados(int idLogDataAgro)
+        {
+            var modificados = logDataAgroManager.TraerDatosModificadosPorId(idLogDataAgro);
+            return Json(modificados);
+        }
+
+
 
     }
 }
