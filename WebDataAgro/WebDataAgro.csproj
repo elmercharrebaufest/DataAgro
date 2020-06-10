@@ -2673,8 +2673,6 @@
     <Content Include="Views\Proveedor\ImportarEstablecimientos.cshtml" />
     <Content Include="Views\LogDataAgro\Index.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizar.cshtml" />
-    <Content Include="Views\HabilitacionCupo\Index.cshtml" />
-    <Content Include="Views\HabilitacionCupo\_ListaCupo.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizarProveedor.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizarCupo.cshtml" />
   </ItemGroup>
