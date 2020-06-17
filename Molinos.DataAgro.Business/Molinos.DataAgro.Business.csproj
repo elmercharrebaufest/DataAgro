@@ -84,6 +84,9 @@
     <Reference Include="JsonDiffer, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JsonDiffer.0.2.0\lib\net45\JsonDiffer.dll</HintPath>
     </Reference>
+    <Reference Include="JsonDiffPatchDotNet, Version=2.2.0.0, Culture=neutral, PublicKeyToken=a407b9994a6d66d5, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonDiffPatch.Net.2.2.0\lib\net45\JsonDiffPatchDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
@@ -154,6 +157,7 @@
     <Compile Include="Managers\CampaniaActualManager.cs" />
     <Compile Include="Managers\CampaniaMaterialManager.cs" />
     <Compile Include="Managers\AdministracionCupoManager.cs" />
+    <Compile Include="Managers\HabilitacionCupoManager.cs" />
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
     <Compile Include="Managers\LogDataAgroManager.cs" />

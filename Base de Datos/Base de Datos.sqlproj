@@ -295,6 +295,7 @@
     <Build Include="dbo\Tables\AdministracionCupo.sql" />
     <Build Include="dbo\Tables\CampoDetalle.sql" />
     <Build Include="dbo\Tables\LogDataAgro.sql" />
+    <Build Include="dbo\Tables\HabilitacionCupo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

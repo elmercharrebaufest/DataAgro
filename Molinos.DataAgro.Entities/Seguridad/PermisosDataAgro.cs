@@ -248,18 +248,23 @@ namespace Molinos.DataAgro.Entities.Seguridad
         SolicitudCupo = 728,
         [Display(ResourceType = typeof(Text), Name = "Disponibilidad_De_Cupos")]
         DisponibilidadDeCupos = 729,
+        [Display(ResourceType = typeof(Text), Name = "Habilitacion_De_Cupos")]
+        HabilitacionDeCupos = 730,
+        
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]
         ServicioAuth = 800,
         [Display(ResourceType = typeof(Text), Name = "Ingreso_Externo")]
         IngresoExterno = 801,
-
         [Display(ResourceType = typeof(Text), Name = "Nuevo_Negocio_Externo")]
         NuevoNegocioExterno = 803,
         [Display(ResourceType = typeof(Text), Name = "Modificar_Negocio_Externo")]
         ModificarNegocioExterno = 804,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_CompraNet_Externo")]
         VisualizarReporteCompraNetExterno = 805,
+        [Display(ResourceType = typeof(Text), Name = "AltaCupo_Externo")]
+        AltaCupo_Externo = 806,
+
     }
 }

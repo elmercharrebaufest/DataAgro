@@ -9,23 +9,101 @@
 @section Styles {
     <link href="~/Content/logDataAgro.css" rel="stylesheet" />
 }
-
-<div class="Titulo" style="margin-bottom:10%; margin-top:2%; margin-left:2%;">
-    <h5>Registro de Logs</h5>
+<link href="~/Content/diffPlex.css" rel="stylesheet" />
+<script src="~/Scripts/diffPlex.js"></script>
+<div class="Titulo">
+    <h4>Registro de Logs</h4>
 </div>
 
 
+
+
+
+<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+</div>
+<br />
+<div id="filtrar" class="container collapse">
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha Desde-Hasta</label>
+        </div>
+        <div class="col-md-2">
+            <span id="FechaDesde">
+                <input id="FechaDesdeId" class="filtroFecha" name="Fecha-desde" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <span id="FechaHasta">
+                <input id="FechaHastaId" class="filtroFecha" name="Fecha-hasta" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <label>Comercial</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("Usuario", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Comercial", new { @class = "form-control filtroBusquedaTextBox", @id = "ComercialId" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Acción Realizada</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("AccionRealizada", new SelectList(ViewBag.Accion, "Value", "Text"), "Seleccione una Acción", new { @class = "form-control filtroBusquedaTextBox", @id = "AccionRealizadaId" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Clase</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("Clase", new SelectList(ViewBag.Clase, "Value", "Text"), "Seleccione una Clase", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", @id = "ClaseId" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+        </div>
+    </div>
+    <br />
+</div>
+
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-excel"></span>Export</a>
+    </div>
+</script>
 <div>
     <div id="grid" class="table-responsive">
     </div>
 </div>
 
+<div class="modal fade" id="modalVisualizar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
+            </div>
+            <div class="modal-body clearfix">
+                <div id="diffPartial">
 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*@Html.Partial("Diff")*@
+@*@Html.Partial("ModalVisualizar")
 
-@Html.Partial("ModalVisualizar")
+    @Html.Partial("ModalVisualizarCupo")
 
-@Html.Partial("ModalVisualizarCupo")
-
-@Html.Partial("ModalVisualizarProveedor")
+    @Html.Partial("ModalVisualizarProveedor")*@
 
 

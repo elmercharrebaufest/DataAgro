@@ -44,8 +44,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IDisponibilidadCuposAgent> disponibilidadCuposAgentMock;
         private Mock<ICriterioCDWarrantAgent> criterioCDWarrantAgentMock;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
-
-
+        private Mock<IComercialManager> comercialManagerMock;
         [SetUp]
         public void SetUp()
         {
@@ -61,9 +60,11 @@ namespace Molinos.DataAgro.Test.Managers
             disponibilidadCuposAgentMock = new Mock<IDisponibilidadCuposAgent>();
             criterioCDWarrantAgentMock = new Mock<ICriterioCDWarrantAgent>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
+            comercialManagerMock = new Mock<IComercialManager>();
+
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, logDataAgroManagerMock.Object);
+                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, logDataAgroManagerMock.Object, comercialManagerMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 

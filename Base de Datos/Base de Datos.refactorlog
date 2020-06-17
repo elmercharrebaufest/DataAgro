@@ -336,4 +336,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Deshabilitado" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f09beb2e-d6dd-4ac1-8708-3bc78a1f319f" ChangeDateTime="06/10/2020 18:20:16">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[UsuarioCreados]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UsuarioCreador" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="aad53759-25a8-47d3-b7df-67c2956b466b" ChangeDateTime="06/12/2020 19:25:30">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[Estado en planta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="EstadoPlanta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="82799764-98d8-4e20-8416-bfff00e6de39" ChangeDateTime="06/12/2020 19:25:38">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[Carta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CartaPorte" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3ccc65cb-07d4-4df6-8b5a-6b64447b0df9" ChangeDateTime="06/12/2020 19:27:13">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[CorredorProveedor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CorredorComprador" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="24e32452-e26f-4010-99fc-ce07a638d788" ChangeDateTime="06/12/2020 19:28:20">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[TransportistaChofer]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Transportista" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="962a5876-1a0a-4a04-89c8-3dc5bd8695eb" ChangeDateTime="06/16/2020 16:28:22">
+    <Property Name="ElementName" Value="[dbo].[Cupo].[Origen]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Cupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CuitOrigen" />
+  </Operation>
 </Operations>

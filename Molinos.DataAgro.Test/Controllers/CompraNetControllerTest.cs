@@ -609,7 +609,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCompraNet(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"LocalidadId\":1,\"Localidad\":\"a\",\"ProvinciaId\":1,\"Provincia\":\"b\",\"ClasificacionCompraNetId\":1,\"Consignatario\":true,\"BoletoCompraNetId\":1,\"BolsaCompraNetId\":1,\"ComisionPorcentaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"LocalidadId\":1,\"Localidad\":\"a\",\"ProvinciaId\":1,\"Provincia\":\"b\",\"ClasificacionCompraNetId\":1,\"Consignatario\":true,\"BoletoCompraNetId\":1,\"BolsaCompraNetId\":1,\"ComisionPorcentaje\":null,\"PlanCanje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

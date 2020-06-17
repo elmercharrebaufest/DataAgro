@@ -14,5 +14,6 @@ namespace Molinos.DataAgro.Interfaces
         DatosModificadosLogDataAgroDto TraerDatosModificadosPorId(int idLogDataAgro);
         int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato);
         int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int? idProveedor);
+        LogDataAgroDto Obtener(int idLogDataAgro, bool anterior = false);
     }
 }

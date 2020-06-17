@@ -39,6 +39,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Pago { get; set; }
         public string CalidadEspecial { get; set; }
         public string EstablecimientoPropio { get; set; }
+        public string MercaderiaEnDeposito { get; set; }
+
         public string Observacion { get; set; }
     }
 }

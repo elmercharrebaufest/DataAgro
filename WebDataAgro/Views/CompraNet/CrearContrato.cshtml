@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <div class="row noAgente noFason noAcuerdo ampliar">
+    <div class="row noAgente noFason acuerdo ampliar">
         <div class="col-sm-2">
             <label>Agente de Compra</label>
         </div>
@@ -88,8 +88,24 @@
                 <option value="1">MATBA ROFEX SA</option>
             </select>
         </div>
+        <div>
+            <div class="col-sm-1 fasonero noAgente noFason noAcuerdo ampliar">
+                <label>Fecha Operacion</label>
+            </div>
+            <div class="col-sm-2">
+                <input id="fechaOperacionId" type="text" data-bind="value: Parametros.fechaOperacionId" style="width:100%" />
+            </div>
+            
+        </div>
     </div>
-
+    <div class="row" id="fechaOperacionMotivoDiv" style="display:none;">
+        <div class="col-sm-offset-6 col-sm-1">
+            <label>Motivo</label>
+        </div>
+        <div class="col-sm-4">
+            <textarea type="text" class="campo-input-text k-textbox" id="fechaOperacionMotivoId" rows="3" maxlength="100"></textarea>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-2">
             <label>Tipo</label>

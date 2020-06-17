@@ -609,6 +609,10 @@ function armarSelects(result) {
     htmlClasificacionCorredorProveedor += '</select>';
     $(".campo-clasificacion-proveedor").append(htmlClasificacionCorredorProveedor);
 
+    var htmlplanCanjeProveedor = "";
+    htmlplanCanjeProveedor += '<input class="campo-input-text check-compranet" type="checkbox" id="planCanje-proveedor-compranet">';
+    $(".campo-planCanje-proveedor").append(htmlplanCanjeProveedor);
+
     var htmlConsignatarioProveedor = "";
     htmlConsignatarioProveedor += '<input class="campo-input-text check-compranet" type="checkbox" id="consignatario-proveedor-compranet">';
     $(".campo-consignatario-proveedor").append(htmlConsignatarioProveedor);
@@ -638,16 +642,24 @@ function armarSelects(result) {
     htmlBolsaCompraNet += '</select>';
     $(".campo-bolsa-compranet").append(htmlBolsaCompraNet);
 
+    var htmlplanCanjeCompraNet = "";
+    htmlplanCanjeCompraNet += '<input class="campo-input-text check-compranet" type="checkbox" id="planCanje-compranet">';
+    $(".campo-planCanje-compranet").append(htmlplanCanjeCompraNet);
+
     var htmlConsignatarioCompraNet = "";
     htmlConsignatarioCompraNet += '<input class="campo-input-text check-compranet" type="checkbox" id="consignatario-compranet">';
     $(".campo-consignatario-compranet").append(htmlConsignatarioCompraNet);
+
     //se oculta/muestra el consignatario
+
     $("#clasificacion-compranet").change(function () { mostrarConsignatario(); });
 
 
     var htmlComisionCompraNet = "";
     htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet">';
     $(".campo-comision-compranet").append(htmlComisionCompraNet);
+
+
 
     (function ($) {
         $.fn.inputFilter = function (inputFilter) {
@@ -929,22 +941,26 @@ function armarSelects(result) {
         if (!ValidarGranoProduccion(cantGrano))
             return false;
 
-        //obj.archivo = $("#kmz").val();
-        //obj.archivoFile = document.getElementById("kmz").files[0];
-        //if (obj.archivo) {
-        //    var input = document.getElementById("kmz");
-        //    var file = input.files[0];
-        //    fr = new FileReader();
-        //    fr.readAsDataURL(file);
-        //    obj.archivoFileReader = fr;
-        //    obj.archivoFileResult = fr.result;
-        //} else if (mantenerArchivos.length) {
-        //    obj.archivo = mantenerArchivos[0].archivo;
-        //    obj.archivoFile = mantenerArchivos[0].archivoFile;
-        //    obj.archivoFileReader = mantenerArchivos[0].archivoFileReader;
-        //    obj.archivoFileResult = mantenerArchivos[0].archivoFileResult;
-        //    mantenerArchivos.pop();
-        //}
+        obj.archivo = $("#kmz").val();
+        obj.archivoFile = document.getElementById("kmz").files[0];
+        if (obj.archivo) {
+            var input = document.getElementById("kmz");
+            var file = input.files[0];
+            if (file.size / 1024 / 1024 > 1.9) {
+                MensErr("El archivo adjuntado es muy grande. Limite maximo 2MB");
+                return false;
+            }
+            fr = new FileReader();
+            fr.readAsDataURL(file);
+            obj.archivoFileReader = fr;
+            obj.archivoFileResult = fr.result;
+        } else if (mantenerArchivos.length) {
+            obj.archivo = mantenerArchivos[0].archivo;
+            obj.archivoFile = mantenerArchivos[0].archivoFile;
+            obj.archivoFileReader = mantenerArchivos[0].archivoFileReader;
+            obj.archivoFileResult = mantenerArchivos[0].archivoFileResult;
+            mantenerArchivos.pop();
+        }
 
         var html = "";
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedor' + capProdCant + '">'
@@ -952,7 +968,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
-            //+ (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>':'')
+            + (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar Archivo</div>':'')
             + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1076,22 +1092,26 @@ function armarSelects(result) {
         if (!ValidarGranoAlmacenamiento(cantGranoAlmacenamiento))
             return false;
 
-        //obj.archivo = $("#kmz-almacenamiento").val();
-        //obj.archivoFile = document.getElementById("kmz-almacenamiento").files[0];
-        //if (obj.archivo) {
-        //    var input = document.getElementById("kmz-almacenamiento");
-        //    var file = input.files[0];
-        //    fr = new FileReader();
-        //    fr.readAsDataURL(file);
-        //    obj.archivoFileReader = fr;
-        //    obj.archivoFileResult = obj.archivoFileReader.result;
-        //} else if (mantenerArchivosAlmacenamiento.length) {
-        //    obj.archivo = mantenerArchivosAlmacenamiento[0].archivo;
-        //    obj.archivoFile = mantenerArchivosAlmacenamiento[0].archivoFile;
-        //    obj.archivoFileReader = mantenerArchivosAlmacenamiento[0].archivoFileReader;
-        //    obj.archivoFileResult = mantenerArchivosAlmacenamiento[0].archivoFileResult;
-        //    mantenerArchivosAlmacenamiento.pop();
-        //}
+        obj.archivo = $("#kmz-almacenamiento").val();
+        obj.archivoFile = document.getElementById("kmz-almacenamiento").files[0];
+        if (obj.archivo) {
+            var input = document.getElementById("kmz-almacenamiento");
+            var file = input.files[0];
+            if (file.size / 1024 / 1024 > 1.9) {
+                MensErr("El archivo adjuntado es muy grande. Limite maximo 2MB");
+                return false;
+            }
+            fr = new FileReader();
+            fr.readAsDataURL(file);
+            obj.archivoFileReader = fr;
+            obj.archivoFileResult = obj.archivoFileReader.result;
+        } else if (mantenerArchivosAlmacenamiento.length) {
+            obj.archivo = mantenerArchivosAlmacenamiento[0].archivo;
+            obj.archivoFile = mantenerArchivosAlmacenamiento[0].archivoFile;
+            obj.archivoFileReader = mantenerArchivosAlmacenamiento[0].archivoFileReader;
+            obj.archivoFileResult = mantenerArchivosAlmacenamiento[0].archivoFileResult;
+            mantenerArchivosAlmacenamiento.pop();
+        }
 
         var html = "";
         html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="granocontenedoralmacenamiento' + capProdCantAlmacenamiento + '">'
@@ -1099,7 +1119,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
-            //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
+            + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar Archivo</div>' : '')
             + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1223,11 +1243,15 @@ function armarSelects(result) {
         obj.granos = [];
 
 
-        obj.archivo = $("#kmz").val();
-        obj.archivoFile = document.getElementById("kmz").files[0];
+        obj.archivo = $("#kmz-establecimiento").val();
+        obj.archivoFile = document.getElementById("kmz-establecimiento").files[0];
         if (obj.archivo) {
-            var input = document.getElementById("kmz");
+            var input = document.getElementById("kmz-establecimiento");
             var file = input.files[0];
+            if (file.size / 1024 / 1024 > 1.9) {
+                MensErr("El archivo adjuntado es muy grande. Limite maximo 2MB");
+                return false;
+            }
             fr = new FileReader();
             fr.readAsDataURL(file);
             obj.archivoFileReader = fr;
@@ -1300,7 +1324,7 @@ function armarSelects(result) {
         $("#hectareas0").val("");
         $("#toneladas0").val("");
         $("#eliminarGrano").hide();
-        $("#kmz").val("");
+        $("#kmz-establecimiento").val("");
         $(".label-field .produccion").html("Subir un Archivo");
         cantGrano = 0;
 
@@ -1763,6 +1787,28 @@ function armarFuncionalidades() {
         $(".label-field").html("Archivo subido");
     });
 
+    $("label[for='kmz-establecimiento']").hover(function () {
+        $("label[for='kmz-establecimiento']").css({
+            'background-color': 'white',
+            border: '1px solid #017940'
+        });
+        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/upload.png");
+        $("label[for='kmz-establecimiento'] .campo-span").css({
+            color: '#017940'
+        });
+    }, function () {
+            $("label[for='kmz-establecimiento']").css({
+            'background-color': '#017940'
+        });
+            $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/uploadb.png");
+            $("label[for='kmz-establecimiento'] .campo-span").css({
+            color: '#fff',
+            border: 'none'
+        });
+    });
+    $("#kmz-establecimiento").change(function (x) {
+        $(".label-field").html("Archivo subido");
+    });
     $("#contacto").click(function () {
         limpiarSelected();
         $("#contacto").addClass("whc-selected");
@@ -2830,6 +2876,7 @@ function ObtenerDatos() {
     obj.basicos.ProvinciaCompraNet = $("#provincia-compranet").val();
     obj.basicos.LocalidadCompraNet = $("#localidad-compranet").val();
     obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
+    obj.basicos.PlanCanje = $("#planCanje-compranet").is(":checked");
     obj.basicos.Comision = Number($("#comision-compranet").val().replace(',', '.'));
 
     obj.basicos.comentario = $("#comentario").val();
@@ -3325,9 +3372,12 @@ function mostrarConsignatario() {
     if ($("#clasificacion-compranet").val() != 2) {
         $("#consignatarioCompraNet").hide();
         $("#consignatario-compranet").prop("checked", false);
+        $("#planCanjeCompraNet").hide();
+        $("#planCanje-compranet").prop("checked", false);
     }
     else {
         $("#consignatarioCompraNet").show();
+        $("#planCanjeCompraNet").show();
     }
 }
 
@@ -3335,8 +3385,11 @@ function mostrarConsignatarioProveedor() {
     if ($("#clasificacion-proveedor-corredor").val() != 2) {
         $("#consignatarioProveedorDiv").hide();
         $("#consignatario-proveedor-compranet").prop("checked", false);
+        $("#planCanjeProveedorDiv").hide();
+        $("#planCanje-proveedor-compranet").prop("checked", false);
     }
     else {
         $("#consignatarioProveedorDiv").show();
+        $("#planCanjeProveedorDiv").show();
     }
 }

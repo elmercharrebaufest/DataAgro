@@ -41,7 +41,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6   )
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5)
-                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))    
+                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))  
+                && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId == null) || !(contrato is ContratoAcuerdo))
                 && ((contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId == null) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).PrecioNeto > 0) || !(contrato is ContratoAcuerdo))
                  && (
@@ -69,7 +70,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
-                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : contrato.TipoNegocio.Descripcion),
+                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : contrato.TipoNegocio.Descripcion),
                     Negocio = (contrato is FijacionDePrecioContrato && contrato.EstadoId == (int)EnumEstadoContrato.Finalizado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialId = contrato.ComercialId,

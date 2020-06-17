@@ -415,6 +415,7 @@ namespace Molinos.DataAgro.Business.Managers
                && (centroId == 0 || x.DestinoId == centroId)
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
                && (x.TipoAgenteCompraId == null)
+               && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                );
 
             var kilosPosicionSoja = materialId.Contains(3) ? TraerPosicionMaterial(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
@@ -545,7 +546,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Acopio = x.Destino.Acopio == true ? Math.Round((double)x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0)
             /*&& fechaDesde == fechaHasta*/  && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta
-                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
+                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1) && x.TipoAgenteCompraId == null);
             var pricing = new List<PricingCampaniaDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, CampaniaTableroId = x.CampaniaTableroId, Descripcion = x.Descripcion, Campana = x.CampaniaTablero.Descripcion });
 
@@ -1268,12 +1269,6 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda)
         {
-            //var contratoIds = negocios.Where(a => a.Key == 1 || a.Key == 2).Select(a => a.Value).ToList();
-            //var fijacionDePrecioContratoIds = negocios.Where(a => a.Key == 3).Select(a => a.Value).ToList();
-            //var fasonIds = negocios.Where(a => a.Key == 4).Select(a => a.Value).ToList();
-            //var contratoAcuerdoIds = negocios.Where(a => a.Key == 6).Select(a => a.Value).ToList();
-            //var agentesIds = negocios.Where(a => a.Key == 5).Select(a => a.Value).ToList();
-
             var data = new List<DetalleContratoDto>();
             var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1291,6 +1286,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHastaDate = x.FechaHasta,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
                 CantidadCamiones = x.CantidadCamiones.ToString(),
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1318,7 +1314,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 6 || x.StandardDeCalidadId == 7 ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
-                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
+                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                MercsDeposito = x.MercsDeposito == true ? "X" : "",
             },
             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
@@ -1343,6 +1340,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHastaDate = x.FechaHasta,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1370,7 +1368,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
                 EstablecimientoPropio = "",
                 Observacion = x.Observacion ?? "",
-                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
+                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                MercsDeposito = "",
             },
              x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
@@ -1394,6 +1393,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHastaDate = x.FechaHasta,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert(x.Cantidad),
+                CantidadD = x.Cantidad,
                 CantidadCamiones = "",
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1421,7 +1421,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.TrigoEspecial == true ? "X" : "",
                 EstablecimientoPropio = "",
                 Observacion = "",
-                PrecioNeto = x.Precio.ToString()
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito = "",
             },
              x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
             if (fasones != null)
@@ -1448,6 +1449,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHastaDate = x.FechaHasta,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
                 CantidadCamiones = "",
                 Campana = "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1475,7 +1477,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 7 ? "X" : "",
                 EstablecimientoPropio = "",
                 Observacion = "",
-                PrecioNeto = x.Precio.ToString()
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito =  ""
             },
              x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
@@ -1502,6 +1505,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHastaDate = x.Fecha,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = x.Cantidad,
                 CantidadCamiones = "",
                 Campana = "",
                 FechaDesde = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
@@ -1529,7 +1533,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = "",
                 EstablecimientoPropio = "",
                 Observacion = "",
-                PrecioNeto = x.Precio.ToString()
+                PrecioNeto = x.Precio.ToString(),
+                MercsDeposito = ""
             },
             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 

@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="ActiveReport\RemoveCopyrigthHelper.cs" />
     <Compile Include="Clases\LstAgendaActividad.cs" />
+    <Compile Include="Clases\LstLogDataAgro.cs" />
     <Compile Include="Clases\LstContrato.cs" />
     <Compile Include="Clases\LstContacto.cs" />
     <Compile Include="Clases\LstIndicadores.cs" />

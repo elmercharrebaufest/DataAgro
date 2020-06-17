@@ -1,7 +1,8 @@
-﻿$(document).ready(function () {
+﻿var externo;
+$(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
-
+    externo = ConvertirStringABool(externo);
     inicializarTodosKendoDate($(".filtroFecha"));
     inicializarElementos();
     InicializarCuposIndex();
@@ -55,7 +56,10 @@ function InicializarCuposIndex() {
                 fields: {
                     FechaIngreso: { type: "date" },
                     FechaGeneracion: { type: "date" },
-                    FleteProcedencia: { type: "boolean" }
+                    FleteProcedencia: { type: "boolean" },
+                    CTGFechaDesde: { type: "date" },
+                    CTGFechaDesde: { type: "date" }
+
                 }
             }
         },
@@ -84,9 +88,18 @@ function InicializarCuposIndex() {
                 }
                 $('[data-toggle="tooltip"]').tooltip();
             }
+            $("td:has(div.statusexterno)").css('border-bottom', '5px solid #15deca');
         },
         columns: [
-            { field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate },
+            {
+                field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
+
+                    if (dataItem.UsuarioCreador != null || externo) {
+                        return '<div class="statusexterno "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
+                    }
+                    return '<div class=" "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
+                }
+             },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
             { field: "Proveedor", type: "string", width: 150 },
@@ -115,6 +128,12 @@ function InicializarCuposIndex() {
                         return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError + '"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 8) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    }else if (dataItem.EstadoCupoId == 9) {
+                        return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    } else if (dataItem.EstadoCupoId == 10) {
+                        return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
+                    } else if (dataItem.EstadoCupoId == 11) {
+                        return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     }
                 }
             },
@@ -122,6 +141,26 @@ function InicializarCuposIndex() {
             { field: "Observaciones", type: "string", width: 150 },
             { field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "Hora", title: "Hora", type: "date", width: 150 },
+            { field: "EstadoPlanta", title: "Estado en Planta",type: "string", width: 150 },
+            { field: "CartaPorte", title: "Carta de Porte", type: "string", width: 150 },
+            { field: "CTG", title: "CTG", type: "string", width: 150 },
+            { field: "CTGFechaDesde", title: "Desde CTG", type: "date", width: 150, format: _DefaultDateTemplate },
+            { field: "CTGFechaHasta", title: "Hasta CTG", type: "date", width: 150, format: _DefaultDateTemplate },
+            { field: "CuitOrigen", title: "Cuit Origen", type: "string", width: 150 },
+            { field: "CuitOrigenAfip", title: "Cuit Origen Afip", type: "string", width: 150 },
+            { field: "CodLocalidadOrigen", title: "Cod Localidad",type: "string", width: 150 },
+            { field: "NroEstablecimientoOrigen", title: "Nro Establecimiento", type: "string", width: 150 },
+            { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", width: 150 },
+            { field: "CorredorComprador", title: "Corredor Comprador", type: "string", width: 150 },
+            { field: "CorredorVendedor", title: "Corredor Vendedor", type: "string", width: 150 },
+            { field: "MercadoATermino", title: "Mercado a Termino", type: "string", width: 150 },
+            { field: "Cosecha", type: "string", width: 150 },
+            { field: "Peso",type: "string", width: 150 },
+            { field: "Km", type: "string", width: 150 },
+            { field: "IntermediarioFlete", title: "Intermediario Flete", type: "string", width: 150 },
+            { field: "Transportista", type: "string", width: 150 },
+            { field: "Chofer", type: "string", width: 150 }, 
+            { field: "MotivoRechazo", title: "Motivo de Rechazo", type: "string", width: 150 }, 
         ],
         pageable: {
             messages: {

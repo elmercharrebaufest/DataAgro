@@ -48,6 +48,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaDesdeDate { get; set; }
         public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
         public DateTime FechaHastaDate { get; set; }
+        public string MercsDeposito { get; set; }
+        public double CantidadD { get; set; }
     }
 }
 

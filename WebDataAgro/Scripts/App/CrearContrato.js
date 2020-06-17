@@ -141,8 +141,9 @@ function InicializarElementos() {
                 }
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
                 $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
-                if ($("#clasificacion").val() == 2) {
+                if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
                     $("#consignatarioId").prop("checked", compraNet.Consignatario);
+                    $("#planCanjeId").prop("checked", compraNet.PlanCanje);
                 }
                 $("#clasificacion").data("kendoDropDownList").trigger("change");
                 if (compraNet.LocalidadId != null) {
@@ -302,7 +303,7 @@ function InicializarElementos() {
     });
 
     $("#contratoId").kendoAutoComplete({
-        template: '<p class="buscar-nomb" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
+        template: '<p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
             'KG CTO: #: data.KilosContrato# ' +
             ' - KGS SIN PRECIO : #: data.ARecibirSinPrecio# - KGS SIN FIJAR : #: data.RecibidoSinFijar#' +
             ' - KILOS A FIJAR: #: data.KilosPendiente# - KG APLIC: #: data.KilosAplicados#' +
@@ -2495,6 +2496,9 @@ function ObtenerDatos() {
             obj.MonedaAjusteComisionId = $("#monedaAjusteComisionId").val();
         }
     }
+    if (obj.TipoNegocioId == 6) {
+        obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
+    }
     if (!error) {
         GrabarContrato(obj);
     } else {
@@ -3173,6 +3177,9 @@ function CargarDatosEditar(contrato, hijo) {
         if (contrato.ContratoAcuerdoId != null) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
         }
+    }
+    if (contrato.TipoNegocioId == 6) {
+        $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
     }
 }
 

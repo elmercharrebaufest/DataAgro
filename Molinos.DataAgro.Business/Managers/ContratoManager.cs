@@ -1901,7 +1901,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ProvinciaId = x.ProvinciaCompraNetId,
                 Localidad = x.LocalidadCompraNet.Nombre,
                 Provincia = x.ProvinciaCompraNet.Nombre,
-                ComisionPorcentaje = x.ComisionPorcentaje
+                ComisionPorcentaje = x.ComisionPorcentaje,
+                PlanCanje = x.PlanCanje
             });
             return compranet;
         }
@@ -2184,7 +2185,8 @@ namespace Molinos.DataAgro.Business.Managers
                     MonedaPactadoId = y.MonedaPactadoId,
                     Porcentaje = y.Porcentaje,
                     Precio = y.Precio
-                }).ToList()
+                }).ToList(),
+                TipoAgenteCompraId = x.TipoAgenteCompraId
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
             if (contrato.Fecha < dia)

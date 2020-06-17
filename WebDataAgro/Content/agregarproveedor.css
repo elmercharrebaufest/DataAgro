@@ -587,6 +587,7 @@ campo-granos-almacenamiento button,
 #latitud,
 #longitud,
 #kmz,
+#kmz-establecimiento,
 .coordenadas {
     background-color: rgb(252, 252, 252);
     border: 1px solid rgb(209, 209, 209);

@@ -62,5 +62,9 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult BuscarDatosProduccion(DataSourceRequest request, List<int> equipo);
         DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo);
         void ImportarEstablecimientos(List<CampoDetalleDto> campos, Resultado resultado);
+
+        int ObtenerIdProveedorPorCuit(string cuit);
+
+        Proveedor ObtenerEmailProveedorPorCuit(string cuit);
     }
 }

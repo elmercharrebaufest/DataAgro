@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
+        private Mock<IHabilitacionCupoManager> habilitacionManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -38,12 +39,13 @@ namespace Molinos.DataAgro.Test.Controllers
             proveedorManagerMock = new Mock<IProveedorManager>();
             cupoManagerMock = new Mock<ICupoManager>();
             comercialManagerMock = new Mock<IComercialManager>();
+            habilitacionManagerMock = new Mock<IHabilitacionCupoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new CupoController(centroManagerMock.Object,
                 materialManagerMock.Object, zonaCupoManagerMock.Object,
                 proveedorManagerMock.Object, cupoManagerMock.Object,
-                comercialManagerMock.Object);
+                comercialManagerMock.Object, habilitacionManagerMock.Object);
             centroManagerMock.Setup(y => y.TraerTodoCentro())
                 .Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "a" } } });
             materialManagerMock.Setup(y => y.TraerTodoMaterial())
@@ -136,6 +138,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 PlantaId = 1,
                 CuitId = "A",
                 Siguientes = null
+                
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new Resultado { Errores = new List<ErrorMessage>() });
@@ -316,6 +319,34 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Fecha\":\"\\/Date(1588042800000)\\/\",\"MaterialNombre\":\"Soja\",\"ZonaId\":\"CBA\",\"Disponibles\":9,\"Consumidos\":1,\"Limite\":10,\"MaterialCodigo\":\"000000000019908017\",\"MaterialId\":3,\"ZonaNombre\":null,\"CentroNombre\":null,\"CentroCodigo\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void RechazarCupoTest()
+        {
+            cupoManagerMock.Setup(x => x.RechazarCupo(It.IsAny<Cupo>(), It.IsAny<string>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            var result = target.RechazarCupo(It.IsAny<Cupo>());
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void AceptarCupoTest()
+        {
+            cupoManagerMock.Setup(x => x.AceptarCupo(It.IsAny<Cupo>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            var result = target.AceptarCupo(It.IsAny<Cupo>());
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
     }

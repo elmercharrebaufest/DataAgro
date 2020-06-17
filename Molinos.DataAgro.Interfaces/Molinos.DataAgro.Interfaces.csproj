@@ -147,6 +147,7 @@
     <Compile Include="Managers\ICampaniaActualManager.cs" />
     <Compile Include="Managers\ICampaniaMaterialManager.cs" />
     <Compile Include="Managers\IAdministracionCupoManager.cs" />
+    <Compile Include="Managers\IHabilitacionCupoManager.cs" />
     <Compile Include="Managers\IConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
     <Compile Include="Managers\ILogDataAgroManager.cs" />

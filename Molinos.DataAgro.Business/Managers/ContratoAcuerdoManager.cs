@@ -388,7 +388,8 @@ namespace Molinos.DataAgro.Business
             {
                 repositorio.GuardarCambios();
                 var contratoLog = objContratoAcuerdo ?? oContratoAcuerdo;
-                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contratoLog.Id), (objContratoAcuerdo == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar, contratoLog.GetType());
+                var tipoDeAccion = (objContratoAcuerdo == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
+                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contratoLog.Id), tipoDeAccion, contratoLog.GetType());
 
             }
             catch (Exception ex)

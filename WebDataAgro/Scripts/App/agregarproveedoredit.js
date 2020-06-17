@@ -124,6 +124,9 @@ function armarBasico(basico) {
     if (basico.Consignatario) {
         $("#consignatario-compranet").prop("checked", true);
     }
+    if (basico.PlanCanje) {
+        $("#planCanje-compranet").prop("checked", true);
+    }
     if (basico.Comision) {
         $("#comision-compranet").val(basico.Comision);
     } else {
@@ -319,9 +322,9 @@ function armarProduccion(campoacopio) {
 
             obj.partido = grupocampoacopio[0][i].Partido;
 
-            //obj.archivo = grupocampoacopio[0][i].KMZnombre;
+            obj.archivo = grupocampoacopio[0][i].KMZnombre;
 
-            //obj.archivoFileResult = grupocampoacopio[0][i].KMZfile;
+            obj.archivoFileResult = grupocampoacopio[0][i].KMZfile;
 
             //obj.latitud = grupocampoacopio[0][i].latitud;
             //obj.longitud = grupocampoacopio[0][i].longitud;
@@ -341,7 +344,7 @@ function armarProduccion(campoacopio) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
-                //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar KMZ</div>' : '')
+                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar Archivo</div>' : '')
                 + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'
@@ -471,9 +474,9 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
             obj.partido = grupoacopio[0][i].Partido;
 
 
-            //obj.archivo = grupoacopio[0][i].KMZnombre;
+            obj.archivo = grupoacopio[0][i].KMZnombre;
 
-            //obj.archivoFileResult = grupoacopio[0][i].KMZfile;
+            obj.archivoFileResult = grupoacopio[0][i].KMZfile;
 
             //obj.latitud = grupoacopio[0][i].latitud;
             //obj.longitud = grupoacopio[0][i].longitud;
@@ -492,7 +495,7 @@ function armarAlmacenamiento(acopio, acopiomaterial) {
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
                 + obj.localidadNom + " - " + obj.partido
                 + '</div>'
-                //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar KMZ</div>' : '')
+                + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZAlmacenamiento(this)" id="eliminarKMZAlm' + capProdCantAlmacenamiento + '">x Eliminar Archivo</div>' : '')
                 + '<div class="editar-produccion" onclick="editarAlmacenamiento(' + capProdCantAlmacenamiento + ')" id="editarAlm' + capProdCantAlmacenamiento + '">'
                 + '<img src="../Content/Images/contacto-edit.png" /> Editar'
                 + '</div>'

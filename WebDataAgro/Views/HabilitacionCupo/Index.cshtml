@@ -1,0 +1,91 @@
+﻿@model WebDataAgro.Models.HabilitacionCupoModel
+@{
+    ViewBag.Title = "Configuración Cupos";
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+    <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
+}
+<script src="~/Scripts/KendoExtensions.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/App/HabilitacionCupo.js"></script>
+
+<div class="container">
+    <style>
+        .k-i-warning {
+            display: none !important;
+        }
+    </style>
+    <h3>Habilitación de Cupos</h3>
+    <br />
+    @if (!Html.ViewData.ModelState.IsValid)
+    {
+        <div id="errorModal">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Html.ValidationSummary()
+            </div>
+        </div>
+    }
+
+    <div class="alert alert-success alert-dismissible" role="alert" hidden>
+        <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+        <span>Grabación Correcta</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 m-grid-col-xs-offset-1">
+            <div class="desplegable" data-toggle="collapse" data-target="#alta" onclick="mostrarocultar('#mostrar')">
+                <span class="historial">Alta</span> <span id="mostrar" class="mostrar">Mostrar</span>
+            </div>
+
+            <div id="alta" class="collapse">
+
+                @using (Html.BeginForm("GrabarHabilitacion", null,FormMethod.Post))
+                {
+
+                <div class="row">
+                    @Html.HiddenFor(x => x.Id)
+                    <div class="col-xs-2">
+                        <span>Zona</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(x => x.ZonaCupoId, new SelectList(ViewBag.Zona, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Material</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control" })
+                    </div>                   
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Desde</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="FechaDesde" name="FechaDesde" type="datetime" style="width:100%" />
+                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Hasta</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input id="FechaHasta" name="FechaHasta" type="datetime" style="width:100%" />
+                        <img id="errFecha" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                    <div class="row">
+                        <button class="btn btnSubmit" type="submit">Grabar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div id="tablaCupos">
+        @Html.Action("TablaCuposPartial", "HabilitacionCupo")
+    </div>
+</div>
+
+

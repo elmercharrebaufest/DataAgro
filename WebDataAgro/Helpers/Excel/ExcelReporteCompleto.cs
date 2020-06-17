@@ -585,10 +585,12 @@ namespace WebDataAgro.Helpers.Excel
                 celda = row.CreateCell(33);
                 celda.SetCellValue(material.EstablecimientoPropio);
                 celda = row.CreateCell(34);
-                celda.SetCellValue(material.Observacion);
+                celda.SetCellValue(material.MercaderiaEnDeposito);
                 celda = row.CreateCell(35);
+                celda.SetCellValue(material.Observacion);
+                celda = row.CreateCell(36);
             }
-            for (var i = 0; i < 35; i++)
+            for (var i = 0; i < 36; i++)
             {
                 sheet.AutoSizeColumn(i);
             }

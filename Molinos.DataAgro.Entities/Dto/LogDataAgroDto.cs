@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -13,5 +14,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ProveedorId { get; set; }
         public string AccionRealizada { get; set; }
         public string Clase { get; set; }
+        public int ClaseId { get; set; }
+        public IList<DatoModificadosLogDataAgroDto> CamposCambiados { get; set; }
+        public string Campo { get; set; }
+        public string Actual { get; set; }
+        public string Anterior { get; set; }
+
     }
 }

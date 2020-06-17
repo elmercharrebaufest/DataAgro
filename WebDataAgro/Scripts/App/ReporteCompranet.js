@@ -199,14 +199,51 @@ function crearGrilladetallePosicion(href) {
                 data: "items",
                 total: "total"
             },
-            pageSize: 20
+            pageSize: 20,
+
+            aggregate: [
+                { field: "CantidadD", aggregate: "sum" },
+            ]
         },
         dataBound: ShowModal,
         sortable: true,
+        scrollable: false,
         reorderable: false,
         groupable: false,
         resizable: true,
-        filterable: true,
+        filterable: {
+            checkAll: false,
+            height: 350,
+            extra: false,
+            messages: {
+                info: "Filtros:",
+                filter: "Filtrar",
+                clear: "Limpiar",
+                isTrue: "SI",
+                isFalse: "NO",
+                and: "Y",
+                or: "O"
+            },
+            operators: {
+                string: {
+                    eq: "Igual",
+                    neq: "Distinto",
+                    startswith: "Comienza con",
+                    contains: "Contiene",
+                    endswith: "Finaliza con"
+                },
+                date: {
+                    eq: "Igual",
+                    gte: "Despu&eacute;s o igual a",
+                    lte: "Antes o igual a",
+                },
+                number: {
+                    eq: "Igual a",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a",
+                }
+            }
+        },
         columnMenu: true,
         pageable: {
             messages: {
@@ -259,17 +296,20 @@ function crearGrilladetallePosicion(href) {
                 title: "Comercial",
                 width: 150
             }, {
-                field: "Cantidad",
+                field: "CantidadD",
                 title: "Cantidad",
-                width: 100
+                width: 110,
+                format: "{0:n0}",
+                type: "number",
+                aggregates: ["sum"], footerTemplate: '#=kendo.toString(sum, "n0")#',
             }, {
                 field: "CantidadCamiones",
                 title: "Camiones",
-                width: 100
+                width: 110
             }, {
                 field: "Campana",
                 title: "Campaña",
-                width: 100
+                width: 110
             }, {
                 field: "FechaDesde",
                 title: "Fecha<br> Desde",
@@ -289,11 +329,11 @@ function crearGrilladetallePosicion(href) {
             }, {
                 field: "Moneda",
                 title: "Moneda",
-                width: 80
+                width: 90
             }, {
                 field: "Fecha",
                 title: "Fecha <br> Operación",
-                width: 110
+                width: 120
             }, {
                 field: "Provincia",
                 title: "Provincia",
@@ -368,15 +408,20 @@ function crearGrilladetallePosicion(href) {
                 title: "Pago",
                 width: 150
             }
+            //, {
+            //    field: "CalidadEspecial",
+            //    title: "Calidad <br>Especial",
+            //    width: 150
+            //}
             , {
                 field: "CalidadEspecial",
                 title: "Calidad <br>Especial",
-                width: 150
+                width: 110
             }
             , {
-                field: "Establecimiento",
-                title: "Establecimiento",
-                width: 150
+                field: "MercsDeposito",
+                title: "Merc. en <br>Deposito",
+                width: 110
             }
             , {
                 field: "Observación",
@@ -426,7 +471,39 @@ function crearGrillaAgente(href) {
         },
         dataBound: ShowModalAgente,
         sortable: true,
-        filterable: true,
+        filterable: {
+            checkAll: false,
+            height: 350,
+            extra: false,
+            messages: {
+                info: "Filtros:",
+                filter: "Filtrar",
+                clear: "Limpiar",
+                isTrue: "SI",
+                isFalse: "NO",
+                and: "Y",
+                or: "O"
+            },
+            operators: {
+                string: {
+                    eq: "Igual",
+                    neq: "Distinto",
+                    startswith: "Comienza con",
+                    contains: "Contiene",
+                    endswith: "Finaliza con"
+                },
+                date: {
+                    eq: "Igual",
+                    gte: "Despu&eacute;s o igual a",
+                    lte: "Antes o igual a",
+                },
+                number: {
+                    eq: "Igual a",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a",
+                }
+            }
+        },
         pageable: {
             messages: {
                 display: "{2} elementos",

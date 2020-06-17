@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Ampliaciones = x.Ampliaciones.ToString(),
                            Consignatario = x is Contrato ? (x as Contrato).Consignatario == true ? "X" : "" : "",
                            PlanCanje = x is Contrato ? (x as Contrato).PlanCanje == true ? "X" : "" : "",
+                           MercaderiaEnDeposito = x is Contrato ? (x as Contrato).MercsDeposito == true ? "X" : "" : "",
                            Pago = x is Contrato ? ((x as Contrato).PagoDirectoVendedor == true ? "Pago Dir. Vend." : x.CD == true ? "CD" : (x as Contrato).Warrant == true ? "Warrant" : "") : "",
                            CalidadEspecial = x.StandardDeCalidad.Descripcion,
                            EstablecimientoPropio = x is Contrato ? ((x as Contrato).EstablecimientoPropio == true ? "Propio" : (x as Contrato).EstablecimientoPropio == false ? "Arrendado" : "") : "",

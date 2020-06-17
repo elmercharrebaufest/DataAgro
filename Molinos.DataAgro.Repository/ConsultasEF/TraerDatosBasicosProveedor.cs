@@ -93,7 +93,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     BoletoCompraNet = prove.BoletoCompraNet.Descripcion,
                     BolsaCompraNet = prove.BolsaCompraNet.Descripcion,
                     Consignatario = prove.Consignatario,
-                    Comision = prove.ComisionPorcentaje
+                    Comision = prove.ComisionPorcentaje,
+                    PlanCanje = prove.PlanCanje
+
 
                 };
 

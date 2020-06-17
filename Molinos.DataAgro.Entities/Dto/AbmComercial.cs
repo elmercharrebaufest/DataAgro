@@ -30,15 +30,16 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ComercialIni
     {
-        public int ComercialId { get; set; }                  
-        public string Apellido { get; set; }                  
-        public string Nombres { get; set; }                  
-        public string PerDescripcion { get; set; }                    
+        public int ComercialId { get; set; }
+        public string Apellido { get; set; }
+        public string Nombres { get; set; }
+        public string PerDescripcion { get; set; }
         public string Rol { get; set; }
         public string NombreCompleto { get { return Apellido.ToUpper() + " " + Nombres.ToUpper(); } }
         public bool Disabled { get; set; }
         public bool Deshabilitado { get; set; }
         public DateTime? FechaDeshabilitado { get; set; }
+        public string IdActiveDirectory { get; set; }
     }
 
 }

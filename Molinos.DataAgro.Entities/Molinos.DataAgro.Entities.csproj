@@ -122,9 +122,12 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\MaterialHabilitadoDto.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />
     <Compile Include="Dto\AbmFormula.cs" />
+    <Compile Include="Dto\CupoSapDto.cs" />
+    <Compile Include="Dto\HabilitacionCupoDto.cs" />
     <Compile Include="Dto\DisponibilidadCuposDto.cs" />
     <Compile Include="Dto\AgenteCompraModel.cs" />
     <Compile Include="Dto\DatosContratoDto.cs" />
@@ -276,6 +279,7 @@
     <Compile Include="Entities\AdministracionCupo.cs" />
     <Compile Include="Entities\CampoDetalle.cs" />
     <Compile Include="Entities\CondicionPago.cs" />
+    <Compile Include="Entities\HabilitacionCupo.cs" />
     <Compile Include="Entities\CriterioCDWarrant.cs" />
     <Compile Include="Entities\LogDataAgro.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />

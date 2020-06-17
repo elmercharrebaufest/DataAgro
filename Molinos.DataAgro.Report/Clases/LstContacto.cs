@@ -163,6 +163,9 @@ namespace Molinos.DataAgro.Report
 
             workSheet7.Cells[1, 1].LoadFromCollection(oDatos.compras, true);
 
+            var workSheet8 = excel.Workbook.Worksheets.Add("Establecimiento");
+
+            workSheet8.Cells[1, 1].LoadFromCollection(oDatos.establecimiento, true);
             var oPropRow = oColumnas.GetType().GetProperties();
 
             var cantColumns = oPropRow.Count();
@@ -517,6 +520,49 @@ namespace Molinos.DataAgro.Report
 
             workSheet7.Cells[1, 2].Value = "Razón Social";
             workSheet7.Column(2).AutoFit();
+
+
+            if (oDatos.establecimiento.Count > 0)
+            {
+                oPropRow = oDatos.establecimiento[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet8.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet8.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet8.Cells[1, j].Value != null)
+            {
+                workSheet8.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet8.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet8.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            workSheet8.Cells[1, 1].Value = "CUIT";
+            workSheet8.Column(1).AutoFit();
+
+            workSheet8.Cells[1, 2].Value = "Razón Social";
+            workSheet8.Column(2).AutoFit();
+
+            workSheet8.Cells[1, 10].Value = "Has. Cultivables";
+            workSheet8.Column(10).AutoFit();
+
+            workSheet8.Cells[1, 11].Value = "Has. Totales";
+            workSheet8.Column(11).AutoFit();
+
 
             var identif = Varios.GetIdentif();
 

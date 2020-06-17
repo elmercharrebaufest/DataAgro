@@ -29,12 +29,13 @@ namespace WebDataAgro.Controllers
         private readonly IProveedorManager proveedorManager;
         private readonly ICupoManager cupoManager;
         private readonly IComercialManager comercialManager;
+        private readonly IHabilitacionCupoManager habilitacionManager;
 
 
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, ICupoManager cupoManager, IComercialManager comercialManager)
+        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
         {
             this.centroManager = centroManager;
             this.materialManager = materialManager;
@@ -42,6 +43,7 @@ namespace WebDataAgro.Controllers
             this.proveedorManager = proveedorManager;
             this.cupoManager = cupoManager;
             this.comercialManager = comercialManager;
+            this.habilitacionManager = habilitacionManager;
         }
 
         //-----------------------------------------------------
@@ -55,10 +57,14 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        [Autorizacion(PermisosDataAgro.AltaCupos)]
+        [Autorizacion(PermisosDataAgro.AltaCupos, PermisosDataAgro.AltaCupo_Externo)]
         public ActionResult CrearCupo(int? id, string siguientes)
         {
             CargarViewBag();
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                return RedirectToAction("CrearCupoExterno");
+            }
             if (id == null)
             {
                 ViewBag.Titulo = "Nuevo Cupo";
@@ -83,6 +89,40 @@ namespace WebDataAgro.Controllers
                     Proveedor = cupo.ProveedorId,
                     Observacion = cupo.Observaciones,
                     ZonaId = cupo.ZonaCupoId,
+                    PlantaId = cupo.CentroId,
+                    CuitId = cupo.Destinatario,
+                    Siguientes = siguientes
+                };
+                ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
+                return View(cupoModel);
+            }
+        }
+
+        [Autorizacion(PermisosDataAgro.AltaCupo_Externo)]
+        public ActionResult CrearCupoExterno(int? id, string siguientes)
+        {
+            CargarViewBag();
+            if (id == null)
+            {
+                ViewBag.Titulo = "Nuevo Cupo";
+                var proveedorId = proveedorManager.ObtenerIdProveedorPorCuit(PermisosHelper.ObtenerCuit());
+                return View(new CupoModel() {Proveedor= proveedorId, CantidadCupos = null, MaterialId = 3, ZonaId = comercialManager.TraerZonaDelComercialAsociado(), FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date, CalidadId = 2 });
+            }
+            else
+            {
+                var cupo = cupoManager.ObtenerCupo(id.Value);
+                var cupoModel = new CupoModel
+                {
+                    Id = cupo.Id,
+                    CalidadId = cupo.Calidad == "Camara" ? 1 : cupo.Calidad == "Fabrica" ? 2 : 0,
+                    CantidadCupos = null,
+                    FasonId = cupo.Fason ?? false,
+                    FechaEntrega = cupo.FechaIngreso,
+                    FechaHastaEntrega = cupo.FechaIngreso,
+                    FleteAcarreo = cupo.FleteProcedencia ?? false,
+                    MaterialId = cupo.MaterialId,
+                    Proveedor = cupo.ProveedorId,
+                    Observacion = cupo.Observaciones,
                     PlantaId = cupo.CentroId,
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes
@@ -138,12 +178,24 @@ namespace WebDataAgro.Controllers
                     cupo.FechaHastaEntrega = cupo.FechaEntrega;
                 }
                 CargarViewBag();
+               
+                if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                {
+                    if(ViewData.ModelState.IsValid){
+                       return  RedirectToAction("Index");
+                    }
+                        return View("CrearCupoExterno", cupo);
+                                       
+                }
                 return View(cupo);
             }
             if (siguientes != null && siguientes.Count != 0)
             {
                 var id = siguientes[0];
                 siguientes.RemoveAt(0);
+                if(PermisosHelper.Is(PermisosDataAgro.IngresoExterno)){
+                    return RedirectToAction("CrearCupoExterno", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
+                }
                 return RedirectToAction("CrearCupo", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
             }
             return RedirectToAction("Index");
@@ -167,7 +219,14 @@ namespace WebDataAgro.Controllers
                 });
             }
             ViewBag.Centro = listaCentro.OrderBy(x => x.Value);
+
             var material = materialManager.TraerTodoMaterial();
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                var materialExterno = habilitacionManager.TraerTodoMaterialHabilitado(comercialManager.TraerZonaDelComercialAsociado());
+                material.Material = material.Material.Where(x => materialExterno.Contains(x.MaterialId)).ToList();
+            }
+
             var listaMaterial = new List<SelectListItem>();
             foreach (var i in material.Material)
             {
@@ -207,14 +266,21 @@ namespace WebDataAgro.Controllers
                 FechaIngreso = cupo.FechaEntrega,
                 CentroId = cupo.PlantaId,
                 FleteProcedencia = cupo.FleteAcarreo,
-                ZonaCupoId = cupo.ZonaId,
                 Calidad = cupo.CalidadId == 1 ? "Camara" : cupo.CalidadId == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,
                 Fason = cupo.FasonId,
-                Destinatario = cupo.CuitId ?? "30715118773",
-                ComercialId = GlobalVariables.ComercialId,
-                FechaGeneracion = DateTime.Now
+                Destinatario = cupo.CuitId ?? "30715118773",      
+                FechaGeneracion = DateTime.Now,
+                ZonaCupoId = cupo.ZonaId
             };
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                entidad.ComercialId = comercialManager.ComercialAsociado(cupo.Proveedor);
+            }
+            else
+            {                
+                entidad.ComercialId = GlobalVariables.ComercialId;
+            }
             return entidad;
         }
 
@@ -275,7 +341,7 @@ namespace WebDataAgro.Controllers
         {
             var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
 
-            var material = materialManager.TraerTodoMaterial();
+            var material = materialManager.TraerTodoMaterial();           
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
                     {
@@ -328,6 +394,36 @@ namespace WebDataAgro.Controllers
             List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fechaDesde, fechaHasta, ZonaId, CentroId, MaterialId);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult TraerTodasHabilitacionesActivas()
+        {            
+            return new JsonResult()
+            {
+                Data = habilitacionManager.TraerTodasHabilitacionesActivas(comercialManager.TraerZonaDelComercialAsociado()),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerTodoMaterialRetirado()
+        {
+            return new JsonResult()
+            {
+                Data = habilitacionManager.TraerTodoMaterialRetirado(comercialManager.TraerZonaDelComercialAsociado()),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult RechazarCupo(Cupo cupo)
+        {
+            var model = cupoManager.RechazarCupo(cupo, GlobalVariables.IdActiveDirectory);
+            return Json(model);
+        }
+
+        public ActionResult AceptarCupo(Cupo cupo)
+        {
+            var model = cupoManager.AceptarCupo(cupo);
+            return Json(model);
         }
 
     }

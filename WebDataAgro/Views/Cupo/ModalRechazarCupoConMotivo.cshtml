@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+    <div class="modal fade" id="modalRechazarCupo" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="status confirmado-modal">
+                        <div id="texto">¿Está seguro que desea eliminar los siguientes cupos?</div>
+                    </div>
+                </div>
+                <input type="hidden" id="cupoId" />
+                <div class="modal-body">
+                    <textarea rows="2" id="motivo-rechazo" placeholder="Indique motivo de rechazo..." style="width:100%" hidden></textarea>
+                </div>
+                <div class="modal-footer clearfix ">
+                    <div class="col-xs-2 noPaddingRight">
+                        <button type="button" style="width: 65px;" class="myBtn btnSubmit" onclick="ModalRechazarCupoConMotivo()" data-dismiss="modal">Si</button>
+
+                    </div>
+                    <div class="col-xs-1 noPaddingRight">
+                        <button type="button"  class="myBtn " data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

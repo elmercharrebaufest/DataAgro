@@ -42,6 +42,8 @@ namespace Molinos.DataAgro.Interfaces
         List<GrupoDeCompras> ListarGrupoDeCompras(string filtro);
         int ComercialAsociado(int proveedorId);
         List<ComercialDto> TraerComercialesProveedor(int proveedorId);
+
+        int TraerZonaDelComercialAsociado();
     }
 }
 

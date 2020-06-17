@@ -145,7 +145,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 repositorio.GuardarCambios();
                 var logCambios = oAgenteSave ?? oAgente;
-                logDataAgroManager.LogCambiosDataAgro(TraerAgente(logCambios.Id), TipoAccionLogDataAgro.Crear, logCambios.GetType());
+                var tipoDeAccion = (oAgenteSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
+                logDataAgroManager.LogCambiosDataAgro(TraerAgente(logCambios.Id), tipoDeAccion, logCambios.GetType());
             }
             catch (Exception ex)
             {

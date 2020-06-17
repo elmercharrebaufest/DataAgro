@@ -26,6 +26,9 @@ namespace WebDataAgro.Services
         [OperationContract]
         ResultadoSap ActualizarContratoSAP(ContratoSAPDto contratoSAP);
 
+        [OperationContract]
+        ResultadoSap ActualizarCupoSAP(CupoSapDto cupoSAP);
+
         #endregion
     }
 }

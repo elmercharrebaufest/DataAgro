@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Business
             var qry = new CombosQueries(logger, repositorio);
             var empleadorId = repositorio.Obtener<Comercial, int?>(x => x.ComercialId == comercialId, x => x.EmpleadorACargoId) ?? 0;
             var list = qry.GetAbmComercialCombo();
-            var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId});
+            var lista = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, EmpleadorACargo = x.EmpleadorACargoId });
             var subordinados = ListarEquipo(comercialId, lista);
             list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
             return list;
@@ -103,16 +103,20 @@ namespace Molinos.DataAgro.Business
 
             try
             {
-                using (var ctx = new PrincipalContext(ContextType.Domain))
+                if (oComercial.Deshabilitado != true)
                 {
-                    var user = UserPrincipal.FindByIdentity(ctx, oComercial.IdActiveDirectory);
-
-                    if (user == null)
+                    using (var ctx = new PrincipalContext(ContextType.Domain))
                     {
-                        oEntityErrors.Error("Usuario", "El usuario no existe en AD ");
-                        return oEntityErrors;
+                        var user = UserPrincipal.FindByIdentity(ctx, oComercial.IdActiveDirectory);
+
+                        if (user == null)
+                        {
+                            oEntityErrors.Error("Usuario", "El usuario no existe en AD ");
+                            return oEntityErrors;
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -149,7 +153,7 @@ namespace Molinos.DataAgro.Business
             }
             var listaRoles = roles.Select(y => y.Id).ToList();
             oComercial.RolesAsociados = repositorio.Listar<Rol>(x => listaRoles.Any(y => y == x.Id));
-            
+
             if (oComercial.ComercialId != 0)
             {
                 var oComercialSave = repositorio.Obtener<Comercial>(oComercial.ComercialId);
@@ -367,6 +371,13 @@ namespace Molinos.DataAgro.Business
                 x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Comercial.Nombres, Apellido = x.Comercial.Apellido },
                 x => x.ProveedorId == proveedorId);
             return comercial;
+        }
+
+        public int TraerZonaDelComercialAsociado()
+        {
+            var cuit = PermisosHelper.ObtenerCuit();
+            var comercial = repositorio.Obtener<ProveedorComercial, string>(x => x.Proveedor.CUIT == cuit, x => x.Comercial.GrupoDeCompras.Descripcion);
+            return repositorio.Obtener<ZonaCupo, int>(x => x.Descripcion == comercial, x => x.Id);
         }
     }
 }

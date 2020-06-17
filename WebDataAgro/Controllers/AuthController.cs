@@ -49,6 +49,10 @@ namespace WebDataAgro.Controllers
                 {
                     return RedirectToAction("Index", "CompraNet");
                 }
+                else if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                {
+                    return RedirectToAction("Index", "Cupo");
+                }
 
             }
             return RedirectToAction("Index", "Error");

@@ -1,4 +1,5 @@
 ﻿using JsonDiffer;
+using JsonDiffPatchDotNet;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -55,7 +57,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                Formatting = Formatting.Indented
             });
 
             try
@@ -109,23 +112,24 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                logAnterior = repositorio.Listar<LogDataAgro>(x =>
-           (x.CupoId != null) ? (x.CupoId == logActual.CupoId && x.Id < logActual.Id) : false ||
-           (x.NegocioId != null) ? (x.NegocioId == logActual.NegocioId && x.Id < logActual.Id) : false ||
-           (x.ProveedorId != null) ? (x.ProveedorId == logActual.ProveedorId && x.Id < logActual.Id) : false)
-               .OrderByDescending(x => x.Id).Take(1)
-               .Select(log => new LogDataAgroDto
-               {
-                   Id = log.Id,
-                   Usuario = log.Usuario,
-                   Fecha = log.Fecha,
-                   Clase = log.Clase,
-                   AccionRealizada = log.AccionRealizada,
-                   DatoModificado = log.DatoModificado,
-                   CupoId = log.CupoId,
-                   NegocioId = log.NegocioId,
-                   ProveedorId = log.ProveedorId,
-               }).FirstOrDefault() ?? logActual;
+                logAnterior = repositorio.Listar<LogDataAgro>(x => x.Id < logActual.Id &&
+                        (((logActual.CupoId != null && x.CupoId != null) ? (x.CupoId == logActual.CupoId) : false) ||
+                        ((logActual.NegocioId != null && x.NegocioId != null) ? (x.NegocioId == logActual.NegocioId) : false) ||
+                        ((logActual.ProveedorId != null && x.ProveedorId != null) ? (x.ProveedorId == logActual.ProveedorId) : false))
+                        )
+                       .OrderByDescending(x => x.Id)
+                       .Select(x => new LogDataAgroDto
+                       {
+                           Id = x.Id,
+                           Usuario = x.Usuario,
+                           Fecha = x.Fecha,
+                           Clase = x.Clase,
+                           AccionRealizada = x.AccionRealizada,
+                           DatoModificado = x.DatoModificado,
+                           CupoId = x.CupoId,
+                           NegocioId = x.NegocioId,
+                           ProveedorId = x.ProveedorId,
+                       }).FirstOrDefault() ?? logActual;
             }
 
 
@@ -140,21 +144,22 @@ namespace Molinos.DataAgro.Business.Managers
             var j2 = JToken.Parse(logAnterior.DatoModificado);
 
 
-
-            JToken diff = JsonDifferentiator.Differentiate(j2, j1);
-            List<string> cambiados = new List<string>();
-
-            if (diff != null)
+            var jdp = new JsonDiffPatch();
+            JToken diffResult = jdp.Diff(j2, j1);
+            List<DatoModificadosLogDataAgroDto> cambiados = new List<DatoModificadosLogDataAgroDto>();
+            if (diffResult != null)
             {
-                foreach (var item in diff)
+                foreach (var item in diffResult)
                 {
-                    string campo = item.ToString().TrimStart('"', '*');
-                    int index = campo.IndexOf('"');
-                    if (index > 0)
-                        campo = campo.Substring(0, index);
-                    cambiados.Add(campo);
+                    cambiados.Add(new DatoModificadosLogDataAgroDto
+                    {
+                        Anterior = ((JContainer)((JProperty)item).Value).First.ToString(),
+                        Actual = ((JContainer)((JProperty)item).Value).Last.ToString(),
+                        Campo = ((JProperty)item).Name
+                    });
                 }
             }
+
 
 
             return new DatosModificadosLogDataAgroDto
@@ -163,6 +168,55 @@ namespace Molinos.DataAgro.Business.Managers
                 LogAnterior = logAnterior,
                 CamposCambiados = cambiados
             };
+        }
+
+        public LogDataAgroDto Obtener(int idLogDataAgro, bool anterior = false)
+        {
+            LogDataAgroDto log = repositorio.Listar<LogDataAgro>(x => x.Id == idLogDataAgro)
+                .Select(x => new LogDataAgroDto
+                {
+                    Id = x.Id,
+                    Usuario = x.Usuario,
+                    Fecha = x.Fecha,
+                    Clase = x.Clase,
+                    AccionRealizada = x.AccionRealizada,
+                    DatoModificado = x.DatoModificado,
+                    CupoId = x.CupoId,
+                    NegocioId = x.NegocioId,
+                    ProveedorId = x.ProveedorId,
+                }).FirstOrDefault();
+
+            if (anterior)
+            {
+                if (log.AccionRealizada == TipoAccionLogDataAgro.Crear.ToString())
+                {
+                    return new LogDataAgroDto();
+                }
+                else
+                {
+                    log = repositorio.Listar<LogDataAgro>(x => x.Id < log.Id &&
+                        (((log.CupoId != null && x.CupoId != null) ? (x.CupoId == log.CupoId) : false) ||
+                        ((log.NegocioId != null && x.NegocioId != null) ? (x.NegocioId == log.NegocioId) : false) ||
+                        ((log.ProveedorId != null && x.ProveedorId != null) ? (x.ProveedorId == log.ProveedorId) : false))
+                        )
+                       .OrderByDescending(x => x.Id)
+                       .Select(x => new LogDataAgroDto
+                       {
+                           Id = x.Id,
+                           Usuario = x.Usuario,
+                           Fecha = x.Fecha,
+                           Clase = x.Clase,
+                           AccionRealizada = x.AccionRealizada,
+                           DatoModificado = x.DatoModificado,
+                           CupoId = x.CupoId,
+                           NegocioId = x.NegocioId,
+                           ProveedorId = x.ProveedorId,
+                       }).FirstOrDefault() ?? new LogDataAgroDto();
+                }
+            }
+
+            return log;
+
         }
     }
 }

@@ -587,10 +587,12 @@ function armarContacto() {
     $("#daco-provcomnet").html((basico[0].ProvinciaCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].ProvinciaCompraNet);
     $("#daco-loccomnet").html((basico[0].LocalidadCompraNet == null || basico[0].ProvinciaCompraNet == "") ? "-" : basico[0].LocalidadCompraNet);
     $("#daco-consigcomnet").html((basico[0].Consignatario == 1) ? "Si" : "No");
+    $("#daco-planCanjecomnet").html((basico[0].PlanCanje == 1) ? "Si" : "No");
     $("#daco-comisioncomnet").html(basico[0].Comision);
 
     if ($("#daco-clascomnet").html() != 'Acopiador') {
         $("#rowConsignatario").hide();
+        $("#rowPlanCanje").hide();
     }
 
 
@@ -874,8 +876,8 @@ function armarContacto() {
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Partido = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Partido || acopiomaterial[i].Partido;
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Nombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Nombre || acopiomaterial[i].Nombre;
 
-                /*grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre || acopiomaterial[i].KMZnombre;
-                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile || acopiomaterial[i].KMZfile;*/
+                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre || acopiomaterial[i].KMZnombre;
+                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile || acopiomaterial[i].KMZfile;
 
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento || [];
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento.push({
@@ -3082,13 +3084,6 @@ function armarEstablecimiento(establecimiento) {
                 + (obj.latitud != "" && obj.longitud != "" ? ('<span class="datos-produccion-cap-prod-guardados-hectareas"> &nbsp;&nbsp;&nbsp;&nbsp; <b>Latitud</b>:' + obj.latitud + " &nbsp;&nbsp;&nbsp;&nbsp;<b>Longitud</b>: " + obj.longitud + '</span>') : "")
                 + '</div>'
                 + file
-                //+ (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZEstablecimiento(this)" id="eliminarKMZEstablecimiento' + capProdCantEstablecimiento + '">x Eliminar KMZ</div>' : '')
-                //+ '<div class="editar-produccion" onclick="editarCampoEstablecimiento(' + capProdCantEstablecimiento + ')" id="editarEstablecimiento' + capProdCantEstablecimiento + '">'
-                //+ '<img src="../Content/Images/contacto-edit.png" /> Editar'
-                //+ '</div>'
-                //+ '<div class="eliminar-produccion" onclick="eliminarCampoEstablecimiento(this)" id="eliminarEstablecimiento' + capProdCantEstablecimiento + '">'
-                //+ 'x Eliminar'
-                //+ '</div>'
                 + '</div>'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'

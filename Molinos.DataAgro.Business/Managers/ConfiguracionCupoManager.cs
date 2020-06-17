@@ -155,5 +155,33 @@ namespace Molinos.DataAgro.Business.Managers
                 LimiteCupo = x.LimiteCupo
             });
         }
+
+        public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona)
+        {
+            var hoy = DateTime.Today;
+            var limitePorZona = repositorio.Listar<LimiteCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
+            {
+                Id = x.Id,
+                Fecha = x.ConfiguracionCupo.Fecha,
+                MaterialId = x.ConfiguracionCupo.MaterialId,
+                CentroId = x.ConfiguracionCupo.CentroId,
+                LimiteCupo = x.ConfiguracionCupo.LimiteCupo
+            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona);
+
+            if (limitePorZona.Count() == 0)
+            {
+                var limitePorCantidadCupo = repositorio.Listar<ConfiguracionCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
+                {
+                    Id = x.Id,
+                    Fecha = x.Fecha,
+                    MaterialId = x.MaterialId,
+                    CentroId = x.CentroId,
+                    LimiteCupo = x.LimiteCupo
+                }, x => x.Fecha == hoy);
+
+                return limitePorCantidadCupo;
+            }
+            return limitePorZona;
+        }
     }
 }

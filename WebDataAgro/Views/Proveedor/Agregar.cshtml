@@ -170,9 +170,13 @@
                 <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
                     <span class="campo-span">Consignatario </span>
                 </div>
+                <div id="planCanjeCompraNet" class="formulario-campo campo-planCanje-compranet noCorredor">
+                    <span class="campo-span">Plan Canje</span>
+                </div>
                 <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor">
                     <span class="campo-span">Comisión %</span>
                 </div>
+
             </div>
         </div>
         <div class="noCorredor">
@@ -424,14 +428,14 @@
                 Agregar detalle de capacidad productiva
             </div>
             <input type="hidden" id="campoid" />
-            @*<div class="formulario-campo ubicacionkmz">
-                <span class="campo-span">Ubicación</span>
+            <div class="formulario-campo ubicacionkmz">
+                @*<span class="campo-span">Ubicación</span>
                 <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-produccion" />
-                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />
-                <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+                <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-produccion" />*@
+                <span style="float:none;" class="campo-span campo-span-kmz">Archivo</span>
                 <input type="file" name="kmz" id="kmz" class="inputfile" />
                 <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
-            </div>*@
+            </div>
             <div class="formulario-campo campo-provincia-produccion">
                 <input id="localidad-produccion" placeholder="Localidad" style="width:59%;float:left;" />
                 @Html.Hidden("localidadId-produccion", "", new { @Id = "localidadId-produccion" })
@@ -511,14 +515,14 @@
                 Agregar detalle de Almacenamiento Estático
             </div>
             <input type="hidden" id="campo-almacenamientoid" />
-            @*<div class="formulario-campo ubicacionkmzalmacenamiento">
-            <span class="campo-span">Ubicación</span>
+            <div class="formulario-campo ubicacionkmzalmacenamiento">
+            @*<span class="campo-span">Ubicación</span>
             <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-almacenamiento" />
-            <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-almacenamiento" />
-            <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
+            <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-almacenamiento" />*@
+            <span style="float:none;" class="campo-span campo-span-kmz">Archivo</span>
             <input type="file" name="kmz-almacenamiento" id="kmz-almacenamiento" class="inputfile" />
             <label for="kmz-almacenamiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field almacenamiento">Subir un Archivo</span></label>
-        </div>*@
+        </div>
             <div class="formulario-campo campo-provincia-almacenamiento">
                 <div style="width:59%;float:left;"><input id="localidad-almacenamiento" placeholder="Localidad" style="width:100% !important;" /></div>
                 @Html.Hidden("localidadId-almacenamiento", "", new { @Id = "localidadId-almacenamiento" })
@@ -621,8 +625,8 @@
                 <input type="text" placeholder="Latitud..." class="campo-input-text coordenadas" id="coordenadas-latitud-establecimiento" />
                 <input type="text" placeholder="Longitud..." class="campo-input-text coordenadas" id="coordenadas-longitud-establecimiento" />
                 <span style="float:none;" class="campo-span campo-span-kmz">KMZ</span>
-                <input type="file" name="kmz" id="kmz" class="inputfile" />
-                <label for="kmz"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
+                <input type="file" name="kmz-establecimiento" id="kmz-establecimiento" class="inputfile" />
+                <label for="kmz-establecimiento"><div class="img-circular"><img title="Adjuntar KMZ" src="~/Content/Images/uploadb.png" /></div><span style="float:none;" class="campo-span label-field produccion">Subir un Archivo</span></label>
             </div>
             <div class="formulario-campo campo-provincia-produccion">
                 <input id="localidad-establecimiento" placeholder="Localidad" style="width:59%;float:left;" />
@@ -800,6 +804,18 @@
                         </div>
                     </div>
                     <div class="col-lg-9 campo-consignatario-proveedor">
+
+                    </div>
+                </div>
+                <div class="row provcorr-form " id="planCanjeProveedorDiv" hidden>
+                    <div class="col-lg-3">
+                        <div id="planCanjeProveedorCompraNet" class="campo-planCanje-proveedor-compranet">
+                            <div class="label-proveedorescorredor">
+                                Plan Canje
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 campo-planCanje-proveedor">
 
                     </div>
                 </div>

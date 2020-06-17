@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Logs.
+        ///   Looks up a localized string similar to Visualizar LogsDataAgro.
         /// </summary>
         public static string Administracion_Logs {
             get {
@@ -192,6 +192,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Alta_OtrasZonas {
             get {
                 return ResourceManager.GetString("Alta_OtrasZonas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alta Cupos Externos.
+        /// </summary>
+        public static string AltaCupo_Externo {
+            get {
+                return ResourceManager.GetString("AltaCupo_Externo", resourceCulture);
             }
         }
         
@@ -300,6 +309,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string April {
             get {
                 return ResourceManager.GetString("April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aprobar Cupo.
+        /// </summary>
+        public static string AprobarCupo {
+            get {
+                return ResourceManager.GetString("AprobarCupo", resourceCulture);
             }
         }
         
@@ -1015,6 +1033,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Habilitar Cupos.
+        /// </summary>
+        public static string Habilitacion_De_Cupos {
+            get {
+                return ResourceManager.GetString("Habilitacion_De_Cupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hasta Fijación.
         /// </summary>
         public static string HastaFijacion {
@@ -1159,6 +1186,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mercaderia en Deposito.
+        /// </summary>
+        public static string MercaderiaEnDeposito {
+            get {
+                return ResourceManager.GetString("MercaderiaEnDeposito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mes.
         /// </summary>
         public static string Mes {
@@ -1272,6 +1308,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Modificar_OtrasZonas {
             get {
                 return ResourceManager.GetString("Modificar_OtrasZonas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Cupos Externos.
+        /// </summary>
+        public static string ModificarCupo_Externo {
+            get {
+                return ResourceManager.GetString("ModificarCupo_Externo", resourceCulture);
             }
         }
         

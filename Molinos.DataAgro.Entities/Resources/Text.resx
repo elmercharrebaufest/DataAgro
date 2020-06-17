@@ -706,7 +706,19 @@
   <data name="Habilitacion_De_Cupos" xml:space="preserve">
     <value>Habilitar Cupos</value>
   </data>
+  <data name="AltaCupo_Externo" xml:space="preserve">
+    <value>Alta Cupos Externos</value>
+  </data>
+  <data name="ModificarCupo_Externo" xml:space="preserve">
+    <value>Modificar Cupos Externos</value>
+  </data>
   <data name="Administracion_Logs" xml:space="preserve">
-    <value>Visualizar Logs</value>
+    <value>Visualizar LogsDataAgro</value>
+  </data>
+  <data name="MercaderiaEnDeposito" xml:space="preserve">
+    <value>Mercaderia en Deposito</value>
+  </data>
+  <data name="AprobarCupo" xml:space="preserve">
+    <value>Aprobar Cupo</value>
   </data>
 </root>

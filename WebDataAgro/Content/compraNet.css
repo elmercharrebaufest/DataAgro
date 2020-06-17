@@ -1229,3 +1229,7 @@ body {
 .k-i-loading {
     display: none;
 }
+.subrayadoVerde {
+    text-decoration: underline;
+    text-decoration-color: green;
+}

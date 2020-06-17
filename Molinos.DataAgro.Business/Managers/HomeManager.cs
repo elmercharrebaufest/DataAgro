@@ -56,22 +56,22 @@ namespace Molinos.DataAgro.Business.Managers
                 oParam.Segmentacion, oParam.Actividad, oParam.Material, oParam.Calificacion,
                 oParam.Hectareas, oParam.Toneladas, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.Condicion, oParam.Estado, oParam.Comercial, oParam.Zona);
 
-                res.TotalContactos = queryPorEstado.Count();
-                res.TotalPotencialContactos = queryPorEstado.Count(x => x.Estado == "Cliente Potencial");
-                res.TotalOperandoContactos = queryPorEstado.Count(x => x.Estado == "Operando");
-                res.TotalNoOperandoContactos = queryPorEstado.Count(x => x.Estado == "No operando");
-                res.TotalBajaContactos = queryPorEstado.Count(x => x.Estado == "Baja");
-                res.TotalSinInteresContactos = queryPorEstado.Count(x => x.Estado == "Sin interés de operar");
+                res.TotalContactos = queryPorEstado.Select(a => a.CUIT).Distinct().Count();
+                res.TotalPotencialContactos = queryPorEstado.Where(x => x.Estado == "Cliente Potencial").Select(a => a.CUIT).Distinct().Count();
+                res.TotalOperandoContactos = queryPorEstado.Where(x => x.Estado == "Operando").Select(a => a.CUIT).Distinct().Count();
+                res.TotalNoOperandoContactos = queryPorEstado.Where(x => x.Estado == "No operando").Select(a => a.CUIT).Distinct().Count();
+                res.TotalBajaContactos = queryPorEstado.Where(x => x.Estado == "Baja").Select(a => a.CUIT).Distinct().Count();
+                res.TotalSinInteresContactos = queryPorEstado.Where(x => x.Estado == "Sin interés de operar").Select(a => a.CUIT).Distinct().Count();
             }
             else
             {
                 var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial()));
-                res.TotalContactos = cuenta.Count();
-                res.TotalPotencialContactos = cuenta.Count(x => x.Estado == "Cliente Potencial");
-                res.TotalOperandoContactos = cuenta.Count(x => x.Estado == "Operando");
-                res.TotalNoOperandoContactos = cuenta.Count(x => x.Estado == "No operando");
-                res.TotalBajaContactos = cuenta.Count(x => x.Estado == "Baja");
-                res.TotalSinInteresContactos = cuenta.Count(x => x.Estado == "Sin interés de operar");
+                res.TotalContactos = cuenta.Select(a=>a.Cuit).Distinct().Count();
+                res.TotalPotencialContactos = cuenta.Where(x => x.Estado == "Cliente Potencial").Select(a => a.Cuit).Distinct().Count();
+                res.TotalOperandoContactos = cuenta.Where(x => x.Estado == "Operando").Select(a => a.Cuit).Distinct().Count();
+                res.TotalNoOperandoContactos = cuenta.Where(x => x.Estado == "No operando").Select(a => a.Cuit).Distinct().Count();
+                res.TotalBajaContactos = cuenta.Where(x => x.Estado == "Baja").Select(a => a.Cuit).Distinct().Count();
+                res.TotalSinInteresContactos = cuenta.Where(x => x.Estado == "Sin interés de operar").Select(a => a.Cuit).Distinct().Count();
             }
 
 
@@ -351,6 +351,8 @@ namespace Molinos.DataAgro.Business.Managers
                 exp.agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, idsStr);
 
                 exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
+
+                exp.establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.contacto.Select(x => x.Cuit).ToList()));
 
                 return exp;
             }

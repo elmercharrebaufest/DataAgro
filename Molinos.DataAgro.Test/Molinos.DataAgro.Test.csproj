@@ -126,9 +126,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\HabilitacionCupoControllerTest.cs" />
     <Compile Include="Controllers\CupoControllerTest.cs" />
     <Compile Include="Controllers\AdministracionProveedorControllerTest.cs" />
     <Compile Include="Controllers\AdministracionCupoControllerTest.cs" />
+    <Compile Include="Controllers\LogDataAgroControllerTest.cs" />
     <Compile Include="Controllers\SugerenciaCupoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionCupoControllerTest.cs" />

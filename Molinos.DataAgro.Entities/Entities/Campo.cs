@@ -12,7 +12,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? LocalidadId { get; set; }
         public int? ArrendaPropia { get; set; }
         public bool HabilitadoSojaSustentable { get; set; }
-
+        public string KMZnombre { get; set; }
+        public string KMZfile { get; set; }
 
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }

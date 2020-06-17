@@ -1,15 +1,20 @@
-﻿using Kendo.DynamicLinq;
+﻿using DiffPlex.DiffBuilder;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
+using WebDataAgro.Core;
+using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -18,14 +23,19 @@ namespace WebDataAgro.Controllers
     public class LogDataAgroController : Controller
     {
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IReportesManager reportesManager;
+        private readonly IComercialManager mobjComercialManager;
 
-        public LogDataAgroController(ILogDataAgroManager logDataAgroManager)
+        public LogDataAgroController(ILogDataAgroManager logDataAgroManager, IReportesManager reportesManager, IComercialManager mobjComercialManager)
         {
             this.logDataAgroManager = logDataAgroManager;
+            this.reportesManager = reportesManager;
+            this.mobjComercialManager = mobjComercialManager;
         }
 
         public ActionResult Index()
         {
+            FillViewBag();
             return View();
         }
         [HttpPost]
@@ -40,17 +50,94 @@ namespace WebDataAgro.Controllers
 
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = logDataAgroManager.ListarDatosLogDataAgro(request, equipo);
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }        
+
+        [HttpPost]
+        public ActionResult MostrarDiferencias(int idLogDataAgro)
+        {
+            SideBySideDiffBuilder diffBuilder = new SideBySideDiffBuilder();
+            LogDataAgroDto actual = logDataAgroManager.Obtener(idLogDataAgro);
+            LogDataAgroDto anterior = logDataAgroManager.Obtener(idLogDataAgro, true);
+            var model = diffBuilder.BuildDiffModel(anterior.DatoModificado ?? string.Empty, actual.DatoModificado ?? string.Empty);
+            return PartialView("Diff",model);
+        }
+
+        public ActionResult Export(DataSourceRequest filtro)
+        {
+            var model = new ReportesModel();
+
+            if (filtro.Sort == null)
+            {
+                filtro.Sort = new List<Sort> {
+                    new Sort {Field= "Id",Dir="desc" }
+                };
+            }
+            filtro.Skip = 0;
+            filtro.Take = 0;
+            var equipo = GlobalVariables.EquipoReal;
+            List<LogDataAgroDto> datos = (List<LogDataAgroDto>)logDataAgroManager.ListarDatosLogDataAgro(filtro, equipo).Data;
+            foreach (var dato in datos)
+            {
+                dato.CamposCambiados = logDataAgroManager.TraerDatosModificadosPorId(dato.Id).CamposCambiados;
+            }
+            var oLstContacto = new LstLogDataAgro(reportesManager);
+
+            var identif = oLstContacto.GenerarExcel(datos);
+
+            model.DownloadKey = Util.GetDownloadKey(identif);
+
             return Json(model);
         }
 
-        [HttpPost]
-        public ActionResult TraerDatosModificados(int idLogDataAgro)
+        private void FillViewBag()
         {
-            var modificados = logDataAgroManager.TraerDatosModificadosPorId(idLogDataAgro);
-            return Json(modificados);
+            var accionesListItems = new List<SelectListItem>();
+            foreach (var nombreDelEnum in Enum.GetNames(typeof(TipoAccionLogDataAgro)))
+            {
+                accionesListItems.Add(new SelectListItem
+                {
+                    Text = nombreDelEnum,
+                    Value = nombreDelEnum,
+                    Selected = false
+                });
+            }
+            accionesListItems.OrderBy(x => x.Text);
+            ViewBag.Accion = accionesListItems;
+
+            var clasesListItems = new List<SelectListItem>{
+                new SelectListItem
+                    {
+                        Text = "Cupo",
+                        Value = "Cupo",
+                        Selected = false
+                    },
+                new SelectListItem
+                    {
+                        Text = "Proveedor",
+                        Value = "Proveedor",
+                        Selected = false
+                    },
+                new SelectListItem
+                    {
+                        Text = "Negocio",
+                        Value = "Negocio",
+                        Selected = false
+                    }
+            }.OrderBy(x => x.Text);
+            ViewBag.Clase = clasesListItems;
+
+
+            var comercial = mobjComercialManager.TraerTodoComercial();
+            //comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) || a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) || a.Rol.ToUpper().Contains("Mesa".ToUpper())) && a.Deshabilitado != true).ToList();
+            var comercialListItems = comercial.Comercial.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Nombres + " " + x.Apellido,
+                   Value = x.IdActiveDirectory,
+                   Selected = false
+               }).OrderBy(x => x.Text);
+            ViewBag.Comercial = comercialListItems;
         }
-
-
-
     }
 }

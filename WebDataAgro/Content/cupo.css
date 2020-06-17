@@ -81,6 +81,10 @@
 .flete-procedencia {
     background-color: #ffe5aa;
 }
+
+#border-turquoise {
+    border-bottom: 5px solid #15deca;
+}
 .btnAzul {
     background-color: #26337B;
     color: #fff;
@@ -324,7 +328,46 @@ span.k-widget.k-numerictextbox.cantidad-masiva {
     margin-bottom: 0;
 }
 
+#tabla-cupo th {
+    text-align: center;
+    border: 2px solid #017940;
+    border-bottom: none;
+}
+
+#tabla-cupo td {
+    text-align: center;
+    border: 2px solid #017940;
+    border-top: none;
+}
+
 [class^="COR"]{
     font-weight:bold;
     color:black;
 }
+
+.k-multiselect-wrap .k-input {
+    color: #999999;
+}
+
+.linea {
+    border-top: 1px solid #387941;
+    margin-left: 5px;
+    height: 9px;
+    padding: 0;
+    width: 100%;
+}
+
+
+.botonFiltrar {
+    padding: 0;
+    position: relative;
+    top: -24px;
+    left: -15px;
+    background-color: transparent;
+}
+
+.icono {
+    font-size: 22px;
+    color: #387941;
+}
+

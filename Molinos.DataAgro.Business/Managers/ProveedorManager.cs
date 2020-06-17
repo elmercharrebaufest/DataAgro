@@ -1161,7 +1161,8 @@ namespace Molinos.DataAgro.Business.Managers
                 EstadoId = 1,
                 FechaAlta = DateTime.Now,
                 Consignatario = oParam.basicos.Consignatario,
-                ComisionPorcentaje = oParam.basicos.Comision
+                ComisionPorcentaje = oParam.basicos.Comision,
+                PlanCanje = oParam.basicos.PlanCanje
             };
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             var oEstados = repositorio.Listar<Estado>();
@@ -1580,6 +1581,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.ProvinciaCompraNetId = oParam.basicos.ProvinciaCompraNet;
                 oProveedorSave.Consignatario = oParam.basicos.Consignatario;
                 oProveedorSave.ComisionPorcentaje = oParam.basicos.Comision;
+                oProveedorSave.PlanCanje = oParam.basicos.PlanCanje;
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
@@ -2086,8 +2088,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 //Longitud = cam.longitud,
                                 //Nombre = cam.nombre,
                                 //ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
-                                //KMZfile = cam.archivoFileResult,
-                                //KMZnombre = cam.archivo,
+                                KMZfile = cam.archivoFileResult,
+                                KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 ArrendaPropia = cam.hectareas,
                                 NroItem = 1,
@@ -2129,8 +2131,8 @@ namespace Molinos.DataAgro.Business.Managers
                             //campo.Longitud = mod.longitud;
                             //campo.Nombre = mod.nombre;
                             //campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
-                            //campo.KMZfile = mod.archivoFileResult;
-                            //campo.KMZnombre = mod.archivo;
+                            campo.KMZfile = mod.archivoFileResult;
+                            campo.KMZnombre = mod.archivo;
                             campo.LocalidadId = mod.localidad;
                             campo.ArrendaPropia = mod.hectareas;
                             campo.ProveedorId = (int)oParam.ProveedorId;
@@ -2241,8 +2243,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 //Longitud = cam.longitud,
                                 //Nombre = cam.nombre,
                                 //ComercialId = cam.comercialId == 0 ? null : cam.comercialId,
-                                //KMZfile = cam.archivoFileResult,
-                                //KMZnombre = cam.archivo,
+                                KMZfile = cam.archivoFileResult,
+                                KMZnombre = cam.archivo,
                                 LocalidadId = cam.localidad,
                                 NroItem = 1,
                                 ProveedorId = (int)oParam.ProveedorId
@@ -2298,8 +2300,8 @@ namespace Molinos.DataAgro.Business.Managers
                             //acopio.Longitud = mod.longitud;
                             //acopio.Nombre = mod.nombre;
                             //acopio.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
-                            //acopio.KMZfile = mod.archivoFileResult;
-                            //acopio.KMZnombre = mod.archivo;
+                            acopio.KMZfile = mod.archivoFileResult;
+                            acopio.KMZnombre = mod.archivo;
                             acopio.LocalidadId = mod.localidad;
                             acopio.ProveedorId = (int)oParam.ProveedorId;
                             #endregion
@@ -3129,6 +3131,16 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
 
+        }
+
+        public int ObtenerIdProveedorPorCuit(string cuit)
+        {
+            return repositorio.Obtener<Proveedor, int>(x => x.CUIT == cuit, x => x.ProveedorId);
+        }
+
+        public Proveedor ObtenerEmailProveedorPorCuit(string cuit)
+        {
+            return repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
         }
     }
 }

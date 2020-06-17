@@ -29,6 +29,25 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class RespuestaCupoStop : ModificarCupo
     {     
         public string creado { get; set; }
+        public string estadoEnPlanta { get; set; }
+        public string cartaPorte { get; set; }
+        public string ctg { get; set; }
+        public string fechaCTG_Desde { get; set; }
+        public string fechaCTG_Hasta { get; set; }
+        public string cuitCorredorVAfip { get; set; }
+        public string cuitCorredorCAfip { get; set; }
+        public string cuitOrigen { get; set; }
+        public string cuitRemComercial { get; set; }
+        public string cuitMercadoATerminoAfip { get; set; }
+        public string cosecha { get; set; }
+        public string pesoNetoEstimado  { get; set; }
+        public string kmRecorrer { get; set; }
+        public string cuitIntermediarioFleteAfip { get; set; }
+        public string cuitTransportistaAfip { get; set; }
+        public string cuitChoferAfip { get; set; }
+        public string cuitOrigenAfip { get; set; }
+        public string codLocalidadOrigen { get; set; }
+        public string nroEstablecimientoOrigen { get; set; }
     }
     public partial class ConsultaCuposStop
     {

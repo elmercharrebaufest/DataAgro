@@ -25,11 +25,30 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CupoStop { get; set; }
         public string CreacionStop { get; set; }
         public string ErrorStop { get; set; }
-        //public int? FasonId { get; set; }
-        //public int? ContratoId { get; set; }
-        //public int? AgenteCompraId { get; set; }
-        //public int? FijacionDePrecioContratoId { get; set; }
 
+        public string UsuarioCreador { get; set; }
+        public string MotivoRechazo { get; set; }
+
+
+        public string EstadoPlanta { get; set; }
+        public string CartaPorte { get; set; }
+        public string CTG { get; set; }
+        public DateTime? CTGFechaDesde { get; set; }
+        public DateTime? CTGFechaHasta { get; set; }
+        public string CuitOrigen { get; set; }
+        public string RemitenteComercial { get; set; }
+        public string CorredorComprador { get; set; }
+        public string CorredorVendedor { get; set; }
+        public string MercadoATermino { get; set; }
+        public string Cosecha { get; set; }
+        public string Peso { get; set; }
+        public string Km { get; set; }
+        public string IntermediarioFlete { get; set; }
+        public string Transportista { get; set; }
+        public string Chofer { get; set; }
+        public string CuitOrigenAfip { get; set; }
+        public string CodLocalidadOrigen { get; set; }
+        public string NroEstablecimientoOrigen { get; set; }
         public int? TipoNegocioId { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         [ForeignKey("ConfiguracionEspacioDinamicoId")]

@@ -33,3 +33,33 @@
 	    CONSTRAINT [PK_ReporteCompraNetPosicionCompras] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+--go
+
+--CREATE TRIGGER InsteadReporteCompraNetPosicionCompras on ReporteCompraNetPosicionCompras INSTEAD OF INSERT AS
+--BEGIN
+--    BEGIN TRANSACTION
+
+ 
+
+--        delete gslosqlprd00.moa_siogranos.dbo.ReporteCompraNetPosicionCompras
+
+ 
+
+--        INSERT INTO gslosqlprd00.moa_siogranos.dbo.ReporteCompraNetPosicionCompras (Material,MaterialId,Mes,KilosPesos,KilosDolares,DispAFijar,DispAPrecio,DispFijac,FrwAFijar,FrwAPrecio,FrwFijac,NewAFijar,NewAPrecio,NewFijac,Anio,PrecioPonderadoPesos,PrecioPonderadoDolares,CantidadPonderada,DispAPrecioPesos,DispAPrecioDolares,DispFijacPesos,DispFijacDolares,FrwAPrecioPesos,FrwAPrecioDolares,FrwFijacPesos,FrwFijacDolares,NewAPrecioPesos,NewAPrecioDolares,NewFijacPesos,NewFijacDolares)
+--        SELECT Material,MaterialId,Mes,KilosPesos,KilosDolares,DispAFijar,DispAPrecio,DispFijac,FrwAFijar,FrwAPrecio,FrwFijac,NewAFijar,NewAPrecio,NewFijac,Anio,PrecioPonderadoPesos,PrecioPonderadoDolares,CantidadPonderada,DispAPrecioPesos,DispAPrecioDolares,DispFijacPesos,DispFijacDolares,FrwAPrecioPesos,FrwAPrecioDolares,FrwFijacPesos,FrwFijacDolares,NewAPrecioPesos,NewAPrecioDolares,NewFijacPesos,NewFijacDolares
+--        FROM ReporteCompraNetPosicionCompras
+
+ 
+
+--        INSERT INTO gslosqlprd00.moa_siogranos.dbo.ReporteCompraNetPosicionCompras (Material,MaterialId,Mes,KilosPesos,KilosDolares,DispAFijar,DispAPrecio,DispFijac,FrwAFijar,FrwAPrecio,FrwFijac,NewAFijar,NewAPrecio,NewFijac,Anio,PrecioPonderadoPesos,PrecioPonderadoDolares,CantidadPonderada,DispAPrecioPesos,DispAPrecioDolares,DispFijacPesos,DispFijacDolares,FrwAPrecioPesos,FrwAPrecioDolares,FrwFijacPesos,FrwFijacDolares,NewAPrecioPesos,NewAPrecioDolares,NewFijacPesos,NewFijacDolares)
+--        SELECT Material,MaterialId,Mes,KilosPesos,KilosDolares,DispAFijar,DispAPrecio,DispFijac,FrwAFijar,FrwAPrecio,FrwFijac,NewAFijar,NewAPrecio,NewFijac,Anio,PrecioPonderadoPesos,PrecioPonderadoDolares,CantidadPonderada,DispAPrecioPesos,DispAPrecioDolares,DispFijacPesos,DispFijacDolares,FrwAPrecioPesos,FrwAPrecioDolares,FrwFijacPesos,FrwFijacDolares,NewAPrecioPesos,NewAPrecioDolares,NewFijacPesos,NewFijacDolares
+--        FROM inserted
+
+ 
+
+--    COMMIT TRANSACTION
+
+ 
+
+--END
+GO

@@ -26,6 +26,8 @@ BEGIN
 		EsCampoProduccion bit,
 		Id int,
 		HasArrendadas bit,
+		KMZnombre varchar(500),
+		KMZfile varchar(MAX),
 		Partido varchar(500)
 	)
 	
@@ -49,6 +51,8 @@ BEGIN
 		1,
 		C.CampoId,
 		0,
+		C.KMZnombre,
+		c.KMZfile,
 		Pa.Descripcion as Partido
 	FROM Campo C
 	INNER JOIN Proveedor PR ON C.ProveedorId = PR.ProveedorId
@@ -80,6 +84,8 @@ BEGIN
 		0,
 		A.AcopioId,
 		AM.HasArrendadas,
+		A.KMZnombre,
+		A.KMZfile,
 		Pa.Descripcion as Partido
 	FROM Acopio A
 	INNER JOIN Proveedor PR ON A.ProveedorId = PR.ProveedorId
@@ -109,6 +115,8 @@ BEGIN
 		EsCampoProduccion,
 		Id,
 		HasArrendadas,
+		KMZnombre,
+		KMZfile,
 		Partido
 	FROM @CampoAcopio	
     

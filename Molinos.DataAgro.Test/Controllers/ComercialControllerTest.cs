@@ -71,8 +71,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
-            Assert.AreEqual(
-"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null,\"NombreCompleto\":\"A A\",\"Disabled\":false,\"Deshabilitado\":false,\"FechaDeshabilitado\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"ComercialId\":1,\"Apellido\":\"A\",\"Nombres\":\"A\",\"PerDescripcion\":\"Mesa\",\"Rol\":null,\"NombreCompleto\":\"A A\",\"Disabled\":false,\"Deshabilitado\":false,\"FechaDeshabilitado\":null,\"IdActiveDirectory\":null}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}", a);
         }
 
         [Test]

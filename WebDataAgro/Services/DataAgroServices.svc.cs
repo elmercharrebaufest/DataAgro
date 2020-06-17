@@ -28,6 +28,7 @@ namespace WebDataAgro.Services
         private readonly IInformeComercialManager informeComercial;
         private readonly IContratoManager contratoManager;
         private readonly IRepositorio repositorio;
+        private readonly ICupoManager cupoManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -35,7 +36,8 @@ namespace WebDataAgro.Services
             ICampaniaMaterialManager campaniaMaterial,
             IInformeComercialManager informeComercial,
             IContratoManager contratoManager,
-            IRepositorio repositorio)
+            IRepositorio repositorio,
+            ICupoManager cupoManager)
         {
             this.logger = logger;
             this.riesgoComercial = riesgoComercial;
@@ -44,6 +46,7 @@ namespace WebDataAgro.Services
             this.informeComercial = informeComercial;
             this.contratoManager = contratoManager;
             this.repositorio = repositorio;
+            this.cupoManager = cupoManager;
         }
         #region Servicios de DataAgro
 
@@ -368,7 +371,7 @@ namespace WebDataAgro.Services
                     contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) });
                 }
                 logger.Debug("ActualizandoContrato5");
-                Validar(contrato, oEntityErrors);
+                ValidarContrato(contrato, oEntityErrors);
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
@@ -392,8 +395,101 @@ namespace WebDataAgro.Services
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
+        public ResultadoSap ActualizarCupoSAP(CupoSapDto cupoSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("Actualizando Cupo" + cupoSAP.ToXml());
+                var cupoOriginal = repositorio.Obtener<Cupo, Cupo>(x => x.CupoSap == cupoSAP.Codigo, x => x);
+                if (cupoOriginal == null || cupoOriginal.Id == 0)
+                {
+                    oEntityErrors.ListaErrores.Add(new ErrorMessage { Source = "Codigo", Message = "No existe cupo " + (cupoSAP.Codigo ?? "") + " en DataAgro" });
+                    return oEntityErrors;
+                }
 
-        private void Validar(Contrato oParam, ResultadoSap oErrorMessages)
+                var cupo = new Cupo();
+                cupo.Id = cupoOriginal.Id;
+                cupo.FechaIngreso = DateTime.ParseExact(cupoSAP.FechaIngreso, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                cupo.CupoSap = cupoSAP.Codigo;
+                cupo.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == cupoSAP.Material, x => x.MaterialId);
+                string cuit = cupoSAP.Proveedor;
+                int ProveedorId = 0;
+                if (cuit.StartsWith("C"))
+                {
+                    cuit = cuit.Replace("C", "");
+                    ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT.Contains(cuit) && (x.SegmentacionId == 5 || x.SegmentacionId == 7), x => x.ProveedorId);
+                }
+                if (cuit.StartsWith("00"))
+                {
+                    cuit = cuit.Remove(0, 2);
+                    ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT.Contains(cuit) && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
+                }
+
+                cupo.ProveedorId = ProveedorId;
+                cupo.CentroId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == cupoSAP.Planta, x => x.Id);
+                cupo.ZonaCupoId = repositorio.Obtener<ZonaCupo, int>(x => x.CodigoSap == cupoSAP.Zona, x => x.Id);
+                cupo.Observaciones = cupoSAP.Observaciones;
+                cupo.Destinatario = cupoSAP.Destinatario??"";
+                cupo.FleteProcedencia = cupoSAP.FleteProcedencia == "S";
+                cupo.Calidad = cupoSAP.Calidad == "01" ? "Camara" : cupoSAP.Calidad == "03" ? "Fabrica" : "";
+                cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
+                cupo.EstadoCupoId = cupoSAP.Borrado == "X" ? 4 : cupoOriginal.EstadoCupoId;
+
+                logger.Debug("Actualizando CUPOSAP VALIDAR");
+                ValidarCupo(cupo, oEntityErrors);
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                Resultado resultado = cupoManager.ActualizarCupoSAP(cupo);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("Actualizand CUPOSAP:" + JsonConvert.SerializeObject(cupoSAP));
+            logger.Debug("Actualizando CUPOSAP RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
+
+        private void ValidarCupo(Cupo cupo, ResultadoSap oEntityErrors)
+        {
+            if (cupo.MaterialId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Material' es invalido" });
+            }
+            if (cupo.ProveedorId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Proveedor' es invalido" });
+            }
+            if (cupo.CentroId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Planta' es invalido" });
+            }
+            if (cupo.ZonaCupoId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Zona' es invalido" });
+            }
+            if (cupo.ComercialId == null || cupo.ComercialId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
+            }
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+        }
+
+        private void ValidarContrato(Contrato oParam, ResultadoSap oErrorMessages)
         {
             if (oParam.LocalidadId == 0)
             {

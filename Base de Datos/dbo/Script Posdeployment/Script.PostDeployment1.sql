@@ -178,6 +178,19 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Arribado') BEGIN in
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Sin STOP', 6); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Error STOP', 7); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
+IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Rechazado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Rechazado', 9); END
+--Segmentacion
+update Segmentacion set Descripcion ='Corredores tradicionales (cooperativas)' where SegmentacionId = '7'
+update Segmentacion set Descripcion ='Corredor Correacopios' where SegmentacionId = '5'
+
+update Segmentacion set Descripcion ='Productor Grande: Más de 10.000 tns' where SegmentacionId = '2'
+update Segmentacion set Descripcion ='Productor Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
+update Segmentacion set Descripcion ='Productor Chico: menos de 3.000 tns' where SegmentacionId = '4'
+
+update Segmentacion set Descripcion ='Acopio Chico: menos de 20.000 tns' where SegmentacionId = '9'
+update Segmentacion set Descripcion ='Acopio Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
+update Segmentacion set Descripcion ='Acopio Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
+update Segmentacion set Descripcion ='Acopio Mega: más de 150.000 tns' where SegmentacionId = '15'
 
 
 --Material 

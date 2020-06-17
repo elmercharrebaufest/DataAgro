@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/Cupos")
 }
 @{
+    var altaCupo = PermisosHelper.Is(PermisosDataAgro.AltaCupos, PermisosDataAgro.AltaCupo_Externo);
     var anularCupo = PermisosHelper.Is(PermisosDataAgro.AnularCupos);
     var modificarCupo = PermisosHelper.Is(PermisosDataAgro.ModificarCupos);
     var modificarCentro = PermisosHelper.Is(PermisosDataAgro.ModificarOrigenCentro);
@@ -22,6 +23,7 @@
     var anularNorte = PermisosHelper.Is(PermisosDataAgro.AnularOrigenNorte);
     var anularRosario = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresRosario);
     var anularBsAs = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresBsAs);
+    var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
 
 }
 
@@ -41,10 +43,10 @@
     anularNorte = '@anularNorte';
     anularRosario = '@anularRosario';
     anularBsAs = '@anularBsAs';
+    externo = '@externo';
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
-   
 }
 
 <input type="hidden" id="TieneEmpleadosACargo" value="@(ViewBag.TieneEmpleadosACargo.ToString())" />
@@ -52,65 +54,86 @@
 <div class="panelflotante">
     <div class="row">
         <div class="float-left">
-            <span id="crearCupo" class="btnAzul btn-block @(PermisosHelper.Is(PermisosDataAgro.AltaCupos)?"":"hide")" type="button">
+            <span id="crearCupo" class="btnAzul btn-block @(altaCupo?"":"hide")" type="button">
                 <i class="fa fa-file-o"></i>
                 Crear Nuevo Cupo
             </span>
+        </div>
+        @if (!externo)
+        {
+            <div>
+                <div class="float-left" id="cupoPropiosDiv" style="width:100px; margin-left:12px" data-toggle="tooltip" onclick="filtrarMesa()">
+                    <span class="botonVarios">
+                        <i id="cupoPropio" class="fa fa-user varios" aria-hidden="true"></i>
+                    </span>
+                    <span>Propios</span>
+                </div>
+                <div class="float-right margen-15">
+                    @if (anularCupo || anularCentro || anularOtrasZonas || anularRosario ||
+            anularSur || anularNorte || anularSur)
+                    {
+                        <span id="anularVarios" class="btnVarios" onclick="AnularSeleccionados()">
+                            <i class="fa fa-trash"></i>
+                            Anular
+                        </span>
+                    }
+                </div>
+                <div class="float-right margen-15">
+                    @if (modificarCupo || modificarCentro || modificarOtrasZonas || modificarRosario ||
+            modificarSur || modificarNorte || modificarSur)
+                    {
+                        <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
+                            <i class="fa fa-pencil"></i>
+                            Modificar
+                        </span>
+                    }
+                </div>
+                <div class="float-right margen-15">
+                    <span id="copiar" class="btnVarios" onclick="CopiarSeleccionados()">
+                        <i class="fa fa-copy"></i>
+                        Copiar
+                    </span>
+                </div>
+                <div class="float-right margen-15">
+                    <span id="retransmitir" class="btnVarios" onclick="RetransmitirSeleccionados()">
+                        <i class="fa fa-mail-forward"></i>
+                        Transmitir
+                    </span>
+                </div>
+            </div>
 
-        </div>
-        <div class="float-left" id="cupoPropiosDiv" style="width:100px; margin-left:12px" data-toggle="tooltip" onclick="filtrarMesa()">
-            <span class="botonVarios">
-                <i id="cupoPropio" class="fa fa-user varios" aria-hidden="true"></i>
-            </span>
-            <span>Propios</span>
-        </div>
-        <div class="float-right margen-15">
-            @if (anularCupo || anularCentro || anularOtrasZonas || anularRosario ||
-                anularSur || anularNorte || anularSur)
-            {
-                <span id="anularVarios" class="btnVarios" onclick="AnularSeleccionados()">
-                    <i class="fa fa-trash"></i>
-                    Anular
-                </span>
-            }
-        </div>
-        <div class="float-right margen-15">
-            @if (modificarCupo || modificarCentro || modificarOtrasZonas || modificarRosario ||
-                modificarSur || modificarNorte || modificarSur)
-            {
-                <span id="modificarVarios" class="btnVarios" onclick="ModificarSeleccionados()">
-                    <i class="fa fa-pencil"></i>
-                    Modificar
-                </span>
-            }
-        </div>
-        <div class="float-right margen-15">
-            <span id="copiar" class="btnVarios" onclick="CopiarSeleccionados()">
-                <i class="fa fa-copy"></i>
-                Copiar
-            </span>
-        </div>
-        <div class="float-right margen-15">
-            <span id="retransmitir" class="btnVarios" onclick="RetransmitirSeleccionados()">
-                <i class="fa fa-mail-forward"></i>
-                Transmitir
-            </span>
+        }
+        else
+        {
+            <div id="materialHabilitado" class="float-right margen-15 text-xs-center table-responsive">
+                <table id="tabla-cupo"></table>
+            </div>
+        }
+
+    </div>
+    <div class="linea col-12" data-toggle="collapse" data-target="#demo">
+    </div>
+    <button type="button" class="botonFiltrar btn" data-toggle="collapse" data-target="#demo">
+        <span class="icono"> <i class="fa fa-plus-square-o" aria-hidden="true"></i></span>
+    </button>
+
+    <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
+             <div class="col-md-8"></div>
+            <div class="col-xs-12 col-md-2">
+                @Html.TextBox("CupoSap", "", new { placeholder = "Cupo SAP", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
+                </button>
+                <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+                </button>
+            
         </div>
     </div>
+
 </div>
 
-@*<div class="row no-margin">
-    <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
-        <div class="col-xs-6 col-sm-4">
-            <div id="cupoPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
-                <span class="botonVarios">
-                    <i id="cupoPropio" class="fa fa-user varios" aria-hidden="true"></i>
-                </span>
-                <span>Propios</span>
-            </div>
-        </div>
-    </div>
-</div>*@
+
 
 
 <br />
@@ -126,3 +149,4 @@
 <!-- Modal Borrar-->
 @Html.Partial("ModalBorrar")
 @Html.Partial("ModalBorrarVarios")
+@Html.Partial("ModalRechazarCupoConMotivo")

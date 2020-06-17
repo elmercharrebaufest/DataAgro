@@ -36,6 +36,9 @@ namespace Molinos.DataAgro.Interfaces
         List<SugerenciaNoAceptada> SugerenciasNoAceptadas();
         void EnviarMailSinCtg();
         List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
+        Resultado ActualizarCupoSAP(Cupo cupo);
+        CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory);
+        CupoResult AceptarCupo(Cupo cupo);
     }
 
 }

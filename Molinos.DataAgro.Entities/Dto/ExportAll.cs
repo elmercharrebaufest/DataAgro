@@ -11,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ContactosPrincipalesAll> ContactosPrincipales { get; set; }
         public List<ProduccionAll> produccion { get; set; }
         public List<AlmacenamientoAll> almacenamiento { get; set; }
+        public List<CampoDetalleAll> establecimiento { get; set; }
         public List<AgendaAll> agenda { get; set; }
         public List<ComprasAll> compras { get; set; }
 
@@ -21,8 +22,9 @@ namespace Molinos.DataAgro.Entities.Dto
             ContactosPrincipales = new List<ContactosPrincipalesAll>();
             produccion = new List<ProduccionAll>();
             almacenamiento = new List<AlmacenamientoAll>();
+            establecimiento = new List<CampoDetalleAll>();
             compras = new List<ComprasAll>();
-            
+
         }
 
     }
@@ -137,6 +139,29 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Toneladas { get; set; }
         public string Mes { get; set; }
         public string Año { get; set; }
-        
+
+    }
+
+    public class CampoDetalleAll
+    {
+        public string Cuit { get; set; }
+        public string RazonSocial { get; set; }
+        public string Nombre { get; set; }
+        public string Localidad { get; set; }
+        public string Provincia { get; set; }
+        public string Partido { get; set; }
+        public string Latitud { get; set; }
+        public string Longitud { get; set; }
+        public string Material { get; set; }
+        public decimal? HectareasCultivables { get; set; }
+        public decimal? HectareasTotales { get; set; }
+        public decimal? Rinde { get; set; }
+        public string Comercial { get; set; }
+        public int? ImportId { get; set; }
+
+
+
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -9,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,12 +23,17 @@ namespace Molinos.DataAgro.Agent.Helpers
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly ILogDataAgroManager logDataAgroManager;
         readonly String urlStop = ConfigurationManager.AppSettings["UrlBaseSTOP"];
+        private readonly Func<ICupoManager> cupoManagerInj;
 
-        public ClienteStopAgent(ILogger logger, IRepositorio repositorio)
+        public ClienteStopAgent(ILogger logger, IRepositorio repositorio, Func<ICupoManager> cupoManagerInj,
+            ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.logDataAgroManager = logDataAgroManager;
+            this.cupoManagerInj = cupoManagerInj;
         }
         public TokenStop ObtenerToken(string clave)
         {
@@ -74,7 +81,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 else
                 {
-                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject.ToString());
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject.data.ToString());
                     logger.Debug(error.ToJson());
                     throw new Exception(error.userMessage);
                 }
@@ -144,7 +151,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     repositorio.GuardarCambios();
+
+
+                    var cupoManager = cupoManagerInj();
+                    var cupoConId = (cupo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupo.CupoSap) : cupo;
+                    var cupoEnDto = cupoManager.ObtenerCupo(cupoConId.Id);
+                    logDataAgroManager.LogCambiosDataAgro(cupoEnDto, TipoAccionLogDataAgro.Modificar);
                 }
+
+
             }
             catch (Exception e)
             {
@@ -208,6 +223,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     repositorio.GuardarCambios();
+
+                    var cupoManager = cupoManagerInj();
+                    foreach (var cupoNuevo in listaCupos)
+                    {
+                        var cupoConId = (cupoNuevo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap) : cupoNuevo;
+                        logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Modificar);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -322,6 +344,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var token = ObtenerToken(datosConfiguracion.ClaveStop);
                     var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
                     logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
+                    CultureInfo provider = CultureInfo.InvariantCulture;
 
                     foreach (var fecha in fechas)
                     {
@@ -348,25 +371,54 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
 
                     listaCupos.results = listaCupos.results.ToList();
-
+                    IList<Cupo> actualizarCupos = null;
                     while (listaCupos.results.Count > 0)
                     {
                         var index = listaCupos.results.Count >= 50 ? 50 : listaCupos.results.Count;
                         var lista = listaCupos.results.Take(index).ToList();
                         listaCupos.results.RemoveRange(0, index);
                         var cuposActualizados = lista.ToDictionary(x => x.idCupoTerminal);
-                        var actualizarCupos = repositorio.Listar<Cupo>(x => cuposActualizados.Keys.Contains(x.CupoSap));
+                        actualizarCupos = repositorio.Listar<Cupo>(x => cuposActualizados.Keys.Contains(x.CupoSap));
                         foreach (var cupo in actualizarCupos)
                         {
                             if (cupo.CupoStop == null)
                             {
                                 cupo.CupoStop = cuposActualizados[cupo.CupoSap].idCupo;
                                 cupo.CreacionStop = cuposActualizados[cupo.CupoSap].creado;
+                               
                             }
+                            cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
+                            cupo.CTGFechaDesde = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddThh:mm:ss", provider);
+                            cupo.CTGFechaHasta = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddThh:mm:ss", provider);
+                            cupo.RemitenteComercial = cuposActualizados[cupo.CupoSap].cuitRemComercial;
+                            cupo.CorredorComprador = cuposActualizados[cupo.CupoSap].cuitCorredorCAfip;
+                            cupo.CorredorVendedor = cuposActualizados[cupo.CupoSap].cuitCorredorVAfip;
+                            cupo.MercadoATermino = cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip;
+                            cupo.Cosecha = cuposActualizados[cupo.CupoSap].cosecha;
+                            cupo.IntermediarioFlete = cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip;
+                            cupo.Transportista = cuposActualizados[cupo.CupoSap].cuitTransportistaAfip;
+                            cupo.Chofer = cuposActualizados[cupo.CupoSap].cuitChoferAfip;
+                            cupo.Km = cuposActualizados[cupo.CupoSap].kmRecorrer;
+                            cupo.Peso = cuposActualizados[cupo.CupoSap].pesoNetoEstimado;
+                            cupo.CartaPorte = cuposActualizados[cupo.CupoSap].cartaPorte;
+                            cupo.CTG = cuposActualizados[cupo.CupoSap].ctg;
+                            cupo.CuitOrigen = cuposActualizados[cupo.CupoSap].cuitOrigen;
+                            cupo.CuitOrigenAfip = cuposActualizados[cupo.CupoSap].cuitOrigenAfip;
+                            cupo.CodLocalidadOrigen = cuposActualizados[cupo.CupoSap].codLocalidadOrigen;
+                            cupo.NroEstablecimientoOrigen = cuposActualizados[cupo.CupoSap].nroEstablecimientoOrigen;
                             cupo.EstadoCupoId = cuposActualizados[cupo.CupoSap].idCupoEstado;
                         }
                     }
                     repositorio.GuardarCambios();
+                    if (actualizarCupos != null)
+                    {
+                        var cupoManager = cupoManagerInj();
+                        foreach (var cupoNuevo in actualizarCupos)
+                        {
+                            var cupoConId = (cupoNuevo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap) : cupoNuevo;
+                            logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Modificar);
+                        }
+                    }
                     return listaCupos.results;
                 }
                 catch (Exception e)

@@ -69,6 +69,9 @@
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="DiffPlex, Version=1.6.3.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiffPlex.1.6.3\lib\net40\DiffPlex.dll</HintPath>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.8.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.8.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -214,6 +217,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
+    <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
     <Compile Include="Controllers\ConfiguracionController.cs" />
@@ -276,6 +280,7 @@
     <Compile Include="Helpers\Excel\ExcelResultBase.cs" />
     <Compile Include="Helpers\Excel\IDataForExcel.cs" />
     <Compile Include="Helpers\ExtensionesUrl.cs" />
+    <Compile Include="Models\HabilitacionCupoModel.cs" />
     <Compile Include="Models\SugerenciaModel.cs" />
     <Compile Include="Models\ActividadesModel.cs" />
     <Compile Include="Models\AgendaModel.cs" />
@@ -379,6 +384,7 @@
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
+    <Content Include="Content\diffPlex.css" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
@@ -980,6 +986,7 @@
     <Content Include="Scripts\App\AbmFormula.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
+    <Content Include="Scripts\App\HabilitacionCupo.js" />
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
@@ -1180,6 +1187,7 @@
     <Content Include="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="libman.json" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="firebase-messaging-sw.js" />
     <Content Include="Scripts\Chart.js" />
@@ -1188,6 +1196,7 @@
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\gtag.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\package.json" />
     <Content Include="Scripts\index.js.flow" />
     <Content Include="Scripts\esm\popper.min.js.map" />
@@ -1838,6 +1847,7 @@
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\diffPlex.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />
@@ -1926,6 +1936,7 @@
     </None>
     <Content Include="Services\AuthService.svc" />
     <Content Include="Services\DataAgroServices.svc" />
+    <Content Include="Views\Cupo\CrearCupoExterno.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2673,8 +2684,15 @@
     <Content Include="Views\Proveedor\ImportarEstablecimientos.cshtml" />
     <Content Include="Views\LogDataAgro\Index.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizar.cshtml" />
+    <Content Include="Views\HabilitacionCupo\Index.cshtml" />
+    <Content Include="Views\HabilitacionCupo\_ListaCupo.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizarProveedor.cshtml" />
     <Content Include="Views\LogDataAgro\ModalVisualizarCupo.cshtml" />
+    <Content Include="Views\LogDataAgro\Diff.cshtml" />
+    <Content Include="Views\LogDataAgro\DiffBar.cshtml" />
+    <Content Include="Views\LogDataAgro\DiffLine.cshtml" />
+    <Content Include="Views\LogDataAgro\DiffPane.cshtml" />
+    <Content Include="Views\Cupo\ModalRechazarCupoConMotivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

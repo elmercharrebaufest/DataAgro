@@ -10,7 +10,14 @@
 @section Styles {
     <link href="~/Content/ReporteCupo.css" rel="stylesheet" />
 }
-
+@{  
+    var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);   
+}
+<script>
+   
+    externo = '@externo';
+    
+</script>
 <div class="Titulo">
     <h5>Reporte de Cupos</h5>
 </div>

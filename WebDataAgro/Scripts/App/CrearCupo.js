@@ -13,6 +13,9 @@ $(document).ready(function () {
     checkFason();
     checkSoja();
 });
+$(document).submit(function () {
+    BlockUi("Grabando...");
+});
 
 function InicializarCargaCupos() {
     $("#buscadorProveedor").click(function () {
@@ -121,11 +124,13 @@ function InicializarCargaCupos() {
         $("#boton-si").click(function () {
             $("#flete").removeAttr('disabled');
             $("#flete").prop('checked', true);
+            $('#fleteProcedenciaModal').modal('toggle');
             $("form").submit();
         });
         $("#boton-no").click(function () {
             $("#flete").removeAttr('disabled');
             $("#flete").prop('checked', false);
+            $('#fleteProcedenciaModal').modal('toggle');
             $("form").submit();
         });
         $("#boton-cancelar").click(function () {
@@ -174,6 +179,15 @@ function cuposCreados(error, lista) {
         });
     });
 }
+
+function avisoCuposCreados() {
+    $(document).ready(function () {
+
+                window.location.href = window.location.origin + "/Cupo/";
+         
+    });
+}
+
 function makeUL(array) {
     var list = document.createElement('ul');
     for (var i = 0; i < array.length; i++) {

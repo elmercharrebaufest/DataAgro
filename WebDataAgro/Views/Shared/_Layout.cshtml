@@ -41,7 +41,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/App/PCFToken.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125418413-1"></script>
+    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125418413-1"></script>*@
+    <script type="text/javascript" src="~/Scripts/gtag.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -103,13 +104,13 @@
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-                    {
-                        <li>
-                            <a href="/Cubproveedores" class="nav-link misreporteslink">
-                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                            </a>
-                        </li>
-                    }*@
+                                    {
+                                        <li>
+                                            <a href="/Cubproveedores" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                                            </a>
+                                        </li>
+                                    }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -342,6 +343,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.LogDataAgro))
+                                {
+                                    <li>
+                                        <a href="~/logdataagro" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> LogsDataAgro
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
                                 {
                                     <li>
@@ -363,6 +372,14 @@
                                     <li>
                                         <a href="~/ConfiguracionCupo" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Administración de Cupos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.HabilitacionDeCupos))
+                                {
+                                    <li>
+                                        <a href="~/HabilitacionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Habilitación de cupos
                                         </a>
                                     </li>
                                 }
@@ -533,7 +550,7 @@
                                         </a>
                                     </li>
                                 }
-                                
+
                             </ul>
                         </li>
                     }

@@ -263,3 +263,7 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
 .k-i-loading {
     display: none;
 }
+
+.k-header > .k-grid-filter, .k-header > .k-header-column-menu {
+    margin: -.5em -0.0em -.4em 0;
+}

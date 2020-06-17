@@ -13,6 +13,7 @@ function TraerFiltrosConValores() {
     filtroTextToArrayCsv(listaFiltros);
     filtroAgregarValorContratoCorredorSap(listaFiltros);
     filtroAgregarValorPopUp(listaFiltros);
+    filtrosBusqContieneTexto(listaFiltros);
 
     let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
     let filtroCompleto = new FiltroCompleto(20, 0, filtroPrincipal);
@@ -97,6 +98,18 @@ function filtrosBusqTexto(listaDeFiltros) {
         }
     });
 }
+
+function filtrosBusqContieneTexto(listaDeFiltros) {
+
+    let filtroBusquedaTextBox = $(".filtroBusquedaTextBoxContieneTexto");
+    filtroBusquedaTextBox.each(function (e) {
+        if (filtroBusquedaTextBox[e].id != "") {
+            ($("#" + filtroBusquedaTextBox[e].id).val() == "") ? null : listaDeFiltros.push(new FiltroHijo(filtroBusquedaTextBox[e].name, $("#" + filtroBusquedaTextBox[e].id).val(), "contains"));
+        }
+    });
+}
+
+
 
 function filtrosBusqBooleano(listaDeFiltros) {
 

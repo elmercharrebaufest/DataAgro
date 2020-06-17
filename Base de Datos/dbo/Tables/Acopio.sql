@@ -3,6 +3,8 @@
     [NroItem]     INT           NOT NULL,
     [ProveedorId] INT           NOT NULL,
     [LocalidadId] INT           NOT NULL,
+    [KMZnombre] VARCHAR(1500) NULL, 
+    [KMZfile] VARCHAR(MAX) NULL, 
     CONSTRAINT [PK_Acopio] PRIMARY KEY CLUSTERED ([AcopioId] ASC),
     CONSTRAINT [FK_Acopio_Contacto] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
     CONSTRAINT [FK_Acopio_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [dbo].[Localidad] ([LocalidadId])

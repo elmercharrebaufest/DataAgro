@@ -30,15 +30,14 @@ namespace Molinos.DataAgro.Agent
         public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
             var datosContratos = new List<DatosFijacionDeContratoDto>();
-var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
                 var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (!string.IsNullOrEmpty(CuitCorredor) ? x.Corredor.CUIT == CuitCorredor : x.CorredorId == null) && x.ContratoSAP != null);
-                contratos.Add("0001");
                 if (contratos != null)
                 {
                     var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));
-                    
+
                     foreach (var id in listaContratos)
                     {
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.ContratoSAP == id
@@ -60,7 +59,8 @@ var hoy = DateTime.Now.Date;
                             PagoDiferido = x.PagoDiferido ?? false,
                             Centro = x.DestinoId,
                             Color = x.HastaFijacion.HasValue && x.HastaFijacion.Value < hoy ? "Red" : "#26337b",
-                            CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null
+                            CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null,
+
                         });
                         contrato.KilosAplicados = (double.Parse(contrato.KilosAplicados)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
                         contrato.KilosPendiente = (double.Parse(contrato.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
@@ -122,7 +122,7 @@ var hoy = DateTime.Now.Date;
                             KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             DesdeEntrega = DateTime.Parse(contrato.ENTREGA_DESDE).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
-                            Calidad = contrato.CALIDAD == "X" ? true : false,
+                            Calidad = (((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X")) ? true : false,
                             Campana = contrato.COSECHA,
                             Posicion = contrato.POSICION,
                             PagoDiferido = contrato.PAGO_DIF_ARP == "X" ? true : false,
@@ -138,7 +138,7 @@ var hoy = DateTime.Now.Date;
                             PorcentajeSobrePrecio = contrato.PORC_S_PRECIO,
                             CondicionFijacionCod = contrato.COND_FIJACION,
                             CondicionPagoCod = contrato.COND_PAGO,
-                            CondicionFijacionDescripcion = repositorio.Obtener<CondicionFijacion, string>(x => x.CodigoSap == contrato.COND_FIJACION,x=>x.Descripcion),
+                            CondicionFijacionDescripcion = repositorio.Obtener<CondicionFijacion, string>(x => x.CodigoSap == contrato.COND_FIJACION, x => x.Descripcion),
                             CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_PAGO, x => x.Descripcion),
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
                             Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",

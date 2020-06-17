@@ -119,6 +119,8 @@
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
+    <Compile Include="ConsultasEF\TraerExportarAllEstablecimientos.cs" />
+    <Compile Include="ConsultasEF\TraerHabilitacionesCupo.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesEspacioDinamico.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesCupo.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosProveedores.cs" />
