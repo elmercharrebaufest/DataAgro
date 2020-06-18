@@ -1,0 +1,247 @@
+﻿@model WebDataAgro.Models.CupoModel
+@{
+    ViewBag.Title = "Cupo";
+    var zonas = (List<SelectListItem>)ViewBag.Zona;
+    var fleteProcedencia = PermisosHelper.Is(PermisosDataAgro.ReasignarFlete);
+}
+
+<script>
+    BlockUi("Cargando...");
+    fleteProcedencia = '@fleteProcedencia';
+</script>
+
+<h3 id="titulo">@ViewBag.Titulo</h3>
+<script src="~/Scripts/jquery.mask.js"></script>
+<script src="~/Scripts/App/CrearCupo.js"></script>
+
+<script>
+ fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
+</script>
+@section Styles {
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+}
+
+@if (!Html.ViewData.ModelState.IsValid)
+{
+    <div id="errorModal">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @Html.ValidationSummary()
+        </div>
+    </div>
+    <script>
+        var cantidadDias = '@Html.Raw(Json.Encode(Model.Dias))';
+        ActualizarCantidad(JSON.parse(cantidadDias));
+    </script>
+}
+
+@using (Html.BeginForm("CrearCupo", "Cupo"))
+{
+    <div id="CrearCupo" class="container">
+        <div id="boton-carga-masiva" class="margen-15" hidden>
+            <span class="btnVarios" onclick="MostrarCarga()">
+                Carga Masiva
+            </span>
+        </div>
+        <br />
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Siguientes)
+    <div class="row">
+        @*<div>
+            <div class="col-sm-2" id="proveedorLabelId">
+                <label id="proveedorLabel">Proveedor</label>
+            </div>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "w100" })
+
+            </div>
+        </div>*@
+        @Html.HiddenFor(x => x.Proveedor)
+        @Html.HiddenFor(x => x.ZonaId)
+        <div>
+            <div class="col-sm-2">
+                <label>Planta</label>
+            </div>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
+                @Html.HiddenFor(x => x.PlantaId)
+            </div>
+        </div>
+        <div>
+            <div class="col-sm-2 ">
+                <label>Fecha Entrega</label>
+            </div>
+            <div class="col-sm-4">
+                <div id="fechaDiv">
+                    <div class="col-xs-6 noLeftPadding">
+                        @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+                    </div>
+                    @Html.HiddenFor(x => x.FechaEntrega)
+                    <div class="col-xs-6 noRightPadding">
+                        @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div class="col-sm-2 ">
+                <label>Material</label>
+            </div>
+            <div class="col-sm-4">
+                <div>
+                    @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
+                    @Html.HiddenFor(x => x.MaterialId)
+                </div>
+            </div>
+        </div>
+        <div id="calidadDiv" hidden>
+            <div class="col-sm-2">
+                <label>Calidad</label>
+            </div>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control", @id = "calidad" })
+            </div>
+        </div>
+
+    </div>
+        <div class="row">
+            <div>
+                <div class="col-sm-2">
+                    <label>Cantidad</label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
+                </div>
+            </div>
+            <div>
+
+                @*<div class="col-sm-2 ">
+            <label>Zona</label>
+        </div>*@
+
+                @*<div class="col-sm-4">
+            <div>
+                @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
+                @Html.HiddenFor(x => x.ZonaId)
+            </div>
+        </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-sm-2 noRightPadding">
+                    <label>Flete procedencia/Acarreo </label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-sm-2">
+                    <label>Observación</label>
+                </div>
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(x => x.Observacion, new { @class = "form-control", @id = "observacion" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Fasón/Préstamo devolución</label>
+            </div>
+            <div class="col-sm-4">
+                <span style="height:34px"></span>
+                @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
+                @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-3 col-md-4" style="padding-left: 67px;">
+            <input id="guardarBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar Cupo" />
+            @Html.ActionLink("Volver", "Index", null, new { @class = "formulario-footer-guardar-contrato k-button k-button-icontext" })
+        </div>
+    </div>
+
+    <div class="modal fade" id="fleteProcedenciaModal" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="status confirmado-modal">
+                        <div>¿Desea reasignar un cupo con flete procedencia?</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn btn" id="boton-si">Si</button>
+                    <button type="button" class="myBtn btn" id="boton-no">No</button>
+                    <button type="button" class="myBtn btn" id="boton-cancelar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="CargaCupos" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 class="modal-title" id="CargaCupos"></h1>
+                    <div class="status confirmado-modal">
+                        <div>Carga de Cupos</div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="carga-cupos-table" class="table table-striped">
+                            <tr>
+                                <th>Día</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="myBtn btn" id="cancelar-carga"  data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="resultadoCupo"></h1>
+                <div class="status confirmado-modal">
+                    <div>Cupos Creados</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="error-modal" hidden></div>
+                <div id="cupos-generados-modal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="myBtn btn" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
