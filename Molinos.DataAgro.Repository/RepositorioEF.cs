@@ -347,5 +347,16 @@ namespace Molinos.DataAgro.Repository
 
             return resultado;
         }
+
+        public void MigrarReporteCompraNetPosicionCompras( )
+        {
+            context.Database.SqlQuery<int>(@"
+                    begin 
+                        exec MigrarReporteCompraNetPosicionCompras
+		                select 1 
+		            end
+                "
+                ).First();
+        }
     }
 }

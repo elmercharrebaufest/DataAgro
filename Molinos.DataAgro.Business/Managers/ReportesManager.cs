@@ -2239,7 +2239,7 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.AgregarTodos(pricingCampania);
             repositorio.GuardarCambios();
 
-
+            repositorio.MigrarReporteCompraNetPosicionCompras();
         }
     }
 }

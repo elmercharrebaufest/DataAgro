@@ -143,5 +143,6 @@ namespace Molinos.DataAgro.Repository
         List<TEntidad> SelStore<TEntidad>(string store, int maxResultados, params object[] parameters) where TEntidad : class;
 
         void EliminarTokens(long cuit);
+        void MigrarReporteCompraNetPosicionCompras();
     }
 }
