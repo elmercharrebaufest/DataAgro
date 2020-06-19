@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, RangoConfirmacionAutomaticaIni>>>(),It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny <int>(),It.IsAny<string>(),It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomaticaIni>() { new RangoConfirmacionAutomaticaIni { Id=1 } });
             
-            var resultado = target.TraerTodoRango();
+            var resultado = target.TraerTodoRangoDisponible();
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, RangoConfirmacionAutomaticaIni>>>(), It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
             Assert.NotNull(resultado);

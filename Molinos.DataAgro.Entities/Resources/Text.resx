@@ -721,4 +721,13 @@
   <data name="AprobarCupo" xml:space="preserve">
     <value>Aprobar Cupo</value>
   </data>
+  <data name="Visualizar_Reporte_Rango" xml:space="preserve">
+    <value>Visualizar Reporte Rango Confirmación Automática</value>
+  </data>
+  <data name="Crear_Negocios_FechaMayorDiaAnterior" xml:space="preserve">
+    <value>Crear Negocios con fecha mayor la día anterior</value>
+  </data>
+  <data name="Configuraciones_JefeEnvioMailNegociosConDiaAnterior" xml:space="preserve">
+    <value>Jefe Envio Mail Negocios Con Dia Anterior</value>
+  </data>
 </root>

@@ -172,6 +172,12 @@ namespace WebDataAgro
                              "~/Scripts/App/Cupo.js",
                              "~/Scripts/jquery.mask.js",
                              "~/Scripts/jquery.unobtrusive-ajax.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/Rango").Include(
+                           "~/Scripts/KendoExtensions.js",
+                           "~/Scripts/App/Filtros.js",
+                            "~/Scripts/jquery.mask.js",
+                           "~/Scripts/App/reporteRangoConfirmacionAutomatica.js"));
             //------------------------
             bundles.Add(new ScriptBundle("~/bundles/Research").Include(
                                        "~/Scripts/KendoExtensions.js",

@@ -345,7 +345,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Rechazo + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaCierta) + "'" + ',' +
         "'" + dataItem.PorcentajeDePago + "'" + ',' +
-        "'" + dataItem.TipoAgenteCompraId + "'" +
+        "'" + dataItem.TipoAgenteCompraId + "'" + ',' +
+        "'" + formatearFecha(dataItem.FechaOperacion) + "'" + ',' +
+        "'" + dataItem.MotivoOperacionAnterior + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -624,6 +626,7 @@ function CreateGridInformeCompraNet() {
                     DesdeFijacion: { type: "date" },
                     HastaFijacion: { type: "date" },
                     FechaCierta: { type: "date" },
+                    FechaOperacion: { type: "date" },
                 }
             }
         },
@@ -822,7 +825,14 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" }
+                field: "Fecha", type: "date", title: "Carga", width: 1, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" },
+                template: function (dataItem) {
+                    if (dataItem.FechaOperacion != null && kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") != kendo.toString(dataItem.Fecha, "dd/MM/yyyy")) {
+                        return "<b style='color:darkblue;'>" + kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy")+"</b>";
+                    } else {
+                        return "" + kendo.toString(dataItem.Fecha, "dd/MM/yyyy");
+                    }
+                }
             },
             {
                 field: "GrupoCompraDescripcion", type: "string", filterable: {
@@ -1821,7 +1831,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra) {
+    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra,FechaOperacion, MotivoOperacionAnterior) {
     $("#modalVisualizar").modal('show');
     visualizacionRowDoblePrecioCero("precioDivVisualizar", "comercialDivVisualizar", false);
     if (tipo === "FIJACION") {
@@ -1902,7 +1912,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $(".modal-title-visualizar").empty();
     $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP : ""));
     $("#visualizar_proveedor").text(proveedor);
-    $("#fechacontrato").text(desdeHasta);
+    $("#fechacontrato").text(FechaOperacion == null || FechaOperacion == "" ? desdeHasta : FechaOperacion);
     $("#visualizar_desdeHasta").text(fecha);
     $("#visualizar_tipo").text(tipo);
     $("#visualizar_comercial").text(comercial);
@@ -1913,7 +1923,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     campana !== "" ? $("#visualizar_campana").text(campana) : $("#visualizar_campana").text("null");
 
     visualizacionRowDoble("materialDivVisualizar", "visualizar_material", "campanaDivVisualizar", "visualizar_campana");
-
+    if (MotivoOperacionAnterior !== null && MotivoOperacionAnterior !== "" && MotivoOperacionAnterior !== "null") {
+        $("#MotivoOperacionAnteriorDivVisualizar").show();
+        $("#visualizar_MotivoOperacionAnterior").text(MotivoOperacionAnterior);
+    } else {
+        $("#MotivoOperacionAnteriorDivVisualizar").hide();
+    }
 
     var procedencia = "";
     var provinciaDat = provincia != "undefined" && provincia != "null" ? provincia : "";

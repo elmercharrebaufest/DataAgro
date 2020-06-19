@@ -70,6 +70,7 @@ function CreateGridInformeCompraNet() {
                     NoInformaSIO: { type: "boolean" },
                     TrigoEspecial: { type: "boolean" },
                     DesdeFijacion: { type: "date" },
+                    FechaOperacion: { type: "date" },
                 }
             }
         },
@@ -218,6 +219,8 @@ function CreateGridInformeCompraNet() {
             { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 },
             { field: "Rechazo", type: "string", title: "Motivo Rechazo" },
             { field: "ClasificacionDescripcion", type: "string", title: "Clasificacion" },
+            { field: "FechaOperacion", type: "date", title: "Fecha Operacion", format: _DefaultDateTemplate, width: 80 },
+            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo Operacion Anterior" },
             
         ],
         excelExport: function (e) {

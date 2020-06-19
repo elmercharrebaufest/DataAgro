@@ -19,8 +19,10 @@ namespace WebDataAgro.Controllers
         private readonly ICupoManager cupoManager;
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
         private readonly IReportesManager reportesManager;
+        private readonly INegocioManager negocioManager;
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, IReportesManager reportesManager)
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, 
+            ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, IReportesManager reportesManager, INegocioManager negocioManager)
 
         {
             this.logger = logger;
@@ -29,6 +31,7 @@ namespace WebDataAgro.Controllers
             this.cupoManager = cupoManager;
             this.contratoAcuerdoManager = contratoAcuerdoManager;
             this.reportesManager = reportesManager;
+            this.negocioManager = negocioManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -105,6 +108,14 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"EnvioMailSinCtg - Iniciando");
             cupoManager.EnviarMailSinCtg();
+            logger.Info($"EnvioMailSinCtg - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult EnvioMailNegociosConDiaAnterior()
+        {
+            logger.Info($"EnvioMailSinCtg - Iniciando");
+            negocioManager.EnvioMailNegociosConDiaAnterior();
             logger.Info($"EnvioMailSinCtg - Finalizado");
             return Content("ok");
         }

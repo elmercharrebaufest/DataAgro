@@ -583,6 +583,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jefe Envio Mail Negocios Con Dia Anterior.
+        /// </summary>
+        public static string Configuraciones_JefeEnvioMailNegociosConDiaAnterior {
+            get {
+                return ResourceManager.GetString("Configuraciones_JefeEnvioMailNegociosConDiaAnterior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirmar Negocios.
         /// </summary>
         public static string Confirmar_Negocio {
@@ -705,6 +714,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Crear_Negocios_Fason {
             get {
                 return ResourceManager.GetString("Crear_Negocios_Fason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crear Negocios con fecha mayor la día anterior.
+        /// </summary>
+        public static string Crear_Negocios_FechaMayorDiaAnterior {
+            get {
+                return ResourceManager.GetString("Crear_Negocios_FechaMayorDiaAnterior", resourceCulture);
             }
         }
         
@@ -1861,6 +1879,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Visualizar_Reporte_Proveedor {
             get {
                 return ResourceManager.GetString("Visualizar_Reporte_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Rango Confirmación Automática.
+        /// </summary>
+        public static string Visualizar_Reporte_Rango {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Rango", resourceCulture);
             }
         }
         

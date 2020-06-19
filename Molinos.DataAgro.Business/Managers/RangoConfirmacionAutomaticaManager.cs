@@ -1,11 +1,12 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
-using System.Linq;
 
 namespace Molinos.DataAgro.Business
 {
@@ -33,10 +34,11 @@ namespace Molinos.DataAgro.Business
             };
         }
 
-        public ResultIniRangoConfirmacionAutomatica TraerTodoRango()
+        public ResultIniRangoConfirmacionAutomatica TraerTodoRangoDisponible()
         {
+            var hoy = DateTime.Now.Date;
             return new ResultIniRangoConfirmacionAutomatica
-            {
+            {                 
                 Rango = repositorio.Listar<RangoConfirmacionAutomatica, RangoConfirmacionAutomaticaIni>(x => new RangoConfirmacionAutomaticaIni()
                 {
                     Id = x.Id,
@@ -51,8 +53,13 @@ namespace Molinos.DataAgro.Business
                     EntregaHasta = (x.HastaMes + "/" + x.HastaAnio) == "0/0" ? "" : (x.HastaMes + "/" + x.HastaAnio),
                     Zona = x.Zona != null ? x.Zona.Descripcion : "",
                     TipoNegocio = x.TipoNegocio.Descripcion
-                }, null, 0, "Material")
+                }, x => x.FechaDesde <= hoy && x.FechaHasta >= hoy, 0, "Material")
             };
+        }
+
+        public DataSourceResult TraerTodoRango(DataSourceRequest request)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerTodoRago(request));
         }
 
         public RangoConfirmacionAutomaticaDto TraerRango(int id)

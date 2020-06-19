@@ -104,13 +104,13 @@
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-                                    {
-                                        <li>
-                                            <a href="/Cubproveedores" class="nav-link misreporteslink">
-                                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                                            </a>
-                                        </li>
-                                    }*@
+        {
+            <li>
+                <a href="/Cubproveedores" class="nav-link misreporteslink">
+                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                </a>
+            </li>
+        }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -164,6 +164,14 @@
                                     <li>
                                         <a href="/ReporteProveedores/Index" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Detalle Proveedor
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteRango))
+                                {
+                                    <li>
+                                        <a href="/ReporteRangoConfirmacionAutomatica/Index" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Reporte Rango Confirmación Automática
                                         </a>
                                     </li>
                                 }

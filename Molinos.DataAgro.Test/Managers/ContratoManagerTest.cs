@@ -191,6 +191,7 @@ namespace Molinos.DataAgro.Test.Managers
                 LocalidadId = 1,
                 ProvinciaId = 1,
                 FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
                 MonedaId = "ARS ",
@@ -246,6 +247,7 @@ namespace Molinos.DataAgro.Test.Managers
                 DestinoId = 1,
                 LocalidadId = 1,
                 ProvinciaId = 1,
+                FechaOperacion = DateTime.Now.Date,
                 FechaEntrega = DateTime.Now,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
@@ -306,6 +308,7 @@ namespace Molinos.DataAgro.Test.Managers
                 LocalidadId = 1,
                 ProvinciaId = 1,
                 FechaEntrega = new DateTime(2019, 11, 11),
+                FechaOperacion = new DateTime(2019, 11, 11),
                 FechaDesde = new DateTime(2019, 11, 11),
                 FechaHasta = new DateTime(2019, 12, 11),
                 MonedaId = "ARS ",
@@ -317,7 +320,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Sustentable = false,
                 Calidad = new List<Calidad>(),
                 Comercial = new Comercial { GrupoDeComprasId = 1 },
-                PorcentajeDePago = 95
+                PorcentajeDePago = 95,
+                MotivoOperacionAnterior = "a"
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
@@ -381,6 +385,7 @@ namespace Molinos.DataAgro.Test.Managers
                 LocalidadId = 1,
                 ProvinciaId = 1,
                 FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
                 MonedaId = "ARS ",
@@ -431,6 +436,7 @@ namespace Molinos.DataAgro.Test.Managers
                 LocalidadId = 1,
                 ProvinciaId = 1,
                 FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
                 MonedaId = "ARS ",
@@ -683,7 +689,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(27, resultado.ListaErrores.Count);
+            Assert.AreEqual(28, resultado.ListaErrores.Count);
         }
 
         [Test]

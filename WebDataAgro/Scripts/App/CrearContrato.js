@@ -327,6 +327,8 @@ function InicializarElementos() {
             $("#hastacontrato").text(e.dataItem.FechaHasta);
 
             $("#posicionFasonId").val(e.dataItem.Posicion);
+            $("#fechaOperacionId").val(e.dataItem.FechaOperacion);
+            $("#motivoOperacionAnteriorId").val(e.dataItem.MotivoOperacionAnterior);
             $("#fechaDesdeId").val(e.dataItem.DesdeEntrega);
             $("#fechaHastaId").val(e.dataItem.HastaEntrega);
             $("#campanaId").data("kendoDropDownList").text(e.dataItem.Campana);
@@ -1043,7 +1045,7 @@ function InicializarElementos() {
                 $("#boletoConfirmaId").attr("disabled", true);
                 $("#boletoFisicoId").attr("disabled", true);
                 $("#boletoCartaId").attr("disabled", true);
-             } else {
+            } else {
                 $("#boletoNingunoId").prop("checked", false);
                 $("#boletoNingunoId").removeAttr("readonly");
                 $("#boletoConfirmaId").removeAttr("disabled");
@@ -1345,7 +1347,26 @@ function InicializarElementos() {
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
     var date = ObtenerFechaDesde();
     var datehasta = ObtenerFechaHasta();
-
+    $("#fechaOperacionId").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        max: new Date(),
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth();
+            var dia = hoy.getDate();
+            hoy = new Date(anio, mes, dia);
+            console.log(this.value(), new Date());
+            if (this.value() < hoy) {
+                $("#fechaOperacionMotivoDiv").show();
+            } else {
+                $("#fechaOperacionMotivoDiv").hide();
+                $("#motivoOperacionAnteriorId").val("");
+            }
+        }
+    });
     $("#fechaDesdeId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
@@ -1357,11 +1378,6 @@ function InicializarElementos() {
     });
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
-        format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
-    });
-
-    $("#fechaOperacionId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
@@ -1387,6 +1403,8 @@ function InicializarElementos() {
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
     $("#fechaDesdeId").val(date);
+    $("#fechaOperacionId").val(date);
+
     $("#fechaHastaId").val(datehasta);
 
     $(".formulario-footer-guardar-contrato").click(function () {
@@ -2071,7 +2089,8 @@ function CrearViewModel() {
         "pizarraId": null,
         "precioNetoId": null,
         "fechaCiertaId": null,
-        "porcentajeDePagoId": null
+        "porcentajeDePagoId": null,
+        "fechaOperacionId": null,
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -2401,7 +2420,7 @@ function ObtenerDatos() {
             var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
         }
     }
-    
+
     obj.ProveedorId = proveedorId;
     obj.CorredorId = corredorId;
 
@@ -2426,7 +2445,7 @@ function ObtenerDatos() {
     if (obj.TipoNegocioId == 5) {
         obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
     }
-   
+
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;
@@ -2498,6 +2517,10 @@ function ObtenerDatos() {
     }
     if (obj.TipoNegocioId == 6) {
         obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
+    }
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
+        obj.FechaOperacion = $("#fechaOperacionId").val();
+        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
     }
     if (!error) {
         GrabarContrato(obj);
@@ -2621,7 +2644,7 @@ function validarDescuento(descuento) {
     var errores = [];
     var descuentos = viewModel.Descuentos;
     var sonIguales = false;
-    
+
     if (descuento.TipoPeriodoDBId == 0 || descuento.TipoPeriodoDBId == "" || descuento.TipoPeriodoDBId == null) {
         errores.push("El campo Descuento no puede estar vacíos");
     }
@@ -2655,7 +2678,7 @@ function validarDescuento(descuento) {
                 sonIguales = true;
                 break;
             }
-            
+
         }
     }
     if (sonIguales) {
@@ -2856,13 +2879,19 @@ function CargarDatosEditar(contrato, hijo) {
     $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
+    $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+    if (contrato.MotivoOperacionAnterior != null) {
+        $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+        $("#fechaOperacionMotivoDiv").show();
+    }
+
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
     if (!hijo) {
-        $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
+        //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
         $("#tipoId").data("kendoDropDownList").trigger("change");
         if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {

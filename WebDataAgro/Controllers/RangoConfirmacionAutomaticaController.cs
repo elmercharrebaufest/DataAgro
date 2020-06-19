@@ -45,7 +45,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ResultIniRangoConfirmacionAutomaticaModel();
 
-            var result = mobjRangoManager.TraerTodoRango();
+            var result = mobjRangoManager.TraerTodoRangoDisponible();
 
             if (result != null)
             {

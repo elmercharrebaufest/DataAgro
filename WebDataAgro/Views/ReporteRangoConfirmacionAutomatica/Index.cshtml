@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "ReporteRangoAutomatico";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/Rango")
+}
+<div class="Titulo">
+    <h3>Reporte Rango Confirmación Automática</h3>
+</div>
+
+<br />
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Rango Confirmación Automática</a>
+    </div>
+</script>
+<div id="rango">
+    <div class="row" id="nuevotab">
+        <div class="col-xs-12">
+            <div id="gridRango"></div>
+        </div>
+    </div>
+</div>
+

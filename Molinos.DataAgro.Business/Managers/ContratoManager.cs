@@ -532,7 +532,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Now.Date)
             {
-                oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al dia de la fecha.");
+                oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al día de la fecha.");
             }
             if (oParam.PorcentajeDePago == null || oParam.PorcentajeDePago.Value > 100 || oParam.PorcentajeDePago.Value < 0)
             {
@@ -560,7 +560,37 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
                 }
             }
+            if (oParam.FechaOperacion > DateTime.Now.Date)
+            {
+                oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
+            }
+            else
+            {
+                if (oParam.FechaOperacion < DateTime.Now.Date )
+                {                    
+                    var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
 
+                    if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                    {
+                        oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+
+                    }
+
+                    if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                    {
+                        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                    }
+
+                }
+                //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
+                //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
+                //{
+                //    if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                //    {
+                //        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                //    }
+                //}
+            }
             return oErrorMessages;
         }
 
@@ -735,6 +765,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrecioAjusteComision = oContrato.PrecioAjusteComision;
             oContratoSave.MonedaAjusteComisionId = oContrato.MonedaAjusteComisionId;
             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
+            oContratoSave.FechaOperacion = oContrato.FechaOperacion;
+            oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
 
             if (oContratoSave.PrecioPactado != null)
             {
@@ -837,7 +869,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
-            if (ConfirmacionAutomatica(oContrato))
+            if (ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
             {
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                 logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
@@ -1675,7 +1707,12 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocio = x.TipoNegocio == null ? "" : x.TipoNegocio.Descripcion,
                 CondicionFijacionDescripcion = x.CondicionFijacion.Descripcion,
                 ClasificacionDescripcion = x.Clasificacion == null ? "" : x.Clasificacion.Descripcion,
-                Comercial = x.Comercial == null ? "" : x.Comercial.Apellido + " " + x.Comercial.Nombres
+                Comercial = x.Comercial == null ? "" : x.Comercial.Apellido + " " + x.Comercial.Nombres,
+                FechaOperacion = x.FechaOperacion,
+                FechaOperacionFormateado = SqlFunctions.DateName("day", x.FechaOperacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaOperacion),
+                MotivoOperacionAnterior = x.MotivoOperacionAnterior
             });
             return contrato;
         }

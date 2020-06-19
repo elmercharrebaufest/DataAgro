@@ -130,6 +130,7 @@
     <Compile Include="ConsultasEF\TraerRolesPermisos.cs" />
     <Compile Include="ConsultasEF\TraerContratosPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodosContratosSinFiltro.cs" />
+    <Compile Include="ConsultasEF\TraerTodoRango.cs" />
     <Compile Include="ConsultasEF\TraerTodosCupos.cs" />
     <Compile Include="ConsultasEF\TraerTodosLogsDataAgro.cs" />
     <Compile Include="ConsultasEF\TraerVentaStock.cs" />

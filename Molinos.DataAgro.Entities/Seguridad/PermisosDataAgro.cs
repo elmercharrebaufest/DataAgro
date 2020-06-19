@@ -115,6 +115,11 @@ namespace Molinos.DataAgro.Entities.Seguridad
         PreAnular = 325,
         [Display(ResourceType = typeof(Text), Name = "Anular")]
         Anular = 326,
+        [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_FechaMayorDiaAnterior")]
+        NegociosFechaMayorDiaAnterior = 327,
+        [Display(ResourceType = typeof(Text), Name = "Configuraciones_JefeEnvioMailNegociosConDiaAnterior")]
+        JefeEnvioMailNegociosConDiaAnterior = 328,
+
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
@@ -139,6 +144,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReporteComercial = 410,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_De_Proveedores")]
         VisualizarReporteDeProveedores = 411,
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Rango")]
+        VisualizarReporteRango = 412,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]

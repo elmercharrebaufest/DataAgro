@@ -45,7 +45,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CaratulaMAT { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
-
+        public DateTime FechaOperacion { get; set; } // FechaOperacion       
+        public string MotivoOperacionAnterior { get; set; }
 
         [ForeignKey("ProvinciaId")]
         public virtual Provincia Provincia { get; set; } // ProvinciaId

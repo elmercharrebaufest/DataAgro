@@ -155,6 +155,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CaratulaMAT { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
+        public DateTime? FechaOperacion { get; set; }
+        public string FechaOperacionFormateado { get; set; }
+        public string MotivoOperacionAnterior { get; set; }
     }
 
     public class StoredPorContratoResult

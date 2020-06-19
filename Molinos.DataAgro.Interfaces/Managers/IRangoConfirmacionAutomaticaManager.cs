@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 
 namespace Molinos.DataAgro.Interfaces
@@ -7,9 +8,10 @@ namespace Molinos.DataAgro.Interfaces
     public interface IRangoConfirmacionAutomaticaManager
     {
         DatosIniAbmRangoConfirmacionAutomatica TraerDatosIniciales();
-        ResultIniRangoConfirmacionAutomatica TraerTodoRango();
+        ResultIniRangoConfirmacionAutomatica TraerTodoRangoDisponible();
         RangoConfirmacionAutomaticaDto TraerRango(int id);
         Resultado GrabarRangoConfirmacionAutomatica(RangoConfirmacionAutomatica oRango);
         Resultado EliminarRangoConfirmacionAutomatica(int id);
+        DataSourceResult TraerTodoRango(DataSourceRequest request);
     }
 }

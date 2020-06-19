@@ -379,7 +379,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PROVINCIA = contrato.ProvinciaId.ToString(),
                             SUSTENTABLE = sustentableString,
                             ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap),
-                            FECHA = fechaContrato.ToString("yyyy-MM-dd"),
+                            FECHA = contrato.FechaOperacion.ToString("yyyy-MM-dd"),
                             USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory),
                             HORAACT = fechaContrato.ToString("HH:mm:ss"),
                             PROCEDENCIA = localidadString,

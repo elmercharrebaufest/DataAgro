@@ -85,7 +85,8 @@
 	[CaratulaMAT] NVARCHAR(10) NULL,
 	[PrecioAjusteComision] DECIMAL(11, 2) NULL,
 	[MonedaAjusteComisionId] CHAR(5) NULL,
-
+    [FechaOperacion] DATETIME NULL , 
+    [MotivoOperacionAnterior] VARCHAR(500) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

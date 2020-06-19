@@ -217,6 +217,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
+    <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
     <Compile Include="Controllers\ConfiguracionInternaController.cs" />
@@ -992,6 +993,7 @@
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\LogDataAgro.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
+    <Content Include="Scripts\App\reporteRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\SugerenciaCupo.js" />
     <Content Include="Scripts\App\AbmRol.js" />
     <Content Include="Scripts\App\AbmTareaProgramada.js" />
@@ -2693,6 +2695,7 @@
     <Content Include="Views\LogDataAgro\DiffLine.cshtml" />
     <Content Include="Views\LogDataAgro\DiffPane.cshtml" />
     <Content Include="Views\Cupo\ModalRechazarCupoConMotivo.cshtml" />
+    <Content Include="Views\ReporteRangoConfirmacionAutomatica\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

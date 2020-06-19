@@ -11,5 +11,6 @@ namespace Molinos.DataAgro.Interfaces
     public interface INegocioManager
     {
         Resultado OcultarEnTablero(Negocio negocio);
+        void EnvioMailNegociosConDiaAnterior();
     }
 }
