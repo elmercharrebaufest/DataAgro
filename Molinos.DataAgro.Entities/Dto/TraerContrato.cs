@@ -158,6 +158,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaOperacion { get; set; }
         public string FechaOperacionFormateado { get; set; }
         public string MotivoOperacionAnterior { get; set; }
+        public string UsuarioConfirmador { get; set; }
+        public DateTime? FechaConfirmacion { get; set; }
     }
 
     public class StoredPorContratoResult

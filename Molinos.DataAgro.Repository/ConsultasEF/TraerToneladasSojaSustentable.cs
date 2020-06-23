@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
 
-            var contratos = contexto.Set<Contrato>().Where(x =>x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null) && (centroId == 0 || x.DestinoId == centroId) && x.ContratoAcuerdo == null).ToList();
+            var contratos = contexto.Set<Contrato>().Where(x =>x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null) && (centroId == 0 || x.DestinoId == centroId) && x.ContratoAcuerdo == null).ToList();
             var result = new ReporteSojaSustDto();
             if (contratos.Count>0)
             {

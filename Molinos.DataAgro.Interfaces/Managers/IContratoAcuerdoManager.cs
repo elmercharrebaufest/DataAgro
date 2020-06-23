@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Interfaces
         BasicoContrato TraerAcuerdo(int contratoId);
         GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo);
         ContratoAcuerdoDto ObtenerContratoAcuerdoParaAsociar(DateTime fecha, int destinoId, int materialId, int proveedorId);
-        Resultado ConfirmarContratoAcuerdo(int id);
+        Resultado ConfirmarContratoAcuerdo(int id, int comercialId);
         void AnularAcuerdos();
     }
 }

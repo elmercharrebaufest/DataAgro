@@ -59,6 +59,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TarifaFlete { get; set; }
         public bool? EsFason { get; set; }
 
+        public int UsuarioConfirmadorId { get; set; }
+        public DateTime FechaConfirmacion { get; set; }
+
+        public string UsuarioConfirmador { get; set; }
     }
 }
 

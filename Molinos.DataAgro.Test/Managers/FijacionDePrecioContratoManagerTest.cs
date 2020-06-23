@@ -440,7 +440,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { ComercialId = 1, Id = 2, Key = "HOLA" } });
 
-            var result = target.ConfirmarFijacion(It.IsAny<int>());
+            var result = target.ConfirmarFijacion(It.IsAny<int>(), It.IsAny<int>());
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -470,7 +470,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(It.IsAny<int>())).Returns(new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado });
 
-            var result = target.ConfirmarFijacion(It.IsAny<int>());
+            var result = target.ConfirmarFijacion(It.IsAny<int>(), It.IsAny<int>());
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);

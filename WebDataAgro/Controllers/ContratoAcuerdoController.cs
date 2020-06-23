@@ -62,9 +62,10 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Confirmar(AbmOperadorParam oParam)
         {
+            
             return new JsonResult()
             {
-                Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(oParam.Id),
+                Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(oParam.Id, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

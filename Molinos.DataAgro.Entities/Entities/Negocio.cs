@@ -49,6 +49,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public string MotivoRechazo { get; set; }
         public int? TipoAgenteCompraId { get; set; }
 
+        public int? UsuarioConfirmadorId { get; set; }
+
+        public DateTime? FechaConfirmacion { get; set; }
+
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
         [ForeignKey("CondicionFijacionId")]
@@ -67,6 +71,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Moneda Moneda { get; set; } // MonedaId (length: 5)
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; } // ComercialId
+        [ForeignKey("UsuarioConfirmadorId")]
+        public virtual Comercial ComercialConfirmador { get; set; } // ComercialId
         [ForeignKey("DestinoId")]
         public virtual Centro Destino { get; set; }
         [ForeignKey("ComercialCreadorId")]

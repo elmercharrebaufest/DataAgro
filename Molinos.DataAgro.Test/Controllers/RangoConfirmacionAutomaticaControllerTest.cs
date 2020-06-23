@@ -4,6 +4,7 @@ using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
 using WebDataAgro.Models;
@@ -26,6 +27,9 @@ namespace Molinos.DataAgro.Test.Controllers
             comercialManagerMock = new Mock<IComercialManager>();
             rangoManagerMock = new Mock<IRangoConfirmacionAutomaticaManager>();
             target = new RangoConfirmacionAutomaticaController(comercialManagerMock.Object, rangoManagerMock.Object);
+
+            HttpContext.Current = Mock.FakeContext.FakeHttpContext();
+            HttpContext.Current.Session["comercialId"] = 1;
         }
 
         [Test]
@@ -56,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}],\"Zona\":null,\"TipoNegocio\":null},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"Material\":null,\"Moneda\":null,\"Zona\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Material\":[{\"MaterialId\":1,\"Descripcion\":\"A\",\"Codigo\":null,\"Campaña\":null}],\"Moneda\":[{\"MonedaId\":\"A\",\"Descripcion\":\"A\"}],\"Zona\":null,\"TipoNegocio\":null},\"RangoConfirmacion\":{\"Id\":0,\"PrecioMinimo\":0,\"PrecioMaximo\":0,\"MaterialId\":0,\"MonedaId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"TipoNegocio\":null,\"Material\":null,\"Moneda\":null,\"Zona\":null,\"Comercial\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -106,7 +110,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -127,7 +131,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -142,14 +146,14 @@ namespace Molinos.DataAgro.Test.Controllers
                 PrecioMaximo = 1,
                 PrecioMinimo = 1
             };
-            rangoManagerMock.Setup(x => x.GrabarRangoConfirmacionAutomatica(rangoPrecio)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            rangoManagerMock.Setup(x => x.GrabarRangoConfirmacionAutomatica(rangoPrecio, It.IsAny<int>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             var result = target.Grabar(rangoPrecio);
 
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":0,\"DesdeMes\":0,\"DesdeAnio\":0,\"HastaMes\":0,\"HastaAnio\":0,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

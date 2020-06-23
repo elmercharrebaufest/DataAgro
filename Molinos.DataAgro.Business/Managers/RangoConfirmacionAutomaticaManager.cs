@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Validations;
@@ -15,11 +16,14 @@ namespace Molinos.DataAgro.Business
     {
         private ILogger logger;
         private readonly IRepositorio repositorio;
+        private readonly ILogDataAgroManager logDataAgroManager;
 
-        public RangoConfirmacionAutomaticaManager(ILogger logger, IRepositorio repositorio)
+
+        public RangoConfirmacionAutomaticaManager(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.logDataAgroManager = logDataAgroManager;
         }
         public DatosIniAbmRangoConfirmacionAutomatica TraerDatosIniciales()
         {
@@ -86,7 +90,7 @@ namespace Molinos.DataAgro.Business
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
-        public Resultado GrabarRangoConfirmacionAutomatica(RangoConfirmacionAutomatica oRango)
+        public Resultado GrabarRangoConfirmacionAutomatica(RangoConfirmacionAutomatica oRango, int comercialId)
         {
             var oEntityErrors = new Resultado();
 
@@ -97,6 +101,7 @@ namespace Molinos.DataAgro.Business
                 return oEntityErrors;
             }
 
+            var tipo = oRango.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
             if (oRango.Id != 0)
             {
                 var oRangoSave = repositorio.Obtener<RangoConfirmacionAutomatica>(oRango.Id);
@@ -113,15 +118,19 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.DesdeAnio = oRango.DesdeAnio;
                 oRangoSave.HastaAnio = oRango.HastaAnio;
                 oRangoSave.TipoNegocioId = oRango.TipoNegocioId;
+                
             }
             else
             {
+                oRango.UsuarioCreadorId = comercialId;
+                oRango.FechaCreacion = DateTime.Now;
                 repositorio.Agregar(oRango);
             }
 
             try
-            {
+            {                
                 repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerRango(oRango.Id), tipo);
             }
             catch (Exception ex)
             {
@@ -137,9 +146,8 @@ namespace Molinos.DataAgro.Business
         public Resultado EliminarRangoConfirmacionAutomatica(int id)
         {
             var oEntityErrors = new Resultado();
-
+            logDataAgroManager.LogCambiosDataAgro(TraerRango(id), TipoAccionLogDataAgro.Eliminar);
             repositorio.Remover<RangoConfirmacionAutomatica>(id);
-
             logger.Debug("Eliminando el Rango de Confirmacion Automatica:" + id);
             try
             {
@@ -188,7 +196,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Anio", "Los campos Año no pueden estar vacios");
             }
-
+            if (oRango.FechaHasta < oRango.FechaDesde)
+            {
+                oEntityErrors.Error("Fechas", "La fecha hasta no puede ser menor que: "+oRango.FechaDesde);
+            }
 
 
             var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();

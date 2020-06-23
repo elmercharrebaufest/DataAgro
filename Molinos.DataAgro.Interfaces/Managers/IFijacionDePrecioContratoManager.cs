@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
 
         GrabarFijacionResult GrabarFijacionDePrecio(FijacionDePrecioContrato oFijacionDePrecio);
 
-        GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId);
+        GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId, int comercialId);
 
         GrabarContratoResult BorrarFijacion(FijacionDePrecioContrato oContrato);
         GrabarContratoResult BorrarFijacionPreAprobacion(int id, string motivo);

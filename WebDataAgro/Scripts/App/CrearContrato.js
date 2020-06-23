@@ -2879,7 +2879,12 @@ function CargarDatosEditar(contrato, hijo) {
     $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
-    $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+
+    if (contrato.FechaOperacionFormateado != null) {
+        $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+    } else {
+        $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
+    }
     if (contrato.MotivoOperacionAnterior != null) {
         $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
         $("#fechaOperacionMotivoDiv").show();
@@ -3185,6 +3190,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.Estado == 5) {
         $("#tipoId").data("kendoDropDownList").enable(false);
         $("#material").data("kendoDropDownList").enable(false);
+        $("#fechaOperacionId").data("kendoDatePicker").enable(false);
         $(".copia-contratos").hide();
         $("#contrato-modificado").html("<h3>CONTRATO " + contrato.ContratoSAP.replace('000', '') + "</h3>");
     }

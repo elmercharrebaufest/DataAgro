@@ -15,5 +15,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProveedorId { get; set; }
         public string AccionRealizada { get; set; }
         public string Clase { get; set; }
+        public int? RangoConfirmacionAutomaticaId { get; set; }
     }
 }

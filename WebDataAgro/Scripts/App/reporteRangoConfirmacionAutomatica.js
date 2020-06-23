@@ -36,6 +36,7 @@ function CargarGrillaConfig() {
                     Moneda: { type: "string" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
+                    FechaCreacion: { type: "date" },
 
                 }
             }
@@ -96,7 +97,17 @@ function CargarGrillaConfig() {
                 }
             },
             { field: "Moneda", type: "string" },
-            { field: "Cantidad", type: "number" }
+            { field: "Cantidad", type: "number" },
+            { field: "UsuarioCreador", type: "string", title: "Usuario Creador" },
+            {
+                field: "FechaCreacion", type: "date", title: "Fecha Creación", format: _DefaultDateTemplate, width: 80,
+
+                template: function (dataItem) {
+                    if (dataItem.FechaCreacion != null) {
+                        return '<div></div>' + kendo.toString(kendo.parseDate(dataItem.FechaCreacion, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                    } else return "";
+                }
+            }
         ],
         pageable: {
             messages: {

@@ -397,7 +397,7 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public Resultado ConfirmarFason(int id)
+        public Resultado ConfirmarFason(int id, int usuarioConfirmador)
         {
             var oEntityErrors = new Resultado();
 
@@ -409,6 +409,8 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("Confirmando el Fason:" + id);
                 try
                 {
+                    contrato.UsuarioConfirmadorId = usuarioConfirmador;
+                    contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerFason(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
                 }

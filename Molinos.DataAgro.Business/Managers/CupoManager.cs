@@ -16,6 +16,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
@@ -1414,6 +1415,10 @@ namespace Molinos.DataAgro.Business.Managers
                 CupoResult result2 = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadFleteProcedencia, Fecha = sugerencia.FechaSugerida } });
                 detalle.CantidadFleteProcedencia -= cantidadFleteProcedencia;
                 resultado.Errores.AddRange(result2.Errores);
+                for (int i = 0; i < result2.ListaCupos.Count; i++)
+                {
+                    result2.ListaCupos[i] = result2.ListaCupos[i] + " <b style='color:blue;'>FP</b>";
+                }
                 resultado.ListaCupos.AddRange(result2.ListaCupos);
             }
             return resultado;
@@ -1551,17 +1556,19 @@ namespace Molinos.DataAgro.Business.Managers
                 for (var i = 0; i <= formula.CantDias; i++)
                 {
                     var fecha = fechasComprendidas[i];
+                    var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x=> DbFunctions.TruncateTime(x.FechaGeneracion) == fecha && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
                     var cupo = new DiaCupo()
                     {
                         Fecha = fecha,
-                        CantidadCuposDevueltos = repositorio.Existe<AdministracionCupo>(x => x.Fecha == fecha && !x.Excedente) ? (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && !x.Excedente) : 0,
-                        CantidadDisponibilidadDia = disponibilidadEnPlanta.Where(x => x.Fecha == fecha).Count() > 0 ? disponibilidadEnPlanta.Where(x => x.Fecha == fecha).Sum(y => y.LimiteCupo) : 0,
-                        CantidadSugerenciaPendiente = repositorio.Existe<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null) ?
-                        (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null) : 0,
-                        CantidadSugerenciaAceptadaDia = repositorio.Existe<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true) ?
-                        (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true) : 0
+                        CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && !x.Excedente),
+                        CantidadSolicitudesAceptadas = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 1),
+                        CantidadDisponibilidadDia = disponibilidadEnPlanta.Where(x => x.Fecha == fecha).Sum(y => y.LimiteCupo),
+                        CantidadSugerenciaPendiente = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null),
+                        CantidadSugerenciaAceptadaDia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true)
                     };
-                    cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadSugerenciaPendiente + cupo.CantidadCuposDevueltos);
+                    //cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadSugerenciaPendiente + cupo.CantidadCuposDevueltos - cupo.CantidadSolicitudesAceptadas);
+                    cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - CantidadCuposGenerados - cupo.CantidadSugerenciaPendiente );
+
                     lista.Add(cupo);
                 }
             }

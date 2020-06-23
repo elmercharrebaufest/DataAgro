@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
             repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
         }
+
         [Test]
         public void LogCambiosDataAgroProveedorOk()
         {
@@ -71,6 +72,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
             repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
         }
+
         [Test]
         public void ListarDatosLogDataAgroOk()
         {
@@ -110,6 +112,16 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, respuesta.CamposCambiados.Count);
             Assert.AreNotEqual(respuesta.LogActual.Id, respuesta.LogAnterior.Id);
             repositorioMock.Verify(x => x.Listar<LogDataAgro>(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void LogCambiosDataAgroRangoConfirmacionAutomaticaOk()
+        {
+            var respuesta = target.LogCambiosDataAgro(new RangoConfirmacionAutomaticaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+
+            Assert.AreEqual(respuesta, 1);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
         }
     }
 }

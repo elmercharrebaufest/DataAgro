@@ -3369,7 +3369,7 @@ function eliminarError(elem, clase) {
     $(".triangulo-error.triangulo-" + clase).remove();
 }
 function mostrarConsignatario() {
-    if ($("#clasificacion-compranet").val() != 2) {
+    if ($("#clasificacion-compranet").val() == 1) {
         $("#consignatarioCompraNet").hide();
         $("#consignatario-compranet").prop("checked", false);
         $("#planCanjeCompraNet").hide();
@@ -3382,7 +3382,7 @@ function mostrarConsignatario() {
 }
 
 function mostrarConsignatarioProveedor() {
-    if ($("#clasificacion-proveedor-corredor").val() != 2) {
+    if ($("#clasificacion-proveedor-corredor").val() == 1) {
         $("#consignatarioProveedorDiv").hide();
         $("#consignatario-proveedor-compranet").prop("checked", false);
         $("#planCanjeProveedorDiv").hide();

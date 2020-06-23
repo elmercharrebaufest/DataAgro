@@ -871,6 +871,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
             {
+                oContratoSave.FechaConfirmacion = DateTime.Now;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                 logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
 
@@ -950,7 +951,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerContratosPorFiltro(filtro, equipo));
         }
-        public GrabarContratoResult ConfirmarContrato(int contratoId)
+        public GrabarContratoResult ConfirmarContrato(int contratoId, int usuarioConfirmador)
         {
             var oEntityErrors = new GrabarContratoResult();
 
@@ -964,7 +965,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.Ampliaciones = 0;
 
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-
+                oContratoSave.UsuarioConfirmadorId = usuarioConfirmador;
+                oContratoSave.FechaConfirmacion = DateTime.Now;
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
 

@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
         DatosIniAbmRangoConfirmacionAutomatica TraerDatosIniciales();
         ResultIniRangoConfirmacionAutomatica TraerTodoRangoDisponible();
         RangoConfirmacionAutomaticaDto TraerRango(int id);
-        Resultado GrabarRangoConfirmacionAutomatica(RangoConfirmacionAutomatica oRango);
+        Resultado GrabarRangoConfirmacionAutomatica(RangoConfirmacionAutomatica oRango, int comercialId);
         Resultado EliminarRangoConfirmacionAutomatica(int id);
         DataSourceResult TraerTodoRango(DataSourceRequest request);
     }

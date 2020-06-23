@@ -123,6 +123,12 @@ namespace WebDataAgro.Controllers
                         Text = "Negocio",
                         Value = "Negocio",
                         Selected = false
+                    },
+                new SelectListItem
+                    {
+                        Text = "RangoConfirmacionAutomatica",
+                        Value = "RangoConfirmacionAutomatica",
+                        Selected = false
                     }
             }.OrderBy(x => x.Text);
             ViewBag.Clase = clasesListItems;

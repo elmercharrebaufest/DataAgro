@@ -220,7 +220,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.ConfirmarContrato(contratoId),
+                Data = mobjContratoManager.ConfirmarContrato(contratoId, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -282,9 +282,10 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
         public ActionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
         {
+
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.ConfirmarFijacion(fijacionDePrecioContratoId),
+                Data = mobjFijacionDePrecioContratoManager.ConfirmarFijacion(fijacionDePrecioContratoId, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -293,7 +294,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(fijacionDePrecioContratoId),
+                Data = mobjContratoAcuerdoManager.ConfirmarContratoAcuerdo(fijacionDePrecioContratoId, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -302,7 +303,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjAgenteManager.ConfirmarAgenteCompra(fijacionDePrecioContratoId),
+                Data = mobjAgenteManager.ConfirmarAgenteCompra(fijacionDePrecioContratoId, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -311,7 +312,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjFasonManager.ConfirmarFason(fijacionDePrecioContratoId),
+                Data = mobjFasonManager.ConfirmarFason(fijacionDePrecioContratoId, GlobalVariables.ComercialId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

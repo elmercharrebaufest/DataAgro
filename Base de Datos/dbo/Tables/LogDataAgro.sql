@@ -10,6 +10,7 @@
 
     [Clase] VARCHAR(100) NOT NULL, 
     [AccionRealizada] VARCHAR(100) NOT NULL, 
+    [RangoConfirmacionAutomaticaId] INT NULL, 
     CONSTRAINT [PK_LogDataAgro] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_LogDataAgro_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [dbo].[Negocio] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_LogDataAgro_Cupo] FOREIGN KEY ([CupoId]) REFERENCES [dbo].[Cupo] ([Id]) ON DELETE CASCADE,

@@ -26,6 +26,16 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
+            if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
+            {
+                var resp = "";
+                resp = repositorio.ObtenerMayor<Negocio, int>(x => x.ContratoSAP != null && x.ContratoSAP != "", x => x.Id).ContratoSAP;
+                long numsap = 0;
+                long.TryParse(resp, out numsap);
+                numsap = numsap + 1;
+                resp = numsap.ToString().PadLeft(10, '0');
+                return resp;
+            }
             try
             {
                 SI_ZMPWS_DATAAGRO_PRE_SLIPClient agent = new SI_ZMPWS_DATAAGRO_PRE_SLIPClient();

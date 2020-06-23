@@ -169,24 +169,29 @@ function CargarEventos() {
         if (cupos.length > 0) {
             //MensInfo("Cupos generados: " + cuposGenerados.join());
             cuposCreados(cupos);
-            grid._selectedIds = {};
-            grid.clearSelection();
-            grid.dataSource.read();
+            //grid._selectedIds = {};
+            //grid.clearSelection();
+            //grid.dataSource.read();
         }
         if (error.length > 0) {
             ShowErrorMessages(error);
         }
+    });
+    $("#resultadoCupo").on('hidden.bs.modal', function () {
+        BlockUi("Cargando...");
+        location.reload();
     });
 }
 
 function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
     $('#resultadoCupo').modal('toggle');
-
 }
+
 
 function copiarGenerados() {
     var listaCupos = $("#cupos-generados-modal").html().replace(/<br>/g, "\n");
+    listaCupos = listaCupos.split('<b style="color:blue;">FP</b>').join("FP");//como un replaceall
     var copy = function (e) {
         e.preventDefault();
         console.log('copy');

@@ -33,8 +33,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         
             var cont = contexto.Set<Contrato>()
                 .Where(x =>materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 && 
-                DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && 
-                DbFunctions.TruncateTime(x.Fecha) <= fechaManana && 
+                DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy && 
+                DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && 
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
                 (0 == centroId || x.DestinoId == centroId) 
                 && x.ContratoAcuerdo == null
@@ -62,8 +62,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var contPizarra = contexto.Set<Contrato>()
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 &&
-                DbFunctions.TruncateTime(x.Fecha) >= fechaHoy &&
-                DbFunctions.TruncateTime(x.Fecha) <= fechaManana &&
+                DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy &&
+                DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
                 (0 == centroId || x.DestinoId == centroId)
                 && x.ContratoAcuerdo == null

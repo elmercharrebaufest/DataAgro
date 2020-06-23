@@ -791,7 +791,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
 
-            var resultado = target.ConfirmarContrato(It.IsAny<int>());
+            var resultado = target.ConfirmarContrato(It.IsAny<int>(), It.IsAny<int>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
         }
@@ -829,7 +829,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>() { 1, 2 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SuscripcionComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<SuscripcionComercial>() { new SuscripcionComercial { Id = 1, ComercialId = 1, Key = "ala" } });
 
-            var resultado = target.ConfirmarContrato(It.IsAny<int>());
+            var resultado = target.ConfirmarContrato(It.IsAny<int>(), It.IsAny<int>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
         }
@@ -838,7 +838,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void ConfirmarContratoErrorContratoNulo()
         {
 
-            var resultado = target.ConfirmarContrato(It.IsAny<int>());
+            var resultado = target.ConfirmarContrato(It.IsAny<int>(), It.IsAny<int>());
             Assert.That(resultado.HayError);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 

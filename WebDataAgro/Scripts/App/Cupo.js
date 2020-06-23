@@ -944,7 +944,6 @@ function Filtrar() {
     var currentFilters = grid.dataSource.filter();
     let filtroSap = TraerFiltrosConValores();
     currentFilters = { filters: [], logic: 'and' };
-    grid.dataSource.filter(currentFilters);
     if (filtroSap.filter != null) {
         //-----------------------------------------
         currentFilters.filters = currentFilters.filters.filter(function (x) {
@@ -955,9 +954,11 @@ function Filtrar() {
         contratoSapFilters.filters.push({ field: 'CupoSap', operator: 'contains', value: filtroSap.filter.filters[0].value });
         currentFilters.filters.push(contratoSapFilters);
         grid.dataSource.filter(currentFilters);
+    } else {
+        BorrarFiltro();
     }
-    recargarGrilla();
 }
+
 
 function BorrarFiltro() {
     $("#CupoSAPId").val("");

@@ -699,7 +699,7 @@ namespace Molinos.DataAgro.Business
                                 });
         }
 
-        public Resultado ConfirmarContratoAcuerdo(int id)
+        public Resultado ConfirmarContratoAcuerdo(int id, int usuarioConfirmador)
         {
             var oEntityErrors = new Resultado();
 
@@ -711,6 +711,8 @@ namespace Molinos.DataAgro.Business
                 logger.Debug("Confirmando el Acuerdo: " + id);
                 try
                 {
+                    contrato.UsuarioConfirmadorId = usuarioConfirmador;
+                    contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
 

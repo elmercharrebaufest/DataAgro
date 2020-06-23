@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Test.Managers
     {
         private RangoConfirmacionAutomaticaManager target;
         private Mock<IRepositorio> repositorioMock;
+        private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<ILogger> logger;
         private JavaScriptSerializer serializer;
 
@@ -35,9 +36,10 @@ namespace Molinos.DataAgro.Test.Managers
             this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
+            logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new RangoConfirmacionAutomaticaManager(logger.Object, repositorioMock.Object);
+            target = new RangoConfirmacionAutomaticaManager(logger.Object, repositorioMock.Object, logDataAgroManagerMock.Object);
         }
 
         [Test]
@@ -98,7 +100,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar( It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -131,7 +133,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<RangoConfirmacionAutomatica>()), Times.Once);
@@ -149,7 +151,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango,It.IsAny<int>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<RangoConfirmacionAutomatica>()), Times.Never);
@@ -168,7 +170,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<RangoConfirmacionAutomatica>()), Times.Never);
@@ -187,7 +189,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<RangoConfirmacionAutomatica>()), Times.Never);
@@ -206,7 +208,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<RangoConfirmacionAutomatica>());
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
@@ -255,7 +257,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ZonaId = 1,
                 FechaHasta = new DateTime(2019, 04, 25),
                 FechaDesde = new DateTime(2019, 04, 25) } });
-            var resultado = target.GrabarRangoConfirmacionAutomatica(rango);
+            var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<RangoConfirmacionAutomatica>()), Times.Never);

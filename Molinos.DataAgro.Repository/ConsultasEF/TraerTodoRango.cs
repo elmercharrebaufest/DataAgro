@@ -49,7 +49,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     DesdeMes = rango.DesdeMes,
                     HastaMes = rango.HastaMes,
                     FechaHasta = rango.FechaHasta,
-                    TipoNegocio = rango.TipoNegocio.Descripcion
+                    TipoNegocio = rango.TipoNegocio.Descripcion,
+                    FechaCreacion = rango.FechaCreacion,
+                    UsuarioCreador = rango.Comercial != null ? rango.Comercial.Nombres + " " + rango.Comercial.Apellido: "",
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryRango);

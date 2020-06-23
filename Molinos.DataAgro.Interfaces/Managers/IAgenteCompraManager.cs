@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarAgenteResult BorrarAgente(AgenteCompra oAgente);
         BasicoContrato TraerAgente(int contratoId);
         GrabarAgenteResult GrabarAmpliacionAgente(AgenteCompra oAgente);
-        Resultado ConfirmarAgenteCompra(int id);
+        Resultado ConfirmarAgenteCompra(int id, int comercialId);
     }
 }
 

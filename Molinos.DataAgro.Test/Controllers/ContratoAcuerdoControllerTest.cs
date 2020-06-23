@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ConfirmarTest()
         {
-            contratoAcuerdoManagerMock.Setup(x => x.ConfirmarContratoAcuerdo(It.IsAny<int>()))
+            contratoAcuerdoManagerMock.Setup(x => x.ConfirmarContratoAcuerdo(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new GrabarAcuerdoResult { AcuerdoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.Confirmar(new AbmOperadorParam());
             var a = serializer.Serialize(result);

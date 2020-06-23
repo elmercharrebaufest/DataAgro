@@ -10,7 +10,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarFasonResult BorrarFason(Fason oFason);
         BasicoContrato TraerFason(int id);
         GrabarContratoResult GrabarAmpliacionFason(Fason oFason);
-        Resultado ConfirmarFason(int id);
+        Resultado ConfirmarFason(int id, int comercialId);
     }
 }
 

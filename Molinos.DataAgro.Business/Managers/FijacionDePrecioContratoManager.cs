@@ -356,7 +356,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return false;
             }
         }
-        public GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId)
+        public GrabarFijacionResult ConfirmarFijacion(int fijacionDePrecioContratoId, int usuarioConfirmador)
         {
             var oEntityErrors = new GrabarFijacionResult();
             var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
@@ -373,6 +373,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 try
                 {
+                    oFijacionDePrecioSave.UsuarioConfirmadorId = usuarioConfirmador;
+                    oFijacionDePrecioSave.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
 

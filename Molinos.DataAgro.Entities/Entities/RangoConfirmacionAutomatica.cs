@@ -20,6 +20,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public int HastaAnio { get; set; }
         public int TipoNegocioId { get; set; }
 
+        public int? UsuarioCreadorId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
         [ForeignKey("MaterialId")]
@@ -28,6 +31,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Moneda Moneda { get; set; }
         [ForeignKey("ZonaId")]
         public virtual GrupoDeCompras Zona { get; set; }
+        [ForeignKey("UsuarioCreadorId")]
+        public virtual Comercial Comercial { get; set; }
 
     }
 

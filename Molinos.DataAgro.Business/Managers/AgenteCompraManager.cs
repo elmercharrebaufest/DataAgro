@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        public Resultado ConfirmarAgenteCompra(int id)
+        public Resultado ConfirmarAgenteCompra(int id, int usuarioConfirmador)
         {
             var oEntityErrors = new Resultado();
 
@@ -396,7 +396,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 logger.Debug("Confirmando el Agente:" + id);
                 try
-                {
+                {                    
+                    contrato.UsuarioConfirmadorId = usuarioConfirmador;
+                    contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerAgente(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
                 }

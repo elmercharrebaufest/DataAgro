@@ -60,6 +60,8 @@ function CreateGridInformeCompraNet() {
                     FechaHasta: { type: "date" },
                     FechaEntrega: { type: "date" },
                     Fecha_Dolarizado: { type: "date" },
+                    FechaConfirmacion: { type: "date" },
+                    UsuarioConfirmador: {type: "string"},
                     Cantidad: { type: "number" },
                     Precio: { type: "number", format: "n2" },
                     Pizarra: { type: "boolean" },
@@ -218,10 +220,20 @@ function CreateGridInformeCompraNet() {
             { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } },
             { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 },
             { field: "Rechazo", type: "string", title: "Motivo Rechazo" },
-            { field: "ClasificacionDescripcion", type: "string", title: "Clasificacion" },
+            { field: "ClasificacionDescripcion", type: "string", title: "Clasificación" },
             { field: "FechaOperacion", type: "date", title: "Fecha Operacion", format: _DefaultDateTemplate, width: 80 },
-            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo Operacion Anterior" },
+            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo Operación Anterior" },
             
+            { field: "UsuarioConfirmador", type: "string", title: "Usuario Confirmador" },
+            {
+                field: "FechaConfirmacion", type: "date", title: "Fecha Confirmación", format: _DefaultDateTemplate, width: 80,
+
+                template: function (dataItem) {
+                    if (dataItem.FechaConfirmacion != null) {
+                        return '<div class="statusexterno "></div>' + kendo.toString(kendo.parseDate(dataItem.FechaConfirmacion, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                    } else return "";
+                }
+            },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];

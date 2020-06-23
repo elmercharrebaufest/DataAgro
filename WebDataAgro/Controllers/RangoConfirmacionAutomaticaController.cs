@@ -87,7 +87,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new AbmRangoConfirmacionAutomaticaResult();
 
-            var entityErrors = mobjRangoManager.GrabarRangoConfirmacionAutomatica(oRango);
+            var entityErrors = mobjRangoManager.GrabarRangoConfirmacionAutomatica(oRango, GlobalVariables.ComercialId);
 
             if (!entityErrors.HayErrores)
             {

@@ -147,6 +147,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion),
                         MotivoOperacionAnterior = (contrato is Contrato) ? (contrato as Contrato).MotivoOperacionAnterior : "",
 
+                        UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido: "Automática",
+                        FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null
                     };
 
                 return queryNegocios;
@@ -267,7 +269,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Acuerdo = null,
                         Rechazo = fijac.MotivoRechazo,
                         OcultarEnTablero = fijac.OcultarEnTablero,
-                        EsFason = false
+                        EsFason = false,
+                        UsuarioConfirmador = fijac.EstadoId == 1 ? "" : fijac.ComercialConfirmador != null ? fijac.ComercialConfirmador.Nombres + " " + fijac.ComercialConfirmador.Apellido : "Automática",
+                        FechaConfirmacion = fijac.FechaConfirmacion != null ? fijac.FechaConfirmacion : (DateTime?)null
 
                     };
                 return queryFijacion;
