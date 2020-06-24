@@ -654,6 +654,18 @@ function armarSelects(result) {
 
     $("#clasificacion-compranet").change(function () { mostrarConsignatario(); });
 
+    $("#consignatario-proveedor-compranet").change(function () {
+        $("#planCanje-proveedor-compranet").prop("checked", false);
+    });
+    $("#planCanje-proveedor-compranet").change(function () {
+        $("#consignatario-proveedor-compranet").prop("checked", false);
+    });
+    $("#consignatario-compranet").change(function () {
+        $("#planCanje-compranet").prop("checked", false);
+    });
+    $("#planCanje-compranet").change(function () {
+        $("#consignatario-compranet").prop("checked", false);
+    });
 
     var htmlComisionCompraNet = "";
     htmlComisionCompraNet += '<input class="campo-input-text" id="comision-compranet">';

@@ -111,6 +111,9 @@ function CargarCopiaContrato(contratoId, tipo) {
         contratoCopia.Estado = 1;
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
+        if (tipo == "acuerdo") {
+            $("#fechaOperacionId").data("kendoDatePicker").enable(false);
+        }
     }
 }
 

@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -956,6 +956,7 @@
     <Content Include="Content\research.css" />
     <Content Include="Content\rol.css" />
     <Content Include="Content\SiteResponsive.css" />
+    <Content Include="Content\w3.css" />
     <Content Include="parameters.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5)
                 && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))  
+                //&& ((contrato is Contrato && DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) == DbFunctions.TruncateTime((contrato as Contrato).Fecha)) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId == null) || !(contrato is ContratoAcuerdo))
                 && ((contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId == null) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).PrecioNeto > 0) || !(contrato is ContratoAcuerdo))
@@ -58,7 +59,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cantidad = Math.Round(contrato.Cantidad / 1000),
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                     FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
-                    Fecha = DbFunctions.TruncateTime(contrato.Fecha),
+                    Fecha = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) : DbFunctions.TruncateTime(contrato.Fecha),                    
                     GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
                     Estado_Contrato = contrato.Estado.Descripcion,
                     Ampliaciones = contrato.Ampliaciones,

@@ -324,10 +324,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.ClasificacionId == 1)
             {
-                var centro = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
+                var centroCodigoSap = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
                 var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
                 var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centro, cosecha, material);
+                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centroCodigoSap, cosecha, material);
                 if (result.ToUpper() != "OK".ToUpper())
                 {
                     oErrorMessages.Error("Capacidad Productiva", result);
@@ -566,8 +566,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                if (oParam.FechaOperacion < DateTime.Now.Date )
-                {                    
+                if (oParam.FechaOperacion < DateTime.Now.Date)
+                {
                     var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
 
                     if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
@@ -590,6 +590,14 @@ namespace Molinos.DataAgro.Business.Managers
                 //        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                 //    }
                 //}
+            }
+            var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
+
+            if (oParam.TipoNegocioId == 1 && (centro == null || centro.Acopio == true)
+                && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))               
+                )
+            {
+                oErrorMessages.Error("Descuentos", "Ingrese el importe de redespacho.");
             }
             return oErrorMessages;
         }
@@ -2115,6 +2123,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public BasicoContrato TraerContratoAcuerdoACopiar(int contratoId)
         {
+            var hoy = DateTime.Now.Date;
             var contrato = repositorio.Obtener<ContratoAcuerdo, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
             {
                 ContratoId = x.Id,
@@ -2124,6 +2133,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
                 ComercialId = x.ComercialCreadorId,
                 Fecha = x.Fecha,
+                FechaOperacion = x.Fecha,
+                FechaOperacionFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.Fecha),
+                MotivoOperacionAnterior = DbFunctions.TruncateTime(x.Fecha) != hoy? "Acuerdo " + x.Id:"",
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),

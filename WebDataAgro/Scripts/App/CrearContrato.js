@@ -2883,11 +2883,16 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.FechaOperacionFormateado != null) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
     } else {
-        $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
-    }
-    if (contrato.MotivoOperacionAnterior != null) {
+        $("#fechaOperacionId").val("");
+
+    } 
+
+    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
         $("#fechaOperacionMotivoDiv").show();
+    } else {
+        $("#motivoOperacionAnteriorId").val("");
+        $("#fechaOperacionMotivoDiv").hide();
     }
 
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
@@ -3281,22 +3286,53 @@ function HabilitarEstablecimiento() {
     }
 }
 
+function validarGuardarApertura(precioPactado) {   
+    if (precioPactado.Precio === 0 && (precioPactado.FechaDesde === "" || precioPactado.FechaDesde === undefined)
+        && (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined) && precioPactado.ImportePactado == 0
+        && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)
+        && (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined) ) {
 
+        return true;
+    }
+    return false;
+}
 
 function GuardarAperturaDePrecio() {
-
-    if (AperturaPrecioPorcentajeDeComision != null && AperturaPrecioPorcentajeDeComision != '') {
-        var num = Number(AperturaPrecioPorcentajeDeComision.replace(',', '.'));
-        if ($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() > num) {
-            MensErr("El Porcentaje de Comision no puede ser mayor a " + AperturaPrecioPorcentajeDeComision);
-            return false;
+    var precioPactado = {
+        Id: 0,
+        FechaDesde: $("#fechaDesdePactado").val(),
+        FechaHasta: $("#fechaHastaPactado").val(),
+        Precio: Number($("#precioPactado").val().replace(',', '.')),
+        PrecioVisualizar: kendo.toString($("#precioPactado").val().replace(',', '.') ? Number($("#precioPactado").val().replace(',', '.')) : "", "n2"),
+        MonedaPactadoId: $("#monedaPactadoId").data("kendoDropDownList").value(),
+        MonedaPactadoDesc: $("#monedaPactadoId").data("kendoDropDownList").text(),
+        ImportePactado: Number($("#importePactado").val().replace(',', '.')),
+        ImportePactadoVisualizar: kendo.toString($("#importePactado").val().replace(',', '.') ? Number($("#importePactado").val().replace(',', '.')) : "", "n2"),
+        MonedaImportePactadoId: $("#monedaImportePactadoId").data("kendoDropDownList").value(),
+        MonedaImportePactadoDesc: $("#monedaImportePactadoId").data("kendoDropDownList").value() != "" ? $("#monedaImportePactadoId").data("kendoDropDownList").text() : "",
+        Porcentaje: $("#porcentajePactado").val(),
+        Borrar: function () {
+            viewModel.PrecioPactado.remove(this);
+            MostrarTablaPrecioPactado();
         }
-    }
-    var total = CalcularPrecioTotalApertura();
-    if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3 || $("#tipoId").val() == 6) && !$("#pizarraId").is(':checked')) {
-        MensErr("El Precio Total no puede ser menor o igual a 0");
+    };
+
+    if (validarGuardarApertura(precioPactado)) {
+        if (AperturaPrecioPorcentajeDeComision != null && AperturaPrecioPorcentajeDeComision != '') {
+            var num = Number(AperturaPrecioPorcentajeDeComision.replace(',', '.'));
+            if ($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() > num) {
+                MensErr("El Porcentaje de Comision no puede ser mayor a " + AperturaPrecioPorcentajeDeComision);
+                return false;
+            }
+        }
+        var total = CalcularPrecioTotalApertura();
+        if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3 || $("#tipoId").val() == 6) && !$("#pizarraId").is(':checked')) {
+            MensErr("El Precio Total no puede ser menor o igual a 0");
+        } else {
+            InsertarAperturasViewModel(total);
+        }
     } else {
-        InsertarAperturasViewModel(total);
+        AgregarPrecioPactado();        
     }
 }
 
