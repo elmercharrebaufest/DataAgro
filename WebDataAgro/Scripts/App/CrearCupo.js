@@ -115,6 +115,11 @@ function InicializarCargaCupos() {
         $("#guardarBtn").attr('type', 'button');
         $("#guardarBtn").click(function () {
             if (fleteProcedencia) {
+                if ($("#flete").is(':checked')) {
+                    $("#msjConfirmacion").html("El cupo tiene flete procedencia, desea mantener esta condición?");
+                } else {
+                    $("#msjConfirmacion").html("El cupo no tiene flete procedencia, desea mantener esta condición?");
+                }
                 $('#fleteProcedenciaModal').modal('toggle');
             } else {
                 $("#flete").removeAttr('disabled');
@@ -123,13 +128,21 @@ function InicializarCargaCupos() {
         });
         $("#boton-si").click(function () {
             $("#flete").removeAttr('disabled');
-            $("#flete").prop('checked', true);
+            if ($("#flete").is(':checked')) {
+                $("#flete").prop('checked', true);
+            } else {
+                $("#flete").prop('checked', false);
+            }
             $('#fleteProcedenciaModal').modal('toggle');
             $("form").submit();
         });
         $("#boton-no").click(function () {
             $("#flete").removeAttr('disabled');
-            $("#flete").prop('checked', false);
+            if ($("#flete").is(':checked')) {
+                $("#flete").prop('checked', false);
+            } else {
+                $("#flete").prop('checked', true);
+            }
             $('#fleteProcedenciaModal').modal('toggle');
             $("form").submit();
         });

@@ -572,6 +572,7 @@ namespace Molinos.DataAgro.Business
                 FechaHasta = x.FechaHasta,
                 FechaDesde = x.FechaDesde,
                 Estado = x.EstadoId,
+                Estado_Contrato = x.Estado.Descripcion,
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion,
                 StandardCalidadId = x.StandardDeCalidadId,

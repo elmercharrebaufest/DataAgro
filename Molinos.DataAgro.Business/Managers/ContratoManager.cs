@@ -1595,6 +1595,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Base = x.Base,
                 Observacion = x.Observacion,
                 Estado = x.EstadoId,
+                Estado_Contrato = x.Estado.Descripcion,
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +

@@ -349,6 +349,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 CampanaId = x.CampanaId ?? 0,
                 Estado = x.EstadoId,
+                Estado_Contrato = x.Estado.Descripcion,
                 Posicion = x.Posicion,
                 TipoFason = x.TipoFason.Descripcion,
                 TipoFasonId = x.TipoFasonId,
