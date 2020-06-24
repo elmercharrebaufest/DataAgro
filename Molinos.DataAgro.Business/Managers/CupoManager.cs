@@ -514,7 +514,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino SAN LORENZO - SANTA FE - BENIELLI 398" + "</td></tr>";
+            var destino = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? " SAN LORENZO - SANTA FE - BENIELLI 398" : cupo.Centro.Descripcion;
+            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " +destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";

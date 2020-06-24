@@ -3,6 +3,8 @@
 }
 @model DiffPlex.DiffBuilder.Model.SideBySideDiffModel
 
+<input type="button" onclick="OcultarUnchangedLine()" value="Mostrar Cambios" class="k-button" />
+<input type="button" onclick="MostrarTodo()" value="Mostrar todo" class="k-button" />
 <div id="diffBox">
     <div id="leftPane">
         <div class="diffHeader">Dato Anterior</div>
@@ -17,3 +19,16 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    $(".UnchangedLine").hide();
+    $(".lineNumber").hide();
+    function OcultarUnchangedLine() {
+        $(".UnchangedLine").hide();
+        $(".lineNumber").hide();
+    }
+
+    function MostrarTodo() {
+        $(".UnchangedLine").show();
+        $(".lineNumber").show();
+    }
+</script>
