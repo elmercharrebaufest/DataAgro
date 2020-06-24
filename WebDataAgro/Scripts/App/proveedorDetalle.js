@@ -590,7 +590,7 @@ function armarContacto() {
     $("#daco-planCanjecomnet").html((basico[0].PlanCanje == 1) ? "Si" : "No");
     $("#daco-comisioncomnet").html(basico[0].Comision);
 
-    if ($("#daco-clascomnet").html() != 'Acopiador') {
+    if ($("#daco-clascomnet").html() != 'Acopiador' && $("#daco-clascomnet").html() != 'Otros') {
         $("#rowConsignatario").hide();
         $("#rowPlanCanje").hide();
     }
