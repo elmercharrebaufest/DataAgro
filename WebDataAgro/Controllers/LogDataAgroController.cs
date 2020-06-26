@@ -135,12 +135,11 @@ namespace WebDataAgro.Controllers
 
 
             var comercial = mobjComercialManager.TraerTodoComercial();
-            //comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) || a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) || a.Rol.ToUpper().Contains("Mesa".ToUpper())) && a.Deshabilitado != true).ToList();
             var comercialListItems = comercial.Comercial.Select(
                x => new SelectListItem
                {
                    Text = x.Nombres + " " + x.Apellido,
-                   Value = x.IdActiveDirectory,
+                   Value = x.Nombres + " " + x.Apellido,
                    Selected = false
                }).OrderBy(x => x.Text);
             ViewBag.Comercial = comercialListItems;

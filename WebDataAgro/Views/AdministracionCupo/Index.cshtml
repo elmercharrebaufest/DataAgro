@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span  style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Configuración de cupos">Disponibilidad en planta </span></td>
+                        <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Configuración de cupos">Disponibilidad en planta </span></td>
                         @foreach (var d in fechas)
                         {
                             <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
@@ -58,7 +58,7 @@
 
                     </tr>
                     <tr>
-                        <td ><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad de planta vs la totalidad en cupos creados y de cada sugerencia pendiente.">Cupos libres</span></td>
+                        <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad de planta vs la totalidad en cupos creados y de cada sugerencia pendiente.">Cupos libres</span></td>
                         @foreach (var d in fechas)
                         {
                             <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
@@ -79,6 +79,14 @@
                         @foreach (var d in fechas)
                         {
                             <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadCuposDevueltos = 0 }).Sum(x => x.CantidadCuposDevueltos)</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Pendientes</span></td>
+                        @foreach (var d in fechas)
+                        {
+                            <td>@panel.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientes = 0 }).Sum(x => x.CantidadSolicitudesPendientes)</td>
                         }
 
                     </tr>

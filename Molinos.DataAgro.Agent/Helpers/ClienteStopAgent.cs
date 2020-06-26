@@ -388,8 +388,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                                
                             }
                             cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
-                            cupo.CTGFechaDesde = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddThh:mm:ss", provider);
-                            cupo.CTGFechaHasta = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddThh:mm:ss", provider);
+                            cupo.CTGFechaDesde = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider);
+                            cupo.CTGFechaHasta = DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider);
                             cupo.RemitenteComercial = cuposActualizados[cupo.CupoSap].cuitRemComercial;
                             cupo.CorredorComprador = cuposActualizados[cupo.CupoSap].cuitCorredorCAfip;
                             cupo.CorredorVendedor = cuposActualizados[cupo.CupoSap].cuitCorredorVAfip;

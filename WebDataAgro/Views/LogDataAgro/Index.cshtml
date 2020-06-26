@@ -40,10 +40,10 @@
             </span>
         </div>
         <div class="col-md-2">
-            <label>Comercial</label>
+            <label>Usuario</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("Usuario", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Comercial", new { @class = "form-control filtroBusquedaTextBox", @id = "ComercialId" })
+            @Html.DropDownList("Usuario", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Usuario", new { @class = "form-control filtroBusquedaTextBox", @id = "ComercialId" })
         </div>
     </div>
     <br />
@@ -99,11 +99,3 @@
         </div>
     </div>
 </div>
-@*@Html.Partial("Diff")*@
-@*@Html.Partial("ModalVisualizar")
-
-    @Html.Partial("ModalVisualizarCupo")
-
-    @Html.Partial("ModalVisualizarProveedor")*@
-
-

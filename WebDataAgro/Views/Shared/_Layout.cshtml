@@ -99,7 +99,8 @@
                         PermisosDataAgro.VisualizarComprasDiarias,
                         PermisosDataAgro.VisualizarIndicadores,
                         PermisosDataAgro.VisualizarReporteCupo,
-                        PermisosDataAgro.VisualizarReporteDeProveedores))
+                        PermisosDataAgro.VisualizarReporteDeProveedores,
+                        PermisosDataAgro.LogDataAgro))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
@@ -173,6 +174,14 @@
                                     <li>
                                         <a href="/ReporteRangoConfirmacionAutomatica/Index" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Rango Confirmación Automática
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.LogDataAgro))
+                                {
+                                    <li>
+                                        <a href="~/logdataagro" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Logs DataAgro
                                         </a>
                                     </li>
                                 }
@@ -348,18 +357,11 @@
                                 {
                                     <li>
                                         <a href="~/Log" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Logs
+                                            <i class="icon-bar-chart"></i> Logs SAP
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.LogDataAgro))
-                                {
-                                    <li>
-                                        <a href="~/logdataagro" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> LogsDataAgro
-                                        </a>
-                                    </li>
-                                }
+                                
                                 @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
                                 {
                                     <li>

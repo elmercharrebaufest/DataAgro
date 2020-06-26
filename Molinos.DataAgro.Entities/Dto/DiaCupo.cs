@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string NombreComercial { get; set; }
         public int CantidadSugerenciaPendiente { get; set; }
         public int CantidadSolicitudesAceptadas { get; set; }
+        public int CantidadSolicitudesPendientes { get; set; }
     }
 }
 

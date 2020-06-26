@@ -49,6 +49,15 @@ namespace Molinos.DataAgro.Business.Managers
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int? id, Type claseDeObjeto = null)
         {
             var usuarioComercial = PermisosHelper.ObtenerUsuario();
+            if (usuarioComercial != null)
+            {
+                var comercial = repositorio.Obtener<Comercial,string>(x => x.IdActiveDirectory == usuarioComercial,x=>x.Nombres + " " + x.Apellido);
+                if (comercial != null)
+                {
+                    usuarioComercial = comercial;
+                }
+            }
+
             Type tipoDelObjeto = (claseDeObjeto != null) ? claseDeObjeto : cambios.GetType();
             string nombreDelTipodeObjeto = tipoDelObjeto.Name.Split('_')[0];
             nombreDelTipodeObjeto = nombreDelTipodeObjeto.Replace("Basico", String.Empty).Replace("Dto", String.Empty).Trim();

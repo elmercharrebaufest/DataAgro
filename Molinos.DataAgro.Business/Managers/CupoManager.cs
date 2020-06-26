@@ -1563,11 +1563,14 @@ namespace Molinos.DataAgro.Business.Managers
                         Fecha = fecha,
                         CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && !x.Excedente),
                         CantidadSolicitudesAceptadas = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 1),
+                        CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3),
                         CantidadDisponibilidadDia = disponibilidadEnPlanta.Where(x => x.Fecha == fecha).Sum(y => y.LimiteCupo),
                         CantidadSugerenciaPendiente = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null),
                         CantidadSugerenciaAceptadaDia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true)
                     };
                     //cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadSugerenciaPendiente + cupo.CantidadCuposDevueltos - cupo.CantidadSolicitudesAceptadas);
+                    cupo.CantidadSugerenciaAceptadaDia = cupo.CantidadSugerenciaAceptadaDia >= cupo.CantidadCuposDevueltos ? 
+                        cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadCuposDevueltos : 0;
                     cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - CantidadCuposGenerados - cupo.CantidadSugerenciaPendiente );
 
                     lista.Add(cupo);

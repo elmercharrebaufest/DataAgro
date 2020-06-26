@@ -4,36 +4,40 @@
     <table cellpadding="0" cellspacing="0" class="diffTable">
         @foreach (var diffLine in Model.Lines)
         {
-
-            <tr>
-                <td class="lineNumber">
-                    @Html.Raw(diffLine.Position.HasValue ? diffLine.Position.ToString() : "&nbsp;")
-                </td>
-                <td class="line @diffLine.Type.ToString()Line">
-                    <span class="lineText">
-                        @*@Html.Partial("DiffLine", diffLine)*@
-                        @if (!string.IsNullOrEmpty(diffLine.Text))
-                        {
-                            string spaceValue = "\u00B7";
-                            string tabValue = "\u00B7\u00B7";
-                            if (diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Deleted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Inserted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Unchanged)
+            if (diffLine.Text != null && !diffLine.Text.Contains("\"id\""))
+            {
+                <tr>
+                    <td class="lineNumber">
+                        @Html.Raw("&nbsp;")
+                        @*@Html.Raw(diffLine.Position.HasValue ? diffLine.Position.ToString() : "&nbsp;")*@
+                    </td>
+                    <td class="line @diffLine.Type.ToString()Line">
+                        <span class="lineText">
+                            @*@Html.Partial("DiffLine", diffLine)*@
+                            @if (!string.IsNullOrEmpty(diffLine.Text))
                             {
-                                @Html.Raw(Html.Encode(diffLine.Text).Replace(" ", spaceValue).Replace("\t", tabValue))
-                            }
-                            else if (diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Modified)
-                            {
-                                foreach (var character in diffLine.SubPieces)
+                                string spaceValue = "\u00B7";
+                                string tabValue = "\u00B7\u00B7";
+                                if (diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Deleted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Inserted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Unchanged)
                                 {
-                                    if (character.Type == DiffPlex.DiffBuilder.Model.ChangeType.Imaginary) { continue; }
-
-                                    <span class="@character.Type.ToString()Character piece">@character.Text.Replace(" ", spaceValue.ToString())</span>
+                                    @Html.Raw(Html.Encode(diffLine.Text).Replace(" ", spaceValue).Replace("\t", tabValue))
                                 }
-                            }
+                                else if (diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Modified)
+                                {
+                                    foreach (var character in diffLine.SubPieces)
+                                    {
+                                        if (character.Type == DiffPlex.DiffBuilder.Model.ChangeType.Imaginary) { continue; }
 
-                        }
-                    </span>
-                </td>
-            </tr>
+                                        <span class="@character.Type.ToString()Character piece">@character.Text.Replace(" ", spaceValue.ToString())</span>
+                                    }
+                                }
+
+                            }
+                        </span>
+                    </td>
+                </tr>
+            }
+
         }
     </table>
 </div>

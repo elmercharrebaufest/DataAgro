@@ -97,7 +97,7 @@
                                 {
                         <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
                             <div class="row">
-                                <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" oninput="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
+                                <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
                                 <span hidden class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" style="margin-top:7px" ><i class="fa fa-times" data-reestablecerColumna="@i" data-reestablecerFila="@j" aria-hidden="true" onclick="Reestablecer(this)"></i></span>
                             </div>
                             <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">0</span>
