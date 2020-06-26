@@ -408,10 +408,10 @@ namespace Molinos.DataAgro.Business.Managers
                 EsFason = x is Contrato ? (x as Contrato).EsFason : null,
                 ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null
             },
-               x => x.OcultarEnTablero == false 
+               x => x.OcultarEnTablero == false
                &&
-               ((x is Contrato && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) <= fechaManana) || 
-               (!(x is Contrato) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy  && DbFunctions.TruncateTime(x.Fecha) <= fechaManana))
+               ((x is Contrato && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) <= fechaManana) ||
+               (!(x is Contrato) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana))
                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                && (centroId == 0 || x.DestinoId == centroId)
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
@@ -492,8 +492,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round(x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && 
-            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta 
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
+            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
             && x.TipoNegocioId == 2 &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
@@ -747,7 +747,7 @@ namespace Molinos.DataAgro.Business.Managers
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
             var posicionKilos = new List<PosicionKilos>();
             var contratos = negocios.Where(x =>
-                x.OcultarEnTablero == false 
+                x.OcultarEnTablero == false
                 //&& x.Fecha >= fechaHoy && x.Fecha <= fechaManana
                 && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
                 && x.MaterialId == materialId
@@ -1328,6 +1328,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
+                Id = x.Id,
                 Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
@@ -1480,7 +1481,7 @@ namespace Molinos.DataAgro.Business.Managers
                 EstablecimientoPropio = "",
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
-                MercsDeposito =  ""
+                MercsDeposito = ""
             },
              x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
 
