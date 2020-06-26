@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarAgenteTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 1, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
+            var agente = new AgenteCompra { Id = 1, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "11.2000", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<RangoPrecio>());
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))
@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarAgenteNuevoTestOk()
         {
             var fecha = new DateTime(2019, 10, 01);
-            var agente = new AgenteCompra { Id = 0, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "1", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
+            var agente = new AgenteCompra { Id = 0, Cantidad = 1, ComercialCreadorId = 1, ComercialId = 1, EstadoId = 1, MaterialId = 1, MonedaId = "1", OperadorId = 1, Fecha = fecha, Posicion = "12.2000", Precio = 1, TipoAgenteCompraId = 1, CampanaId = 1 };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<RangoPrecio>());
             repositorioMock.Setup(y => y.Obtener<AgenteCompra>(It.IsAny<int>()))

@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 TipoFasonId = 1,
                 CampanaId = 1,
-                Posicion = "01/2019",
+                Posicion = "01.2019",
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now
             };
@@ -102,7 +102,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 TipoFasonId = 1,
                 CampanaId = 1,
-                Posicion = "01/2019",
+                Posicion = "01.2019",
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
                 ComercialCreadorId = 1,
