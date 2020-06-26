@@ -69,7 +69,35 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Posicion == "" || oParam.Posicion == null)
             {
-                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacío");
+                oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
+            }
+            else
+            {
+                if (oParam.Posicion.Split('.').Length != 2)
+                {
+                    oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                }
+                else
+                {
+                    int i = 0;
+
+                    if (!int.TryParse(oParam.Posicion.Split('.')[1], out i) || !int.TryParse(oParam.Posicion.Split('.')[0], out i))
+                    {
+                        oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                    }
+                    else
+                    {
+                        if (int.Parse(oParam.Posicion.Split('.')[0]) > 12)
+                        {
+                            oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                        }
+                        if (oParam.Posicion.Split('.')[1].Length < 4)
+                        {
+                            oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                        }
+
+                    }
+                }
             }
             var rangosPrecio = repositorio.Listar<RangoPrecio>();
             if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))

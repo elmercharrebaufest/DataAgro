@@ -90,6 +90,80 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES5300 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cODIGOField;
+        
+        private decimal pORC_DESDEField;
+        
+        private decimal pORC_HASTAField;
+        
+        private decimal vALORField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CODIGO {
+            get {
+                return this.cODIGOField;
+            }
+            set {
+                this.cODIGOField = value;
+                this.RaisePropertyChanged("CODIGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public decimal PORC_DESDE {
+            get {
+                return this.pORC_DESDEField;
+            }
+            set {
+                this.pORC_DESDEField = value;
+                this.RaisePropertyChanged("PORC_DESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal PORC_HASTA {
+            get {
+                return this.pORC_HASTAField;
+            }
+            set {
+                this.pORC_HASTAField = value;
+                this.RaisePropertyChanged("PORC_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public decimal VALOR {
+            get {
+                return this.vALORField;
+            }
+            set {
+                this.vALORField = value;
+                this.RaisePropertyChanged("VALOR");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class ZMPES6230 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string cONTRATOField;
@@ -139,6 +213,8 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private string gRUPO_COMPRASField;
         
         private string cOND_PAGOField;
+        
+        private ZMPES5300[] cALIDADESField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -425,6 +501,19 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.cOND_PAGOField = value;
                 this.RaisePropertyChanged("COND_PAGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=24)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES5300[] CALIDADES {
+            get {
+                return this.cALIDADESField;
+            }
+            set {
+                this.cALIDADESField = value;
+                this.RaisePropertyChanged("CALIDADES");
             }
         }
         

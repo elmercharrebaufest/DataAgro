@@ -597,7 +597,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))               
                 )
             {
-                oErrorMessages.Error("Descuentos", "Ingrese el importe de redespacho.");
+                oErrorMessages.Error("Descuentos", " Ingrese el importe de redespacho en Descuentos y Bonificaciones.");
             }
             return oErrorMessages;
         }

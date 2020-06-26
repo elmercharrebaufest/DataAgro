@@ -67,6 +67,35 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Posicion", "El campo 'Posicion' no debe estar vacio");
             }
+            else
+            {
+                if (oParam.Posicion.Split('.').Length != 2)
+                {
+                    oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                }
+                else
+                {
+                    int i = 0;
+
+                    if (!int.TryParse(oParam.Posicion.Split('.')[1], out i) || !int.TryParse(oParam.Posicion.Split('.')[0], out i))
+                    {
+                        oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                    }
+                    else
+                    {
+                        if (int.Parse(oParam.Posicion.Split('.')[0]) > 12)
+                        {
+                            oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                        }
+                        if (oParam.Posicion.Split('.')[1].Length < 4)
+                        {
+                            oErrorMessages.Error("Posicion", "El campo 'Posicion' no tiene el formato correcto (MM.YYYY)");
+                        }
+
+                    }
+                }                
+            }
+
             if (oParam.FechaDesde.Year == 1)
             {
                 oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacio");
