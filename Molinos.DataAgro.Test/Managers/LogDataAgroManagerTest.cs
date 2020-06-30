@@ -36,8 +36,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.GuardarCambios()).Returns(1);
 
             listaDeLogs = new List<LogDataAgro> {
-                    new LogDataAgro { Id = 1, DatoModificado = "{'cambio':'cambio'}",NegocioId=1,AccionRealizada="Crear" },
-                    new LogDataAgro { Id = 2, DatoModificado = "{'cambio':'Otro'}" ,NegocioId=1, AccionRealizada = "Modificar"}
+                    new LogDataAgro { Id = 1, DatoModificado = "{'cambio':'cambio'}",ClaseId=1,Tipo="",AccionRealizada="Crear" },
+                    new LogDataAgro { Id = 2, DatoModificado = "{'cambio':'Otro'}" ,ClaseId=1,Tipo= "", AccionRealizada = "Modificar"}
                 };
         }
 
@@ -118,6 +118,34 @@ namespace Molinos.DataAgro.Test.Managers
         public void LogCambiosDataAgroRangoConfirmacionAutomaticaOk()
         {
             var respuesta = target.LogCambiosDataAgro(new RangoConfirmacionAutomaticaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+
+            Assert.AreEqual(respuesta, 1);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
+        }
+
+        [Test]
+        public void LogCambiosDataAgroPrecioMoaOk()
+        {
+            var respuesta = target.LogCambiosDataAgro(new PrecioMoaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+
+            Assert.AreEqual(respuesta, 1);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
+        }
+        [Test]
+        public void LogCambiosDataAgroHabilitacionFijacionOk()
+        {
+            var respuesta = target.LogCambiosDataAgro(new HabilitacionFijacionDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+
+            Assert.AreEqual(respuesta, 1);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
+        }
+        [Test]
+        public void LogCambiosDataAgroHabilitacionPizarraOk()
+        {
+            var respuesta = target.LogCambiosDataAgro(new HabilitacionPizarraDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());

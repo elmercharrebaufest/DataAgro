@@ -229,7 +229,10 @@ namespace Molinos.DataAgro.Business
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
-
+            if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados))
+            {
+                oContratoAcuerdo.FechaConfirmacion = DateTime.Now;
+            }
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
@@ -237,6 +240,7 @@ namespace Molinos.DataAgro.Business
                 repositorio.Agregar(oContratoAcuerdo);
                 if (ConfirmacionAutomatica(oContratoAcuerdo))
                 {
+                    oContratoAcuerdo.FechaConfirmacion = DateTime.Now;
                     oContratoAcuerdo.EstadoId = (int)EnumEstadoContrato.Confirmado;
                     logger.Debug("El contrato " + oContratoAcuerdo.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
 

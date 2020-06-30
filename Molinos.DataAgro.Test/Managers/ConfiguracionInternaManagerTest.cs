@@ -28,17 +28,18 @@ namespace Molinos.DataAgro.Test.Managers
         private ConfiguracionInternaManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
-        private Mock<IComercialManager> comercialManagerMock;
+        private Mock<ILogDataAgroManager> logDataAgroMock;
 
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
+            logDataAgroMock = new Mock<ILogDataAgroManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new ConfiguracionInternaManager(repositorioMock.Object, logger.Object);
+            target = new ConfiguracionInternaManager(repositorioMock.Object, logger.Object, logDataAgroMock.Object);
         }
         [Test]
         public void GrabarPrecioTestOk()
@@ -46,11 +47,11 @@ namespace Molinos.DataAgro.Test.Managers
             var config = new PrecioMoa
             {
                 Id = 0,
-                DesdeVigencia= new DateTime(2099,1,30),
+                DesdeVigencia = new DateTime(2099, 1, 30),
                 HastaVigencia = new DateTime(2099, 1, 30),
-                MaterialId=1,
-                MonedaId="ARP",
-                Precio=120
+                MaterialId = 1,
+                MonedaId = "ARP",
+                Precio = 120
             };
             var resultado = target.GrabarPrecio(config);
 
@@ -95,7 +96,7 @@ namespace Molinos.DataAgro.Test.Managers
         }
         [Test]
         public void TraerPreciosTestOk()
-        {            
+        {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioMoa, PrecioMoaDto>>>(), It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<PrecioMoaDto>() { new PrecioMoaDto { Id = 1 } });
             var resultado = target.TraerPrecios();
@@ -127,7 +128,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void EliminarPrecioTestOk()
         {
             repositorioMock.Setup(y => y.Obtener<PrecioMoa>(It.IsAny<int>()))
-                .Returns( new PrecioMoa { Id = 1 } );
+                .Returns(new PrecioMoa { Id = 1 });
             var resultado = target.EliminarPrecio(1);
 
             repositorioMock.Verify(x => x.Obtener<PrecioMoa>(It.IsAny<int>()), Times.Once);
@@ -162,7 +163,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsTrue(resultado.HayError);
             Assert.AreEqual(1, resultado.Errores.Count);
         }
-        
+
         [Test]
         public void TraerPrecioMoaCompraNetTestOk()
         {
@@ -213,6 +214,45 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Verify(x => x.Existe(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>()), Times.Once);
             Assert.IsTrue(resultado);
+        }
+        [Test]
+        public void TraerPrecioOk()
+        {
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<Expression<Func<PrecioMoa, PrecioMoaDto>>>()))
+                .Returns(new PrecioMoaDto { Id = 1 });
+
+            var resultado = target.TraerPrecio(1);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<Expression<Func<PrecioMoa, PrecioMoaDto>>>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
+        }
+        [Test]
+        public void TraerPizarraOk()
+        {
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>(), It.IsAny<Expression<Func<HabilitacionPizarra, HabilitacionPizarraDto>>>()))
+                .Returns(new HabilitacionPizarraDto { Id = 1 });
+
+            var resultado = target.TraerPizarra(1);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>(), It.IsAny<Expression<Func<HabilitacionPizarra, HabilitacionPizarraDto>>>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
+        }
+        [Test]
+        public void TraerFijacionOk()
+        {
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<HabilitacionFijacion, bool>>>(), It.IsAny<Expression<Func<HabilitacionFijacion, HabilitacionFijacionDto>>>()))
+                .Returns(new HabilitacionFijacionDto { Id = 1 });
+
+            var resultado = target.TraerFijacion(1);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<HabilitacionFijacion, bool>>>(), It.IsAny<Expression<Func<HabilitacionFijacion, HabilitacionFijacionDto>>>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
         }
     }
 }

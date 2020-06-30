@@ -47,7 +47,16 @@ namespace WebDataAgro.Controllers
                     new Sort {Field= "Fecha",Dir="desc" }
                     };
             }
-
+            if (request.Filter != null && request.Filter.Filters != null)
+            {
+                foreach (var item in request.Filter.Filters)
+                {
+                    if (item.Field == "Fecha" && item.Operator == "lte")
+                    {
+                        item.Value = Convert.ToDateTime(item.Value).AddDays(1);
+                    }
+                }
+            }
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = logDataAgroManager.ListarDatosLogDataAgro(request, equipo);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
@@ -129,7 +138,25 @@ namespace WebDataAgro.Controllers
                         Text = "RangoConfirmacionAutomatica",
                         Value = "RangoConfirmacionAutomatica",
                         Selected = false
-                    }
+                    },
+                 new SelectListItem
+                    {
+                        Text = "PrecioMoa",
+                        Value = "PrecioMoa",
+                        Selected = false
+                    },
+                 //new SelectListItem
+                 //   {
+                 //       Text = "HabilitacionFijacion",
+                 //       Value = "HabilitacionFijacion",
+                 //       Selected = false
+                 //   },
+                 new SelectListItem
+                    {
+                        Text = "HabilitacionPizarra",
+                        Value = "HabilitacionPizarra",
+                        Selected = false
+                    },
             }.OrderBy(x => x.Text);
             ViewBag.Clase = clasesListItems;
 

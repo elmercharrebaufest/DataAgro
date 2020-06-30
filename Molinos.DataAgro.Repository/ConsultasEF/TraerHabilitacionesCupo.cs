@@ -18,18 +18,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         }
 
         private static KendoGrid<HabilitacionCupoDto> Query(DbContext contexto, KendoGridMvcRequest request)
-        {
+        {          
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var query =
-                from cupo in contexto.Set<HabilitacionCupo>()                
+                from cupo in contexto.Set<HabilitacionCupo>()
                 select new HabilitacionCupoDto()
                 {
                     Id = cupo.Id,
                     FechaDesde = cupo.FechaDesde,
                     FechaHasta = cupo.FechaHasta,
                     ZonaCupoId = cupo.ZonaCupoId,
-                    Zona = cupo.ZonaCupo.Descripcion,
+                    Zona = string.IsNullOrEmpty(cupo.ZonaCupo.Descripcion) ? "TODAS" : cupo.ZonaCupo.Descripcion,
                     Material = cupo.Material.Descripcion
                     
                 };

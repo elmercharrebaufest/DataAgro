@@ -1496,6 +1496,10 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
+                var usuarioIdActive = PermisosHelper.ObtenerUsuario();
+                var equipos = mobComercial.ListarEquipo(usuarioIdActive);
+                var proveedorEnDto = TraerProveedor(oParam.ProveedorId.Value, usuarioIdActive, equipos.Equipo);
+                logDataAgroManager.LogCambiosDataAgro(proveedorEnDto, TipoAccionLogDataAgro.Modificar, oParam.ProveedorId.Value);
             }
             catch (Exception ex)
             {
@@ -1681,11 +1685,6 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 repositorio.GuardarCambios();
-                var usuarioIdActive = PermisosHelper.ObtenerUsuario();
-                var equipos = mobComercial.ListarEquipo(usuarioIdActive);
-                var proveedorEnDto = TraerProveedor(oProveedorSave.ProveedorId, usuarioIdActive, equipos.Equipo);
-                logDataAgroManager.LogCambiosDataAgro(proveedorEnDto, TipoAccionLogDataAgro.Modificar, oProveedorSave.ProveedorId);
-
             }
             catch (Exception ex)
             {
@@ -2838,6 +2837,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 resultado.ProveedorId = oParam.CorredorId;
                 repositorio.GuardarCambios();
+                var usuarioIdActive = PermisosHelper.ObtenerUsuario();
+                var equipos = mobComercial.ListarEquipo(usuarioIdActive);
+                var proveedorEnDto = TraerProveedor(corredor.ProveedorId.Value, usuarioIdActive, equipos.Equipo);
+                logDataAgroManager.LogCambiosDataAgro(proveedorEnDto, TipoAccionLogDataAgro.Modificar, corredor.ProveedorId.Value);
             }
             catch (Exception ex)
             {

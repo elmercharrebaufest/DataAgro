@@ -75,7 +75,7 @@ function InicializarCuposIndex() {
         
         columns: [
             //{ field: "Id", type: "string" },
-            { field: "Fecha", title: "Fecha de Modificacion", type: "date", /*width: 150,*/ format: "{0:dd/MM/yyyy HH:mm }" },
+            { field: "Fecha", title: "Fecha de Modificacion", type: "date", /*width: 150,*/ format: "{0:dd/MM/yyyy HH:mm:ss }" },
             { field: "Usuario", title: "Usuario", type: "string" },
             { field: "AccionRealizada", title: "Accion Realizada", type: "string" },
             { field: "Clase", type: "string" },

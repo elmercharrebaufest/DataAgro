@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -159,6 +160,8 @@ namespace Molinos.DataAgro.Business.Managers
         public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona)
         {
             var hoy = DateTime.Today;
+            var cantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaGeneracion) == hoy && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
+
             var limitePorZona = repositorio.Listar<LimiteCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
             {
                 Id = x.Id,
@@ -166,7 +169,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.ConfiguracionCupo.MaterialId,
                 CentroId = x.ConfiguracionCupo.CentroId,
                 LimiteCupo = x.ConfiguracionCupo.LimiteCupo
-            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona);
+            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona && (x.ConfiguracionCupo.LimiteCupo - cantidadCuposGenerados) >= 0);
 
             if (limitePorZona.Count() == 0)
             {
@@ -177,7 +180,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MaterialId = x.MaterialId,
                     CentroId = x.CentroId,
                     LimiteCupo = x.LimiteCupo
-                }, x => x.Fecha == hoy);
+                }, x => x.Fecha == hoy && (x.LimiteCupo - cantidadCuposGenerados) >= 0);
 
                 return limitePorCantidadCupo;
             }

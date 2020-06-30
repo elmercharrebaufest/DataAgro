@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Report
                             Fecha = item.Fecha,
                             AccionRealizada = item.AccionRealizada,
                             Clase = item.Clase,
-                            ClaseId = item.NegocioId ?? item.ProveedorId ?? item.CupoId ?? 0,
+                            ClaseId = item.ClaseId,
                             Campo = item2.Campo,
                             Actual = item2.Actual,
                             Anterior = item2.Anterior,

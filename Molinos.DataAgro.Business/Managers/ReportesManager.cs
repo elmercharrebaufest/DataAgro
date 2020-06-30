@@ -406,7 +406,9 @@ namespace Molinos.DataAgro.Business.Managers
                 StandardCalidadId = x.StandardDeCalidadId,
                 DestinoId = x.DestinoId,
                 EsFason = x is Contrato ? (x as Contrato).EsFason : null,
-                ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null
+                ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null,
+                TrigoEspecial = x.TrigoEspecial,
+                Posicion = x.Posicion,
             },
                x => x.OcultarEnTablero == false
                &&

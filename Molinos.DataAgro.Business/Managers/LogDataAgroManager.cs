@@ -37,21 +37,21 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, tipoDeContrato);
         }
-        public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int? idProveedor)
+        public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
             return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, typeof(Proveedor));
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return (cambios.Id == 0) ? LogGuardarCambios(cambios, tipoDeAccion, null) : LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
         }
 
-        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int? id, Type claseDeObjeto = null)
+        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, Type claseDeObjeto = null)
         {
             var usuarioComercial = PermisosHelper.ObtenerUsuario();
             if (usuarioComercial != null)
             {
-                var comercial = repositorio.Obtener<Comercial,string>(x => x.IdActiveDirectory == usuarioComercial,x=>x.Nombres + " " + x.Apellido);
+                var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
                 if (comercial != null)
                 {
                     usuarioComercial = comercial;
@@ -78,11 +78,9 @@ namespace Molinos.DataAgro.Business.Managers
                     Fecha = DateTime.Now,
                     DatoModificado = jsonObjeto,
                     Clase = (tipoDelObjeto.IsSubclassOf(typeof(Negocio))) ? $"Negocio - { nombreDelTipodeObjeto }" : nombreDelTipodeObjeto,
+                    Tipo = tipoDelObjeto.Name,
                     AccionRealizada = tipoDeAccion.ToString(),
-                    CupoId = (nombreDelTipodeObjeto.Contains("Cupo")) ? id : null,
-                    ProveedorId = (nombreDelTipodeObjeto.Contains("Proveedor")) ? id : null,
-                    NegocioId = (tipoDelObjeto.IsSubclassOf(typeof(Negocio))) ? id : null,
-                    RangoConfirmacionAutomaticaId = (nombreDelTipodeObjeto.Contains("RangoConfirmacionAutomatica")) ? id : null,
+                    ClaseId = id,
                 };
                 repositorio.Agregar<LogDataAgro>(logAgregado);
 
@@ -111,10 +109,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Clase = log.Clase,
                     AccionRealizada = log.AccionRealizada,
                     DatoModificado = log.DatoModificado,
-                    CupoId = log.CupoId,
-                    NegocioId = log.NegocioId,
-                    ProveedorId = log.ProveedorId,
-                    RangoConfirmacionAutomaticaId = log.RangoConfirmacionAutomaticaId,
+                    ClaseId = log.ClaseId,
                 }).FirstOrDefault();
 
             if (logActual.AccionRealizada.Contains("Crear"))
@@ -123,12 +118,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                logAnterior = repositorio.Listar<LogDataAgro>(x => x.Id < logActual.Id &&
-                        (((logActual.CupoId != null && x.CupoId != null) ? (x.CupoId == logActual.CupoId) : false) ||
-                        ((logActual.NegocioId != null && x.NegocioId != null) ? (x.NegocioId == logActual.NegocioId) : false) ||
-                        ((logActual.ProveedorId != null && x.ProveedorId != null) ? (x.ProveedorId == logActual.ProveedorId) : false) ||
-                        ((logActual.RangoConfirmacionAutomaticaId != null && x.RangoConfirmacionAutomaticaId != null) ? (x.RangoConfirmacionAutomaticaId == logActual.RangoConfirmacionAutomaticaId) : false))
-                        )
+                logAnterior = repositorio.Listar<LogDataAgro>(x => x.Id < logActual.Id && x.ClaseId == logActual.ClaseId && logActual.Clase == x.Clase)
                        .OrderByDescending(x => x.Id)
                        .Select(x => new LogDataAgroDto
                        {
@@ -138,19 +128,18 @@ namespace Molinos.DataAgro.Business.Managers
                            Clase = x.Clase,
                            AccionRealizada = x.AccionRealizada,
                            DatoModificado = x.DatoModificado,
-                           CupoId = x.CupoId,
-                           NegocioId = x.NegocioId,
-                           ProveedorId = x.ProveedorId,
+                           ClaseId = x.ClaseId,
+
                        }).FirstOrDefault() ?? logActual;
             }
 
 
-            if (logAnterior.NegocioId != logActual.NegocioId ||
-                logAnterior.CupoId != logActual.CupoId ||
-                logAnterior.ProveedorId != logActual.ProveedorId)
-            {
-                throw new Exception("No se pueden comparar diferentes Tipos de Registros.");
-            }
+            //if (logAnterior.NegocioId != logActual.NegocioId ||
+            //    logAnterior.CupoId != logActual.CupoId ||
+            //    logAnterior.ProveedorId != logActual.ProveedorId)
+            //{
+            //    throw new Exception("No se pueden comparar diferentes Tipos de Registros.");
+            //}
 
             var j1 = JToken.Parse(logActual.DatoModificado);
             var j2 = JToken.Parse(logAnterior.DatoModificado);
@@ -193,10 +182,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Clase = x.Clase,
                     AccionRealizada = x.AccionRealizada,
                     DatoModificado = x.DatoModificado,
-                    CupoId = x.CupoId,
-                    NegocioId = x.NegocioId,
-                    ProveedorId = x.ProveedorId,
-                    RangoConfirmacionAutomaticaId = x.RangoConfirmacionAutomaticaId,
+                    ClaseId = x.ClaseId,
                 }).FirstOrDefault();
 
             if (anterior)
@@ -207,13 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    log = repositorio.Listar<LogDataAgro>(x => x.Id < log.Id &&
-                        (
-                        ((log.CupoId != null && x.CupoId != null) ? (x.CupoId == log.CupoId) : false) ||
-                        ((log.NegocioId != null && x.NegocioId != null) ? (x.NegocioId == log.NegocioId) : false) ||
-                        ((log.ProveedorId != null && x.ProveedorId != null) ? (x.ProveedorId == log.ProveedorId) : false) ||
-                        ((log.RangoConfirmacionAutomaticaId != null && x.RangoConfirmacionAutomaticaId != null) ? (x.RangoConfirmacionAutomaticaId == log.RangoConfirmacionAutomaticaId) : false)
-                        ))
+                    log = repositorio.Listar<LogDataAgro>(x => x.Id < log.Id && x.ClaseId == log.ClaseId && x.Clase == log.Clase)
                        .OrderByDescending(x => x.Id)
                        .Select(x => new LogDataAgroDto
                        {
@@ -223,10 +203,7 @@ namespace Molinos.DataAgro.Business.Managers
                            Clase = x.Clase,
                            AccionRealizada = x.AccionRealizada,
                            DatoModificado = x.DatoModificado,
-                           CupoId = x.CupoId,
-                           NegocioId = x.NegocioId,
-                           ProveedorId = x.ProveedorId,
-                           RangoConfirmacionAutomaticaId = x.RangoConfirmacionAutomaticaId
+                           ClaseId = x.ClaseId
                        }).FirstOrDefault() ?? new LogDataAgroDto();
                 }
             }
@@ -237,8 +214,21 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return (cambios.Id == 0) ? LogGuardarCambios(cambios, tipoDeAccion, null) : LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
         }
 
+        public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+        }
+        public int LogCambiosDataAgro(HabilitacionFijacionDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+        }
+
+        public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+        }
     }
 }

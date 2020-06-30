@@ -165,6 +165,10 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
+                if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados))
+                {
+                    oFason.FechaConfirmacion = DateTime.Now;
+                }
                 oFason.Fecha = DateTime.Now;
                 oFason.EstadoId = estado;
                 repositorio.Agregar(oFason);

@@ -164,6 +164,10 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var estado = (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente)) ? 2 : 1;
+                if(PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
+                {
+                    oAgente.FechaConfirmacion = DateTime.Now;
+                }
                 oAgente.Fecha = DateTime.Now;
                 oAgente.EstadoId = estado;
                 repositorio.Agregar(oAgente);

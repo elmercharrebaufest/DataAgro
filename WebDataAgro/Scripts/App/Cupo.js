@@ -17,6 +17,7 @@ var anularNorte;
 var anularRosario;
 var anularBsAs;
 var externo;
+var materialDisponible;
 
 
 $(document).ready(function () {
@@ -36,6 +37,7 @@ $(document).ready(function () {
     anularRosario = ConvertirStringABool(anularRosario);
     anularBsAs = ConvertirStringABool(anularBsAs);
     externo = ConvertirStringABool(externo);
+    materialDisponible = ConvertirStringABool(materialDisponible);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     $("#demo").on("hide.bs.collapse", function () {
@@ -870,10 +872,10 @@ function addOrRemoveFilter(grid, field, operator, value) {
 function HabilitarAltaCupoExterno (){
     $("#crearCupo").hide()
     var habilitaciones = MSExecuteOnServer('/Cupo/TraerTodasHabilitacionesActivas');
-
-    if (habilitaciones.length > 0) {
+    if (materialDisponible) {
         $("#crearCupo").show();
 
+    } 
         var habilitacionesPorMaterial = MSExecuteOnServer('/Cupo/TraerTodoMaterialRetirado');
 
         var table = '<tr>';
@@ -887,7 +889,8 @@ function HabilitarAltaCupoExterno (){
             table += '</td>';
         }
         $("#tabla-cupo").html(table);
-    }
+
+
 }
 
 function ModalRechazarCupoConMotivo() {

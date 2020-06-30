@@ -1051,7 +1051,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Habilitar Cupos.
+        ///   Looks up a localized string similar to Habilitar Cupos Tercero.
         /// </summary>
         public static string Habilitacion_De_Cupos {
             get {

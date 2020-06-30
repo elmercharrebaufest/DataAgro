@@ -1,5 +1,6 @@
 ﻿var _DefaultDateTemplate = "{0:dd/MM/yyyy hh:mm:ss tt}";
 $(document).ready(function () {
+    kendo.culture("es-AR");
     $('#menuproveedor').hide();
     CargarGrillaConfig();
 });
@@ -52,17 +53,36 @@ function CargarGrillaConfig() {
         toolbar: kendo.template($("#templateToolbar").html()),
         //toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Contratos.xlsx",
+            fileName: "Reporte Rango Confirmación Automática.xlsx",
             allPages: true,
+        },
+
+        excelExport: function (e) {
+            var sheet = e.workbook.sheets[0];
+            for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
+                var row = sheet.rows[rowIndex];
+                for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
+                    row.cells[9].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[3].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[4].format = "yy/MM/dd hh:mm:ss";
+                }
+            }
         },
         dataSource: ds,
         sortable: true,
         columns: [
-            { selectable: true },
-            { field: "PrecioMinimo", title: "Precio Mínimo", type: "number" },
-            { field: "PrecioMaximo", title: "Precio Máximo", type: "number" },
             {
-                field: "Material", title: "Cultivo", filterable: {
+                field: "PrecioMinimo", title: "Precio Mínimo", type: "number", template: function (dataItem) {
+                    return kendo.toString(dataItem.PrecioMinimo, "##,#.##").replace(/,/g, ".");
+                }
+            },
+            {
+                field: "PrecioMaximo", title: "Precio Máximo", type: "number", template: function (dataItem) {
+                    return kendo.toString(dataItem.PrecioMaximo, "##,#.##").replace(/,/g, ".");
+                }
+            },
+            {
+                field: "Material", title: "Material", filterable: {
                     multi: true, dataSource: [{
                         Material: "Maiz"
                     }, {
@@ -88,19 +108,23 @@ function CargarGrillaConfig() {
             {
                 field: "TipoNegocio", type: "string", filterable: {
                     multi: true, dataSource: [{
-                        TipoNegocio: "FIJACION"
+                        TipoNegocio: "FIJACIÓN"
                     }, {
                         TipoNegocio: "A PRECIO"
                     }]
-                }, title: "Tipo", width: 70, attributes: {
+                }, title: "Tipo Negocio", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
             },
             { field: "Moneda", type: "string" },
-            { field: "Cantidad", type: "number" },
+            {
+                field: "Cantidad", type: "number", template: function (dataItem) {
+                    return kendo.toString(dataItem.Cantidad, "##,#.##").replace(/,/g, ".");
+                }
+            },
             { field: "UsuarioCreador", type: "string", title: "Usuario Creador" },
             {
-                field: "FechaCreacion", type: "date", title: "Fecha Creación", format: _DefaultDateTemplate, width: 80,
+                field: "FechaCreacion", type: "date", title: "Fecha Creación", format: _DefaultDateTemplate,
 
                 template: function (dataItem) {
                     if (dataItem.FechaCreacion != null) {

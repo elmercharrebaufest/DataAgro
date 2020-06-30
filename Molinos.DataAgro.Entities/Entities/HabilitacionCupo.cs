@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int ZonaCupoId { get; set; }
+        public int? ZonaCupoId { get; set; }
 
         public int MaterialId {get; set;}
 

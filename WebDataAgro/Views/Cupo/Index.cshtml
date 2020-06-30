@@ -24,6 +24,7 @@
     var anularRosario = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresRosario);
     var anularBsAs = PermisosHelper.Is(PermisosDataAgro.AnularCorredoresBsAs);
     var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
+    var materialDisponible = ViewBag.mostrarMaterial;
 
 }
 
@@ -44,6 +45,7 @@
     anularRosario = '@anularRosario';
     anularBsAs = '@anularBsAs';
     externo = '@externo';
+    materialDisponible =  '@materialDisponible';
 </script>
 @section Styles {
     <link href="~/Content/cupo.css" rel="stylesheet" />
@@ -120,7 +122,7 @@
     <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
              <div class="col-md-8"></div>
             <div class="col-xs-12 col-md-2">
-                @Html.TextBox("CupoSap", "", new { placeholder = "Cupo SAP", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
+                @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
             </div>
             <div class="col-xs-12 col-md-2">
                 <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">

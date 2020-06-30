@@ -8,8 +8,7 @@ namespace WebDataAgro.Models
     public class HabilitacionCupoModel
     {
         public int Id { get; set; }
-        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CentroRequerido")]
-        public int ZonaCupoId { get; set; }
+        public int? ZonaCupoId { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_MaterialRequerido")]
         public int MaterialId { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]

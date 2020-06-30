@@ -86,7 +86,10 @@ namespace Molinos.DataAgro.Business
                 DesdeMes = x.DesdeMes,
                 HastaMes = x.HastaMes,
                 FechaHasta = x.FechaHasta,
-                TipoNegocioId = x.TipoNegocioId
+                TipoNegocioId = x.TipoNegocioId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                UsuarioCreador = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                FechaCreacion = x.FechaCreacion
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 

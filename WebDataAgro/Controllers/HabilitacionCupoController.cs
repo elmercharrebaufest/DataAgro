@@ -59,7 +59,7 @@ namespace WebDataAgro.Controllers
                 Id = cupo.Id,
                 FechaDesde = cupo.FechaDesde,
                 FechaHasta = cupo.FechaHasta,
-                ZonaCupoId = cupo.ZonaCupoId,
+                ZonaCupoId = cupo.ZonaCupoId ?? null,
                 MaterialId = cupo.MaterialId
                 
             });

@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -1939,7 +1939,7 @@
     </None>
     <Content Include="Services\AuthService.svc" />
     <Content Include="Services\DataAgroServices.svc" />
-    <Content Include="Views\Cupo\CrearCupoExterno.cshtml" />
+    <Content Include="Views\Cupo\CrearCupoTercero.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

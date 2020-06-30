@@ -21,6 +21,8 @@ namespace Molinos.DataAgro.Interfaces
         List<int> TraerTodoMaterialHabilitado(int zona);
 
         List<MaterialHabilitadoDto> TraerTodoMaterialRetirado(int zona);
+
+        bool HayMaterialDisponibleExterno(int zona);
     }
 }
 

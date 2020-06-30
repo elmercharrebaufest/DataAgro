@@ -17,11 +17,13 @@ namespace Molinos.DataAgro.Business.Managers
         private ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IConfiguracionCupoManager configuracionManager;
-        public HabilitacionCupoManager(ILogger logger, IRepositorio repositorio, IConfiguracionCupoManager configuracionManager)
+        private readonly IMaterialManager materialManager;
+        public HabilitacionCupoManager(ILogger logger, IRepositorio repositorio, IConfiguracionCupoManager configuracionManager, IMaterialManager materialManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.configuracionManager = configuracionManager;
+            this.materialManager = materialManager;
     }
 
         public Resultado GrabarHabilitacionCupo(HabilitacionCupo cupo)
@@ -110,33 +112,41 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHasta = x.FechaHasta,
                 ZonaCupoId = x.ZonaCupoId,
                 MaterialId = x.MaterialId
-            }, x => x.ZonaCupoId == zona && x.FechaDesde <= hoy && x.FechaHasta >= hoy);
+            }, x => x.ZonaCupoId == zona || x.ZonaCupoId == null && x.FechaDesde <= hoy && x.FechaHasta >= hoy);
         }
         public List<MaterialHabilitadoDto> TraerTodoMaterialRetirado(int zona)
         {
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
-            var tieneMaterial = TraerTodoMaterialHabilitado(zona);
+            var materialHabilitado = TraerTodoMaterialHabilitado(zona);
             var habilitacion = new List<MaterialHabilitadoDto>();
-            var materialRetirado = configuracionManager.TraerTodaConfiguracionCupoPorDia(zona);
+            var materialDisponible = configuracionManager.TraerTodaConfiguracionCupoPorDia(zona);
             foreach (var item in materiales)
             {
-                if (tieneMaterial.Any(x=>x == item.MaterialId) && materialRetirado.Any(x => x.MaterialId == item.MaterialId))
+                if (materialHabilitado.Any(x=>x == item.MaterialId) && materialDisponible.Any(x => x.MaterialId == item.MaterialId))
                 {
-                    var materialHabilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "DISPONIBLE" };
-                    habilitacion.Add(materialHabilitado);
+                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "DISPONIBLE" };
+                    habilitacion.Add(habilitado);
                 }
-                else if (!tieneMaterial.Any(x => x == item.MaterialId) && !materialRetirado.Any(x => x.MaterialId == item.MaterialId))
+                else if (!materialHabilitado.Any(x => x == item.MaterialId) && materialDisponible.Any(x => x.MaterialId == item.MaterialId))
                 {
-                    var materialHabilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "NO HABILITADO" };
-                    habilitacion.Add(materialHabilitado);
+                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "NO HABILITADO" };
+                    habilitacion.Add(habilitado);
                 }
-                else if (!materialRetirado.Any(x => x.MaterialId == item.MaterialId))
+                else if (!materialDisponible.Any(x => x.MaterialId == item.MaterialId))
                 {
-                    var materialHabilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "RETIRADO" };
-                    habilitacion.Add(materialHabilitado);
-                }     
+                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "RETIRADO" };
+                    habilitacion.Add(habilitado);
+                }   
             }
             return habilitacion;
+        }
+        public bool HayMaterialDisponibleExterno(int zona)
+        {
+            var material = materialManager.TraerTodoMaterial();
+            var materialExterno = TraerTodoMaterialRetirado(zona);
+            material.Material = material.Material.Where(x => materialExterno.Where(y => y.Descripcion == "Disponible".ToUpper()).Any(y => y.Id == x.MaterialId)).ToList();
+            return  material.Material.Count >= 1 ? true : false;
+           
         }
         public List<int> TraerTodoMaterialHabilitado(int zona)
         {

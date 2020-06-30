@@ -1,6 +1,6 @@
 ﻿@model WebDataAgro.Models.HabilitacionCupoModel
 @{
-    ViewBag.Title = "Configuración Cupos";
+    ViewBag.Title = "Habilitacion Cupos Externos";
 }
 
 @section Styles {
@@ -18,7 +18,7 @@
             display: none !important;
         }
     </style>
-    <h3>Habilitación de Cupos</h3>
+    <h3>Habilitación de Cupos Tercero</h3>
     <br />
     @if (!Html.ViewData.ModelState.IsValid)
     {
@@ -51,7 +51,7 @@
                         <span>Zona</span>
                     </div>
                     <div class="col-sm-4">
-                        @Html.DropDownListFor(x => x.ZonaCupoId, new SelectList(ViewBag.Zona, "Value", "Text"), new { @class = "form-control" })
+                        @Html.DropDownListFor(x => x.ZonaCupoId, new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione Zona", new { @class = "form-control" })
                     </div>
                     <div class="col-xs-2">
                         <span>Material</span>

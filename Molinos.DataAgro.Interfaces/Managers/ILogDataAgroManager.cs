@@ -13,9 +13,11 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult ListarDatosLogDataAgro(DataSourceRequest request, List<int> equipo);
         DatosModificadosLogDataAgroDto TraerDatosModificadosPorId(int idLogDataAgro);
         int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato);
-        int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int? idProveedor);
+        int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor);
         LogDataAgroDto Obtener(int idLogDataAgro, bool anterior = false);
         int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion);
-
+        int LogCambiosDataAgro(HabilitacionFijacionDto habilitacionFijacionDto, TipoAccionLogDataAgro tipoDeAccion);
+        int LogCambiosDataAgro(HabilitacionPizarraDto habilitacionPizarraDto, TipoAccionLogDataAgro tipoDeAccion);
+        int LogCambiosDataAgro(PrecioMoaDto precioMoaDto, TipoAccionLogDataAgro tipoDeAccion);
     }
 }

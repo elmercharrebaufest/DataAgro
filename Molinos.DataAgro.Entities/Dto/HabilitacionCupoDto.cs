@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class HabilitacionCupoDto
     {
         public int Id { get; set; }
-        public int ZonaCupoId { get; set; }
+        public int? ZonaCupoId { get; set; }
         public int MaterialId { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[HabilitacionCupo]
 (
 	[Id]					INT NOT NULL IDENTITY (1, 1),     
-	[ZonaCupoId]			INT NOT NULL,
+	[ZonaCupoId]			INT NULL,
     [MaterialId]			INT NOT NULL,
     [FechaHasta]		DATETIME NOT NULL, 
     [FechaDesde]		DATETIME NOT NULL, 

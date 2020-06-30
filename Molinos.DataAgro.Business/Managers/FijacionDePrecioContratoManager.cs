@@ -302,6 +302,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oFijacionDePrecio.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oFijacionDePrecioSave))
             {
+                oFijacionDePrecioSave.FechaConfirmacion = DateTime.Now;
                 oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
                 logger.Debug("El contrato " + oFijacionDePrecioSave.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
             }

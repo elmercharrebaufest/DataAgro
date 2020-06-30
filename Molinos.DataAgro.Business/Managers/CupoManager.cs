@@ -355,6 +355,33 @@ namespace Molinos.DataAgro.Business.Managers
                 CupoSap = x.CupoSap,
                 EstadoCupo = x.EstadoCupo.Descripcion,
                 EstadoCupoId = x.EstadoCupoId,
+                CartaPorte = x.CartaPorte,
+                Chofer = x.Chofer,
+                CodLocalidadOrigen = x.CodLocalidadOrigen,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                CorredorComprador = x.CorredorComprador,
+                CorredorVendedor = x.CorredorVendedor,
+                Cosecha = x.Cosecha,
+                CTG = x.CTG,
+                CTGFechaDesde = x.CTGFechaDesde,
+                CTGFechaHasta = x.CTGFechaHasta,
+                CuitOrigen = x.CuitOrigen,
+                CuitOrigenAfip = x.CuitOrigenAfip,
+                CupoStop = x.CupoStop == null ? "" : x.CupoSap.ToString(),
+                EstadoPlanta = x.EstadoPlanta,
+                FechaGeneracion = x.FechaGeneracion,
+                FechaRegistro = x.FechaGeneracion,
+                IntermediarioFlete = x.IntermediarioFlete,
+                Km = x.Km,
+                MercadoATermino = x.MercadoATermino,
+                MotivoRechazo = x.MotivoRechazo,
+                NroEstablecimientoOrigen = x.NroEstablecimientoOrigen,
+                Peso = x.Peso,
+                RemitenteComercial = x.RemitenteComercial,
+                Transportista = x.Transportista,
+                UsuarioCreador = x.UsuarioCreador,
+                ZonaCupoSap = x.ZonaCupo.CodigoSap,
+                Acopio = x.Centro.Acopio,
             });
         }
         public Resultado EliminarVarios(List<int> cupos, string comercial)
@@ -515,7 +542,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             var destino = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? " SAN LORENZO - SANTA FE - BENIELLI 398" : cupo.Centro.Descripcion;
-            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " +destino.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
@@ -1557,7 +1584,7 @@ namespace Molinos.DataAgro.Business.Managers
                 for (var i = 0; i <= formula.CantDias; i++)
                 {
                     var fecha = fechasComprendidas[i];
-                    var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x=> DbFunctions.TruncateTime(x.FechaGeneracion) == fecha && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
+                    var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaGeneracion) == fecha && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
                     var cupo = new DiaCupo()
                     {
                         Fecha = fecha,
@@ -1569,9 +1596,9 @@ namespace Molinos.DataAgro.Business.Managers
                         CantidadSugerenciaAceptadaDia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true)
                     };
                     //cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadSugerenciaPendiente + cupo.CantidadCuposDevueltos - cupo.CantidadSolicitudesAceptadas);
-                    cupo.CantidadSugerenciaAceptadaDia = cupo.CantidadSugerenciaAceptadaDia >= cupo.CantidadCuposDevueltos ? 
+                    cupo.CantidadSugerenciaAceptadaDia = cupo.CantidadSugerenciaAceptadaDia >= cupo.CantidadCuposDevueltos ?
                         cupo.CantidadSugerenciaAceptadaDia - cupo.CantidadCuposDevueltos : 0;
-                    cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - CantidadCuposGenerados - cupo.CantidadSugerenciaPendiente );
+                    cupo.CantidadCuposLibres = (cupo.CantidadDisponibilidadDia - CantidadCuposGenerados - cupo.CantidadSugerenciaPendiente);
 
                     lista.Add(cupo);
                 }

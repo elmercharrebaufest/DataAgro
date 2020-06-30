@@ -18,7 +18,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class TraerTodoRago : IConsultaEscalar<DataSourceResult>
     {
         private readonly DataSourceRequest request;
-        private readonly List<int> equipo;
 
         public TraerTodoRago(DataSourceRequest request)
         {

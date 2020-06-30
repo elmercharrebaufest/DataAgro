@@ -61,18 +61,18 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Provincia { get; set; }
         public string Localidad { get; set; }
         public string Estado_Contrato { get; set; }
-        public int? Cantidad_F { get; set; }
-        public decimal? Precio_F { get; set; }
-        public string Proveedor_F { get; set; }
-        public string Fecha_F { get; set; }
-        public string Material_F { get; set; }
-        public string MonedaId_F { get; set; }
-        public string Moneda_F { get; set; }
-        public int? Ampliaciones_F { get; set; }
+        //public int? Cantidad_F { get; set; }
+        //public decimal? Precio_F { get; set; }
+        //public string Proveedor_F { get; set; }
+        //public string Fecha_F { get; set; }
+        //public string Material_F { get; set; }
+        //public string MonedaId_F { get; set; }
+        //public string Moneda_F { get; set; }
+        //public int? Ampliaciones_F { get; set; }
         public DateTime Fecha_Order { get; set; }
         public int Estado_Order { get; set; }
         public string Observacion { get; set; }
-        public string Observacion_F { get; set; }
+        //public string Observacion_F { get; set; }
 
         public int? FijacionDePrecioContratoId { get; set; }
         public bool? Sustentable { get; set; }

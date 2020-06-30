@@ -54,16 +54,17 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
+            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
             return View();
         }
 
         [Autorizacion(PermisosDataAgro.AltaCupos, PermisosDataAgro.AltaCupo_Externo)]
         public ActionResult CrearCupo(int? id, string siguientes)
         {
-            CargarViewBag();
+            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());            CargarViewBag();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
-                return RedirectToAction("CrearCupoExterno");
+                return RedirectToAction("CrearCupoTercero");
             }
             if (id == null)
             {
@@ -99,7 +100,7 @@ namespace WebDataAgro.Controllers
         }
 
         [Autorizacion(PermisosDataAgro.AltaCupo_Externo)]
-        public ActionResult CrearCupoExterno(int? id, string siguientes)
+        public ActionResult CrearCupoTercero(int? id, string siguientes)
         {
             CargarViewBag();
             if (id == null)
@@ -184,7 +185,7 @@ namespace WebDataAgro.Controllers
                     if(ViewData.ModelState.IsValid){
                        return  RedirectToAction("Index");
                     }
-                        return View("CrearCupoExterno", cupo);
+                        return View("CrearCupoTercero", cupo);
                                        
                 }
                 return View(cupo);
@@ -194,7 +195,7 @@ namespace WebDataAgro.Controllers
                 var id = siguientes[0];
                 siguientes.RemoveAt(0);
                 if(PermisosHelper.Is(PermisosDataAgro.IngresoExterno)){
-                    return RedirectToAction("CrearCupoExterno", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
+                    return RedirectToAction("CrearCupoTercero", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
                 }
                 return RedirectToAction("CrearCupo", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
             }
@@ -223,8 +224,9 @@ namespace WebDataAgro.Controllers
             var material = materialManager.TraerTodoMaterial();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
-                var materialExterno = habilitacionManager.TraerTodoMaterialHabilitado(comercialManager.TraerZonaDelComercialAsociado());
-                material.Material = material.Material.Where(x => materialExterno.Contains(x.MaterialId)).ToList();
+                var materialExterno = habilitacionManager.TraerTodoMaterialRetirado(comercialManager.TraerZonaDelComercialAsociado());
+                material.Material = material.Material.Where(x => materialExterno.Where(y=>y.Descripcion == "Disponible".ToUpper()).Any(y=>y.Id == x.MaterialId)).ToList();
+                 
             }
 
             var listaMaterial = new List<SelectListItem>();
