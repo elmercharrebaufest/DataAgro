@@ -63,8 +63,8 @@ function CargarGrillaConfig() {
                 var row = sheet.rows[rowIndex];
                 for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
                     row.cells[9].format = "yy/MM/dd hh:mm:ss";
-                    row.cells[3].format = "yy/MM/dd hh:mm:ss";
                     row.cells[4].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[5].format = "yy/MM/dd hh:mm:ss";
                 }
             }
         },
@@ -81,6 +81,7 @@ function CargarGrillaConfig() {
                     return kendo.toString(dataItem.PrecioMaximo, "##,#.##").replace(/,/g, ".");
                 }
             },
+            { field: "Moneda", type: "string" },
             {
                 field: "Material", title: "Material", filterable: {
                     multi: true, dataSource: [{
@@ -115,8 +116,7 @@ function CargarGrillaConfig() {
                 }, title: "Tipo Negocio", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
-            },
-            { field: "Moneda", type: "string" },
+            },           
             {
                 field: "Cantidad", type: "number", template: function (dataItem) {
                     return kendo.toString(dataItem.Cantidad, "##,#.##").replace(/,/g, ".");

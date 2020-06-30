@@ -1445,7 +1445,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Errores.AddRange(result2.Errores);
                 for (int i = 0; i < result2.ListaCupos.Count; i++)
                 {
-                    result2.ListaCupos[i] = result2.ListaCupos[i] + " <b style='color:blue;'>FP</b>";
+                    result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
                 }
                 resultado.ListaCupos.AddRange(result2.ListaCupos);
             }

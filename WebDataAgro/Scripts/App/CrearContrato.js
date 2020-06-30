@@ -1358,10 +1358,18 @@ function InicializarElementos() {
             var mes = hoy.getMonth();
             var dia = hoy.getDate();
             hoy = new Date(anio, mes, dia);
+            const diffTime = Math.abs(hoy - this.value());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
             if (this.value() < hoy) {
                 $("#fechaOperacionMotivoDiv").show();
-                $("#noInformaSioId").prop("checked", true);
-                $("#noInformaSioId").attr("disabled", true);
+                if (diffDays > 1) {
+                    $("#noInformaSioId").prop("checked", true);
+                    $("#noInformaSioId").attr("disabled", true);
+                } else {
+                    $("#noInformaSioId").prop("checked", false);
+                    $("#noInformaSioId").attr("disabled", false);
+                }
+
             } else {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
@@ -2892,9 +2900,20 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
         $("#fechaOperacionMotivoDiv").show();
-        if (Id > 0) {
-            $("#noInformaSioId").attr("disabled", true);
+        var hoy = new Date();
+        var anio = hoy.getFullYear();
+        var mes = hoy.getMonth();
+        var dia = hoy.getDate();
+        hoy = new Date(anio, mes, dia);
+        var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
+        const diffTime = Math.abs(hoy - fechaop);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (fechaop < hoy) {
+            if (Id > 0 && diffDays > 1) {
+                $("#noInformaSioId").attr("disabled", true);
+            }
         }
+        
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();

@@ -226,7 +226,7 @@ function CreateGridInformeCompraNet() {
             
             { field: "UsuarioConfirmador", type: "string", title: "Usuario Confirmador" },
             {
-                field: "FechaConfirmacion", type: "date", title: "Fecha Confirmación", format: _DefaultDateTemplate, width: 80,
+                field: "FechaConfirmacion", type: "date", title: "Fecha Confirmación", format: _DefaultDateTemplate,
 
                 template: function (dataItem) {
                     if (dataItem.FechaConfirmacion != null) {
@@ -236,7 +236,8 @@ function CreateGridInformeCompraNet() {
             },
         ],
         excelExport: function (e) {
-            var sheet = e.workbook.sheets[0];
+            var sheet = e.workbook.sheets[0];            
+            
             var templateHora = kendo.template(this.columns[6].template);
             var templatePizarra = kendo.template(this.columns[14].template);
             var templateSustentable = kendo.template(this.columns[27].columns[0].template);
@@ -284,7 +285,7 @@ function CreateGridInformeCompraNet() {
                 row.cells[33].value = templatePesificado(dataItem);
                 row.cells[35].value = templateSIO(dataItem);
                 row.cells[36].value = templateTrigoEsp(dataItem);
-
+                row.cells[45].format = "yy/MM/dd hh:mm:ss";
             }
         },
         pageable: {

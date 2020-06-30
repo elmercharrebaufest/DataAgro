@@ -191,7 +191,9 @@ function cuposCreados(lista) {
 
 function copiarGenerados() {
     var listaCupos = $("#cupos-generados-modal").html().replace(/<br>/g, "\n");
-    listaCupos = listaCupos.split('<b style="color:blue;">FP</b>').join("FP");//como un replaceall
+    listaCupos = listaCupos.split('<strong>').join("");
+    listaCupos = listaCupos.split('</strong>').join("");
+    //como un replaceall 
     var copy = function (e) {
         e.preventDefault();
         console.log('copy');
