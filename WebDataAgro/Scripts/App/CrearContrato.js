@@ -1358,12 +1358,14 @@ function InicializarElementos() {
             var mes = hoy.getMonth();
             var dia = hoy.getDate();
             hoy = new Date(anio, mes, dia);
-            console.log(this.value(), new Date());
             if (this.value() < hoy) {
                 $("#fechaOperacionMotivoDiv").show();
+                $("#noInformaSioId").prop("checked", true);
+                $("#noInformaSioId").attr("disabled", true);
             } else {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
+                $("#noInformaSioId").attr("disabled", false);
             }
         }
     });
@@ -2885,11 +2887,14 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#fechaOperacionId").val("");
 
-    } 
+    }
 
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
         $("#fechaOperacionMotivoDiv").show();
+        if (Id > 0) {
+            $("#noInformaSioId").attr("disabled", true);
+        }
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
@@ -3286,11 +3291,11 @@ function HabilitarEstablecimiento() {
     }
 }
 
-function validarGuardarApertura(precioPactado) {   
+function validarGuardarApertura(precioPactado) {
     if (precioPactado.Precio === 0 && (precioPactado.FechaDesde === "" || precioPactado.FechaDesde === undefined)
         && (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined) && precioPactado.ImportePactado == 0
         && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)
-        && (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined) ) {
+        && (precioPactado.FechaHasta === "" || precioPactado.FechaHasta === undefined)) {
 
         return true;
     }
@@ -3332,7 +3337,7 @@ function GuardarAperturaDePrecio() {
             InsertarAperturasViewModel(total);
         }
     } else {
-        AgregarPrecioPactado();        
+        AgregarPrecioPactado();
     }
 }
 
