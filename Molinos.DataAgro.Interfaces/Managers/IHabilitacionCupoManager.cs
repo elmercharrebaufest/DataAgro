@@ -14,6 +14,8 @@ namespace Molinos.DataAgro.Interfaces
     {
         Resultado GrabarHabilitacionCupo(HabilitacionCupo cupo);
         HabilitacionCupoDto TraerHabilitacionCupo(int id);
+        Resultado EliminarHabilitacionCupo(int id);
+       
         KendoGrid<HabilitacionCupoDto> TraerTodaHabilitacionCupo(KendoGridMvcRequest request);
 
         List<HabilitacionCupoDto> TraerTodasHabilitacionesActivas(int zona);

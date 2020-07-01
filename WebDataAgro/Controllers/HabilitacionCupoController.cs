@@ -112,5 +112,11 @@ namespace WebDataAgro.Controllers
             var cupo = habilitacionManager.TraerHabilitacionCupo(id);           
             return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
+
+        public ActionResult EliminarHabilitacionCupo(int id)
+        {
+            var cupo = habilitacionManager.EliminarHabilitacionCupo(id);
+            return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
     }    
 }

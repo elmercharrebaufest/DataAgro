@@ -125,8 +125,17 @@
                             {
                                 <td>@c.Diacupo.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
                             }
+
                         </tr>
                     }
+                    <tr>
+                        <td><strong>Total</strong></td>
+                       
+                            @foreach (var d in dias)
+                            {
+                                <td>@noAceptadas.SelectMany(x=>x.Diacupo).Where(x=>x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
+                            }                        
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -162,11 +171,12 @@
     #gridInformeCompraNet td {
         text-align: center !important;
     }
-     .popover-content {
-            color: dimgray;
-            font-size: 9px !important;
-            font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
-        }
+
+    .popover-content {
+        color: dimgray;
+        font-size: 9px !important;
+        font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
+    }
 </style>
 
 

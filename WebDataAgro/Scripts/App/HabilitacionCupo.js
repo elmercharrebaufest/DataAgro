@@ -146,9 +146,11 @@ function CargarGrillaConfig() {
             
             {
                 field: "Id", title: " ", filterable: false, sortable: false, width: 75, template: function (dataItem) { 
-                    return '<a data-toggle="tooltip" title="Editar Configuracion"f class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')"><span> <i class="fa fa-pencil"></i> </span ></a >';
+                    return '<a data-toggle="tooltip" title="Editar Habilitacion"f class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')"><span> <i class="fa fa-pencil"></i> </span ></a > ' + 
+                    '<a data-toggle="tooltip" title="Eliminar Habilitacion"f class="links-grid" onclick="Eliminar(' + dataItem.Id + ')"><span> <i class="fa fa-trash"></i> </span ></a >';
                 }
             }
+
         ],
         pageable: {
             messages: {
@@ -206,7 +208,7 @@ function CargarGrillaConfig() {
     });
 }
 function recargarGrilla() {
-    $('#gridConfiguracionCupo').data('kendoGrid').dataSource.read();
+    $('#gridHabilitacionCupo').data('kendoGrid').dataSource.read();
 }
 
 function Editar(id) {
@@ -218,5 +220,12 @@ function Editar(id) {
     var fechaHasta = kendo.toString(kendo.parseDate(cupo.FechaHasta), "dd-MM-yyyy"); 
     $("#FechaDesde").val(fechaDesde);
     $("#FechaHasta").val(fechaHasta);
+    $('#alta').collapse("show");
+}
+
+function Eliminar(id) {
+    var cupo = MSExecuteOnServer("/HabilitacionCupo/EliminarHabilitacionCupo", { id: id });
+    MensInfo(cupo.Errores[0].Message);
+    recargarGrilla();
 }
 

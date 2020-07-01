@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHasta = x.FechaHasta,
                 ZonaCupoId = x.ZonaCupoId,
                 MaterialId = x.MaterialId
-            }, x => x.ZonaCupoId == zona || x.ZonaCupoId == null && x.FechaDesde <= hoy && x.FechaHasta >= hoy);
+            }, x => (x.ZonaCupoId == zona || x.ZonaCupoId == null) && x.FechaDesde <= hoy && x.FechaHasta >= hoy);
         }
         public List<MaterialHabilitadoDto> TraerTodoMaterialRetirado(int zona)
         {
@@ -151,6 +151,28 @@ namespace Molinos.DataAgro.Business.Managers
         public List<int> TraerTodoMaterialHabilitado(int zona)
         {
            return TraerTodasHabilitacionesActivas(zona).Select(x => x.MaterialId).ToList();
+        }
+
+        public Resultado EliminarHabilitacionCupo(int id)
+        {
+            var oEntityErrors = new Resultado();
+            var tc = repositorio.Obtener <HabilitacionCupo>(x => x.Id == id);
+            try
+            {
+                repositorio.Remover(tc);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se eliminó correctamente"));
+            }
+            return oEntityErrors;
         }
     }
 }
