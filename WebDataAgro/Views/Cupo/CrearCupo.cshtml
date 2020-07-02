@@ -127,13 +127,12 @@ else if (!Html.ViewData.ModelState.IsValid)
             </div>
         </div>
         <div class="row">
-            <div>
-                <div class="col-sm-2 noRightPadding">
-                    <label>Flete procedencia/Acarreo </label>
-                </div>
-                <div class="col-sm-4 ">
-                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
-                </div>
+            <div class="col-sm-2">
+                <label>Contrato</label>
+            </div>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(x => x.NegocioId, new { @id = "contratoId", @class = "w100" })
+                @Html.HiddenFor(x => x.Negocio)
             </div>
             <div id="calidadDiv" hidden>
                 <div class="col-sm-2">
@@ -155,6 +154,14 @@ else if (!Html.ViewData.ModelState.IsValid)
             </div>
         </div>
         <div class="row">
+            <div>
+                <div class="col-sm-2 noRightPadding">
+                    <label>Flete procedencia/Acarreo </label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+                </div>
+            </div>
             <div class="col-sm-2">
                 <label>Fasón/Préstamo devolución</label>
             </div>

@@ -175,6 +175,7 @@ namespace Molinos.DataAgro.Business.Managers
                     cupoSave.Destinatario = cupo.Destinatario;
                     cupoSave.Fason = cupo.Fason;
                     cupoSave.FleteProcedencia = cupo.FleteProcedencia;
+                    cupoSave.NegocioId = cupo.NegocioId;
                     var res = modificarCupoAgent.Modificar(cupoSave);
                     if (res != "Ok")
                     {
@@ -243,6 +244,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.Id == 0 && fechaHasta.HasValue && fechaHasta < cupo.FechaIngreso)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
+            }
+            if (cupo.NegocioId == 0 && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             }
 
             return error;
@@ -382,6 +387,7 @@ namespace Molinos.DataAgro.Business.Managers
                 UsuarioCreador = x.UsuarioCreador,
                 ZonaCupoSap = x.ZonaCupo.CodigoSap,
                 Acopio = x.Centro.Acopio,
+                NegocioId = x.NegocioId.Value
             });
         }
         public Resultado EliminarVarios(List<int> cupos, string comercial)
@@ -1847,6 +1853,94 @@ namespace Molinos.DataAgro.Business.Managers
             logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), cupoSAP.EstadoCupoId == 4 ? TipoAccionLogDataAgro.Eliminar : TipoAccionLogDataAgro.Modificar);
 
             return resultado;
+        }
+
+
+        public List<CupoDto> ListarCupo(string cupoSap)
+        {
+            return repositorio.Listar<Cupo, CupoDto>(x => new CupoDto
+            {
+                Id = x.Id,
+                Calidad = x.Calidad,
+                Centro = x.Centro.Descripcion,
+                CentroId = x.CentroId,
+                ComercialId = x.ComercialId,
+                Destinatario = x.Destinatario,
+                Fason = x.Fason,
+                FleteProcedencia = x.FleteProcedencia,
+                FechaIngreso = x.FechaIngreso,
+                MaterialId = x.MaterialId,
+                Material = x.Material.Descripcion,
+                Observaciones = x.Observaciones,
+                ProveedorId = x.ProveedorId,
+                Proveedor = x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")",
+                ZonaCupoId = x.ZonaCupoId,
+                ZonaCupo = x.ZonaCupo.Descripcion,
+                CupoSap = x.CupoSap,
+                EstadoCupo = x.EstadoCupo.Descripcion,
+                EstadoCupoId = x.EstadoCupoId,
+                CartaPorte = x.CartaPorte,
+                Chofer = x.Chofer,
+                CodLocalidadOrigen = x.CodLocalidadOrigen,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                CorredorComprador = x.CorredorComprador,
+                CorredorVendedor = x.CorredorVendedor,
+                Cosecha = x.Cosecha,
+                CTG = x.CTG,
+                CTGFechaDesde = x.CTGFechaDesde,
+                CTGFechaHasta = x.CTGFechaHasta,
+                CuitOrigen = x.CuitOrigen,
+                CuitOrigenAfip = x.CuitOrigenAfip,
+                CupoStop = x.CupoStop == null ? "" : x.CupoSap.ToString(),
+                EstadoPlanta = x.EstadoPlanta,
+                FechaGeneracion = x.FechaGeneracion,
+                FechaRegistro = x.FechaGeneracion,
+                IntermediarioFlete = x.IntermediarioFlete,
+                Km = x.Km,
+                MercadoATermino = x.MercadoATermino,
+                MotivoRechazo = x.MotivoRechazo,
+                NroEstablecimientoOrigen = x.NroEstablecimientoOrigen,
+                Peso = x.Peso,
+                RemitenteComercial = x.RemitenteComercial,
+                Transportista = x.Transportista,
+                UsuarioCreador = x.UsuarioCreador,
+                ZonaCupoSap = x.ZonaCupo.CodigoSap,
+                Acopio = x.Centro.Acopio,
+            },
+            x => x.CupoSap.Contains(cupoSap),15);
+        }
+
+        public List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta)
+        {
+           var negocio = repositorio.Listar<Negocio, BasicoContrato>(x=> new BasicoContrato {
+                TipoNegocioId = x.TipoNegocioId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                Negocio = x.ContratoSAP,
+                Cantidad = x.Cantidad,
+                Id = x.Id,
+                Fecha = x.Fecha
+           }, x => x.Proveedor.CUIT == proveedorCuit && x.MaterialId == material && x.EstadoId == 5 && x.DestinoId == centro && 
+           (x.FechaDesde <= desde && x.FechaHasta >= hasta) && 
+           (x is Contrato) && x.ContratoSAP.Contains(filtro), 15, "Fecha", Entities.Helpers.DirOrden.Desc);
+
+            var negociosSugeridos = new List<BasicoContrato>();
+            for (int i = 0; i < negocio.Count(); i++)
+            {
+                var n = negocio[i];
+                var cupoNegocio = repositorio.Contar<Cupo>(x => x.Negocio.ContratoSAP == n.Negocio);
+               
+                    var cantidad = n.Cantidad - (cupoNegocio*30000);
+                    if (cantidad > 0)
+                    {
+                    var cantidadMaxCupo = Math.Ceiling(cantidad/30000);
+                    n.CantidadMaximaCupo = (int)cantidadMaxCupo;
+                        negociosSugeridos.Add(n);
+                    }     
+                    
+
+            }
+
+            return negociosSugeridos;
         }
     }
 }

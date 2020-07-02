@@ -160,6 +160,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MotivoOperacionAnterior { get; set; }
         public string UsuarioConfirmador { get; set; }
         public DateTime? FechaConfirmacion { get; set; }
+        public int CantidadMaximaCupo { get; set; }
     }
 
     public class StoredPorContratoResult

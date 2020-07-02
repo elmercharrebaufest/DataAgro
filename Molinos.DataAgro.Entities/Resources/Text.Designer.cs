@@ -925,6 +925,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debe agregar un negocio.
+        /// </summary>
+        public static string Error_Negocio {
+            get {
+                return ResourceManager.GetString("Error_Negocio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to La Planta no debe estar vacía.
         /// </summary>
         public static string Error_PlantaRequerido {

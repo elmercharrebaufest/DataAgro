@@ -730,4 +730,7 @@
   <data name="Configuraciones_JefeEnvioMailNegociosConDiaAnterior" xml:space="preserve">
     <value>Jefe Envio Mail Negocios Con Dia Anterior</value>
   </data>
+  <data name="Error_Negocio" xml:space="preserve">
+    <value>Debe agregar un negocio</value>
+  </data>
 </root>

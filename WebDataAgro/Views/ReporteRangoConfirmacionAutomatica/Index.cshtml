@@ -5,6 +5,9 @@
 @section Scripts {
     @Scripts.Render("~/bundles/Rango")
 }
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
 <div class="Titulo">
     <h3>Reporte Rango Confirmación Automática</h3>
 </div>
@@ -17,9 +20,7 @@
 </script>
 <div id="rango">
     <div class="row" id="nuevotab">
-        <div class="table-responsive">
-            <div id="gridRango"></div>
-        </div>
+        <div id="gridRango" class="tabla-result"></div>
     </div>
 </div>
 

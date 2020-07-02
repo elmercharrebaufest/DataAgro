@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -39,6 +40,11 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
+            if (cambios.BasicoProveedorTraerPorProveedores != null &&cambios.BasicoProveedorTraerPorProveedores.Count > 1)
+            {
+                cambios.BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { cambios.BasicoProveedorTraerPorProveedores.FirstOrDefault() };
+            }
+
             return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, typeof(Proveedor));
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
@@ -152,12 +158,73 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var item in diffResult)
                 {
-                    cambiados.Add(new DatoModificadosLogDataAgroDto
+                    if (((JProperty)item).Name != null && (!((JProperty)item).Name.ToLower().EndsWith("id")) && !((JProperty)item).Name.ToLower().Contains("formateado"))// saco los dis
                     {
-                        Anterior = ((JContainer)((JProperty)item).Value).First.ToString(),
-                        Actual = ((JContainer)((JProperty)item).Value).Last.ToString(),
-                        Campo = ((JProperty)item).Name
-                    });
+                        var campo = AddSpacesToSentence(((JProperty)item).Name, ':');
+                        if (!((JContainer)((JProperty)item).Value).ToString().StartsWith("{"))
+                        {
+                            if (!((JProperty)item).Name.ToLower().EndsWith("id") && !((JProperty)item).Name.ToLower().EndsWith("formateado"))
+                            {
+                                cambiados.Add(new DatoModificadosLogDataAgroDto
+                                {
+                                    Anterior = BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).First().ToString()),
+                                    Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).Last().ToString()),
+                                    Campo = campo
+                                });
+                            }
+
+                        }
+                        else//lista modificada
+                        {
+                            var items = (JContainer)((JProperty)item).Value;
+                            foreach (var item2 in items.Children())
+                            {
+                                if (((JProperty)item2).Name != "_t")
+                                {
+                                    foreach (var item3 in ((JProperty)item2).Value.Children())
+                                    {
+                                        if (!item3.ToString().StartsWith("{"))
+                                        {
+                                            if (item3.ToString() != "0")
+                                            {
+                                                if (!((JProperty)item3).Name.ToLower().EndsWith("id") && !((JProperty)item3).Name.ToLower().EndsWith("formateado"))
+                                                {
+                                                    cambiados.Add(new DatoModificadosLogDataAgroDto
+                                                    {
+                                                        Anterior = BuscaFechaYFormatea(((JProperty)item3).First.First.ToString()),
+                                                        Actual = BuscaFechaYFormatea(((JProperty)item3).First.Last.ToString()),
+                                                        Campo = campo + " - " + AddSpacesToSentence(((JProperty)item3).Name, ':')
+                                                    });
+                                                }
+                                            }
+
+                                        }
+                                        else // item nuevo o borrado en la lista
+                                        {
+                                            foreach (var item4 in item3.Children())
+                                            {
+                                                if (((JProperty)item4).Name != "_t" && !((JProperty)item4).Name.ToLower().EndsWith("id") && !((JProperty)item4).Name.ToLower().EndsWith("formateado"))
+                                                {
+                                                    var value = ((JProperty)item4).First == null ? "" : ((JProperty)item4).First.ToString();
+
+                                                    cambiados.Add(new DatoModificadosLogDataAgroDto
+                                                    {
+                                                        Anterior = "",
+                                                        Actual = BuscaFechaYFormatea(value),
+                                                        Campo = campo + " - " + AddSpacesToSentence(((JProperty)item4).Name, ':')
+                                                    });
+                                                }
+
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
                 }
             }
 
@@ -229,6 +296,101 @@ namespace Molinos.DataAgro.Business.Managers
         public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+        }
+
+
+        public string AddSpacesToSentence(string text, char limite)
+        {
+            bool limiteEncontrado = false;
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+            text = UppercaseFirst(text.Trim());
+            StringBuilder newText = new StringBuilder(text.Length * 2);
+            newText.Append(text[0]);
+            for (int i = 1; i < text.Length; i++)
+            {
+                var letra = text[i];
+                limiteEncontrado = limiteEncontrado ? limiteEncontrado : limite == letra;
+                if (char.IsUpper(text[i]) && !char.IsUpper(text[i - 1]) && text[i - 1] != ' ' && !limiteEncontrado)
+                    newText.Append(' ');
+                newText.Append(text[i]);
+            }
+            return newText.ToString();
+        }
+
+        public string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
+        public string BuscaFechaYFormatea(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return s;
+            s = s.Trim();
+            s = s.Replace("false", "No");
+            s = s.Replace("true", "Si");
+            s = s.Replace("null", "");
+            s = s.Replace("\"", "");
+            s = s.Replace("_", "");
+
+            Regex formato1 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"); //2020-06-30T16:36:23.597
+            Regex formato2 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-06-30T00:00:00
+            Regex formato3 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2} T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-08-02 T00:00:00
+
+            try
+            {
+                if (formato1.IsMatch(s))
+                {
+                    Match mat = formato1.Match(s);
+                    DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd'T'HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
+                    s = formato1.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                }
+                if (formato2.IsMatch(s))
+                {
+                    Match mat = formato2.Match(s);
+                    DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    s = formato2.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                }
+                if (formato3.IsMatch(s))
+                {
+                    Match mat = formato3.Match(s);
+                    DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd 'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    s = formato3.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+            return s;
+        }
+
+        public List<BasicoContrato> ListarNegocios(string text)
+        {
+            var negocio = repositorio.Listar<Negocio, BasicoContrato>(x => new BasicoContrato
+            {
+                Id = x.Id,
+                TipoNegocio = (x.TipoNegocio == null ? "" : (x is Contrato && (x as Contrato).Madre == true) ? "CONVENIO" : (x is Contrato && (x as Contrato).Madre == false) ? "FIJ. CONVENIO" : (x is Contrato && (x as Contrato).EsFason == true) ? "FASON MP" : (x is Contrato && (x as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : x.TipoNegocio.Descripcion),
+                Negocio = x.ContratoSAP == null || x.ContratoSAP == "" ? x.Id.ToString() : x.ContratoSAP,
+                FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" + SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.Fecha),
+                Fecha = x.Fecha,
+                Cuit = x.Proveedor == null ? "" : x.Proveedor.CUIT,
+                Proveedor = (x is AgenteCompra) ? (x as AgenteCompra).Operador.Descripcion : x.Proveedor == null ? "" : x.Proveedor.RazonSocial,
+                Material = x.Material.Descripcion,
+            }, x => x.ContratoSAP.Contains(text) || SqlFunctions.StringConvert((double)x.Id).Contains(text)
+            , 15, "Fecha", Entities.Helpers.DirOrden.Desc);
+
+            return negocio;
         }
     }
 }

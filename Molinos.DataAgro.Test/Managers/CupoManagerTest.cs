@@ -597,5 +597,35 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Count());
 
         }
+
+        [Test]
+        public void BuscarCupoTest()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, CupoDto>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CupoDto>(){new CupoDto
+            {
+                Id = 1,
+                Calidad = "a",
+                Centro = "a",
+                CentroId = 1,
+                ComercialId = 1,
+                Destinatario = "a",
+                Fason = true,
+                FleteProcedencia = true,
+                FechaIngreso = DateTime.Now,
+                MaterialId = 1,
+                Material = "a",
+                Observaciones = "a",
+                ProveedorId = 1,
+                Proveedor = "a",
+                ZonaCupoId = 2,
+                ZonaCupo = "a"
+            } });
+            var result = target.ListarCupo("asd");
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Cupo, CupoDto>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count());
+        }
     }
 }

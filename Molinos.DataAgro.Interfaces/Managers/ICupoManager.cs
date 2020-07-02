@@ -39,6 +39,9 @@ namespace Molinos.DataAgro.Interfaces
         Resultado ActualizarCupoSAP(Cupo cupo);
         CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory);
         CupoResult AceptarCupo(Cupo cupo);
+        List<CupoDto> ListarCupo(string cupoSap);
+
+        List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
     }
 
 }

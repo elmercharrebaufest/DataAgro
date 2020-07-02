@@ -33,12 +33,12 @@ namespace Molinos.DataAgro.Report
 
             if (oDatos.Count > 0)
             {
-                List<LogDataAgroDto> datos = new List<LogDataAgroDto>();
+                List<LogDataAgroExcel> datos = new List<LogDataAgroExcel>();
                 foreach (var item in oDatos)
                 {
                     foreach (var item2 in item.CamposCambiados)
                     {
-                        datos.Add(new LogDataAgroDto
+                        datos.Add(new LogDataAgroExcel
                         {
                             Id = item.Id,
                             Usuario = item.Usuario,
@@ -49,45 +49,61 @@ namespace Molinos.DataAgro.Report
                             Campo = item2.Campo,
                             Actual = item2.Actual,
                             Anterior = item2.Anterior,
-
-
+                        });
+                    }
+                    if (item.CamposCambiados.Count == 0)
+                    {
+                        datos.Add(new LogDataAgroExcel
+                        {
+                            Id = item.Id,
+                            Usuario = item.Usuario,
+                            Fecha = item.Fecha,
+                            AccionRealizada = item.AccionRealizada,
+                            Clase = item.Clase,
+                            ClaseId = item.ClaseId,
+                            Campo = "",
+                            Actual = "",
+                            Anterior = "",
                         });
                     }
                 }
 
                 var oColumnas = datos.ToList();
 
-                var workSheet = excel.Workbook.Worksheets.Add("Hoja1");
-
-                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
-
-                var oPropRow = oColumnas[0].GetType().GetProperties();
-
-                var cantColumns = oPropRow.Count();
-                var j = 1;
-                while (workSheet.Cells[1, j].Value != null)
+                if (oColumnas.Count > 0)
                 {
-                    workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    var workSheet = excel.Workbook.Worksheets.Add("Hoja1");
 
-                    workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+                    workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
-                    workSheet.Cells[1, j].Style.Font.Bold = true;
+                    var oPropRow = oColumnas[0].GetType().GetProperties();
 
-                    j++;
-                }
-                for (int i = 1; i <= cantColumns; i++)
-                {
-                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    var cantColumns = oPropRow.Count();
+                    var j = 1;
+                    while (workSheet.Cells[1, j].Value != null)
                     {
-                        workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                        workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
+                        workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+
+                        workSheet.Cells[1, j].Style.Font.Bold = true;
+
+                        j++;
                     }
-                    workSheet.Column(i).AutoFit();
-                };
+                    for (int i = 1; i <= cantColumns; i++)
+                    {
+                        if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                        {
+                            workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY hh:mm:ss";
+
+                        }
+                        workSheet.Column(i).AutoFit();
+                    };
 
 
-                //workSheet.Cells[1, 26].Value = "Flete Procedencia";
-                workSheet.Column(1).AutoFit();
+                    //workSheet.Cells[1, 26].Value = "Flete Procedencia";
+                    workSheet.Column(1).AutoFit();
+                }
 
             }
 

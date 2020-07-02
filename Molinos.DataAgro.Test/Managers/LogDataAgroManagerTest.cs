@@ -151,5 +151,21 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
             repositorioMock.Verify(x => x.Agregar(It.IsAny<LogDataAgro>()), Times.Once());
         }
+
+        [Test]
+        public void ListarNegociosOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<BasicoContrato>(){new BasicoContrato
+            {
+                Id = 1,
+            } });
+            var result = target.ListarNegocios("asd");
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count());
+        }
+
     }
 }

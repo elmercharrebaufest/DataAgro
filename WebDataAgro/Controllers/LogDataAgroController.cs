@@ -16,6 +16,12 @@ using WebDataAgro.Atributos;
 using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
+using System.Collections.Generic;
+using System.Reflection;
+using Newtonsoft.Json;
+using System.Collections;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WebDataAgro.Controllers
 {
@@ -60,7 +66,7 @@ namespace WebDataAgro.Controllers
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = logDataAgroManager.ListarDatosLogDataAgro(request, equipo);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
-        }        
+        }
 
         [HttpPost]
         public ActionResult MostrarDiferencias(int idLogDataAgro)
@@ -69,8 +75,19 @@ namespace WebDataAgro.Controllers
             LogDataAgroDto actual = logDataAgroManager.Obtener(idLogDataAgro);
             LogDataAgroDto anterior = logDataAgroManager.Obtener(idLogDataAgro, true);
             var model = diffBuilder.BuildDiffModel(anterior.DatoModificado ?? string.Empty, actual.DatoModificado ?? string.Empty);
-            return PartialView("Diff",model);
+
+            foreach (var diffLine in model.NewText.Lines)
+            {
+                FormatearTexto(diffLine);
+            }
+            foreach (var diffLine in model.OldText.Lines)
+            {
+                FormatearTexto(diffLine);
+            }
+
+            return PartialView("Diff", model);
         }
+
 
         public ActionResult Export(DataSourceRequest filtro)
         {
@@ -81,6 +98,16 @@ namespace WebDataAgro.Controllers
                 filtro.Sort = new List<Sort> {
                     new Sort {Field= "Id",Dir="desc" }
                 };
+            }
+            if (filtro.Filter != null && filtro.Filter.Filters != null)
+            {
+                foreach (var item in filtro.Filter.Filters)
+                {
+                    if (item.Field == "Fecha" && item.Operator == "lte")
+                    {
+                        item.Value = Convert.ToDateTime(item.Value).AddDays(1);
+                    }
+                }
             }
             filtro.Skip = 0;
             filtro.Take = 0;
@@ -170,6 +197,50 @@ namespace WebDataAgro.Controllers
                    Selected = false
                }).OrderBy(x => x.Text);
             ViewBag.Comercial = comercialListItems;
+        }
+
+        public void FormatearTexto(DiffPlex.DiffBuilder.Model.DiffPiece diffLine)
+        {
+            if (diffLine.Text != null)
+            {
+                //diffLine.Text = diffLine.Text.Replace("\"", "").Replace("_", "");
+                diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text);
+                diffLine.Text = logDataAgroManager.AddSpacesToSentence(diffLine.Text, ':');
+                //if (diffLine.Text != null && (!diffLine.Text.Split(':')[0].Trim().ToLower().EndsWith("id")) && !diffLine.Text.ToLower().Contains("formateado"))// saco los dis
+                //{
+
+                //    if (diffLine.Text.Contains("false"))
+                //    {
+                //        diffLine.Text = diffLine.Text.Replace("false", "No");
+                //    }
+                //    if (diffLine.Text.Contains("true"))
+                //    {
+                //        diffLine.Text = diffLine.Text.Replace("true", "Si");
+                //    }
+                //    if (diffLine.Text.Contains("null"))
+                //    {
+                //        diffLine.Text = diffLine.Text.Replace("null", "");
+                //    }
+                //}
+
+                foreach (var character in diffLine.SubPieces)
+                {
+                    if (character.Text != null)
+                    {
+                        character.Text = logDataAgroManager.BuscaFechaYFormatea(character.Text);
+                        character.Text = logDataAgroManager.AddSpacesToSentence(character.Text, ':');
+                    }
+
+                }
+            }
+
+        }
+
+        public JsonResult ListarNegocios(string text = "")
+        {
+            List<BasicoContrato> negocios = logDataAgroManager.ListarNegocios(text);
+
+            return Json(negocios.Select(x => new { x.Id, Descripcion = x.Negocio + " - " + x.TipoNegocio + " - " + x.Material + " - " + x.Proveedor + "(" + x.Cuit + ") - " + x.FechaFormateado }), JsonRequestBehavior.AllowGet);
         }
     }
 }

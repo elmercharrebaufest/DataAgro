@@ -59,7 +59,33 @@
             <label>Clase</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("Clase", new SelectList(ViewBag.Clase, "Value", "Text"), "Seleccione una Clase", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", @id = "ClaseId" })
+            @Html.DropDownList("Clase", new SelectList(ViewBag.Clase, "Value", "Text"), "Seleccione una Clase", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", @id = "Clase" })
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div id="ProveedorDiv">
+            <div class="col-md-2">
+                <label>Proveedor</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorProveedor" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" />
+            </div>
+        </div>
+        <div id="NegocioDiv">
+            <div class="col-md-2">
+                <label>Negocio</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorNegocio" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar ContratoSAP o Nro de Negocio" />
+            </div>
+        </div>
+        <div id="CupoDiv">
+            <div class="col-md-2">
+                <label>Cupo</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorCupo" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar CupoSAP" />
+            </div>
         </div>
     </div>
     <br />

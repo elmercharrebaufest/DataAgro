@@ -44,7 +44,6 @@ function CargarGrillaConfig() {
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "Id", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20
     };
@@ -118,7 +117,7 @@ function CargarGrillaConfig() {
                 }
             },           
             {
-                field: "Cantidad", type: "number", template: function (dataItem) {
+                field: "Cantidad", type: "number", title: "Cantidad (Kg)", template: function (dataItem) {
                     return kendo.toString(dataItem.Cantidad, "##,#.##").replace(/,/g, ".");
                 }
             },

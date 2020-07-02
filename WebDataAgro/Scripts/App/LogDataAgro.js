@@ -1,14 +1,17 @@
 ﻿$(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
-    InicializarCuposIndex();
 
     //$('#menuproveedor').hide();
     //kendo.culture("es-AR");
 
     inicializarTodosKendoDate($(".filtroFecha"));
+    $("#FechaDesdeId").data("kendoDatePicker").value(new Date());
+    InicializarCuposIndex();
+
     //inicializarElementos();
     //InicializarCuposIndex();
+    $('#Clase').change();
 
 });
 
@@ -70,9 +73,9 @@ function InicializarCuposIndex() {
 
     $("#grid").kendoGrid({
         toolbar: kendo.template($("#templateToolbar").html()),
-       
+
         dataSource: ds,
-        
+
         columns: [
             //{ field: "Id", type: "string" },
             { field: "Fecha", title: "Fecha de Modificacion", type: "date", /*width: 150,*/ format: "{0:dd/MM/yyyy HH:mm:ss }" },
@@ -109,9 +112,14 @@ function InicializarCuposIndex() {
             allowUnsort: true,
             showIndexes: false
         },
-       
+
     });
 
+    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
+    CrearMultiSelectFiltro("#buscadorCupo", "CupoSap", "Id", "/cupo/ListarCupo");
+    CrearMultiSelectFiltro("#buscadorNegocio", "Descripcion", "Id", "/logdataagro/ListarNegocios");
+    var kendoDropDown = $('#buscadorNegocio').data('kendoMultiSelect');
+    kendoDropDown.list.width(550);
 }
 
 
@@ -128,7 +136,7 @@ function traerDatosModificados(idLogDataAgro, tipoDeClase) {
         $("#diffPartial").html(res);
         $("#modalVisualizar").modal('show');
     });
-    
+
 }
 
 function customExport() {
@@ -143,3 +151,20 @@ function customExport() {
     MSExecuteOnServerAsync('/LogDataAgro/Export', TraerFiltrosConValores(), funcReturn, true);
 }
 
+$('#Clase').on('change', function () {
+    $("#ProveedorDiv").hide();
+    $("#NegocioDiv").hide();
+    $("#CupoDiv").hide();
+    $("#buscadorProveedor").data("kendoMultiSelect").value('');
+    $("#buscadorNegocio").data("kendoMultiSelect").value('');
+    $("#buscadorCupo").data("kendoMultiSelect").value('');
+    if (this.value == "Proveedor") {
+        $("#ProveedorDiv").show();
+    }
+    if (this.value == "Negocio") {
+        $("#NegocioDiv").show();
+    }
+    if (this.value == "Cupo") {
+        $("#CupoDiv").show();
+    }
+});

@@ -61,7 +61,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.AltaCupos, PermisosDataAgro.AltaCupo_Externo)]
         public ActionResult CrearCupo(int? id, string siguientes)
         {
-            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());            CargarViewBag();
+            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado()); CargarViewBag();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 return RedirectToAction("CrearCupoTercero");
@@ -92,7 +92,8 @@ namespace WebDataAgro.Controllers
                     ZonaId = cupo.ZonaCupoId,
                     PlantaId = cupo.CentroId,
                     CuitId = cupo.Destinatario,
-                    Siguientes = siguientes
+                    Siguientes = siguientes,
+                    NegocioId = cupo.NegocioId
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 return View(cupoModel);
@@ -107,7 +108,7 @@ namespace WebDataAgro.Controllers
             {
                 ViewBag.Titulo = "Nuevo Cupo";
                 var proveedorId = proveedorManager.ObtenerIdProveedorPorCuit(PermisosHelper.ObtenerCuit());
-                return View(new CupoModel() {Proveedor= proveedorId, CantidadCupos = null, MaterialId = 3, ZonaId = comercialManager.TraerZonaDelComercialAsociado(), FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date, CalidadId = 2 });
+                return View(new CupoModel() { Proveedor = proveedorId, CantidadCupos = null, MaterialId = 3, ZonaId = comercialManager.TraerZonaDelComercialAsociado(), FechaEntrega = DateTime.Now.Date, FechaHastaEntrega = DateTime.Now.Date, CalidadId = 2 });
             }
             else
             {
@@ -179,14 +180,15 @@ namespace WebDataAgro.Controllers
                     cupo.FechaHastaEntrega = cupo.FechaEntrega;
                 }
                 CargarViewBag();
-               
+
                 if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                 {
-                    if(ViewData.ModelState.IsValid){
-                       return  RedirectToAction("Index");
+                    if (ViewData.ModelState.IsValid)
+                    {
+                        return RedirectToAction("Index");
                     }
-                        return View("CrearCupoTercero", cupo);
-                                       
+                    return View("CrearCupoTercero", cupo);
+
                 }
                 return View(cupo);
             }
@@ -194,7 +196,8 @@ namespace WebDataAgro.Controllers
             {
                 var id = siguientes[0];
                 siguientes.RemoveAt(0);
-                if(PermisosHelper.Is(PermisosDataAgro.IngresoExterno)){
+                if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                {
                     return RedirectToAction("CrearCupoTercero", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
                 }
                 return RedirectToAction("CrearCupo", new { id, siguientes = JsonConvert.SerializeObject(siguientes) });
@@ -225,8 +228,8 @@ namespace WebDataAgro.Controllers
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 var materialExterno = habilitacionManager.TraerTodoMaterialRetirado(comercialManager.TraerZonaDelComercialAsociado());
-                material.Material = material.Material.Where(x => materialExterno.Where(y=>y.Descripcion == "Disponible".ToUpper()).Any(y=>y.Id == x.MaterialId)).ToList();
-                 
+                material.Material = material.Material.Where(x => materialExterno.Where(y => y.Descripcion == "Disponible".ToUpper()).Any(y => y.Id == x.MaterialId)).ToList();
+
             }
 
             var listaMaterial = new List<SelectListItem>();
@@ -271,8 +274,10 @@ namespace WebDataAgro.Controllers
                 Calidad = cupo.CalidadId == 1 ? "Camara" : cupo.CalidadId == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,
                 Fason = cupo.FasonId,
-                Destinatario = cupo.CuitId ?? "30715118773",      
+                Destinatario = cupo.CuitId ?? "30715118773",
+                ComercialId = GlobalVariables.ComercialId,
                 FechaGeneracion = DateTime.Now,
+                NegocioId = cupo.Negocio,
                 ZonaCupoId = cupo.ZonaId
             };
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
@@ -280,7 +285,7 @@ namespace WebDataAgro.Controllers
                 entidad.ComercialId = comercialManager.ComercialAsociado(cupo.Proveedor);
             }
             else
-            {                
+            {
                 entidad.ComercialId = GlobalVariables.ComercialId;
             }
             return entidad;
@@ -343,7 +348,7 @@ namespace WebDataAgro.Controllers
         {
             var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
 
-            var material = materialManager.TraerTodoMaterial();           
+            var material = materialManager.TraerTodoMaterial();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
                     {
@@ -399,7 +404,7 @@ namespace WebDataAgro.Controllers
         }
 
         public ActionResult TraerTodasHabilitacionesActivas()
-        {            
+        {
             return new JsonResult()
             {
                 Data = habilitacionManager.TraerTodasHabilitacionesActivas(comercialManager.TraerZonaDelComercialAsociado()),
@@ -428,5 +433,19 @@ namespace WebDataAgro.Controllers
             return Json(model);
         }
 
+        public JsonResult ListarCupo(string text = "")
+        {
+            var cupo = cupoManager.ListarCupo(text);
+            return Json(cupo.Select(x => new { Id = x.Id, CupoSap = x.CupoSap }), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult TraerNegocioConCupoDisponible(string cuitProveedor, int materialId, int centro,string filtro, DateTime desde, DateTime hasta)
+        {
+            return new JsonResult()
+            {
+                Data = cupoManager.TraerNegocioConCupoDisponible(cuitProveedor, materialId, centro, filtro, desde, hasta),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

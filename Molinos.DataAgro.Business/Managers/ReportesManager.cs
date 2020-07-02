@@ -800,7 +800,7 @@ namespace Molinos.DataAgro.Business.Managers
             && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
             && x.MaterialId == materialId
             && x.TipoNegocioId == 3
-            && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 3 && x.TrigoEspecial == false))
+            && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 1 && x.TrigoEspecial == false))
             && (centroId == 0 || centroId == x.DestinoId))
                 .Select(
                 x => new PosicionPorMaterial

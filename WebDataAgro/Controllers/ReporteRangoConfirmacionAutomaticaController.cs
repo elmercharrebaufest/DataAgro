@@ -42,7 +42,11 @@ namespace WebDataAgro.Controllers
 
         [HttpPost]
         public ActionResult BuscaDatosTabla(DataSourceRequest request)
-        {           
+        {
+           if (request.Sort == null)
+            {
+                request.Sort = new List<Sort> { new Sort { Field = "Id", Dir = "desc" } };
+            }
             var model = rangoManager.TraerTodoRango(request);
             return Json(model);
         }

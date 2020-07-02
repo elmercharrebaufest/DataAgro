@@ -4,21 +4,22 @@
     <table cellpadding="0" cellspacing="0" class="diffTable">
         @foreach (var diffLine in Model.Lines)
         {
-            if (diffLine.Text != null && ( !diffLine.Text.Split(':')[0].Replace("\"","").Trim().ToLower().EndsWith("id") )&& !diffLine.Text.ToLower().Contains("formateado"))// saco los dis
+            //diffLine.Text = diffLine.Text.Replace("\"","");
+            if (diffLine.Text != null && !diffLine.Text.Split(':')[0].Trim().ToLower().EndsWith("id") && !diffLine.Text.ToLower().Contains("formateado")  &&  !diffLine.Text.Split(':')[0].Trim().Contains("Id") )// saco los dis
             {
 
-                if (diffLine.Text.Contains("false"))
-                {
-                    diffLine.Text = diffLine.Text.Replace("false","No");
-                }
-                if (diffLine.Text.Contains("true"))
-                {
-                    diffLine.Text = diffLine.Text.Replace("true","Si");
-                }
-                if (diffLine.Text.Contains("null"))
-                {
-                    diffLine.Text = diffLine.Text.Replace("null","");
-                }
+                //if (diffLine.Text.Contains("false"))
+                //{
+                //    diffLine.Text = diffLine.Text.Replace("false","No");
+                //}
+                //if (diffLine.Text.Contains("true"))
+                //{
+                //    diffLine.Text = diffLine.Text.Replace("true","Si");
+                //}
+                //if (diffLine.Text.Contains("null"))
+                //{
+                //    diffLine.Text = diffLine.Text.Replace("null","");
+                //}
 
                 <tr>
                     <td class="lineNumber">
@@ -30,23 +31,23 @@
                             @*@Html.Partial("DiffLine", diffLine)*@
                             @if (!string.IsNullOrEmpty(diffLine.Text))
                             {
-                                string spaceValue = "\u00B7";
-                                string tabValue = "\u00B7\u00B7";
-                                foreach (var character in diffLine.SubPieces)//reemplazo texto por datos "amigables"
-                                {
-                                    if (character.Text == "false")
-                                    {
-                                        character.Text = "No";
-                                    }
-                                    if (character.Text == "true")
-                                    {
-                                        character.Text = "Si";
-                                    }
-                                    if (character.Text == "null")
-                                    {
-                                        character.Text = "";
-                                    }
-                                }
+                                string spaceValue = "\u0020";
+                                string tabValue = "\u0020\u0020";
+                                //foreach (var character in diffLine.SubPieces)//reemplazo texto por datos "amigables"
+                                //{
+                                //    if (character.Text == "false")
+                                //    {
+                                //        character.Text = "No";
+                                //    }
+                                //    if (character.Text == "true")
+                                //    {
+                                //        character.Text = "Si";
+                                //    }
+                                //    if (character.Text == "null")
+                                //    {
+                                //        character.Text = "";
+                                //    }
+                                //}
                                 if (diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Deleted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Inserted || diffLine.Type == DiffPlex.DiffBuilder.Model.ChangeType.Unchanged)
                                 {
                                     @Html.Raw(Html.Encode(diffLine.Text).Replace(" ", spaceValue).Replace("\t", tabValue))

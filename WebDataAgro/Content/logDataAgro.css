@@ -184,3 +184,6 @@ div.col-md-6.col-sm-10 .k-icon.k-i-close {
 .modal .bordeSeccionVisualizar {
     border: 1px solid #dbdbdb;
 }
+.k-i-loading  {
+    display:none;
+}

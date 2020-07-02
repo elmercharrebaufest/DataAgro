@@ -109,5 +109,20 @@ namespace Molinos.DataAgro.Test.Controllers
                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"ZonaCupoId\":1,\"MaterialId\":1,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"Zona\":null,\"Material\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
+
+        [Test]
+        public void EliminarHabilitacionCupoOk()
+        {
+            habilitacionCupoManagerMock.Setup(x => x.EliminarHabilitacionCupo(It.IsAny<int>()))
+                 .Returns(new Resultado());
+            var result = target.EliminarHabilitacionCupo(1);
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            habilitacionCupoManagerMock.Verify(x => x.EliminarHabilitacionCupo(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+             "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+             a);
+        }
     }
 }

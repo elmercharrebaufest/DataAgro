@@ -70,6 +70,7 @@ function InicializarCargaCupos() {
             var datepicker = $("#fechaHasta").data("kendoDatePicker");
             datepicker.min(kendo.parseDate($("#fechaEntrega").val()));
             datepicker.value(kendo.parseDate($("#fechaEntrega").val()));
+            $("#contratoId").val("");
             CrearTablaFechaHasta();
         }
     });
@@ -77,6 +78,7 @@ function InicializarCargaCupos() {
     $("#fechaHasta").kendoDatePicker({
         min: kendo.parseDate($("#fechaEntrega").val()),
         change: function () {
+            $("#contratoId").val("");
             CrearTablaFechaHasta();
             $("#boton-carga-masiva").show();
         }
@@ -157,6 +159,59 @@ function InicializarCargaCupos() {
     if ($("#fechaHasta").val() != $("#fechaEntrega").val() ) {
         $("#boton-carga-masiva").show();
     }
+
+    $("#contratoId").kendoAutoComplete({
+        template: 
+        '<p class="buscar-nomb" >#: data.TipoNegocio# - #: data.Negocio# KGs: #: data.Cantidad#</p>',
+        dataTextField: "Negocio",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        //change: function () {
+        //    if ($("#contratoId").val().split('|').length > 1) {
+        //        $("#contratoId").val($("#contratoId").val().split('|')[1]);
+        //    }
+        //},
+        select: function (e) {
+            $("#cantidad").data("kendoNumericTextBox").max(e.dataItem.CantidadMaximaCupo);
+            $("#cantidad").data("kendoNumericTextBox").value(e.dataItem.CantidadMaximaCupo);
+            $("#cantidad").data("kendoNumericTextBox").trigger("change");
+            $("#Negocio").val(e.dataItem.Id);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Cupo/TraerNegocioConCupoDisponible"
+                },
+                parameterMap: function (data, type) {
+                    var cuitProv = $("#buscadorProveedor").val().split('(');
+                    if (cuitProv[1] != null) {
+                        var cuitP = cuitProv[1].split(')');
+                    }
+                    else {
+                        cuitP = cuitProv;
+                    }                   
+                    return { cuitProveedor: cuitP[0], materialId: $('#material').val(), centro: $('#planta').val(), filtro: $('#contratoId').val(), desde: $('#fechaEntrega').val(), hasta: $('#fechaHasta').val()};
+                }
+            }
+
+        }
+    });
+    $('#contratoId').click(function (e) {
+        $('#contratoId').val("");
+        $("#contratoId").data("kendoAutoComplete").search("");
+    });
+    $("#contratoId").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if (event.which < 48 || event.which > 57) {
+            event.preventDefault();
+        }
+    });
+
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {
