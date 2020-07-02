@@ -119,24 +119,24 @@ namespace Molinos.DataAgro.Business.Managers
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
             var materialHabilitado = TraerTodoMaterialHabilitado(zona);
             var habilitacion = new List<MaterialHabilitadoDto>();
-            var materialDisponible = configuracionManager.TraerTodaConfiguracionCupoPorDia(zona);
+            //var materialDisponible = configuracionManager.TraerTodaConfiguracionCupoPorDia(zona);
             foreach (var item in materiales)
             {
-                if (materialHabilitado.Any(x=>x == item.MaterialId) && materialDisponible.Any(x => x.MaterialId == item.MaterialId))
+                if (materialHabilitado.Any(x=>x == item.MaterialId) /*&& materialDisponible.Any(x => x.MaterialId == item.MaterialId)*/)
                 {
                     var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "DISPONIBLE" };
                     habilitacion.Add(habilitado);
                 }
-                else if (!materialHabilitado.Any(x => x == item.MaterialId) && materialDisponible.Any(x => x.MaterialId == item.MaterialId))
+                else if (!materialHabilitado.Any(x => x == item.MaterialId)/* && materialDisponible.Any(x => x.MaterialId == item.MaterialId)*/)
                 {
-                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "NO HABILITADO" };
+                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "NO DISPONIBLE" };
                     habilitacion.Add(habilitado);
                 }
-                else if (!materialDisponible.Any(x => x.MaterialId == item.MaterialId))
-                {
-                    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "RETIRADO" };
-                    habilitacion.Add(habilitado);
-                }   
+                //else if (!materialDisponible.Any(x => x.MaterialId == item.MaterialId))
+                //{
+                //    var habilitado = new MaterialHabilitadoDto { Id = item.MaterialId, DescripcionMaterial = item.Descripcion, Descripcion = "RETIRADO" };
+                //    habilitacion.Add(habilitado);
+                //}   
             }
             return habilitacion;
         }
