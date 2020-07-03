@@ -409,6 +409,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null,
                 TrigoEspecial = x.TrigoEspecial,
                 Posicion = x.Posicion,
+                ContratoSAP = x.ContratoSAP
             },
                x => x.OcultarEnTablero == false
                &&
@@ -420,7 +421,23 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.TipoAgenteCompraId == null)
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                );
-
+            var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3).Select(a => a.ContratoSAP).ToList();
+            var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
+            foreach (var fijacion in negocios.Where(a=>a.TipoNegocioId == 3))
+            {
+                var contrato = contratosDeFijaciones.Where(a => a.ContratoSAP == fijacion.ContratoSAP).SingleOrDefault();
+                if (contrato != null)
+                {
+                    fijacion.StandardCalidadId = contrato.StandardDeCalidadId;
+                }
+                else
+                {
+                    if (fijacion.StandardCalidadId == null)
+                    {
+                        fijacion.StandardCalidadId = fijacion.TrigoEspecial == true ? 7 : 1;
+                    }
+                }
+            }
             var kilosPosicionSoja = materialId.Contains(3) ? TraerPosicionMaterial(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
             var posicionSoja = new PosicionComprasDto
             {
@@ -800,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
             && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
             && x.MaterialId == materialId
             && x.TipoNegocioId == 3
-            && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 1 && x.TrigoEspecial == false))
+            && (calidad == null || (calidad == x.StandardCalidadId ) )
             && (centroId == 0 || centroId == x.DestinoId))
                 .Select(
                 x => new PosicionPorMaterial
