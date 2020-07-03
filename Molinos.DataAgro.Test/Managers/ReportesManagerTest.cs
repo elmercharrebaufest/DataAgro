@@ -660,6 +660,9 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<PrecioPizarra>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
              .Returns(new List<BasicoContrato>() { new BasicoContrato { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha } });
+            //var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
+            repositorioMock.Setup(y=> y.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<Negocio>() );
             var result = target.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(7));
