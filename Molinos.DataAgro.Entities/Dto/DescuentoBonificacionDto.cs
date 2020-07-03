@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaHasta { get; set; }
         public decimal Importe { get; set; }
         public string MonedaId { get; set; }
+        public string Moneda { get; set; }
         public decimal Porcentaje { get; set; }
         public string TipoDBDesc { get; set; }
         public int TipoDBId { get; set; }

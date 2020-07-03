@@ -147,12 +147,12 @@ namespace Molinos.DataAgro.Business.Managers
             //    throw new Exception("No se pueden comparar diferentes Tipos de Registros.");
             //}
 
-            var j1 = JToken.Parse(logActual.DatoModificado);
-            var j2 = JToken.Parse(logAnterior.DatoModificado);
+            var jActual = JToken.Parse(logActual.DatoModificado);
+            var jAnterior = JToken.Parse(logAnterior.DatoModificado);
 
 
             var jdp = new JsonDiffPatch();
-            JToken diffResult = jdp.Diff(j2, j1);
+            JToken diffResult = jdp.Diff(jAnterior, jActual);
             List<DatoModificadosLogDataAgroDto> cambiados = new List<DatoModificadosLogDataAgroDto>();
             if (diffResult != null)
             {
@@ -207,10 +207,12 @@ namespace Molinos.DataAgro.Business.Managers
                                                 {
                                                     var value = ((JProperty)item4).First == null ? "" : ((JProperty)item4).First.ToString();
 
+                                                    bool actual = logActual.DatoModificado.Replace(" ","").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item3.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+
                                                     cambiados.Add(new DatoModificadosLogDataAgroDto
                                                     {
-                                                        Anterior = "",
-                                                        Actual = BuscaFechaYFormatea(value),
+                                                        Anterior = !actual ? BuscaFechaYFormatea(value) : "",
+                                                        Actual = actual ? BuscaFechaYFormatea(value) : "",
                                                         Campo = campo + " - " + AddSpacesToSentence(((JProperty)item4).Name, ':')
                                                     });
                                                 }

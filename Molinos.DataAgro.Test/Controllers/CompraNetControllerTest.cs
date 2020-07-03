@@ -791,6 +791,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     FechaHasta= "01/10/2019",
                     Importe=1,
                     MonedaId="a",
+                    Moneda="a",
                     Porcentaje=1,
                     TipoDBDesc="a",
                     TipoDBId=1,
@@ -802,7 +803,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDescuentosPorContrato(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"FechaDesde\":\"01/10/2019\",\"FechaHasta\":\"01/10/2019\",\"Importe\":1,\"MonedaId\":\"a\",\"Porcentaje\":1,\"TipoDBDesc\":\"a\",\"TipoDBId\":1,\"TipoPeriodoDBDesc\":\"a\",\"TipoPeriodoDBId\":1,\"ContratoId\":1}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"FechaDesde\":\"01/10/2019\",\"FechaHasta\":\"01/10/2019\",\"Importe\":1,\"MonedaId\":\"a\",\"Moneda\":\"a\",\"Porcentaje\":1,\"TipoDBDesc\":\"a\",\"TipoDBId\":1,\"TipoPeriodoDBDesc\":\"a\",\"TipoPeriodoDBId\":1,\"ContratoId\":1}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
