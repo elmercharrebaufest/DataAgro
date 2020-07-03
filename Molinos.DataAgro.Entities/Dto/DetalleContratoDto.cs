@@ -51,6 +51,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MercsDeposito { get; set; }
         public double CantidadD { get; set; }
         public int Id { get; set; }
+        public DateTime FechaDate { get; set; }
+        public bool? Pizarra { get; set; }
     }
 }
 

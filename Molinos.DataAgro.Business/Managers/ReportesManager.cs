@@ -423,7 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
                );
             var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3).Select(a => a.ContratoSAP).ToList();
             var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
-            foreach (var fijacion in negocios.Where(a=>a.TipoNegocioId == 3))
+            foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
             {
                 var contrato = contratosDeFijaciones.Where(a => a.ContratoSAP == fijacion.ContratoSAP).SingleOrDefault();
                 if (contrato != null)
@@ -817,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
             && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
             && x.MaterialId == materialId
             && x.TipoNegocioId == 3
-            && (calidad == null || (calidad == x.StandardCalidadId ) )
+            && (calidad == null || (calidad == x.StandardCalidadId))
             && (centroId == 0 || centroId == x.DestinoId))
                 .Select(
                 x => new PosicionPorMaterial
@@ -1315,6 +1315,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = x.Fecha,
                 Provincia = x.Provincia != null ? x.Provincia.Nombre : "",
                 Localidad = x.Localidad != null ? x.Localidad.Nombre : "",
                 Boleto = x.Boleto != null ? x.Boleto.Descripcion : "",
@@ -1337,8 +1338,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
+                Pizarra = x.Pizarra 
             },
-            x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+            x => negocios.Contains(x.Id));
 
             if (contratos != null)
             {
@@ -1370,6 +1372,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = x.Fecha,
                 Provincia = "",
                 Localidad = "",
                 Boleto = "",
@@ -1392,8 +1395,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = "",
+                Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id));
 
             if (fijaciones != null)
             {
@@ -1423,6 +1427,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda != null ? x.Moneda.Descripcion : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = x.Fecha,
                 Provincia = "",
                 Localidad = "",
                 Boleto = "",
@@ -1445,8 +1450,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
                 MercsDeposito = "",
+                Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id));
             if (fasones != null)
             {
                 data.AddRange(fasones);
@@ -1479,6 +1485,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda.Descripcion,
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = x.Fecha,
                 Provincia = "",
                 Localidad = "",
                 Boleto = "",
@@ -1500,9 +1507,10 @@ namespace Molinos.DataAgro.Business.Managers
                 EstablecimientoPropio = "",
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
-                MercsDeposito = ""
+                MercsDeposito = "",
+                Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+             x => negocios.Contains(x.Id));
 
 
             if (acuerdos != null)
@@ -1535,6 +1543,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda.Descripcion,
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                FechaDate = x.Fecha,
                 Provincia = "",
                 Localidad = "",
                 Boleto = "",
@@ -1556,16 +1565,28 @@ namespace Molinos.DataAgro.Business.Managers
                 EstablecimientoPropio = "",
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
-                MercsDeposito = ""
+                MercsDeposito = "",
+                Pizarra = x.Pizarra
             },
-            x => negocios.Contains(x.Id) && (moneda == "" || x.MonedaId == moneda));
+            x => negocios.Contains(x.Id));
 
             if (agente != null)
             {
                 data.AddRange(agente);
             }
 
-
+            if (data.Count > 0 && data.Any(a => a.Pizarra == true))
+            {
+                var maxFecha = data.Where(a => a.Pizarra == true).Max(a => a.FechaDate);
+                var preciosPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= maxFecha);
+                foreach (var item in data.Where(a => a.Moneda == "").ToList())
+                {
+                    var precioPizarra = preciosPizarra.Where(x => x.Material.Descripcion == item.Material && x.FechaHasta <= item.FechaDate).ToList();
+                    var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
+                    item.Moneda = precio.MonedaId;
+                    item.Precio = precio.Precio.ToString();
+                }
+            }
 
             return data;
         }
