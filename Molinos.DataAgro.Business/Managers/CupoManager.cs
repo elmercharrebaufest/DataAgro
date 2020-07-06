@@ -245,10 +245,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
-            if (cupo.NegocioId == 0 && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
-            {
-                error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
-            }
+            //if (cupo.NegocioId == 0 && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            //{
+            //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
+            //}
 
             return error;
         }
