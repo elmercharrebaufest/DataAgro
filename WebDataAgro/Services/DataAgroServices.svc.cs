@@ -433,7 +433,7 @@ namespace WebDataAgro.Services
                 cupo.Destinatario = cupoSAP.Destinatario??"";
                 cupo.FleteProcedencia = cupoSAP.FleteProcedencia == "S";
                 cupo.Calidad = cupoSAP.Calidad == "01" ? "Camara" : cupoSAP.Calidad == "03" ? "Fabrica" : "";
-                cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
+                //cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
                 cupo.EstadoCupoId = cupoSAP.Borrado == "X" ? 4 : cupoOriginal.EstadoCupoId;
 
                 logger.Debug("Actualizando CUPOSAP VALIDAR");

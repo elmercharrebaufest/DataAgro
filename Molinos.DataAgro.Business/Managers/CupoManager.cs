@@ -1846,7 +1846,7 @@ namespace Molinos.DataAgro.Business.Managers
             cupoSave.Destinatario = cupoSAP.Destinatario;
             cupoSave.FleteProcedencia = cupoSAP.FleteProcedencia;
             cupoSave.Calidad = cupoSAP.Calidad;
-            cupoSave.ComercialId = cupoSAP.ComercialId;
+            //cupoSave.ComercialId = cupoSAP.ComercialId;
             cupoSave.EstadoCupoId = cupoSAP.EstadoCupoId;
 
             repositorio.GuardarCambios();

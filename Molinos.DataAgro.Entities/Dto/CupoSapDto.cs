@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Destinatario { get; set; }
         public string FleteProcedencia { get; set; }
         public string Calidad { get; set; }
-        public string Comercial { get; set; }
+        //public string Comercial { get; set; }
         public string Borrado { get; set; }
     }
 }
