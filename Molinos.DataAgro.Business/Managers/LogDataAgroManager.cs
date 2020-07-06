@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
-            if (cambios.BasicoProveedorTraerPorProveedores != null &&cambios.BasicoProveedorTraerPorProveedores.Count > 1)
+            if (cambios.BasicoProveedorTraerPorProveedores != null && cambios.BasicoProveedorTraerPorProveedores.Count > 1)
             {
                 cambios.BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { cambios.BasicoProveedorTraerPorProveedores.FirstOrDefault() };
             }
@@ -55,6 +56,16 @@ namespace Molinos.DataAgro.Business.Managers
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, Type claseDeObjeto = null)
         {
             var usuarioComercial = PermisosHelper.ObtenerUsuario();
+            if (usuarioComercial == null)
+            {
+                try
+                {
+                    usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
+                }
+                catch (Exception)
+                { }
+            }
+
             if (usuarioComercial != null)
             {
                 var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
@@ -62,6 +73,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     usuarioComercial = comercial;
                 }
+            }
+
+            if (usuarioComercial == null)
+            {
+                usuarioComercial = "";
             }
 
             Type tipoDelObjeto = (claseDeObjeto != null) ? claseDeObjeto : cambios.GetType();
@@ -207,7 +223,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                 {
                                                     var value = ((JProperty)item4).First == null ? "" : ((JProperty)item4).First.ToString();
 
-                                                    bool actual = logActual.DatoModificado.Replace(" ","").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item3.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+                                                    bool actual = logActual.DatoModificado.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item3.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
 
                                                     cambiados.Add(new DatoModificadosLogDataAgroDto
                                                     {
