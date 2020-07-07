@@ -1,4 +1,5 @@
-﻿using Kendo.DynamicLinq;
+﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
@@ -22,14 +23,16 @@ namespace Molinos.DataAgro.Test.Managers
     {
         private LogDataAgroManager target;
         private Mock<IRepositorio> repositorioMock;
+        private Mock<ILogger> loggerMock;
         IList<LogDataAgro> listaDeLogs;
 
         [SetUp]
         public void SetUp()
         {
             repositorioMock = new Mock<IRepositorio>();
+            loggerMock = new Mock<ILogger>();
 
-            target = new LogDataAgroManager(repositorioMock.Object);
+            target = new LogDataAgroManager(repositorioMock.Object, loggerMock.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
 
             repositorioMock.Setup(x => x.Agregar(It.IsAny<LogDataAgro>()));
