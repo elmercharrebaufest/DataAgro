@@ -481,10 +481,10 @@ namespace WebDataAgro.Services
             {
                 oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Zona' es invalido" });
             }
-            if (cupo.ComercialId == null || cupo.ComercialId == 0)
-            {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
-            }
+            //if (cupo.ComercialId == null || cupo.ComercialId == 0)
+            //{
+            //    oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
+            //}
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
         }
