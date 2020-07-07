@@ -8,6 +8,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
+using System.Data.Entity;
 
 namespace Molinos.DataAgro.Business
 {
@@ -40,7 +41,7 @@ namespace Molinos.DataAgro.Business
 
         public ResultIniRangoConfirmacionAutomatica TraerTodoRangoDisponible()
         {
-            var hoy = DateTime.Now.Date;
+            var hoy = DateTime.Today;
             return new ResultIniRangoConfirmacionAutomatica
             {                 
                 Rango = repositorio.Listar<RangoConfirmacionAutomatica, RangoConfirmacionAutomaticaIni>(x => new RangoConfirmacionAutomaticaIni()
@@ -57,7 +58,7 @@ namespace Molinos.DataAgro.Business
                     EntregaHasta = (x.HastaMes + "/" + x.HastaAnio) == "0/0" ? "" : (x.HastaMes + "/" + x.HastaAnio),
                     Zona = x.Zona != null ? x.Zona.Descripcion : "",
                     TipoNegocio = x.TipoNegocio.Descripcion
-                }, x => x.FechaDesde <= hoy && x.FechaHasta >= hoy, 0, "Material")
+                }, x => DbFunctions.TruncateTime(x.FechaDesde) <= hoy && DbFunctions.TruncateTime(x.FechaHasta) >= hoy, 0, "Material")
             };
         }
 
