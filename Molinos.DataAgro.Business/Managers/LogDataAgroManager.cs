@@ -1,4 +1,5 @@
-﻿using JsonDiffer;
+﻿using Autofac.Extras.NLog;
+using JsonDiffer;
 using JsonDiffPatchDotNet;
 using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities;
@@ -29,10 +30,12 @@ namespace Molinos.DataAgro.Business.Managers
     public class LogDataAgroManager : ILogDataAgroManager
     {
         private readonly IRepositorio repositorio;
+        private readonly ILogger logger;
 
-        public LogDataAgroManager(IRepositorio repositorio)
+        public LogDataAgroManager(IRepositorio repositorio, ILogger logger)
         {
             this.repositorio = repositorio;
+            this.logger = logger;
         }
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
@@ -55,23 +58,39 @@ namespace Molinos.DataAgro.Business.Managers
 
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, Type claseDeObjeto = null)
         {
-            var usuarioComercial = PermisosHelper.ObtenerUsuario();
-            if (usuarioComercial == null)
+            var usuarioComercial = "";
+            logger.Debug("LogGuardarCambios");
+            try
+            {
+                logger.Debug("LogGuardarCambios ObtenerUsuario");
+                usuarioComercial = PermisosHelper.ObtenerUsuario();
+                logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
+
+            }
+            catch (Exception)
+            { }
+            if (string.IsNullOrEmpty(usuarioComercial))
             {
                 try
                 {
+                    logger.Debug("LogGuardarCambios OperationContext");
                     usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
+                    logger.Debug("LogGuardarCambios OperationContext :" + (usuarioComercial ?? "null"));
+
                 }
                 catch (Exception)
                 { }
             }
 
-            if (usuarioComercial != null)
+            if (!string.IsNullOrEmpty(usuarioComercial))
             {
+                logger.Debug("LogGuardarCambios Comercial :" + (usuarioComercial ?? "null"));
+
                 var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
                 if (comercial != null)
                 {
                     usuarioComercial = comercial;
+                    logger.Debug("LogGuardarCambios Comercial :" + (usuarioComercial ?? "null"));
                 }
             }
 
@@ -79,6 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 usuarioComercial = "";
             }
+            logger.Debug("LogGuardarCambios final :" + (usuarioComercial ?? "null"));
 
             Type tipoDelObjeto = (claseDeObjeto != null) ? claseDeObjeto : cambios.GetType();
             string nombreDelTipodeObjeto = tipoDelObjeto.Name.Split('_')[0];
