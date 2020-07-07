@@ -40,7 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, tipoDeContrato);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
@@ -49,14 +49,14 @@ namespace Molinos.DataAgro.Business.Managers
                 cambios.BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { cambios.BasicoProveedorTraerPorProveedores.FirstOrDefault() };
             }
 
-            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, typeof(Proveedor));
+            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, "Proveedor");
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id,"Cupo");
         }
 
-        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, Type claseDeObjeto = null)
+        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase )
         {
             var usuarioComercial = "";
             logger.Debug("LogGuardarCambios");
@@ -99,11 +99,7 @@ namespace Molinos.DataAgro.Business.Managers
                 usuarioComercial = "";
             }
             logger.Debug("LogGuardarCambios final :" + (usuarioComercial ?? "null"));
-
-            Type tipoDelObjeto = (claseDeObjeto != null) ? claseDeObjeto : cambios.GetType();
-            string nombreDelTipodeObjeto = tipoDelObjeto.Name.Split('_')[0];
-            nombreDelTipodeObjeto = nombreDelTipodeObjeto.Replace("Basico", String.Empty).Replace("Dto", String.Empty).Trim();
-
+            
             string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -119,8 +115,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Usuario = usuarioComercial,
                     Fecha = DateTime.Now,
                     DatoModificado = jsonObjeto,
-                    Clase = (tipoDelObjeto.IsSubclassOf(typeof(Negocio))) ? $"Negocio - { nombreDelTipodeObjeto }" : nombreDelTipodeObjeto,
-                    Tipo = tipoDelObjeto.Name,
+                    Clase = clase,
+                    Tipo = cambios.GetType().Name,
                     AccionRealizada = tipoDeAccion.ToString(),
                     ClaseId = id,
                 };
@@ -130,7 +126,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                throw new Exception($"{nombreDelTipodeObjeto} Guardado, error en LogDataAgro. {e.Message}", e);
+                throw new Exception($"{cambios.GetType().Name} Guardado, error en LogDataAgro. {e.Message}", e);
 
             }
         }
@@ -319,21 +315,21 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica");
         }
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa");
         }
         public int LogCambiosDataAgro(HabilitacionFijacionDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Habilitacion Fijacion");
         }
 
         public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra");
         }
 
 

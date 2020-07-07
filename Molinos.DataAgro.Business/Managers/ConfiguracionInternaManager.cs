@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerPrecio(oConfiguracion.Id), tipo);
+                logDataAgroManager.LogCambiosDataAgro(TraerPizarra(oConfiguracion.Id), tipo);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerPrecio(oConfiguracion.Id), tipo);
+                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oConfiguracion.Id), tipo);
             }
             catch (Exception ex)
             {
