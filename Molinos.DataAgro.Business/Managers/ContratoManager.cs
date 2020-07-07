@@ -560,37 +560,65 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
                 }
             }
-            if (oParam.FechaOperacion > DateTime.Now.Date)
+
+            if (!validacionesMinimas)
             {
-                oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
-            }
-            else
-            {
-                if (oParam.FechaOperacion < DateTime.Now.Date)
+                if (oParam.TipoAgenteCompraId != null)
                 {
-                    var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
-
-                    if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                    if (oParam.CaratulaMAT == null)
                     {
-                        oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
-
+                        oErrorMessages.Error("CaratulaMAT", "Debe completar Caratula MAT.");
                     }
-
-                    if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                    if (oParam.PrecioAjusteComision == null)
                     {
-                        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                        oErrorMessages.Error("PrecioAjusteComision", "Debe completar Precio Ajuste Comisión.");
                     }
-
+                    if (oParam.MonedaAjusteComisionId == null)
+                    {
+                        oErrorMessages.Error("MonedaAjusteComisionId", "Debe completar Moneda Ajuste Comisión.");
+                    }
                 }
-                //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
-                //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
-                //{
-                //    if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
-                //    {
-                //        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
-                //    }
-                //}
+                if (oParam.TipoAgenteCompraId == null && (oParam.CaratulaMAT != null || oParam.PrecioAjusteComision != null || oParam.MonedaAjusteComisionId != null || oParam.CaratulaExtension != null))
+                {
+                    oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
+                }
             }
+
+            if (!validacionesMinimas)
+            {
+                if (oParam.FechaOperacion > DateTime.Now.Date)
+                {
+                    oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
+                }
+                else
+                {
+                    if (oParam.FechaOperacion < DateTime.Now.Date)
+                    {
+                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+
+                        if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                        {
+                            oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+
+                        }
+
+                        if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                        }
+
+                    }
+                    //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
+                    //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
+                    //{
+                    //    if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                    //    {
+                    //        oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                    //    }
+                    //}
+                }
+            }
+
             var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
 
             if (oParam.TipoNegocioId == 1 && (centro == null || centro.Acopio == true)
