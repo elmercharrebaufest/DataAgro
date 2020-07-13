@@ -137,6 +137,14 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult CrearCupo(CupoModel cupo)
         {
+            if (cupo.NegocioId == 0)
+            {
+                cupo.NegocioId = null;
+            }
+            if (cupo.Negocio == 0)
+            {
+                cupo.Negocio = null;
+            }
             var modificado = cupo.Id != 0;
             cupo.CantidadCupos = cupo.CantidadCupos
                                  != null ? cupo.CantidadCupos : 0;
@@ -439,7 +447,7 @@ namespace WebDataAgro.Controllers
             return Json(cupo.Select(x => new { Id = x.Id, CupoSap = x.CupoSap }), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult TraerNegocioConCupoDisponible(string cuitProveedor, int materialId, int centro,string filtro, DateTime desde, DateTime hasta)
+        public ActionResult TraerNegocioConCupoDisponible(string cuitProveedor, int materialId, int centro, string filtro, DateTime desde, DateTime hasta)
         {
             return new JsonResult()
             {

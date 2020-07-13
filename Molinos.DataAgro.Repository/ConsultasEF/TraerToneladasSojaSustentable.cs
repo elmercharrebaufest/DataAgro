@@ -26,9 +26,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
 
-            var contratos = contexto.Set<Contrato>().Where(x =>x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && /*x.MaterialId == 3 &&*/ (x.ImporteSustentable != null && x.MonedaSustentableId != null) && (centroId == 0 || x.DestinoId == centroId) && x.ContratoAcuerdo == null).ToList();
+            var contratos = contexto.Set<Contrato>().Where(x =>
+            x.OcultarEnTablero == false &&
+            DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy &&
+            DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
+            /*x.MaterialId == 3 &&*/
+            (x.ImporteSustentable != null && x.MonedaSustentableId != null) &&
+            (centroId == 0 || x.DestinoId == centroId) &&
+            x.ContratoAcuerdo == null &&
+            x.TipoAgenteCompraId == null
+            ).ToList();
             var result = new ReporteSojaSustDto();
-            if (contratos.Count>0)
+            if (contratos.Count > 0)
             {
                 result = contratos.GroupBy(x => x.Material.MaterialId).DefaultIfEmpty().Select(x => new ReporteSojaSustDto()
                 {
@@ -38,7 +48,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Ids = x.Select(a => new KeyValuePair<int, int>(a.TipoNegocioId, a.Id))
                 }).First();
             }
-            
+
             return result;
         }
     }

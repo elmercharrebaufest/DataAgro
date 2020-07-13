@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
-            //if (cupo.NegocioId == 0 && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            //if ((cupo.NegocioId == 0 || cupo.NegocioId == null) && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
@@ -387,7 +387,7 @@ namespace Molinos.DataAgro.Business.Managers
                 UsuarioCreador = x.UsuarioCreador,
                 ZonaCupoSap = x.ZonaCupo.CodigoSap,
                 Acopio = x.Centro.Acopio,
-                NegocioId = x.NegocioId.Value
+                NegocioId = x.NegocioId
             });
         }
         public Resultado EliminarVarios(List<int> cupos, string comercial)

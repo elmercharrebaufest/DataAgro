@@ -38,8 +38,8 @@ namespace WebDataAgro.Models
         public List<DiaCupo> Dias { get; set; }
         public CupoResult Resultado { get; set; }
 
-        public int Negocio { get; set; }       
-        public int NegocioId { get; set; }
+        public int? Negocio { get; set; }       
+        public int? NegocioId { get; set; }
 
     }
     
