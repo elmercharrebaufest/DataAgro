@@ -422,10 +422,10 @@ namespace Molinos.DataAgro.Business.Managers
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                );
             var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3 && a.ContratoSAP != null && a.ContratoSAP != "").Select(a => a.ContratoSAP).ToList();
-            var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
+            var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && x.EstadoId == 5 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
             foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
             {
-                var contrato = contratosDeFijaciones.Where(a => a.ContratoSAP == fijacion.ContratoSAP).SingleOrDefault();
+                var contrato = contratosDeFijaciones.Where(a => a.ContratoSAP == fijacion.ContratoSAP).FirstOrDefault();
                 if (contrato != null)
                 {
                     fijacion.StandardCalidadId = contrato.StandardDeCalidadId;
