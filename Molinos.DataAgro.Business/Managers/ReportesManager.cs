@@ -421,7 +421,7 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.TipoAgenteCompraId == null)
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                );
-            var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3).Select(a => a.ContratoSAP).ToList();
+            var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3 && a.ContratoSAP != null && a.ContratoSAP != "").Select(a => a.ContratoSAP).ToList();
             var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
             foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
             {
