@@ -97,9 +97,9 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult GrabarAmpliacionFijacion(FijacionDePrecioContrato oFijacion)
         {
             var oFijacionDePrecioContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacion.Id);
-            var oEntityErrors = new GrabarContratoResult();
+            var oEntityErrors = ValidarAmpliacionFijacion(oFijacionDePrecioContratoSave, oFijacion.Ampliaciones.Value);
 
-            if (oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Finalizado && oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Rechazado)
+            if (!oEntityErrors.HayError && oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Finalizado && oFijacionDePrecioContratoSave.Estado.EstadoContratoId != (int)EnumEstadoContrato.Rechazado)
             {
                 oFijacionDePrecioContratoSave.Ampliaciones = oFijacion.Ampliaciones.Value;
                 oFijacionDePrecioContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
@@ -121,7 +121,18 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
+        private GrabarContratoResult ValidarAmpliacionFijacion(FijacionDePrecioContrato fijacion, double ampliacion)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            var aFijar = oContratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor != null ? fijacion.Corredor.CUIT : null , fijacion.MaterialId, fijacion.ContratoSAP.Remove(0,3), fijacion.Id);
+            double kgAplicados = aFijar.Count() > 0 &&  double.TryParse(aFijar.First().KilosAplicados, out kgAplicados) ? kgAplicados : 0;           
+            double pendiente = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosContrato, out pendiente) ? pendiente - kgAplicados : 0;
+            if (pendiente <= ampliacion)
+            {
+                oEntityErrors.Error("", "La ampliación supera la cantidad disponible");
+            }
+            return oEntityErrors;
+       }
         private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages)
         {
 

@@ -810,6 +810,9 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridCupo').data("kendoGrid");
     if (!$("#cupoPropiosDiv").hasClass("selected")) {
+        var fecha = new Date();
+        var ayer = new Date(fecha.getTime() - 24 * 60 * 60 * 1000);
+        addOrRemoveFilter(grilla, "FechaIngreso", "gte", ayer);
         addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
         $("#cupoPropiosDiv").addClass("selected");
         $("#cupoPropio").addClass("selected").removeClass("varios");

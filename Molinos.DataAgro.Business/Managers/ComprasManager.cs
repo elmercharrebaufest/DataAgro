@@ -16,12 +16,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IComprasAgent oComprasAgent;
+        private readonly IComprasDetalleAgent comprasDetalleAgent;
 
-        public ComprasManager(ILogger logger, IRepositorio repositorio, IComprasAgent oComprasAgent)
+        public ComprasManager(ILogger logger, IRepositorio repositorio, IComprasAgent oComprasAgent, IComprasDetalleAgent comprasDetalleAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oComprasAgent = oComprasAgent;
+            this.comprasDetalleAgent = comprasDetalleAgent;
         }
 
         public void ActualizarComprasAyer()
@@ -152,5 +154,109 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
         }
+
+        public void ActualizarComprasDetalle()
+        {
+            var a = new List<string>();
+
+            var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT,x=> x.CUIT == "30711160163").Distinct();
+            var oComercial = repositorio.Listar<Comercial>();
+
+            List<ComprasIniciales> listProve = new List<ComprasIniciales>();
+            ComprasIniciales comp = null;
+            foreach (var comercial in oComercial)
+            {
+                comp = new ComprasIniciales();
+                comp.CUIT.AddRange(oProveedor);
+
+                comp.UsuarioDirectory = comercial.IdActiveDirectory;
+                listProve.Add(comp);
+            }
+
+            ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);
+            ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes        
+        }
+        private void ActualizarComprasDetalleProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
+        {
+            var histActual = repositorio.Listar<CampañaMaterialPorMes>();
+            var campaniaMaterialActual = repositorio.Listar<CampañaMaterial>();
+            var proveedores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT }).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
+            var campanias = repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToDictionary(x => x.Descripcion.ToUpper().Trim());
+            var materiales = repositorio.Listar<Material, MaterialBasicoDto>(x => new MaterialBasicoDto { MaterialId = x.MaterialId, Codigo = x.Codigo }).ToDictionary(x => x.Codigo.ToUpper().Trim());
+            var campaniasMaterial = new List<CampañaMaterial>();
+            var campaniaMaterialPorMes = new List<CampañaMaterialPorMes>();
+
+            try
+            {
+                var contadorActualizacion = 0;
+                foreach (var item in listProve)
+                {
+                    var hist = comprasDetalleAgent.ComprarIniciales(item.CUIT, item.UsuarioDirectory);
+                    logger.Debug("Campos a Acualizar para " + item.UsuarioDirectory + "-" + item.CUIT.Count + ": " + hist.Count);
+                    if (hist.Count > 0)
+                    {
+                            var listHistorial = hist.GroupBy(x => new { x.VENDEDOR, x.MATERIAL, x.COSECHA });
+                        //    var ComercialId = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower().Trim() == item.UsuarioDirectory.ToLower().Trim()).ComercialId;
+                        //    foreach (var jj in listHistorial)
+                        //    {
+                        //        var proveedoresId = proveedores[jj.Key.VENDEDOR];
+                        //        var materialId = materiales[jj.Key.MATERIAL].MaterialId;
+                        //        var campaniaId = campanias[jj.Key.COSECHA].CampañaId;
+
+                        //        foreach (var proveedor in proveedoresId)
+                        //        {
+                        //            int proveedorId = proveedor.ProveedorId;
+                        //            var campaniaMaterial = campaniaMaterialActual.Where(x => x.CampañaId == campaniaId && x.ProveedorId == proveedorId && x.MaterialId == materialId).FirstOrDefault();
+                        //            if (campaniaMaterial != null)
+                        //            {
+                        //                campaniaMaterial.ToneladasCompradas = jj.Sum(x => (double)x.TN_COMPRADAS);
+                        //                contadorActualizacion++;
+                        //                foreach (var ii in jj)
+                        //                {
+
+                        //                    var campaniaMaterialMes = histActual.Where(x => x.CampañaMaterialId == campaniaMaterial.CampañaMaterialId && x.Mes == Helper.DevolverIdMes(ii.MES) && x.Año == Int32.Parse(ii.ANIO) && x.ComercialId == ComercialId).FirstOrDefault();
+                        //                    if (campaniaMaterialMes != null)
+                        //                    {
+                        //                        campaniaMaterialMes.Toneladas = (double)ii.TN_COMPRADAS;
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        campaniaMaterialPorMes.Add(new CampañaMaterialPorMes()
+                        //                        {
+                        //                            NroItem = 1,
+                        //                            Mes = Helper.DevolverIdMes(ii.MES),
+                        //                            Toneladas = (double)ii.TN_COMPRADAS,
+                        //                            CampañaMaterialId = campaniaMaterial.CampañaMaterialId,
+                        //                            Año = Int32.Parse(ii.ANIO),
+                        //                            ComercialId = ComercialId
+                        //                        });
+                        //                    }
+                        //                }
+
+                        //            }
+                        //            else
+                        //            {
+                        //                campaniasMaterial.Add(new CampañaMaterial() { CampañaId = campaniaId, NroItem = 1, ProveedorId = proveedorId, MaterialId = materialId, ToneladasCompradas = jj.Sum(x => (double)x.TN_COMPRADAS) });
+                        //            }
+                        //        }
+                        //    }
+                    }
+                }
+                //logger.Debug("Campos a actualizados: " + contadorActualizacion);
+                //logger.Debug("Nuevos CampañaMaterial por mes: " + campaniaMaterialPorMes.Count);
+                //repositorio.AgregarTodos(campaniaMaterialPorMes);
+
+                //logger.Debug("Nuevos CampañaMaterial: " + campaniasMaterial.Count);
+                //repositorio.AgregarTodos(campaniasMaterial);
+                //repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("ProcessCompras ERROR");
+                logger.Error(ex);
+                throw;
+            }
+        }
+
     }
 }

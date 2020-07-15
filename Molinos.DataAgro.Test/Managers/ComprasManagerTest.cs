@@ -21,6 +21,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IRepositorio> repositorioMock;
         private Mock<IComprasAgent> comprasAgentMock;
+        private Mock<IComprasDetalleAgent> comprasDetalleAgentMock;
 
         [SetUp]
         public void SetUp()
@@ -28,7 +29,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             logger = new Mock<ILogger>();
             comprasAgentMock = new Mock<IComprasAgent>();
-            target = new ComprasManager(logger.Object, repositorioMock.Object, comprasAgentMock.Object);
+            comprasDetalleAgentMock = new Mock<IComprasDetalleAgent>();
+            target = new ComprasManager(logger.Object, repositorioMock.Object, comprasAgentMock.Object, comprasDetalleAgentMock.Object);
         }
 
         [Test]

@@ -245,5 +245,13 @@ namespace WebDataAgro.Controllers
             logger.Info($"ProcessCompras - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult ProcessComprasDetalle()
+        {
+            logger.Info($"ProcessCompras - Iniciando");
+            comprasManager.ActualizarComprasDetalle();
+            logger.Info($"ProcessCompras - Finalizado");
+            return Content("ok");
+        }
     }
 }

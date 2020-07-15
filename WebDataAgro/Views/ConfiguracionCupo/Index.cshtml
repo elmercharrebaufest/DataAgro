@@ -44,7 +44,7 @@
 
                     @using (Html.BeginForm("GrabarCupos", null, FormMethod.Post))
                     {
-                       
+
                         <div class="row">
                             @Html.HiddenFor(x => x.Id)
                             <div class="col-xs-2">
@@ -75,7 +75,18 @@
                             </div>
                         </div>
                         <div class="row">
-                            <button class="btn btnSubmit" type="submit">Grabar</button>
+                            <div class="col-xs-2">
+                                <span>Cerrar Cupera</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="CierreCupera" name="CierreCupera" type="checkbox" value="true">
+                            </div>
+                            <div class="col-xs-4">
+                               
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btnSubmit" type="submit">Grabar</button>
+                            </div>
                         </div>
                     }
                 </div>

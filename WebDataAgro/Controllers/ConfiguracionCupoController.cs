@@ -65,7 +65,8 @@ namespace WebDataAgro.Controllers
                 CentroId = cupo.CentroId,
                 MaterialId = cupo.MaterialId,
                 Fecha = cupo.Fecha,
-                LimiteCupo = cupo.CantidadCupo
+                LimiteCupo = cupo.CantidadCupo,
+                CierreCupera = cupo.CierreCupera
             });
             if (resultado.HayError)
             {

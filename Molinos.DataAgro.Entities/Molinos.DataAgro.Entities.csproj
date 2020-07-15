@@ -122,6 +122,8 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\ContratoSAP.cs" />
+    <Compile Include="Dto\CompraDetalleAgentDto.cs" />
     <Compile Include="Dto\MaterialHabilitadoDto.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />

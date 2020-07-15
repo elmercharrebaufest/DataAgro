@@ -97,14 +97,17 @@ function CargarGrillaConfig() {
                 }, width: 130, template: "#=Material#"
             },
             { field: "Fecha", type: "date", format: _DefaultDateTemplate },
-            { field: "LimiteCupo" },
+            { field: "LimiteCupo", title: "Límite de Cupo" },
+            { field: "BloquearCupera", title: "Bloqueo Cupera", width: 40 },
             {
                 field: "Id", title: " ", filterable: false, sortable: false, width:75, template: function (dataItem) {
                     return '<a data-toggle="tooltip" title="Editar Configuracion" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
                         '<span> <i class="fa fa-pencil"></i> </span ></a >' +
                         '<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="AbrirModal(' + dataItem.Id + ')">' +
                         '<span> <i class="fa fa-list"></i> </span ></a >';
-                }}
+                }
+            },
+            
         ],
         pageable: {
             messages: {
@@ -213,7 +216,7 @@ function GuardarLimiteCupo() {
             Id: $("#limiteCupoId" + zonaId).val(),
             ZonaCupoId: zonaId,
             CantidadCupo: $("#cantidad" + zonaId).val(),
-            ConfiguracionCupoId: $("#configuracionCupoId").val()
+            ConfiguracionCupoId: $("#configuracionCupoId").val()            
         };
         limites.push(obj);        
     }
@@ -237,6 +240,7 @@ function Editar(id) {
     var fecha = kendo.toString(kendo.parseDate(cupo.Fecha), "dd-MM-yyyy"); 
     $("#Fecha").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value(cupo.LimiteCupo);
+    $("#CierreCupo").prop("checked", cupo.CierreCupo);
 }
 
 function LimpiarConfiguracion() {

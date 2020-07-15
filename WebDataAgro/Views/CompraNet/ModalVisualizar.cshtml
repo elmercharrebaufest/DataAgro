@@ -10,7 +10,10 @@
                     <span aria-hidden="true">×</span>
                     <span class="sr-only">Close</span>
                 </button>
+                <div id="contrato" hidden></div>
                 <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
+                <button id="mostrar" hidden onclick="compararReconfirmacion()">Visualizar Modicación</button>
+                <button id="ocultar" onclick="mostrarDetalles()" hidden>Ocultar Modificación</button>
                 <div class="status pendiente-modal"><div>PENDIENTE</div></div>
                 <div class="status confirmado-modal"><div>CONFIRMADO</div></div>
                 <div class="status oferta-modal"><div>OFERTA</div></div>
@@ -19,7 +22,7 @@
                 <div class="status borrado-modal"><div>RECHAZADO</div></div>
                 <div class="status reconfirmar-modal"><div>RECONFIRMAR</div></div>
             </div>
-            <div class="modal-body clearfix ">
+            <div class="modal-body clearfix" id="datosContrato">
                 <div id="DivVisualizar" class="row">
                     <div id="proveedorDivVisualizar" class="row campo marginCero noAgente clearfix">
                         <strong style="float:left">Proveedor:</strong>
@@ -90,9 +93,9 @@
                             <span id="visualizar_porcentajeDePago"></span>
                         </div>
                         @*<div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                <strong style="float:left">Comercial:</strong>
-                <span id="visualizar_comercial"></span>
-            </div>*@
+                        <strong style="float:left">Comercial:</strong>
+                        <span id="visualizar_comercial"></span>
+                    </div>*@
                     </div>
 
                     <div id="aperturaDiv" class="bordeSeccionVisualizar">
@@ -340,6 +343,11 @@
                     </div>
                 </div>
             </div>
+
+            <div id="tablaModificacion" class="text-xs-center table-responsive">
+                <table hidden id="tablaComparar"  style="width:100%">
+                </table>
+            </div>
         </div>
-    </div>
+        </div>
 </div>

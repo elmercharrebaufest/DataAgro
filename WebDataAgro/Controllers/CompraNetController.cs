@@ -882,6 +882,29 @@ namespace WebDataAgro.Controllers
 
         }
 
+        public ActionResult CompararNegocioReconfirmado(int contratoId)
+        {
+            var contratos = mobjContratoManager.CompararNegocioReconfirmado(contratoId);
+            return new JsonResult()
+            {
+                Data = contratos,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
+        public ActionResult ValidarCalidades(int contratoId)
+        {
+            
+            var validarCalidad = mobjContratoManager.DiferenciaEnCalidades(contratoId);
+            return new JsonResult()
+            {
+                Data = validarCalidad,
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
 
 
     }

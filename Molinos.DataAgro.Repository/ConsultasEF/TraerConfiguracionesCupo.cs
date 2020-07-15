@@ -31,7 +31,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Material = cupo.Material.Descripcion,
                     Centro = cupo.Centro.Descripcion,
                     CentroId = cupo.CentroId,
-                    MaterialId = cupo.MaterialId
+                    MaterialId = cupo.MaterialId,
+                    BloquearCupera = cupo.CierreCupera ? "Si":"No"
                 };
             
             return new KendoGrid<ConfiguracionCupoDto>(request, query);

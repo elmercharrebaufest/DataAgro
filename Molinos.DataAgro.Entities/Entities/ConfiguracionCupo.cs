@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CentroId { get; set; }
         public DateTime Fecha { get; set; }
         public int LimiteCupo { get; set; }
+        public bool CierreCupera { get; set; }
 
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }

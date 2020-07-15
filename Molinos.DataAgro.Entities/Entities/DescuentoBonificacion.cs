@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("TipoPeriodoDBId")]
         public virtual TipoPeriodoDB TipoPeriodoDB { get; set; }
         [ForeignKey("ContratoId")]
-        public virtual Contrato Contrato { get; set; }
+        public virtual Negocio Negocio { get; set; }
     }
 
 }

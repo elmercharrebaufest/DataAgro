@@ -19,6 +19,7 @@ using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
@@ -841,7 +842,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var descuento in oContrato.Descuentos.Where(x => x.Id == 0))
                 {
-                    descuento.Contrato = oContratoSave;
+                    descuento.Negocio = oContratoSave;
                     repositorio.Agregar(descuento);
                     if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
                     {
@@ -2179,6 +2180,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
+                FechaCiertaFormateado = x.FechaCierta.HasValue ?  SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaCierta) : "",
                 TipoNegocioId = x.Precio > 0 ? 2 : 1,
                 HastaFijacion = x.HastaFijacion,
                 DesdeFijacion = x.DesdeFijacion,
@@ -2225,6 +2229,26 @@ namespace Molinos.DataAgro.Business.Managers
                 SelCargoVendedor = null,
                 Madre = null,
                 ContratoMadre = null,
+                FechaCierta = x.FechaCierta,
+                Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Moneda = y.MonedaId,
+                    Id = y.Id,
+                    Porcentaje = y.Porcentaje,
+                    TipoDBDesc = y.TipoDB.Descripcion,
+                    TipoDBId = y.TipoDBId,
+                    TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId = y.TipoPeriodoDBId
+                }).ToList(),
                 Calidades = x.Calidad.Select(y => new CalidadDto
                 {
                     Valor = y.Valor,
@@ -2540,7 +2564,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return error;
         }
-        private bool ValidarCalidadModificada(Contrato contrato, Contrato contratoGuardado)
+        public bool ValidarCalidadModificada(Contrato contrato, Contrato contratoGuardado)
         {
             var calModificado = false;
 
@@ -3151,5 +3175,317 @@ namespace Molinos.DataAgro.Business.Managers
                 return td2;
             }
         }
+
+        public List<BasicoContrato> CompararNegocioReconfirmado(int contratoId)
+        {
+            try
+            {
+                var json = repositorio.Obtener<NegocioHistorico>(x => x.NegocioId == contratoId).Datos;
+                var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
+                Expression<Func<Contrato, BasicoContrato>> proyeccion = x => new BasicoContrato
+                {
+
+                    ContratoId = x.Id,
+                    ProveedorId = x.ProveedorId ?? 0,
+                    Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
+                    Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
+                    ComercialId = x.ComercialId,
+                    FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.FechaDesde),
+                    FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.FechaHasta),
+                    FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.Fecha),
+                    TipoNegocioId = x.TipoNegocioId,
+                    MaterialId = x.MaterialId,
+                    Cantidad = x.Cantidad,
+                    Ampliaciones = x.Ampliaciones,
+                    Precio = x.Precio,
+                    MonedaId = x.MonedaId,
+                    CampanaId = x.CampanaId ?? 0,
+                    ProvinciaId = x.ProvinciaId,
+                    Provincia = x.Provincia.Nombre,
+                    LocalidadId = x.LocalidadId,
+                    Localidad = x.Localidad.Nombre,
+                    ContratoSAP = x.ContratoSAP,
+                    Base = x.Base,
+                    Observacion = x.Observacion,
+                    Estado = x.EstadoId,
+                    Estado_Contrato = x.Estado.Descripcion,
+                    Importe_Sustentable = x.ImporteSustentable,
+                    Moneda_Sustentable = x.MonedaSustentableId,
+                    Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                    Dolarizado = x.Dolarizado,
+
+                    Dias_Pesificado = x.DiasPesificado,
+                    NoInformaSIO = x.NoInformaSio,
+                    TrigoEspecial = x.TrigoEspecial,
+                    ClasificacionId = x.ClasificacionId,
+                    DestinoId = x.DestinoId,
+                    PlanCanje = x.PlanCanje,
+                    Consignatario = x.Consignatario,
+                    CantidadCamiones = x.CantidadCamiones,
+                    BoletoId = x.BoletoId,
+                    BolsaId = x.BolsaId,
+                    DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                    HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                    CondicionFijacion = x.CondicionFijacionId,
+                    CD = x.CD,
+                    Warrant = x.Warrant,
+                    PagoDirectoVendedor = x.PagoDirectoVendedor,
+                    EstablecimientoPropio = x.EstablecimientoPropio,
+                    MercsDeposito = x.MercsDeposito,
+                    PorcentajeComision = x.PorcentajeComision,
+                    ContratoCorredor = x.ContratoCorredor,
+                    ContratoVendedor = x.ContratoVendedor,
+                    SelCargoMOA = x.SelCargoMOA,
+                    SelCargoVendedor = x.SelCargoVendedor,
+                    Madre = x.Madre,
+                    EsFason = x.EsFason,
+                    ContratoMadre = x.ContratoMadre,
+                    Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+                    StandardCalidadId = x.StandardDeCalidadId,
+                    StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
+                    PagoDiferido = x.PagoDiferido,
+                    ZonaId = x.ZonaId,
+                    ZonaDescripcion = x.Zona.Descripcion,
+                    Compensacion = x.Compensacion,
+                    NivelTarifaId = x.NivelTarifaId,
+                    TarifaFlete = x.TarifaFlete,
+                    Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
+                    {
+                        ContratoId = y.ContratoId,
+                        FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", y.FechaDesde) : "",
+                        FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", y.FechaHasta) : "",
+                        Importe = y.Importe,
+                        MonedaId = y.MonedaId,
+                        Moneda = y.MonedaId,
+                        Id = y.Id,
+                        Porcentaje = y.Porcentaje,
+                        TipoDBDesc = y.TipoDB.Descripcion,
+                        TipoDBId = y.TipoDBId,
+                        TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                        TipoPeriodoDBId = y.TipoPeriodoDBId
+                    }).ToList(),
+                    Calidades = x.Calidad.Select(y => new CalidadDto
+                    {
+                        Id = y.Id,
+                        CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
+                        CalidadEspecialId = y.CalidadEspecialId,
+                        PorcentajeDesde = y.PorcentajeDesde,
+                        PorcentajeHasta = y.PorcentajeHasta,
+                        Valor = y.Valor,
+                    }).ToList(),
+                    AperturaPrecios = x.AperturaPrecio.Select(y => new AperturaPrecioDto
+                    {
+                        contratoId = y.NegocioId,
+                        Id = y.Id,
+                        ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
+                        ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
+                        Importe = y.Importe,
+                        MonedaId = y.MonedaId,
+                        Porcentaje = y.Porcentaje
+                    }).ToList(),
+                    PreciosPactados = x.PrecioPactado.Select(y => new PrecioPactadosDto
+                    {
+                        ContratoId = y.ContratoId,
+                        FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", y.FechaDesde) : "",
+                        FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                               SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                               SqlFunctions.DateName("year", y.FechaHasta) : "",
+                        Id = y.Id,
+                        ImportePactado = y.ImportePactado,
+                        MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                        MonedaImportePactadoId = y.MonedaImportePactadoId,
+                        MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                        MonedaPactadoId = y.MonedaPactadoId,
+                        Porcentaje = y.Porcentaje,
+                        Precio = y.Precio
+                    }).ToList()
+                };
+                var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, proyeccion);
+                var basicoSave = TransformarABasicoContrato(contratoSave);
+                var contratos = new List<BasicoContrato>();
+                contratos.Add(contrato);
+                contratos.Add(basicoSave);
+                return contratos;
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+                throw;
+            }
+        }
+
+        private BasicoContrato TransformarABasicoContrato(Contrato x)
+        {
+            return new BasicoContrato
+            {
+
+                ContratoId = x.Id,
+                ProveedorId = x.ProveedorId ?? 0,
+                Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
+                Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
+                ComercialId = x.ComercialId,
+                FechaDesdeFormateado = x.FechaDesde.ToString("dd-MM-yyyy"),
+                FechaHastaFormateado = x.FechaHasta.ToString("dd-MM-yyyy"),
+                FechaFormateado = x.Fecha.ToString("dd-MM-yyyy"),
+                TipoNegocioId = x.TipoNegocioId,
+                MaterialId = x.MaterialId,
+                Cantidad = x.Cantidad,
+                Ampliaciones = x.Ampliaciones,
+                Precio = x.Precio,
+                MonedaId = x.MonedaId,
+                CampanaId = x.CampanaId ?? 0,
+                ProvinciaId = x.ProvinciaId,
+                Provincia = x.Provincia.Nombre,
+                LocalidadId = x.LocalidadId,
+                Localidad = x.Localidad.Nombre,
+                ContratoSAP = x.ContratoSAP,
+                Base = x.Base,
+                Observacion = x.Observacion,
+                Estado = x.EstadoId,
+                Estado_Contrato = x.Estado.Descripcion,
+                Importe_Sustentable = x.ImporteSustentable,
+                Moneda_Sustentable = x.MonedaSustentableId,
+                Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue? x.FechaDolarizado.Value.ToString("dd-MM-yyyy") : "",
+                Dolarizado = x.Dolarizado,
+
+                Dias_Pesificado = x.DiasPesificado,
+                NoInformaSIO = x.NoInformaSio,
+                TrigoEspecial = x.TrigoEspecial,
+                ClasificacionId = x.ClasificacionId,
+                DestinoId = x.DestinoId,
+                PlanCanje = x.PlanCanje,
+                Consignatario = x.Consignatario,
+                CantidadCamiones = x.CantidadCamiones,
+                BoletoId = x.BoletoId,
+                BolsaId = x.BolsaId,
+                DesdeFijacionFormateado = x.DesdeFijacion.HasValue ? x.DesdeFijacion.Value.ToString("dd-MM-yyyy") : "",
+                HastaFijacionFormateado = x.HastaFijacion.HasValue ? x.HastaFijacion.Value.ToString("dd-MM-yyyy") : "",
+                CondicionFijacion = x.CondicionFijacionId,
+                CD = x.CD,
+                Warrant = x.Warrant,
+                PagoDirectoVendedor = x.PagoDirectoVendedor,
+                EstablecimientoPropio = x.EstablecimientoPropio,
+                MercsDeposito = x.MercsDeposito,
+                PorcentajeComision = x.PorcentajeComision,
+                ContratoCorredor = x.ContratoCorredor,
+                ContratoVendedor = x.ContratoVendedor,
+                SelCargoMOA = x.SelCargoMOA,
+                SelCargoVendedor = x.SelCargoVendedor,
+                Madre = x.Madre,
+                EsFason = x.EsFason,
+                ContratoMadre = x.ContratoMadre,
+                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+                StandardCalidadId = x.StandardDeCalidadId,
+                StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
+                PagoDiferido = x.PagoDiferido,
+                ZonaId = x.ZonaId,
+                ZonaDescripcion = x.Zona != null ? x.Zona.Descripcion : "",
+                Compensacion = x.Compensacion,
+                NivelTarifaId = x.NivelTarifaId,
+                TarifaFlete = x.TarifaFlete,
+                Descuentos = x.Descuentos != null ? x.Descuentos.Select(y => new DescuentoBonificacionDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde.HasValue ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                    FechaHasta = y.FechaHasta.HasValue ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Moneda = y.MonedaId,
+                    Id = y.Id,
+                    Porcentaje = y.Porcentaje,
+                    TipoDBDesc = y.TipoDB.Descripcion,
+                    TipoDBId = y.TipoDBId,
+                    TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId = y.TipoPeriodoDBId
+                }).ToList() : new List<DescuentoBonificacionDto>(),
+                Calidades = x.Calidad!= null? x.Calidad.Select(y => new CalidadDto
+                {
+                    Id = y.Id,
+                    CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
+                    CalidadEspecialId = y.CalidadEspecialId,
+                    PorcentajeDesde = y.PorcentajeDesde,
+                    PorcentajeHasta = y.PorcentajeHasta,
+                    Valor = y.Valor,
+                }).ToList():new List<CalidadDto>(),
+                AperturaPrecios = x.AperturaPrecio!=null ? x.AperturaPrecio.Select(y => new AperturaPrecioDto
+                {
+                    contratoId = y.NegocioId,
+                    Id = y.Id,
+                    ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
+                    ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Porcentaje = y.Porcentaje
+                }).ToList() :new List<AperturaPrecioDto>(),
+                PreciosPactados = x.PrecioPactado != null ? x.PrecioPactado.Select(y => new PrecioPactadosDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde.HasValue ?  y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                    FechaHasta = y.FechaHasta.HasValue ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
+                    Id = y.Id,
+                    ImportePactado = y.ImportePactado,
+                    MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                    MonedaImportePactadoId = y.MonedaImportePactadoId,
+                    MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                    MonedaPactadoId = y.MonedaPactadoId,
+                    Porcentaje = y.Porcentaje,
+                    Precio = y.Precio
+                }).ToList() : new List<PrecioPactadosDto>()
+            };
+        }
+
+        public bool DiferenciaEnCalidades(int contratoId)
+        {
+            var json = repositorio.Obtener<NegocioHistorico>(x => x.NegocioId == contratoId).Datos;
+            var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
+            var contrato = repositorio.Obtener<Contrato>(contratoId);
+            return ValidarCalidadModificada(contratoSave, contrato);
+        }
+        public Resultado AnularContratoSAP(ContratoSAP contrato)
+        {
+            var oEntityErrors = new Resultado();
+            var oContratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CodigoSap);
+            if (oContratoSave != null)
+            {
+                try
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("No existe el contrato"));
+
+            }
+            return oEntityErrors;
+        } 
+
+           
     }
 }

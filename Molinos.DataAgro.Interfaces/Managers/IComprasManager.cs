@@ -5,5 +5,6 @@
         void ActualizarComprasAyer();
 
         void ActualizarCompras();
+        void ActualizarComprasDetalle();
     }
 }

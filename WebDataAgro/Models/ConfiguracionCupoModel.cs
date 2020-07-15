@@ -17,5 +17,6 @@ namespace WebDataAgro.Models
         //[Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_CantidadCupoRequerido")]
         public int CantidadCupo { get; set; }
         public Resultado Resultado { get; set; }
+        public bool CierreCupera { get; set; }
     }
 }

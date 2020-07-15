@@ -39,7 +39,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? TarifaFlete { get; set; }
         public bool? Sustentable { get; set; }
         public bool? EsFason { get; set; }
-        public DateTime? FechaCierta { get; set; }
         public decimal? PorcentajeDePago { get; set; }
         public string CaratulaExtension { get; set; }
         public string CaratulaMAT { get; set; }
@@ -62,9 +61,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("BolsaId")]
         public virtual BolsaCompraNet Bolsa { get; set; }
         [ForeignKey("ContratoAcuerdoId")]
-        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
-        [InverseProperty("Contrato")]
-        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
+        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }        
         [InverseProperty("Contrato")]
         public virtual ICollection<Calidad> Calidad { get; set; }
         [InverseProperty("Contrato")]

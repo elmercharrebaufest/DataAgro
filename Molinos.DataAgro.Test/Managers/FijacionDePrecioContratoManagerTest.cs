@@ -124,25 +124,22 @@ namespace Molinos.DataAgro.Test.Managers
                         FechaDesde = "2019/10/30",
                         FechaHasta = "2019/11/30",
                         KilosAplicados = "1111",
-                        KilosPendiente = "1111"
+                        KilosPendiente = "111111"
                     }
                 });
-
             repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(
-                        new FijacionDePrecioContrato
-                        {
-                            Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado, Descripcion = "Confirmado" },
-                            Ampliaciones = 2
-                        });
+                  new FijacionDePrecioContrato
+                  {
+                      Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente, Descripcion = "Pendiente" },
+                      Ampliaciones = 2,
+                      Proveedor = new Proveedor() { CUIT = "00027362" },
+                      ContratoSAP = "0002343211",
+                      MaterialId = 1,
 
-            repositorioMock.Setup(y => y.Obtener<EstadoContrato>(It.IsAny<int>())).Returns(
-                       new EstadoContrato
-                       {
-                           EstadoContratoId = (int)EnumEstadoContrato.Pendiente,
-                           Descripcion = "Pendiente"
+                  });
 
-                       });
-
+            contratosParaFijacionMock.Setup(y => y.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+               .Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId = "1234", KilosPendiente = "10", KilosContrato = "100", Calidad = true } });
             var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { Id = It.IsAny<int>(), Ampliaciones = 2 });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -156,8 +153,16 @@ namespace Molinos.DataAgro.Test.Managers
                         new FijacionDePrecioContrato
                         {
                             Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Finalizado, Descripcion = "Finalizado" },
-                            Ampliaciones = 2
+                            Ampliaciones = 2,
+                            Proveedor = new Proveedor() { CUIT = "00027362" },
+                            ContratoSAP = "0002343211",
+                            MaterialId = 1,
+
                         });
+            contratosParaFijacionMock.Setup(y => y.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+               .Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId = "1234", KilosPendiente = "10", KilosContrato = "100", Calidad = true } });
+            repositorioMock.Setup(y => y.Obtener<Contrato, int>(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
+
             var result = target.GrabarAmpliacionFijacion(new FijacionDePrecioContrato { Id = It.IsAny<int>(), Ampliaciones = 2 });
 
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);

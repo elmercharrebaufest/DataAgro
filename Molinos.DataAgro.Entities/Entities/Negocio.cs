@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? UsuarioConfirmadorId { get; set; }
 
         public DateTime? FechaConfirmacion { get; set; }
-
+        public DateTime? FechaCierta { get; set; }
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
         [ForeignKey("CondicionFijacionId")]
@@ -91,7 +91,8 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [InverseProperty("Negocio")]
         public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();
-
+        [InverseProperty("Negocio")]
+        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
         public Negocio()
         {
             Cantidad = 0;

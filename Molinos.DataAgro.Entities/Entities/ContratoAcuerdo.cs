@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Entities.Entities
 {
     public partial class ContratoAcuerdo : Negocio
     {
-        
+       
         [InverseProperty("ContratoAcuerdo")]
         public virtual ICollection<Calidad> Calidad { get; set; }
 

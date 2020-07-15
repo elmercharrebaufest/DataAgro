@@ -248,5 +248,11 @@
                            /endpoint[@name='HTTP_Port19']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port20 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port20']
+                           /@address" />
+  </parameter>
   
 </parameters>

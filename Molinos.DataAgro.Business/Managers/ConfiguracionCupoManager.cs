@@ -169,7 +169,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.ConfiguracionCupo.MaterialId,
                 CentroId = x.ConfiguracionCupo.CentroId,
                 LimiteCupo = x.ConfiguracionCupo.LimiteCupo
-            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona && (x.ConfiguracionCupo.LimiteCupo - cantidadCuposGenerados) >= 0);
+            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona && (x.ConfiguracionCupo.LimiteCupo - cantidadCuposGenerados) >= 0 && x.ConfiguracionCupo.CierreCupera);
 
             if (limitePorZona.Count() == 0)
             {
@@ -180,7 +180,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MaterialId = x.MaterialId,
                     CentroId = x.CentroId,
                     LimiteCupo = x.LimiteCupo
-                }, x => x.Fecha == hoy && (x.LimiteCupo - cantidadCuposGenerados) >= 0);
+                }, x => x.Fecha == hoy && (x.LimiteCupo - cantidadCuposGenerados) >= 0 && x.CierreCupera);
 
                 return limitePorCantidadCupo;
             }

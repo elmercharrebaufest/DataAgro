@@ -10,7 +10,7 @@
     comercialId = '@ViewBag.ComercialId';
     BlockUi("Cargando...");
 </script>
-
+<script src="~/Scripts/umd/popper.js"></script>
 @section Scripts {
     @Scripts.Render("~/bundles/CompraNetContrato")
 }
@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <div class="row noAgente noFason noAcuerdo ampliar" >
+    <div class="row noAgente noFason noAcuerdo ampliar">
         <div id="fechaOperacionMotivoDiv" style="display:none;">
             <div class="col-sm-offset-6 col-sm-1">
                 <label>Motivo</label>
@@ -189,7 +189,7 @@
             </div>
         </div>
         <div class="row acuerdo ampliar">
-            <div class="contratoAFijar noFason noAgente ampliar acuerdoSinPrecio">
+            <div class="contratoAFijar noFason noAgente ampliar acuerdoSinPrecio" id="condicion">
                 <div class="col-sm-2 ">
                     <label>Condición fijación</label>
                 </div>
@@ -294,7 +294,11 @@
         <div class="col-sm-5 col-md-4 required-box-parent">
             <input id="cantidadId" class="required-box" style="width:100%" />
             <img id="errcantidadId" src="~/Content/Images/error.png" style="display:none" />
+            <div hidden id="cargarCantidadPendienteFijar">
+                <input id="CheckFijacion" name="CheckFijacion" style="position:absolute; right:20px;top:8px" type="checkbox" value="true" data-html="true" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="<i><strong>Fijar Saldo Contrato</strong><i>">
+            </div>
         </div>
+
         <div class="datoscontrato" hidden>
             <div class="col-sm-6">
                 <div id="impo-a-precio" class="importe-porcentaje" style="display:inline-block">
@@ -514,6 +518,15 @@
             </div>
         </div>
     </div>
+    <div class="acuerdo row" hidden>
+        <div class="col-md-2">
+            <label>Fecha Cierta</label>
+        </div>
+        <div class="col-md-2 ">
+            <input id="fechaCiertaAcuerdo" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
+            <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+    </div>
     <div id="ComercialDiv" class="row fason acuerdo" hidden>
         <div class="col-sm-2">
             <label>Comercial</label>
@@ -523,6 +536,7 @@
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
+
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
             <label>Observaci&oacute;n</label>
@@ -672,21 +686,25 @@
             </div>
         </div>
 
-        <div class="row noAcuerdo">
+        <div class="row ">
             <div id="fechaCiertaDiv">
-                <div class="col-sm-2 ">
+                <div class="col-md-2 col-sm-9">
                     <label>Fecha Cierta</label>
                 </div>
+
                 <div class="col-md-2 ">
                     <input id="fechaCiertaId" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
                     <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
+                <div class="col-md-2"></div>
             </div>
-            <div class="col-sm-2 col-md-offset-2">
-                <label>Porcentaje de Pago</label>
-            </div>
-            <div class="col-md-3 ">
-                <input id="porcentajeDePagoId" type="date" data-bind="value: Parametros.porcentajeDePagoId" />
+            <div class="noAcuerdo">
+                <div class="col-sm-2">
+                    <label>Porcentaje de Pago</label>
+                </div>
+                <div class="col-md-4 col-sm-9">
+                    <input id="porcentajeDePagoId" type="date" data-bind="value: Parametros.porcentajeDePagoId" />
+                </div>
             </div>
         </div>
         <div class="row noAcuerdo">
@@ -770,7 +788,7 @@
         </div>
     </div>
 
-    <div class="noFason noAgente noAcuerdo ampliar">
+    <div class="noFason noAgente ampliar">
         <div id="DatosDescuentos" class="btnagregar btnAzul widthButton ampliar " type="button">
             <i class="fa fa-plus"></i> Descuentos y Bonificaciones
         </div>
@@ -843,12 +861,12 @@
         </script>
     </div>
 
-    <div class="noFason noAgente noAcuerdo ampliar">
+    <div class="noFason noAgente ampliar">
         <div id="DatosCalidades" class="btnagregar widthButton btnAzul " type="button">
             <i class="fa fa-plus"></i> Calidad
         </div>
     </div>
-    <div class="noFason noAgente datos-calidades ampliar-adicionales acuerdo" display="block">
+    <div class="noFason noAgente datos-calidades ampliar-adicionales" display="block">
         <div class="row">
             <div id="especialesId">
                 <div>
@@ -926,6 +944,12 @@
 
     </div>
 </div>
-
+<style>
+        .popover-content {
+            color: dimgray;
+            font-size: 12px !important;
+            font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
+        }
+</style>
 <!-- Modal Apertura Precio-->
 @Html.Partial("ModalAperturaPrecio")

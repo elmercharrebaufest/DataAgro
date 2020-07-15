@@ -55,6 +55,7 @@ namespace WebDataAgro.Controllers
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
+
             return View();
         }
 
@@ -308,7 +309,6 @@ namespace WebDataAgro.Controllers
                     new Sort {Field= "FechaIngreso",Dir="desc" },
                     new Sort { Field="Material",Dir="desc" } };
             }
-
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);

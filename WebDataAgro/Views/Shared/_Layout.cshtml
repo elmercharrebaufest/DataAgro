@@ -256,31 +256,6 @@
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="tablas">
-
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCanalOperacion))
-                                {
-                                    <li>
-                                        <a href="~/CanalOperacion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Canal de Operación
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA))
-                                {
-                                    <li>
-                                        <a href="~/Destinatario" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Entrega A
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCondicion))
-                                {
-                                    <li>
-                                        <a href="~/Condicion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Condición Preferente
-                                        </a>
-                                    </li>
-                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionUsuarios))
                                 {
                                     <li>
@@ -297,141 +272,12 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosPrecios))
-                                {
-                                    <li>
-                                        <a href="~/RangoPrecio" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Rangos de precio por material
-                                        </a>
-                                    </li>
-                                }
+
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionOperador))
                                 {
                                     <li>
                                         <a href="~/Operador" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Operador
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas))
-                                {
-                                    <li>
-                                        <a href="~/TareaProgramada" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Tareas Programadas
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosConfirmacion))
-                                {
-                                    <li>
-                                        <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Rangos para confirmacion automatica
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial))
-                                {
-                                    <li>
-                                        <a href="~/Diferencial" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Diferencial
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol))
-                                {
-                                    <li>
-                                        <a href="~/Zona" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Zona Calidad Girasol
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial))
-                                {
-                                    <li>
-                                        <a href="~/Material" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Material
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionLogs))
-                                {
-                                    <li>
-                                        <a href="~/Log" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Logs SAP
-                                        </a>
-                                    </li>
-                                }
-                                
-                                @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
-                                {
-                                    <li>
-                                        <a href="~/NotificacionResearch" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Notificaciones Research
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos))
-                                {
-                                    <li>
-                                        <a href="~/ZonaCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Zona Cupos
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionCupos))
-                                {
-                                    <li>
-                                        <a href="~/ConfiguracionCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Administración de Cupos
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.HabilitacionDeCupos))
-                                {
-                                    <li>
-                                        <a href="~/HabilitacionCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Habilitación de cupos Tercero
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.SolicitudCupo))
-                                {
-                                    <li>
-                                        <a href="~/AdministracionCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Solicitud de Cupos
-                                        </a>
-                                    </li>
-                                }
-
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
-                                {
-                                    <li>
-                                        <a href="~/Configuracion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Configuraciones Constantes
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos))
-                                {
-                                    <li>
-                                        <a href="~/Rol" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Roles y Permisos
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas))
-                                {
-                                    <li>
-                                        <a href="~/ConfiguracionInterna" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Configuraciones Op Tercero
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores))
-                                {
-                                    <li>
-                                        <a href="~/AdministracionProveedor" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Asignación Proveedor
                                         </a>
                                     </li>
                                 }
@@ -447,7 +293,167 @@
                                 {
                                     <li>
                                         <a href="/Formula" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Algoritimo de Cupos
+                                            <i class="icon-bar-chart"></i> Algoritmo de Cupos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionCupos))
+                                {
+                                    <li>
+                                        <a href="~/ConfiguracionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Administración de Cupos
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.AdministracionProveedores))
+                                {
+                                    <li>
+                                        <a href="~/AdministracionProveedor" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Asignación Proveedor
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCanalOperacion))
+                                {
+                                    <li>
+                                        <a href="~/CanalOperacion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Canal de Operación
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCondicion))
+                                {
+                                    <li>
+                                        <a href="~/Condicion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Condición Preferente
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
+                                {
+                                    <li>
+                                        <a href="~/Configuracion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuraciones Constantes
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionesInternas))
+                                {
+                                    <li>
+                                        <a href="~/ConfiguracionInterna" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuraciones Op Tercero
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial))
+                                {
+                                    <li>
+                                        <a href="~/Diferencial" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Diferencial
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA))
+                                {
+                                    <li>
+                                        <a href="~/Destinatario" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Entrega A
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.HabilitacionDeCupos))
+                                {
+                                    <li>
+                                        <a href="~/HabilitacionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Habilitación de cupos Tercero
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionLogs))
+                                {
+                                    <li>
+                                        <a href="~/Log" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Logs SAP
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial))
+                                {
+                                    <li>
+                                        <a href="~/Material" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Material
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
+                                {
+                                    <li>
+                                        <a href="~/NotificacionResearch" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Notificaciones Research
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosPrecios))
+                                {
+                                    <li>
+                                        <a href="~/RangoPrecio" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Rangos de precio por material
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRangosConfirmacion))
+                                {
+                                    <li>
+                                        <a href="~/RangoConfirmacionAutomatica" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Rangos para confirmacion automatica
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionRolesPermisos))
+                                {
+                                    <li>
+                                        <a href="~/Rol" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Roles y Permisos
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.SolicitudCupo))
+                                {
+                                    <li>
+                                        <a href="~/AdministracionCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Solicitud de Cupos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionTareasProgramadas))
+                                {
+                                    <li>
+                                        <a href="~/TareaProgramada" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Tareas Programadas
+                                        </a>
+                                    </li>
+                                }
+
+
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos))
+                                {
+                                    <li>
+                                        <a href="~/ZonaCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Zona Cupos
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol))
+                                {
+                                    <li>
+                                        <a href="~/Zona" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Zona Calidad Girasol
                                         </a>
                                     </li>
                                 }

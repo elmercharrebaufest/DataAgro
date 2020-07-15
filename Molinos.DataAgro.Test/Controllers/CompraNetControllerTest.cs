@@ -1113,5 +1113,33 @@ namespace Molinos.DataAgro.Test.Controllers
                 a);
         }
 
+        [Test]
+        public void CompararNegocioReconfirmadoTest()
+        {
+            contratoManagerMock.Setup(x => x.CompararNegocioReconfirmado(It.IsAny<int>())).Returns( new List<BasicoContrato>());
+            var result = target.CompararNegocioReconfirmado(It.IsAny<int>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.CompararNegocioReconfirmado(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void ValidarCalidadesTest()
+        {
+            contratoManagerMock.Setup(x => x.DiferenciaEnCalidades(It.IsAny<int>())).Returns(true);
+            var result = target.ValidarCalidades(It.IsAny<int>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.DiferenciaEnCalidades(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":true,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
     }
 }

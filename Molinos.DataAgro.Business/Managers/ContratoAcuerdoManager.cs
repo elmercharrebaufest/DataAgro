@@ -212,7 +212,7 @@ namespace Molinos.DataAgro.Business
         {
             var oEntityErrors = new GrabarAcuerdoResult();
             ContratoAcuerdo objContratoAcuerdo = null;
-
+            List<DescuentoBonificacion> descuentosExistentes = null;
             EntityValid.ValidateAll(oContratoAcuerdo, oEntityErrors);
 
             if (oEntityErrors.HayErrores)
@@ -228,6 +228,7 @@ namespace Molinos.DataAgro.Business
             }
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
+            
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
             if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados))
             {
@@ -248,7 +249,9 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
+                
                 objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
+                descuentosExistentes = objContratoAcuerdo.Descuentos.ToList();
                 if (estado == 1 && objContratoAcuerdo.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
                     string jsonContrato = JsonConvert.SerializeObject(objContratoAcuerdo, new JsonSerializerSettings()
@@ -294,10 +297,28 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.HastaFijacion = oContratoAcuerdo.HastaFijacion;
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
+                objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
 
 
 
-
+                if (descuentosExistentes != null)
+                {
+                    foreach (var descExistente in descuentosExistentes)
+                    {
+                        if (objContratoAcuerdo.Descuentos == null || !objContratoAcuerdo.Descuentos.Any(x => x.Id == descExistente.Id))
+                        {
+                            repositorio.Remover(descExistente);                           
+                        }
+                    }
+                }
+                if (objContratoAcuerdo.Descuentos != null)
+                {
+                    foreach (var descuento in objContratoAcuerdo.Descuentos.Where(x => x.Id == 0))
+                    {
+                        descuento.Negocio = objContratoAcuerdo;
+                        repositorio.Agregar(descuento);                       
+                    }
+                }
 
                 if (objContratoAcuerdo.Calidad != null)
                 {
@@ -593,7 +614,25 @@ namespace Molinos.DataAgro.Business
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 CondicionFijacionDescripcion = x.CondicionFijacion.Descripcion,
                 Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres,
-
+                Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
+                {
+                    ContratoId = y.ContratoId,
+                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    Importe = y.Importe,
+                    MonedaId = y.MonedaId,
+                    Moneda = y.MonedaId,
+                    Id = y.Id,
+                    Porcentaje = y.Porcentaje,
+                    TipoDBDesc = y.TipoDB.Descripcion,
+                    TipoDBId = y.TipoDBId,
+                    TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
+                    TipoPeriodoDBId = y.TipoPeriodoDBId
+                }).ToList(),
                 Calidades = x.Calidad.Select(y => new CalidadDto
                 {
                     Valor = y.Valor,

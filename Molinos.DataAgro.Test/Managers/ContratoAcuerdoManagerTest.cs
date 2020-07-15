@@ -96,11 +96,26 @@ namespace Molinos.DataAgro.Test.Managers
                 CampanaId = 1,
                 MaterialId = 1,
                 MonedaId = "a",
-                FechaHasta = new DateTime(2019, 08, 08)
+                FechaHasta = new DateTime(2019, 08, 08),
+                Descuentos = new List<DescuentoBonificacion>()
+                {
+                    new DescuentoBonificacion()
+                    {
+                        Id= 0
+                    }
+                },
             };
 
             repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
-                .Returns(new ContratoAcuerdo { Id = 10, Precio = 10, Cantidad = 10, ComercialCreadorId = 1, DestinoId = 1, MaterialId = 1, MonedaId = "a", FechaHasta = new DateTime(2019, 08, 08) });
+                .Returns(new ContratoAcuerdo { Id = 10, Precio = 10, Cantidad = 10, ComercialCreadorId = 1, DestinoId = 1, MaterialId = 1, MonedaId = "a", FechaHasta = new DateTime(2019, 08, 08),
+                    Descuentos = new List<DescuentoBonificacion>()
+                {
+                    new DescuentoBonificacion()
+                    {
+                        Id= 0
+                    }
+                }
+                });
             var resultado = target.GrabarAcuerdo(acuerdo);
 
             Assert.That(!resultado.HayError);
