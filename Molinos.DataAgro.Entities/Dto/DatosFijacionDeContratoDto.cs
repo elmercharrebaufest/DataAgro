@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -31,6 +32,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionFijacionDescripcion { get; set; }
         public string CondicionPagoCod { get; set; }
         public string CondicionPagoDescripcion { get; set; }
+
+        public List<CalidadDto> Calidades { get; set; } 
         public string Color { get; set; }
     }
 }

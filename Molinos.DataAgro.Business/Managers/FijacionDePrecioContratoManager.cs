@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             var aFijar = oContratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor != null ? fijacion.Corredor.CUIT : null , fijacion.MaterialId, fijacion.ContratoSAP.Remove(0,3), fijacion.Id);
             double kgAplicados = aFijar.Count() > 0 &&  double.TryParse(aFijar.First().KilosAplicados, out kgAplicados) ? kgAplicados : 0;           
-            double pendiente = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosContrato, out pendiente) ? pendiente - kgAplicados : 0;
+            double pendiente = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosPendiente, out pendiente) ? pendiente - kgAplicados : 0;
             if (pendiente <= ampliacion)
             {
                 oEntityErrors.Error("", "La ampliación supera la cantidad disponible");

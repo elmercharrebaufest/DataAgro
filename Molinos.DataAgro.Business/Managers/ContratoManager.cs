@@ -3463,7 +3463,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado AnularContratoSAP(ContratoSAP contrato)
         {
             var oEntityErrors = new Resultado();
-            var oContratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CodigoSap);
+            var oContratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CodigoSap && x.EstadoId == (int)EnumEstadoContrato.Finalizado);
             if (oContratoSave != null)
             {
                 try

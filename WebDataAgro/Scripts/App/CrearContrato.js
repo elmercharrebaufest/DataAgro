@@ -307,7 +307,14 @@ function InicializarElementos() {
             'KG CONTRATO: #: data.KilosContrato# ' +
             /*' - KGS SIN PRECIO : #: data.ARecibirSinPrecio#*/ ' KG APLICADOS: #: data.KilosAplicados# ' +
             ' - KG APLICADOS SIN FIJAR : #: data.RecibidoSinFijar# - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
-            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> #if(data.Calidad == true){#<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>#}else{}# </p>',
+            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong>' +
+            ' #if(data.Calidad == true){ #<i style="z-index:10005 !important;" value="true" data-html="true" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="<i><strong>' +
+            '#for(var cal = 0; cal < data.Calidades.length; cal++){# ' +            
+            ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> '+
+            ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' + 
+            '  # <li>Porc. Desde #:data.Calidades[cal].PorcentajeDesde# % Hasta #:data.Calidades[cal].PorcentajeHasta# %</li> <br /> # }' +
+            ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ',        
+    
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,
@@ -318,6 +325,14 @@ function InicializarElementos() {
             if ($("#contratoId").val().split('|').length > 1) {
                 $("#contratoId").val($("#contratoId").val().split('|')[1]);
             }
+            $('[data-toggle="popover"]').popover({
+                container: 'body'
+            });
+        },
+        open: function (e) {
+            $('[data-toggle="popover"]').popover({
+                container: 'body'
+            });
         },
         select: function (e) {
             $(".datoscontrato").show();
@@ -769,10 +784,10 @@ function InicializarElementos() {
     });
     $("#CheckFijacion").click(function () {
         if ($(this).is(':checked')) {
-            $("#cantidadId").data("kendoNumericTextBox").value($("#kgspendientescontrato").text());
-            $(this).prop("checked", false);
+            $("#cantidadId").data("kendoNumericTextBox").value($("#kgspendientescontrato").text());            
         }
     });
+   
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
         dataTextField: "Descripcion",
@@ -1208,6 +1223,7 @@ function InicializarElementos() {
         format: "n0",
         spinners: false,
         change: function () {
+            $("#CheckFijacion").prop("checked", false);
             if ($("#cargarCantidadCamiones").is(':checked')) {
                 $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
             }

@@ -7,6 +7,7 @@
     [Año]                     INT        NULL,
     [ComercialId]             INT        NULL,
     CONSTRAINT [PK_CampañaMaterialPorMes] PRIMARY KEY CLUSTERED ([CampañaMaterialPorMesId] ASC),
+	CONSTRAINT [FK_CampañaMaterialPorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),
     CONSTRAINT [FK_CampañaMaterialPorMes_CampañaMaterial] FOREIGN KEY ([CampañaMaterialId]) REFERENCES [dbo].[CampañaMaterial] ([CampañaMaterialId])
 );
 

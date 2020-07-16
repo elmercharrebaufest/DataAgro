@@ -82,22 +82,26 @@ namespace Molinos.DataAgro.Agent
         }
         private CompraDetalleAgentDto ConvertirADto(ZMPES5620 dev)
         {
-            var compraAgent = new CompraDetalleAgentDto();
-            compraAgent.CLASE_DOC = dev.CLASE_DOC;
-            compraAgent.CLASIFICACION = dev.CLASIFICACION;
-            compraAgent.CONTRATO = dev.CONTRATO;
-            compraAgent.CORREDOR = dev.CORREDOR;
-            compraAgent.COSECHA = dev.COSECHA;
-            compraAgent.FECHA = dev.FECHA;
-            compraAgent.MATERIAL = dev.MATERIAL;
-            compraAgent.PEND_APLICAR = dev.PEND_APLICAR;
-            compraAgent.PEND_FIJAR = dev.PEND_FIJAR;
-            compraAgent.TN_AMPLIADAS = dev.TN_AMPLIADAS;
-            compraAgent.TN_ANULADAS = dev.TN_ANULADAS;
-            compraAgent.TN_APLICADAS = dev.TN_APLICADAS;
-            compraAgent.TN_CONTRATO = dev.TN_CONTRATO;
-            compraAgent.TN_FIJADAS = dev.TN_FIJADAS;
-            compraAgent.VENDEDOR = dev.VENDEDOR;
+            var compraAgent = new CompraDetalleAgentDto
+            {               
+                COSECHA = dev.COSECHA,
+                MATERIAL = dev.MATERIAL,
+                VENDEDOR = dev.VENDEDOR,
+
+                CLASE_DOC = dev.CLASE_DOC,
+                CLASIFICACION = dev.CLASIFICACION,
+                CONTRATO = dev.CONTRATO,
+                CORREDOR = dev.CORREDOR,
+                FECHA = dev.FECHA,               
+                PEND_APLICAR = dev.PEND_APLICAR,
+                PEND_FIJAR = dev.PEND_FIJAR,
+                TN_AMPLIADAS = dev.TN_AMPLIADAS,
+                TN_ANULADAS = dev.TN_ANULADAS,
+                TN_APLICADAS = dev.TN_APLICADAS,
+                TN_CONTRATO = dev.TN_CONTRATO,
+                TN_FIJADAS = dev.TN_FIJADAS
+                
+            };
             return compraAgent;
         }
     }

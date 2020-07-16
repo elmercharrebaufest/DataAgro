@@ -40,9 +40,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             try
             {
                 // Create a new token
-                logger.Debug($"Gestionando Token...");
+                //logger.Debug($"Gestionando Token...");
                 var token = CreateTokenAsync(clave);
-                logger.Debug($"Token obtenido: {token.Data}");
+                //logger.Debug($"Token obtenido: {token.Data}");
                 return token;
             }
             catch (Exception e)
@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 else
                 {
                     ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject.data.ToString());
-                    logger.Debug(error.ToJson());
+                    //logger.Debug(error.ToJson());
                     throw new Exception(error.userMessage);
                 }
             }
@@ -140,14 +140,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             cupo.CupoStop = model.idCupo;
                             cupo.CreacionStop = model.creado;
                             cupo.EstadoCupoId = model.idCupoEstado;
-                            logger.Debug(model.ToJson());
+                            //logger.Debug(model.ToJson());
                         }
                         else
                         {
                             ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
                             cupo.ErrorStop = error.userMessage;
                             cupo.EstadoCupoId = 7;
-                            logger.Debug(error.ToJson());
+                            //logger.Debug(error.ToJson());
                         }
                     }
                     repositorio.GuardarCambios();
@@ -212,14 +212,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             cupo.CupoStop = model.idCupo;
                             cupo.CreacionStop = model.creado;
                             cupo.EstadoCupoId = model.idCupoEstado;
-                            logger.Debug(model.ToJson());
+                            //logger.Debug(model.ToJson());
                         }
                         else
                         {
                             ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
                             cupo.ErrorStop = error.userMessage;
                             cupo.EstadoCupoId = 7;
-                            logger.Debug(error.ToJson());
+                            //logger.Debug(error.ToJson());
                         }
                     }
                     repositorio.GuardarCambios();
@@ -253,7 +253,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             if (!respuesta.isError)
             {
                 RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
-                logger.Debug(model.ToJson());
+                //logger.Debug(model.ToJson());
 
                 return model.idCupoEstado;
             }
@@ -339,11 +339,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     client.BaseAddress = new Uri(urlStop);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    logger.Debug("Iniciando consulta");
+                    //logger.Debug("Iniciando consulta");
                     var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
                     var token = ObtenerToken(datosConfiguracion.ClaveStop);
                     var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
-                    logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
+                    //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
                     CultureInfo provider = CultureInfo.InvariantCulture;
 
                     foreach (var fecha in fechas)
@@ -354,14 +354,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var res = response.Content.ReadAsAsync<dynamic>().Result;
                         var jObject = JObject.Parse(res.ToString());
                         ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                        logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
+                        //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
                         if (!respuesta.isError)
                         {
                             ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());
                             listaCupos.results.AddRange(model.results);
-                            logger.Debug(model.results.Count);
-                            if (model.results.Count > 0)
-                                logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+                            //logger.Debug(model.results.Count);
+                            //if (model.results.Count > 0)
+                                //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
                         }
                         else
                         {
@@ -388,8 +388,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                                
                             }
                             cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
-                            logger.Debug("CTGFechaDesde: ." + cuposActualizados[cupo.CupoSap].fechaCTG_Desde);
-                            logger.Debug("CTGFechaHasta" + cuposActualizados[cupo.CupoSap].fechaCTG_Hasta);
+                            //logger.Debug("CTGFechaDesde: ." + cuposActualizados[cupo.CupoSap].fechaCTG_Desde);
+                            //logger.Debug("CTGFechaHasta" + cuposActualizados[cupo.CupoSap].fechaCTG_Hasta);
                             cupo.CTGFechaDesde = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ?
                                 DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null;
                             cupo.CTGFechaHasta = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ? 
@@ -474,7 +474,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     if (!respuesta.isError)
                     {
                         RespuestaCupoStop model = JsonConvert.DeserializeObject<RespuestaCupoStop>(jObject["data"].ToString());
-                        logger.Debug(model.ToJson());
+                        //logger.Debug(model.ToJson());
                     }
                     else
                     {

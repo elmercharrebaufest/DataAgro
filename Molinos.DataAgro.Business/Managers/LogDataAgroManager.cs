@@ -59,12 +59,12 @@ namespace Molinos.DataAgro.Business.Managers
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase )
         {
             var usuarioComercial = "";
-            logger.Debug("LogGuardarCambios");
+            //logger.Debug("LogGuardarCambios");
             try
             {
-                logger.Debug("LogGuardarCambios ObtenerUsuario");
+                //logger.Debug("LogGuardarCambios ObtenerUsuario");
                 usuarioComercial = PermisosHelper.ObtenerUsuario();
-                logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
+                //logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
 
             }
             catch (Exception)

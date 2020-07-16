@@ -1338,7 +1338,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
-                Pizarra = x.Pizarra 
+                Pizarra = x.Pizarra
             },
             x => negocios.Contains(x.Id));
 
@@ -2080,209 +2080,240 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void GrabarDatosReporteCompraNet(DateTime fechaDesde, DateTime fechaHasta, string centroId, List<int> materialId)
         {
-            ReporteCompraNetModel result = ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId, materialId);
-            List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
-            List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
-            ReporteCompraNetSojaSustentable sojaSustentable = new ReporteCompraNetSojaSustentable();
-            List<ReporteCompraNetHedgeMaterial> hedgeMaterial = new List<ReporteCompraNetHedgeMaterial>();
-            ReporteCompraNetHedgeCargaObjetivo hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo();
-            ReporteCompraNetHedgeTCPromedio TCPromedioDto = new ReporteCompraNetHedgeTCPromedio();
-            List<ReporteCompraNetAgenteCompra> agenteCompras = new List<ReporteCompraNetAgenteCompra>();
-            List<ReporteCompraNetPricingCampania> pricingCampania = new List<ReporteCompraNetPricingCampania>();
-
-            foreach (var posicion in result.PosicionCompras)
+            try
             {
-                foreach (var kilos in posicion.PosicionKilos)
+                logger.Debug("GrabarDatosReporteCompraNet - inicio obtener datos");
+                ReporteCompraNetModel result = ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId, materialId);
+                logger.Debug("GrabarDatosReporteCompraNet - fin obtener datos");
+
+                List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
+                List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
+                ReporteCompraNetSojaSustentable sojaSustentable = new ReporteCompraNetSojaSustentable();
+                List<ReporteCompraNetHedgeMaterial> hedgeMaterial = new List<ReporteCompraNetHedgeMaterial>();
+                ReporteCompraNetHedgeCargaObjetivo hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo();
+                ReporteCompraNetHedgeTCPromedio TCPromedioDto = new ReporteCompraNetHedgeTCPromedio();
+                List<ReporteCompraNetAgenteCompra> agenteCompras = new List<ReporteCompraNetAgenteCompra>();
+                List<ReporteCompraNetPricingCampania> pricingCampania = new List<ReporteCompraNetPricingCampania>();
+
+
+                logger.Debug("GrabarDatosReporteCompraNet - inicio armadatos");
+                logger.Debug("GrabarDatosReporteCompraNet - inicio armadatos posicioncompras");
+                foreach (var posicion in result.PosicionCompras)
                 {
-                    posicionCompras.Add(new ReporteCompraNetPosicionCompras
+                    foreach (var kilos in posicion.PosicionKilos)
                     {
-                        Material = posicion.Material,
-                        MaterialId = posicion.MaterialId,
-                        Anio = kilos.Anio,
-                        CantidadPonderada = kilos.CantidadPonderada,
-                        DispAFijar = kilos.DispAFijar,
-                        DispAPrecio = kilos.DispAPrecio,
-                        DispFijac = kilos.DispFijac,
-                        FrwAFijar = kilos.FrwAFijar,
-                        FrwAPrecio = kilos.FrwAPrecio,
-                        FrwFijac = kilos.FrwFijac,
-                        KilosDolares = kilos.KilosDolares,
-                        KilosPesos = kilos.KilosPesos,
-                        Mes = kilos.Mes.ToString(),
-                        NewAFijar = kilos.NewAFijar,
-                        NewAPrecio = kilos.NewAPrecio,
-                        NewFijac = kilos.NewFijac,
-                        PrecioPonderadoDolares = kilos.PrecioPonderadoDolares,
-                        PrecioPonderadoPesos = kilos.PrecioPonderadoPesos,
-                        DispAPrecioPesos = kilos.DispAPrecioPesos,
-                        DispAPrecioDolares = kilos.DispAPrecioDolares,
-                        DispFijacPesos = kilos.DispFijacPesos,
-                        DispFijacDolares = kilos.DispFijacDolares,
-                        FrwAPrecioPesos = kilos.FrwAPrecioPesos,
-                        FrwAPrecioDolares = kilos.FrwAPrecioDolares,
-                        FrwFijacPesos = kilos.FrwFijacPesos,
-                        FrwFijacDolares = kilos.FrwFijacDolares,
-                        NewAPrecioPesos = kilos.NewAPrecioPesos,
-                        NewAPrecioDolares = kilos.NewAPrecioDolares,
-                        NewFijacPesos = kilos.NewFijacPesos,
-                        NewFijacDolares = kilos.NewFijacDolares,
+                        posicionCompras.Add(new ReporteCompraNetPosicionCompras
+                        {
+                            Material = posicion.Material,
+                            MaterialId = posicion.MaterialId,
+                            Anio = kilos.Anio,
+                            CantidadPonderada = kilos.CantidadPonderada,
+                            DispAFijar = kilos.DispAFijar,
+                            DispAPrecio = kilos.DispAPrecio,
+                            DispFijac = kilos.DispFijac,
+                            FrwAFijar = kilos.FrwAFijar,
+                            FrwAPrecio = kilos.FrwAPrecio,
+                            FrwFijac = kilos.FrwFijac,
+                            KilosDolares = kilos.KilosDolares,
+                            KilosPesos = kilos.KilosPesos,
+                            Mes = kilos.Mes.ToString(),
+                            NewAFijar = kilos.NewAFijar,
+                            NewAPrecio = kilos.NewAPrecio,
+                            NewFijac = kilos.NewFijac,
+                            PrecioPonderadoDolares = kilos.PrecioPonderadoDolares,
+                            PrecioPonderadoPesos = kilos.PrecioPonderadoPesos,
+                            DispAPrecioPesos = kilos.DispAPrecioPesos,
+                            DispAPrecioDolares = kilos.DispAPrecioDolares,
+                            DispFijacPesos = kilos.DispFijacPesos,
+                            DispFijacDolares = kilos.DispFijacDolares,
+                            FrwAPrecioPesos = kilos.FrwAPrecioPesos,
+                            FrwAPrecioDolares = kilos.FrwAPrecioDolares,
+                            FrwFijacPesos = kilos.FrwFijacPesos,
+                            FrwFijacDolares = kilos.FrwFijacDolares,
+                            NewAPrecioPesos = kilos.NewAPrecioPesos,
+                            NewAPrecioDolares = kilos.NewAPrecioDolares,
+                            NewFijacPesos = kilos.NewFijacPesos,
+                            NewFijacDolares = kilos.NewFijacDolares,
+                        });
+                    }
+
+                }
+                logger.Debug("GrabarDatosReporteCompraNet - inicio preciocantidad");
+                foreach (var moneda in result.PrecioCantidad)
+                {
+                    precioCantidad.Add(new ReporteCompraNetPrecioCantidad
+                    {
+                        Cantidad = moneda.Cantidad,
+                        Moneda = moneda.Moneda
                     });
                 }
-
-            }
-            foreach (var moneda in result.PrecioCantidad)
-            {
-                precioCantidad.Add(new ReporteCompraNetPrecioCantidad
+                logger.Debug("GrabarDatosReporteCompraNet - inicio sojasustentable");
+                sojaSustentable = new ReporteCompraNetSojaSustentable
                 {
-                    Cantidad = moneda.Cantidad,
-                    Moneda = moneda.Moneda
-                });
-            }
-            sojaSustentable = new ReporteCompraNetSojaSustentable
-            {
-                AFijar = result.SojaSustentable.Fijar,
-                APrecio = result.SojaSustentable.Precio,
-                Total = result.SojaSustentable.Total
-            };
-            foreach (var material in result.HedgeMaterial)
-            {
-                hedgeMaterial.Add(new ReporteCompraNetHedgeMaterial
+                    AFijar = result.SojaSustentable.Fijar,
+                    APrecio = result.SojaSustentable.Precio,
+                    Total = result.SojaSustentable.Total
+                };
+                logger.Debug("GrabarDatosReporteCompraNet - inicio hedge material");
+                foreach (var material in result.HedgeMaterial)
                 {
-                    Disponible = material.Disponible,
-                    Forward = material.Forward,
-                    Material = material.MaterialDescripcion,
-                    NewCrop = material.NewCrop
-                });
-            }
-            hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo
-            {
-                PricingCumplido = result.HedgeObjetivo.PricingCumplido,
-                PricingObjetivo = result.HedgeObjetivo.PricingObjetivo,
-                RemitirCumplido = result.HedgeObjetivo.RemitirCumplido,
-                RemitirObjetivo = result.HedgeObjetivo.RemitirObjetivo,
-            };
-            TCPromedioDto = new ReporteCompraNetHedgeTCPromedio
-            {
-                PromedioTC = result.TCPromedioDto.PromedioTC,
-                TotalTC = result.TCPromedioDto.TotalTC
-            };
-            foreach (var agente in result.AgenteCompras.ListaAgenteCompras)
-            {
-                foreach (var item in agente.Operador)
-                {
-                    agenteCompras.Add(new ReporteCompraNetAgenteCompra
+                    hedgeMaterial.Add(new ReporteCompraNetHedgeMaterial
                     {
-                        Cantidad = item.Cantidad,
-                        Material = agente.MaterialDesc,
-                        MaterialId = agente.MaterialId,
-                        Operador = item.OperadorDesc,
-                        OperadorId = item.OperadorId,
-                        Posicion = agente.Posicion,
-                        PrecioPonderado = agente.PrecioPonderado,
-                        TipoAgente = agente.TipoAgenteDesc,
-                        TipoAgenteId = agente.TipoAgenteId
-
+                        Disponible = material.Disponible,
+                        Forward = material.Forward,
+                        Material = material.MaterialDescripcion,
+                        NewCrop = material.NewCrop
                     });
                 }
-
-            }
-            foreach (var datos in result.PricingCampania)
-            {
-                double sumaPricing;
-                switch (datos.Id)
+                logger.Debug("GrabarDatosReporteCompraNet - inicio hedge obejetivo");
+                hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo
                 {
-                    case 11:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.DispAgente + x.FrwAgente));
-                        datos.Pricing = sumaPricing;
+                    PricingCumplido = result.HedgeObjetivo.PricingCumplido,
+                    PricingObjetivo = result.HedgeObjetivo.PricingObjetivo,
+                    RemitirCumplido = result.HedgeObjetivo.RemitirCumplido,
+                    RemitirObjetivo = result.HedgeObjetivo.RemitirObjetivo,
+                };
+                logger.Debug("GrabarDatosReporteCompraNet - inicio hedgetcpromedio");
+                TCPromedioDto = new ReporteCompraNetHedgeTCPromedio
+                {
+                    PromedioTC = result.TCPromedioDto.PromedioTC,
+                    TotalTC = result.TCPromedioDto.TotalTC
+                };
+                logger.Debug("GrabarDatosReporteCompraNet - inicio agente");
+                foreach (var agente in result.AgenteCompras.ListaAgenteCompras)
+                {
+                    foreach (var item in agente.Operador)
+                    {
+                        agenteCompras.Add(new ReporteCompraNetAgenteCompra
+                        {
+                            Cantidad = item.Cantidad,
+                            Material = agente.MaterialDesc,
+                            MaterialId = agente.MaterialId,
+                            Operador = item.OperadorDesc,
+                            OperadorId = item.OperadorId,
+                            Posicion = agente.Posicion,
+                            PrecioPonderado = agente.PrecioPonderado,
+                            TipoAgente = agente.TipoAgenteDesc,
+                            TipoAgenteId = agente.TipoAgenteId
 
-                        break;
-                    case 12:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.NewAgente));
-                        datos.Pricing = sumaPricing;
+                        });
+                    }
 
-                        break;
-                    case 21:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.DispAgente + x.FrwAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 22:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.NewAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 31:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.DispAgente + x.FrwAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 32:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.NewAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 41:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.DispAgente + x.FrwAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 42:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.NewAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 51:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.DispAgente + x.FrwAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    case 52:
-                        sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente));
-                        datos.Pricing = sumaPricing;
-
-                        break;
-                    default:
-                        sumaPricing = 0;
-                        datos.Pricing = sumaPricing;
-
-                        break;
                 }
-            }
-            foreach (var pricing in result.PricingCampania)
-            {
-                pricingCampania.Add(new ReporteCompraNetPricingCampania
+                logger.Debug("GrabarDatosReporteCompraNet - inicio suma pricing");
+                foreach (var datos in result.PricingCampania)
                 {
-                    Material = pricing.Material,
-                    MaterialId = pricing.MaterialId,
-                    Acopio = pricing.Acopio,
-                    Campania = pricing.Campania,
-                    CampaniaId = pricing.CampaniaId,
-                    Pricing = pricing.Pricing,
-                    SanLorenzo = pricing.SanLorenzo
-                });
+                    double sumaPricing;
+                    switch (datos.Id)
+                    {
+                        case 11:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.DispAgente + x.FrwAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 12:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 1).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Maiz").Sum(x => x.NewAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 21:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.DispAgente + x.FrwAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 22:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.NewAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 31:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.DispAgente + x.FrwAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 32:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 3).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Soja").Sum(x => x.NewAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 41:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.DispAgente + x.FrwAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 42:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 4).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol").Sum(x => x.NewAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 51:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.DispAgente + x.FrwAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        case 52:
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 5).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Girasol Alto Oleico").Sum(x => x.NewAgente));
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                        default:
+                            sumaPricing = 0;
+                            datos.Pricing = sumaPricing;
+
+                            break;
+                    }
+                }
+                logger.Debug("GrabarDatosReporteCompraNet - inicio pricing");
+                foreach (var pricing in result.PricingCampania)
+                {
+                    pricingCampania.Add(new ReporteCompraNetPricingCampania
+                    {
+                        Material = pricing.Material,
+                        MaterialId = pricing.MaterialId,
+                        Acopio = pricing.Acopio,
+                        Campania = pricing.Campania,
+                        CampaniaId = pricing.CampaniaId,
+                        Pricing = pricing.Pricing,
+                        SanLorenzo = pricing.SanLorenzo
+                    });
+                }
+                logger.Debug("GrabarDatosReporteCompraNet - fin armadatos");
+
+
+                logger.Debug("GrabarDatosReporteCompraNet - inicio  removertodos");
+
+                repositorio.RemoverTodos<ReporteCompraNetPosicionCompras>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetPrecioCantidad>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetSojaSustentable>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetHedgeMaterial>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetHedgeCargaObjetivo>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetHedgeTCPromedio>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetAgenteCompra>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetPricingCampania>(a => true);
+                repositorio.GuardarCambios();
+                logger.Debug("GrabarDatosReporteCompraNet - fin removertodos");
+
+                logger.Debug("GrabarDatosReporteCompraNet - inicio agregartodos");
+                repositorio.AgregarTodos(posicionCompras);
+                repositorio.AgregarTodos(precioCantidad);
+                repositorio.Agregar(sojaSustentable);
+                repositorio.AgregarTodos(hedgeMaterial);
+                repositorio.Agregar(hedgeObjetivo);
+                repositorio.Agregar(TCPromedioDto);
+                repositorio.AgregarTodos(agenteCompras);
+                repositorio.AgregarTodos(pricingCampania);
+                repositorio.GuardarCambios();
+                logger.Debug("GrabarDatosReporteCompraNet - fin agregartodos");
+
+                logger.Debug("GrabarDatosReporteCompraNet - inicio migrar");
+                repositorio.MigrarReporteCompraNetPosicionCompras();
+                logger.Debug("GrabarDatosReporteCompraNet - fin migrar");
+            }
+            catch (Exception e)
+            {
+                logger.Error("GrabarDatosReporteCompraNet", e);
             }
 
-            repositorio.RemoverTodos<ReporteCompraNetPosicionCompras>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetPrecioCantidad>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetSojaSustentable>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetHedgeMaterial>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetHedgeCargaObjetivo>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetHedgeTCPromedio>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetAgenteCompra>(a => true);
-            repositorio.RemoverTodos<ReporteCompraNetPricingCampania>(a => true);
-            repositorio.GuardarCambios();
-
-            repositorio.AgregarTodos(posicionCompras);
-            repositorio.AgregarTodos(precioCantidad);
-            repositorio.Agregar(sojaSustentable);
-            repositorio.AgregarTodos(hedgeMaterial);
-            repositorio.Agregar(hedgeObjetivo);
-            repositorio.Agregar(TCPromedioDto);
-            repositorio.AgregarTodos(agenteCompras);
-            repositorio.AgregarTodos(pricingCampania);
-            repositorio.GuardarCambios();
-
-            repositorio.MigrarReporteCompraNetPosicionCompras();
         }
     }
 }
