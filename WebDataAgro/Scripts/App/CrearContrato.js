@@ -313,8 +313,12 @@ function InicializarElementos() {
             ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> '+
             ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' + 
             '  # <li>Porc. Desde #:data.Calidades[cal].PorcentajeDesde# % Hasta #:data.Calidades[cal].PorcentajeHasta# %</li> <br /> # }' +
-            ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ',        
-    
+            ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ',
+        dataBound: function () {
+            $('[data-toggle="popover"]').popover({
+                container: 'body'
+            });
+        },
         dataTextField: "Filtro",
         dataValueField: "ContratoId",
         autoWidth: true,
