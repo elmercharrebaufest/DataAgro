@@ -1280,7 +1280,13 @@ function InicializarElementos() {
         culture: "es-AR",
         format: "n2",
         spinners: false,
-        min: 0
+        min: 0,
+        change: function () {
+            if ($("#tipoId").val() == "6") {
+                $("#fechaCiertaAcuerdoDiv").show();
+            }   
+        }
+        
     });
 
     $("#precioAjusteComisionId").kendoNumericTextBox({

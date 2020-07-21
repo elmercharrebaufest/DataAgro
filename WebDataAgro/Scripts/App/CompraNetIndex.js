@@ -2459,9 +2459,9 @@ function mostrarDetalles() {
 function compararReconfirmacion() {
     var id = $("#contrato").text();
     $("#mostrar").hide();
-    $("#ocultar").show();   
-    $("#tablaModificacion").show();  
-    
+    $("#ocultar").show();
+    $("#tablaModificacion").show();
+
     $("#datosContrato").hide();
     var result = MSExecuteOnServer('/CompraNet/CompararNegocioReconfirmado', { contratoId: id });
     var contratoSave = result[0];
@@ -2471,100 +2471,97 @@ function compararReconfirmacion() {
     table += "<th>Modificado</th>"
     table += "</tr>";
 
-    if (contrato.Precio != contratoSave.Precio) {
-        table += "<tr>";
-        table += '<td>';
-        table += '<span> PRECIO: ' + contrato.Precio + '</span><br/>';
-        table += '</td>';
-        table += '<td>';
-        table += '<span"> PRECIO: ' + contratoSave.Precio + '</span><br/>';
-        table += '</td>';
-        table += "</tr>";
-    }
-    if (contrato.Cantidad != contratoSave.Cantidad) {
-        table += "<tr>";
-        table += '<td>';
-        table += '<span> CANTIDAD: ' + contrato.Cantidad + '</span><br/>';
-        table += '</td>';
-        table += '<td>';
-        table += '<span"> CANTIDAD: ' + contratoSave.Cantidad + '</span><br/>';
-        table += '</td>';
-        table += "</tr>";
-    }
+    table += "<tr>";
+    table += '<td>';
+    table += '<span> PRECIO: ' + contrato.Precio + '</span><br/>';
+    table += '</td>';
+    table += '<td>';
+    table += '<span> PRECIO: ' + (contrato.Precio != contratoSave.Precio ? "<strong>" + contratoSave.Precio + "</strong>" : contratoSave.Precio) + '</span><br/>';
+    table += '</td>';
+    table += "</tr>";
+    table += "<tr>";
+    table += '<td>';
+    table += '<span> CANTIDAD: ' + contrato.Cantidad + '</span><br/>';
+    table += '</td>';
+    table += '<td>';
+    table += '<span> CANTIDAD: ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + contratoSave.Cantidad + "</strong>" : contratoSave.Cantidad) + '</span><br/>';
+    table += '</td>';
+    table += "</tr>";
+
     var result = MSExecuteOnServer('/CompraNet/ValidarCalidades', { contratoId: id });
 
-    if (result == true) {
-        table += "<tr>";
-       
-        if (contrato.StandardCalidadId == 7) {
-            table += '<td>';
-            table += '<span> CALIDAD GRADO 2 </span><br/>';
-            table += '</td>';
-        }
-        else if (contrato.TrigoEspecial == true) {
-            table += '<td>';
-            table += '<span> CALIDAD ESPECIAL </span><br/>';
-            table += '</td>';
-        }
-        else if (contrato.StandardCalidadId == 1 || contrato.StandardCalidadId == 4 || contrato.StandardCalidadId == 5) {
-            table += '<td>';
-            table += '<span> CALIDAD C&AacuteMARA </span><br/>';
-            table += '</td>';
-        }
-        else if (contrato.StandardCalidadId == 3) {
-            table += '<td>';
-            table += '<span> CALIDAD F&AacuteBRICA </span><br/>';
-            table += '</td>';
-        }
-        if (contrato.Calidades.length > 0 && contrato.StandardCalidadId != 7) {
-            table += '<td>';
-            for (var cal = 0; cal < contrato.Calidades.length; cal++) {
-                table += contrato.Calidades[cal].CalidadEspecialDesc + " " + contrato.Calidades[cal].Valor + "<br />";
-                if (contrato.Calidades[cal].PorcentajeDesde != null && contrato.Calidades[cal].PorcentajeHasta != null) {
-                    table += "Porc. Desde " + contrato.Calidades[cal].PorcentajeDesde + "% Hasta " + contrato.Calidades[cal].PorcentajeHasta + "%<br />";
-                }
-            table += '</td>';
-            }
-        }
-        
-       
-       
-        if (contratoSave.StandardCalidadId == 7) {
-            table += '<td>';
-            table += '<span> CALIDAD GRADO 2 </span><br/>';
-            table += '</td>';
-        }
-        else if (contratoSave.TrigoEspecial == true) {
-            table += '<td>';
-            table += '<span> CALIDAD ESPECIAL </span><br/>';
-            table += '</td>';
-        }
-        else if (contratoSave.StandardCalidadId == 1 || contratoSave.StandardCalidadId == 4 || contratoSave.StandardCalidadId == 5) {
-            table += '<td>';
-            table += '<span> CALIDAD C&AacuteMARA </span><br/>';
-            table += '</td>';
-        }
-        else if (contratoSave.StandardCalidadId == 3) {
-            table += '<td>';
-            table += '<span> CALIDAD F&AacuteBRICA </span><br/>';
-            table += '</td>';
-        }
-        if (contratoSave.Calidades.length > 0 && contratoSave.StandardCalidadId != 7) {
-            table += '<td>';
-            for (var cal = 0; cal < contratoSave.Calidades.length; cal++) {
-                
-                table += contratoSave.Calidades[cal].CalidadEspecialDesc + " " + contratoSave.Calidades[cal].Valor + "<br />";
-                if (contratoSave.Calidades[cal].PorcentajeDesde != null && contratoSave.Calidades[cal].PorcentajeHasta != null) {
-                    table += "Porc. Desde " + contratoSave.Calidades[cal].PorcentajeDesde + "% Hasta " + contratoSave.Calidades[cal].PorcentajeHasta + "%<br />";
-                } 
-                
-            }
-            table += '</td>';
-        }
-        table += "</tr>";
+
+    table += "<tr>";
+
+    if (contrato.StandardCalidadId == 7) {
+        table += '<td>';
+        table += '<span> CALIDAD GRADO 2 </span><br/>';
+        table += '</td>';
     }
+    else if (contrato.TrigoEspecial == true) {
+        table += '<td>';
+        table += '<span> CALIDAD ESPECIAL </span><br/>';
+        table += '</td>';
+    }
+    else if (contrato.StandardCalidadId == 1 || contrato.StandardCalidadId == 4 || contrato.StandardCalidadId == 5) {
+        table += '<td>';
+        table += '<span> CALIDAD C&AacuteMARA </span><br/>';
+        table += '</td>';
+    }
+    else if (contrato.StandardCalidadId == 3) {
+        table += '<td>';
+        table += '<span> CALIDAD F&AacuteBRICA </span><br/>';
+        table += '</td>';
+    }
+    if (contrato.Calidades.length > 0 && contrato.StandardCalidadId != 7) {
+        table += '<td>';
+        for (var cal = 0; cal < contrato.Calidades.length; cal++) {
+            table += contrato.Calidades[cal].CalidadEspecialDesc + " " + contrato.Calidades[cal].Valor + "<br />";
+            if (contrato.Calidades[cal].PorcentajeDesde != null && contrato.Calidades[cal].PorcentajeHasta != null) {
+                table += "Porc. Desde " + contrato.Calidades[cal].PorcentajeDesde + "% Hasta " + contrato.Calidades[cal].PorcentajeHasta + "%<br />";
+            }
+            table += '</td>';
+        }
+    }
+
+
+    if (contratoSave.StandardCalidadId == 7) {
+        table += '<td>';
+        table += '<span>' + (result ? "<strong>CALIDAD GRADO 2 </strong>" : "CALIDAD GRADO 2" ) +"</span><br/>";
+        table += '</td>';
+    }
+    else if (contratoSave.TrigoEspecial == true) {
+        table += '<td>';
+        table += '<span>' + (result ? "<strong>CALIDAD ESPECIAL  </strong>" : "CALIDAD ESPECIAL " ) +"</span><br/>" ;
+        table += '</td>';
+    }
+    else if (contratoSave.StandardCalidadId == 1 || contratoSave.StandardCalidadId == 4 || contratoSave.StandardCalidadId == 5) {
+        table += '<td>';
+        table += '<span>' + (result ? "<strong>CALIDAD C&AacuteMARA</strong>" : "CALIDAD C&AacuteMARA") + "</span><br/>";
+        table += '</td>';
+    }
+    else if (contratoSave.StandardCalidadId == 3) {
+        table += '<td>';
+        table += '<span>' + (result ? "<strong>CALIDAD F&AacuteBRICA</strong>  </span><br/>" : "CALIDAD F&AacuteBRICA") + "</span><br/>";
+        table += '</td>';
+    }
+    if (contratoSave.Calidades.length > 0 && contratoSave.StandardCalidadId != 7) {
+        table += '<td>';
+        for (var cal = 0; cal < contratoSave.Calidades.length; cal++) {
+
+            table += result ? "<strong>" + contratoSave.Calidades[cal].CalidadEspecialDesc + " " + contratoSave.Calidades[cal].Valor + " <strong><br />" : contratoSave.Calidades[cal].CalidadEspecialDesc + " " + contratoSave.Calidades[cal].Valor + "<br />";
+            if (contratoSave.Calidades[cal].PorcentajeDesde != null && contratoSave.Calidades[cal].PorcentajeHasta != null) {
+                table += result ? "<strong> Porc.Desde " + contratoSave.Calidades[cal].PorcentajeDesde + " % Hasta " + contratoSave.Calidades[cal].PorcentajeHasta + " % </strong><br />" :                     
+               "Porc. Desde " + contratoSave.Calidades[cal].PorcentajeDesde + "% Hasta " + contratoSave.Calidades[cal].PorcentajeHasta + "%<br />";
+            }
+
+        }
+        table += '</td>';
+    }
+    table += "</tr>";
+
 
     $("#tablaComparar").html(table);
     $("#tablaComparar").show();
-    
+
 }

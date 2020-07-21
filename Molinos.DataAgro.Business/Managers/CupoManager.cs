@@ -555,9 +555,17 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
-            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+            if(cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            }
+            if(cupo.Observaciones != null)
+            {
+                htmlBody += cupo.Observaciones + "<br />";
+            }            
+            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+            {
+                
                 if (cupo.MaterialId == 1)
                 {
                     htmlBody += "ESPECIAL<br />";
@@ -570,6 +578,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "SUSTENTABLE<br />";
                 }
+                
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";

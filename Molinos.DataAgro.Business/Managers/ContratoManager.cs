@@ -804,7 +804,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
             oContratoSave.FechaOperacion = oContrato.FechaOperacion;
             oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
-
+            //oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -1756,6 +1756,7 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
                 MotivoOperacionAnterior = x.MotivoOperacionAnterior
+                //ChequeElectronico = x.ChequeElectronico
             });
             return contrato;
         }
@@ -2296,6 +2297,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Precio = y.Precio
                 }).ToList(),
                 TipoAgenteCompraId = x.TipoAgenteCompraId
+                //ChequeElectronico = x.ChequeElectronico
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
             if (contrato.Fecha < dia)
@@ -3468,7 +3470,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
-                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    var cantidadKg = oContratoSave.Cantidad - contrato.Cantidad;
+                    if (cantidadKg > 0)
+                    {
+                        oContratoSave.Cantidad = cantidadKg;
+                    }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;                        
+                    }
                     repositorio.GuardarCambios();
                 }
                 catch (Exception e)

@@ -553,7 +553,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var subject = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
-                    subject += "Nueva fijación Molinos Agro S.A. –  " + oFijacionDePrecioContrato.Proveedor.RazonSocial;
+                    subject += "Nueva fijación Molinos Agro S.A. – ";
                 }
                 else
                 {
