@@ -211,22 +211,6 @@ namespace WebDataAgro.Controllers
                 //diffLine.Text = diffLine.Text.Replace("\"", "").Replace("_", "");
                 diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text);
                 diffLine.Text = logDataAgroManager.AddSpacesToSentence(diffLine.Text, ':');
-                //if (diffLine.Text != null && (!diffLine.Text.Split(':')[0].Trim().ToLower().EndsWith("id")) && !diffLine.Text.ToLower().Contains("formateado"))// saco los dis
-                //{
-
-                //    if (diffLine.Text.Contains("false"))
-                //    {
-                //        diffLine.Text = diffLine.Text.Replace("false", "No");
-                //    }
-                //    if (diffLine.Text.Contains("true"))
-                //    {
-                //        diffLine.Text = diffLine.Text.Replace("true", "Si");
-                //    }
-                //    if (diffLine.Text.Contains("null"))
-                //    {
-                //        diffLine.Text = diffLine.Text.Replace("null", "");
-                //    }
-                //}
 
                 foreach (var character in diffLine.SubPieces)
                 {

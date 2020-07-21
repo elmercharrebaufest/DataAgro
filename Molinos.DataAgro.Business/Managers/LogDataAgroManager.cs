@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo" });
+            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "EstadoOrder", "FechaOrder", "GrupoCompra" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.ContratoSAP;
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
         }
@@ -61,9 +61,11 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
+            var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
+
             string descripcion = string.IsNullOrEmpty(cambios.CupoSap)? cambios.Id.ToString():cambios.CupoSap;
 
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo",descripcion);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo",descripcion,resolver);
         }
 
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase, string descripcion, IgnorePropertiesResolver resolver = null)
@@ -418,10 +420,14 @@ namespace Molinos.DataAgro.Business.Managers
             text = text.Replace("CampoProduccionAcopioPorProveedores", "Produccion");
             text = text.Replace("ObjetivosTraerPorProveedorId", "Objetivos");
             text = text.Replace("_", " ");
+            if (!text.StartsWith("Descripcion") && text.Contains("Descripcion"))
+            {
+                text = text.Replace("Descripcion", "");
+            }
             bool limiteEncontrado = false;
             if (string.IsNullOrWhiteSpace(text))
                 return "";
-            text = UppercaseFirst(text.Trim());
+            text = UppercaseFirst(text);
             StringBuilder newText = new StringBuilder(text.Length * 2);
             newText.Append(text[0]);
             for (int i = 1; i < text.Length; i++)
@@ -450,7 +456,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (string.IsNullOrEmpty(s))
                 return s;
-            s = s.Trim();
+            //s = s.Trim();
             s = s.Replace("false", "No");
             s = s.Replace("true", "Si");
             s = s.Replace("False", "No");
