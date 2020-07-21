@@ -1184,8 +1184,7 @@ namespace Molinos.DataAgro.Business.Managers
                     string nroContratoSAP = SAPFinalizarContrato(oContratoSave, objDescuento, objCalidad);
 
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
-                    repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+
 
                     try
                     {
@@ -1196,7 +1195,8 @@ namespace Molinos.DataAgro.Business.Managers
                         oContratoSave.ContratoSAP = "";
                         logger.Error(e);
                     }
-
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
                     try
                     {
                         if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null)

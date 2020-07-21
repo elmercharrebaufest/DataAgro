@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campo { get; set; }
         public string Actual { get; set; }
         public string Anterior { get; set; }
+        public string Tipo { get; set; }
+        public string Descripcion { get; set; }
     }
     public class LogDataAgroExcel
     {
@@ -24,7 +26,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime Fecha { get; set; }
         public string AccionRealizada { get; set; }
         public string Clase { get; set; }
-        public int ClaseId { get; set; }
+        public string Codigo { get; set; }
         public string Campo { get; set; }
         public string Actual { get; set; }
         public string Anterior { get; set; }

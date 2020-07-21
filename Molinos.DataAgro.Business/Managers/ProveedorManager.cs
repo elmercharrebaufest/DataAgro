@@ -93,22 +93,22 @@ namespace Molinos.DataAgro.Business.Managers
                     archivoFileResult = x.KMZfile,
                     CampoId = x.Id,
                     comercialId = x.ComercialId,
-                    comercialNom = x.Comercial.Apellido + " " + x.Comercial.Nombres,
+                    comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres,
                     hcultivables = x.HectareasCultivables,
                     htotales = x.HectareasTotales,
                     ImportId = x.ImportId,
                     archivofile = null,
                     item = x.NroItem,
                     latitud = x.Latitud,
-                    localidad = x.LocalidadId,
-                    localidadNom = x.Localidad.Nombre,
+                    localidadId = x.LocalidadId,
+                    localidad = x.Localidad.Nombre,
                     longitud = x.Longitud,
                     materialId = x.MaterialId,
-                    materialNom = x.Material.Descripcion,
+                    material = x.Material.Descripcion,
                     nombre = x.Nombre,
-                    provincia = x.Localidad.ProvinciaId,
-                    provinciaNom = x.Localidad.Provincia.Nombre,
-                    partidoNom = x.Localidad.Partido.Descripcion,
+                    provinciaId = x.Localidad.ProvinciaId,
+                    provincia = x.Localidad.Provincia.Nombre,
+                    partido = x.Localidad.Partido.Descripcion,
                     rinde = x.Rinde
                 }, x => x.ProveedorId == ProveedorId);
 
@@ -1354,7 +1354,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Nombre = param.nombre,
                         KMZfile = param.archivoFileResult,
                         KMZnombre = param.archivo,
-                        LocalidadId = param.localidad,
+                        LocalidadId = param.localidadId,
                         MaterialId = param.materialId,
                         Proveedor = proveedor
                     });
@@ -2462,7 +2462,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Nombre = param.nombre,
                                 KMZfile = param.archivoFileResult,
                                 KMZnombre = param.archivo,
-                                LocalidadId = param.localidad,
+                                LocalidadId = param.localidadId,
                                 MaterialId = param.materialId,
                                 NroItem = 1,
                                 ProveedorId = (int)oParam.ProveedorId
@@ -2490,7 +2490,7 @@ namespace Molinos.DataAgro.Business.Managers
                             campo.ComercialId = mod.comercialId == 0 ? null : mod.comercialId;
                             campo.KMZfile = mod.archivoFileResult;
                             campo.KMZnombre = mod.archivo;
-                            campo.LocalidadId = mod.localidad;
+                            campo.LocalidadId = mod.localidadId;
                             campo.MaterialId = mod.materialId;
                             campo.HectareasCultivables = mod.hcultivables;
                             campo.HectareasTotales = mod.htotales;
@@ -3102,7 +3102,7 @@ namespace Molinos.DataAgro.Business.Managers
                         campoDetalle = new CampoDetalle();
                         campoDetalle.ProveedorId = campo.proveedorId;
                         campoDetalle.Nombre = campo.nombre;
-                        campoDetalle.LocalidadId = campo.localidad;
+                        campoDetalle.LocalidadId = campo.localidadId;
                         campoDetalle.Longitud = campo.longitud;
                         campoDetalle.Latitud = campo.latitud;
                         campoDetalle.NroItem = 1;
@@ -3118,7 +3118,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         campoDetalle.ProveedorId = campo.proveedorId;
                         campoDetalle.Nombre = campo.nombre;
-                        campoDetalle.LocalidadId = campo.localidad;
+                        campoDetalle.LocalidadId = campo.localidadId;
                         campoDetalle.Longitud = campo.longitud;
                         campoDetalle.Latitud = campo.latitud;
                         campoDetalle.HectareasTotales = campo.htotales;

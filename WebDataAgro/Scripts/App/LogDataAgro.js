@@ -82,6 +82,7 @@ function InicializarCuposIndex() {
             { field: "Usuario", title: "Usuario", type: "string" },
             { field: "AccionRealizada", title: "Accion Realizada", type: "string" },
             { field: "Clase", type: "string" },
+            { field: "Descripcion", type: "string" },
             {
                 field: "Estado_Contrato", sortable: false, title: " ", template: function (dataItem) {
 

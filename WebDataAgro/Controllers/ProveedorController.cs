@@ -462,14 +462,14 @@ namespace WebDataAgro.Controllers
                     var localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper().Trim() == provinciaNom && a.Nombre.ToUpper().Trim() == localidadNom && a.Partido_Nombre == departamentoNom).FirstOrDefault();
                     if (localidad != null)
                     {
-                        campo.localidad = localidad.LocalidadId;
+                        campo.localidadId = localidad.LocalidadId;
                     }
                     else
                     {
                         localidad = localidades.Where(a => a.Provincia_Nombre.ToUpper().Trim() == provinciaNom && a.Nombre.ToUpper().Trim() == localidadNom).FirstOrDefault();
                         if (localidad != null)
                         {
-                            campo.localidad = localidad.LocalidadId;
+                            campo.localidadId = localidad.LocalidadId;
                         }
                         else
                         {

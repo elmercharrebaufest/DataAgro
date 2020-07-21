@@ -175,28 +175,28 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class CampoDetalleDto
     {
-        public string partidoNom;
+        public string partido;
         public int proveedorId;
 
         public string archivo { get; set; }
         public byte[] archivofile { get; set; }
         public string archivoFileResult { get; set; }
         public int item { get; set; }
-        public int localidad { get; set; }
-        public string localidadNom { get; set; }
-        public int provincia { get; set; }
-        public string provinciaNom { get; set; }
+        public int localidadId { get; set; }
+        public string localidad { get; set; }
+        public int provinciaId { get; set; }
+        public string provincia { get; set; }
         public string latitud { get; set; }
         public string longitud { get; set; }
         public string nombre { get; set; }
         public int? comercialId { get; set; }
-        public string comercialNom { get; set; }
+        public string comercial { get; set; }
         public int? CampoId { get; set; }
         public decimal? rinde { get; set; }
         public decimal? htotales { get; set; }
         public decimal? hcultivables { get; set; }
         public int materialId { get; set; }
-        public string materialNom { get; set; }
+        public string material { get; set; }
         public int? ImportId  { get; set; }
     }
 

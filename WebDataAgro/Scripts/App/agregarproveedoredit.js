@@ -576,24 +576,24 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] = grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] || {};
 
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].CampoId = establecimiento[i].CampoId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Localidad = establecimiento[i].localidadNom;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Provincia = establecimiento[i].provinciaNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Localidad = establecimiento[i].localidad;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Provincia = establecimiento[i].provincia;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Partido = establecimiento[i].Partido;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].LocalidadId = establecimiento[i].localidad;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ProvinciaId = establecimiento[i].provincia;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].LocalidadId = establecimiento[i].localidadId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ProvinciaId = establecimiento[i].provinciaId;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].latitud = establecimiento[i].latitud;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].longitud = establecimiento[i].longitud;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].nombre = establecimiento[i].nombre;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialId = establecimiento[i].comercialId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialNom = establecimiento[i].comercialNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercial = establecimiento[i].comercial;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZnombre = establecimiento[i].archivo;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZfile = establecimiento[i].archivoFileResult;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].rinde = establecimiento[i].rinde;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].htotales = establecimiento[i].htotales;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].hcultivables = establecimiento[i].hcultivables;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialId = establecimiento[i].materialId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].materialNom;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partidoNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].material = establecimiento[i].material;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partido = establecimiento[i].partido;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ImportId = establecimiento[i].ImportId;
 
 
@@ -610,8 +610,8 @@ function armarEstablecimiento(establecimiento) {
 
             obj.item = capProdCantEstablecimiento;
 
-            obj.localidad = grupoestablecimiento[0][i].LocalidadId;
-            obj.localidadNom = grupoestablecimiento[0][i].Localidad + "(" + grupoestablecimiento[0][i].Provincia + ")";
+            obj.localidadId = grupoestablecimiento[0][i].LocalidadId;
+            obj.localidad = grupoestablecimiento[0][i].Localidad + "(" + grupoestablecimiento[0][i].Provincia + ")";
             obj.partido = grupoestablecimiento[0][i].Partido;
 
 
@@ -623,13 +623,13 @@ function armarEstablecimiento(establecimiento) {
             obj.longitud = grupoestablecimiento[0][i].longitud;
             obj.nombre = grupoestablecimiento[0][i].nombre;
             obj.comercialId = grupoestablecimiento[0][i].comercialId;
-            obj.comercialNom = grupoestablecimiento[0][i].comercialNom;
-            obj.partido = grupoestablecimiento[0][i].partidoNom;
+            obj.comercial = grupoestablecimiento[0][i].comercial;
+            obj.partido = grupoestablecimiento[0][i].partido;
 
             obj.CampoId = grupoestablecimiento[0][i].CampoId;
             obj.ImportId = grupoestablecimiento[0][i].ImportId;
 
-            obj.materialNom = grupoestablecimiento[0][i].materialNom;
+            obj.material = grupoestablecimiento[0][i].material;
             obj.materialId = grupoestablecimiento[0][i].materialId;
             obj.rinde = grupoestablecimiento[0][i].rinde;
             obj.htotales = grupoestablecimiento[0][i].htotales;
@@ -639,7 +639,7 @@ function armarEstablecimiento(establecimiento) {
             html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="establecimientocontenedor' + capProdCantEstablecimiento + '">'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-zona">'
-                + obj.localidadNom + " - " + obj.partido
+                + obj.localidad + " - " + obj.partido
                 + '</div>'
                 + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZEstablecimiento(this)" id="eliminarKMZEstablecimiento' + capProdCantEstablecimiento + '">x Eliminar KMZ</div>' : '')
                 + '<div class="editar-produccion" onclick="editarCampoEstablecimiento(' + capProdCantEstablecimiento + ')" id="editarEstablecimiento' + capProdCantEstablecimiento + '">'
@@ -653,9 +653,9 @@ function armarEstablecimiento(establecimiento) {
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
                 + (obj.nombre != "" ? ('<b>Nombre</b>: ' + obj.nombre) : "")
                 + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
-                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
+                + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercial : "")
                 + "<br>"
-                + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.materialNom : "")
+                + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.material : "")
                 + (obj.rinde > 0 ? ' <b>Rinde</b>:' + obj.rinde : "")
                 + (obj.htotales > 0 ? ' <b>Has Totales</b>:' + obj.htotales : "")
                 + (obj.hcultivables > 0 ? ' <b>Has Cultivables</b>:' + obj.hcultivables : "")

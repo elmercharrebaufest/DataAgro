@@ -1233,8 +1233,8 @@ function armarSelects(result) {
             MensErr("Debe ingresar una localidad");
             return false;
         } else {
-            obj.localidad = $("#localidadId-establecimiento").val();
-            obj.localidadNom = $("#localidad-establecimiento").val()
+            obj.localidadId = $("#localidadId-establecimiento").val();
+            obj.localidad = $("#localidad-establecimiento").val()
             obj.partido = $("#partido-establecimiento").val();
         }
 
@@ -1242,9 +1242,9 @@ function armarSelects(result) {
         obj.longitud = $("#coordenadas-longitud-establecimiento").val();
         obj.nombre = $("#campo-nombre-establecimiento").val();
         obj.comercialId = $("#comercial-establecimiento").val();
-        obj.comercialNom = $("#comercial-establecimiento option:selected").text();
+        obj.comercial = $("#comercial-establecimiento option:selected").text();
 
-        obj.materialNom = $("#material-establecimiento option:selected").text();
+        obj.material = $("#material-establecimiento option:selected").text();
         obj.materialId = $("#material-establecimiento").val();
         obj.rinde = $("#rinde-establecimiento").data("kendoNumericTextBox").value() == null ? 0 : $("#rinde-establecimiento").data("kendoNumericTextBox").value();
         obj.htotales = $("#htotales-establecimiento").data("kendoNumericTextBox").value() == null ? 0 : $("#htotales-establecimiento").data("kendoNumericTextBox").value();
@@ -1534,8 +1534,8 @@ function editarCampoEstablecimiento(id) {
     });
     obj = obj[0];
 
-    $("#localidadId-establecimiento").val(obj.localidad);
-    $("#localidad-establecimiento").val(obj.localidadNom);
+    $("#localidadId-establecimiento").val(obj.localidadId);
+    $("#localidad-establecimiento").val(obj.localidad);
     $("#coordenadas-latitud-establecimiento").val(obj.latitud);
     $("#coordenadas-longitud-establecimiento").val(obj.longitud);
     $("#campo-nombre-establecimiento").val(obj.nombre);

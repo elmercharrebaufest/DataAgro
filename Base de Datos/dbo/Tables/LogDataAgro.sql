@@ -9,5 +9,6 @@
     [AccionRealizada] VARCHAR(100) NOT NULL, 
 
     [Tipo] VARCHAR(100) NOT NULL, 
+    [Descripcion] VARCHAR(250) NOT NULL DEFAULT '', 
     CONSTRAINT [PK_LogDataAgro] PRIMARY KEY CLUSTERED ([Id] ASC)
 )

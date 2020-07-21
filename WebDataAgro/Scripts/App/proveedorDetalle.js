@@ -3013,24 +3013,24 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] = grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId] || {};
 
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].CampoId = establecimiento[i].CampoId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Localidad = establecimiento[i].localidadNom;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Provincia = establecimiento[i].provinciaNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Localidad = establecimiento[i].localidad;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Provincia = establecimiento[i].provincia;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].Partido = establecimiento[i].Partido;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].LocalidadId = establecimiento[i].localidad;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ProvinciaId = establecimiento[i].provincia;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].LocalidadId = establecimiento[i].localidadId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ProvinciaId = establecimiento[i].provinciaId;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].latitud = establecimiento[i].latitud;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].longitud = establecimiento[i].longitud;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].nombre = establecimiento[i].nombre;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialId = establecimiento[i].comercialId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialNom = establecimiento[i].comercialNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].comercialNom = establecimiento[i].comercial;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZnombre = establecimiento[i].archivo;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].KMZfile = establecimiento[i].archivoFileResult;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].rinde = establecimiento[i].rinde;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].htotales = establecimiento[i].htotales;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].hcultivables = establecimiento[i].hcultivables;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialId = establecimiento[i].materialId;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].materialNom;
-            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partidoNom;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].material;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partido;
 
 
 

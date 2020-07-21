@@ -14,5 +14,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public string AccionRealizada { get; set; }
         public string Clase { get; set; }
         public string Tipo { get; set; }
+        public string Descripcion { get; set; }
     }
 }

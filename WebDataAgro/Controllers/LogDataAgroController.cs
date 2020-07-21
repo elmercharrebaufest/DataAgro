@@ -84,7 +84,12 @@ namespace WebDataAgro.Controllers
             {
                 FormatearTexto(diffLine);
             }
+            List<string> tipos = new List<string> { "BasicoContrato", "StoredPorProveedorResult", "CupoDto" };
+            if (tipos.Contains(actual.Tipo))
+            {
+                ViewBag.Mensaje = actual.AccionRealizada + " " + actual.Clase + ": " + actual.Descripcion;
 
+            }
             return PartialView("Diff", model);
         }
 

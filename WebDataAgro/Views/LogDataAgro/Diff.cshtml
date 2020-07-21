@@ -4,8 +4,12 @@
 @model DiffPlex.DiffBuilder.Model.SideBySideDiffModel
 
 <input type="button" onclick="OcultarUnchangedLine()" value="Mostrar Cambios" class="k-button" />
-<input type="button" onclick="MostrarTodo()" value="Mostrar todo" class="k-button" />
+<input type="button" onclick="MostrarTodo()" value="Mostrar Todo" class="k-button" />
 <div id="diffBox">
+    @if (ViewBag.Mensaje != null && ViewBag.Mensaje != "")
+    {
+        <h3 style="text-align:center;font-weight:600;">@ViewBag.Mensaje</h3>
+    }
     <div id="leftPane">
         <div class="diffHeader">Dato Anterior</div>
 

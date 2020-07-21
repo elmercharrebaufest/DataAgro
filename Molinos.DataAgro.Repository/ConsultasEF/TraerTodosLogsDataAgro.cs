@@ -54,6 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     AccionRealizada = log.AccionRealizada,
                     DatoModificado = log.DatoModificado,
                     ClaseId = log.ClaseId,
+                    Descripcion = log.Descripcion
                 };
 
             return queryLogs.ToDataSourceResult<LogDataAgroDto>(request);
