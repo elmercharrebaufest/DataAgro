@@ -810,18 +810,21 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridCupo').data("kendoGrid");
     if (!$("#cupoPropiosDiv").hasClass("selected")) {
+        var currentFilters =  { filters: [], logic: 'and' };        
+        grilla.dataSource.filter(currentFilters);
         var fecha = new Date();
         var ayer = new Date(fecha.getTime() - 24 * 60 * 60 * 1000);
         addOrRemoveFilter(grilla, "FechaIngreso", "gte", ayer);
         addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId));
         $("#cupoPropiosDiv").addClass("selected");
-        $("#cupoPropio").addClass("selected").removeClass("varios");
+        $("#cupoPropio").addClass("selected").removeClass("varios");        
     } else {
+        addOrRemoveFilter(grilla, "FechaIngreso", "gte", "");
         addOrRemoveFilter(grilla, "ComercialId", "eq", "");
         $("#cupoPropiosDiv").removeClass("selected");
         $("#cupoPropio").addClass("varios").removeClass("selected");
     }
-    recargarGrilla();
+    recargarGrilla();   
 }
 
 function addOrRemoveFilter(grid, field, operator, value) {
