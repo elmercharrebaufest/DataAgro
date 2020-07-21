@@ -409,6 +409,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string AddSpacesToSentence(string text, char limite)
         {
+            text = text.Replace("BasicoProveedorTraerPorProveedores", "Proveedor");
+            text = text.Replace("ContactosComercialesTraerPorProveedores", "ContactosComerciales");
+            text = text.Replace("ContactosComercialesTraerPorProveedores", "ContactosComerciales");
+            text = text.Replace("ActividadHistoriaTraerPorProveedores", "ActividadHistoria");
+            text = text.Replace("ProveedorCampoDetalle", "Establecimientos");
+            text = text.Replace("AcopioMaterialPorProveedores", "AcopioMaterial");
+            text = text.Replace("CampoProduccionAcopioPorProveedores", "Produccion");
+            text = text.Replace("ObjetivosTraerPorProveedorId", "Objetivos");
             text = text.Replace("_", " ");
             bool limiteEncontrado = false;
             if (string.IsNullOrWhiteSpace(text))
