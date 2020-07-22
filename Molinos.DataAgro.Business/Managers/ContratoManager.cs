@@ -53,6 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly IStatusContratoAgent status;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IValidarDocProcPagoAgent validarPagoAgente;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -68,7 +69,8 @@ namespace Molinos.DataAgro.Business.Managers
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status, ILogDataAgroManager logDataAgroManager)
+            IMailManager mailManager, IStatusContratoAgent status, 
+            ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -94,6 +96,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.capacidadProductiva = capacidadProductiva;
             this.status = status;
             this.logDataAgroManager = logDataAgroManager;
+            this.validarPagoAgente = validarPagoAgente;
         }
 
         public DatosIniContrato TraerDatosCombo()
@@ -805,6 +808,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.FechaOperacion = oContrato.FechaOperacion;
             oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
             //oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
+            oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -1755,8 +1759,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaOperacionFormateado = SqlFunctions.DateName("day", x.FechaOperacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
-                MotivoOperacionAnterior = x.MotivoOperacionAnterior
-                //ChequeElectronico = x.ChequeElectronico
+                MotivoOperacionAnterior = x.MotivoOperacionAnterior,
+                //ChequeElectronico = x.ChequeElectronico,
+                DolarizadoExpress = x.DolarizadoExpress
             });
             return contrato;
         }
@@ -2296,7 +2301,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Porcentaje = y.Porcentaje,
                     Precio = y.Precio
                 }).ToList(),
-                TipoAgenteCompraId = x.TipoAgenteCompraId
+                TipoAgenteCompraId = x.TipoAgenteCompraId,
                 //ChequeElectronico = x.ChequeElectronico
             });
             var dia = diasHabilesAgent.UltimoDiaHabil();
@@ -2441,6 +2446,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CaratulaExtension = contrato.CaratulaExtension;
             contratoSave.PrecioAjusteComision = contrato.PrecioAjusteComision;
             contratoSave.MonedaAjusteComisionId = contrato.MonedaAjusteComisionId;
+            //contratoSave.ChequeElectronico = contrato.ChequeElectronico;
+            contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -2492,6 +2499,15 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Error("", "El contrato no se puede modificar");
                     return error;
                 }
+                //if (oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value)
+                //{
+                //    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+                //    if (result != "Ok")
+                //    {
+                //        error.Error("", result);
+                //        return error;
+                //    }
+                //}
                 if (oContrato.EstadoId != 11)
                 {
                     if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3) || ValidarCalidadModificada(oContrato, oContratoSave))
@@ -2511,8 +2527,9 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        oContrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
 
+                        oContrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
+                        
                         var res = modificarContratoAgent.Modificar(oContrato, oContratoSave);
                         if (res.Contains("Error"))
                         {
@@ -2539,9 +2556,9 @@ namespace Molinos.DataAgro.Business.Managers
             var error = new GrabarContratoResult();
             try
             {
-                var json = repositorio.Obtener<NegocioHistorico>(x => x.NegocioId == contratoId).Datos;
+                var json = repositorio.Listar<NegocioHistorico>(x => x.NegocioId == contratoId).LastOrDefault().Datos;
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
-                var contrato = repositorio.Obtener<Contrato>(contratoId);
+                var contrato = repositorio.Obtener<Contrato>(contratoId);             
                 var res = modificarContratoAgent.Modificar(contrato, contratoSave);
 
                 if (res.Contains("Error"))
@@ -3182,7 +3199,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var json = repositorio.Obtener<NegocioHistorico>(x => x.NegocioId == contratoId).Datos;
+                var json = repositorio.Listar<NegocioHistorico>(x => x.NegocioId == contratoId).LastOrDefault().Datos;
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
                 Expression<Func<Contrato, BasicoContrato>> proyeccion = x => new BasicoContrato
                 {
@@ -3457,7 +3474,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public bool DiferenciaEnCalidades(int contratoId)
         {
-            var json = repositorio.Obtener<NegocioHistorico>(x => x.NegocioId == contratoId).Datos;
+            var json = repositorio.Listar<NegocioHistorico>(x => x.NegocioId == contratoId).LastOrDefault().Datos;
             var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
             var contrato = repositorio.Obtener<Contrato>(contratoId);
             return ValidarCalidadModificada(contratoSave, contrato);

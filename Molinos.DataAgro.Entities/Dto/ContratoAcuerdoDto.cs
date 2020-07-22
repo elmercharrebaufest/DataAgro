@@ -30,5 +30,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int EstadoId { get; set; }
         public string Moneda { get; set; }
         public string MonedaId { get; set; }
+        public bool? ChequeElectronico { get; set; }
+
     }
 }

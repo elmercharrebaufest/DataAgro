@@ -234,6 +234,8 @@ function CreateGridInformeCompraNet() {
                     } else return "";
                 }
             },
+            { field: "DolarizadoExpressValor", type: "string", title: "Dolarizado Express" },
+            //{ field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];            

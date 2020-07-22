@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoAcuerdo\":{\"Id\":0,\"Comercial\":null,\"ComercialId\":0,\"Proveedor\":null,\"ProveedorId\":0,\"Corredor\":null,\"CorredorId\":0,\"Cantidad\":0,\"Precio\":0,\"Material\":null,\"MaterialId\":0,\"Destino\":null,\"DestinoId\":0,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"FechaModificacionDesde\":null,\"FechaModificacion\":null,\"Estado\":null,\"EstadoId\":0,\"Moneda\":null,\"MonedaId\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoAcuerdo\":{\"Id\":0,\"Comercial\":null,\"ComercialId\":0,\"Proveedor\":null,\"ProveedorId\":0,\"Corredor\":null,\"CorredorId\":0,\"Cantidad\":0,\"Precio\":0,\"Material\":null,\"MaterialId\":0,\"Destino\":null,\"DestinoId\":0,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"FechaModificacionDesde\":null,\"FechaModificacion\":null,\"Estado\":null,\"EstadoId\":0,\"Moneda\":null,\"MonedaId\":null,\"ChequeElectronico\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

@@ -148,7 +148,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         MotivoOperacionAnterior = (contrato is Contrato) ? (contrato as Contrato).MotivoOperacionAnterior : "",
 
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido: "Automática",
-                        FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null
+                        FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,
+                        DolarizadoExpressValor = contrato.DolarizadoExpress.HasValue ? (contrato.DolarizadoExpress.Value ? "Si" : "No") : "",
+                        //ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
+                        DolarizadoExpress = contrato.DolarizadoExpress.Value
+
                     };
 
                 return queryNegocios;

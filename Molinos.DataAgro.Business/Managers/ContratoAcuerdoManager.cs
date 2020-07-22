@@ -23,14 +23,17 @@ namespace Molinos.DataAgro.Business
         private readonly IRepositorio repositorio;
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IValidarDocProcPagoAgent validarPagoAgente;
 
         public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio,
-            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager)
+            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.diasHabilesAgent = diasHabilesAgent;
             this.logDataAgroManager = logDataAgroManager;
+            this.validarPagoAgente = validarPagoAgente;
+
         }
 
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
@@ -251,6 +254,7 @@ namespace Molinos.DataAgro.Business
             {
                 
                 objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
+               
                 descuentosExistentes = objContratoAcuerdo.Descuentos.ToList();
                 if (estado == 1 && objContratoAcuerdo.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
@@ -281,7 +285,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
                 objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
                 objContratoAcuerdo.FechaDolarizado = oContratoAcuerdo.FechaDolarizado;
-
+                //objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
 
                 objContratoAcuerdo.TipoNegocioId = oContratoAcuerdo.TipoNegocioId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;

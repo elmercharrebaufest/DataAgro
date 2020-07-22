@@ -218,7 +218,10 @@
         <div class="col-md-4">
             @*@Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), new { @class = "multiselect", @id = "ClasificacionId" })*@
             <input id="ClasificacionId" name="ClasificacionId" class="multiselect" style="width:100%" type="text" placeholder="" required="required" />
-
+        </div>
+        <div class="col-md-2">
+            <label>Dolarizado Express</label>
+            @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
         </div>
     </div>
     <br />

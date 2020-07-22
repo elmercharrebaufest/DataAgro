@@ -851,6 +851,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
+            if (oContrato.DolarizadoExpress.Value)
+            {
+                htmlBody += "A pesificar en mes en curso y enviar mail a Notificaciones diferido: Notificacionesdiferido@molinosagro.com.ar hasta las 13 hs <br />";
+            }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +

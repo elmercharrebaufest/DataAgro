@@ -113,6 +113,7 @@ function CargarCopiaContrato(contratoId, tipo) {
         CargarDatosEditar(contratoCopia);
         if (tipo == "acuerdo") {
             $("#fechaOperacionId").data("kendoDatePicker").enable(false);
+            //$("#chequeElectronicoId").show();
         }
     }
 }

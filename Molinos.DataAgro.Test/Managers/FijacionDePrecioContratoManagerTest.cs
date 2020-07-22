@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRelacionCorredorProveedorAgent> relacionCorredorProveedorAgentMock;
         private Mock<IContratosParaFijacionAgent> contratosParaFijacionMock;
         private Mock<IMailManager> mailManagerMock;
-
+        private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -53,12 +53,13 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock = new Mock<IMailManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
-
+            validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
+            
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
                 pushNotificacionManagerMock.Object, finalizarFijacionAgentMock.Object,
                 contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
-                mailManagerMock.Object, logDataAgroManagerMock.Object);
+                mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object);
         }
 
         [Test]

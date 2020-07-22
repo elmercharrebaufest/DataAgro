@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
-
+        private readonly IValidarDocProcPagoAgent validarPagoAgente;
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -42,7 +42,8 @@ namespace Molinos.DataAgro.Business.Managers
             IFinalizarFijacionAgent oFinalizarFijacionAgent,
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IMailManager mailManager, ILogDataAgroManager logDataAgroManager)
+            IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
+            IValidarDocProcPagoAgent validarPagoAgente)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -54,6 +55,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.mailManager = mailManager;
             this.logDataAgroManager = logDataAgroManager;
+            this.validarPagoAgente = validarPagoAgente;
         }
 
         //--------------------------------------------------
@@ -247,6 +249,15 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecio.Id != 0)
             {
                 oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
+                //if (oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value)
+                //{
+                //    var result = validarPagoAgente.ValidarEstado("", oFijacionDePrecio.FijacionSAP);
+                //    if (result != "Ok")
+                //    {
+                //        oEntityErrors.Error("", result);
+                //        return oEntityErrors;
+                //    }
+                //}
                 if (oFijacionDePrecioSave.EstadoId == 5 || oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
@@ -290,6 +301,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
+                //oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
+
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
                     var aperturas = repositorio.Listar<AperturaPrecio>(x => x.NegocioId != null && x.NegocioId == oFijacionDePrecioSave.Id);
@@ -769,7 +782,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,
-                Fecha = fijac.Fecha
+                Fecha = fijac.Fecha,
+                //ChequeElectronico = fijac.ChequeElectronico
 
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');

@@ -290,7 +290,7 @@ namespace WebDataAgro.Services
                 contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
                 contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
                 contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
-
+                //contrato.ChequeElectronico = contratoSAP.ChequeElectronico == "X";
 
                 if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
                 {

@@ -50,6 +50,7 @@ namespace Molinos.DataAgro.Test.Managers
         private JavaScriptSerializer serializer;
         private Mock<IStatusContratoAgent> status;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
+        private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
 
         [SetUp]
         public void SetUp()
@@ -81,8 +82,8 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock = new Mock<IMailManager>();
             status = new Mock<IStatusContratoAgent>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
-
-
+            validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
+                       
             target = new ContratoManager(logger.Object, repositorioMock.Object,
                 materialManagerMock.Object, tipoNegocioManagerMock.Object,
                 oMSCampaniaManagerMock.Object, provinciaManagerMock.Object,
@@ -97,7 +98,8 @@ namespace Molinos.DataAgro.Test.Managers
                 capacidadProductivaAgentMock.Object,
                 altaTempranaAgentMock.Object,
                 diasHabilesAgentMock.Object, modificarContratoAgentMock.Object,
-                mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object);
+                mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object,
+                validarPagoAgente.Object);
         }
 
         [Test]

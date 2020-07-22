@@ -63,6 +63,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaConfirmacion { get; set; }
 
         public string UsuarioConfirmador { get; set; }
+
+        public bool? ChequeElectronico { get; set; }
+        public bool? DolarizadoExpress { get; set; }
+
     }
 }
 

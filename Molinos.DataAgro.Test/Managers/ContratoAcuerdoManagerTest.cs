@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
+        private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
 
         [SetUp]
         public void SetUp()
@@ -39,8 +40,10 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
+            validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
 
-            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object, diasHabilesAgentMock.Object, logDataAgroManagerMock.Object);
+            target = new ContratoAcuerdoManager(logger.Object, repositorioMock.Object, 
+            diasHabilesAgentMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object);
         }
         [Test]
         public void BorrarAcuerdoTest()

@@ -329,8 +329,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.CaratulaMAT != contrato.CaratulaMAT ||
                     contratoGuardado.CaratulaExtension != contrato.CaratulaExtension ||
                     contratoGuardado.PrecioAjusteComision != contrato.PrecioAjusteComision ||
-                    contratoGuardado.MonedaAjusteComisionId != contrato.MonedaAjusteComisionId
-                    ;
+                    contratoGuardado.MonedaAjusteComisionId != contrato.MonedaAjusteComisionId ||
+                    //contratoGuardado.ChequeElectronico != contrato.ChequeElectronico ||
+                    contratoGuardado.DolarizadoExpress != contrato.DolarizadoExpress;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
@@ -432,7 +433,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             CARATULA_EXT = contrato.CaratulaExtension,
                             PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0,
                             MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
-                            FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd")
+                            FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd"),
+                            //ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
+                            DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X":""
                         }
                     }
                 };

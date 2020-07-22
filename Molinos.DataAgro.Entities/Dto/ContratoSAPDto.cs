@@ -75,6 +75,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CaratulaExtension { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
+
+        public string ChequeElectronico { get; set; }
     }
 
     public class CalidadSAP

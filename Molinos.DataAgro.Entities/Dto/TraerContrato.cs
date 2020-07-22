@@ -6,6 +6,8 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class BasicoContrato
     {
+        public string ChequeElectronicoValor;
+
         public int Id { get; set; }
         public string Cuit { get; set; }
         public int ContratoId { get; set; }
@@ -161,6 +163,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UsuarioConfirmador { get; set; }
         public DateTime? FechaConfirmacion { get; set; }
         public int CantidadMaximaCupo { get; set; }
+        public bool? ChequeElectronico { get; set; }
+        public bool? DolarizadoExpress { get; set; }
+        public string DolarizadoExpressValor { get; set; }
     }
 
     public class StoredPorContratoResult

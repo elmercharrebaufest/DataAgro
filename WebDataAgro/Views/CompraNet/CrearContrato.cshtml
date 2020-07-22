@@ -36,7 +36,7 @@
 
     </div>
 
-    <div class="copia-contratos">
+    <div class="copia-contratos noAcuerdo">
         <div class="row ampliar">
             <div class="col-sm-2">
                 <label>Copiar Contrato</label>
@@ -198,7 +198,7 @@
                     <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div id="pagosDiv" class="noFason noAgente acuerdo ampliar ">
+            <div id="pagosDiv" class="noFason noAgente acuerdo ampliar">
                 <div class="col-sm-2 ">
                     <label>Pago</label>
                 </div>
@@ -401,17 +401,17 @@
         </div>
 
 
-        <div class="col-xs-10 col-sm-5 noFason noAgente noAcuerdo ampliar ampliar-fijacion">
-            <span id="baseDiv" style="display:inline-block">
+        <div class="col-xs-10 col-sm-5 noFason noAgente  acuerdo ampliar-fijacion">
+            <span id="baseDiv" style="display:inline-block" class="noAcuerdo ampliar">
                 <label id="lblBase">Base</label>
                 <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
             </span>
-            <span id="pizarraDiv" style="display:inline-block">
+            <span id="pizarraDiv" style="display:inline-block" class="noAcuerdo ampliar">
                 <label id="lblPizarra">Pizarra</label>
                 <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
             </span>
 
-            <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion">
+            <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar">
                 <label style="width:100px">Pago diferido</label>
                 <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
@@ -419,13 +419,15 @@
                     <input id="diasDiferidoFijacionId" placeholder="Días" />
                 </div>
             </div>
-
-            <div id="pagoDirectoDiv" hidden style="float:right;">
+            @*<div id="chequeElectronicoId" style="float:right" hidden>
+                <label>Vía de Pago</label>
+                <input id="chequeElectronico"  class="campo-input-input" name="chequeElectronico" type="checkbox">
+            </div>*@
+            <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo">
                 <label>Pago dir. Vend.</label>
-                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
+                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" onclick="ClickPagoDirecto()" />
                 <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-
         </div>
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
@@ -666,8 +668,12 @@
 
             <div class="col-sm-2 ">
                 <label style="width:120px">Compensación</label>
-                <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" />
+                <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
             </div>
+            @*<div id="chequeElectronicoDiv">
+                <label>Vía de Pago</label>
+                <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox">
+            </div>*@
         </div>
 
         <div class="row ocultar noAcuerdo">
@@ -731,7 +737,13 @@
                     <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
                 </div>
             </div>
+            <div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
+                <label>Dolarizado Express</label>
+                <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
+            </div>
         </div>
+           
+        
     </div>
 
     <div class="noFason noAgente noAcuerdo ampliar">
@@ -788,8 +800,8 @@
         </div>
     </div>
 
-    <div class="noFason noAgente ampliar">
-        <div id="DatosDescuentos" class="btnagregar btnAzul widthButton ampliar " type="button">
+    <div class="noFason noAgente ampliar acuerdo">
+        <div id="DatosDescuentos" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Descuentos y Bonificaciones
         </div>
     </div>
@@ -861,7 +873,7 @@
         </script>
     </div>
 
-    <div class="noFason noAgente ampliar">
+    <div class="noFason noAgente ampliar acuerdo">
         <div id="DatosCalidades" class="btnagregar widthButton btnAzul " type="button">
             <i class="fa fa-plus"></i> Calidad
         </div>

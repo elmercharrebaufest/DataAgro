@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Helpers\ComprasDetalleAgent.cs" />
     <Compile Include="Helpers\CriterioCDWarrantAgent.cs" />
+    <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
     <Compile Include="Helpers\PrecioPizarraAgent.cs" />
