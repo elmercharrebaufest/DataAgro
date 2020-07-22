@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "EstadoCuit", "CantidadMaximaCupo" });
+            var resolver = new IgnorePropertiesResolver(new[] { "EstadoCuit", "CantidadMaximaCupo", "Facacop" });
             string descripcion = "";
             if (cambios.BasicoProveedorTraerPorProveedores != null && cambios.BasicoProveedorTraerPorProveedores.Count > 1)
             {
@@ -57,15 +57,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 descripcion = cambios.BasicoProveedorTraerPorProveedores.First().RazonSocial + " (" + cambios.BasicoProveedorTraerPorProveedores.First().CUIT + ")";
             }
-            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, "Proveedor", descripcion,resolver);
+            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, "Proveedor", descripcion, resolver);
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
             var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
 
-            string descripcion = string.IsNullOrEmpty(cambios.CupoSap)? cambios.Id.ToString():cambios.CupoSap;
+            string descripcion = string.IsNullOrEmpty(cambios.CupoSap) ? cambios.Id.ToString() : cambios.CupoSap;
 
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo",descripcion,resolver);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo", descripcion, resolver);
         }
 
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase, string descripcion, IgnorePropertiesResolver resolver = null)
@@ -391,21 +391,21 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica",cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.Id.ToString());
         }
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa",cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa", cambios.Id.ToString());
         }
         public int LogCambiosDataAgro(HabilitacionFijacionDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Habilitacion Fijacion",cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Habilitacion Fijacion", cambios.Id.ToString());
         }
 
         public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra",cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.Id.ToString());
         }
 
 
@@ -475,19 +475,19 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     Match mat = formato1.Match(s);
                     DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd'T'HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-                    s = formato1.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                    s = formato1.Replace(s, date.ToString("dd-MM-yyyy HH:mm:ss"));
                 }
                 if (formato2.IsMatch(s))
                 {
                     Match mat = formato2.Match(s);
                     DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                    s = formato2.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                    s = formato2.Replace(s, date.ToString("dd-MM-yyyy HH:mm:ss"));
                 }
                 if (formato3.IsMatch(s))
                 {
                     Match mat = formato3.Match(s);
                     DateTime date = DateTime.ParseExact(mat.ToString(), "yyyy-MM-dd 'T'HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                    s = formato3.Replace(s, date.Second > 0 || date.Minute > 0 || date.Hour > 0 ? date.ToString("dd-MM-yyyy HH:mm:ss") : date.ToString("dd-MM-yyyy"));
+                    s = formato3.Replace(s, date.ToString("dd-MM-yyyy HH:mm:ss"));
                 }
 
             }

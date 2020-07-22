@@ -32,7 +32,7 @@
                                         {
                                             if (character.Type == DiffPlex.DiffBuilder.Model.ChangeType.Imaginary) { continue; }
 
-                                            <span class="@character.Type.ToString()Character piece">@character.Text.Replace(" ", spaceValue.ToString())</span>
+                                <span class="@character.Type.ToString()Character piece">@Html.Raw(Html.Encode(character.Text).Replace(" ", spaceValue))</span>
                                         }
                                     }
                                 }
