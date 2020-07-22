@@ -121,6 +121,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ListaCBUProveedor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\PrecioPizarra\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -211,6 +216,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ValidarDocProcPago\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -241,6 +251,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\DisponibilidadCupos\SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS.wsdl" />
+    <None Include="Service References\ListaCBUProveedor\Molinos.DataAgro.Agent.ListaCBUProveedor.SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDORResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ListaCBUProveedor\Molinos.DataAgro.Agent.ListaCBUProveedor.Z_MPRFC_LISTA_CBU_PROVEEDORResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ListaCBUProveedor\SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR.wsdl" />
     <None Include="Service References\PrecioPizarra\Molinos.DataAgro.Agent.PrecioPizarra.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -369,11 +386,19 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
+    <None Include="Service References\ValidarDocProcPago\Molinos.DataAgro.Agent.ValidarDocProcPago.SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarDocProcPago\Molinos.DataAgro.Agent.ValidarDocProcPago.Z_MPRFC_VALIDAR_DOC_PROC_PAGOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarDocProcPago\SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\CriterioCDWarrant\" />
     <WCFMetadataStorage Include="Service References\ComprasDetalle\" />
     <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
+    <WCFMetadataStorage Include="Service References\ListaCBUProveedor\" />
     <WCFMetadataStorage Include="Service References\PrecioPizarra\" />
     <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
@@ -392,6 +417,7 @@
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
     <WCFMetadataStorage Include="Service References\StatusContrato\" />
     <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
+    <WCFMetadataStorage Include="Service References\ValidarDocProcPago\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -655,6 +681,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ComprasDetalle\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ListaCBUProveedor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ListaCBUProveedor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ListaCBUProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarDocProcPago\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarDocProcPago\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarDocProcPago\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

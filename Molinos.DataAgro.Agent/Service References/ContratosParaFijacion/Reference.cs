@@ -216,6 +216,8 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         
         private ZMPES5300[] cALIDADESField;
         
+        private string zONAField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CONTRATO {
@@ -514,6 +516,18 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.cALIDADESField = value;
                 this.RaisePropertyChanged("CALIDADES");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=25)]
+        public string ZONA {
+            get {
+                return this.zONAField;
+            }
+            set {
+                this.zONAField = value;
+                this.RaisePropertyChanged("ZONA");
             }
         }
         
