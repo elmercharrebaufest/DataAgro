@@ -625,7 +625,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
 
-            if (oParam.TipoNegocioId == 1 && (centro == null || centro.Acopio == true)
+            if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 
                 && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))               
                 )
             {
