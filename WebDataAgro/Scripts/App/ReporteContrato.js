@@ -142,7 +142,7 @@ function CreateGridInformeCompraNet() {
             {
                 field: "Acuerdo", width: 90
             },
-            { field: "Fecha", title: "Operacion", width: 80, format: _DefaultDateTemplate },
+            { field: "Fecha", title: "Carga", width: 80, format: _DefaultDateTemplate },
             {
                 field: "Hora", value: "Hora", title: "Hora", template:
                     function (dataItem) {
@@ -207,7 +207,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Pesificado", columns: [
+                field: "Pago Diferido", columns: [
                     { field: "Pesificado", title: "Pesif. ", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false }
                 ]

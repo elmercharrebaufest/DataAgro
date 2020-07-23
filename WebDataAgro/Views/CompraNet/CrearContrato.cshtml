@@ -402,15 +402,16 @@
 
 
         <div class="col-xs-10 col-sm-5 noFason noAgente  acuerdo ampliar-fijacion">
-            <span id="baseDiv" style="display:inline-block" class="noAcuerdo ampliar">
-                <label id="lblBase">Base</label>
-                <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
-            </span>
-            <span id="pizarraDiv" style="display:inline-block" class="noAcuerdo ampliar">
-                <label id="lblPizarra">Pizarra</label>
-                <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
-            </span>
-
+            <div class="ampliar">
+                <span id="baseDiv" style="display:inline-block" class="noAcuerdo">
+                    <label id="lblBase">Base</label>
+                    <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
+                </span>
+                <span id="pizarraDiv" style="display:inline-block" class="noAcuerdo ">
+                    <label id="lblPizarra">Pizarra</label>
+                    <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
+                </span>
+            </div>
             <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar">
                 <label style="width:100px">Pago diferido</label>
                 <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
@@ -425,7 +426,7 @@
             </div>*@
             <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo">
                 <label>Pago dir. Vend.</label>
-                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" onclick="ClickPagoDirecto()" />
+                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
                 <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>

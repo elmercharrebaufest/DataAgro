@@ -109,6 +109,12 @@ function CargarCopiaContrato(contratoId, tipo) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {
         contratoCopia.Estado = 1;
+        if (contratoCopia.Descuentos) {
+            for (var i = 0; i < contratoCopia.Descuentos.length; i++) {
+                contratoCopia.Descuentos[i].Id = 0;
+            }
+        }       
+        
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
         if (tipo == "acuerdo") {

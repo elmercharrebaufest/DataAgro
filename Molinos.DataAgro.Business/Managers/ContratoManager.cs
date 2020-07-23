@@ -2655,11 +2655,29 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = new List<string>();
             var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
-            var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == contrato.Proveedor.ProveedorId);
-
+            var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
+           
             lista.Add(email);
 
-            mailManager.EnviarMail(contrato.Comercial, emailproveedor, "Modificación de contrato", "", lista, CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato, contratoSave));
+            var emailComerciales = "";
+            if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
+            {
+                var corredoresComerciales = mobjComercialManager.ListarComercialesCorredor();
+                corredoresComerciales.Remove(contrato.Comercial);
+                logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales));
+                foreach (Comercial corredorComercialCopia in corredoresComerciales)
+                {
+                    try
+                    {
+                        emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                        lista.Add(emailComerciales);
+                    }
+                    catch (Exception e) { logger.Error(e); }
+                }
+            }
+            var subject = "Modificación negocio Molinos Agro S.A. – " + contrato.Proveedor.RazonSocial;
+
+            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato, contratoSave));
         }
 
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, Contrato contratoSave)

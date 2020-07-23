@@ -551,6 +551,8 @@ function InicializarElementos() {
             $("#cargarCantidadPendienteFijar").hide();
             //$("#chequeElectronicoDiv").hide();
             $("#dolarizadoExpressDiv").hide();
+            $("#baseDiv").hide();
+            $("#pizarraDiv").hide();
             ImporteSobrePrecio = 0;
             MonedaSobrePrecio = "";
             PorcentajeSobrePrecio = 0;
@@ -860,7 +862,7 @@ function InicializarElementos() {
                 $("#pesificadoId").prop("checked", false);
                 $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
 
-                if ($("#pagoDirectoId").is(":checked") && $("#clasificacion").val() == "1") {
+                if ($("#clasificacion").val() == "1") {
                     $("#dolarizadoExpressDiv").show();
                 } else {
                     $("#dolarizadoExpressDiv").hide();
@@ -1015,7 +1017,7 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);
-                if ($("#pagoDirectoId").is(":checked") && $("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
+                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
                     $("#dolarizadoExpressDiv").show();
                 } else {
                     $("#dolarizadoExpressDiv").hide();
@@ -3920,22 +3922,22 @@ function HayCompensacion() {
     //}
 }
 
-function ClickPagoDirecto() {
-    if (!$("#pagoDirectoId").is(":checked")) {
-        //$("#chequeElectronicoDiv").show();
-        $("#dolarizadoExpressDiv").hide();
-        $("#dolarizadoExpressId").prop("checked", false);
-    }
-    else {
-        //$("#chequeElectronicoInput").prop("checked", false);
-        //$("#chequeElectronicoDiv").hide();
-        if ($("#clasificacion").val() == "1" && $("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
-            $("#dolarizadoExpressDiv").show();
-        }
+//function ClickPagoDirecto() {
+//    if (!$("#pagoDirectoId").is(":checked")) {
+//        //$("#chequeElectronicoDiv").show();
+//        $("#dolarizadoExpressDiv").hide();
+//        $("#dolarizadoExpressId").prop("checked", false);
+//    }
+//    else {
+//        //$("#chequeElectronicoInput").prop("checked", false);
+//        //$("#chequeElectronicoDiv").hide();
+//        if ($("#clasificacion").val() == "1" && $("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
+//            $("#dolarizadoExpressDiv").show();
+//        }
         
         
-    }
-}
+//    }
+//}
 
 
 
