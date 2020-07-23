@@ -479,10 +479,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "El campo 'Campaña' no debe estar vacio");
             }
-            if (oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
-            {
-                oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
-            }
+            
             if (oContratoAcuerdo.Precio < 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
