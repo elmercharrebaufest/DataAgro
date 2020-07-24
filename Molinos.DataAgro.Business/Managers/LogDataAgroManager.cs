@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "EstadoOrder", "FechaOrder", "GrupoCompra" });
+            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
         }
@@ -167,26 +167,26 @@ namespace Molinos.DataAgro.Business.Managers
                     ClaseId = log.ClaseId,
                 }).FirstOrDefault();
 
-            if (logActual.AccionRealizada.Contains("Crear"))
-            {
-                logAnterior = null;
-            }
-            else
-            {
-                logAnterior = repositorio.Listar<LogDataAgro>(x => x.Id < logActual.Id && x.ClaseId == logActual.ClaseId && logActual.Clase == x.Clase)
-                       .OrderByDescending(x => x.Id)
-                       .Select(x => new LogDataAgroDto
-                       {
-                           Id = x.Id,
-                           Usuario = x.Usuario,
-                           Fecha = x.Fecha,
-                           Clase = x.Clase,
-                           AccionRealizada = x.AccionRealizada,
-                           DatoModificado = x.DatoModificado,
-                           ClaseId = x.ClaseId,
+            //if (logActual.AccionRealizada.Contains("Crear"))
+            //{
+            //    logAnterior = null;
+            //}
+            //else
+            //{
+            logAnterior = repositorio.Listar<LogDataAgro>(x => x.Id < logActual.Id && x.ClaseId == logActual.ClaseId && logActual.Clase == x.Clase)
+                   .OrderByDescending(x => x.Id)
+                   .Select(x => new LogDataAgroDto
+                   {
+                       Id = x.Id,
+                       Usuario = x.Usuario,
+                       Fecha = x.Fecha,
+                       Clase = x.Clase,
+                       AccionRealizada = x.AccionRealizada,
+                       DatoModificado = x.DatoModificado,
+                       ClaseId = x.ClaseId,
 
-                       }).FirstOrDefault() ?? logActual;
-            }
+                   }).FirstOrDefault();
+            //}
             if (logAnterior == logActual)
                 logAnterior = null;
 
@@ -307,7 +307,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var name = ((JProperty)item).Name;
                 var value = ((JProperty)item).Value;
-                if (name != "_t")
+                if (!NombresExcluidos(name))
                 {
                     var campo = AddSpacesToSentence(name, ':');
                     if (!string.IsNullOrEmpty(campoNombre))
@@ -346,7 +346,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
-                            if (campo != null && !campo.ToLower().EndsWith("id") && !campo.ToLower().Contains("formateado"))
+                            if (!NombresExcluidos(campo))
                                 AgregarItem(cambiados, logActual, item, campo);
                         }
                     }
@@ -358,6 +358,10 @@ namespace Molinos.DataAgro.Business.Managers
         private void Agregar(List<DatoModificadosLogDataAgroDto> cambiados, LogDataAgroDto logActual, JToken item2, string campo, JToken item)
         {
             var name = ((JProperty)item2).Name;
+            if (NombresExcluidos(name))
+            {
+                return;
+            }
             var Anterior = BuscaFechaYFormatea(((JProperty)item2).First.ToString());
             var Actual = BuscaFechaYFormatea(((JProperty)item2).Last.ToString());
             if (((JProperty)item2).Count() == 1)
@@ -384,8 +388,15 @@ namespace Molinos.DataAgro.Business.Managers
                 cambiados.Add(modificado);
             }
         }
+
+        private static bool NombresExcluidos(string name)
+        {
+            return name == null || name == "_t" || name.ToLower().EndsWith("id") || name.ToLower().EndsWith("formateado");
+        }
+
         void AgregarItem(List<DatoModificadosLogDataAgroDto> cambiados, LogDataAgroDto logActual, JToken item, string campo)
         {
+            
             var Anterior = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).First.ToString());
             var Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).Last.ToString());
             if (((JContainer)((JProperty)item).First).Count() == 1)
