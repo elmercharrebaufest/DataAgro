@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(respuesta);
             Assert.AreEqual(1, respuesta.CamposCambiados.Count);
             Assert.AreEqual(respuesta.LogActual.Id, 1);
-            repositorioMock.Verify(x => x.Listar<LogDataAgro>(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once());
+            repositorioMock.Verify(x => x.Listar<LogDataAgro>(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(2));
         }
 
         [Test]
