@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+@model Molinos.DataAgro.Entities.Dto.DatosModificadosLogDataAgroDto
+
+<div id="diffBox">
+    @if (ViewBag.Mensaje != null && ViewBag.Mensaje != "")
+    {
+        <h3 style="text-align:center;font-weight:600;">@ViewBag.Mensaje</h3>
+    }
+
+    <table id="gridCambios">
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th>Actual</th>
+                <th>Anterior</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CamposCambiados)
+            {
+                <tr>
+                    <td>@item.Campo</td>
+                    <td>@item.Actual</td>
+                    <td>@item.Anterior</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    $("#gridCambios").kendoGrid({
+        columns: [{
+            field: "Campo",
+            title: "Campo",
+            template: '#=Getvalue(Campo)#'
+        },
+        {
+            field: "Actual",
+            title: "Actual"
+        },
+        {
+            field: "Anterior",
+            title: "Anterior"
+        }
+        ]
+    });
+    function Getvalue(value) {
+        return "<div style='text-align:left;'>" + value + "</div>";
+    }
+</script>

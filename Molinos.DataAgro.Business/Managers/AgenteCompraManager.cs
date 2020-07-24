@@ -207,14 +207,14 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(oFasonSave.Id), TipoAccionLogDataAgro.Crear, oFasonSave.GetType());
 
                 }
                 catch (Exception ex)
                 {
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(oFasonSave.Id), TipoAccionLogDataAgro.Crear, oFasonSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
@@ -432,7 +432,7 @@ namespace Molinos.DataAgro.Business.Managers
                     contrato.UsuarioConfirmadorId = usuarioConfirmador;
                     contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAgente(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
                 }
                 catch (Exception ex)
                 {

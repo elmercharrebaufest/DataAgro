@@ -123,6 +123,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
             Fason oFasonSave = null;
+            var tipoCambio = oFason.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
             if (oFason.Id != 0)
             {
                 oFasonSave = repositorio.Obtener<Fason>(oFason.Id);
@@ -177,7 +178,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerFason(oFason.Id), TipoAccionLogDataAgro.Crear, oFason.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerFason(oFason.Id), tipoCambio, oFason.GetType());
                 //logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave ?? oFason, (oFasonSave == null) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar);
             }
             catch (Exception ex)
@@ -203,13 +204,13 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Crear, oFasonSave.GetType());
                 }
                 catch (Exception ex)
                 {
                     oFasonSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Modificar, oFasonSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(oFasonSave.Id), TipoAccionLogDataAgro.Crear, oFasonSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
@@ -446,7 +447,7 @@ namespace Molinos.DataAgro.Business.Managers
                     contrato.UsuarioConfirmadorId = usuarioConfirmador;
                     contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerFason(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerFason(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
                 }
                 catch (Exception ex)
                 {

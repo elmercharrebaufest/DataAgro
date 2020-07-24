@@ -221,7 +221,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CampoDetalleDto> ProveedorCampoDetalle { get; set; }
         public List<ObjetivosTraer> ObjetivosTraerPorProveedorId { get; set; }
 
-
+        public List<ProveedorCorredorDto> ProveedorCorredor { get; set; }
         public StoredPorProveedorResult()
         {
 

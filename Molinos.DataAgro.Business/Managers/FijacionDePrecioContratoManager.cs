@@ -246,6 +246,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var oFijacionDePrecioSave = oFijacionDePrecio;
             var oContratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == oFijacionDePrecio.ContratoSAP, x => x.Id);
+            var tipoCambio = oFijacionDePrecio.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
             if (oFijacionDePrecio.Id != 0)
             {
                 oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
@@ -333,7 +334,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), tipoCambio, oFijacionDePrecioSave.GetType());
 
             }
             catch (Exception ex)
@@ -401,7 +402,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oFijacionDePrecioSave.UsuarioConfirmadorId = usuarioConfirmador;
                     oFijacionDePrecioSave.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
 
 
                     var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
@@ -471,7 +472,7 @@ namespace Molinos.DataAgro.Business.Managers
                         mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
 
                         repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
+                        logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
 
 
                         var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
@@ -870,7 +871,7 @@ namespace Molinos.DataAgro.Business.Managers
                 try
                 {
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Modificar, oFijacionDePrecioSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
 
 
                 }

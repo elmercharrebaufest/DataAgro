@@ -156,19 +156,26 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
-        public void ListarNegociosOk()
+        public void ObtenerCuposIdOk()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<BasicoContrato>(){new BasicoContrato
-            {
-                Id = 1,
-            } });
-            var result = target.ListarNegocios("asd");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, int>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<int>() { 1 });
+            var result = target.ObtenerCuposId("asd");
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Cupo, int>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
         }
+        [Test]
+        public void ObtenerNegociosIdOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, int>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<int>() { 1 });
+            var result = target.ObtenerNegociosId(new List<string> { "asd" });
 
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, int>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count());
+        }
     }
 }

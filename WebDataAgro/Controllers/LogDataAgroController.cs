@@ -92,6 +92,20 @@ namespace WebDataAgro.Controllers
             }
             return PartialView("Diff", model);
         }
+        [HttpPost]
+        public ActionResult MostrarDiferenciasTabla(int idLogDataAgro)
+        {
+            LogDataAgroDto actual = logDataAgroManager.Obtener(idLogDataAgro);
+            DatosModificadosLogDataAgroDto CamposCambiados = logDataAgroManager.TraerDatosModificadosPorId(idLogDataAgro);
+
+            List<string> tipos = new List<string> { "BasicoContrato", "StoredPorProveedorResult", "CupoDto" };
+            if (tipos.Contains(actual.Tipo))
+            {
+                ViewBag.Mensaje = actual.AccionRealizada + " " + actual.Clase + ": " + actual.Descripcion;
+
+            }
+            return PartialView("_MostrarDiferenciasTabla", CamposCambiados);
+        }
 
 
         public ActionResult Export(DataSourceRequest filtro)
@@ -225,11 +239,20 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public JsonResult ListarNegocios(string text = "")
+        public JsonResult ObtenerNegociosId(List<string> contratosSap)
         {
-            List<BasicoContrato> negocios = logDataAgroManager.ListarNegocios(text);
+           
+            List<int> negocios = logDataAgroManager.ObtenerNegociosId(contratosSap);
 
-            return Json(negocios.Select(x => new { x.Id, Descripcion = x.Negocio + " - " + x.TipoNegocio + " - " + x.Material + " - " + x.Proveedor + "(" + x.Cuit + ") - " + x.FechaFormateado }), JsonRequestBehavior.AllowGet);
+            return Json(negocios, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult ObtenerCuposId(string cupoSap)
+        {
+
+            List<int> cupos = logDataAgroManager.ObtenerCuposId(cupoSap);
+
+            return Json(cupos, JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

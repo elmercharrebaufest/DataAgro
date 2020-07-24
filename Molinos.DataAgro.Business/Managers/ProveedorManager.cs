@@ -112,6 +112,7 @@ namespace Molinos.DataAgro.Business.Managers
                     rinde = x.Rinde
                 }, x => x.ProveedorId == ProveedorId);
 
+                res.ProveedorCorredor = ListarProveedorCorredor(ProveedorId);
             }
             catch (Exception ex)
             {
@@ -2813,35 +2814,32 @@ namespace Molinos.DataAgro.Business.Managers
             };
             var resultado = UpdateDatosBasicosProveedor(corredor, idActiveDirectory, equipo);
 
-            if (resultado.HayErrores)
-            {
-                resultado.ProveedorId = oParam.CorredorId;
-                return resultado;
-            }
-            resultado = UpdateDatosContacto(corredor);
 
-            if (resultado.HayErrores)
-            {
-                resultado.ProveedorId = oParam.CorredorId;
-                return resultado;
-            }
-            resultado = UpdateContactoComerciales(corredor);
+            resultado.ProveedorId = oParam.CorredorId;
 
-            if (resultado.HayErrores)
+
+            if (!resultado.HayErrores)
             {
-                resultado.ProveedorId = oParam.CorredorId;
-                return resultado;
+                resultado = UpdateDatosContacto(corredor);
             }
-            resultado = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
-            if (resultado.HayErrores)
+
+            if (!resultado.HayErrores)
             {
-                resultado.ProveedorId = oParam.CorredorId;
-                return resultado;
+                resultado = UpdateContactoComerciales(corredor);
             }
+
+            if (!resultado.HayErrores)
+            {
+                resultado = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
+            }
+
             try
             {
-                resultado.ProveedorId = oParam.CorredorId;
-                repositorio.GuardarCambios();
+                if (!resultado.HayErrores)
+                {
+                    resultado.ProveedorId = oParam.CorredorId;
+                    repositorio.GuardarCambios();
+                }
                 var usuarioIdActive = PermisosHelper.ObtenerUsuario();
                 var equipos = mobComercial.ListarEquipo(usuarioIdActive);
                 var proveedorEnDto = TraerProveedor(corredor.ProveedorId.Value, usuarioIdActive, equipos.Equipo);
@@ -2862,6 +2860,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resultado = new GrabarProveedorResult();
             var sinError = new List<NuevoProveedor>();
+            List<int> proveedoresModificados = new List<int>();
+
             if (proveedores != null)
             {
                 foreach (var proveedor in proveedores)
@@ -2901,6 +2901,24 @@ namespace Molinos.DataAgro.Business.Managers
                         if (proveedor.ProveedorId != 0 && proveedor.ProveedorId != null)
                         {
                             proveedorUpdate = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedor.ProveedorId);
+
+                            if (
+                                   (proveedorUpdate.SegmentacionId != (proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId)) ||
+                                   (proveedorUpdate.ProvinciaCompraNetId != (proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId)) ||
+                                   (proveedorUpdate.LocalidadCompraNetId != (proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId)) ||
+                                   (proveedorUpdate.ClasificacionCompraNetId != (proveedor.basicos.ClasificacionCompraNet != null ? proveedor.basicos.ClasificacionCompraNet : proveedorUpdate.ClasificacionCompraNetId)) ||
+                                   (proveedorUpdate.BoletoCompraNetId != (proveedor.basicos.BoletoCompraNet != null ? proveedor.basicos.BoletoCompraNet : proveedorUpdate.BoletoCompraNetId)) ||
+                                   (proveedorUpdate.BolsaCompraNetId != (proveedor.basicos.BolsaCompraNet != null ? proveedor.basicos.BolsaCompraNet : proveedorUpdate.BolsaCompraNetId)) ||
+                                   (proveedorUpdate.Consignatario != proveedor.basicos.Consignatario) ||
+                                   (proveedorUpdate.CodigoPostal != (proveedor.contacto.codpost != null ? proveedor.contacto.codpost : proveedorUpdate.CodigoPostal)) ||
+                                   (proveedorUpdate.Direccion != (proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion)) ||
+                                   (proveedorUpdate.ProvinciaId != (proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId)) ||
+                                   (proveedorUpdate.LocalidadId != (proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId))
+                                   )
+                            {
+                                proveedoresModificados.Add(proveedorUpdate.ProveedorId);
+                            }
+
                             proveedorUpdate.SegmentacionId = proveedor.basicos.segmentacion != 0 ? proveedor.basicos.segmentacion : proveedorUpdate.SegmentacionId;
                             proveedorUpdate.ProvinciaCompraNetId = proveedor.basicos.ProvinciaCompraNet != null ? proveedor.basicos.ProvinciaCompraNet : proveedorUpdate.ProvinciaCompraNetId;
                             proveedorUpdate.LocalidadCompraNetId = proveedor.basicos.LocalidadCompraNet != null ? proveedor.basicos.LocalidadCompraNet : proveedorUpdate.LocalidadCompraNetId;
@@ -2912,6 +2930,7 @@ namespace Molinos.DataAgro.Business.Managers
                             proveedorUpdate.Direccion = proveedor.contacto.direccion != null ? proveedor.contacto.direccion : proveedorUpdate.Direccion;
                             proveedorUpdate.ProvinciaId = proveedor.contacto.provincia != null ? proveedor.contacto.provincia : proveedorUpdate.ProvinciaId;
                             proveedorUpdate.LocalidadId = proveedor.contacto.localidad != null ? proveedor.contacto.localidad : proveedorUpdate.LocalidadId;
+
 
                         }
                         else
@@ -2972,6 +2991,13 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 #endregion
                 repositorio.GuardarCambios();
+                var usuarioIdActive = PermisosHelper.ObtenerUsuario();
+                var equipos = mobComercial.ListarEquipo(usuarioIdActive);
+                foreach (var item in proveedoresModificados.Distinct().ToList())
+                {
+                    var proveedorEnDto = TraerProveedor(item, usuarioIdActive, equipos.Equipo);
+                    logDataAgroManager.LogCambiosDataAgro(proveedorEnDto, TipoAccionLogDataAgro.Modificar, item);
+                }
             }
             catch (Exception ex)
             {

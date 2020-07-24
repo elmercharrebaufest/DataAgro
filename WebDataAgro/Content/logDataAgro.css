@@ -187,3 +187,13 @@ div.col-md-6.col-sm-10 .k-icon.k-i-close {
 .k-i-loading  {
     display:none;
 }
+
+.modal .confirmado-modal div {
+    background: #008e61 !important;
+    display:block !important;
+    color:white;
+    font-weight:600;
+}
+.modal div.status {
+    display: block !important;
+}

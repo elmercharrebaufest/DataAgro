@@ -759,7 +759,7 @@ namespace Molinos.DataAgro.Business
                     contrato.UsuarioConfirmadorId = usuarioConfirmador;
                     contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
 
                 }
                 catch (Exception ex)
@@ -786,14 +786,14 @@ namespace Molinos.DataAgro.Business
                 {
                     oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Finalizado);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Modificar, oAcuerdoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Crear, oAcuerdoSave.GetType());
 
                 }
                 catch (Exception ex)
                 {
                     oAcuerdoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Modificar, oAcuerdoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(oAcuerdoSave.Id), TipoAccionLogDataAgro.Crear, oAcuerdoSave.GetType());
 
                     oEntityErrors.Error("", ex.Message);
                     logger.Error(ex);
@@ -823,7 +823,7 @@ namespace Molinos.DataAgro.Business
                 var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
                 acuerdo.Cantidad = (int)cantidad;
                 acuerdo.EstadoId = 5;
-                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Modificar, acuerdo.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
             }
 
             repositorio.GuardarCambios();

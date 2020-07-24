@@ -1009,7 +1009,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.UsuarioConfirmadorId = usuarioConfirmador;
                 oContratoSave.FechaConfirmacion = DateTime.Now;
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
                 try
                 {
@@ -1053,7 +1053,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
 
                 }
                 catch (Exception e)
@@ -1083,7 +1083,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
                 }
                 catch (Exception e)
@@ -1155,7 +1155,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "Fecha del contrato debe ser la de hoy o día hábil anterior");
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
                     return oEntityErrors;
                 }
@@ -1200,7 +1200,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Error(e);
                     }
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     try
                     {
                         if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null)
@@ -1223,7 +1223,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Con_Error;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     logger.Error(e);
                     oEntityErrors.Error("", e.Message);
                 }
@@ -2037,7 +2037,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContratoSave.GetType());
+                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                     }
                     catch (Exception e)
                     {
@@ -2570,7 +2570,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     contrato.EstadoId = 5;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
 
                     EnviarMail(contrato, contratoSave);
                 }

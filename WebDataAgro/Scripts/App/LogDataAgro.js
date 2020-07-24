@@ -11,12 +11,15 @@
 
     //inicializarElementos();
     //InicializarCuposIndex();
-    $('#Clase').change();
-
+    $("#ProveedorDiv").hide();
+    $("#NegocioDiv").hide();
+    $("#CupoDiv").hide();
 });
 
 function Filtrar() {
-    $('#grid').data('kendoGrid').dataSource.read();
+    var grid = $('#grid').data('kendoGrid');
+    let currentFilters = TraerFiltrosConValores();
+    grid.dataSource.filter(currentFilters.filter);
 }
 
 
@@ -42,7 +45,7 @@ function InicializarCuposIndex() {
                 data: function () {
 
                     let filtroCompleto = TraerFiltrosConValores();
-
+                    filtroCompleto = BorrarFiltroSap(filtroCompleto);
                     return filtroCompleto;
 
                 }
@@ -117,10 +120,13 @@ function InicializarCuposIndex() {
     });
 
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
-    CrearMultiSelectFiltro("#buscadorCupo", "CupoSap", "Id", "/cupo/ListarCupo");
-    CrearMultiSelectFiltro("#buscadorNegocio", "Descripcion", "Id", "/logdataagro/ListarNegocios");
-    var kendoDropDown = $('#buscadorNegocio').data('kendoMultiSelect');
-    kendoDropDown.list.width(550);
+    //CrearMultiSelectFiltro("#buscadorCupo", "CupoSap", "Id", "/cupo/ListarCupo");
+    //CrearMultiSelectFiltro("#buscadorNegocio", "Descripcion", "Id", "/logdataagro/ListarNegocios");
+    //var kendoDropDown = $('#buscadorNegocio').data('kendoMultiSelect');
+    //kendoDropDown.list.width(550);
+
+    inicializarPopUpSap("Contratos");
+
 }
 
 
@@ -133,7 +139,7 @@ function botonVisualizar(dataItem) {
 }
 
 function traerDatosModificados(idLogDataAgro, tipoDeClase) {
-    $.post('/logdataagro/MostrarDiferencias', { idLogDataAgro: idLogDataAgro }).done(function (res) {
+    $.post('/logdataagro/MostrarDiferenciasTabla', { idLogDataAgro: idLogDataAgro }).done(function (res) {
         $("#diffPartial").html(res);
         $("#modalVisualizar").modal('show');
     });
@@ -157,8 +163,7 @@ $('#Clase').on('change', function () {
     $("#NegocioDiv").hide();
     $("#CupoDiv").hide();
     $("#buscadorProveedor").data("kendoMultiSelect").value('');
-    $("#buscadorNegocio").data("kendoMultiSelect").value('');
-    $("#buscadorCupo").data("kendoMultiSelect").value('');
+    //BorrarFiltro();
     if (this.value == "Proveedor") {
         $("#ProveedorDiv").show();
     }
@@ -169,3 +174,120 @@ $('#Clase').on('change', function () {
         $("#CupoDiv").show();
     }
 });
+
+
+
+function FiltrarNegocio() {
+    var grid = $('#grid').data('kendoGrid');
+    let currentFilters = TraerFiltrosConValores();
+
+    let filtrosContratosSap = new Array();
+    $("#contratos-table td").each(function (e) {
+        let valorBuscado = $("#contratos-table td")[e].innerText;
+        if (valorBuscado != "" && $(valorBuscado != null)) {
+            filtrosContratosSap.push(valorBuscado.padStart(10, '0'));
+        }
+    });
+    if (filtrosContratosSap.length > 100) {
+        MensErr("El liminte de contratos es 100");
+        return;
+    }
+    if (filtrosContratosSap.length == 0) {
+        MensErr("No ingreso contratos");
+        return;
+    }
+    var result = MSExecuteOnServer('/LogDataAgro/ObtenerNegociosId', { contratosSap: filtrosContratosSap });//2647187
+    if (result.length > 0) {
+        currentFilters.filter.filters = currentFilters.filter.filters.filter(function (x) {
+            return x.field != 'ClaseId' && x.field != undefined
+        });
+
+        var contratoSapFilters = { logic: 'or', filters: [] };
+        for (var i = 0; i < result.length; i++) {
+            contratoSapFilters.filters.push({ field: 'ClaseId', operator: 'eq', value: result[i] });
+        }
+        currentFilters.filter.filters.push(contratoSapFilters);
+        grid.dataSource.filter(currentFilters.filter);
+
+
+    } else {
+        MensErr("No encontraron contratos");
+        return;
+    }
+
+
+}
+
+function FiltrarCupo() {
+    var grid = $('#grid').data('kendoGrid');
+    let currentFilters = TraerFiltrosConValores();
+
+    var filtrosSap = $("#CupoSAPId").val();
+    if (filtrosSap.length == 0) {
+        MensErr("Ingrese un dato para hacer la busuqeda");
+        return;
+    }
+    var result = MSExecuteOnServer('/LogDataAgro/ObtenerCuposId', { cupoSap: filtrosSap });//2647187
+    if (result.length > 0) {
+        currentFilters.filter.filters = currentFilters.filter.filters.filter(function (x) {
+            return x.field != 'ClaseId' && x.field != undefined
+        });
+
+        var contratoSapFilters = { logic: 'or', filters: [] };
+        for (var i = 0; i < result.length; i++) {
+            contratoSapFilters.filters.push({ field: 'ClaseId', operator: 'eq', value: result[i] });
+        }
+        currentFilters.filter.filters.push(contratoSapFilters);
+        grid.dataSource.filter(currentFilters.filter);
+
+
+    } else {
+        MensErr("No encontraron contratos");
+        return;
+    }
+
+
+}
+
+function BorrarFiltro() {
+    $("#CupoSAPId").val("");
+    $("#ContratoSAPId").val("");
+    $("#ContratoSAPHastaId").val("");
+    var grid = $('#grid').data('kendoGrid');
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+    //Remove filter 
+    var removeIndex = -1;
+    if (filters != null) {
+        for (var x = 0; x < filters.length; x++) {
+            var temp = filters[x];
+            if (temp.logic == "or") {
+
+                for (var i = 0; i < temp.filters.length; i++) {
+                    if (temp.filters[i].field == 'ClaseId' ) {
+                        removeIndex = x;
+                        break;
+                    }
+                }
+            //    break;
+            }
+        }
+        if (removeIndex != -1)
+            filters.splice(removeIndex, 1);
+
+    }
+    dataSource.filter(filters);
+    //Filtrar();
+}
+
+function BorrarFiltroSap(filtroCompleto) {
+    //if ($("#CupoSAPId").val() == "" && $("#ContratoSAPId").val() == "" && $("#ContratoSAPHastaId").val() == "") {
+    //    filtroCompleto.filter.filters = filtroCompleto.filter.filters.filter(function (x) {
+    //        return x.field != 'ClaseId' && x.field != undefined
+    //    });
+    //}
+    return filtroCompleto;
+}

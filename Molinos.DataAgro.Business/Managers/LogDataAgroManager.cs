@@ -42,12 +42,12 @@ namespace Molinos.DataAgro.Business.Managers
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
             var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "EstadoOrder", "FechaOrder", "GrupoCompra" });
-            string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.ContratoSAP;
+            string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "EstadoCuit", "CantidadMaximaCupo", "Facacop" });
+            var resolver = new IgnorePropertiesResolver(new[] { "BasicoProveedorTraerPorProveedores.EstadoCuit", "BasicoProveedorTraerPorProveedores.Facacop" });
             string descripcion = "";
             if (cambios.BasicoProveedorTraerPorProveedores != null && cambios.BasicoProveedorTraerPorProveedores.Count > 1)
             {
@@ -187,6 +187,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                        }).FirstOrDefault() ?? logActual;
             }
+            if (logAnterior == logActual)
+                logAnterior = null;
 
             var jActual = JToken.Parse(logActual.DatoModificado);
             var jAnterior = JToken.Parse(logAnterior == null ? "{}" : logAnterior.DatoModificado);
@@ -198,90 +200,91 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (diffResult != null)
                 {
-                    foreach (var item in diffResult)
-                    {
-                        if (((JProperty)item).Name != null && (!((JProperty)item).Name.ToLower().EndsWith("id")) && !((JProperty)item).Name.ToLower().Contains("formateado"))// saco los dis
-                        {
-                            var campo = AddSpacesToSentence(((JProperty)item).Name, ':');
-                            if (!((JContainer)((JProperty)item).Value).ToString().StartsWith("{"))
-                            {
-                                if (!((JProperty)item).Name.ToLower().EndsWith("id") && !((JProperty)item).Name.ToLower().EndsWith("formateado"))
-                                {
-                                    var modificado = new DatoModificadosLogDataAgroDto
-                                    {
-                                        Anterior = (((JContainer)((JProperty)item).Value).Count == 1 ? "" : BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).First().ToString())),
-                                        Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).Last().ToString()),
-                                        Campo = campo
-                                    };
-                                    if (!(modificado.Anterior == "" && modificado.Actual == ""))
-                                    {
-                                        cambiados.Add(modificado);
-                                    }
+                    ArmarListaModificar(diffResult, cambiados, "", logActual);
+                    //foreach (var item in diffResult)
+                    //{
+                    //    if (((JProperty)item).Name != null && (!((JProperty)item).Name.ToLower().EndsWith("id")) && !((JProperty)item).Name.ToLower().Contains("formateado"))// saco los ids
+                    //    {
+                    //        var campo = AddSpacesToSentence(((JProperty)item).Name, ':');
+                    //        if (!((JContainer)((JProperty)item).Value).ToString().StartsWith("{"))
+                    //        {
+                    //            if (!((JProperty)item).Name.ToLower().EndsWith("id") && !((JProperty)item).Name.ToLower().EndsWith("formateado"))
+                    //            {
+                    //                var modificado = new DatoModificadosLogDataAgroDto
+                    //                {
+                    //                    Anterior = (((JContainer)((JProperty)item).Value).Count == 1 ? "" : BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).First().ToString())),
+                    //                    Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).Value).Last().ToString()),
+                    //                    Campo = campo
+                    //                };
+                    //                if (!(modificado.Anterior == "" && modificado.Actual == ""))
+                    //                {
+                    //                    cambiados.Add(modificado);
+                    //                }
 
-                                }
+                    //            }
 
-                            }
-                            else//lista modificada
-                            {
-                                var items = (JContainer)((JProperty)item).Value;
-                                foreach (var item2 in items.Children())
-                                {
-                                    if (((JProperty)item2).Name != "_t")
-                                    {
-                                        foreach (var item3 in ((JProperty)item2).Value.Children())
-                                        {
-                                            if (!item3.ToString().StartsWith("{"))
-                                            {
-                                                if (item3.ToString() != "0")
-                                                {
-                                                    if (!((JProperty)item3).Name.ToLower().EndsWith("id") && !((JProperty)item3).Name.ToLower().EndsWith("formateado"))
-                                                    {
-                                                        var modificado = new DatoModificadosLogDataAgroDto
-                                                        {
-                                                            Anterior = (((JProperty)item3).First.Count() == 1 ? "" : BuscaFechaYFormatea(((JProperty)item3).First.First.ToString())),
-                                                            Actual = BuscaFechaYFormatea(((JProperty)item3).First.Last.ToString()),
-                                                            Campo = campo + " - " + AddSpacesToSentence(((JProperty)item3).Name, ':')
-                                                        };
-                                                        if (!(modificado.Anterior == "" && modificado.Actual == ""))
-                                                        {
-                                                            cambiados.Add(modificado);
-                                                        }
-                                                    }
-                                                }
+                    //        }
+                    //        else//lista modificada
+                    //        {
+                    //            var items = (JContainer)((JProperty)item).Value;
+                    //            foreach (var item2 in items.Children())
+                    //            {
+                    //                if (((JProperty)item2).Name != "_t")
+                    //                {
+                    //                    foreach (var item3 in ((JProperty)item2).Value.Children())
+                    //                    {
+                    //                        if (!item3.ToString().StartsWith("{"))
+                    //                        {
+                    //                            if (item3.ToString() != "0")
+                    //                            {
+                    //                                if (!((JProperty)item3).Name.ToLower().EndsWith("id") && !((JProperty)item3).Name.ToLower().EndsWith("formateado"))
+                    //                                {
+                    //                                    var modificado = new DatoModificadosLogDataAgroDto
+                    //                                    {
+                    //                                        Anterior = (((JProperty)item3).First.Count() == 1 ? "" : BuscaFechaYFormatea(((JProperty)item3).First.First.ToString())),
+                    //                                        Actual = BuscaFechaYFormatea(((JProperty)item3).First.Last.ToString()),
+                    //                                        Campo = campo + " - " + AddSpacesToSentence(((JProperty)item3).Name, ':')
+                    //                                    };
+                    //                                    if (!(modificado.Anterior == "" && modificado.Actual == ""))
+                    //                                    {
+                    //                                        cambiados.Add(modificado);
+                    //                                    }
+                    //                                }
+                    //                            }
 
-                                            }
-                                            else // item nuevo o borrado en la lista
-                                            {
-                                                foreach (var item4 in item3.Children())
-                                                {
-                                                    if (((JProperty)item4).Name != "_t" && !((JProperty)item4).Name.ToLower().EndsWith("id") && !((JProperty)item4).Name.ToLower().EndsWith("formateado"))
-                                                    {
-                                                        var value = ((JProperty)item4).First == null ? "" : ((JProperty)item4).First.ToString();
+                    //                        }
+                    //                        else // item nuevo o borrado en la lista
+                    //                        {
+                    //                            foreach (var item4 in item3.Children())
+                    //                            {
+                    //                                if (((JProperty)item4).Name != "_t" && !((JProperty)item4).Name.ToLower().EndsWith("id") && !((JProperty)item4).Name.ToLower().EndsWith("formateado"))
+                    //                                {
+                    //                                    var value = ((JProperty)item4).First == null ? "" : ((JProperty)item4).First.ToString();
 
-                                                        bool actual = logActual.DatoModificado.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item3.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
-                                                        var modificado = new DatoModificadosLogDataAgroDto
-                                                        {
-                                                            Anterior = !actual ? BuscaFechaYFormatea(value) : "",
-                                                            Actual = actual ? BuscaFechaYFormatea(value) : "",
-                                                            Campo = campo + " - " + AddSpacesToSentence(((JProperty)item4).Name, ':')
-                                                        };
-                                                        if (!(modificado.Anterior == "" && modificado.Actual == ""))
-                                                        {
-                                                            cambiados.Add(modificado);
-                                                        }
-                                                    }
+                    //                                    bool actual = logActual.DatoModificado.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item3.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+                    //                                    var modificado = new DatoModificadosLogDataAgroDto
+                    //                                    {
+                    //                                        Anterior = !actual ? BuscaFechaYFormatea(value) : "",
+                    //                                        Actual = actual ? BuscaFechaYFormatea(value) : "",
+                    //                                        Campo = campo + " - " + AddSpacesToSentence(((JProperty)item4).Name, ':')
+                    //                                    };
+                    //                                    if (!(modificado.Anterior == "" && modificado.Actual == ""))
+                    //                                    {
+                    //                                        cambiados.Add(modificado);
+                    //                                    }
+                    //                                }
 
-                                                }
-                                            }
+                    //                            }
+                    //                        }
 
-                                        }
-                                    }
-                                }
-                            }
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
 
-                        }
+                    //    }
 
-                    }
+                    //}
                 }
 
             }
@@ -298,7 +301,137 @@ namespace Molinos.DataAgro.Business.Managers
                 CamposCambiados = cambiados
             };
         }
+        private void ArmarListaModificar(JToken diffResult, List<DatoModificadosLogDataAgroDto> cambiados, string campoNombre, LogDataAgroDto logActual)
+        {
+            foreach (var item in diffResult)
+            {
+                var name = ((JProperty)item).Name;
+                var value = ((JProperty)item).Value;
+                if (name != "_t")
+                {
+                    var campo = AddSpacesToSentence(name, ':');
+                    if (!string.IsNullOrEmpty(campoNombre))
+                    {
+                        int num = 0;
+                        if (!int.TryParse(name, out num))
+                        {
+                            campo = campoNombre + " - " + campo;
+                        }
+                        else
+                        {
+                            campo = campoNombre;
+                        }
+                    }
+                    if (esLista(item))
+                    {
+                        ArmarListaModificar(value, cambiados, campo, logActual);
+                    }
+                    else
+                    {
+                        if (esItemDeLista(item))
+                        {
+                            foreach (var item2 in ((JContainer)((JProperty)item).First).First().Children())
+                            {
+                                if (esLista(item))
+                                {
+                                    ArmarListaModificar(item, cambiados, campo, logActual);
+                                }
+                                else
+                                {
+                                    if (((JProperty)item2).Name != null && !((JProperty)item2).Name.ToLower().EndsWith("id") && !((JProperty)item2).Name.ToLower().Contains("formateado"))
+                                        Agregar(cambiados, logActual, item2, campo, item);
+                                }
 
+                            }
+                        }
+                        else
+                        {
+                            if (campo != null && !campo.ToLower().EndsWith("id") && !campo.ToLower().Contains("formateado"))
+                                AgregarItem(cambiados, logActual, item, campo);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        private void Agregar(List<DatoModificadosLogDataAgroDto> cambiados, LogDataAgroDto logActual, JToken item2, string campo, JToken item)
+        {
+            var name = ((JProperty)item2).Name;
+            var Anterior = BuscaFechaYFormatea(((JProperty)item2).First.ToString());
+            var Actual = BuscaFechaYFormatea(((JProperty)item2).Last.ToString());
+            if (((JProperty)item2).Count() == 1)
+            {
+                bool actual = logActual.DatoModificado.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(((JProperty)item).Value.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+                if (actual)
+                {
+                    Anterior = "";
+                }
+                else
+                {
+                    Actual = "";
+                }
+
+            }
+            var modificado = new DatoModificadosLogDataAgroDto
+            {
+                Anterior = Anterior,
+                Actual = Actual,
+                Campo = campo + " - " + AddSpacesToSentence(name, ':')
+            };
+            if (!(modificado.Anterior == "" && modificado.Actual == ""))
+            {
+                cambiados.Add(modificado);
+            }
+        }
+        void AgregarItem(List<DatoModificadosLogDataAgroDto> cambiados, LogDataAgroDto logActual, JToken item, string campo)
+        {
+            var Anterior = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).First.ToString());
+            var Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).Last.ToString());
+            if (((JContainer)((JProperty)item).First).Count() == 1)
+            {
+                bool actual = logActual.DatoModificado.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace(".00", ".0").Contains(item.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", ""));
+                if (actual)
+                {
+                    Anterior = "";
+                }
+                else
+                {
+                    Actual = "";
+                }
+
+            }
+            var modificado = new DatoModificadosLogDataAgroDto
+            {
+                Anterior = Anterior,
+                Actual = Actual,
+                Campo = campo
+            };
+            if (!(modificado.Anterior == "" && modificado.Actual == ""))
+            {
+                cambiados.Add(modificado);
+            }
+        }
+
+        private bool esItemDeLista(JToken item)
+        {
+            int num = 0;
+            var name = ((JProperty)item).Name;
+            return int.TryParse(name, out num);
+        }
+
+        private bool esLista(JToken item)
+        {
+            //if (((JProperty)item).Value.ToString().StartsWith("["))
+            //{
+            //    return true;
+            //}
+            if (((JProperty)item).Value.ToString().StartsWith("{"))
+            {
+                return true;
+            }
+            return false;
+        }
         private void ArmarListaCrear(JToken jActual, List<DatoModificadosLogDataAgroDto> cambiados, string campoNombre)
         {
             foreach (var item in jActual)
@@ -316,13 +449,22 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     if (!((JProperty)item).Value.ToString().StartsWith("["))
                     {
-                        var modificado = new DatoModificadosLogDataAgroDto
+                        if (((JProperty)item).Value.ToString().StartsWith("{"))
                         {
-                            Anterior = "",
-                            Actual = BuscaFechaYFormatea(((JProperty)item).Value.ToString()),
-                            Campo = campo
-                        };
-                        cambiados.Add(modificado);
+                            ArmarListaCrear(((JProperty)item).Value, cambiados, campo);
+                        }
+                        else
+                        {
+                            var modificado = new DatoModificadosLogDataAgroDto
+                            {
+                                Anterior = "",
+                                Actual = BuscaFechaYFormatea(((JProperty)item).Value.ToString()),
+                                Campo = campo
+                            };
+                            cambiados.Add(modificado);
+                        }
+
+
                     }
                     else
                     {
@@ -500,22 +642,16 @@ namespace Molinos.DataAgro.Business.Managers
             return s;
         }
 
-        public List<BasicoContrato> ListarNegocios(string text)
+        public List<int> ObtenerNegociosId(List<string> contratosSap)
         {
-            var negocio = repositorio.Listar<Negocio, BasicoContrato>(x => new BasicoContrato
-            {
-                Id = x.Id,
-                TipoNegocio = (x.TipoNegocio == null ? "" : (x is Contrato && (x as Contrato).Madre == true) ? "CONVENIO" : (x is Contrato && (x as Contrato).Madre == false) ? "FIJ. CONVENIO" : (x is Contrato && (x as Contrato).EsFason == true) ? "FASON MP" : (x is Contrato && (x as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : x.TipoNegocio.Descripcion),
-                Negocio = x.ContratoSAP == null || x.ContratoSAP == "" ? x.Id.ToString() : x.ContratoSAP,
-                FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" + SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.Fecha),
-                Fecha = x.Fecha,
-                Cuit = x.Proveedor == null ? "" : x.Proveedor.CUIT,
-                Proveedor = (x is AgenteCompra) ? (x as AgenteCompra).Operador.Descripcion : x.Proveedor == null ? "" : x.Proveedor.RazonSocial,
-                Material = x.Material.Descripcion,
-            }, x => x.ContratoSAP.Contains(text) || SqlFunctions.StringConvert((double)x.Id).Contains(text)
-            , 15, "Fecha", Entities.Helpers.DirOrden.Desc);
-
+            var negocio = repositorio.Listar<Negocio, int>(x => x.Id, x => contratosSap.Contains(x.ContratoSAP));
             return negocio;
+        }
+
+        public List<int> ObtenerCuposId(string cupoSap)
+        {
+            var cupos = repositorio.Listar<Cupo, int>(x => x.Id, x => x.CupoSap.Contains(cupoSap));
+            return cupos;
         }
     }
 }

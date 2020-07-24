@@ -114,9 +114,9 @@ namespace WebDataAgro.Controllers
 
         public ActionResult EnvioMailNegociosConDiaAnterior()
         {
-            logger.Info($"EnvioMailSinCtg - Iniciando");
+            logger.Info($"EnvioMailNegociosConDiaAnterior - Iniciando");
             negocioManager.EnvioMailNegociosConDiaAnterior();
-            logger.Info($"EnvioMailSinCtg - Finalizado");
+            logger.Info($"EnvioMailNegociosConDiaAnterior - Finalizado");
             return Content("ok");
         }
 

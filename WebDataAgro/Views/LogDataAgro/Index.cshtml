@@ -72,19 +72,42 @@
             </div>
         </div>
         <div id="NegocioDiv">
+
+            @*<div class="col-md-4">
+                    <input id="buscadorNegocio" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar ContratoSAP o Nro de Negocio" />
+                </div>*@
             <div class="col-md-2">
-                <label>Negocio</label>
+                <label>Contrato SAP</label>
             </div>
-            <div class="col-md-4">
-                <input id="buscadorNegocio" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar ContratoSAP o Nro de Negocio" />
+            <div class="col-xs-12 col-md-2">
+                @Html.TextBox("ContratoSAP", "", new { placeholder = "Contrato SAP", @class = "form-control", style = "width:100%", @id = "ContratoSAPId" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+                </div>
+                <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="FiltrarNegocio()">
+                </button>
+                <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+                </button>
             </div>
         </div>
         <div id="CupoDiv">
             <div class="col-md-2">
-                <label>Cupo</label>
+                <label>Cupo SAP</label>
+            </div>           
+            <div class="col-xs-12 col-md-2">
+                @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control ", style = "width:100%", @id = "CupoSAPId" })
             </div>
-            <div class="col-md-4">
-                <input id="buscadorCupo" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar CupoSAP" />
+            <div class="col-xs-12 col-md-2">
+                <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="FiltrarCupo()">
+                </button>
+                <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+                </button>
+
             </div>
         </div>
     </div>
