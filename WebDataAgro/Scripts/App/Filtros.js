@@ -30,7 +30,7 @@ function filtroAgregarValorPopUp(listaFiltros) {
 
     if (filtrosParaContratoSAP != null) {
         for (var i = 0; i < filtrosParaContratoSAP.filters.length; i++) {
-            filtrosParaContratoSAP.filters[i].value = filtrosParaContratoSAP.filters[i].valuepadStart(10, '0');  
+            filtrosParaContratoSAP.filters[i].value = filtrosParaContratoSAP.filters[i].value.padStart(10, '0');  
         }
         listaFiltros.push(filtrosParaContratoSAP);
     }

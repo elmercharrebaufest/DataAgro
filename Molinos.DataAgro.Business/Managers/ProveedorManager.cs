@@ -1535,7 +1535,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (!repositorio.Existe<SISA>(x => x.CUIT == oParam.basicos.cuit))
             {
-                oEntityErrors.Error("SISA", "No existe el CUIT" + oParam.basicos.cuit);
+                oEntityErrors.Error("SISA", "No existe el CUIT " + oParam.basicos.cuit + " en el padrón de SISA");
                 return oEntityErrors;
             }
 
@@ -2802,6 +2802,8 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public GrabarProveedorResult UpdateCorredor(NuevoCorredor oParam, string idActiveDirectory, List<int> equipo, int comercialId)
         {
+            var resultadoUpdateProveedorCorredor = new GrabarProveedorResult();
+
             var corredor = new NuevoProveedor()
             {
                 ProveedorId = oParam.CorredorId,
@@ -2830,7 +2832,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (!resultado.HayErrores)
             {
-                resultado = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
+                resultadoUpdateProveedorCorredor = UpdateProveedorCorredor(oParam.proveedorCorredor, oParam.CorredorId.Value, idActiveDirectory);
             }
 
             try
@@ -2852,7 +2854,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             resultado.ProveedorId = oParam.CorredorId;
-
+            if (resultadoUpdateProveedorCorredor.HayErrores)
+            {
+                resultado.Errores.AddRange(resultadoUpdateProveedorCorredor.Errores);
+            }
             return resultado;
         }
 

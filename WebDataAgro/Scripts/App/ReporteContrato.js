@@ -208,7 +208,7 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Pago Diferido", columns: [
-                    { field: "Pesificado", title: "Pesif. ", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
+                    { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false }
                 ]
             },

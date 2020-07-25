@@ -2675,7 +2675,7 @@ namespace Molinos.DataAgro.Business.Managers
                     catch (Exception e) { logger.Error(e); }
                 }
             }
-            var subject = "Modificación negocio Molinos Agro S.A. – " + contrato.Proveedor.RazonSocial;
+            var subject = "Modificación negocio Molinos Agro S.A. – " + contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial;
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato, contratoSave));
         }
