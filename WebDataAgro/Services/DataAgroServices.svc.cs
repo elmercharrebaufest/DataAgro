@@ -29,6 +29,7 @@ namespace WebDataAgro.Services
         private readonly IContratoManager contratoManager;
         private readonly IRepositorio repositorio;
         private readonly ICupoManager cupoManager;
+        private readonly IMailManager mailManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -37,7 +38,8 @@ namespace WebDataAgro.Services
             IInformeComercialManager informeComercial,
             IContratoManager contratoManager,
             IRepositorio repositorio,
-            ICupoManager cupoManager)
+            ICupoManager cupoManager,
+            IMailManager mailManager)
         {
             this.logger = logger;
             this.riesgoComercial = riesgoComercial;
@@ -47,6 +49,7 @@ namespace WebDataAgro.Services
             this.contratoManager = contratoManager;
             this.repositorio = repositorio;
             this.cupoManager = cupoManager;
+            this.mailManager = mailManager;
         }
         #region Servicios de DataAgro
 
@@ -430,7 +433,7 @@ namespace WebDataAgro.Services
                 cupo.CentroId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == cupoSAP.Planta, x => x.Id);
                 cupo.ZonaCupoId = repositorio.Obtener<ZonaCupo, int>(x => x.CodigoSap == cupoSAP.Zona, x => x.Id);
                 cupo.Observaciones = cupoSAP.Observaciones;
-                cupo.Destinatario = cupoSAP.Destinatario??"";
+                cupo.Destinatario = cupoSAP.Destinatario ?? "";
                 cupo.FleteProcedencia = cupoSAP.FleteProcedencia == "S";
                 cupo.Calidad = cupoSAP.Calidad == "01" ? "Camara" : cupoSAP.Calidad == "03" ? "Fabrica" : "";
                 //cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
@@ -524,6 +527,42 @@ namespace WebDataAgro.Services
             }
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
+        }
+
+        public ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit)
+        {
+            ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
+            var existe = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+            if (existe != null)
+            {
+                var provCom = existe.ProveedorComercialAsociados.FirstOrDefault();
+                if (provCom != null)
+                {
+                    resultado.Apellido = provCom.Comercial.Apellido;
+                    resultado.ComercialId = provCom.Comercial.ComercialId;
+                    resultado.Nombres = provCom.Comercial.Nombres;
+                    try
+                    {
+                    resultado.Mail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else
+                {
+                    resultado.ListaErrores.Add(new ErrorMessage("El cuit no tiene ninguno comercial asociado"));
+                }
+            }
+            else
+            {
+                resultado.ListaErrores.Add(new ErrorMessage("No se encontro el cuit"));
+            }
+
+
+            resultado.HayError = resultado.ListaErrores.Count() > 0;
+            return resultado;
         }
 
         #endregion
