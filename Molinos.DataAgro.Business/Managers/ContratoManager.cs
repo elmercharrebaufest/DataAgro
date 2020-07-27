@@ -2019,7 +2019,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo)
         {
             var fechaHoy = DateTime.Now.Date;
-            var fechaAteAyer = DateTime.Now.Date.AddDays(-2);
+            var fechaAteAyer = DateTime.Now.Date.AddDays(-1);
             return repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.Id,
@@ -2030,7 +2030,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy && x.Fecha > fechaAteAyer);
+            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && equipo.Contains(x.Comercial.ComercialId) && x.Fecha < fechaHoy);
         }
 
         public DatosCompraNetDto TraerDatosCompraNet(int id)

@@ -315,9 +315,9 @@ namespace Molinos.DataAgro.Business
                         }
                     }
                 }
-                if (objContratoAcuerdo.Descuentos != null)
+                if (oContratoAcuerdo.Descuentos != null)
                 {
-                    foreach (var descuento in objContratoAcuerdo.Descuentos.Where(x => x.Id == 0))
+                    foreach (var descuento in oContratoAcuerdo.Descuentos.Where(x => x.Id == 0))
                     {
                         descuento.Negocio = objContratoAcuerdo;
                         repositorio.Agregar(descuento);                       
@@ -669,7 +669,10 @@ namespace Molinos.DataAgro.Business
                     MonedaPactadoId = y.MonedaPactadoId,
                     Porcentaje = y.Porcentaje,
                     Precio = y.Precio
-                }).ToList()
+                }).ToList(),
+                FechaCiertaFormateado = x.FechaCierta.HasValue ? SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaCierta) : "",
             });
             return contrato;
         }

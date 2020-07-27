@@ -2483,7 +2483,7 @@ function compararReconfirmacion() {
     table += '<span> PRECIO: ' + kendo.toString(contrato.Precio, "n")+ "  " + contrato.MonedaId  + '</span><br/>';
     table += '</td>';
     table += '<td>';
-    table += '<span> PRECIO: ' + (contrato.Precio != contratoSave.Precio ? "<strong>" + kendo.toString(contrato.Precio, "n") + "  " + contrato.MonedaId + "</strong>" : kendo.toString(contrato.Precio, "n") + "  " + contrato.MonedaId) + '</span><br/>';
+    table += '<span> PRECIO: ' + (contrato.Precio != contratoSave.Precio ? "<strong>" + kendo.toString(contratoSave.Precio, "n") + "  " + contratoSave.MonedaId + "</strong>" : kendo.toString(contratoSave.Precio, "n") + "  " + contrato.MonedaId) + '</span><br/>';
     table += '</td>';
     table += "</tr>";
     table += "<tr>";
@@ -2491,7 +2491,7 @@ function compararReconfirmacion() {
     table += '<span> CANTIDAD: ' + kendo.toString(contrato.Cantidad, "n") + '</span><br/>';
     table += '</td>';
     table += '<td>';
-    table += '<span> CANTIDAD: ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + kendo.toString(contrato.Cantidad, "n") + "</strong>" : kendo.toString(contrato.Cantidad, "n")) + '</span><br/>';
+    table += '<span> CANTIDAD: ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + kendo.toString(contratoSave.Cantidad, "n") + "</strong>" : kendo.toString(contratoSave.Cantidad, "n")) + '</span><br/>';
     table += '</td>';
     table += "</tr>";
 

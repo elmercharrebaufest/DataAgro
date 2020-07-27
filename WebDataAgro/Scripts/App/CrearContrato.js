@@ -1321,10 +1321,13 @@ function InicializarElementos() {
         min: 0,
         change: function () {
             if ($("#tipoId").val() == "6") {
-                $("#fechaCiertaAcuerdoDiv").show();
-                //if ($("#AgenteCompraId").val() == "") {
-                //    $("#chequeElectronicoId").show();
-                //}
+                if ($("#precioId").val() != "" && $("#precioId").val() != "0") {
+                    $("#fechaCiertaAcuerdoDiv").show();
+                } else {
+                    $("#fechaCiertaAcuerdo").data("kendoDatePicker").value("");
+                    $("#fechaCiertaAcuerdoDiv").hide();
+                }
+                               
             }           
             
         }
@@ -3021,6 +3024,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
+    $("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));    
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
     if (!hijo) {
@@ -3356,7 +3360,12 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.TipoNegocioId == 6) {
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
+        if (contrato.Precio != null) {
+        $("#fechaCiertaAcuerdoDiv").show();   
+
+        }
     }
+ 
 }
 
 function LimpiarApertura() {
@@ -3566,6 +3575,7 @@ function InicializarAperturaDePrecios() {
                 $("#ocultarAperturaBtn").hide();
                 $("#ocultarAperturaMoneda").removeClass("w70");
                 $("#ocultarAperturaMoneda").addClass("w100");
+                //$("#fechaCiertaAcuerdo").data("kendoDatePicker").value("");
             } else {
                 $("#ocultarAperturaBtn").show();
                 $("#ocultarAperturaMoneda").removeClass("w100");
