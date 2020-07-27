@@ -1881,7 +1881,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $(".fason").hide();
     }
     if (tipo === "CONTRATO ACUERDO") {
-        $("#pactadosDivVisualizar").hide();
+        $("#pactadosDivVisualizar").hide();       
+        $(".noFijacion").show();
+      
+
     } else {
         $("#pactadosDivVisualizar").show();
     }
@@ -1981,6 +1984,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_FechaCierta").text(fechaCierta);
         $("#FechaCiertaVisualizar").show();
     }
+   
     if (porcentajeDePago == "null") {
         $("#porcentajeDePagoDivVisualizar").hide();
     } else {
@@ -2029,8 +2033,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     var datos;
     console.log(tipo, contrato,  id);
-    if (tipo == "CONTRATO ACUERDO" || tipo == "AGENTE DE COMPRAS" || tipo == "FASON" || tipo == "FIJACION") {
+    if (tipo == "AGENTE DE COMPRAS" || tipo == "FASON" || tipo == "FIJACION") {
         datos = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
+    } else if (tipo == "CONTRATO ACUERDO") {
+        datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContratoAcuerdo', { contratoId: id});
+
     } else {
         datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContrato', { contratoId: id });
     }

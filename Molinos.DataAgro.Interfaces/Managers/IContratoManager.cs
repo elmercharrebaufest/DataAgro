@@ -59,5 +59,6 @@ namespace Molinos.DataAgro.Interfaces
         List<BasicoContrato> CompararNegocioReconfirmado(int contratoId);
         bool DiferenciaEnCalidades(int contratoId);
         Resultado AnularContratoSAP(ContratoSAP contrato);
+        DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId);
     }
 }

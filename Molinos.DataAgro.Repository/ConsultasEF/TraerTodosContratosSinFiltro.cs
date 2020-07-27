@@ -141,7 +141,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Acuerdo = (contrato is Contrato) ? (contrato as Contrato).ContratoAcuerdoId : null,
                         Rechazo = contrato.MotivoRechazo,
                         OcultarEnTablero = contrato.OcultarEnTablero,
-                        FechaCierta = DbFunctions.TruncateTime((contrato as Contrato).FechaCierta),
+                        FechaCierta = DbFunctions.TruncateTime(contrato.FechaCierta)??null,
                         EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false,
                         PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion),

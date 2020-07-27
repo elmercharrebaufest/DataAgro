@@ -1596,6 +1596,64 @@ namespace Molinos.DataAgro.Business.Managers
                     }).ToList()
                 });
         }
+
+
+        public DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId)
+        {
+            return repositorio.Obtener<ContratoAcuerdo, DatosContratoDto>(x => x.Id == contratoId,
+                x => new DatosContratoDto()
+                {
+                    Calidades = x.Calidad.Select(cal => new CalidadDto()
+                    {
+                        ContratoId = cal.NegocioId,
+                        Id = cal.Id,
+                        CalidadEspecialDesc = cal.CalidadEspecial.Descripcion,
+                        CalidadEspecialId = cal.CalidadEspecialId,
+                        Valor = cal.Valor,
+                        PorcentajeDesde = cal.PorcentajeDesde,
+                        PorcentajeHasta = cal.PorcentajeHasta,
+                    }).ToList(),
+                    DescuentosBonificaciones = x.Descuentos.Select(desc => new DescuentoBonificacionDto()
+                    {
+                        ContratoId = desc.ContratoId,
+                        Id = desc.Id,
+                        FechaDesde = desc.FechaDesde != null ? SqlFunctions.DateName("day", desc.FechaDesde).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)desc.FechaDesde.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", desc.FechaDesde) : "",
+
+                        FechaHasta = desc.FechaHasta != null ? SqlFunctions.DateName("day", desc.FechaHasta).Trim() + "-" +
+                                                SqlFunctions.StringConvert((double)desc.FechaHasta.Value.Month).TrimStart() + "-" +
+                                                SqlFunctions.DateName("year", desc.FechaHasta) : "",
+                        Importe = desc.Importe,
+                        Porcentaje = desc.Porcentaje,
+                        MonedaId = desc.MonedaId,
+                        Moneda = desc.MonedaId,
+                        TipoDBId = desc.TipoDBId,
+                        TipoDBDesc = desc.TipoDB.Descripcion,
+                        TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
+                        TipoPeriodoDBId = desc.TipoPeriodoDBId
+                    }).ToList(),
+                    //Precios = x.PrecioPactado.Select(y=>new PrecioPactadosDto()).ToList()
+                    Precios = x.PrecioPactado.Select(y => new PrecioPactadosDto
+                    {
+                        ContratoId = y.ContratoId,
+                        FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
+                                         SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                         SqlFunctions.DateName("year", y.FechaDesde) : "",
+                        FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
+                                         SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                         SqlFunctions.DateName("year", y.FechaHasta) : "",
+                        Id = y.Id,
+                        ImportePactado = y.ImportePactado,
+                        MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
+                        MonedaImportePactadoId = y.MonedaImportePactadoId,
+                        MonedaPactadoDesc = y.MonedaPactado.Descripcion,
+                        MonedaPactadoId = y.MonedaPactadoId,
+                        Porcentaje = y.Porcentaje,
+                        Precio = y.Precio
+                    }).ToList(),
+                });
+        }
         public BasicoContrato TraerContrato(int contratoId)
         {
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato
