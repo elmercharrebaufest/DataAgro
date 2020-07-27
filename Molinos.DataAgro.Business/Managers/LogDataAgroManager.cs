@@ -60,6 +60,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resolver = new IgnorePropertiesResolver(new[] { "BasicoProveedorTraerPorProveedores.EstadoCuit", "BasicoProveedorTraerPorProveedores.Facacop" });
             string descripcion = "";
+            cambios.Historial = null;//no registrar el historial de compras
+            cambios.ActividadHistoriaTraerPorProveedores = null;//notificaciones
             if (cambios.BasicoProveedorTraerPorProveedores != null && cambios.BasicoProveedorTraerPorProveedores.Count > 1)
             {
                 cambios.BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { cambios.BasicoProveedorTraerPorProveedores.FirstOrDefault() };
@@ -568,10 +570,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string AddSpacesToSentence(string text, char limite)
         {
-            text = text.Replace("TipoDBDesc", "TipoDB");
-            text = text.Replace("TipoPeriodoDBDesc", "TipoPeriodoDB");
+            text = text.Replace("Descuentos", "Descuentos y Bonificaciones");
+            text = text.Replace("TipoDBDesc", "TipoDto y Bonif");
+            text = text.Replace("TipoPeriodoDBDesc", "TipoPeriodoDto y Bonif");
             text = text.Replace("CalidadEspecialDesc", "CalidadEspecial");
-            text = text.Replace("BasicoProveedorTraerPorProveedores", "Proveedor");
+            text = text.Replace("BasicoProveedorTraerPorProveedores", "Datos Generales");
             text = text.Replace("ContactosComercialesTraerPorProveedores", "ContactosComerciales");
             text = text.Replace("ContactosComercialesTraerPorProveedores", "ContactosComerciales");
             text = text.Replace("ActividadHistoriaTraerPorProveedores", "ActividadHistoria");
@@ -670,9 +673,9 @@ namespace Molinos.DataAgro.Business.Managers
             return negocio;
         }
 
-        public List<int> ObtenerCuposId(string cupoSap)
+        public List<int> ObtenerCuposId(List<string> cupoSap)
         {
-            var cupos = repositorio.Listar<Cupo, int>(x => x.Id, x => x.CupoSap.Contains(cupoSap));
+            var cupos = repositorio.Listar<Cupo, int>(x => x.Id, x => cupoSap.Contains(x.CupoSap));
             return cupos;
         }
     }

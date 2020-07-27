@@ -246,7 +246,7 @@ namespace WebDataAgro.Controllers
 
             return Json(negocios, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult ObtenerCuposId(string cupoSap)
+        public JsonResult ObtenerCuposId(List<string> cupoSap)
         {
 
             List<int> cupos = logDataAgroManager.ObtenerCuposId(cupoSap);

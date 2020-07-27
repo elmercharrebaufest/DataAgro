@@ -185,7 +185,11 @@ function FiltrarNegocio() {
     $("#contratos-table td").each(function (e) {
         let valorBuscado = $("#contratos-table td")[e].innerText;
         if (valorBuscado != "" && $(valorBuscado != null)) {
-            filtrosContratosSap.push(valorBuscado.padStart(10, '0'));
+            var valoresEnValor = valorBuscado.split(" ");
+            for (var i = 0; i < valoresEnValor.length; i++) {
+                filtrosContratosSap.push(valoresEnValor[i].padStart(10, '0'));
+            //filtrosContratosSap.push(valorBuscado.padStart(10, '0'));
+            }
         }
     });
     if (filtrosContratosSap.length > 100) {
@@ -227,7 +231,12 @@ function FiltrarCupo() {
         MensErr("Ingrese un dato para hacer la busuqeda");
         return;
     }
-    var result = MSExecuteOnServer('/LogDataAgro/ObtenerCuposId', { cupoSap: filtrosSap });//2647187
+    var filtrosCuposSap = new Array();
+    var valoresEnValor = filtrosSap.split(" ");
+    for (var i = 0; i < valoresEnValor.length; i++) {
+        filtrosCuposSap.push(valoresEnValor[i]);
+    }
+    var result = MSExecuteOnServer('/LogDataAgro/ObtenerCuposId', { cupoSap: filtrosCuposSap });//2647187
     if (result.length > 0) {
         currentFilters.filter.filters = currentFilters.filter.filters.filter(function (x) {
             return x.field != 'ClaseId' && x.field != undefined

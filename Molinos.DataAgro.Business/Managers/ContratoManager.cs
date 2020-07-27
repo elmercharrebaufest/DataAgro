@@ -1122,7 +1122,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoId), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
+                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoId), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                     }
                     catch (Exception e)
                     {
@@ -3577,6 +3577,7 @@ namespace Molinos.DataAgro.Business.Managers
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;                        
                     }
                     repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                 }
                 catch (Exception e)
                 {

@@ -22,6 +22,6 @@ namespace Molinos.DataAgro.Interfaces
         string AddSpacesToSentence(string text, char v);
         string BuscaFechaYFormatea(string text);
         List<int> ObtenerNegociosId(List<string> contratosSap);
-        List<int> ObtenerCuposId(string cupoSap);
+        List<int> ObtenerCuposId(List<string> cupoSap);
     }
 }

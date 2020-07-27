@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, int>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<int>() { 1 });
-            var result = target.ObtenerCuposId("asd");
+            var result = target.ObtenerCuposId(new List<string> { "asd" });
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Cupo, int>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.IsNotNull(result);
