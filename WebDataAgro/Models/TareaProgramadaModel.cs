@@ -20,7 +20,7 @@ namespace WebDataAgro.Models
         public string Name { get; set; }
         public DateTime NextRunTime { get; set; }
         public DateTime LastRunTime { get; set; }
-        public virtual string Action { get; set; }
+        public virtual string ActionURL { get; set; }
         public int RepeticionEnMinutos { get; set; }
         public DateTime Inicio { get; set; }
     }

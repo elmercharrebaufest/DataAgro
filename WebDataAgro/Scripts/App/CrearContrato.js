@@ -1017,7 +1017,7 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);
-                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
+                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " || $("#tipoId").val() == "1") {
                     $("#dolarizadoExpressDiv").show();
                 } else {
                     $("#dolarizadoExpressDiv").hide();

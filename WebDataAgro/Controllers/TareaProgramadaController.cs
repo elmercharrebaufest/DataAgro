@@ -27,24 +27,27 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Buscar()
         {
             var model = new TareaProgramadaModel();
 
             using (var ts = new TaskService())
             {
-                
+
                 var tasks = ObtenerCarpetaDeTasks(ts).EnumerateTasks();
-                model.Datos = tasks.Select(x => new TaskModel
+                if (tasks != null)
                 {
-                    Name = x.Name,
-                    LastRunTime = x.LastRunTime,
-                    NextRunTime = x.NextRunTime,
-                    RepeticionEnMinutos = x.Definition.Triggers.Any() ? (int)x.Definition.Triggers.First().Repetition.Interval.TotalMinutes : 0,
-                    Action = x.Definition.Actions.Any() ? Regex.Match(((ExecAction)x.Definition.Actions.First()).Arguments,
-                        @"-command {Invoke-WebRequest (.+) -UseDefaultCredential", RegexOptions.Singleline).Groups[1].Value : ""
-                }).ToList();
+                    model.Datos = tasks.Select(x => new TaskModel
+                    {
+                        Name = x.Name,
+                        LastRunTime = x.LastRunTime,
+                        NextRunTime = x.NextRunTime,
+                        RepeticionEnMinutos = x.Definition.Triggers.Any() ? (int)x.Definition.Triggers.First().Repetition.Interval.TotalMinutes : 0,
+                        ActionURL = x.Definition.Actions.Any() ? Regex.Match(((ExecAction)x.Definition.Actions.First()).Arguments,
+                            @"-command {Invoke-WebRequest (.+) -UseDefaultCredential", RegexOptions.Singleline).Groups[1].Value : ""
+                    }).ToList();
+                }
             }
 
             return new JsonResult()
@@ -72,7 +75,7 @@ namespace WebDataAgro.Controllers
                     td.Triggers.Add(new DailyTrigger { Repetition = new RepetitionPattern(new TimeSpan(0, model.RepeticionEnMinutos, 0), TimeSpan.Zero), StartBoundary = model.Inicio });
 
                     // Create an action that will launch Notepad whenever the trigger fires
-                    td.Actions.Add(new ExecAction("powershell.exe", $"powershell.exe -command {{Invoke-WebRequest {model.Action} -UseDefaultCredential}}", null));
+                    td.Actions.Add(new ExecAction("powershell.exe", $"powershell.exe -command {{Invoke-WebRequest {model.ActionURL} -UseDefaultCredential}}", null));
                     //td.Principal.UserId = user;
                     //td.Principal.LogonType = TaskLogonType.Password;
                     ObtenerCarpetaDeTasks(ts).RegisterTaskDefinition(model.Name, td);
@@ -83,7 +86,7 @@ namespace WebDataAgro.Controllers
             {
                 model.Errores.Add(new ErrorMessage("Ocurrió un error al intentar guardar la tarea: " + e.Message));
             }
-            
+
             return new JsonResult()
             {
                 Data = model,
@@ -104,10 +107,10 @@ namespace WebDataAgro.Controllers
             {
                 model.Errores.Add(new ErrorMessage("Ocurrió un error al intentar guardar la tarea: " + e.Message));
             }
-            
+
             return new JsonResult()
             {
-                Data =model,
+                Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -123,7 +126,7 @@ namespace WebDataAgro.Controllers
 
         private TaskFolder ObtenerCarpetaDeTasks(TaskService ts)
         {
-            if(!ts.RootFolder.SubFolders.Any(x => x.Name == "DataAgro"))
+            if (!ts.RootFolder.SubFolders.Any(x => x.Name == "DataAgro"))
             {
                 ts.RootFolder.CreateFolder("DataAgro");
             }

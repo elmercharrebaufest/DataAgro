@@ -55,7 +55,7 @@ function CrearResultadosDataSource(datos) {
                     Name: { type: "string", editable: false },
                     LastRunTime: { type: "date", editable: false },
                     NextRunTime: { type: "date", editable: false },    
-                    Action: { type: "string", editable: false },
+                    ActionURL: { type: "string", editable: false },
                     RepeticionEnMinutos: { type: "string", editable: false },
                     Inicio: { type: "string", editable: false }
                 }
@@ -72,7 +72,7 @@ function CreateGrid() {
             { field: "Name", title: "Nombre", filterable: false },
             { field: "NextRunTime", type: "Próxima ejecución", title: "NextRunTime", format: _DefaultDateTemplate, filterable: false },
             { field: "LastRunTime", title: "Ultima ejecución", format: _DefaultDateTemplate, filterable: false },
-            { field: "Action", title: "Accion", filterable: false },
+            { field: "ActionURL", title: "Accion", filterable: false },
             { field: "RepeticionEnMinutos", title: "Repetición(min)", filterable: false }
         ],
         scrollable: true,
@@ -208,7 +208,7 @@ function Grabar() {
     
     var datos = {
         "Name": viewModel.get("TareaProgramada.Name"),
-        "Action": viewModel.get("TareaProgramada.Action"),
+        "ActionURL": viewModel.get("TareaProgramada.ActionURL"),
         "RepeticionEnMinutos": viewModel.get("TareaProgramada.RepeticionEnMinutos"),
         "Inicio": viewModel.get("TareaProgramada.Inicio")
     };
@@ -238,7 +238,7 @@ function UpdateViewModel(model) {
         "Name": model.Name,
         "LastRunTime": model.LastRunTime,
         "NextRunTime": model.NextRunTime,
-        "Action": model.Action,
+        "ActionURL": model.ActionURL,
         "RepeticionEnMinutos": model.RepeticionEnMinutos,
         "Inicio": model.Inicio
     };

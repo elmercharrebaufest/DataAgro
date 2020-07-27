@@ -1122,6 +1122,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoId), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     }
                     catch (Exception e)
                     {
@@ -2628,7 +2629,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     contrato.EstadoId = 5;
                     repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
 
                     EnviarMail(contrato, contratoSave);
                 }
@@ -2722,18 +2723,21 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var corredoresComerciales = mobjComercialManager.ListarComercialesCorredor();
                 corredoresComerciales.Remove(contrato.Comercial);
-                logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales));
+                logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales.Select(x=> x.IdActiveDirectory)));
                 foreach (Comercial corredorComercialCopia in corredoresComerciales)
                 {
                     try
                     {
                         emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
-                        lista.Add(emailComerciales);
+                        if (!String.IsNullOrEmpty(emailComerciales))
+                        {
+                            lista.Add(emailComerciales);
+                        }
                     }
                     catch (Exception e) { logger.Error(e); }
                 }
             }
-            var subject = "Modificación negocio Molinos Agro S.A. – " + contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial;
+            var subject = "Modificación negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato, contratoSave));
         }

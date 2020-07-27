@@ -361,7 +361,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             listaCupos.results.AddRange(model.results);
                             //logger.Debug(model.results.Count);
                             //if (model.results.Count > 0)
-                                //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+                            //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
                         }
                         else
                         {
@@ -372,6 +372,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     listaCupos.results = listaCupos.results.ToList();
                     IList<Cupo> actualizarCupos = null;
+                    List<int> cuposCambioEstado = new List<int>();
                     while (listaCupos.results.Count > 0)
                     {
                         var index = listaCupos.results.Count >= 50 ? 50 : listaCupos.results.Count;
@@ -385,14 +386,38 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 cupo.CupoStop = cuposActualizados[cupo.CupoSap].idCupo;
                                 cupo.CreacionStop = cuposActualizados[cupo.CupoSap].creado;
-                               
+
+                            }
+                            if (cupo.EstadoCupoId != cuposActualizados[cupo.CupoSap].idCupoEstado ||
+                                cupo.EstadoPlanta != cuposActualizados[cupo.CupoSap].estadoEnPlanta ||
+                            (cupo.CTGFechaDesde != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null))||
+                            (cupo.CTGFechaHasta != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null)) ||
+                            cupo.RemitenteComercial != cuposActualizados[cupo.CupoSap].cuitRemComercial||
+                            cupo.CorredorComprador != cuposActualizados[cupo.CupoSap].cuitCorredorCAfip||
+                            cupo.CorredorVendedor != cuposActualizados[cupo.CupoSap].cuitCorredorVAfip||
+                            cupo.MercadoATermino != cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip||
+                            cupo.Cosecha != cuposActualizados[cupo.CupoSap].cosecha||
+                            cupo.IntermediarioFlete != cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip||
+                            cupo.Transportista != cuposActualizados[cupo.CupoSap].cuitTransportistaAfip||
+                            cupo.Chofer != cuposActualizados[cupo.CupoSap].cuitChoferAfip||
+                            cupo.Km != cuposActualizados[cupo.CupoSap].kmRecorrer||
+                            cupo.Peso != cuposActualizados[cupo.CupoSap].pesoNetoEstimado||
+                            cupo.CartaPorte != cuposActualizados[cupo.CupoSap].cartaPorte||
+                            cupo.CTG != cuposActualizados[cupo.CupoSap].ctg||
+                            cupo.CuitOrigen != cuposActualizados[cupo.CupoSap].cuitOrigen||
+                            cupo.CuitOrigenAfip != cuposActualizados[cupo.CupoSap].cuitOrigenAfip||
+                            cupo.CodLocalidadOrigen != cuposActualizados[cupo.CupoSap].codLocalidadOrigen||
+                            cupo.NroEstablecimientoOrigen != cuposActualizados[cupo.CupoSap].nroEstablecimientoOrigen
+                                )
+                            {
+                                cuposCambioEstado.Add(cupo.Id);
                             }
                             cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
                             //logger.Debug("CTGFechaDesde: ." + cuposActualizados[cupo.CupoSap].fechaCTG_Desde);
                             //logger.Debug("CTGFechaHasta" + cuposActualizados[cupo.CupoSap].fechaCTG_Hasta);
                             cupo.CTGFechaDesde = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ?
                                 DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null;
-                            cupo.CTGFechaHasta = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ? 
+                            cupo.CTGFechaHasta = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ?
                                 DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null;
                             cupo.RemitenteComercial = cuposActualizados[cupo.CupoSap].cuitRemComercial;
                             cupo.CorredorComprador = cuposActualizados[cupo.CupoSap].cuitCorredorCAfip;
@@ -417,10 +442,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     if (actualizarCupos != null)
                     {
                         var cupoManager = cupoManagerInj();
-                        foreach (var cupoNuevo in actualizarCupos)
+                        foreach (var cupoId in cuposCambioEstado)
                         {
-                            var cupoConId = (cupoNuevo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap) : cupoNuevo;
-                            logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Modificar);
+                            logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
                         }
                     }
                     return listaCupos.results;
